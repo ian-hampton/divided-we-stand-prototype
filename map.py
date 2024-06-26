@@ -481,9 +481,9 @@ def apply_textures(texture_file, background_file, temp_save_location, temp2_save
 def text_over_map(temp_map, text_file, map_save_location):
     '''Adds text over given temp map image and saves it.'''
     temp_image = Image.open(temp_map)
+    temp_image = temp_image.convert("RGBA")
     text_image = Image.open(text_file)
-    mask = text_image.split()[3]
-    temp_image.paste(text_image, (0,0), mask)
+    temp_image = Image.alpha_composite(temp_image, text_image)
     temp_image.save(map_save_location)
 
 def update_preview_image(game_id, current_turn_num):
