@@ -248,8 +248,10 @@ class MainMap:
                 #place unit health
                 health_filepath = f"static/health/U{unit_health}-{core.unit_data_dict[unit_name]['Health']}.png"
                 health_image = Image.open(health_filepath)
+                health_temp = Image.new("RGBA", temp5_image.size)
                 mask = health_image.split()[3]
-                temp5_image.paste(health_image, unit_cords, mask)
+                health_temp.paste(health_image, unit_cords, mask)
+                temp5_image = Image.alpha_composite(temp5_image, health_temp)
         temp5_image.save(main_map_save_location)
         
         #Delete Temp Files
