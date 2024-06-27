@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw
 #UWS SOURCE IMPORTS
 import core
 
-#MAP CLASSES
+#THE MAP CLASSES
 class MainMap:
     
     '''Creates and updates the main map for United We Stood games.'''
@@ -99,12 +99,7 @@ class MainMap:
                 main_map_save_location = f'gamedata/{full_game_id}/images/{self.turn_num - 1}.png'
         regdata_location = f'gamedata/{full_game_id}/regdata.csv'
         playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
-        temp_save_location = f'gamedata/game{self.game_id}/images/temp.png'
-        temp2_save_location = f'gamedata/game{self.game_id}/images/temp2.png'
-        temp3_save_location = f'gamedata/game{self.game_id}/images/temp3.png'
-        temp4_save_location = f'gamedata/game{self.game_id}/images/temp4.png'
-        temp5_save_location = f'gamedata/game{self.game_id}/images/temp5.png'
-        background_file, magnified_file, main_file, text_file, texture_file = get_map_filepaths(self.map_name)
+        background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
         
         #Build Needed Lists
         playerdata_list = core.read_file(playerdata_location, 1)
@@ -124,7 +119,7 @@ class MainMap:
             unit_cords_dict = json.load(json_file)
         
         #Color Regions in Map Image
-        main_image = Image.open(main_file)
+        main_image = Image.open(main_filepath)
         for region in regdata_list:
             region_id = region[0]
             control_data_list = ast.literal_eval(region[2])
@@ -137,17 +132,12 @@ class MainMap:
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
                 map_color_fill(owner_id, occupier_id, player_color_list, region_id, main_image, start_cords_finalized)
-        main_image.save(temp_save_location)
         #add texture and background to temp image
-        apply_textures(texture_file, background_file, temp_save_location, temp2_save_location, temp3_save_location)
+        main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
         #add magnified regions
-        magnified_image = Image.open(magnified_file)
-        temp3_image = Image.open(temp3_save_location)
-        mask = magnified_image.split()[3]
-        temp3_image.paste(magnified_image, (0,0), mask)
-        temp3_image.save(temp4_save_location)
+        magnified_image = Image.open(magnified_filepath)
+        main_image = Image.alpha_composite(main_image, magnified_image)
         #color magnified regions
-        temp4_image = Image.open(temp4_save_location)
         for region in regdata_list:
             region_id = region[0]
             control_data_list = ast.literal_eval(region[2])
@@ -169,13 +159,12 @@ class MainMap:
                 cord_x = (improvement_start_cords[0] + 70)
                 cord_y = (improvement_start_cords[1] + 25)
                 unit_box_start_cords = (cord_x, cord_y)
-                ImageDraw.floodfill(temp4_image, improvement_box_start_cords, fill_color, border=(0, 0, 0, 255))
-                ImageDraw.floodfill(temp4_image, main_box_start_cords, fill_color, border=(0, 0, 0, 255))
-                ImageDraw.floodfill(temp4_image, unit_box_start_cords, fill_color, border=(0, 0, 0, 255))
-        temp4_image.save(temp5_save_location)
+                ImageDraw.floodfill(main_image, improvement_box_start_cords, fill_color, border=(0, 0, 0, 255))
+                ImageDraw.floodfill(main_image, main_box_start_cords, fill_color, border=(0, 0, 0, 255))
+                ImageDraw.floodfill(main_image, unit_box_start_cords, fill_color, border=(0, 0, 0, 255))
         
         #Place Improvements
-        temp5_image = Image.open(temp5_save_location)
+        main_image = main_image.convert("RGBA")
         nuke_image = Image.open('static/nuke.png')
         for region in regdata_list:
             region_id = region[0]
@@ -188,7 +177,7 @@ class MainMap:
             #place nuclear explosion
             if nuke:
                 mask = nuke_image.split()[3]
-                temp5_image.paste(nuke_image, improvement_start_cords, mask)
+                main_image.paste(nuke_image, improvement_start_cords, mask)
                 continue
             if improvement_start_cords != () and improvement_name is not None:
                 #place improvement image
@@ -202,7 +191,7 @@ class MainMap:
                     else:
                         improvement_filepath = f'static/improvements/{improvement_name}.png'
                 improvement_image = Image.open(improvement_filepath)
-                temp5_image.paste(improvement_image, improvement_start_cords)
+                main_image.paste(improvement_image, improvement_start_cords)
                 #place improvement health
                 if improvement_health != 99:
                     cord_x = (improvement_start_cords[0] - 13)
@@ -213,10 +202,9 @@ class MainMap:
                     else:
                         health_filepath = f'static/health/{improvement_health}-5.png'
                     health_image = Image.open(health_filepath)
-                    temp5_image.paste(health_image, health_start_cords)
+                    main_image.paste(health_image, health_start_cords)
         
         #Place Units
-        temp5_image = temp5_image.convert("RGBA")
         for region in regdata_list:
             region_id = region[0]
             unit_data_list = ast.literal_eval(region[5])
@@ -244,29 +232,19 @@ class MainMap:
                 #place unit
                 unit_image = Image.open(unit_filepath)
                 mask = unit_image.split()[3]
-                temp5_image.paste(unit_image, unit_cords, mask)
+                main_image.paste(unit_image, unit_cords, mask)
                 #place unit health
                 health_filepath = f"static/health/U{unit_health}-{core.unit_data_dict[unit_name]['Health']}.png"
                 health_image = Image.open(health_filepath)
-                health_temp = Image.new("RGBA", temp5_image.size)
+                health_temp = Image.new("RGBA", main_image.size)
                 mask = health_image.split()[3]
                 health_temp.paste(health_image, unit_cords, mask)
-                temp5_image = Image.alpha_composite(temp5_image, health_temp)
-        temp5_image.save(main_map_save_location)
-        
-        #Delete Temp Files
-        os.remove(temp_save_location)
-        os.remove(temp2_save_location)
-        os.remove(temp3_save_location)
-        os.remove(temp4_save_location)
-        os.remove(temp5_save_location)
+                main_image = Image.alpha_composite(main_image, health_temp)
+        main_image.save(main_map_save_location)
 
 class ResourceMap:
     
     '''Creates and updates the resource map for United We Stood games.'''
-
-    #RESOURCE LISTS
-    united_states_resource_list = ["Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Coal","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Oil","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Basic Materials","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Common Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Advanced Metals","Uranium","Uranium","Uranium","Uranium","Uranium","Uranium","Uranium","Uranium","Uranium","Uranium","Rare Earth Elements","Rare Earth Elements","Rare Earth Elements","Rare Earth Elements","Rare Earth Elements","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty","Empty"]
 
     #INITIALIZE
     def __init__(self, game_id, map_name):
@@ -275,9 +253,28 @@ class ResourceMap:
 
     #CREATE RESOURCE MAP DATA
     def create(self):
-        #Identify needed resource list and shuffle it
+        
+        #Create Resource List
+        resource_list = []
         if self.map_name == "United States 2.0":
-            resource_list = random.sample(self.united_states_resource_list, len(self.united_states_resource_list))
+            coal_count = 18
+            oil_count = 18
+            basic_count = 50
+            common_count = 30
+            advanced_count = 10
+            uranium_count = 10
+            rare_count = 5
+            empty_count = 67
+        resource_list += "Coal" * coal_count
+        resource_list += "Oil" * oil_count
+        resource_list += "Basic Materials" * basic_count
+        resource_list += "Common Metals" * common_count
+        resource_list += "Advanced Metals" * advanced_count
+        resource_list += "Uranium" * uranium_count
+        resource_list += "Rare Earth Elements" * rare_count
+        resource_list += "Empty" * empty_count
+        resource_list = random.sample(self.resource_list, len(self.resource_list))
+        
         #Update regdata.csv
         regdata_location = f'gamedata/game{self.game_id}/regdata.csv'
         regdata_list = core.read_file(regdata_location, 0)
@@ -285,6 +282,7 @@ class ResourceMap:
         resource_list.insert(0, "Resource Data")
         for i, region in enumerate(regdata_list):
             region[3] = resource_list[i]
+        
         #Save regdata.csv
         with open(regdata_location, 'w', newline='') as file:
             writer = csv.writer(file)
@@ -299,9 +297,7 @@ class ResourceMap:
         resource_map_save_location = f'gamedata/{full_game_id}/images/resourcemap.png'
         regdata_location = f'gamedata/{full_game_id}/regdata.csv'
         playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
-        temp_save_location = f'gamedata/game{self.game_id}/images/temp.png'
-        temp2_save_location = f'gamedata/game{self.game_id}/images/temp2.png'
-        background_file, magnified_file, main_file, text_file, texture_file = get_map_filepaths(self.map_name)
+        background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
         
         #Build Needed Lists
         regdata_list = core.read_file(regdata_location, 2)
@@ -316,7 +312,7 @@ class ResourceMap:
             improvement_cords_dict = json.load(json_file)
         
         #Color Regions in Map Image
-        main_image = Image.open(main_file)
+        main_image = Image.open(main_filepath)
         for region in regdata_list:
             region_id = region[0]
             resource_type = region[3]
@@ -329,20 +325,15 @@ class ResourceMap:
                 if region_id == "HAMPT" and self.map_name == "United States 2.0":
                     ImageDraw.floodfill(main_image, (4430, 1520), core.resource_colors[resource_type], border=(0, 0, 0, 255))
                 ImageDraw.floodfill(main_image, start_cords_finalized, core.resource_colors[resource_type], border=(0, 0, 0, 255))
-        main_image.save(temp_save_location)
         
-        #Put Images Together
-        background_image = Image.open(background_file)
-        temp_image = Image.open(temp_save_location)
-        mask = temp_image.split()[3]
-        background_image.paste(temp_image, (0,0), mask)
-        background_image.save(temp2_save_location)
-        #add text
-        text_over_map(temp2_save_location, text_file, resource_map_save_location)
-        
-        #Delete Temp Files
-        os.remove(temp_save_location)
-        os.remove(temp2_save_location)
+        #Add Textures and Text
+        background_image = Image.open(background_filepath)
+        background_image = background_image.convert("RGBA")
+        mask = main_image.split()[3]
+        background_image.paste(main_image, (0,0), mask)
+        main_image = background_image
+        main_image = text_over_map_new(main_image, text_filepath)
+        main_image.save(resource_map_save_location)
 
 class ControlMap:
 
@@ -362,10 +353,7 @@ class ControlMap:
         control_map_save_location = f'gamedata/{full_game_id}/images/controlmap.png'
         regdata_location = f'gamedata/{full_game_id}/regdata.csv'
         playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
-        temp_save_location = f'gamedata/game{self.game_id}/images/temp.png'
-        temp2_save_location = f'gamedata/game{self.game_id}/images/temp2.png'
-        temp3_save_location = f'gamedata/game{self.game_id}/images/temp3.png'
-        background_file, magnified_file, main_file, text_file, texture_file = get_map_filepaths(self.map_name)
+        background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
        
         #Build Needed Lists
         regdata_list = core.read_file(regdata_location, 2)
@@ -381,7 +369,7 @@ class ControlMap:
             improvement_cords_dict = json.load(json_file)
 
         #Color Regions in Map Image
-        main_image = Image.open(main_file)
+        main_image = Image.open(main_filepath)
         for region in regdata_list:
             region_id = region[0]
             control_data_list = ast.literal_eval(region[2])
@@ -394,30 +382,24 @@ class ControlMap:
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
                 map_color_fill(owner_id, occupier_id, player_color_list, region_id, main_image, start_cords_finalized)
-        main_image.save(temp_save_location)
-        #put images together
-        apply_textures(texture_file, background_file, temp_save_location, temp2_save_location, temp3_save_location)
-        #add text
-        text_over_map(temp3_save_location, text_file, control_map_save_location)
         
-        #Delete Temp Files
-        os.remove(temp_save_location)
-        os.remove(temp2_save_location)
-        os.remove(temp3_save_location)
-        print("Map updates complete!")
+        #Add Textures and Text
+        main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
+        main_image = text_over_map_new(main_image, text_filepath)
+        main_image.save(control_map_save_location)
 
-#FILEPATH GATHERING FUNCTIONS
+#MAP GENERATION HELPER FUNCTIONS
 def get_map_filepaths(map_name):
     '''Returns a series of variables representing the filepaths of the map generation image based on the map type.'''
     if map_name == "United States 2.0":
-        background_file = 'maps/united_states/image_resources/background.png'
-        magnified_file = 'maps/united_states/image_resources/magnified.png'
-        main_file = 'maps/united_states/image_resources/main.png'
-        text_file = 'maps/united_states/image_resources/text.png'
-        texture_file = 'maps/united_states/image_resources/texture.png'
+        map_name = "united_states"
+    background_file = f'maps/{map_name}/image_resources/background.png'
+    magnified_file = f'maps/{map_name}/image_resources/magnified.png'
+    main_file = f'maps/{map_name}/image_resources/main.png'
+    text_file = f'maps/{map_name}/image_resources/text.png'
+    texture_file = f'maps/{map_name}/image_resources/texture.png'
     return background_file, magnified_file, main_file, text_file, texture_file
 
-#MAP GENERATION FUNCTIONS
 def generate_player_color_list(playerdata_location):
     player_color_list = []
     with open(playerdata_location, 'r') as file:
@@ -466,25 +448,29 @@ def map_color_fill(owner_id, occupier_id, player_color_list, region_id, main_ima
         ImageDraw.floodfill(main_image, (4430, 1520), fill_color, border=(0, 0, 0, 255))
     ImageDraw.floodfill(main_image, start_cords_updated, fill_color, border=(0, 0, 0, 255))
 
-def apply_textures(texture_file, background_file, temp_save_location, temp2_save_location, temp3_save_location):
-    '''Applies the texture and background images to the temp image file.'''
-    texture_image = Image.open(texture_file)
-    temp_image = Image.open(temp_save_location)
-    temp2_image = Image.blend(texture_image, temp_image, 0.75)
-    temp2_image.save(temp2_save_location)
-    background_image = Image.open(background_file)
-    temp2_image = Image.open(temp2_save_location)
-    mask = temp2_image.split()[3]
-    background_image.paste(temp2_image, (0,0), mask)
-    background_image.save(temp3_save_location)
+def apply_textures_new(main_image, texture_filepath, background_filepath):
+    '''
+    '''
+    
+    texture_image = Image.open(texture_filepath)
+    temp_image = Image.blend(texture_image, main_image, 0.75)
+    main_image = temp_image
 
-def text_over_map(temp_map, text_file, map_save_location):
-    '''Adds text over given temp map image and saves it.'''
-    temp_image = Image.open(temp_map)
-    temp_image = temp_image.convert("RGBA")
-    text_image = Image.open(text_file)
-    temp_image = Image.alpha_composite(temp_image, text_image)
-    temp_image.save(map_save_location)
+    background_image = Image.open(background_filepath)
+    background_image = background_image.convert("RGBA")
+    mask = main_image.split()[3]
+    background_image.paste(main_image, (0,0), mask)
+    main_image = background_image
+
+    return main_image
+
+def text_over_map_new(main_image, text_filepath):
+    '''
+    '''
+    text_image = Image.open(text_filepath)
+    main_image = Image.alpha_composite(main_image, text_image)
+
+    return main_image
 
 def update_preview_image(game_id, current_turn_num):
     match current_turn_num:
