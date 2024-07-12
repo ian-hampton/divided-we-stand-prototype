@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>United We Stood</title>
+
+<style>
+body {
+    background-image: url("{{ url_for('static', filename='UWS-background-1.png') }}");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    display: flex;
+    flex-direction: column;
+}
+img {
+    margin-left: auto;
+    margin-right: auto;
+}
+.button {
+    margin-left: auto;
+    margin-right: auto;
+    width:25%;
+    margin-bottom:2%;
+    display: block;
+}
+</style>
+
+<body>
+    <img src={{ url_for('static', filename='title.png') }} align="center" style="width:70%;margin-bottom:2%;">
+    <a href={{ url_for('games') }}><img class="button" src={{ url_for('static', filename='button-1.png') }}></a>
+    <a href={{ url_for('leaderboard') }}><img class="button" src={{ url_for('static', filename='button-2.png') }}></a>
+    <a href={{ url_for('archived_games') }}><img class="button" src={{ url_for('static', filename='button-3.png') }} ></a>
+</body>
+
+</html>

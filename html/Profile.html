@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>Profile for {{ username }}</title>
+
+<style>
+body {
+    background-image: url("{{ url_for('static', filename='background_default.png') }}");
+    background-size: 100%;
+}
+.top {
+    width:80%;
+    margin-left:10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+#title {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 48px;
+    padding: 0;
+    margin: 0;
+}
+#home {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    margin: 0;
+}
+.main {
+    width:80%;
+    margin-left:10%;
+}
+.profile-data {
+    border-width: 0px;
+    border-collapse: collapse;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 0px;
+    margin: 0px;
+}
+.profile-data th {
+    font-weight: bold;
+    font-size: 24px;
+    text-align: left;
+    padding-left: 10px;
+}
+.profile-data td {
+    text-align: left;
+    padding-left: 10px;
+}
+.ghost {
+    visibility: hidden;
+}
+hr {
+    border-top: 3px dashed black;
+    padding: 0px;
+}
+</style>
+
+<body>
+<div class="top">
+    <p id="title">{{ username }}</p>
+    <a class="home" href={{ url_for('main') }}><img src="{{ url_for('static', filename='home.png') }}" align=right style="width:50px;"></a>
+</div>
+<div class="main">
+    <table class = "profile-data">
+        <tr>
+            <td width="20%" rowspan="12"><img src="{{ url_for('static', filename='blank.png') }}" style="width:100%;"></td>
+            <th width="20%">Profile Information</th>
+            <th width="60%">Game Statistics</th>
+        </tr>
+        <tr>
+            <td>Joined: {{ joined }}</td>
+            <td>Wins: {{ wins }}</td>
+        </tr>
+        <tr>
+            <td>First Played: {{ first_game }}</td>
+            <td>Draws: {{ draws }}</td> 
+        </tr>
+        <tr>
+            <td>Last Played: {{ latest_game }}</td>
+            <td>Losses: {{ losses }}</td>
+        </tr>
+        <tr>
+            <td>Reliability: {{ reliability }}</td>
+            <td>Total Games: {{ games }}</td>
+        </tr>
+        <tr>
+            <td>Rank: {{ rank }}</td>
+            <td>Total Score: {{ score }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Average Score: {{ average }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Favorite Government: {{ favorite_gov }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Favorite Foreign Policy: {{ favorite_fp }}</td>
+        </tr>
+        <tr class="ghost">
+            <td></td>
+            <td>XXX</td>
+        </tr>
+        <tr class="ghost">
+            <td></td>
+            <td>XXX</td>
+        </tr>
+        <tr class="ghost">
+            <td></td>
+            <td>XXX</td>
+        </tr>
+    </table>
+    <p></p>
+    <hr>
+</div>
+</div>
+</body>

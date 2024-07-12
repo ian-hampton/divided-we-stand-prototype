@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>Games</title>
+
+<style>
+body {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-image: url("{{ url_for('static', filename='pattern.png') }}");
+    background-repeat: repeat;
+    background-size: 20%;
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: white;
+    text-decoration: none;
+}
+header {
+    background-color: #0f4660;
+    margin: 0;
+    padding: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    opacity: 0.9;
+    margin-bottom: 20px;
+}
+.left-header {
+    display: flex;
+    align-items: center;
+}
+.right-header {
+    display: flex;
+    align-items: center;
+}
+#title {
+    font-size: 48px;
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+.main {
+    width: 80%;
+    margin-left: 10%;
+    display: flex;
+    flex-direction: column;
+}
+.record-box {
+    width: 80%;
+    margin: 0px;
+    padding: 0px;
+    background-color: #434343;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+}
+.record-title {
+    border: none;
+    font-size: 24px;
+    background-color: #2a2a2a;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding-top: 2px;
+}
+.record-subtitle {
+    border: none;
+    font-size: 14px;
+    background-color: #2a2a2a;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5px;
+}
+.contents {
+    display: flex;
+    flex-direction: row;
+}
+.info-table {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    background-color: #434343;
+    border-collapse: collapse;
+    border-width: 0px;
+    color: white;
+    opacity: 0.9;
+    height: min-content;
+    width: 20%;
+}
+.info-table td {
+    border: none;
+    font-size: 10px;
+    padding: 2px;
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.player-table {
+    width: 100%;
+    margin: 0px;
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #434343;
+    border-collapse: collapse;
+    border-width: 0px;
+    opacity: 0.9;
+    height: min-content;
+    width: 30%;
+}
+.player-table td {
+    border: none;
+    font-size: 10px;
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+img {
+    padding: 0px;
+    margin: 0px;
+    display: block;
+}
+.record-box img {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    max-width: 50%;
+    opacity: 1.0;
+}
+.nation_top {
+    font-style: bold;
+    padding-top: 5px;
+}
+.nation_sub {
+    font-style: italic;
+    padding-bottom: 5px;
+}
+.create-button {
+    background: none;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+}
+</style>
+
+<body>
+<header>
+    <div class="left-header">
+        <p id="title">Active Games</p>
+    </div>
+    <div class="right-header">
+        <a class="create-button" href={{ url_for('settings') }}><img src="{{ url_for('static', filename='create.png') }}" style="width:48px;"></a>
+        <a href={{ url_for('main') }}><img src="{{ url_for('static', filename='home-white.png') }}" style="width:48px;"></a>
+    </div>
+</header>
+<div class="main">
+    {% for row in active_game_masterlist %}
+    <div class="record-box">
+        <p class="record-title">{% autoescape false %} {{ row[0] }} {% endautoescape %}</p>
+        <p class="record-subtitle">{{ row[1] }}</p>
+        <div class="contents">
+        <table class="info-table">
+            <tr>
+                <td colspan="2">{{ row[2] }}</td>
+            </tr>
+            <tr>
+                <td>Version:</td>
+                <td align="right">{{ row[3] }}</td>
+            </tr>
+            <tr>
+                <td>Map:</td>
+                <td align="right">{{ row[4] }}</td>
+            </tr>
+            <tr>
+                <td>Victory Conditions:</td>
+                <td align="right">{{ row[5] }}</td>
+            </tr>
+            <tr>
+                <td>Fog of War:</td>
+                <td align="right">{{ row[6] }}</td>
+            </tr>
+            <tr>
+                <td>Turn Length:</td>
+                <td align="right">{{ row[7] }}</td>
+            </tr>
+            <tr>
+                <td>Accelerated Schedule:</td>
+                <td align="right">{{ row[8] }}</td>
+            </tr>
+            <tr>
+                <td>Days Ellapsed:</td>
+                <td align="right">{{ row[9] }}</td>
+            </tr>
+            <tr>
+                <td>Game Started:</td>
+                <td align="right">{{ row[10] }}</td>
+            </tr>
+        </table>
+        <img src={{ row[11] }}>
+        <table class="player-table">
+            {% for entry in row[12] %}
+            <tr>
+                <td width="50%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
+                <td width="50%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
+            </tr>
+            <tr>
+                <td width="50%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
+                <td width="50%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
