@@ -1,0 +1,656 @@
+{
+    "Alpha": {
+        "Game #": 1,
+        "Player Count": 3,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "United States 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 47,
+        "Days Ellapsed": 65,
+        "Game Started": "06/14/2020",
+        "Game Ended": "08/18/2020",
+        "Player Data": {
+            "003": {
+                "Nation Name": "Fukuoka",
+                "Color": "#5a009d",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 3,
+                "Victory": 1
+            },
+            "002": {
+                "Nation Name": "Ohio",
+                "Color": "#ff3d3d",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "001": {
+                "Nation Name": "Bezos Bureaucracy",
+                "Color": "#b30000",
+                "Government": "Plutocracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            }
+        }
+    },
+    "Bravo": {
+        "Game #": 2,
+        "Player Count": 5,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "United States 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 35,
+        "Days Ellapsed": 63,
+        "Game Started": "10/01/2020",
+        "Game Ended": "12/02/2020",
+        "Player Data": {
+            "001": {
+                "Nation Name": "American Commonwealth",
+                "Color": "#ff3d3d",
+                "Government": "Democracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 3,
+                "Victory": 1
+            },
+            "002": {
+                "Nation Name": "poop clan",
+                "Color": "#603913",
+                "Government": "Democracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 2,
+                "Victory": 0
+            },
+            "005": {
+                "Nation Name": "Ionia",
+                "Color": "#003b84",
+                "Government": "Democracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "003": {
+                "Nation Name": "Kingdom of Nyawa",
+                "Color": "#8b2a1a",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Isolationist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "Last State of Delaware",
+                "Color": "#0096ff",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Charlie": {
+        "Game #": 3,
+        "Player Count": 7,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "United States 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 44,
+        "Days Ellapsed": 80,
+        "Game Started": "01/02/2021",
+        "Game Ended": "03/23/2021",
+        "Player Data": {
+            "003": {
+                "Nation Name": "The Gentle Men",
+                "Color": "#105500",
+                "Government": "Democracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "001": {
+                "Nation Name": "Midwest Political Sector",
+                "Color": "#5bb000",
+                "Government": "Democracy",
+                "Foreign Policy": "Isolationist",
+                "Score": 2,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "The Grand Ol' Party",
+                "Color": "#b30000",
+                "Government": "Plutocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "Willemstan Scientific-Industrial Socialists",
+                "Color": "#f384ae",
+                "Government": "Technocracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "005": {
+                "Nation Name": "Texan Caliphate",
+                "Color": "#5a009d",
+                "Government": "Plutocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "The Frozen North",
+                "Color": "#003b84",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Isolationist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "The Scarlet Crusade",
+                "Color": "#ff3d3d",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Delta": {
+        "Game #": 4,
+        "Player Count": 8,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "United States 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 41,
+        "Days Ellapsed": 97,
+        "Game Started": "05/01/2021",
+        "Game Ended": "08/06/2021",
+        "Player Data": {
+            "007": {
+                "Nation Name": "Mara Salvatrucha",
+                "Color": "#9f8757",
+                "Government": "Crime Syndicate",
+                "Foreign Policy": "Isolationist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "005": {
+                "Nation Name": "The Blazing South",
+                "Color": "#ff3d3d",
+                "Government": "United States Remnant",
+                "Foreign Policy": "Diplomatic",
+                "Score": 2,
+                "Victory": 0
+            },
+            "003": {
+                "Nation Name": "Vornalar",
+                "Color": "#b66317",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 2,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "Greater Idaho",
+                "Color": "#ffd64b",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "001": {
+                "Nation Name": "Phoenix Colony",
+                "Color": "#ff9600",
+                "Government": "Protectorate",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "The D.I.N.G.U.S. Confederacy",
+                "Color": "#8b2a1a",
+                "Government": "Protectorate",
+                "Foreign Policy": "Diplomatic",
+                "Score": 0,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Pencilvania",
+                "Color": "#f384ae",
+                "Government": "Technocracy",
+                "Foreign Policy": "Isolationist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "Lake Pirates",
+                "Color": "#003b84",
+                "Government": "Crime Syndicate",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Echo": {
+        "Game #": 5,
+        "Player Count": 6,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "Africa 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 42,
+        "Days Ellapsed": 130,
+        "Game Started": "10/02/2021",
+        "Game Ended": "02/09/2022",
+        "Player Data": {
+            "005": {
+                "Nation Name": "South African Exodus",
+                "Color": "#003b84",
+                "Government": "Technocracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 3,
+                "Victory": 1
+            },
+            "003": {
+                "Nation Name": "Yormani",
+                "Color": "#ff974e",
+                "Government": "Protectorate",
+                "Foreign Policy": "Diplomatic",
+                "Score": 2,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "Mobutu",
+                "Color": "#0096ff",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "G.N.C.",
+                "Color": "#ffd64b",
+                "Government": "Plutocracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Fam Republic",
+                "Color": "#8b2a1a",
+                "Government": "Plutocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "Unga Bunga",
+                "Color": "#603913",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Foxtrot": {
+        "Game #": 6,
+        "Player Count": 4,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "Southeast Asia 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 45,
+        "Days Ellapsed": 113,
+        "Game Started": "06/05/2022",
+        "Game Ended": "07/24/2022",
+        "Player Data": {
+            "007": {
+                "Nation Name": "Azjol-Nerub",
+                "Color": "#003b84",
+                "Government": "Democracy",
+                "Foreign Policy": "Commercial",
+                "Score": 2,
+                "Victory": 0
+            },
+            "001": {
+                "Nation Name": "Dominion of Manila",
+                "Color": "#b30000",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "003": {
+                "Nation Name": "Neo Fukuoka",
+                "Color": "#5a009d",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Lamdat",
+                "Color": "#ff9600",
+                "Government": "Crime Syndicate",
+                "Foreign Policy": "Isolationist",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Golf": {
+        "Game #": 7,
+        "Player Count": 7,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "Europe 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 50,
+        "Days Ellapsed": 137,
+        "Game Started": "03/09/2022",
+        "Game Ended": "07/24/2022",
+        "Player Data": {
+            "007": {
+                "Nation Name": "Arathi Highlands",
+                "Color": "#5bb000",
+                "Government": "Plutocracy",
+                "Foreign Policy": "Isolationist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "008": {
+                "Nation Name": "Familienerbe",
+                "Color": "#105500",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "003": {
+                "Nation Name": "Wastelands of Knoor",
+                "Color": "#9f8757",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "001": {
+                "Nation Name": "New Byzantine Empire",
+                "Color": "#5a009d",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "Simoyan Finland",
+                "Color": "#8b2a1a",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "New Roman Empire",
+                "Color": "#b30000",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "005": {
+                "Nation Name": "Totally Not the USSR",
+                "Color": "#ff3d3d",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Diplomatic",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Hotel": {
+        "Game #": 8,
+        "Player Count": 7,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "United States 1.1",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Enabled",
+        "Version": "Development",
+        "Game End Turn": 37,
+        "Days Ellapsed": 75,
+        "Game Started": "09/21/2022",
+        "Game Ended": "12/05/2022",
+        "Player Data": {
+            "003": {
+                "Nation Name": "Amikabuu",
+                "Color": "#b30000",
+                "Government": "Military Junta",
+                "Foreign Policy": "Isolationist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "002": {
+                "Nation Name": "Robert Bungus Federation",
+                "Color": "#ff974e",
+                "Government": "Technocracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 2,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "Ahn'Qiraj",
+                "Color": "#f384ae",
+                "Government": "Military Junta",
+                "Foreign Policy": "Isolationist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Phamen",
+                "Color": "#ffd64b",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "Ragnarok",
+                "Color": "#5a009d",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "Republic of Aldi",
+                "Color": "#9f8757",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "009": {
+                "Nation Name": "Sardinia",
+                "Color": "#003b84",
+                "Government": "Protectorate",
+                "Foreign Policy": "Isolationist",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "India": {
+        "Game #": 9,
+        "Player Count": 9,
+        "Victory Conditions": "Foreign Policy",
+        "Map": "China 1.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 49,
+        "Days Ellapsed": 130,
+        "Game Started": "01/22/2023",
+        "Game Ended": "06/01/2023",
+        "Player Data": {
+            "003": {
+                "Nation Name": "Guandi Empire",
+                "Color": "#105500",
+                "Government": "Technocracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "001": {
+                "Nation Name": "New Republic of Qinghai",
+                "Color": "#b654ff",
+                "Government": "Democracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 1,
+                "Victory": 0
+            },
+            "009": {
+                "Nation Name": "His Mother",
+                "Color": "#0096ff",
+                "Government": "Technocracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 1,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Fam Dynasty",
+                "Color": "#003b84",
+                "Government": "Democracy",
+                "Foreign Policy": "Diplomatic",
+                "Score": 0,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "Holy Imperium of Man",
+                "Color": "#ffd64b",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "Manchurian Tech Company",
+                "Color": "#8b2a1a",
+                "Government": "Technocracy",
+                "Foreign Policy": "Isolationist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "Ny'alotha",
+                "Color": "#5a009d",
+                "Government": "Crime Syndicate",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "Respondus Lockdown Browser",
+                "Color": "#9f8757",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "004": {
+                "Nation Name": "The Pooh Bear Confederacy",
+                "Color": "#ff3d3d",
+                "Government": "Military Junta",
+                "Foreign Policy": "Diplomatic",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "Test Game": {
+        "Game #": 10,
+        "Player Count": "4",
+        "Victory Conditions": "Randomized Sets",
+        "Map": "United States 2.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "Live Game",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 34,
+        "Days Ellapsed": 35,
+        "Game Started": "02/03/2024",
+        "Game Ended": "03/09/2024",
+        "Player Data": {
+            "001": {
+                "Nation Name": "Western Occupation Zone",
+                "Color": "#ff3d3d",
+                "Government": "Protectorate",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "mid state ngl",
+                "Color": "#5a009d",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "Border Patrol",
+                "Color": "#8b2a1a",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "011": {
+                "Nation Name": "EASND",
+                "Color": "#5bb000",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            }
+        }
+    },
+    "Genisys": {
+        "Game #": 11,
+        "Player Count": 8,
+        "Victory Conditions": "Randomized Sets",
+        "Map": "United States 2.0",
+        "Accelerated Schedule": "Enabled",
+        "Turn Duration": "48 hours",
+        "Fog of War": "Disabled",
+        "Version": "Development",
+        "Game End Turn": 0,
+        "Days Ellapsed": 0,
+        "Game Started": "06/02/2024",
+        "Game Ended": "Present"
+    }
+}

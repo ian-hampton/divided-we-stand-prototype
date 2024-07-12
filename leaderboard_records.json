@@ -1,0 +1,75 @@
+{
+    "Largest Nation": {
+        "Player Name": "Eyiri",
+        "Nation Name": "Amikabuu",
+        "Game Name": "Hotel",
+        "Value": 53
+    },
+    "Largest Economy": {
+        "Player Name": "Eyiri",
+        "Nation Name": "Amikabuu",
+        "Game Name": "Hotel",
+        "Value": 105.1
+    },
+    "Most Completed Research": {
+        "Player Name": "Roman General",
+        "Nation Name": "Manchurian Tech Company",
+        "Game Name": "India",
+        "Value": 48
+    },
+    "Largest Military": {
+        "Player Name": "Eyiri",
+        "Nation Name": "Amikabuu",
+        "Game Name": "Hotel",
+        "Value": 51
+    },
+    "Warmonger": {
+        "Player Name": "Eyiri",
+        "Nation Name": "Guandi Empire",
+        "Game Name": "India",
+        "Value": 6
+    },
+    "Longest War": {
+        "War Name": "The Grand Ol' Party v. Texan Caliphate",
+        "Game Name": "Charlie",
+        "Value": 20
+    },
+    "Most Battles Won": {
+        "Player Name": "Eyiri",
+        "Nation Name": "Guandi Empire",
+        "Game Name": "India",
+        "Value": 61
+    },
+    "Greatest # of Players": {
+        "Game Name": "India",
+        "Value": 9
+    },
+    "Smallest # of Players": {
+        "Game Name": "Foxtrot",
+        "Value": 4
+    },
+    "Greatest # of Wars": {
+        "Game Name": "Golf",
+        "Value": 14
+    },
+    "Smallest # of Wars": {
+        "Game Name": "Foxtrot",
+        "Value": 5
+    },
+    "Longest Game (turns)": {
+        "Game Name": "Golf",
+        "Value": 50
+    },
+    "Longest Game (days)": {
+        "Game Name": "Golf",
+        "Value": 137
+    },
+    "Shortest Game (turns)": {
+        "Game Name": "Bravo",
+        "Value": 35
+    },
+    "Shortest Game (days)": {
+        "Game Name": "Bravo",
+        "Value": 63
+    }
+}
