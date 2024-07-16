@@ -957,7 +957,7 @@ def update_turn_num(game_id):
 def identify(action):
     ACTIONS_LIST = ['Surrender', 'White Peace', 'Sanction', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
     for action_type in ACTIONS_LIST:
-        if action_type.lower() in action[:12].lower():
+        if action_type.lower() == action[:len(action_type)].lower():
             return action_type
     return None
 
@@ -1697,6 +1697,7 @@ def conduct_combat(attacker_data_list, defender_data_list, war_statistics_list, 
     attacker_roll_modifier = calculate_unit_roll_modifier(attacker_unit_id, attacker_research_list, attacker_player_id, attacker_war_role, regdata_list, defender_name, defender_region_id)
     defender_roll_modifier = calculate_unit_roll_modifier(defender_name, defender_research_list, defender_player_id, defender_war_role, regdata_list, attacker_unit_id, defender_region_id)
     attacker_damage_modifier = calculate_unit_damage_modifier(attacker_unit_id, attacker_player_id, regdata_list, defender_name, defender_region_id)
+    defender_damage_modifier = 0
 
     #get damage values and hit values
     attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == attacker_unit_id), None)

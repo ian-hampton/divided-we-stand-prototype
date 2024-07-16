@@ -1519,7 +1519,7 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
+    regdata_list = core.read_file(regdata_filepath, 2)
     stability_punishments = ['Compromised Military Secrets', 'Material Shortage', 'Embezzlement', 'Secession', 'Low Morale', 'Widespread Instability']
 
     #get needed information from player
@@ -1577,10 +1577,12 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
     while current_stability_level < 1:
         punishment_roll = random.randint(1, 6)
         punishment_name = stability_punishments[punishment_roll - 1]
+        
         if punishment_name == 'Compromised Military Secrets':
             #no need to program effect
             temp_stability = 1
             current_stability_level += 1
+        
         elif punishment_name == 'Material Shortage':
             bm_resource_data = ast.literal_eval(playerdata[15])
             cm_resource_data = ast.literal_eval(playerdata[16])
@@ -1593,70 +1595,69 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
             playerdata[17]= str(am_resource_data)
             temp_stability = 2
             current_stability_level += 2
+        
         elif punishment_name == 'Embezzlement':
             temp_stability = 2
             current_stability_level += 2
+        
         elif punishment_name == 'Secession':
             candidates_list = []
             for region in regdata_list:
-                if len(region[0]) == 5:
-                    region_id = region[0]
-                    control_data = ast.literal_eval(region[2])
-                    improvement_data = ast.literal_eval(region[4])
-                    unit_data = ast.literal_eval(region[5])
-                    adjacency_data = ast.literal_eval(region[8])
-                    if control_data[0] == player_id and improvement_data[0] != 'Capital' and unit_data[0] == None:
-                        neighbors_list = []
-                        for select_id in adjacency_data:
-                            for region in regdata_list:
-                                if select_id == region[0]:
-                                    select_control_data = ast.literal_eval(region[2])
-                                    break
-                            if select_control_data[0] != player_id and select_control_data[0] != 0 and select_control_data[0]:
-                                neighbors_list.append(select_control_data[0])
-                        if len(neighbors_list) > 0:
-                            neighbors_list.insert(0, region_id)
-                            candidates_list.append(neighbors_list)
+                region_id = region[0]
+                control_data = ast.literal_eval(region[2])
+                improvement_data = ast.literal_eval(region[4])
+                adjacency_data = ast.literal_eval(region[8])
+                if control_data[0] == player_id and improvement_data[0] != 'Capital':
+                    for adjacent_region_id in adjacency_data:
+                        adjacent_region_data = core.get_region_data(regdata_list, adjacent_region_id)
+                        adjacent_control_data = ast.literal_eval(adjacent_region_data[2])
+                        if adjacent_control_data[0] != player_id and adjacent_control_data[0] != 0:
+                            candidates_list.append(region_id)
+                            break
             random.shuffle(candidates_list)
-            chosen_list = []
-            count = 0
-            while len(chosen_list) > 0 or count < 3:
-                choice = candidates_list.pop()
-                chosen_list.append(choice)
-                count += 1
-            for region_set in chosen_list:
-                region_id = region_set[0]
-                neighbors_list = region_set - region_id
-                random.shuffle(neighbors_list)
-                new_owner_id = neighbors_list.pop()
+            chosen_list = candidates_list[:3]
+            for chosen_region_id in chosen_list:
                 for region in regdata_list:
-                    if region_id == region[0]:
+                    if chosen_region_id == region[0]:
                         control_data = ast.literal_eval(region[2])
-                        control_data[0] == new_owner_id
-                        control_data[1] == 0
+                        adjacency_data = ast.literal_eval(region[8])
+                        neighbor_player_ids = []
+                        for adjacent_region_id in adjacency_data:
+                            adjacent_region_data = core.get_region_data(regdata_list, adjacent_region_id)
+                            adjacent_control_data = ast.literal_eval(adjacent_region_data[2])
+                            adjacent_owner_id = adjacent_control_data[0]
+                            if adjacent_owner_id != player_id and adjacent_owner_id != 0:
+                                if adjacent_owner_id not in neighbor_player_ids:
+                                    neighbor_player_ids.append(adjacent_owner_id)
+                        random.shuffle(neighbor_player_ids)
+                        new_owner_id = neighbor_player_ids.pop()
+                        control_data[0] = new_owner_id
+                        control_data[1] = 0
                         region[2] = str(control_data)
             temp_stability = 1
             current_stability_level += 1
+        
         elif punishment_name == 'Low Morale':
             #no need to program effect
             temp_stability = 1
             current_stability_level += 1
+        
         elif punishment_name == 'Widespread Instability':
             pp_resource_data = ast.literal_eval(playerdata[10])
             pp_resource_data[0] = '0.00'
             playerdata[10] = str(pp_resource_data)
             for region in regdata_list:
-                if len(region[0]) == 5:
-                    region_id = region[0]
-                    control_data = ast.literal_eval(region[2])
-                    improvement_data = ast.literal_eval(region[4])
-                    if control_data[0] == player_id and improvement_data[0] != None:
-                        improvement_roll = random.randint(1, 10)
-                        if improvement_roll > 8:
-                            empty_data = [None, 99]
-                            region[4] = str(empty_data)
+                region_id = region[0]
+                control_data = ast.literal_eval(region[2])
+                improvement_data = ast.literal_eval(region[4])
+                if control_data[0] == player_id and improvement_data[0] != None:
+                    improvement_roll = random.randint(1, 10)
+                    if improvement_roll > 8:
+                        empty_data = [None, 99]
+                        region[4] = str(empty_data)
             temp_stability = 2
             current_stability_level += 2
+        
         expire_turn = current_turn_num + 4
         stability_data.append(f'{temp_stability} from {punishment_name} through turn {expire_turn}')
         diplomacy_log.append(f'{nation_name} hit zero stability and is now suffering from {punishment_name}.')
@@ -1674,6 +1675,8 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
     #Update regdata.csv
     with open(regdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(core.regdata_header_a)
+        writer.writerow(core.regdata_header_b)
         writer.writerows(regdata_list)
 
 
@@ -1689,7 +1692,7 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
     regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
     wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
+    regdata_list = core.read_file(regdata_filepath, 2)
     wardata_list = core.read_file(wardata_filepath, 2)
     nation_name_list = []
     for playerdata in playerdata_list:
@@ -1703,11 +1706,11 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
     for region in regdata_list:
         control_data = ast.literal_eval(region[2])
         owner_id = control_data[0]
-        if owner_id != 0 and owner_id != 99 and region[1] == 0:
+        if owner_id != 0 and owner_id != 99 and control_data[1] == 0:
             non_occupied_found_list[owner_id - 1] = True
     
     #if no unoccupied region found for a player force surrender if main combatant
-    for index, region_found in non_occupied_found_list:
+    for index, region_found in enumerate(non_occupied_found_list):
         surrender_player_id = index + 1
         looser_nation_name = nation_name_list[surrender_player_id - 1]
         if not region_found:
@@ -1720,14 +1723,18 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
                     looser_war_role = surrender_player_wardata[0]
                     if looser_war_role not in ['Main Attacker', 'Main Defender']:
                         continue
-                    for i in range(len(playerdata_list)):
-                        select_player_id = i + 1
-                        wardata = ast.literal_eval(war[select_player_id])
-                        war_role = wardata[0]
-                        if war_role in ['Main Attacker', 'Main Defender'] and war_role != looser_war_role:
-                            winner_war_role = war_role
-                            winner_war_justification = wardata[1]
-                            winner_nation_name = nation_name_list[select_player_id - 1]
+                    for j, entry in enumerate(war):
+                        if j in range(1, 11) and entry != '-':
+                            wardata = ast.literal_eval(entry)
+                            war_role = wardata[0]
+                            if war_role in ['Main Attacker', 'Main Defender'] and war_role != looser_war_role:
+                                winner_war_role = war_role
+                                winner_war_justification = wardata[1]
+                                winner_nation_name = nation_name_list[j - 1]
+                                if looser_war_role == 'Main Attacker':
+                                    war[13] = 'Defender Victory'
+                                elif looser_war_role == 'Main Defender':
+                                    war[13] = 'Attacker Victory'
                     #get war justifications that will be fullfilled
                     signatories_list = [False, False, False, False, False, False, False, False, False, False]
                     war_justifications_list = []

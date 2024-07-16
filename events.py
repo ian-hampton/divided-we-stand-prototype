@@ -1209,7 +1209,6 @@ def resolve_active_events(turn_status, public_actions_dict, private_actions_dict
     for event_name in active_games_dict[full_game_id]["Active Events"]:
         public_actions_dict, private_actions_dict, active_games_dict, diplomacy_log = handle_active_event(event_name, public_actions_dict, private_actions_dict, active_games_dict, full_game_id, turn_status, diplomacy_log)
     
-    active_games_dict[full_game_id]["Active Events"] = {}
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
@@ -1400,16 +1399,19 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
 
     #retire active events if expired at end of turn
     current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
-    if turn_status == "After Actions" and active_games_dict[full_game_id]['Active Events'][event_name]["Expiration"] == current_turn_num:
-        #handle special cases
-        if event_name == "Foreign Invasion":
-            regdata_list = end_foreign_invasion(regdata_list)
-        del active_games_dict[full_game_id]['Active Events'][event_name]
-        active_games_dict[full_game_id]["Inactive Events"].append(event_name)
-        diplomacy_log.append(f"{event_name} event has ended.")
-    else:
-        #add active event to diplomacy log
-        diplomacy_log.append(f"{event_name} event is ongoing.")
+    if turn_status == "After Actions":
+        if "Expiration" in active_games_dict[full_game_id]['Active Events'][event_name]:
+            if active_games_dict[full_game_id]['Active Events'][event_name]["Expiration"] == current_turn_num:
+                #handle special cases
+                print("YOU SHOULD NOT BE READING THIS")
+                if event_name == "Foreign Invasion":
+                    regdata_list = end_foreign_invasion(regdata_list)
+                del active_games_dict[full_game_id]['Active Events'][event_name]
+                active_games_dict[full_game_id]["Inactive Events"].append(event_name)
+                diplomacy_log.append(f"{event_name} event has ended.")
+            else:
+                #add active event to diplomacy log
+                diplomacy_log.append(f"{event_name} event is ongoing.")
 
     #save files
     with open(playerdata_filepath, 'w', newline='') as file:

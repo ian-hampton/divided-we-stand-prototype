@@ -961,14 +961,15 @@ def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs)
             defending_unit_owned_by_loyal_puppet_state = (target_unit_owner_id in puppet_state_of_active_player_list and target_unit_owner_id not in at_war_with_active_player_list)
             if both_units_owned_by_attacker or defending_unit_owned_by_ally or defending_unit_owned_by_loyal_puppet_state:
                 if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. A friendly unit is stationed in the target region.')
+                    player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. A friendly unit is present in the target region.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
                     continue
             if target_owner_id not in at_war_with_active_player_list and target_owner_id not in defensive_pact_with_active_player_list and target_owner_id not in puppet_state_of_active_player_list:
-                if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. Region is controlled by a player that is neither your ally nor enemy.')
-                    player_action_logs[attacker_player_id - 1] = player_action_log
-                    continue
+                if target_owner_id != attacker_player_id:
+                    if attacker_player_id != 99:
+                        player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. Region is controlled by a player that is neither your ally nor enemy.')
+                        player_action_logs[attacker_player_id - 1] = player_action_log
+                        continue
             
             #combat will occur if hostile unit present and/or defensive improvement present
             attacking_unit_alive = True
