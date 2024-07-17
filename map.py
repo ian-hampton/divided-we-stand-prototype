@@ -106,6 +106,8 @@ class MainMap:
         nation_info_masterlist = core.get_nation_info(playerdata_list)
         regdata_list = core.read_file(regdata_location, 2)
         player_color_list = generate_player_color_list(playerdata_location)
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
 
         #Get Cordinate Dictionaries
         match self.map_name:
@@ -131,7 +133,7 @@ class MainMap:
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
-                map_color_fill(owner_id, occupier_id, player_color_list, region_id, main_image, start_cords_finalized)
+                map_color_fill(owner_id, occupier_id, player_color_list, region_id, start_cords_finalized, main_image, full_game_id, active_games_dict)
         #add texture and background to temp image
         main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
         #add magnified regions
@@ -147,9 +149,7 @@ class MainMap:
             if self.map_name == "United States 2.0":
                 magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELEW", "RHODE", "NTHMA", "STHMA"]
             if improvement_start_cords != () and owner_id != 0 and region_id in magnified_regions_list:
-                fill_color = player_color_list[owner_id -1]
-                if occupier_id != 0:
-                    fill_color = core.player_colors_normal_to_occupied[fill_color]
+                fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
                 cord_x = (improvement_start_cords[0] + 25)
                 cord_y = (improvement_start_cords[1] + 25)
                 improvement_box_start_cords = (cord_x, cord_y)
@@ -179,6 +179,14 @@ class MainMap:
                 mask = nuke_image.split()[3]
                 main_image.paste(nuke_image, improvement_start_cords, mask)
                 continue
+            #check for fautasian bargan case lease
+            if "Faustian Bargain" in active_games_dict[full_game_id]["Active Events"]:
+                if region_id in active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
+                    lease_filepath = 'static/lease.png'
+                    lease_image = Image.open(lease_filepath)
+                    main_image.paste(lease_image, improvement_start_cords)
+                    continue
+            #place improvement if present
             if improvement_start_cords != () and improvement_name is not None:
                 #place improvement image
                 if improvement_name != "Embassy":
@@ -358,6 +366,8 @@ class ControlMap:
         #Build Needed Lists
         regdata_list = core.read_file(regdata_location, 2)
         player_color_list = generate_player_color_list(playerdata_location)
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
 
         #Get Cordinate Dictionaries
         match self.map_name:
@@ -381,7 +391,7 @@ class ControlMap:
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
-                map_color_fill(owner_id, occupier_id, player_color_list, region_id, main_image, start_cords_finalized)
+                map_color_fill(owner_id, occupier_id, player_color_list, region_id, start_cords_finalized, main_image, full_game_id, active_games_dict)
         
         #Add Textures and Text
         main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
@@ -437,16 +447,32 @@ def check_region_fill_exceptions(region_id, map_name, start_cords_updated):
             start_cords_updated = (4700, 960)
     return start_cords_updated
 
-def map_color_fill(owner_id, occupier_id, player_color_list, region_id, main_image, start_cords_updated):
-    '''Determines what fill color to use for main map and control map generation, depending on region ownership and occupation.'''
-    fill_color = player_color_list[owner_id -1]
-    if occupier_id != 0:
-        #use an occupation player color because region is occupied
-        fill_color = player_color_list[occupier_id -1]
-        fill_color = core.player_colors_normal_to_occupied[fill_color]
+def map_color_fill(owner_id, occupier_id, player_color_list, region_id, start_cords_updated, main_image, full_game_id, active_games_dict):
+    '''
+    Determines what fill color to use for main map and control map generation, depending on region ownership and occupation.
+    '''
+
+    fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
     if region_id == "HAMPT":
         ImageDraw.floodfill(main_image, (4430, 1520), fill_color, border=(0, 0, 0, 255))
     ImageDraw.floodfill(main_image, start_cords_updated, fill_color, border=(0, 0, 0, 255))
+
+def determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict):
+    '''
+    Cheap solution for determing region color. Future Ian if you allow this code to survive the next refactoring I will strangle you.
+    '''
+    
+    if owner_id != 99:
+        fill_color = player_color_list[owner_id - 1]
+    elif owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
+        fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
+    if occupier_id != 0 and occupier_id != 99:
+        fill_color = player_color_list[occupier_id -1]
+        fill_color = core.player_colors_normal_to_occupied[fill_color]
+    elif occupier_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
+        fill_color = core.player_colors_normal_to_occupied[active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]]
+        
+    return fill_color
 
 def apply_textures_new(main_image, texture_filepath, background_filepath):
     '''
