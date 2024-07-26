@@ -22,16 +22,11 @@ def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game
 
     #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
-    request_list = ['Political Power']
-    economy_masterlist = core.get_economy_info(playerdata_list, request_list)
+    nation_name_list = []
     research_masterlist = []
     for player in playerdata_list:
-        player_research_list = ast.literal_eval(player[26])
-        if player_research_list:
-            research_masterlist.append(player_research_list)
-        else:
-            player_research_list = []
-            research_masterlist.append(player_research_list)
+        nation_name_list.append(player[1])
+        research_masterlist.append(ast.literal_eval(player[26]))
 
 
     #Execute Actions
@@ -44,12 +39,7 @@ def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game
         alliance_type = f'{action_data_list[-2]} {action_data_list[-1]}'
         action_data_list = action_data_list[:-2]
         nation_name_2 = " ".join(action_data_list)
-        player_id_2 = 1
-        for nation_info in nation_info_masterlist:
-            if nation_info[0] == nation_name_2:
-                break
-            else:
-                player_id_2 += 1
+        player_id_2 = nation_name_list.index(nation_name_2) + 1
         player_research_list_1 = research_masterlist[player_id_1 - 1]
         player_research_list_2 = research_masterlist[player_id_2 - 1]
         player_action_log = player_action_logs[player_id_1 - 1]
@@ -83,7 +73,7 @@ def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game
         #alliance capacity check
         if alliance_type != 'Non-Aggression Pact':
             alliance_count_1, alliance_capacity_1 = core.get_alliance_count(playerdata_list[player_id_1 - 1])
-            alliance_count_2, alliance_capacity_2 = core.get_alliance_count(playerdata_list[player_id_1 - 2])
+            alliance_count_2, alliance_capacity_2 = core.get_alliance_count(playerdata_list[player_id_2 - 1])
             with open('active_games.json', 'r') as json_file:
                 active_games_dict = json.load(json_file)
             if "Shared Fate" in active_games_dict[full_game_id]["Active Events"]:
@@ -110,18 +100,8 @@ def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game
         alliance_type = f'{excess_list[-2]} {excess_list[-1]}'
         excess_list = excess_list[:-2]
         nation_name_2 = " ".join(excess_list)
-        player_id_1 = 1
-        for nation_info in nation_info_masterlist:
-            if nation_info[0] == nation_name_1:
-                break
-            else:
-                player_id_1 += 1
-        player_id_2 = 1
-        for nation_info in nation_info_masterlist:
-            if nation_info[0] == nation_name_2:
-                break
-            else:
-                player_id_2 += 1
+        player_id_1 = nation_name_list.index(nation_name_1) + 1
+        player_id_2 = nation_name_list.index(nation_name_2) + 1
         player_action_log_1 = player_action_logs[player_id_1 - 1]
         player_action_log_2 = player_action_logs[player_id_2 - 1]
         
