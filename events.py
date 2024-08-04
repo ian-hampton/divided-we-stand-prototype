@@ -35,6 +35,9 @@ def trigger_event(full_game_id, current_turn_num, diplomacy_log):
     events_list = list(EVENT_DICT.keys())
     random.shuffle(events_list)
     event_conditions_dict = build_event_conditions_dict(full_game_id, current_turn_num, playerdata_list, active_games_dict)
+    already_chosen_events_list = []
+    already_chosen_events_list += active_games_dict[full_game_id]["Inactive Events"]
+    already_chosen_events_list += [key for key in active_games_dict[full_game_id]["Active Events"]]
     event_override = None
 
     chosen_event = None
@@ -42,7 +45,8 @@ def trigger_event(full_game_id, current_turn_num, diplomacy_log):
         chosen_event = events_list.pop()
         if event_override is not None:
             chosen_event = event_override
-        if event_conditions_met(chosen_event, event_conditions_dict, full_game_id, active_games_dict):
+        if event_conditions_met(chosen_event, event_conditions_dict, full_game_id, active_games_dict) and chosen_event not in already_chosen_events_list:
+            print(chosen_event)
             active_games_dict, playerdata_list, regdata_list, wardata_list, diplomacy_log = initiate_event(chosen_event, event_conditions_dict, full_game_id, current_turn_num, active_games_dict, playerdata_list, regdata_list, wardata_list, diplomacy_log)
             break
 
@@ -1088,15 +1092,22 @@ def handle_current_event(active_games_dict, full_game_id, diplomacy_log):
                         political_power_economy_data[0] = core.round_total_income(political_power_stored)
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
-            sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
-            (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            if vote_tally_dict != {}:
+                sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
+                top_two = sorted_vote_tally_dict[:2]
+                (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            else:
+                count_1 = 0
+                count_2 = 0
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} will be sanctioned.')
                 active_event_dict = {}
                 active_event_dict["Chosen Nation Name"] = nation_name_1
                 active_event_dict["Expiration"] = current_turn_num + 8
                 active_games_dict[full_game_id]["Active Events"][event_name] = active_event_dict
+            elif count_1 == 0 and count_2 == 0:
+                diplomacy_log.append(f'All nations abstained. No nation will be sanctioned.')
+                active_games_dict[full_game_id]["Inactive Events"].append(event_name)
             else:
                 diplomacy_log.append(f'Vote tied between {nation_name_1} and {nation_name_2}. No nation will be sanctioned.')
                 active_games_dict[full_game_id]["Inactive Events"].append(event_name)
