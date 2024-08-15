@@ -1,7 +1,7 @@
 {
     "game1": {
         "Game Name": "Genisys",
-        "Current Turn": "19",
+        "Current Turn": "30",
         "Game #": 11,
         "Version": "Development",
         "Player Count": "8",
@@ -10,10 +10,11 @@
         "Fog of War": "Disabled",
         "Turn Length": "48 hours",
         "Accelerated Schedule": "Enabled",
-        "Days Ellapsed": 36,
+        "Days Ellapsed": 66,
         "Game Started": "06/09/2024",
         "Inactive Events": [
-            "Lost Nuclear Weapons"
+            "Lost Nuclear Weapons",
+            "Threat Containment"
         ],
         "Active Events": {
             "Shared Fate": {
