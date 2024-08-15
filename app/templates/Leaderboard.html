@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>UWS Leaderboard</title>
+
+<style>
+:root {
+    --leaderboard-height: {{ leaderboard_height }};
+}
+body {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-image: url("{{ url_for('static', filename='UWS-background-2.png') }}");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: white;
+    text-decoration: none;
+}
+header {
+    background-color: #0f4660;
+    margin: 0;
+    padding: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+.left-header {
+    display: flex;
+    align-items: center;
+}
+.right-header {
+    display: flex;
+    align-items: center;
+}
+#title {
+    font-size: 48px;
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+.main {
+    width:80%;
+    margin-left:10%;
+    display: flex;
+}
+.leaderboard {
+    border-collapse: collapse;
+    margin: 0px;
+    padding: 0px;
+    width: 70%;
+    padding-right: 20px;
+    background-color: #434343;
+    color: white;
+    height: var(--leaderboard-height);
+    opacity: 0.9;
+}
+.leaderboard th {   
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 18px;
+}
+.leaderboard td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 18px;
+}
+.records_box {
+    flex-direction: column;
+    width: 30%;
+    padding-left: 20px;
+}
+.record_table {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: #434343;
+    border-collapse: collapse;
+    border-width: 0px;
+    color: white;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+.record_table th {
+    padding: 8px;
+    text-align: left;
+    border: none;
+    font-size: 28px;
+    background-color: #2a2a2a;
+    column-span: 2;
+}
+.record_table_title {
+    text-align: left; 
+    border: none;
+    font-size: 18px;
+    padding: 0px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+.record_table_text {
+    text-align: left;
+    border: none;
+    font-size: 18px;
+    padding: 0px;
+    padding-left: 5px;
+    font-style: italic;
+}
+</style>
+
+<body>
+
+<header>
+    <div class="left-header">
+        <p id="title">Leaderboards</p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:48px;"></a>
+    </div>
+</header>
+
+<div class="main">
+
+    <table class="leaderboard">
+        <tr>
+            <th style="font-size: 28px;background-color: #2a2a2a" colspan="5">Player Leaderboard</th>
+        </tr>
+        <tr>
+            <th width="20%">Player</th>
+            <th width="20%">Games Won</th>
+            <th width="20%">Total Score</th>
+            <th width="20%">Average Score</th>
+            <th width="20%">Games Played</th>
+        </tr>
+        {% for row in leaderboard_data %}
+        <tr>
+            <td >{% autoescape false %} {{ row[0] }} {% endautoescape %}</td>
+            <td> {{ row[1] }}</td>
+            <td> {{ row[2] }}</td>
+            <td> {{ row[3] }}</td>
+            <td> {{ row[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="records_box">
+
+        <table class="record_table">
+            <tr>
+                <th>Player Records</th>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Largest Nation:</b> {{ leaderboard_records_dict["Largest Nation"]["Value"] }} regions</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Largest Nation"]["Player Name"] }} as {{ leaderboard_records_dict["Largest Nation"]["Nation Name"] }} ({{ leaderboard_records_dict["Largest Nation"]["Game Name"] }})</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Largest Economy:</b> {{ leaderboard_records_dict["Largest Economy"]["Value"] }} income</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Largest Economy"]["Player Name"] }} as {{ leaderboard_records_dict["Largest Economy"]["Nation Name"] }} ({{ leaderboard_records_dict["Largest Economy"]["Game Name"] }})</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Most Completed Research:</b> {{ leaderboard_records_dict["Most Completed Research"]["Value"] }} research</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Most Completed Research"]["Player Name"] }} as {{ leaderboard_records_dict["Most Completed Research"]["Nation Name"] }} ({{ leaderboard_records_dict["Most Completed Research"]["Game Name"] }})</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Largest Military:</b> {{ leaderboard_records_dict["Largest Military"]["Value"] }} units</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Largest Military"]["Player Name"] }} as {{ leaderboard_records_dict["Largest Military"]["Nation Name"] }} ({{ leaderboard_records_dict["Largest Military"]["Game Name"] }})</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Warmonger:</b> {{ leaderboard_records_dict["Warmonger"]["Value"] }} war declarations</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Warmonger"]["Player Name"] }} as {{ leaderboard_records_dict["Warmonger"]["Nation Name"] }} ({{ leaderboard_records_dict["Warmonger"]["Game Name"] }})</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Longest War:</b> {{ leaderboard_records_dict["Longest War"]["Value"] }} turns</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Longest War"]["War Name"] }} ({{ leaderboard_records_dict["Longest War"]["Game Name"] }})</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Most Battles Won:</b> {{ leaderboard_records_dict["Most Battles Won"]["Value"] }} victories</td>
+            </tr>
+            <tr>
+                <td class="record_table_text" style="padding-bottom:5px">{{ leaderboard_records_dict["Most Battles Won"]["Player Name"] }} as {{ leaderboard_records_dict["Most Battles Won"]["Nation Name"] }} ({{ leaderboard_records_dict["Most Battles Won"]["Game Name"] }})</td>
+            </tr>
+        </table>
+
+        <table class="record_table">
+            <tr>
+                <th>Game Records</th>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Greatest # of Players:</b> {{ leaderboard_records_dict["Greatest # of Players"]["Value"] }} players - {{ leaderboard_records_dict["Greatest # of Players"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Smallest # of Players:</b> {{ leaderboard_records_dict["Smallest # of Players"]["Value"] }} players - {{ leaderboard_records_dict["Smallest # of Players"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Greatest # of Wars:</b> {{ leaderboard_records_dict["Greatest # of Wars"]["Value"] }} wars - {{ leaderboard_records_dict["Greatest # of Wars"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Smallest # of Wars:</b> {{ leaderboard_records_dict["Smallest # of Wars"]["Value"] }} wars - {{ leaderboard_records_dict["Smallest # of Wars"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Longest Game:</b> {{ leaderboard_records_dict["Longest Game (turns)"]["Value"] }} turns - {{ leaderboard_records_dict["Longest Game (turns)"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Longest Game:</b> {{ leaderboard_records_dict["Longest Game (days)"]["Value"] }} days - {{ leaderboard_records_dict["Longest Game (days)"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title"><b>Shortest Game:</b> {{ leaderboard_records_dict["Shortest Game (turns)"]["Value"] }} turns - {{ leaderboard_records_dict["Shortest Game (turns)"]["Game Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_title" style="padding-bottom:5px"><b>Shortest Game:</b> {{ leaderboard_records_dict["Shortest Game (days)"]["Value"] }} days - {{ leaderboard_records_dict["Shortest Game (days)"]["Game Name"] }}</td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
