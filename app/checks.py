@@ -6,7 +6,7 @@ import random
 import re
 
 #UWS SOURCE IMPORTS
-import core
+from app import core
 
 #END OF TURN CHECKS
 def update_improvement_count(full_game_id, player_id):
@@ -1084,7 +1084,9 @@ def countdown(full_game_id, map_name):
         resource_map.update()
 
 def resolve_shortages(full_game_id, player_id, diplomacy_log): 
-    '''Resolves negative resource values after income is processed.'''
+    '''
+    Resolves negative resource values after income is processed.
+    '''
 
     #define core lists
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
@@ -1098,6 +1100,7 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
     request_list = ['Dollars', 'Coal', 'Oil', 'Green Energy']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
     unit_count_list = core.get_unit_count_list(player_id, full_game_id)
+    upkeep_manager_list = ast.literal_eval(playerdata[23])
 
     #get resource stockpiles
     stockpile_list = []
@@ -1120,35 +1123,67 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
         for improvement_name in energy_upkeep_dict:
             improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
+                #destroy random improvement of that type
                 region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to oil shortages.')
                 oil_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
+                #adjust upkeep manager
+                total_dedicated_upkeep = float(upkeep_manager_list[3])
+                total_dedicated_upkeep -= improvement_upkeep
+                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
+                dedicated_oil_upkeep = float(upkeep_manager_list[1])
+                dedicated_oil_upkeep -= improvement_upkeep
+                upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
         for unit_name in oil_unit_upkeep_dict:
             unit_upkeep = oil_unit_upkeep_dict[unit_name]['Improvement Upkeep']
             while oil_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
+                #destroy random unit of that type
                 region_id, regdata_list = core.search_and_destroy_unit(player_id, unit_name, regdata_list)
                 diplomacy_log.append(f'{nation_name} lost a {unit_name} in {region_id} due to oil shortages.')
                 oil_stockpile += unit_upkeep
                 oil_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
+                #adjust upkeep manager
+                total_dedicated_upkeep = float(upkeep_manager_list[3])
+                total_dedicated_upkeep -= unit_upkeep
+                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
+                dedicated_oil_upkeep = float(upkeep_manager_list[1])
+                dedicated_oil_upkeep -= unit_upkeep
+                upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
     while coal_stockpile < 0:
         for improvement_name in energy_upkeep_dict:
             improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
+                #destroy random improvement of that type
                 region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to coal shortages.')
                 coal_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
+                #adjust upkeep manager
+                total_dedicated_upkeep = float(upkeep_manager_list[3])
+                total_dedicated_upkeep -= improvement_upkeep
+                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
+                dedicated_coal_upkeep = float(upkeep_manager_list[0])
+                dedicated_coal_upkeep -= improvement_upkeep
+                upkeep_manager_list[0] = core.round_total_income(dedicated_coal_upkeep)
     while green_stockpile < 0:
         for improvement_name in energy_upkeep_dict:
             improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
+                #destroy random improvement of that type
                 region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to green energy shortages.')
                 green_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
+                #adjust upkeep manager
+                total_dedicated_upkeep = float(upkeep_manager_list[3])
+                total_dedicated_upkeep -= improvement_upkeep
+                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
+                dedicated_green_upkeep = float(upkeep_manager_list[2])
+                dedicated_green_upkeep -= improvement_upkeep
+                upkeep_manager_list[2] = core.round_total_income(dedicated_green_upkeep)
 
-    
+
     #Resolve Dollars Shortages
     while dollars_stockpile < 0:
         for improvement_name in dollars_upkeep_dict:

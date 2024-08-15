@@ -1,4 +1,4 @@
-import core
+from app import core
 import re
 
 def check_action(action, library):

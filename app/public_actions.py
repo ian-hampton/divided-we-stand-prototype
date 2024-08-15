@@ -5,8 +5,8 @@ import random
 import json
 
 #UWS SOURCE IMPORTS
-import core
-import events
+from app import core
+from app import events
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -1163,25 +1163,26 @@ def resolve_peace_actions(peace_action_list, full_game_id, current_turn_num, dip
         overlord_role = None
         subject_id = 0
         #check if war is a subjugation war that was just won 
-        if war[13] != "White Peace" and current_turn_num == int(war[15]):
-            for select_player_id in range(1, 11):
-                if war[select_player_id] != '-':
-                    war_player_info = ast.literal_eval(war[select_player_id])
-                    if war_player_info[1] == "Subjugation":
-                        overlord_id = select_player_id
-                        overlord_role = war_player_info[0]
-                        break
-            for select_player_id in range(1, 11):
-                if war[select_player_id] != '-':
-                    war_player_info = ast.literal_eval(war[select_player_id])
-                    if overlord_role == "Main Attacker":
-                        if war_player_info[0] == "Main Defender":
-                            subject_id = select_player_id
+        if war[13] != "White Peace" and not isinstance(war[15], str):
+            if current_turn_num == int(war[15]):
+                for select_player_id in range(1, 11):
+                    if war[select_player_id] != '-':
+                        war_player_info = ast.literal_eval(war[select_player_id])
+                        if war_player_info[1] == "Subjugation":
+                            overlord_id = select_player_id
+                            overlord_role = war_player_info[0]
                             break
-                    elif overlord_role == "Main Defender":
-                        if war_player_info[0] == "Main Attacker":
-                            subject_id = select_player_id
-                            break
+                for select_player_id in range(1, 11):
+                    if war[select_player_id] != '-':
+                        war_player_info = ast.literal_eval(war[select_player_id])
+                        if overlord_role == "Main Attacker":
+                            if war_player_info[0] == "Main Defender":
+                                subject_id = select_player_id
+                                break
+                        elif overlord_role == "Main Defender":
+                            if war_player_info[0] == "Main Attacker":
+                                subject_id = select_player_id
+                                break
         if overlord_role != None and overlord_id != 0 and subject_id != 0:
             if overlord_role[5:] in war[13]:
                 #get information on overlord and subject

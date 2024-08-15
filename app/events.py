@@ -3,9 +3,9 @@ import csv
 import json
 import random
 
-import core
-import private_actions
-import checks
+from app import core
+from app import private_actions
+from app import checks
 
 #EVENT INITIATION CODE
 ################################################################################

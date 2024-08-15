@@ -10,15 +10,18 @@ import shutil
 import uuid
 
 #UWS SOURCE IMPORTS
-import core
-import checks
-import events
-from testing import map_tests
+from app import core
+from app import checks
+from app import events
+from app.testing import map_tests
 
 #ENVIROMENT IMPORTS
-from flask import Flask, render_template, request, redirect, url_for, send_file
-app = Flask(__name__, template_folder='html')
-
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
+app = Flask(__name__)
+main = Blueprint('main', __name__)
+@main.route('/')
+def main_function():
+    return render_template('UWS.html')
 
 #SITE FUNCTIONS
 ################################################################################
@@ -113,13 +116,8 @@ def generate_refined_player_list_inactive(game_data):
 #CORE SITE PAGES
 ################################################################################
 
-#HOMEPAGE
-@app.route('/')
-def main():
-    return render_template('UWS.html')
-
 #GAMES PAGE
-@app.route('/games')
+@main.route('/games')
 def games():
     
     #read json files
@@ -219,7 +217,7 @@ def games():
     return render_template('Games.html', active_game_masterlist = active_game_masterlist, full_game_id = full_game_id)
 
 #SETTINGS PAGE
-@app.route('/settings')
+@main.route('/settings')
 def settings():
     username_list = []
     for profile_id, player_data in player_records_dict.items():
@@ -227,7 +225,7 @@ def settings():
     return render_template('Settings.html', username_list = username_list)
 
 #SETTINGS PAGE - Create Game Procedure
-@app.route('/create_game', methods=['POST'])
+@main.route('/create_game', methods=['POST'])
 def create_game():
     
     #get game record dictionaries
@@ -306,12 +304,12 @@ def create_game():
         quit()
 
 #GAME CREATED
-@app.route('/game_created')
+@main.route('/game_created')
 def game_created():
     return render_template('Game Created.html')
 
 #GAMES ARCHIVE PAGE
-@app.route('/archived_games')
+@main.route('/archived_games')
 def archived_games():
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
@@ -349,7 +347,7 @@ def archived_games():
     return render_template('Games Archive.html', archived_game_masterlist = archived_game_masterlist)
 
 #LEADERBOARD PAGE
-@app.route('/leaderboard')
+@main.route('/leaderboard')
 def leaderboard():
     leaderboard_data = []
     with open('leaderboard.csv', 'r') as file:
@@ -377,7 +375,7 @@ def leaderboard():
 #GENRATE PROFILE PAGES
 def generate_profile_route(profile_id):
     route_name = f'profile_route_{uuid.uuid4().hex}'
-    @app.route(f'/profile/{profile_id}', endpoint=route_name)
+    @main.route(f'/profile/{profile_id}', endpoint=route_name)
     def load_profile():
         #read needed files
         with open('game_records.json', 'r') as json_file:
@@ -479,7 +477,7 @@ for profile_id in profile_id_list:
 ################################################################################
 
 #LOAD GAME PAGE
-@app.route(f'/<full_game_id>')
+@main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
     #define additional functions
@@ -503,9 +501,9 @@ def game_load(full_game_id):
     game1_extendedtitle = f"United We Stood - {game1_title}" 
     
     #load images
-    main_url = url_for('get_mainmap', full_game_id=full_game_id)
-    resource_url = url_for('get_resourcemap', full_game_id=full_game_id)
-    control_url = url_for('get_controlmap', full_game_id=full_game_id)
+    main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
+    resource_url = url_for('main.get_resourcemap', full_game_id=full_game_id)
+    control_url = url_for('main.get_controlmap', full_game_id=full_game_id)
     #load inactive state
     if not game1_active_bool:
         with open('game_records.json', 'r') as json_file:
@@ -540,7 +538,7 @@ def game_load(full_game_id):
     match game1_turn:
         
         case "Starting Region Selection in Progress":
-            form_key = "stage1_resolution"
+            form_key = "main.stage1_resolution"
             player_data = []
             with open(f'gamedata/{full_game_id}/playerdata.csv', 'r') as file:
                 reader = csv.reader(file)
@@ -559,7 +557,7 @@ def game_load(full_game_id):
             return render_template('stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case "Nation Setup in Progress":
-            form_key = "stage2_resolution"
+            form_key = "main.stage2_resolution"
             player_data = []
             with open(f'gamedata/{full_game_id}/playerdata.csv', 'r') as file:
                 reader = csv.reader(file)
@@ -580,8 +578,8 @@ def game_load(full_game_id):
             return render_template('stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case _:
-            form_key = "turn_resolution"
-            main_url = url_for('get_mainmap', full_game_id=full_game_id)
+            form_key = "main.turn_resolution"
+            main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
             player_data = []
             with open(f'gamedata/{full_game_id}/playerdata.csv', 'r') as file:
                 reader = csv.reader(file)
@@ -602,13 +600,13 @@ def game_load(full_game_id):
                 active_games_dict = json.load(json_file)
             current_event_dict = active_games_dict[full_game_id]["Current Event"]
             if current_event_dict != {}:
-                form_key = "event_resolution"
+                form_key = "main.event_resolution"
             return render_template('stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
 
 #GENERATE NATION SHEET PAGES
 def generate_player_route(full_game_id, player_id):
     route_name = f'player_route_{uuid.uuid4().hex}'
-    @app.route(f'/{full_game_id}/player{player_id}', endpoint=route_name)
+    @main.route(f'/{full_game_id}/player{player_id}', endpoint=route_name)
     def player_route():
         page_title = f'Player #{player_id} Nation Sheet'
         game_id = int(full_game_id[-1])
@@ -625,7 +623,7 @@ for full_game_id in game_ids:
         generate_player_route(full_game_id, player_id)
 
 #WARS PAGE
-@app.route('/<full_game_id>/wars')
+@main.route('/<full_game_id>/wars')
 def wars(full_game_id):
     
     #function defs
@@ -751,29 +749,29 @@ def wars(full_game_id):
     return render_template('wars.html', page_title = page_title, war_masterlist = war_masterlist)
 
 #MAP IMAGES
-@app.route('/<full_game_id>/mainmap.png')
+@main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     try:
         current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
-        filepath = f'gamedata/{full_game_id}/images/{current_turn_num - 1}.png'
+        filepath = f'../gamedata/{full_game_id}/images/{current_turn_num - 1}.png'
     except:
-        filepath = f'gamedata/{full_game_id}/images/mainmap.png'
+        filepath = f'../gamedata/{full_game_id}/images/mainmap.png'
     return send_file(filepath, mimetype='image/png')
-@app.route('/<full_game_id>/resourcemap.png')
+@main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):
-    filepath = f'gamedata/{full_game_id}/images/resourcemap.png'
+    filepath = f'../gamedata/{full_game_id}/images/resourcemap.png'
     return send_file(filepath, mimetype='image/png')
-@app.route('/<full_game_id>/controlmap.png')
+@main.route('/<full_game_id>/controlmap.png')
 def get_controlmap(full_game_id):
-    filepath = f'gamedata/{full_game_id}/images/controlmap.png'
+    filepath = f'../gamedata/{full_game_id}/images/controlmap.png'
     return send_file(filepath, mimetype='image/png')
 
 
 #ACTION PROCESSING
 ################################################################################
-@app.route('/stage1_resolution', methods=['POST'])
+@main.route('/stage1_resolution', methods=['POST'])
 def stage1_resolution():
     #process form data
     full_game_id = request.form.get('full_game_id')
@@ -789,7 +787,7 @@ def stage1_resolution():
     core.resolve_stage1_processing(full_game_id, starting_region_list, player_color_list)
     return redirect(f'/{full_game_id}')
 
-@app.route('/stage2_resolution', methods=['POST'])
+@main.route('/stage2_resolution', methods=['POST'])
 def stage2_resolution():
     #process form data
     full_game_id = request.form.get('full_game_id')
@@ -813,7 +811,7 @@ def stage2_resolution():
     core.resolve_stage2_processing(full_game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list)
     return redirect(f'/{full_game_id}')
 
-@app.route('/turn_resolution', methods=['POST'])
+@main.route('/turn_resolution', methods=['POST'])
 def turn_resolution():
     #process form data
     full_game_id = request.form.get('full_game_id')
@@ -837,11 +835,10 @@ def turn_resolution():
     core.resolve_turn_processing(full_game_id, public_actions_list, private_actions_list)
     return redirect(f'/{full_game_id}')
 
-@app.route('/event_resolution', methods=['POST'])
+@main.route('/event_resolution', methods=['POST'])
 def event_resolution():
     '''
     Handles current event and runs end of turn checks & updates when activated.
-    
     Redirects back to selected game.
     '''
     
@@ -863,6 +860,3 @@ def event_resolution():
     return redirect(f'/{full_game_id}')
 
 #map_tests.run()
-
-if __name__ == '__main__':
-    app.run()

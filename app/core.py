@@ -8,13 +8,13 @@ import random
 import shutil
 
 #UWS SOURCE IMPORTS
-import map
-import interpreter
-import public_actions
-import private_actions
-import checks
-import resgraphs
-import events
+from app import map
+from app import interpreter
+from app import public_actions
+from app import private_actions
+from app import checks
+from app import resgraphs
+from app import events
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -485,6 +485,8 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         diplomacy_log = checks.resolve_shortages(full_game_id, player_id, diplomacy_log)
         #update improvement count in playerdata
         checks.update_improvement_count(full_game_id, player_id)
+    #update income in playerdata
+    checks.update_income(full_game_id, current_turn_num)
     #update sanctions
     diplomacy_log, reminders_list = checks.update_sanctions(full_game_id, diplomacy_log, reminders_list)
     #update alliances
@@ -1654,11 +1656,12 @@ def calculate_unit_roll_modifier(friendly_unit_id, friendly_research_list, frien
     roll_modifier = 0
 
     infantry_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Infantry']
+    attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == friendly_unit_id), None)
 
     #roll bonus from research
     if 'Attacker' in friendly_war_role and 'Superior Training' in friendly_research_list:
         roll_modifier += 1
-    elif 'Defender' in friendly_war_role and 'Defensive Tactics' in friendly_research_list:
+    elif 'Defender' in friendly_war_role and 'Defensive Tactics' in friendly_research_list and attacker_name not in infantry_type_units:
         roll_modifier += 1
 
     #roll bonus from special forces ability
@@ -2237,7 +2240,7 @@ agenda_data_dict = {
         'Cost': 15,
         'Location': 'C2',
     },
-    'Cost of War': {
+    'Cost Of War': {
         'Agenda Type': 'Security',
         'Prerequisite': 'Mobilization',
         'Cost': 15,
@@ -2245,7 +2248,7 @@ agenda_data_dict = {
     },
     'Counter Offensive': {
         'Agenda Type': 'Security',
-        'Prerequisite': 'Cost of War',
+        'Prerequisite': 'Cost Of War',
         'Cost': 15,
         'Location': 'C4',
     },

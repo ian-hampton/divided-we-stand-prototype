@@ -5,7 +5,7 @@ import json
 import random
 
 #UWS SOURCE IMPORTS
-import core
+from app import core
 
 #PRIVATE ACTION FUNCTIONS
 def resolve_unit_withdraws(unit_withdraw_list, full_game_id, player_action_logs, current_turn_num):

@@ -3,7 +3,7 @@ import ast
 import copy
 
 #UWS SOURCE IMPORTS
-import core
+from app import core
 
 #UWS ENVIROMENT IMPORTS
 from PIL import Image
@@ -44,7 +44,7 @@ def update_research_graphic(research_type, completed_research_dictionary, player
             research_dict = core.research_data_dict
 
     #populate the chosen research graphic with stars    
-    research_graphic = Image.open(f'static/{filename}.png')
+    research_graphic = Image.open(f'app/static/{filename}.png')
     for research_name in research_dict:
         if completed_research_dictionary[research_name] == []:
             continue
@@ -66,7 +66,7 @@ def update_research_graphic(research_type, completed_research_dictionary, player
             for key, value in core.player_colors_hex.items():
                 if value == color_hex:
                     color = key
-            star_image = Image.open(f'static/stars/{color}.png')
+            star_image = Image.open(f'app/static/stars/{color}.png')
             mask = star_image.split()[3]
             research_graphic.paste(star_image, star_cords, mask)
     research_graphic.save(f'gamedata/{full_game_id}/images/{filename}.png')

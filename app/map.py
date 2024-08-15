@@ -11,7 +11,7 @@ import shutil
 from PIL import Image, ImageDraw
 
 #UWS SOURCE IMPORTS
-import core
+from app import core
 
 #THE MAP CLASSES
 class MainMap:
@@ -165,7 +165,7 @@ class MainMap:
         
         #Place Improvements
         main_image = main_image.convert("RGBA")
-        nuke_image = Image.open('static/nuke.png')
+        nuke_image = Image.open('app/static/nuke.png')
         for region in regdata_list:
             region_id = region[0]
             improvement_data_list = ast.literal_eval(region[4])
@@ -182,7 +182,7 @@ class MainMap:
             #check for fautasian bargan case lease
             if "Faustian Bargain" in active_games_dict[full_game_id]["Active Events"]:
                 if region_id in active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
-                    lease_filepath = 'static/lease.png'
+                    lease_filepath = 'app/static/lease.png'
                     lease_image = Image.open(lease_filepath)
                     main_image.paste(lease_image, improvement_start_cords)
                     continue
@@ -190,14 +190,14 @@ class MainMap:
             if improvement_start_cords != () and improvement_name is not None:
                 #place improvement image
                 if improvement_name != "Embassy":
-                    improvement_filepath = f'static/improvements/{improvement_name}.png'
+                    improvement_filepath = f'app/static/improvements/{improvement_name}.png'
                 else:
                     partner_player_id = improvement_data_list[2]
                     if partner_player_id != 0:
                         embassy_color_str = nation_info_masterlist[partner_player_id - 1][1]
-                        improvement_filepath = f'static/improvements/{improvement_name}{embassy_color_str}.png'
+                        improvement_filepath = f'app/static/improvements/{improvement_name}{embassy_color_str}.png'
                     else:
-                        improvement_filepath = f'static/improvements/{improvement_name}.png'
+                        improvement_filepath = f'app/static/improvements/{improvement_name}.png'
                 improvement_image = Image.open(improvement_filepath)
                 main_image.paste(improvement_image, improvement_start_cords)
                 #place improvement health
@@ -206,9 +206,9 @@ class MainMap:
                     cord_y = (improvement_start_cords[1] + 54)
                     health_start_cords = (cord_x, cord_y)
                     if improvement_name in core.ten_health_improvements_list:
-                        health_filepath = f'static/health/{improvement_health}-10.png'
+                        health_filepath = f'app/static/health/{improvement_health}-10.png'
                     else:
-                        health_filepath = f'static/health/{improvement_health}-5.png'
+                        health_filepath = f'app/static/health/{improvement_health}-5.png'
                     health_image = Image.open(health_filepath)
                     main_image.paste(health_image, health_start_cords)
         
@@ -236,13 +236,13 @@ class MainMap:
                     unit_cords = (cord_x, cord_y)
                 #get unit color
                 player_color_str = nation_info_masterlist[unit_owner_id - 1][1]
-                unit_filepath = f'static/units/{unit_abbr}{player_color_str}.png'
+                unit_filepath = f'app/static/units/{unit_abbr}{player_color_str}.png'
                 #place unit
                 unit_image = Image.open(unit_filepath)
                 mask = unit_image.split()[3]
                 main_image.paste(unit_image, unit_cords, mask)
                 #place unit health
-                health_filepath = f"static/health/U{unit_health}-{core.unit_data_dict[unit_name]['Health']}.png"
+                health_filepath = f"app/static/health/U{unit_health}-{core.unit_data_dict[unit_name]['Health']}.png"
                 health_image = Image.open(health_filepath)
                 health_temp = Image.new("RGBA", main_image.size)
                 mask = health_image.split()[3]
@@ -505,8 +505,8 @@ def update_preview_image(game_id, current_turn_num):
         case _:
             filename = f'{current_turn_num - 1}.png'
     mainmap_file = f'gamedata/game{game_id}/images/{filename}'
-    filepath_new = f'static/game{game_id}_image.png'
-    preview_destination = 'static'
+    filepath_new = f'app/static/game{game_id}_image.png'
+    preview_destination = 'app/static'
     shutil.copy(mainmap_file, preview_destination)
-    filepath_old = f'static/{filename}'
+    filepath_old = f'app/static/{filename}'
     shutil.move(filepath_old, filepath_new)
