@@ -1,0 +1,12 @@
+Deployed Light Tank in region STWNM.
+Failed to move LT PHOEN - EASAZ.
+Failed to move LT PHOEN - PHOEN. Target region not adjacent to current region.
+Failed to move LT STHAZ - EASAZ.
+Failed to move LT STHAZ - NTWNM. Target region not adjacent to current region.
+Failed to move LT NTENM - REDCA.
+Failed to move LT NTENM - STHKS. Target region not adjacent to current region.
+Failed to move LT METRO - CHOCT.
+Failed to move LT METRO - STWAR. Target region not adjacent to current region.
+Failed to move LT GREEN - STHKS.
+Successfully moved LT TXPAN - GRTPL.
+Successfully moved LT GRTPL - CHOCT.
