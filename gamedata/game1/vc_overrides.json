@@ -26,7 +26,7 @@
     "Reliable Ally": "None 0",
     "Road to Recovery": [
         true,
-        false,
+        true,
         false,
         false,
         false,

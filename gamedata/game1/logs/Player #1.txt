@@ -1,5 +1,3 @@
-Researched Special Operations for 20 technology.
-Researched Basic Defenses for 5 technology.
-Researched Superior Training for 15 political power.
-Bought 31 Basic Materials from the resource market for 51.15 dollars.
-Deployed Special Forces in region STECO.
+Sold 50 Coal to the resource market for 37.0 dollars.
+Sold 50 Common Metals to the resource market for 183.5 dollars.
+Disbanded Special Forces in STECO.

@@ -1,14 +1,21 @@
-Researched Power Grid Restoration for 10 technology.
-Bought 4 Coal from the resource market for 5.88 dollars.
-Successfully moved ME MOUNT - NTWGA.
-Failed to move SF EASTN - CUMBE.
-Failed to move SF EASTN - STWVA.
-Successfully moved SF PIEDM - MOUNT.
-Successfully moved SF MOUNT - STWVA.
-Failed to move SF MTRLA - STHVA.
-Failed to move SF MTRLA - ROANO. Target region not adjacent to current region.
-Failed to move SF SANDH - TRIAN.
-Failed to move SF SANDH - BANKS. Target region not adjacent to current region.
-Failed to move SF STENC - BANKS.
-Failed to move SF STENC - HAMPT. Target region not adjacent to current region.
-Successfully moved IN ATHEN - ATLAN.
+Built Boot Camp in region HALIF for 9.0 basic materials.
+Deployed Special Forces in region STEAL.
+Deployed Special Forces in region FLPAN.
+Declared war on Mississippi Trade Co..
+Successfully moved ME CHATT - NTWTN.
+Successfully moved ME NTHAL - CHATT.
+Successfully moved SF EASAL - NTHAL.
+Failed to move SF NTHAL - NTHMS.
+Failed to move SF WESAL - CENMS.
+Failed to move SF WESAL - NTHMS.
+Failed to move SF STWAL - MSGUL.
+Failed to move SF STWAL - CENMS.
+Successfully moved SF STHIN - INDIA.
+Successfully moved SF INDIA - CENIN.
+Successfully moved SF CINCI - MIAVA.
+Failed to move SF MIAVA - NTWOH.
+Successfully moved SF EASTN - PENNY.
+Successfully moved SF PENNY - WESKY.
+Successfully moved SF STWVA - CUMBE.
+Successfully moved SF CUMBE - PENNY.
+Successfully moved SF MOUNT - NTWGA.

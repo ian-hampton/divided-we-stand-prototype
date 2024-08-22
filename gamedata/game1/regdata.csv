@@ -5,16 +5,16 @@ PACCA,Pacific Cascades,"[1, 0]",Empty,"['Research Institute', 99]","[None, 99, 0
 PUGET,Puget Sound,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['NTCAS', 'COLBA', 'PACCA', 'OLYMP']",True,True,False,0
 NTCAS,Northern Cascades,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['OKANO', 'COLBA', 'PUGET']",True,False,False,0
 OKANO,Okanagan,"[1, 0]",Uranium,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['IDPAN', 'COLBA', 'NTCAS']",True,False,False,0
-COLBA,Columbia Basin,"[1, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['NTCAS', 'OKANO', 'IDPAN', 'EASOR', 'NTHOR', 'PACCA', 'PUGET']",False,False,False,0
+COLBA,Columbia Basin,"[1, 0]",Common Metals,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['NTCAS', 'OKANO', 'IDPAN', 'EASOR', 'NTHOR', 'PACCA', 'PUGET']",False,False,False,0
 WILVA,Willamette Valley,"[1, 0]",Empty,"['Research Institute', 99]","[None, 99, 0]","[False, 0]",5,"['PACCA', 'NTHOR', 'STHOR']",True,True,False,0
-NTHOR,Northern Oregon,"[1, 0]",Coal,"['Strip Mine', 99, 5]","[None, 99, 0]","[False, 0]",5,"['PACCA', 'COLBA', 'EASOR', 'STHOR', 'WILVA']",False,False,False,0
+NTHOR,Northern Oregon,"[1, 0]",Coal,"['Strip Mine', 99, 1]","[None, 99, 0]","[False, 0]",5,"['PACCA', 'COLBA', 'EASOR', 'STHOR', 'WILVA']",False,False,False,0
 STHOR,Southern Oregon,"[1, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['WILVA', 'NTHOR', 'EASOR', 'WESNV', 'SHAST', 'NTHCT']",True,False,False,0
 EASOR,Eastern Oregon,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['COLBA', 'IDPAN', 'MAGVA', 'WESNV', 'STHOR', 'NTHOR']",False,False,False,0
-IDPAN,Idaho Panhandle,"[1, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['OKANO', 'WESMT', 'STEID', 'MAGVA', 'EASOR', 'COLBA']",True,False,False,0
+IDPAN,Idaho Panhandle,"[1, 0]",Common Metals,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['OKANO', 'WESMT', 'STEID', 'MAGVA', 'EASOR', 'COLBA']",True,False,False,0
 MAGVA,Magic Valley,"[1, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['IDPAN', 'STEID', 'CACHE', 'EASNV', 'WESNV', 'EASOR']",False,True,False,0
-STEID,Southeastern Idaho,"[1, 0]",Coal,"['Strip Mine', 99, 5]","[None, 99, 0]","[False, 0]",5,"['WESMT', 'NTHWY', 'STHWY', 'CACHE', 'MAGVA', 'IDPAN']",False,False,False,0
+STEID,Southeastern Idaho,"[1, 0]",Coal,"['Strip Mine', 99, 1]","[None, 99, 0]","[False, 0]",5,"['WESMT', 'NTHWY', 'STHWY', 'CACHE', 'MAGVA', 'IDPAN']",False,False,False,0
 WESMT,Western Montana,"[1, 0]",Empty,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['EASMT', 'NTHWY', 'STEID', 'IDPAN']",True,True,False,0
-EASMT,Eastern Montana,"[1, 0]",Coal,"['Strip Mine', 99, 5]","[None, 99, 0]","[False, 0]",5,"['WESND', 'WESSD', 'NTHWY', 'WESMT']",True,False,False,0
+EASMT,Eastern Montana,"[1, 0]",Coal,"['Strip Mine', 99, 1]","[None, 99, 0]","[False, 0]",5,"['WESND', 'WESSD', 'NTHWY', 'WESMT']",True,False,False,0
 NTHWY,Nothern Wyoming,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['WESMT', 'EASMT', 'WESSD', 'WESNE', 'STHWY', 'STEID']",False,False,False,0
 STHWY,Southern Wyoming,"[1, 0]",Empty,"['Capital', 5]","[None, 99, 0]","[False, 0]",5,"['NTHWY', 'WESNE', 'NTECO', 'NTWCO', 'UINTA', 'SLTLK', 'CACHE', 'STEID']",False,True,False,0
 NTHCT,North Coast,"[2, 0]",Coal,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['STHOR', 'SHAST', 'SACRA', 'BAYAR']",True,False,False,0
@@ -23,7 +23,7 @@ SACRA,Sacramento,"[2, 0]",Uranium,"[None, 99]","[None, 99, 0]","[False, 0]",5,"[
 BAYAR,Bay Area,"[2, 0]",Coal,"['Coal Mine', 99]","[None, 99, 0]","[False, 0]",5,"['NTHCT', 'SACRA', 'CENCT']",True,False,False,0
 SINEV,Sierra Nevada,"[2, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['WESNV', 'STHNV', 'LASVE', 'INEMP', 'KERNC', 'SJOVA', 'SACRA']",False,False,False,0
 SJOVA,San Joaquin Valley,"[2, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['SACRA', 'SINEV', 'KERNC', 'CENCT']",False,False,False,0
-CENCT,Central Coast,"[2, 0]",Oil,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['BAYAR', 'SACRA', 'SJOVA', 'KERNC', 'LOSAN']",True,False,False,0
+CENCT,Central Coast,"[2, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['BAYAR', 'SACRA', 'SJOVA', 'KERNC', 'LOSAN']",True,False,False,0
 KERNC,Kern County,"[2, 0]",Empty,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['SJOVA', 'SINEV', 'INEMP', 'LOSAN', 'CENCT']",False,False,False,0
 LOSAN,Los Angeles,"[2, 0]",Advanced Metals,"['Advanced Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['CENCT', 'KERNC', 'INEMP', 'STHBR']",True,False,False,0
 INEMP,Inland Empire,"[2, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['KERNC', 'SINEV', 'LASVE', 'MOHAV', 'YUMAC', 'STHBR', 'LOSAN']",False,False,False,0
@@ -32,7 +32,7 @@ WESNV,Western Nevada,"[2, 0]",Common Metals,"['Common Metals Mine', 99]","[None,
 EASNV,Eastern Nevada,"[2, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['WESNV', 'MAGVA', 'CACHE', 'SLTLK', 'STWUT', 'STHNV']",False,False,False,0
 STHNV,Southern Nevada,"[2, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['WESNV', 'EASNV', 'STWUT', 'MOHAV', 'LASVE', 'SINEV']",False,False,False,0
 LASVE,Las Vegas,"[2, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['STHNV', 'MOHAV', 'INEMP', 'SINEV']",False,False,False,0
-CACHE,Cache County,"[1, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['MAGVA', 'STEID', 'STHWY', 'SLTLK', 'EASNV']",False,False,False,0
+CACHE,Cache County,"[1, 0]",Common Metals,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['MAGVA', 'STEID', 'STHWY', 'SLTLK', 'EASNV']",False,False,False,0
 SLTLK,Salt Lake,"[1, 0]",Empty,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['CACHE', 'STHWY', 'UINTA', 'STWUT', 'EASNV']",False,True,False,0
 UINTA,Unitah County,"[1, 0]",Empty,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['SLTLK', 'STHWY', 'NTWCO', 'SANJU', 'STWUT']",False,False,False,0
 STWUT,Southwest Utah,"[2, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['SLTLK', 'UINTA', 'SANJU', 'EASAZ', 'MOHAV', 'STHNV', 'EASNV']",False,False,False,0
@@ -40,36 +40,36 @@ SANJU,San Juan County,"[1, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0
 NTWCO,Northwest Colorado,"[1, 0]",Empty,"['Research Institute', 99]","[None, 99, 0]","[False, 0]",5,"['STHWY', 'NTECO', 'STECO', 'STWCO', 'SANJU', 'UINTA']",False,False,False,0
 NTECO,Northeast Colorado,"[1, 0]",Common Metals,"['Research Institute', 99]","[None, 99, 0]","[False, 0]",5,"['STHWY', 'WESNE', 'CENNE', 'NTHKS', 'STHKS', 'STECO', 'NTWCO']",False,True,False,0
 STWCO,Southwest Colorado,"[1, 0]",Empty,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['SANJU', 'NTWCO', 'STECO', 'NTENM', 'NTWNM']",False,False,False,0
-STECO,Southeast Colorado,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","['SF', 10, 1]","[False, 0]",5,"['STWCO', 'NTWCO', 'NTECO', 'STHKS', 'REDCA', 'NTENM']",False,False,False,0
-MOHAV,Mohave County,"[2, 6]",Coal,"[None, 99]","[None, 99]","[False, 0]",5,"['LASVE', 'STHNV', 'STWUT', 'EASAZ', 'YAVAP', 'YUMAC', 'INEMP']",False,False,False,0
-YUMAC,Yuma County,"[2, 0]",Basic Materials,"[None, 99]","[None, 99]","[False, 0]",5,"['STHBR', 'INEMP', 'MOHAV', 'YAVAP', 'PHOEN', 'STHAZ']",True,False,False,0
+STECO,Southeast Colorado,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['STWCO', 'NTWCO', 'NTECO', 'STHKS', 'REDCA', 'NTENM']",False,False,False,0
+MOHAV,Mohave County,"[2, 0]",Coal,"[None, 99]","[None, 99]","[False, 0]",5,"['LASVE', 'STHNV', 'STWUT', 'EASAZ', 'YAVAP', 'YUMAC', 'INEMP']",False,False,False,0
+YUMAC,Yuma County,"[2, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['STHBR', 'INEMP', 'MOHAV', 'YAVAP', 'PHOEN', 'STHAZ']",True,False,False,0
 YAVAP,Yavapai County,"[2, 0]",Uranium,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MOHAV', 'EASAZ', 'PHOEN', 'YUMAC']",False,False,False,0
-PHOEN,Phoenix,"[2, 0]",Empty,"['Boot Camp', 5]","['LT', 7, 2]","[False, 0]",5,"['YUMAC', 'YAVAP', 'EASAZ', 'STHAZ']",False,True,False,0
-STHAZ,Southern Arizona,"[2, 0]",Empty,"[None, 99]","['LT', 8, 2]","[False, 0]",5,"['YUMAC', 'PHOEN', 'EASAZ', 'STWNM']",True,False,False,0
-EASAZ,Eastern Arizona,"[2, 6]",Basic Materials,"[None, 99]","['IN', 1, 6]","[False, 0]",5,"['STHAZ', 'PHOEN', 'YAVAP', 'MOHAV', 'STWUT', 'SANJU', 'NTWNM', 'STWNM']",False,False,False,0
-NTWNM,Northwest New Mexico,"[2, 6]",Basic Materials,"[None, 99]","['IN', 6, 6]","[False, 0]",5,"['EASAZ', 'STWCO', 'NTENM', 'STENM', 'STWNM']",False,False,False,0
-NTENM,Northeast New Mexico,"[2, 0]",Empty,"[None, 99]","['LT', 7, 2]","[False, 0]",5,"['NTWNM', 'STWCO', 'STECO', 'REDCA', 'TXPAN', 'STENM']",False,True,False,0
-STWNM,Southwest New Mexico,"[2, 0]",Basic Materials,"['Capital', 5]","['LT', 8, 2]","[False, 0]",5,"['EASAZ', 'NTWNM', 'STENM', 'WESTX', 'STHAZ']",True,False,False,0
+PHOEN,Phoenix,"[2, 0]",Empty,"['Boot Camp', 5]","[None, 99]","[False, 0]",5,"['YUMAC', 'YAVAP', 'EASAZ', 'STHAZ']",False,True,False,0
+STHAZ,Southern Arizona,"[2, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['YUMAC', 'PHOEN', 'EASAZ', 'STWNM']",True,False,False,0
+EASAZ,Eastern Arizona,"[2, 0]",Basic Materials,"['Industrial Zone', 99]","['LT', 7, 2]","[False, 0]",5,"['STHAZ', 'PHOEN', 'YAVAP', 'MOHAV', 'STWUT', 'SANJU', 'NTWNM', 'STWNM']",False,False,False,0
+NTWNM,Northwest New Mexico,"[2, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['EASAZ', 'STWCO', 'NTENM', 'STENM', 'STWNM']",False,False,False,0
+NTENM,Northeast New Mexico,"[2, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['NTWNM', 'STWCO', 'STECO', 'REDCA', 'TXPAN', 'STENM']",False,True,False,0
+STWNM,Southwest New Mexico,"[2, 0]",Basic Materials,"['Capital', 5]","[None, 99]","[False, 0]",5,"['EASAZ', 'NTWNM', 'STENM', 'WESTX', 'STHAZ']",True,False,False,0
 STENM,Southeast New Mexico,"[2, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['STWNM', 'NTWNM', 'NTENM', 'TXPAN', 'WESTX']",False,False,False,0
-WESND,Western North Dakota,"[1, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['EASND', 'WESSD', 'EASMT']",True,True,False,0
+WESND,Western North Dakota,"[1, 0]",Common Metals,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['EASND', 'WESSD', 'EASMT']",True,True,False,0
 EASND,Eastern North Dakota,"[1, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['NTWMN', 'EASSD', 'WESSD', 'WESND']",True,False,False,0
 WESSD,Western North Dakota,"[1, 0]",Uranium,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['WESND', 'EASND', 'EASSD', 'CENNE', 'WESNE', 'NTHWY', 'EASMT']",False,True,False,0
 EASSD,Eastern North Dakota,"[1, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['EASND', 'NTWMN', 'STWMN', 'NTWIA', 'EASNE', 'CENNE', 'WESSD']",False,False,False,0
 WESNE,Western Nebraska,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['NTHWY', 'WESSD', 'CENNE', 'NTECO', 'STHWY']",False,False,False,0
 CENNE,Central Nebraska,"[1, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['WESNE', 'WESSD', 'EASSD', 'EASNE', 'NTHKS', 'NTECO']",False,False,False,0
 EASNE,Eastern Nebraska,"[1, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['CENNE', 'EASSD', 'NTWIA', 'STWIA', 'NTHMO', 'EASKS', 'NTHKS']",False,True,False,0
-NTHKS,Northern Kansas,"[1, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENNE', 'EASNE', 'EASKS', 'STHKS', 'NTECO']",False,False,False,0
-STHKS,Southern Kansas,"[6, 0]",Coal,"['Boot Camp', 2]","['IN', 6, 6]","[False, 0]",5,"['NTHKS', 'EASKS', 'GREEN', 'REDCA', 'STECO', 'NTECO']",False,False,False,0
-EASKS,Eastern Kansas,"[8, 0]",Empty,"['Boot Camp', 5]","['IN', 6, 8]","[False, 0]",5,"['EASNE', 'NTHMO', 'WESMO', 'GREEN', 'STHKS', 'NTHKS']",False,True,False,0
-REDCA,Red Carpet Country,"[6, 0]",Empty,"[None, 99]","['IN', 1, 6]","[False, 0]",5,"['STHKS', 'GREEN', 'GRTPL', 'TXPAN', 'NTENM', 'STECO']",False,False,False,0
-GREEN,Green Country,"[6, 2]",Basic Materials,"[None, 99]","['LT', 5, 2]","[False, 0]",5,"['STHKS', 'EASKS', 'WESMO', 'NTWAR', 'CHOCT', 'GRTPL', 'REDCA']",False,True,False,0
-GRTPL,Great Plains Country,"[2, 0]",Empty,"[None, 99]","[None, 99]","[False, 0]",5,"['REDCA', 'GREEN', 'CHOCT', 'METRO', 'TXPAN']",False,False,False,0
-CHOCT,Choctaw Country,"[6, 2]",Empty,"['Capital', 0]","['LT', 8, 2]","[False, 0]",5,"['GREEN', 'NTWAR', 'STWAR', 'NTETX', 'METRO', 'GRTPL']",False,False,False,0
-TXPAN,Texas Panhandle,"[2, 0]",Advanced Metals,"[None, 99]","[None, 99]","[False, 0]",5,"['REDCA', 'GRTPL', 'METRO', 'HILLC', 'WESTX', 'STENM', 'NTENM']",False,False,False,0
-METRO,Metroplex,"[2, 0]",Empty,"[None, 99]","['LT', 4, 2]","[False, 0]",5,"['GRTPL', 'CHOCT', 'NTETX', 'CENTX', 'HILLC', 'TXPAN']",False,False,False,0
+NTHKS,Northern Kansas,"[1, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['CENNE', 'EASNE', 'EASKS', 'STHKS', 'NTECO']",False,False,False,0
+STHKS,Southern Kansas,"[2, 0]",Coal,"[None, 99]","['LT', 4, 2]","[False, 0]",5,"['NTHKS', 'EASKS', 'GREEN', 'REDCA', 'STECO', 'NTECO']",False,False,False,0
+EASKS,Eastern Kansas,"[8, 0]",Empty,"['Boot Camp', 5]","['IN', 4, 8]","[False, 0]",5,"['EASNE', 'NTHMO', 'WESMO', 'GREEN', 'STHKS', 'NTHKS']",False,True,False,0
+REDCA,Red Carpet Country,"[2, 0]",Empty,"['Research Institute', 99]","[None, 99]","[False, 0]",5,"['STHKS', 'GREEN', 'GRTPL', 'TXPAN', 'NTENM', 'STECO']",False,False,False,0
+GREEN,Green Country,"[2, 0]",Basic Materials,"['Industrial Zone', 99]","['LT', 4, 2]","[False, 0]",5,"['STHKS', 'EASKS', 'WESMO', 'NTWAR', 'CHOCT', 'GRTPL', 'REDCA']",False,True,False,0
+GRTPL,Great Plains Country,"[2, 0]",Empty,"['Research Institute', 99]","['LT', 7, 2]","[False, 0]",5,"['REDCA', 'GREEN', 'CHOCT', 'METRO', 'TXPAN']",False,False,False,0
+CHOCT,Choctaw Country,"[2, 0]",Empty,"['Capital', 0]","[None, 99]","[False, 0]",5,"['GREEN', 'NTWAR', 'STWAR', 'NTETX', 'METRO', 'GRTPL']",False,False,False,0
+TXPAN,Texas Panhandle,"[2, 0]",Advanced Metals,"['Advanced Metals Mine', 99]","[None, 99]","[False, 0]",5,"['REDCA', 'GRTPL', 'METRO', 'HILLC', 'WESTX', 'STENM', 'NTENM']",False,False,False,0
+METRO,Metroplex,"[2, 0]",Empty,"[None, 99]","[None, 99]","[False, 0]",5,"['GRTPL', 'CHOCT', 'NTETX', 'CENTX', 'HILLC', 'TXPAN']",False,False,False,0
 NTETX,Northeast Texas,"[3, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['CHOCT', 'STWAR', 'SPORT', 'STETX', 'GULCT', 'CENTX', 'METRO']",False,False,False,0
-WESTX,Western Texas,"[2, 0]",Empty,"['City', 5]","[None, 99]","[False, 0]",5,"['STWNM', 'STENM', 'TXPAN', 'HILLC', 'STHTX']",True,False,False,0
-HILLC,Hill Country,"[2, 0]",Empty,"['City', 5]","[None, 99]","[False, 0]",5,"['TXPAN', 'METRO', 'CENTX', 'STHTX', 'WESTX']",False,False,False,0
+WESTX,Western Texas,"[2, 0]",Empty,"['City', 5]","['LT', 7, 2]","[False, 0]",5,"['STWNM', 'STENM', 'TXPAN', 'HILLC', 'STHTX']",True,False,False,0
+HILLC,Hill Country,"[2, 0]",Empty,"['City', 5]","['LT', 8, 2]","[False, 0]",5,"['TXPAN', 'METRO', 'CENTX', 'STHTX', 'WESTX']",False,False,False,0
 CENTX,Central Texas,"[3, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['METRO', 'NTETX', 'GULCT', 'CBEND', 'STHTX', 'HILLC']",False,True,False,0
 STHTX,Southern Texas,"[3, 0]",Coal,"['Coal Mine', 99]","[None, 99, 0]","[False, 0]",5,"['WESTX', 'HILLC', 'CENTX', 'CBEND']",True,False,False,0
 CBEND,Coastal Bend,"[3, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['STHTX', 'CENTX', 'GULCT']",True,False,False,0
@@ -86,13 +86,13 @@ STWIA,Southwest Iowa,"[8, 0]",Coal,"['Coal Mine', 99]","[None, 99, 0]","[False, 
 STEIA,Southeast Iowa,"[8, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['NTEIA', 'NTWIL', 'FORGO', 'NTHMO', 'STWIA']",False,False,False,0
 NTHMO,Northern Missouri,"[8, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['STWIA', 'STEIA', 'FORGO', 'STWIL', 'STLOU', 'WESMO', 'EASKS', 'EASNE']",False,False,False,0
 WESMO,Western Missouri,"[8, 0]",Empty,"['Boot Camp', 5]","['IN', 6, 8]","[False, 0]",5,"['NTHMO', 'STLOU', 'OZARK', 'NTWAR', 'GREEN', 'EASKS']",False,False,False,0
-STLOU,St. Louis,"[8, 0]",Empty,"['City', 5]","['IN', 6, 8]","[False, 0]",5,"['NTHMO', 'STWIL', 'STEMO', 'OZARK', 'WESMO']",False,True,False,0
+STLOU,St. Louis,"[8, 0]",Empty,"['City', 5]","[None, 99]","[False, 0]",5,"['NTHMO', 'STWIL', 'STEMO', 'OZARK', 'WESMO']",False,True,False,0
 OZARK,Ozark Highlands,"[8, 0]",Empty,"['Missile Silo', 5]","['IN', 6, 8]","[False, 0]",5,"['WESMO', 'STLOU', 'STEMO', 'NTEAR', 'NTWAR']",False,False,False,0
-STEMO,Southeast Missouri,"[3, 0]",Rare Earth Elements,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['STLOU', 'STWIL', 'LILEG', 'WESKY', 'NTWTN', 'NTEAR', 'OZARK']",False,False,False,0
-NTWAR,Northwest Arkansas,"[6, 0]",Common Metals,"['Boot Camp', 5]","['IN', 6, 6]","[False, 0]",5,"['WESMO', 'OZARK', 'NTEAR', 'STEAR', 'STWAR', 'CHOCT', 'GREEN']",False,False,False,0
+STEMO,Southeast Missouri,"[3, 0]",Rare Earth Elements,"['Research Institute', 99]","[None, 99, 0]","[False, 0]",5,"['STLOU', 'STWIL', 'LILEG', 'WESKY', 'NTWTN', 'NTEAR', 'OZARK']",False,False,False,0
+NTWAR,Northwest Arkansas,"[8, 0]",Common Metals,"[None, 99]","['IN', 6, 8]","[False, 0]",5,"['WESMO', 'OZARK', 'NTEAR', 'STEAR', 'STWAR', 'CHOCT', 'GREEN']",False,False,False,0
 NTEAR,Northeast Arkansas,"[3, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['OZARK', 'STEMO', 'NTWTN', 'STWTN', 'NTHMS', 'STEAR', 'NTWAR']",False,False,False,0
-STWAR,Southwest Arkansas,"[6, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['NTWAR', 'STEAR', 'SPORT', 'NTETX', 'CHOCT']",False,False,False,0
-STEAR,Southeast Arkansas,"[3, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['NTWAR', 'NTEAR', 'NTHMS', 'SPORT', 'STWAR']",False,True,False,0
+STWAR,Southwest Arkansas,"[3, 0]",Basic Materials,"[None, 99]","[None, 99]","[False, 0]",5,"['NTWAR', 'STEAR', 'SPORT', 'NTETX', 'CHOCT']",False,False,False,0
+STEAR,Southeast Arkansas,"[3, 0]",Empty,"['Research Institute', 99]","[None, 99]","[False, 0]",5,"['NTWAR', 'NTEAR', 'NTHMS', 'SPORT', 'STWAR']",False,True,False,0
 SPORT,Sportsman's Paradise,"[3, 0]",Uranium,"['Crude Barrier', 5]","[None, 99]","[False, 0]",5,"['STWAR', 'STEAR', 'NTHMS', 'CENMS', 'CROSS', 'STETX', 'NTETX']",False,False,False,0
 CROSS,Crossroads,"[3, 0]",Empty,"['City', 5]","[None, 99]","[False, 0]",5,"['SPORT', 'CENMS', 'NEWOR', 'ACADI', 'STETX']",False,False,False,0
 ACADI,Acadiana,"[3, 0]",Empty,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['CROSS', 'NEWOR', 'STETX']",True,False,False,0
@@ -116,68 +116,68 @@ STWIL,Southwest Illinois,"[8, 0]",Basic Materials,"['Industrial Zone', 99]","[No
 EASIL,Eastern Illinois,"[8, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['CHICA', 'NTHIN', 'CENIN', 'WABAS', 'LILEG', 'STWIL', 'CENIL']",False,False,False,0
 LILEG,Little Egypt,"[8, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['EASIL', 'WABAS', 'STHIN', 'WESKY', 'STEMO', 'STLOU', 'STWIL']",False,False,False,0
 NTHIN,Northern Indiana,"[8, 0]",Rare Earth Elements,"['Capital', 5]","[None, 99, 0]","[False, 0]",5,"['WESMI', 'NTWOH', 'CENIN', 'EASIL', 'CHICA']",True,False,False,0
-CENIN,Central Indiana,"[8, 0]",Uranium,"['Uranium Mine', 99]","[None, 99, 0]","[False, 0]",5,"['NTHIN', 'NTWOH', 'MIAVA', 'STHIN', 'INDIA', 'WABAS', 'EASIL']",False,False,False,0
-INDIA,Greater Indiana,"[8, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['CENIN', 'STHIN', 'WABAS']",False,True,False,0
+CENIN,Central Indiana,"[8, 4]",Uranium,"[None, 99]","['SF', 5, 4]","[False, 0]",5,"['NTHIN', 'NTWOH', 'MIAVA', 'STHIN', 'INDIA', 'WABAS', 'EASIL']",False,False,False,0
+INDIA,Greater Indiana,"[8, 4]",Oil,"[None, 99]","[None, 99]","[False, 0]",5,"['CENIN', 'STHIN', 'WABAS']",False,True,False,0
 WABAS,Wabash Valley,"[8, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['CENIN', 'INDIA', 'STHIN', 'LILEG', 'EASIL']",False,False,False,0
-STHIN,Southern Indiana,"[8, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['WABAS', 'INDIA', 'CENIN', 'MIAVA', 'CINCI', 'BLUEG', 'PENNY', 'WESKY', 'LILEG']",False,False,False,0
+STHIN,Southern Indiana,"[8, 4]",Basic Materials,"[None, 99]","[None, 99]","[False, 0]",5,"['WABAS', 'INDIA', 'CENIN', 'MIAVA', 'CINCI', 'BLUEG', 'PENNY', 'WESKY', 'LILEG']",False,False,False,0
 NTWOH,Northwest Ohio,"[8, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",10,"['WESMI', 'STEMI', 'CLEVE', 'CENOH', 'MIAVA', 'CENIN', 'NTHIN']",True,False,False,0
 CLEVE,Greater Cleveland,"[7, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['NTWPA', 'VALLE', 'STEOH', 'CENOH', 'NTWOH']",True,False,False,0
-MIAVA,Miami Valley,"[8, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['NTWOH', 'CENOH', 'CINCI', 'STHIN', 'CENIN']",False,False,False,0
+MIAVA,Miami Valley,"[8, 4]",Basic Materials,"[None, 99]","['SF', 7, 4]","[False, 0]",5,"['NTWOH', 'CENOH', 'CINCI', 'STHIN', 'CENIN']",False,False,False,0
 CENOH,Central Ohio,"[5, 0]",Empty,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['NTWOH', 'CLEVE', 'STEOH', 'STHOH', 'CINCI', 'MIAVA']",False,True,False,0
-CINCI,Cincinnati,"[8, 0]",Coal,"['Coal Mine', 99]","[None, 99, 0]","[False, 0]",5,"['MIAVA', 'CENOH', 'STHOH', 'CUMBE', 'BLUEG', 'STHIN']",False,False,False,0
+CINCI,Cincinnati,"[8, 4]",Coal,"[None, 99]","[None, 99]","[False, 0]",5,"['MIAVA', 'CENOH', 'STHOH', 'CUMBE', 'BLUEG', 'STHIN']",False,False,False,0
 STHOH,Southern Ohio,"[5, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['CENOH', 'STEOH', 'VALLE', 'CUMBE', 'CINCI']",False,False,False,0
 STEOH,Southeastern Ohio,"[5, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['CENOH', 'CLEVE', 'VALLE', 'STHOH']",False,False,False,0
-BLUEG,Bluegrass,"[8, 0]",Empty,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['STHIN', 'CINCI', 'CUMBE', 'PENNY']",False,True,False,0
-WESKY,Western Kentucky,"[3, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['LILEG', 'STHIN', 'PENNY', 'NASHV', 'NTWTN', 'STEMO']",False,False,False,0
-PENNY,Pennyroyal Region,"[3, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['STHIN', 'BLUEG', 'CUMBE', 'EASTN', 'MIDTN', 'NASHV', 'WESKY']",False,False,False,0
-CUMBE,Cumberland Plateau,"[5, 0]",Uranium,"['Research Laboratory', 99]","['HT', 2, 5]","[False, 0]",5,"['BLUEG', 'CINCI', 'STHOH', 'VALLE', 'CHARL', 'STWVA', 'EASTN', 'PENNY']",False,False,False,0
-NTWTN,Northwest Tennessee,"[3, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['STEMO', 'WESKY', 'NASHV', 'CHATT', 'STWTN', 'NTEAR']",False,False,False,0
+BLUEG,Bluegrass,"[8, 4]",Empty,"[None, 99]","[None, 99]","[False, 0]",5,"['STHIN', 'CINCI', 'CUMBE', 'PENNY']",False,True,False,0
+WESKY,Western Kentucky,"[3, 4]",Empty,"[None, 99]","['SF', 8, 4]","[False, 0]",5,"['LILEG', 'STHIN', 'PENNY', 'NASHV', 'NTWTN', 'STEMO']",False,False,False,0
+PENNY,Pennyroyal Region,"[3, 4]",Empty,"[None, 99]","['SF', 10, 4]","[False, 0]",5,"['STHIN', 'BLUEG', 'CUMBE', 'EASTN', 'MIDTN', 'NASHV', 'WESKY']",False,False,False,0
+CUMBE,Cumberland Plateau,"[4, 0]",Uranium,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['BLUEG', 'CINCI', 'STHOH', 'VALLE', 'CHARL', 'STWVA', 'EASTN', 'PENNY']",False,False,False,0
+NTWTN,Northwest Tennessee,"[3, 4]",Common Metals,"[None, 99]","['ME', 8, 4]","[False, 0]",5,"['STEMO', 'WESKY', 'NASHV', 'CHATT', 'STWTN', 'NTEAR']",False,False,False,0
 NASHV,Nashville,"[3, 0]",Coal,"['Coal Mine', 99]","['IN', 6, 3]","[False, 0]",5,"['WESKY', 'PENNY', 'MIDTN', 'CHATT', 'NTWTN']",False,True,False,0
 MIDTN,Middle Tennessee,"[3, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['PENNY', 'EASTN', 'CHATT', 'NASHV']",False,False,False,0
-EASTN,Eastern Tennessee,"[4, 0]",Empty,"['City', 5]","['SF', 5, 4]","[False, 0]",5,"['CUMBE', 'STWVA', 'MOUNT', 'CHATT', 'MIDTN', 'PENNY']",False,False,False,0
+EASTN,Eastern Tennessee,"[4, 0]",Empty,"['City', 5]","[None, 99]","[False, 0]",5,"['CUMBE', 'STWVA', 'MOUNT', 'CHATT', 'MIDTN', 'PENNY']",False,False,False,0
 STWTN,Southwest Tennessee,"[3, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['NTWTN', 'CHATT', 'NTHAL', 'NTHMS', 'NTEAR']",False,False,False,0
-CHATT,Chattanooga,"[4, 0]",Common Metals,"['Common Metals Mine', 99]","['ME', 8, 4]","[False, 0]",5,"['NASHV', 'MIDTN', 'EASTN', 'MOUNT', 'NTWGA', 'NTHAL', 'STWTN', 'NTWTN']",False,False,False,0
-NTHMS,Northern Mississippi,"[3, 0]",Oil,"['Research Laboratory', 99]","['IN', 6, 3]","[False, 0]",5,"['STWTN', 'NTHAL', 'WESAL', 'CENMS', 'SPORT', 'STEAR', 'NTEAR']",False,False,False,0
-CENMS,Central Mississippi,"[3, 0]",Empty,"['Research Laboratory', 99]","['IN', 6, 3]","[False, 0]",5,"['NTHMS', 'WESAL', 'STWAL', 'MSGUL', 'NEWOR', 'CROSS', 'SPORT']",False,True,False,0
-MSGUL,Mississippi Gulf Coast,"[3, 0]",Advanced Metals,"['Research Laboratory', 99]","['IN', 6, 3]","[False, 0]",5,"['CENMS', 'STWAL', 'NEWOR']",True,False,False,0
-NTHAL,Northern Alabama,"[4, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['CHATT', 'NTWGA', 'EASAL', 'WESAL', 'NTHMS', 'STWTN']",False,False,False,0
-WESAL,Western Alabama,"[4, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['NTHAL', 'EASAL', 'STEAL', 'STWAL', 'CENMS', 'NTHMS']",False,False,False,0
+CHATT,Chattanooga,"[4, 0]",Common Metals,"['Common Metals Mine', 99]","['ME', 5, 4]","[False, 0]",5,"['NASHV', 'MIDTN', 'EASTN', 'MOUNT', 'NTWGA', 'NTHAL', 'STWTN', 'NTWTN']",False,False,False,0
+NTHMS,Northern Mississippi,"[3, 0]",Oil,"['Research Laboratory', 99]","['IN', 2, 3]","[False, 0]",5,"['STWTN', 'NTHAL', 'WESAL', 'CENMS', 'SPORT', 'STEAR', 'NTEAR']",False,False,False,0
+CENMS,Central Mississippi,"[3, 0]",Empty,"['Research Laboratory', 99]","['IN', 2, 3]","[False, 0]",5,"['NTHMS', 'WESAL', 'STWAL', 'MSGUL', 'NEWOR', 'CROSS', 'SPORT']",False,True,False,0
+MSGUL,Mississippi Gulf Coast,"[3, 0]",Advanced Metals,"['Research Laboratory', 99]","['IN', 2, 3]","[False, 0]",5,"['CENMS', 'STWAL', 'NEWOR']",True,False,False,0
+NTHAL,Northern Alabama,"[4, 0]",Empty,"['Research Laboratory', 99]","['SF', 9, 4]","[False, 0]",5,"['CHATT', 'NTWGA', 'EASAL', 'WESAL', 'NTHMS', 'STWTN']",False,False,False,0
+WESAL,Western Alabama,"[4, 0]",Empty,"['Research Laboratory', 99]","['SF', 8, 4]","[False, 0]",5,"['NTHAL', 'EASAL', 'STEAL', 'STWAL', 'CENMS', 'NTHMS']",False,False,False,0
 EASAL,Eastern Alabama,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['NTHAL', 'NTWGA', 'STEAL', 'WESAL']",False,False,False,0
-STWAL,Southwest Alabama,"[4, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['WESAL', 'STEAL', 'FLPAN', 'CENMS', 'MSGUL']",True,False,False,0
-STEAL,Southeast Alabama,"[4, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['EASAL', 'STWGA', 'FLPAN', 'NTWGA', 'WESAL', 'STWAL']",False,True,False,0
-FLPAN,Florida Panhandle,"[4, 0]",Common Metals,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['STWAL', 'STEAL', 'STWGA', 'STEGA', 'GAINE']",True,True,False,0
-GAINE,Greater Gainesville,"[4, 0]",Coal,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['FLPAN', 'STEGA', 'FIRCT', 'HALIF', 'TAMPA']",True,False,False,0
+STWAL,Southwest Alabama,"[4, 0]",Empty,"['Research Laboratory', 99]","['SF', 9, 4]","[False, 0]",5,"['WESAL', 'STEAL', 'FLPAN', 'CENMS', 'MSGUL']",True,False,False,0
+STEAL,Southeast Alabama,"[4, 0]",Common Metals,"['Research Laboratory', 99]","['SF', 10, 4]","[False, 0]",5,"['EASAL', 'STWGA', 'FLPAN', 'NTWGA', 'WESAL', 'STWAL']",False,True,False,0
+FLPAN,Florida Panhandle,"[4, 0]",Common Metals,"['Research Laboratory', 99]","['SF', 10, 4]","[False, 0]",5,"['STWAL', 'STEAL', 'STWGA', 'STEGA', 'GAINE']",True,True,False,0
+GAINE,Greater Gainesville,"[4, 0]",Coal,"['Coal Mine', 99]","[None, 99, 0]","[False, 0]",5,"['FLPAN', 'STEGA', 'FIRCT', 'HALIF', 'TAMPA']",True,False,False,0
 FIRCT,First Coast,"[4, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['GACST', 'STEGA', 'GAINE', 'HALIF']",True,False,False,0
-HALIF,Halifax Area,"[4, 0]",Common Metals,"['Research Laboratory', 99]","[None, 99, 0]","[False, 0]",5,"['FIRCT', 'GAINE', 'TAMPA', 'STWFL', 'MIAMI']",True,False,False,0
+HALIF,Halifax Area,"[4, 0]",Common Metals,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['FIRCT', 'GAINE', 'TAMPA', 'STWFL', 'MIAMI']",True,False,False,0
 TAMPA,Tampa Bay Area,"[4, 0]",Empty,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['GAINE', 'HALIF', 'STWFL']",True,False,False,0
 STWFL,Southwest Florida,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['TAMPA', 'HALIF', 'MIAMI']",True,False,False,0
 MIAMI,Greater Miami,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['STWFL', 'HALIF']",True,False,False,0
-NTWGA,Northwest Georgia,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","['ME', 5, 4]","[False, 0]",5,"['CHATT', 'MOUNT', 'ATHEN', 'ATLAN', 'STWGA', 'STEAL', 'EASAL', 'NTHAL']",False,False,False,0
+NTWGA,Northwest Georgia,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","['SF', 4, 4]","[False, 0]",5,"['CHATT', 'MOUNT', 'ATHEN', 'ATLAN', 'STWGA', 'STEAL', 'EASAL', 'NTHAL']",False,False,False,0
 ATHEN,Athens–Clarke,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['MOUNT', 'PIEDM', 'MDLND', 'EASGA', 'ATLAN', 'NTWGA']",False,False,False,0
-ATLAN,Atlanta,"[4, 0]",Advanced Metals,"['Boot Camp', 5]","['IN', 6, 4]","[False, 0]",5,"['NTWGA', 'ATHEN', 'EASGA', 'STWGA']",False,True,False,0
+ATLAN,Atlanta,"[4, 0]",Advanced Metals,"['Boot Camp', 5]","[None, 99]","[False, 0]",5,"['NTWGA', 'ATHEN', 'EASGA', 'STWGA']",False,True,False,0
 EASGA,Eastern Georgia,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['ATHEN', 'MDLND', 'SCLOW', 'GACST', 'STEGA', 'STWGA', 'ATLAN']",False,False,False,0
 STWGA,Southwest Georgia,"[4, 0]",Empty,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['NTWGA', 'ATLAN', 'EASGA', 'STEGA', 'FLPAN', 'STEAL']",False,False,False,0
 STEGA,Southeast Georgia,"[4, 0]",Advanced Metals,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['EASGA', 'GACST', 'FIRCT', 'GAINE', 'FLPAN', 'STWGA']",False,False,False,0
 GACST,Georgia Coast,"[4, 0]",Rare Earth Elements,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['SCLOW', 'EASGA', 'STEGA', 'FIRCT']",True,False,False,0
 PIEDM,Piedmont,"[4, 0]",Empty,"['City', 5]","[None, 99]","[False, 0]",5,"['MOUNT', 'MDLND', 'ATHEN']",False,False,False,0
-MDLND,Midland,"[4, 0]",Empty,"['Capital', 5]","['AR', 6, 4]","[False, 0]",5,"['PIEDM', 'MOUNT', 'MTRLA', 'PEEDE', 'SCLOW', 'EASGA', 'ATHEN']",False,False,False,0
+MDLND,Midland,"[4, 0]",Empty,"['Capital', 5]","[None, 99]","[False, 0]",5,"['PIEDM', 'MOUNT', 'MTRLA', 'PEEDE', 'SCLOW', 'EASGA', 'ATHEN']",False,False,False,0
 PEEDE,PeeDee,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['MTRLA', 'SANDH', 'STENC', 'MDLND', 'SCLOW']",True,False,False,0
 SCLOW,Lowcountry,"[4, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['GACST', 'EASGA', 'MDLND', 'PEEDE']",True,True,False,0
 MOUNT,Mountain,"[4, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['STWVA', 'MTRLA', 'MDLND', 'PIEDM', 'ATHEN', 'NTWGA', 'CHATT', 'EASTN']",False,False,False,0
-MTRLA,Metrolina,"[4, 0]",Common Metals,"['City', 5]","['SF', 4, 4]","[False, 0]",5,"['STWVA', 'STHVA', 'TRIAN', 'SANDH', 'PEEDE', 'MDLND', 'MOUNT']",False,False,False,0
-TRIAN,Triangle,"[5, 0]",Coal,"[None, 99]","['LT', 4, 5]","[False, 0]",5,"['STHVA', 'BANKS', 'STENC', 'SANDH', 'MTRLA']",False,True,False,0
+MTRLA,Metrolina,"[4, 0]",Common Metals,"['City', 5]","[None, 99]","[False, 0]",5,"['STWVA', 'STHVA', 'TRIAN', 'SANDH', 'PEEDE', 'MDLND', 'MOUNT']",False,False,False,0
+TRIAN,Triangle,"[5, 0]",Coal,"['Coal Mine', 99]","['LT', 4, 5]","[False, 0]",5,"['STHVA', 'BANKS', 'STENC', 'SANDH', 'MTRLA']",False,True,False,0
 BANKS,Banks,"[5, 0]",Basic Materials,"['Industrial Zone', 99]","['LT', 6, 5]","[False, 0]",5,"['HAMPT', 'STHVA', 'TRIAN', 'STENC']",True,False,False,0
-SANDH,Sandhills,"[5, 4]",Basic Materials,"[None, 99]","['SF', 10, 4]","[False, 0]",5,"['STENC', 'TRIAN', 'MTRLA', 'PEEDE']",False,False,False,0
-STENC,Southeast North Carolina,"[5, 4]",Common Metals,"[None, 99]","['SF', 8, 4]","[False, 0]",5,"['BANKS', 'TRIAN', 'SANDH', 'PEEDE']",True,False,False,0
+SANDH,Sandhills,"[5, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99]","[False, 0]",5,"['STENC', 'TRIAN', 'MTRLA', 'PEEDE']",False,False,False,0
+STENC,Southeast North Carolina,"[5, 0]",Common Metals,"['Crude Barrier', 5]","[None, 99]","[False, 0]",5,"['BANKS', 'TRIAN', 'SANDH', 'PEEDE']",True,False,False,0
 ROANO,Roanoke Region,"[5, 0]",Oil,"['Oil Well', 99]","[None, 99, 0]","[False, 0]",5,"['NTHVA', 'RICHM', 'STHVA', 'STWVA', 'CHARL', 'POTOM']",False,False,False,0
 NTHVA,Northern Virginia,"[5, 0]",Empty,"['City', 5]","[None, 99, 0]","[False, 0]",5,"['WESMD', 'HAMPT', 'RICHM', 'ROANO', 'POTOM']",False,False,False,0
 RICHM,Richmond,"[5, 0]",Empty,"['Military Base', 10]","[None, 99, 0]","[False, 0]",5,"['NTHVA', 'HAMPT', 'STHVA', 'ROANO']",False,True,False,0
-STWVA,Southwest Virginia,"[5, 4]",Empty,"[None, 99]","['SF', 10, 4]","[False, 0]",5,"['CHARL', 'ROANO', 'STHVA', 'MTRLA', 'MOUNT', 'EASTN', 'CUMBE']",False,False,False,0
+STWVA,Southwest Virginia,"[4, 0]",Empty,"['Research Laboratory', 99]","[None, 99]","[False, 0]",5,"['CHARL', 'ROANO', 'STHVA', 'MTRLA', 'MOUNT', 'EASTN', 'CUMBE']",False,False,False,0
 STHVA,Southside Virginia,"[5, 0]",Basic Materials,"['Industrial Zone', 99]","['IN', 4, 5]","[False, 0]",5,"['ROANO', 'RICHM', 'HAMPT', 'BANKS', 'TRIAN', 'MTRLA', 'STWVA']",False,False,False,0
 HAMPT,Hampton Roads,"[5, 0]",Basic Materials,"['Industrial Zone', 99]","[None, 99, 0]","[False, 0]",5,"['EASMD', 'WESMD', 'NTHVA', 'RICHM', 'STHVA', 'BANKS']",True,False,False,0
 VALLE,Valley,"[5, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['PITTS', 'POTOM', 'CHARL', 'CUMBE', 'STHOH', 'STEOH', 'CLEVE', 'NTWPA']",False,False,False,0
 POTOM,Potomac Highlands,"[5, 0]",Common Metals,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['PITTS', 'WESMD', 'NTHVA', 'ROANO', 'CHARL', 'VALLE']",False,False,False,0
-CHARL,Charleston,"[5, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99, 0]","[False, 0]",5,"['VALLE', 'POTOM', 'ROANO', 'STWVA', 'CUMBE']",False,True,False,0
+CHARL,Charleston,"[4, 0]",Common Metals,"['Common Metals Mine', 99]","[None, 99]","[False, 0]",5,"['VALLE', 'POTOM', 'ROANO', 'STWVA', 'CUMBE']",False,True,False,0
 WESMD,Western Maryland,"[5, 0]",Uranium,"['Uranium Mine', 99]","[None, 99, 0]","[False, 0]",5,"['PITTS', 'PAHLR', 'EASMD', 'POTOM', 'NTHVA', 'HAMPT']",True,True,False,0
 EASMD,Eastern Maryland,"[5, 0]",Coal,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['DELEW', 'PHILL', 'PAHLR', 'WESMD', 'HAMPT']",True,False,False,0
 DELEW,State of Deleware,"[5, 0]",Common Metals,"['Boot Camp', 5]","[None, 99, 0]","[False, 0]",5,"['PHILL', 'EASMD']",True,True,False,0
