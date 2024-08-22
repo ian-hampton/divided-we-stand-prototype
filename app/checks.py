@@ -1923,7 +1923,9 @@ def update_records(full_game_id, current_turn_num):
         player_misc_info = ast.literal_eval(playerdata_list[index][24])
         region_count_str = player_misc_info[1][-2:]
         region_count = region_count_str.strip()
-        entry.append(region_count)
+        occupied_count_str = player_misc_info[2][-2:]
+        occupied_count = occupied_count_str.strip()
+        entry.append(str(int(region_count) + int(occupied_count)))
 
     #update most research record
     for index, entry in enumerate(most_research_list):

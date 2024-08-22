@@ -502,22 +502,27 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #update income in playerdata
     checks.update_income(full_game_id, current_turn_num)
     
-    
+
+    #Check If Someone Has Won the Game
+    player_has_won = check_for_winner(full_game_id, player_count, current_turn_num)
+
+
     #Resolve Bonus Phase
-    if current_turn_num % 4 == 0:
-        checks.bonus_phase_heals(full_game_id)
-        diplomacy_log.append('All units and defensive improvements have regained 2 health.')
-    #event procedure
-    if current_turn_num % 8 == 0:
-        diplomacy_log = events.trigger_event(full_game_id, current_turn_num, diplomacy_log)
-        checks.update_stability(full_game_id, player_id, current_turn_num)
-        diplomacy_log = checks.check_stability(full_game_id, player_id, current_turn_num, diplomacy_log)
     event_pending = False
-    with open(f'active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    current_event_dict = active_games_dict[full_game_id]["Current Event"]
-    if current_event_dict != {}:
-        event_pending = True
+    if not player_has_won:
+        if current_turn_num % 4 == 0:
+            checks.bonus_phase_heals(full_game_id)
+            diplomacy_log.append('All units and defensive improvements have regained 2 health.')
+        #event procedure
+        if current_turn_num % 8 == 0:
+            diplomacy_log = events.trigger_event(full_game_id, current_turn_num, diplomacy_log)
+            checks.update_stability(full_game_id, player_id, current_turn_num)
+            diplomacy_log = checks.check_stability(full_game_id, player_id, current_turn_num, diplomacy_log)
+        with open(f'active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
+        current_event_dict = active_games_dict[full_game_id]["Current Event"]
+        if current_event_dict != {}:
+            event_pending = True
 
 
     #Update Game_Settings
@@ -533,8 +538,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     active_games_dict[full_game_id]["Days Ellapsed"] = date_difference.days
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
-    #check if someone has won the game
-    check_for_winner(full_game_id, player_count, current_turn_num)
 
 
     #Update Visuals
@@ -920,6 +923,8 @@ def check_for_winner(full_game_id, player_count, current_turn_num):
         with open('game_records.json', 'w') as json_file:
             json.dump(game_records_dict, json_file, indent=4)
 
+        return player_has_won
+
 def get_game_name(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -1173,9 +1178,10 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
                 select_nation_name = nation_name_list[i - 1][0]
                 truce_participants_list.append(select_nation_name)
         truce_name = ' - '.join(truce_participants_list)
-        if int(truce[11]) > current_turn_num:
-            diplomacy_log.append(f"{truce_name} truce through turn {truce[11]}.")
-        if int(truce[11]) == current_turn_num:
+        truce_end_turn = int(truce[11])
+        if truce_end_turn >= current_turn_num:
+            diplomacy_log.append(f"{truce_name} truce through turn {truce_end_turn + 1}.")
+        if truce_end_turn < current_turn_num:
             diplomacy_log.append(f'{truce_name} truce has expired.')
 
 
@@ -1863,7 +1869,7 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
     #generate output
     truce_id = len(trucedata_list)
     signatories_list.insert(0, truce_id)
-    signatories_list.append(current_turn_num + truce_length)
+    signatories_list.append(current_turn_num + truce_length - 1)
     trucedata_list.append(signatories_list)
 
     #update trucedata.csv

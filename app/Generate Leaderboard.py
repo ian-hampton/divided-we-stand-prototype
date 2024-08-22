@@ -48,14 +48,14 @@ def update_leaderboard(player_totals_dict, player_records_dict):
         player_record_entry = [username, victory, score, score_avg, games]
         leaderboard_list.append(player_record_entry)
     filtered_leaderboard_list = sorted(leaderboard_list, key=itemgetter(1, 2, 3, 4), reverse=True)
-    with open("leaderboard.csv", "w", newline='') as file:
+    with open("../leaderboard.csv", "w", newline='') as file:
         writer = csv.writer(file)
         writer.writerows(filtered_leaderboard_list)
 
-with open('game_records.json', 'r') as json_file:
+with open('../game_records.json', 'r') as json_file:
     game_records_dict = json.load(json_file)
 
-with open('player_records.json', 'r') as json_file:
+with open('../player_records.json', 'r') as json_file:
     player_records_dict = json.load(json_file)
 
 player_totals_dict = calculate_totals(game_records_dict)
