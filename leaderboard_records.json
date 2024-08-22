@@ -1,75 +1,92 @@
 {
     "Largest Nation": {
+        "Description": "Highest number of regions owned at the end of a game.",
         "Player Name": "Eyiri",
         "Nation Name": "Amikabuu",
         "Game Name": "Hotel",
-        "Value": 53
+        "Value": "53 regions"
     },
     "Largest Economy": {
-        "Player Name": "Eyiri",
-        "Nation Name": "Amikabuu",
-        "Game Name": "Hotel",
-        "Value": 105.1
+        "Description": "Highest net income at the end of a game.",
+        "Player Name": "Xsotan",
+        "Nation Name": "Allied States Of America",
+        "Game Name": "Genisys",
+        "Value": "152.5 income"
     },
-    "Most Completed Research": {
+    "Most Transactions": {
+        "Description": "Highest combined total of resources bought & sold to the resource market, and resources traded to and from a nation in a single game.",
+        "Player Name": "Xsotan",
+        "Nation Name": "Allied States Of America",
+        "Game Name": "Genisys",
+        "Value": "264 transactions"
+    },
+    "Most Technologies": {
+        "Description": "Highest total number of technologies and agendas unlocked during a single game.",
         "Player Name": "Roman General",
         "Nation Name": "Manchurian Tech Company",
         "Game Name": "India",
-        "Value": 48
+        "Value": "48 technologies"
     },
     "Largest Military": {
+        "Description": "Highest number of units at the end of a game.",
         "Player Name": "Eyiri",
         "Nation Name": "Amikabuu",
         "Game Name": "Hotel",
-        "Value": 51
+        "Value": "51 units"
     },
     "Warmonger": {
+        "Description": "Highest number of wars declared during a single game.",
         "Player Name": "Eyiri",
         "Nation Name": "Guandi Empire",
         "Game Name": "India",
-        "Value": 6
-    },
-    "Longest War": {
-        "War Name": "The Grand Ol' Party v. Texan Caliphate",
-        "Game Name": "Charlie",
-        "Value": 20
+        "Value": "6 wars"
     },
     "Most Battles Won": {
+        "Description": "Highest number of combats won during a single game.",
         "Player Name": "Eyiri",
         "Nation Name": "Guandi Empire",
         "Game Name": "India",
-        "Value": 61
+        "Value": "61 battles"
     },
-    "Greatest # of Players": {
+    "Longest War": {
+        "Description": "The longest war during a single game.",
+        "War Name": "The Grand Ol' Party v. Texan Caliphate",
+        "Player Name": "mudkip vs Starzz",
+        "Game Name": "Charlie",
+        "Value": "20 turns"
+    },
+    "Game Records": {
+        "Greatest # of Players": {
         "Game Name": "India",
-        "Value": 9
-    },
-    "Smallest # of Players": {
-        "Game Name": "Foxtrot",
-        "Value": 4
-    },
-    "Greatest # of Wars": {
-        "Game Name": "Golf",
-        "Value": 14
-    },
-    "Smallest # of Wars": {
-        "Game Name": "Foxtrot",
-        "Value": 5
-    },
-    "Longest Game (turns)": {
-        "Game Name": "Golf",
-        "Value": 50
-    },
-    "Longest Game (days)": {
-        "Game Name": "Golf",
-        "Value": 137
-    },
-    "Shortest Game (turns)": {
-        "Game Name": "Bravo",
-        "Value": 35
-    },
-    "Shortest Game (days)": {
-        "Game Name": "Bravo",
-        "Value": 63
+        "Value": "9 players"
+        },
+        "Smallest # of Players": {
+            "Game Name": "Foxtrot",
+            "Value": "4 players"
+        },
+        "Greatest # of Wars": {
+            "Game Name": "Golf",
+            "Value": "14 wars"
+        },
+        "Smallest # of Wars": {
+            "Game Name": "Foxtrot",
+            "Value": "5 wars"
+        },
+        "Longest Game (turns)": {
+            "Game Name": "Golf",
+            "Value": "50 turns"
+        },
+        "Shortest Game (turns)": {
+            "Game Name": "Genisys",
+            "Value": "32 turns"
+        },
+        "Longest Game (days)": {
+            "Game Name": "Golf",
+            "Value": "137 days"
+        },
+        "Shortest Game (days)": {
+            "Game Name": "Bravo",
+            "Value": "63 days"
+        }
     }
 }

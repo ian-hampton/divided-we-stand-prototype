@@ -648,9 +648,75 @@
         "Turn Duration": "48 hours",
         "Fog of War": "Disabled",
         "Version": "Development",
-        "Game End Turn": 0,
+        "Game End Turn": 32,
         "Days Ellapsed": 0,
         "Game Started": "06/02/2024",
-        "Game Ended": "Present"
+        "Game Ended": "08/21/2024",
+        "Player Data": {
+            "001": {
+                "Nation Name": "Allied States Of America",
+                "Color": "#b30000",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 3,
+                "Victory": 1
+            },
+            "002": {
+                "Nation Name": "Capitalism Works!",
+                "Color": "#b66317",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 2,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "Mississippi Trade Co.",
+                "Color": "#003b84",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "Threads Of Azj-Kahet",
+                "Color": "#5a009d",
+                "Government": "Remnant",
+                "Foreign Policy": "Imperialist",
+                "Score": 2,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Doofenshmirtz Evil Incorporated",
+                "Color": "#b654ff",
+                "Government": "Crime Syndicate",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "Would You Like Fries With That?",
+                "Color": "#8b2a1a",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "011": {
+                "Nation Name": "Peener Pee-Pee Land",
+                "Color": "#ff9600",
+                "Government": "Military Junta",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "012": {
+                "Nation Name": "Skibidi Supremacy",
+                "Color": "#603913",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Isolationist",
+                "Score": 1,
+                "Victory": 0
+            }
+        }
     }
 }

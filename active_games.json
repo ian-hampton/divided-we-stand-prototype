@@ -1,7 +1,7 @@
 {
     "game1": {
         "Game Name": "Genisys",
-        "Current Turn": "30",
+        "Current Turn": "33",
         "Game #": 11,
         "Version": "Development",
         "Player Count": "8",
@@ -10,7 +10,7 @@
         "Fog of War": "Disabled",
         "Turn Length": "48 hours",
         "Accelerated Schedule": "Enabled",
-        "Days Ellapsed": 66,
+        "Days Ellapsed": 73,
         "Game Started": "06/09/2024",
         "Inactive Events": [
             "Lost Nuclear Weapons",
@@ -22,7 +22,7 @@
             }
         },
         "Current Event": {},
-        "Game Active": true
+        "Game Active": false
     },
     "game2": {
         "Game Name": "Open Game Slot",
