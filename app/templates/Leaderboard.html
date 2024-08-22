@@ -3,52 +3,13 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 <title>UWS Leaderboard</title>
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
 <style>
 :root {
     --leaderboard-height: {{ leaderboard_height }};
 }
-header {
-    background-color: #0f4660;
-    margin: 0;
-    padding: 40px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: white;
-}
-.left-header {
-    display: flex;
-    align-items: center;
-}
-.right-header {
-    display: flex;
-    align-items: center;
-}
-#title {
-    font-size: 48px;
-    padding: 0;
-    margin: 0;
-    color: white;
-}
-body {
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-image: url("{{ url_for('static', filename='new-background.png') }}");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-}
-a {
-    color: white;
-    text-decoration: none;
-}
 .main {
     width:80%;
-    padding-top: 20px;
     margin-left:10%;
     display: flex;
 }

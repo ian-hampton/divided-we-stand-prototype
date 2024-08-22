@@ -3,47 +3,8 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 <title>Create New Game</title>
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
 <style>
-body {
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-image: url("{{ url_for('static', filename='UWS-background-2.png') }}");
-    background-repeat: no-repeat;
-    background-size: 100%;
-    margin: 0;
-    padding: 0;
-}
-a {
-    color: white;
-    text-decoration: none;
-}
-header {
-    background-color: #0f4660;
-    margin: 0;
-    padding: 40px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: white;
-    margin-bottom: 20px;
-    opacity: 0.9;
-}
-.left-header {
-    display: flex;
-    align-items: center;
-}
-.right-header {
-    display: flex;
-    align-items: center;
-}
-#title {
-    font-size: 48px;
-    padding: 0;
-    margin: 0;
-    color: white;
-}
 .main {
     width:60%;
     margin-left:20%;
