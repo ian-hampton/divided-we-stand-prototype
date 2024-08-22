@@ -6,9 +6,10 @@
 <style>
 body {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-image: url("{{ url_for('static', filename='pattern.png') }}");
-    background-repeat: repeat;
-    background-size: 20%;
+    background-image: url("{{ url_for('static', filename='new-background.png') }}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
 }
@@ -27,7 +28,7 @@ header {
     align-items: center;
     justify-content: space-between;
     color: white;
-    opacity: 0.9;
+    opacity: 1;
     margin-bottom: 20px;
 }
 .left-header {

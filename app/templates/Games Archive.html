@@ -6,9 +6,10 @@
 <style>
 body {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-image: url("{{ url_for('static', filename='pattern.png') }}");
-    background-repeat: repeat;
-    background-size: 20%;
+    background-image: url("{{ url_for('static', filename='new-background.png') }}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
 }
@@ -18,17 +19,17 @@ a {
 }
 header {
     background-color: #0f4660;
-    margin: 0;
-    padding: 40px;
-    padding-top: 10px;
-    padding-bottom: 10px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: white;
-    opacity: 0.9;
+    opacity: 1;
+    margin: 0px;
     margin-bottom: 20px;
+    padding: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .left-header {
     display: flex;
