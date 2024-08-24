@@ -311,40 +311,73 @@ def game_created():
 #GAMES ARCHIVE PAGE
 @main.route('/archived_games')
 def archived_games():
+    
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
-    archived_game_masterlist = []
-    for game, game_data in game_records_dict.items():
-        if game_records_dict[game]["Game Ended"] == "Present":
+    
+    #take information from game_record_dict and build new dict
+    archived_game_dict = {}
+    for game_name, game_data in game_records_dict.items():
+        
+        if game_data["Game Ended"] == "Present":
             continue
-        archived_game_data = []
-        archived_game_data.append(game)
-        archived_game_data.append(game_records_dict[game]["Version"])
-        archived_game_data.append(game_records_dict[game]["Map"])
-        archived_game_data.append(game_records_dict[game]["Victory Conditions"])
-        archived_game_data.append(game_records_dict[game]["Fog of War"])
-        archived_game_data.append(game_records_dict[game]["Turn Duration"])
-        archived_game_data.append(game_records_dict[game]["Accelerated Schedule"])
-        archived_game_data.append(game_records_dict[game]["Game End Turn"])
-        archived_game_data.append(game_records_dict[game]["Days Ellapsed"])
-        date_string = f"""{game_records_dict[game]["Game Started"]} - {game_records_dict[game]["Game Ended"]}"""
-        archived_game_data.append(date_string)
-        game_title_str = game.replace(' ', '-')
-        archived_game_data.append(f'static/archive/{game_title_str}.png')
+        
+        game_details_dict = {}
+        game_details_dict["Game ID"] = game_data["Game ID"]
+        game_details_dict["Game #"] = game_data["Game #"]
+        game_details_dict["Version"] = game_data["Version"]
+        game_details_dict["Map"] = game_data["Map"]
+        game_details_dict["Victory Conditions"] = game_data["Victory Conditions"]
+        game_details_dict["Fog of War"] = game_data["Fog of War"]
+        game_details_dict["Turn Duration"] = game_data["Turn Duration"]
+        game_details_dict["Accelerated Schedule"] = game_data["Accelerated Schedule"]
+        game_details_dict["Game End Turn"] = game_data["Game End Turn"]
+        game_details_dict["Days Ellapsed"] = game_data["Days Ellapsed"]
+        game_details_dict["Date String"] = f"""{game_records_dict[game_name]["Game Started"]} - {game_records_dict[game_name]["Game Ended"]}"""
         archived_player_data_list, players_who_won_list = generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
-            archived_game_data.append(f'{victors_str} Victory!')
+            game_details_dict["Winner String"] = f'{victors_str} Victory!'
         elif len(players_who_won_list) > 1:
             victors_str = ' & '.join(players_who_won_list)
-            archived_game_data.append(f'{victors_str} Victory!')
+            game_details_dict["Winner String"] = f'{victors_str} Victory!'
         elif len(players_who_won_list) == 0:
-            archived_game_data.append(f'Draw!')
-        archived_game_data.append(archived_player_data_list)
-        archived_game_data.append(game_records_dict[game]["Game #"])
-        archived_game_masterlist.append(archived_game_data)
-    archived_game_masterlist.reverse()
-    return render_template('Games Archive.html', archived_game_masterlist = archived_game_masterlist)
+            game_details_dict["Winner String"] = 'Draw!'
+        game_details_dict["Playerdata Masterlist"] = archived_player_data_list
+
+        image_name_list = []
+        filename = "graphic.png"
+        filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
+        if os.path.isfile(filepath):
+            image_name_list.append(filename)
+        turn_number = game_data["Game End Turn"]
+        if game_data["Game End Turn"] % 4 != 0:
+            filename = f"{turn_number}.png"
+            filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
+            if os.path.isfile(filepath):
+                image_name_list.append(filename)
+            while turn_number % 4 != 0:
+                turn_number -= 1
+        while turn_number >= 0:
+            filename = f"{turn_number}.png"
+            filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
+            if os.path.isfile(filepath):
+                image_name_list.append(filename)
+            turn_number -= 4
+        game_details_dict["Slideshow Images"] = image_name_list
+
+        archived_game_dict[game_name] = game_details_dict
+    
+    archived_game_dict = dict(sorted(archived_game_dict.items(), key=lambda item: item[1]['Game #'], reverse=True))
+
+    #get gameid list
+    game_id_list = []
+    for game_name, game_data in game_records_dict.items():
+        game_id_list.append(game_data["Game ID"])
+    game_id_list.reverse()
+    slide_index_list = [1] * len(game_id_list)
+    
+    return render_template('Games Archive.html', dict = archived_game_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
 
 #LEADERBOARD PAGE
 @main.route('/leaderboard')
