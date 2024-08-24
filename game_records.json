@@ -1,5 +1,6 @@
 {
     "Alpha": {
+        "Game ID": "qSNQClOWRJwRwccPtSGV",
         "Game #": 1,
         "Player Count": 3,
         "Victory Conditions": "Foreign Policy",
@@ -40,6 +41,7 @@
         }
     },
     "Bravo": {
+        "Game ID": "nLsefQYKStAlAngJKzCN",
         "Game #": 2,
         "Player Count": 5,
         "Victory Conditions": "Foreign Policy",
@@ -96,6 +98,7 @@
         }
     },
     "Charlie": {
+        "Game ID": "RYeggypebzegsHSWdrql",
         "Game #": 3,
         "Player Count": 7,
         "Victory Conditions": "Foreign Policy",
@@ -168,6 +171,7 @@
         }
     },
     "Delta": {
+        "Game ID": "NWvKllpBdfvllSvBcUMF",
         "Game #": 4,
         "Player Count": 8,
         "Victory Conditions": "Foreign Policy",
@@ -248,6 +252,7 @@
         }
     },
     "Echo": {
+        "Game ID": "AvTkNMRkjIZXAXjVpJGb",
         "Game #": 5,
         "Player Count": 6,
         "Victory Conditions": "Foreign Policy",
@@ -312,6 +317,7 @@
         }
     },
     "Foxtrot": {
+        "Game ID": "KwQvMSAzknEmGNFBZrmA",
         "Game #": 6,
         "Player Count": 4,
         "Victory Conditions": "Foreign Policy",
@@ -360,6 +366,7 @@
         }
     },
     "Golf": {
+        "Game ID": "hdUrBSNbJdIuEvVANqEn",
         "Game #": 7,
         "Player Count": 7,
         "Victory Conditions": "Foreign Policy",
@@ -432,6 +439,7 @@
         }
     },
     "Hotel": {
+        "Game ID": "aPiJFqnrnvUiLhgsllVO",
         "Game #": 8,
         "Player Count": 7,
         "Victory Conditions": "Foreign Policy",
@@ -504,6 +512,7 @@
         }
     },
     "India": {
+        "Game ID": "iNFGnbJydzfkmyZwgBwe",
         "Game #": 9,
         "Player Count": 9,
         "Victory Conditions": "Foreign Policy",
@@ -592,6 +601,7 @@
         }
     },
     "Test Game": {
+        "Game ID": "XwSUiwmEAfZUzDGXfEGj",
         "Game #": 10,
         "Player Count": "4",
         "Victory Conditions": "Randomized Sets",
@@ -640,6 +650,7 @@
         }
     },
     "Genisys": {
+        "Game ID": "maSTSlhYOQjYTjHPtPhA",
         "Game #": 11,
         "Player Count": 8,
         "Victory Conditions": "Randomized Sets",
@@ -649,8 +660,8 @@
         "Fog of War": "Disabled",
         "Version": "Development",
         "Game End Turn": 32,
-        "Days Ellapsed": 0,
-        "Game Started": "06/02/2024",
+        "Days Ellapsed": 73,
+        "Game Started": "06/09/2024",
         "Game Ended": "08/21/2024",
         "Player Data": {
             "001": {
