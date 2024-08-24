@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 
+
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 <title>Game Archive</title>
 
@@ -8,13 +9,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
 <style>
 .main {
-    width: 80%;
-    margin-left: 10%;
+    width: 50%;
+    margin-left: 25%;
     display: flex;
     flex-direction: column;
 }
+/* game box styling */
 .record-box {
-    width: 80%;
+    width: 100%;
     margin: 0px;
     padding: 0px;
     background-color: #434343;
@@ -61,7 +63,7 @@
     color: white;
     opacity: 0.9;
     height: min-content;
-    width: 20%;
+    width: 25%;
 }
 .info-table td {
     border: none;
@@ -82,7 +84,7 @@
     border-width: 0px;
     opacity: 0.9;
     height: min-content;
-    width: 30%;
+    width: 25%;
 }
 .player-table td {
     border: none;
@@ -91,15 +93,10 @@
     padding-left: 5px;
     padding-right: 5px;
 }
-img {
-    padding: 0px;
-    margin: 0px;
-}
 .record-box img {
     padding-top: 7px;
     padding-bottom: 7px;
-    max-width: 50%;
-    opacity: 1.0;
+    width: 100%;
 }
 .nation_top {
     font-style: bold;
@@ -109,10 +106,41 @@ img {
     font-style: italic;
     padding-bottom: 5px;
 }
+/* slideshow styling 
+* {box-sizing: border-box}*/
+.qSNQClOWRJwRwccPtSGV, .nLsefQYKStAlAngJKzCN, .RYeggypebzegsHSWdrql, .NWvKllpBdfvllSvBcUMF, .AvTkNMRkjIZXAXjVpJGb, .KwQvMSAzknEmGNFBZrmA, .hdUrBSNbJdIuEvVANqEn, .aPiJFqnrnvUiLhgsllVO, .iNFGnbJydzfkmyZwgBwe, .XwSUiwmEAfZUzDGXfEGj, .maSTSlhYOQjYTjHPtPhA {
+    display: none;
+}
+img {vertical-align: middle;}
+.slideshow-container {
+  position: relative;
+  margin: auto;
+  width: 50%;
+}
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+.prev:hover, .next:hover {
+  background-color: #f1f1f1;
+  color: black;
+}
 </style>
 
-
-<body>
 
 <header>
     <div class="left-header">
@@ -123,69 +151,120 @@ img {
     </div>
 </header>
 
+
+<body>
+
 <div class="main">
-    {% for row in archived_game_masterlist %}
-    <div class="record-box">
-        <p class="record-title">{{ row[0] }}</p>
-        <p class="record-subtitle">{{ row[11] }}</p>
-        <div class="contents">
-        <table class="info-table">
-            <tr>
-                <td colspan="2">Game #{{ row[13] }}</td>
-            </tr>
-            <tr>
-                <td>Version:</td>
-                <td align="right">{{ row[1] }}</td>
-            </tr>
-            <tr>
-                <td>Map:</td>
-                <td align="right">{{ row[2] }}</td>
-            </tr>
-            <tr>
-                <td>Victory Conditions:</td>
-                <td align="right">{{ row[3] }}</td>
-            </tr>
-            <tr>
-                <td>Fog of War:</td>
-                <td align="right">{{ row[4] }}</td>
-            </tr>
-            <tr>
-                <td>Turn Length:</td>
-                <td align="right">{{ row[5] }}</td>
-            </tr>
-            <tr>
-                <td>Accelerated Schedule:</td>
-                <td align="right">{{ row[6] }}</td>
-            </tr>
-            <tr>
-                <td>Turns Ellapsed:</td>
-                <td align="right">{{ row[7] }}</td>
-            </tr>
-            <tr>
-                <td>Days Ellapsed:</td>
-                <td align="right">{{ row[8] }}</td>
-            </tr>
-            <tr>
-                <td colspan="2">{{ row[9] }}</td>
-            </tr>
-        </table>
-        <img src={{ row[10] }}>
-        <table class="player-table">
-            {% for entry in row[12] %}
-            <tr>
-                <td width="50%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
-                <td width="50%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
-            </tr>
-            <tr>
-                <td width="50%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
-                <td width="50%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
-            </tr>
-            {% endfor %}
-        </table>
+    
+    {% for key, contents in dict.items() %}
+        <div class="record-box">
+            <p class="record-title">{{ key }}</p>
+            <p class="record-subtitle">{{ contents["Winner String"] }}</p>
+
+            <div class="contents">
+
+                <table class="info-table">
+                    <tr>
+                        <td colspan="2">Game #{{ contents["Game #"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Version:</td>
+                        <td align="right">{{ contents["Version"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Map:</td>
+                        <td align="right">{{ contents["Map"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Victory Conditions:</td>
+                        <td align="right">{{ contents["Victory Conditions"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Fog of War:</td>
+                        <td align="right">{{ contents["Fog of War"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Turn Length:</td>
+                        <td align="right">{{ contents["Turn Duration"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Accelerated Schedule:</td>
+                        <td align="right">{{ contents["Accelerated Schedule"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Turns Ellapsed:</td>
+                        <td align="right">{{ contents["Game End Turn"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Days Ellapsed:</td>
+                        <td align="right">{{ contents["Days Ellapsed"] }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{ contents["Date String"] }}</td>
+                    </tr>
+                </table>
+
+                <div class="slideshow-container">
+                    
+                    {% for filename in contents["Slideshow Images"] %}
+                        {% set image_url = contents["Game ID"] + "/" + filename %}
+                        <div class="{{ contents["Game ID"] }}">
+                            <img src="/static/archive/{{ image_url }}">
+                        </div>
+                    {% endfor %}
+
+                    {% set no = loop.index - 1 %}
+                  
+                    <a class="prev" onclick="plusSlides(-1, {{ no }})">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1, {{ no }})">&#10095;</a>
+
+                </div>
+
+                <table class="player-table">
+                    {% for entry in contents["Playerdata Masterlist"] %}
+                    <tr>
+                        <td width="60%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
+                        <td width="40%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
+                    </tr>
+                    <tr>
+                        <td width="60%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
+                        <td width="40%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
         </div>
-    </div>
     {% endfor %}
 
 </div>
 
 </body>
+</html>
+
+
+<script>
+    let slideIndex = {{ slide_index_list }};
+    let slideId = {{ game_id_list |tojson }};
+    let i;
+    for (i = 0; i < slideId.length; i++) {
+        showSlides(1, i);
+    }
+
+    function plusSlides(n, no) {
+        showSlides(slideIndex[no] += n, no);
+    }
+
+    function showSlides(n, no) {
+        let i;
+        let x = document.getElementsByClassName(slideId[no]);
+        if (n > x.length) {slideIndex[no] = 1}    
+        if (n < 1) {slideIndex[no] = x.length}
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";  
+        }
+        x[slideIndex[no]-1].style.display = "block";  
+    }
+    
+</script>
