@@ -331,6 +331,8 @@ def archived_games():
         game_details_dict["Fog of War"] = game_data["Fog of War"]
         game_details_dict["Turn Duration"] = game_data["Turn Duration"]
         game_details_dict["Accelerated Schedule"] = game_data["Accelerated Schedule"]
+        game_details_dict["Region Disputes"] = game_data["Region Disputes"]
+        game_details_dict["Deadlines on Weekends"] = game_data["Deadlines on Weekends"]
         game_details_dict["Game End Turn"] = game_data["Game End Turn"]
         game_details_dict["Days Ellapsed"] = game_data["Days Ellapsed"]
         game_details_dict["Date String"] = f"""{game_records_dict[game_name]["Game Started"]} - {game_records_dict[game_name]["Game Ended"]}"""
