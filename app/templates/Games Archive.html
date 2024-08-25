@@ -48,6 +48,8 @@
     padding-bottom: 5px;
 }
 .contents {
+    margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: row;
 }
@@ -55,7 +57,6 @@
     width: 100%;
     margin: 0px;
     padding: 0px;
-    margin-top: 5px;
     padding-bottom: 5px;
     background-color: #434343;
     border-collapse: collapse;
@@ -73,11 +74,17 @@
     padding-left: 5px;
     padding-right: 5px;
 }
+.record-section-title {
+    border: none;
+    text-align: left;
+    color: white;
+    text-decoration: underline;
+    margin: 0;
+    padding: 0;
+}
 .player-table {
     width: 100%;
     margin: 0px;
-    margin-top: 5px;
-    padding-top: 5px;
     padding-bottom: 5px;
     background-color: #434343;
     border-collapse: collapse;
@@ -94,8 +101,6 @@
     padding-right: 5px;
 }
 .record-box img {
-    padding-top: 7px;
-    padding-bottom: 7px;
     width: 100%;
 }
 .nation_top {
@@ -165,7 +170,7 @@ img {vertical-align: middle;}
 
                 <table class="info-table">
                     <tr>
-                        <td colspan="2">Game #{{ contents["Game #"] }}</td>
+                        <td colspan=2 class="record-section-title">Information</td>
                     </tr>
                     <tr>
                         <td>Version:</td>
@@ -188,8 +193,19 @@ img {vertical-align: middle;}
                         <td align="right">{{ contents["Turn Duration"] }}</td>
                     </tr>
                     <tr>
-                        <td>Accelerated Schedule:</td>
+                        <td>Accelerated Start:</td>
                         <td align="right">{{ contents["Accelerated Schedule"] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Deadlines on Weekends:</td>
+                        <td align="right">{{ contents["Deadlines on Weekends"] }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan=2 class="record-section-title" style="padding-top:10px;">Statistics</td>
+                    </tr>
+                    <tr>
+                        <td>Region Disputes:</td>
+                        <td align="right">{{ contents["Region Disputes"] }}</td>
                     </tr>
                     <tr>
                         <td>Turns Ellapsed:</td>
