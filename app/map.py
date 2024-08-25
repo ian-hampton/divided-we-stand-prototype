@@ -273,14 +273,14 @@ class ResourceMap:
             uranium_count = 10
             rare_count = 5
             empty_count = 67
-        resource_list += "Coal" * coal_count
-        resource_list += "Oil" * oil_count
-        resource_list += "Basic Materials" * basic_count
-        resource_list += "Common Metals" * common_count
-        resource_list += "Advanced Metals" * advanced_count
-        resource_list += "Uranium" * uranium_count
-        resource_list += "Rare Earth Elements" * rare_count
-        resource_list += "Empty" * empty_count
+        resource_list += ["Coal"] * coal_count
+        resource_list += ["Oil"] * oil_count
+        resource_list += ["Basic Materials"] * basic_count
+        resource_list += ["Common Metals"] * common_count
+        resource_list += ["Advanced Metals"] * advanced_count
+        resource_list += ["Uranium"] * uranium_count
+        resource_list += ["Rare Earth Elements"] * rare_count
+        resource_list += ["Empty"] * empty_count
         resource_list = random.sample(self.resource_list, len(self.resource_list))
         
         #Update regdata.csv
