@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html>
+
+
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 <title>Games</title>
+
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
 <style>
 .main {
-    width: 80%;
-    margin-left: 10%;
+    width: 50%;
+    margin-left: 25%;
     display: flex;
     flex-direction: column;
 }
+/* game box styling */
 .record-box {
-    width: 80%;
+    width: 100%;
     margin: 0px;
     padding: 0px;
     background-color: #434343;
@@ -44,6 +48,8 @@
     padding-bottom: 5px;
 }
 .contents {
+    margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: row;
 }
@@ -51,7 +57,6 @@
     width: 100%;
     margin: 0px;
     padding: 0px;
-    margin-top: 5px;
     padding-bottom: 5px;
     background-color: #434343;
     border-collapse: collapse;
@@ -59,7 +64,7 @@
     color: white;
     opacity: 0.9;
     height: min-content;
-    width: 20%;
+    width: 25%;
 }
 .info-table td {
     border: none;
@@ -69,18 +74,24 @@
     padding-left: 5px;
     padding-right: 5px;
 }
+.record-section-title {
+    border: none;
+    text-align: left;
+    color: white;
+    text-decoration: underline;
+    margin: 0;
+    padding: 0;
+}
 .player-table {
     width: 100%;
     margin: 0px;
-    margin-top: 5px;
-    padding-top: 5px;
     padding-bottom: 5px;
     background-color: #434343;
     border-collapse: collapse;
     border-width: 0px;
     opacity: 0.9;
     height: min-content;
-    width: 30%;
+    width: 25%;
 }
 .player-table td {
     border: none;
@@ -89,16 +100,9 @@
     padding-left: 5px;
     padding-right: 5px;
 }
-img {
-    padding: 0px;
-    margin: 0px;
-    display: block;
-}
 .record-box img {
-    padding-top: 7px;
-    padding-bottom: 7px;
-    max-width: 50%;
-    opacity: 1.0;
+    width: 50%;
+    object-fit: contain;
 }
 .nation_top {
     font-style: bold;
@@ -108,15 +112,9 @@ img {
     font-style: italic;
     padding-bottom: 5px;
 }
-.create-button {
-    background: none;
-    border: none;
-    margin-right: 10px;
-    cursor: pointer;
-}
 </style>
 
-<body>
+
 <header>
     <div class="left-header">
         <p id="title">Active Games</p>
@@ -126,6 +124,10 @@ img {
         <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:48px;"></a>
     </div>
 </header>
+
+
+<body>
+
 <div class="main">
     {% for row in active_game_masterlist %}
     <div class="record-box">
@@ -173,12 +175,12 @@ img {
         <table class="player-table">
             {% for entry in row[12] %}
             <tr>
-                <td width="50%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
-                <td width="50%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
+                <td width="60%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
+                <td width="40%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
             </tr>
             <tr>
-                <td width="50%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
-                <td width="50%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
+                <td width="60%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
+                <td width="40%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
             </tr>
             {% endfor %}
         </table>
@@ -186,5 +188,8 @@ img {
     </div>
     {% endfor %}
 </div>
+
 </body>
+
+
 </html>
