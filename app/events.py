@@ -1409,7 +1409,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
 
 
     #retire active events if expired at end of turn
-    current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
+    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
     if turn_status == "After Actions":
         if "Expiration" in active_games_dict[full_game_id]['Active Events'][event_name]:
             if active_games_dict[full_game_id]['Active Events'][event_name]["Expiration"] == current_turn_num:

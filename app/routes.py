@@ -124,44 +124,27 @@ def games():
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
+    
+    #get dict of active games
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    
-    #generate list of active games by iterating through active_games_dict
-    active_game_masterlist = []
-    for full_game_id, value in active_games_dict.items():
-        active_game_data = []
-        game_name = value.get("Game Name")
-        current_turn = value.get("Current Turn")
-        preview_image_filepath = f'static/{full_game_id}_image.png'
 
+    #read active games
+    for game_id, game_data in active_games_dict.items():
+
+        current_turn = game_data["Statistics"]["Current Turn"]
+        if current_turn == "Turn N/A":
+            continue
+        
         match current_turn:
-            case "Turn N/A":
-                active_game_data.append('Open Game Slot')
-                active_game_data.append('Turn N/A')
-                active_game_data.append('Game #: TBD')
-                for i in range(0, 8):
-                    active_game_data.append('TBD')
-                active_game_data.append('static/UWS-2.png')
-                playercount = 10
-                refined_player_data = []
-                for i in range(playercount):
-                    refined_player_data.append(['', '', '', '', '#FFFFFF', '#FFFFFF'])
-                active_game_data.append(refined_player_data)
 
             case "Starting Region Selection in Progress":
-                active_game_data.append(f"""<a href="/{full_game_id}">{game_name}</a>""")
-                active_game_data.append(current_turn)
-                active_game_data.append(f"""Game #{value.get("Game #")}""")
-                active_game_data.append(value.get("Version"))
-                active_game_data.append(value.get("Map"))
-                active_game_data.append(value.get("Victory Conditions"))
-                active_game_data.append(value.get("Fog of War"))
-                active_game_data.append(value.get("Turn Length"))
-                active_game_data.append(value.get("Accelerated Schedule"))
-                active_game_data.append(value.get("Days Ellapsed"))
-                active_game_data.append('TBD')
-                active_game_data.append(preview_image_filepath)
+                #get title and game link
+                game_name = game_data["Game Name"]
+                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
+                #get status
+                game_data["Status"] = current_turn
+                #get player information
                 refined_player_data = []
                 playerdata_list = core.read_file(f'gamedata/{full_game_id}/playerdata.csv', 1)
                 for playerdata in playerdata_list:
@@ -169,23 +152,22 @@ def games():
                     username = player_records_dict[profile_id]["Username"]
                     username_str = f"""<a href="profile/{profile_id}">{username}</a>"""
                     refined_player_data.append([playerdata[1], 0, 'TBD', username_str, '#ffffff', '#ffffff'])
-                active_game_data.append(refined_player_data)
+                #get image
+                game_map = game_data["Information"]["Map"]
+                if game_map == "United States 2.0":
+                    game_map = "united_states"
+                image_url = f"../maps/{game_map}/default.png"
+                pass
 
             case "Nation Setup in Progress":
-                active_game_data.append(f"""<a href="/{full_game_id}">{game_name}</a>""")
-                active_game_data.append(current_turn)
-                active_game_data.append(f"""Game #{value.get("Game #")}""")
-                active_game_data.append(value.get("Version"))
-                active_game_data.append(value.get("Map"))
-                active_game_data.append(value.get("Victory Conditions"))
-                active_game_data.append(value.get("Fog of War"))
-                active_game_data.append(value.get("Turn Length"))
-                active_game_data.append(value.get("Accelerated Schedule"))
-                active_game_data.append(value.get("Days Ellapsed"))
-                active_game_data.append('TBD')
-                active_game_data.append(preview_image_filepath)
+                #get title and game link
+                game_name = game_data["Game Name"]
+                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
+                #get status
+                game_data["Status"] = current_turn
+                #get player information
                 refined_player_data = []
-                playerdata_list = core.read_file(f'gamedata/{full_game_id}/playerdata.csv', 1)
+                playerdata_list = core.read_file(f'gamedata/{game_id}/playerdata.csv', 1)
                 for playerdata in playerdata_list:
                     profile_id = playerdata[30]
                     username = player_records_dict[profile_id]["Username"]
@@ -193,28 +175,30 @@ def games():
                     player_color = playerdata[2]
                     player_color_2 = check_color_correction(player_color)
                     refined_player_data.append([playerdata[1], 0, 'TBD', username_str, player_color, player_color_2])
-                active_game_data.append(refined_player_data)
+                #get image
+                image_url = f"../gamedata/{game_id}/images/0.png"
+                pass
 
             case _:
-                active_game_data.append(f"""<a href="/{full_game_id}">{game_name}</a>""")
-                if value.get("Game Active"):
-                    active_game_data.append(f"Turn {current_turn}")
+                #get title and game link
+                game_name = game_data["Game Name"]
+                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
+                #get status
+                if game_data["Game Active"]:
+                    game_data["Status"] = f"Turn {current_turn}"
                 else:
-                    active_game_data.append("Game Completed")
-                active_game_data.append(f"""Game #{value.get("Game #")}""")
-                active_game_data.append(value.get("Version"))
-                active_game_data.append(value.get("Map"))
-                active_game_data.append(value.get("Victory Conditions"))
-                active_game_data.append(value.get("Fog of War"))
-                active_game_data.append(value.get("Turn Length"))
-                active_game_data.append(value.get("Accelerated Schedule"))
-                active_game_data.append(value.get("Days Ellapsed"))
-                active_game_data.append(value.get("Game Started"))
-                active_game_data.append(preview_image_filepath)
-                refined_player_data = generate_refined_player_list_active(full_game_id, current_turn)
-                active_game_data.append(refined_player_data)
-        active_game_masterlist.append(active_game_data)
-    return render_template('Games.html', active_game_masterlist = active_game_masterlist, full_game_id = full_game_id)
+                    game_data["Status"] = "Game Over!"
+                #get player information
+                refined_player_data = generate_refined_player_list_active(game_id, current_turn)
+                #get image
+                image_url = url_for('main.get_mainmap', full_game_id=game_id)
+                #image_url = f"../gamedata/{game_id}/images/{int(current_turn) - 1}.png"
+                pass
+        
+        game_data["Playerdata Masterlist"] = refined_player_data
+        game_data["image_url"] = image_url
+    
+    return render_template('Games.html', dict = active_games_dict, full_game_id = game_id)
 
 #SETTINGS PAGE
 @main.route('/settings')
@@ -264,21 +248,25 @@ def create_game():
         for active_game_id in active_games:
             active_games_dict[active_game_id] = {
                 "Game Name": "Open Game Slot",
-                "Current Turn": "Turn N/A",
                 "Game #": 0,
-                "Version": "TBD",
-                "Player Count": "0",
-                "Map": "TBD",
-                "Victory Conditions": "TBD",
-                "Fog of War": "TBD",
-                "Turn Length": "TBD",
-                "Accelerated Schedule": "TBD",
-                "Days Ellapsed": 0,
-                "Game Started": "TBD",
+                "Game Active": False,
+                "Information": {
+                    "Version": "TBD",
+                    "Map": "TBD",
+                    "Victory Conditions": "TBD",
+                    "Fog of War": "TBD",
+                    "Turn Length": "TBD",
+                    "Accelerated Schedule": "TBD"
+                },
+                "Statistics": {
+                    "Player Count": "0",
+                    "Current Turn": "Turn N/A",
+                    "Days Ellapsed": 0,
+                    "Game Started": "TBD",
+                },
                 "Inactive Events": [],
                 "Active Events": {},
-                "Current Event": {},
-                "Game Active": False
+                "Current Event": {}
             }
             core.erase_game(active_game_id)
         active_games = [key for key, value in game_records_dict.items() if value.get("Game Ended") == "Present"]
@@ -316,44 +304,31 @@ def archived_games():
         game_records_dict = json.load(json_file)
     
     #take information from game_record_dict and build new dict
-    archived_game_dict = {}
     for game_name, game_data in game_records_dict.items():
         
-        if game_data["Game Ended"] == "Present":
+        if game_data["Statistics"]["Turns Ellapsed"] == "Present":
             continue
         
-        game_details_dict = {}
-        game_details_dict["Game ID"] = game_data["Game ID"]
-        game_details_dict["Game #"] = game_data["Game #"]
-        game_details_dict["Version"] = game_data["Version"]
-        game_details_dict["Map"] = game_data["Map"]
-        game_details_dict["Victory Conditions"] = game_data["Victory Conditions"]
-        game_details_dict["Fog of War"] = game_data["Fog of War"]
-        game_details_dict["Turn Duration"] = game_data["Turn Duration"]
-        game_details_dict["Accelerated Schedule"] = game_data["Accelerated Schedule"]
-        game_details_dict["Region Disputes"] = game_data["Region Disputes"]
-        game_details_dict["Deadlines on Weekends"] = game_data["Deadlines on Weekends"]
-        game_details_dict["Game End Turn"] = game_data["Game End Turn"]
-        game_details_dict["Days Ellapsed"] = game_data["Days Ellapsed"]
-        game_details_dict["Date String"] = f"""{game_records_dict[game_name]["Game Started"]} - {game_records_dict[game_name]["Game Ended"]}"""
+        #get playerdata
         archived_player_data_list, players_who_won_list = generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
-            game_details_dict["Winner String"] = f'{victors_str} Victory!'
+            game_data["Winner String"] = f'{victors_str} Victory!'
         elif len(players_who_won_list) > 1:
             victors_str = ' & '.join(players_who_won_list)
-            game_details_dict["Winner String"] = f'{victors_str} Victory!'
+            game_data["Winner String"] = f'{victors_str} Victory!'
         elif len(players_who_won_list) == 0:
-            game_details_dict["Winner String"] = 'Draw!'
-        game_details_dict["Playerdata Masterlist"] = archived_player_data_list
+            game_data["Winner String"] = 'Draw!'
+        game_data["Playerdata Masterlist"] = archived_player_data_list
 
+        #get game images
         image_name_list = []
         filename = "graphic.png"
         filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
         if os.path.isfile(filepath):
             image_name_list.append(filename)
-        turn_number = game_data["Game End Turn"]
-        if game_data["Game End Turn"] % 4 != 0:
+        turn_number = game_data["Statistics"]["Turns Ellapsed"]
+        if game_data["Statistics"]["Turns Ellapsed"] % 4 != 0:
             filename = f"{turn_number}.png"
             filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
             if os.path.isfile(filepath):
@@ -366,20 +341,19 @@ def archived_games():
             if os.path.isfile(filepath):
                 image_name_list.append(filename)
             turn_number -= 4
-        game_details_dict["Slideshow Images"] = image_name_list
-
-        archived_game_dict[game_name] = game_details_dict
+        game_data["Slideshow Images"] = image_name_list
     
-    archived_game_dict = dict(sorted(archived_game_dict.items(), key=lambda item: item[1]['Game #'], reverse=True))
+    #display games from newest to oldest
+    game_records_dict = dict(sorted(game_records_dict.items(), key=lambda item: item[1]['Game #'], reverse=True))
 
-    #get gameid list
+    #get gameid list (needed for slideshows)
     game_id_list = []
     for game_name, game_data in game_records_dict.items():
         game_id_list.append(game_data["Game ID"])
     game_id_list.reverse()
     slide_index_list = [1] * len(game_id_list)
     
-    return render_template('Games Archive.html', dict = archived_game_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
+    return render_template('Games Archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
 
 #LEADERBOARD PAGE
 @main.route('/leaderboard')
@@ -531,7 +505,7 @@ def game_load(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game1_title = active_games_dict[full_game_id]["Game Name"]
-    game1_turn = active_games_dict[full_game_id]["Current Turn"]
+    game1_turn = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
     game1_active_bool = active_games_dict[full_game_id]["Game Active"]
     game1_extendedtitle = f"United We Stood - {game1_title}" 
     
@@ -789,10 +763,10 @@ def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     try:
-        current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
-        filepath = f'../gamedata/{full_game_id}/images/{current_turn_num - 1}.png'
+        current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+        filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'
     except:
-        filepath = f'../gamedata/{full_game_id}/images/mainmap.png'
+        filepath = f'..\\gamedata\\{full_game_id}\\images\\mainmap.png'
     return send_file(filepath, mimetype='image/png')
 @main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):

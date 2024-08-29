@@ -172,52 +172,27 @@ img {vertical-align: middle;}
                     <tr>
                         <td colspan=2 class="record-section-title">Information</td>
                     </tr>
-                    <tr>
-                        <td>Version:</td>
-                        <td align="right">{{ contents["Version"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Map:</td>
-                        <td align="right">{{ contents["Map"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Victory Conditions:</td>
-                        <td align="right">{{ contents["Victory Conditions"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Fog of War:</td>
-                        <td align="right">{{ contents["Fog of War"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Turn Length:</td>
-                        <td align="right">{{ contents["Turn Duration"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Accelerated Start:</td>
-                        <td align="right">{{ contents["Accelerated Schedule"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Deadlines on Weekends:</td>
-                        <td align="right">{{ contents["Deadlines on Weekends"] }}</td>
-                    </tr>
+                    {% for key, value in contents["Information"].items() %}
+                        <tr>
+                            <td width="40%">{{ key }}:</td>
+                            <td width="60%" align="right">{{ value }}</td>
+                        </tr>
+                    {% endfor %}
                     <tr>
                         <td colspan=2 class="record-section-title" style="padding-top:10px;">Statistics</td>
                     </tr>
-                    <tr>
-                        <td>Region Disputes:</td>
-                        <td align="right">{{ contents["Region Disputes"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Turns Ellapsed:</td>
-                        <td align="right">{{ contents["Game End Turn"] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Days Ellapsed:</td>
-                        <td align="right">{{ contents["Days Ellapsed"] }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{ contents["Date String"] }}</td>
-                    </tr>
+                    {% for key, value in contents["Statistics"].items() %}
+                        {% if key == "Date String" %}
+                        <tr>
+                            <td colspan=2>{{ value }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td>{{ key }}:</td>
+                            <td align="right">{{ value }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
                 </table>
 
                 <div class="slideshow-container">
@@ -230,7 +205,6 @@ img {vertical-align: middle;}
                     {% endfor %}
 
                     {% set no = loop.index - 1 %}
-                  
                     <a class="prev" onclick="plusSlides(-1, {{ no }})">&#10094;</a>
                     <a class="next" onclick="plusSlides(1, {{ no }})">&#10095;</a>
 
@@ -265,6 +239,7 @@ img {vertical-align: middle;}
     let slideId = {{ game_id_list |tojson }};
     let i;
     for (i = 0; i < slideId.length; i++) {
+        console.log("1-"+i)
         showSlides(1, i);
     }
 
@@ -275,12 +250,16 @@ img {vertical-align: middle;}
     function showSlides(n, no) {
         let i;
         let x = document.getElementsByClassName(slideId[no]);
+        console.log(x)
         if (n > x.length) {slideIndex[no] = 1}    
         if (n < 1) {slideIndex[no] = x.length}
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";  
-        }
-        x[slideIndex[no]-1].style.display = "block";  
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";  
+                console.log("bruh")
+            }
+        x[slideIndex[no]-1].style.display = "block";
+        console.log(n + " " + no)
+        console.log("============")
     }
     
 </script>
