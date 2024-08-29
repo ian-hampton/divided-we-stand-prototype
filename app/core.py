@@ -106,9 +106,6 @@ def resolve_stage1_processing(full_game_id, starting_region_list, player_color_l
     resource_map.update()
     control_map.update()
 
-    #update preview image
-    map.update_preview_image(game_id, current_turn_num)
-
 def resolve_stage2_processing(full_game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
     '''
     Resolves turn processing for a game in stage two.
@@ -275,7 +272,6 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
     map_name = active_games_dict[full_game_id]["Statistics"]["Map"]
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
-    map.update_preview_image(game_id, current_turn_num)
 
 def resolve_turn_processing(full_game_id, public_actions_list, private_actions_list):
     '''
@@ -549,7 +545,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     if update_control_map:
         control_map = map.ControlMap(game_id, map_name)
         control_map.update()
-    map.update_preview_image(game_id, current_turn_num)
 
 
 #TURN PROCESSING FUNCTIONS
@@ -625,12 +620,10 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
             map = 'united_states'
     starting_map_images = ['mainmap', 'resourcemap', 'controlmap']
     files_destination = f'gamedata/{full_game_id}'
-    images_destination = f'{files_destination}/images'
-    shutil.copy(f'maps/{map}/regdata.csv', files_destination)
+    shutil.copy(f"maps/{map}/regdata.csv", files_destination)
     for map_filename in starting_map_images:
-        shutil.copy(f'maps/{map}/{map_filename}.png', images_destination)
-    shutil.copy(f'maps/{map}/mainmap.png', 'static')
-    shutil.move('static/mainmap.png', f'static/{full_game_id}_image.png')
+        shutil.copy(f"maps/{map}/reference.png", f"{files_destination}/images")
+        shutil.move(f"{files_destination}/images/reference.png", f"maps/{map}/{map_filename}.png")
 
     #create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'

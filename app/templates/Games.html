@@ -7,6 +7,7 @@
 
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/game_display.css') }}">
 <style>
 .main {
     width: 50%;
@@ -14,103 +15,9 @@
     display: flex;
     flex-direction: column;
 }
-/* game box styling */
-.record-box {
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    background-color: #434343;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.9;
-}
-.record-title {
-    border: none;
-    font-size: 24px;
-    background-color: #2a2a2a;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-    padding: 0;
-    padding-top: 2px;
-}
-.record-subtitle {
-    border: none;
-    font-size: 14px;
-    background-color: #2a2a2a;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 5px;
-}
-.contents {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: row;
-}
-.info-table {
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    padding-bottom: 5px;
-    background-color: #434343;
-    border-collapse: collapse;
-    border-width: 0px;
-    color: white;
-    opacity: 0.9;
-    height: min-content;
-    width: 25%;
-}
-.info-table td {
-    border: none;
-    font-size: 10px;
-    padding: 2px;
-    margin: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-.record-section-title {
-    border: none;
-    text-align: left;
-    color: white;
-    text-decoration: underline;
-    margin: 0;
-    padding: 0;
-}
-.player-table {
-    width: 100%;
-    margin: 0px;
-    padding-bottom: 5px;
-    background-color: #434343;
-    border-collapse: collapse;
-    border-width: 0px;
-    opacity: 0.9;
-    height: min-content;
-    width: 25%;
-}
-.player-table td {
-    border: none;
-    font-size: 10px;
-    margin: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
 .record-box img {
     width: 50%;
     object-fit: contain;
-}
-.nation_top {
-    font-style: bold;
-    padding-top: 5px;
-}
-.nation_sub {
-    font-style: italic;
-    padding-bottom: 5px;
 }
 </style>
 
@@ -138,7 +45,7 @@
 
                     <table class="info-table">
                         <tr>
-                            <td colspan=2 class="record-section-title">Information</td>
+                            <th colspan=2>Information</th>
                         </tr>
                         {% for key, value in contents["Information"].items() %}
                             <tr>
@@ -147,7 +54,7 @@
                             </tr>
                         {% endfor %}
                         <tr>
-                            <td colspan=2 class="record-section-title" style="padding-top:10px;">Statistics</td>
+                            <th colspan=2 style="padding-top:10px;">Statistics</th>
                         </tr>
                         {% for key, value in contents["Statistics"].items() %}
                             <tr>
@@ -160,14 +67,17 @@
                 <img src={{ contents["image_url"] }}>
 
                 <table class="player-table">
+                    <tr>
+                        <th colspan=2>Nations</th>
+                    </tr>
                     {% for entry in contents["Playerdata Masterlist"] %}
                     <tr>
-                        <td width="60%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
-                        <td width="40%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
+                        <td width="60%" style="color:{{ entry[5]}};">{{ entry[0] }}</td>
+                        <td width="40%" style="color:{{ entry[5]}};" align="right">{{ entry[1] }}</td>
                     </tr>
                     <tr>
-                        <td width="60%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
-                        <td width="40%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
+                        <td width="60%" style="color:white;padding-bottom:10px;">{{ entry[2] }}</td>
+                        <td width="40%" style="color:white;padding-bottom:10px;" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
                     </tr>
                     {% endfor %}
                 </table>

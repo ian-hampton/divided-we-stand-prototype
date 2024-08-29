@@ -497,16 +497,3 @@ def text_over_map_new(main_image, text_filepath):
     main_image = Image.alpha_composite(main_image, text_image)
 
     return main_image
-
-def update_preview_image(game_id, current_turn_num):
-    match current_turn_num:
-        case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-            filename = 'mainmap.png'
-        case _:
-            filename = f'{current_turn_num - 1}.png'
-    mainmap_file = f'gamedata/game{game_id}/images/{filename}'
-    filepath_new = f'app/static/game{game_id}_image.png'
-    preview_destination = 'app/static'
-    shutil.copy(mainmap_file, preview_destination)
-    filepath_old = f'app/static/{filename}'
-    shutil.move(filepath_old, filepath_new)
