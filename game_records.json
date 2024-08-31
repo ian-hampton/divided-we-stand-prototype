@@ -2,19 +2,23 @@
     "Alpha": {
         "Game ID": "qSNQClOWRJwRwccPtSGV",
         "Game #": 1,
-        "Player Count": 3,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "United States 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 0,
-        "Game End Turn": 47,
-        "Days Ellapsed": 65,
-        "Game Started": "06/14/2020",
-        "Game Ended": "08/18/2020",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 3,
+            "Region Disputes": 0,
+            "Turns Ellapsed": 47,
+            "Days Ellapsed": 65,
+            "Game Started": "06/14/2020",
+            "Game Ended": "08/18/2020"
+        },
         "Player Data": {
             "003": {
                 "Nation Name": "Fukuoka",
@@ -45,19 +49,23 @@
     "Bravo": {
         "Game ID": "nLsefQYKStAlAngJKzCN",
         "Game #": 2,
-        "Player Count": 5,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "United States 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 0,
-        "Game End Turn": 35,
-        "Days Ellapsed": 63,
-        "Game Started": "10/01/2020",
-        "Game Ended": "12/02/2020",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 5,
+            "Region Disputes": 0,
+            "Turns Ellapsed": 35,
+            "Days Ellapsed": 63,
+            "Game Started": "10/01/2020",
+            "Game Ended": "12/02/2020"
+        },
         "Player Data": {
             "001": {
                 "Nation Name": "American Commonwealth",
@@ -104,19 +112,23 @@
     "Charlie": {
         "Game ID": "RYeggypebzegsHSWdrql",
         "Game #": 3,
-        "Player Count": 7,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "United States 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 0,
-        "Game End Turn": 44,
-        "Days Ellapsed": 80,
-        "Game Started": "01/02/2021",
-        "Game Ended": "03/23/2021",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 7,
+            "Region Disputes": 0,
+            "Turns Ellapsed": 44,
+            "Days Ellapsed": 80,
+            "Game Started": "01/02/2021",
+            "Game Ended": "03/23/2021"
+        },
         "Player Data": {
             "003": {
                 "Nation Name": "The Gentle Men",
@@ -179,19 +191,23 @@
     "Delta": {
         "Game ID": "NWvKllpBdfvllSvBcUMF",
         "Game #": 4,
-        "Player Count": 8,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "United States 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 3,
-        "Game End Turn": 41,
-        "Days Ellapsed": 97,
-        "Game Started": "05/01/2021",
-        "Game Ended": "08/06/2021",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 8,
+            "Region Disputes": 3,
+            "Turns Ellapsed": 41,
+            "Days Ellapsed": 97,
+            "Game Started": "05/01/2021",
+            "Game Ended": "08/06/2021"
+        },
         "Player Data": {
             "007": {
                 "Nation Name": "Mara Salvatrucha",
@@ -262,19 +278,23 @@
     "Echo": {
         "Game ID": "AvTkNMRkjIZXAXjVpJGb",
         "Game #": 5,
-        "Player Count": 6,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "Africa 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 0,
-        "Game End Turn": 42,
-        "Days Ellapsed": 130,
-        "Game Started": "10/02/2021",
-        "Game Ended": "02/09/2022",
+        "Information": {
+            "Version": "Development",
+            "Map": "Africa 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 6,
+            "Region Disputes": 0,
+            "Turns Ellapsed": 42,
+            "Days Ellapsed": 130,
+            "Game Started": "10/02/2021",
+            "Game Ended": "02/09/2022"
+        },
         "Player Data": {
             "005": {
                 "Nation Name": "South African Exodus",
@@ -329,19 +349,23 @@
     "Foxtrot": {
         "Game ID": "KwQvMSAzknEmGNFBZrmA",
         "Game #": 6,
-        "Player Count": 4,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "Southeast Asia 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 3,
-        "Game End Turn": 45,
-        "Days Ellapsed": 113,
-        "Game Started": "06/05/2022",
-        "Game Ended": "07/24/2022",
+        "Information": {
+            "Version": "Development",
+            "Map": "Southeast Asia 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 4,
+            "Region Disputes": 3,
+            "Turns Ellapsed": 45,
+            "Days Ellapsed": 113,
+            "Game Started": "06/05/2022",
+            "Game Ended": "07/24/2022"
+        },
         "Player Data": {
             "007": {
                 "Nation Name": "Azjol-Nerub",
@@ -380,19 +404,23 @@
     "Golf": {
         "Game ID": "hdUrBSNbJdIuEvVANqEn",
         "Game #": 7,
-        "Player Count": 7,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "Europe 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 7,
-        "Game End Turn": 50,
-        "Days Ellapsed": 137,
-        "Game Started": "03/09/2022",
-        "Game Ended": "07/24/2022",
+        "Information": {
+            "Version": "Development",
+            "Map": "Europe 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 7,
+            "Region Disputes": 7,
+            "Turns Ellapsed": 50,
+            "Days Ellapsed": 137,
+            "Game Started": "03/09/2022",
+            "Game Ended": "07/24/2022"
+        },
         "Player Data": {
             "007": {
                 "Nation Name": "Arathi Highlands",
@@ -455,19 +483,23 @@
     "Hotel": {
         "Game ID": "aPiJFqnrnvUiLhgsllVO",
         "Game #": 8,
-        "Player Count": 7,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "United States 1.1",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Enabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 9,
-        "Game End Turn": 37,
-        "Days Ellapsed": 75,
-        "Game Started": "09/21/2022",
-        "Game Ended": "12/05/2022",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 1.1",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Enabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 7,
+            "Region Disputes": 9,
+            "Turns Ellapsed": 37,
+            "Days Ellapsed": 75,
+            "Game Started": "09/21/2022",
+            "Game Ended": "12/05/2022"
+        },
         "Player Data": {
             "003": {
                 "Nation Name": "Amikabuu",
@@ -530,19 +562,23 @@
     "India": {
         "Game ID": "iNFGnbJydzfkmyZwgBwe",
         "Game #": 9,
-        "Player Count": 9,
-        "Victory Conditions": "Foreign Policy",
-        "Map": "China 1.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 4,
-        "Game End Turn": 49,
-        "Days Ellapsed": 130,
-        "Game Started": "01/22/2023",
-        "Game Ended": "06/01/2023",
+        "Information": {
+            "Version": "Development",
+            "Map": "China 1.0",
+            "Victory Conditions": "Foreign Policy",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": 9,
+            "Region Disputes": 4,
+            "Turns Ellapsed": 49,
+            "Days Ellapsed": 130,
+            "Game Started": "01/22/2023",
+            "Game Ended": "06/01/2023"
+        },
         "Player Data": {
             "003": {
                 "Nation Name": "Guandi Empire",
@@ -621,19 +657,23 @@
     "Test Game": {
         "Game ID": "XwSUiwmEAfZUzDGXfEGj",
         "Game #": 10,
-        "Player Count": "4",
-        "Victory Conditions": "Randomized Sets",
-        "Map": "United States 2.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "Live Game",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Enabled",
-        "Region Disputes": 0,
-        "Game End Turn": 34,
-        "Days Ellapsed": 35,
-        "Game Started": "02/03/2024",
-        "Game Ended": "03/09/2024",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 2.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": "Disabled",
+            "Accelerated Schedule": "Enabled",
+            "Turn Duration": "Live Game",
+            "Deadlines on Weekends": "Enabled"
+        },
+        "Statistics": {
+            "Player Count": "4",
+            "Region Disputes": 0,
+            "Turns Ellapsed": 34,
+            "Days Ellapsed": 35,
+            "Game Started": "02/03/2024",
+            "Game Ended": "03/09/2024"
+        },
         "Player Data": {
             "001": {
                 "Nation Name": "Western Occupation Zone",
@@ -672,19 +712,23 @@
     "Genisys": {
         "Game ID": "maSTSlhYOQjYTjHPtPhA",
         "Game #": 11,
-        "Player Count": 8,
-        "Victory Conditions": "Randomized Sets",
-        "Map": "United States 2.0",
-        "Accelerated Schedule": "Enabled",
-        "Turn Duration": "48 hours",
-        "Fog of War": "Disabled",
-        "Version": "Development",
-        "Deadlines on Weekends": "Disabled",
-        "Region Disputes": 1,
-        "Game End Turn": 32,
-        "Days Ellapsed": 73,
-        "Game Started": "06/09/2024",
-        "Game Ended": "08/21/2024",
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 2.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": "Disabled",
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Disabled"
+        },
+        "Statistics": {
+            "Player Count": 8,
+            "Region Disputes": 1,
+            "Turns Ellapsed": 32,
+            "Days Ellapsed": 73,
+            "Game Started": "06/09/2024",
+            "Game Ended": "08/21/2024"
+        },
         "Player Data": {
             "001": {
                 "Nation Name": "Allied States Of America",

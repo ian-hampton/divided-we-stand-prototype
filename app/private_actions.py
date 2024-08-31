@@ -852,7 +852,7 @@ def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs)
     wardata_list = core.read_file(wardata_filepath, 2)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
+    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
 
     #get needed player info
     nation_name_list = []

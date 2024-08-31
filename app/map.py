@@ -94,7 +94,7 @@ class MainMap:
         full_game_id = f'game{self.game_id}'
         match self.turn_num:
             case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-                main_map_save_location = f'gamedata/{full_game_id}/images/mainmap.png'
+                main_map_save_location = f'gamedata/{full_game_id}/images/0.png'
             case _:
                 main_map_save_location = f'gamedata/{full_game_id}/images/{self.turn_num - 1}.png'
         regdata_location = f'gamedata/{full_game_id}/regdata.csv'
@@ -281,7 +281,7 @@ class ResourceMap:
         resource_list += ["Uranium"] * uranium_count
         resource_list += ["Rare Earth Elements"] * rare_count
         resource_list += ["Empty"] * empty_count
-        resource_list = random.sample(self.resource_list, len(self.resource_list))
+        resource_list = random.sample(resource_list, len(resource_list))
         
         #Update regdata.csv
         regdata_location = f'gamedata/game{self.game_id}/regdata.csv'
@@ -497,16 +497,3 @@ def text_over_map_new(main_image, text_filepath):
     main_image = Image.alpha_composite(main_image, text_image)
 
     return main_image
-
-def update_preview_image(game_id, current_turn_num):
-    match current_turn_num:
-        case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-            filename = 'mainmap.png'
-        case _:
-            filename = f'{current_turn_num - 1}.png'
-    mainmap_file = f'gamedata/game{game_id}/images/{filename}'
-    filepath_new = f'app/static/game{game_id}_image.png'
-    preview_destination = 'app/static'
-    shutil.copy(mainmap_file, preview_destination)
-    filepath_old = f'app/static/{filename}'
-    shutil.move(filepath_old, filepath_new)

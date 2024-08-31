@@ -1,17 +1,23 @@
 {
     "game1": {
         "Game Name": "Genisys",
-        "Current Turn": "33",
         "Game #": 11,
-        "Version": "Development",
-        "Player Count": "8",
-        "Map": "United States 2.0",
-        "Victory Conditions": "Randomized Sets",
-        "Fog of War": "Disabled",
-        "Turn Length": "48 hours",
-        "Accelerated Schedule": "Enabled",
-        "Days Ellapsed": 73,
-        "Game Started": "06/09/2024",
+        "Game Active": false,
+        "Information": {
+            "Version": "Development",
+            "Map": "United States 2.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": "Disabled",
+            "Turn Length": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Disabled"
+        },
+        "Statistics": {
+            "Player Count": "8",
+            "Current Turn": "33",
+            "Days Ellapsed": 73,
+            "Game Started": "06/09/2024"
+        },
         "Inactive Events": [
             "Lost Nuclear Weapons",
             "Threat Containment"
@@ -21,25 +27,29 @@
                 "Effect": "Cooperation"
             }
         },
-        "Current Event": {},
-        "Game Active": false
+        "Current Event": {}
     },
     "game2": {
         "Game Name": "Open Game Slot",
-        "Current Turn": "Turn N/A",
         "Game #": 0,
-        "Version": "TBD",
-        "Player Count": "0",
-        "Map": "TBD",
-        "Victory Conditions": "TBD",
-        "Fog of War": "TBD",
-        "Turn Length": "TBD",
-        "Accelerated Schedule": "TBD",
-        "Days Ellapsed": 0,
-        "Game Started": "TBD",
+        "Game Active": false,
+        "Information": {
+            "Version": "TBD",
+            "Map": "TBD",
+            "Victory Conditions": "TBD",
+            "Fog of War": "TBD",
+            "Turn Length": "TBD",
+            "Accelerated Schedule": "TBD",
+            "Deadlines on Weekends": "Disabled"
+        },
+        "Statistics": {
+            "Player Count": "0",
+            "Current Turn": "Turn N/A",
+            "Days Ellapsed": 0,
+            "Game Started": "TBD"
+        },
         "Inactive Events": [],
         "Active Events": {},
-        "Current Event": {},
-        "Game Active": false
+        "Current Event": {}
     }
 }

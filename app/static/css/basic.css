@@ -26,6 +26,9 @@ header {
     display: flex;
     align-items: center;
 }
+.header-obj {
+    padding-right: 20px;
+}
 body {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-image: url('../new-background.png');

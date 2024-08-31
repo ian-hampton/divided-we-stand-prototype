@@ -1,0 +1,88 @@
+/* game box styling */
+.record-box {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    background-color: #434343;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+}
+.record-title {
+    border: none;
+    font-size: 24px;
+    background-color: #2a2a2a;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding-top: 2px;
+}
+.record-subtitle {
+    border: none;
+    font-size: 14px;
+    background-color: #2a2a2a;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5px;
+}
+.contents {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.info-table {
+    width: 25%;
+    height: min-content;
+    opacity: 0.9;
+    color: white;
+    background-color: #434343;
+    border-width: 0px;
+    border-collapse: collapse;
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 5px;
+}
+.info-table td {
+    border: none;
+    font-size: 10px;
+    padding: 0px;
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.player-table {
+    width: 25%;
+    height: min-content;
+    opacity: 0.9;
+    background-color: #434343;
+    border-width: 0px;
+    border-collapse: collapse;
+    margin: 0px;
+    padding-bottom: 5px;
+    
+}
+.player-table td {
+    border: none;
+    font-size: 10px;
+    padding: 0px;
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+th {
+    border: none;
+    text-align: left;
+    color: white;
+    text-decoration: underline;
+    margin: 0;
+    padding: 0;
+    padding-left: 5px;
+    font-size: 14px;
+}

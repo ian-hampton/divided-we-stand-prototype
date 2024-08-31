@@ -1,190 +1,95 @@
 <!DOCTYPE html>
 <html>
+
+
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 <title>Games</title>
 
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/game_display.css') }}">
 <style>
 .main {
-    width: 80%;
-    margin-left: 10%;
+    width: 50%;
+    margin-left: 25%;
     display: flex;
     flex-direction: column;
 }
-.record-box {
-    width: 80%;
-    margin: 0px;
-    padding: 0px;
-    background-color: #434343;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.9;
-}
-.record-title {
-    border: none;
-    font-size: 24px;
-    background-color: #2a2a2a;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-    padding: 0;
-    padding-top: 2px;
-}
-.record-subtitle {
-    border: none;
-    font-size: 14px;
-    background-color: #2a2a2a;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 5px;
-}
-.contents {
-    display: flex;
-    flex-direction: row;
-}
-.info-table {
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    margin-top: 5px;
-    padding-bottom: 5px;
-    background-color: #434343;
-    border-collapse: collapse;
-    border-width: 0px;
-    color: white;
-    opacity: 0.9;
-    height: min-content;
-    width: 20%;
-}
-.info-table td {
-    border: none;
-    font-size: 10px;
-    padding: 2px;
-    margin: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-.player-table {
-    width: 100%;
-    margin: 0px;
-    margin-top: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background-color: #434343;
-    border-collapse: collapse;
-    border-width: 0px;
-    opacity: 0.9;
-    height: min-content;
-    width: 30%;
-}
-.player-table td {
-    border: none;
-    font-size: 10px;
-    margin: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-img {
-    padding: 0px;
-    margin: 0px;
-    display: block;
-}
 .record-box img {
-    padding-top: 7px;
-    padding-bottom: 7px;
-    max-width: 50%;
-    opacity: 1.0;
-}
-.nation_top {
-    font-style: bold;
-    padding-top: 5px;
-}
-.nation_sub {
-    font-style: italic;
-    padding-bottom: 5px;
-}
-.create-button {
-    background: none;
-    border: none;
-    margin-right: 10px;
-    cursor: pointer;
+    width: 50%;
+    object-fit: contain;
 }
 </style>
 
-<body>
+
 <header>
     <div class="left-header">
         <p id="title">Active Games</p>
     </div>
     <div class="right-header">
-        <a class="create-button" href="settings"><img src="{{ url_for('static', filename='create.png') }}" style="width:48px;"></a>
+        <a class="header-obj" href="settings"><img src="{{ url_for('static', filename='create.png') }}" style="width:48px;"></a>
         <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:48px;"></a>
     </div>
 </header>
+
+
+<body>
+
 <div class="main">
-    {% for row in active_game_masterlist %}
-    <div class="record-box">
-        <p class="record-title">{% autoescape false %} {{ row[0] }} {% endautoescape %}</p>
-        <p class="record-subtitle">{{ row[1] }}</p>
-        <div class="contents">
-        <table class="info-table">
-            <tr>
-                <td colspan="2">{{ row[2] }}</td>
-            </tr>
-            <tr>
-                <td>Version:</td>
-                <td align="right">{{ row[3] }}</td>
-            </tr>
-            <tr>
-                <td>Map:</td>
-                <td align="right">{{ row[4] }}</td>
-            </tr>
-            <tr>
-                <td>Victory Conditions:</td>
-                <td align="right">{{ row[5] }}</td>
-            </tr>
-            <tr>
-                <td>Fog of War:</td>
-                <td align="right">{{ row[6] }}</td>
-            </tr>
-            <tr>
-                <td>Turn Length:</td>
-                <td align="right">{{ row[7] }}</td>
-            </tr>
-            <tr>
-                <td>Accelerated Schedule:</td>
-                <td align="right">{{ row[8] }}</td>
-            </tr>
-            <tr>
-                <td>Days Ellapsed:</td>
-                <td align="right">{{ row[9] }}</td>
-            </tr>
-            <tr>
-                <td>Game Started:</td>
-                <td align="right">{{ row[10] }}</td>
-            </tr>
-        </table>
-        <img src={{ row[11] }}>
-        <table class="player-table">
-            {% for entry in row[12] %}
-            <tr>
-                <td width="50%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
-                <td width="50%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
-            </tr>
-            <tr>
-                <td width="50%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
-                <td width="50%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        </div>
-    </div>
+    {% for key, contents in dict.items() %}
+        {% if contents["Statistics"]["Current Turn"] != "Turn N/A"%}
+            <div class="record-box">
+                <p class="record-title">{% autoescape false %} {{ contents["Title"] }} {% endautoescape %}</p>
+                <p class="record-subtitle">{{ contents["Status"] }}</p>
+                <div class="contents">
+
+                    <table class="info-table">
+                        <tr>
+                            <th colspan=2>Information</th>
+                        </tr>
+                        {% for key, value in contents["Information"].items() %}
+                            <tr>
+                                <td width="40%">{{ key }}:</td>
+                                <td width="60%" align="right">{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <th colspan=2 style="padding-top:10px;">Statistics</th>
+                        </tr>
+                        {% for key, value in contents["Statistics"].items() %}
+                            <tr>
+                                <td>{{ key }}:</td>
+                                <td align="right">{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                <img src={{ contents["image_url"] }}>
+
+                <table class="player-table">
+                    <tr>
+                        <th colspan=2>Nations</th>
+                    </tr>
+                    {% for entry in contents["Playerdata Masterlist"] %}
+                    <tr>
+                        <td width="60%" style="color:{{ entry[5]}};">{{ entry[0] }}</td>
+                        <td width="40%" style="color:{{ entry[5]}};" align="right">{{ entry[1] }}</td>
+                    </tr>
+                    <tr>
+                        <td width="60%" style="color:white;padding-bottom:10px;">{{ entry[2] }}</td>
+                        <td width="40%" style="color:white;padding-bottom:10px;" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                </div>
+                
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
+
 </body>
+
+
 </html>

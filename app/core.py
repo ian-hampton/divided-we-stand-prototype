@@ -90,7 +90,7 @@ def resolve_stage1_processing(full_game_id, starting_region_list, player_color_l
     #update active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    active_games_dict[full_game_id]["Current Turn"] = "Nation Setup in Progress"
+    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
@@ -105,9 +105,6 @@ def resolve_stage1_processing(full_game_id, starting_region_list, player_color_l
     main_map.update()
     resource_map.update()
     control_map.update()
-
-    #update preview image
-    map.update_preview_image(game_id, current_turn_num)
 
 def resolve_stage2_processing(full_game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
     '''
@@ -218,17 +215,6 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
         writer = csv.writer(file)
         writer.writerow(trucedata_header)
 
-    #create statistics file
-    statistics_dict = {
-        'Region Dispute Count': 0
-    }
-    trade_count_dict = {}
-    for playerdata in playerdata_list:
-        trade_count_dict[playerdata[1]] = 0
-    statistics_dict['Trade Count'] = trade_count_dict
-    with open(f'gamedata/{full_game_id}/statistics.json', "w") as json_file:
-        json.dump(statistics_dict, json_file, indent=4)
-
     #update misc info in playerdata
     for i in range(player_count):
         player_id = i + 1
@@ -261,21 +247,20 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
     #read and update game_settings
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    active_games_dict[full_game_id]["Current Turn"] = "1"
+    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "1"
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
-    active_games_dict[full_game_id]["Game Started"] = current_date_string
-    active_games_dict[full_game_id]["Days Ellapsed"] = 0
+    active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
     #update visuals
     current_turn_num = 1
     update_announcements_sheet(full_game_id, [], [])
-    map_name = active_games_dict[full_game_id]["Map"]
+    map_name = active_games_dict[full_game_id]["Statistics"]["Map"]
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
-    map.update_preview_image(game_id, current_turn_num)
 
 def resolve_turn_processing(full_game_id, public_actions_list, private_actions_list):
     '''
@@ -529,13 +514,13 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     update_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    start_date = active_games_dict[full_game_id]["Game Started"]
+    start_date = active_games_dict[full_game_id]["Statistics"]["Game Started"]
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
     current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
     start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
     date_difference = current_date_obj - start_date_obj
-    active_games_dict[full_game_id]["Days Ellapsed"] = date_difference.days
+    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
@@ -549,7 +534,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     if update_control_map:
         control_map = map.ControlMap(game_id, map_name)
         control_map.update()
-    map.update_preview_image(game_id, current_turn_num)
 
 
 #TURN PROCESSING FUNCTIONS
@@ -576,17 +560,27 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     current_date_string = current_date.strftime("%m/%d/%Y")
     game_version = "Development"
 
+    #generate game id
+    #to be added
+
     #erase old game files
     erase_game(full_game_id)
     
     #update active_games
-    for key, value in form_data_dict.items():
-        active_games_dict[full_game_id][key] = value
-    active_games_dict[full_game_id]["Current Turn"] = "Starting Region Selection in Progress"
+    active_games_dict[full_game_id]["Game Name"] = form_data_dict["Game Name"]
+    active_games_dict[full_game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
+    active_games_dict[full_game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
+    active_games_dict[full_game_id]["Information"]["Map"] = form_data_dict["Map"]
+    active_games_dict[full_game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
+    active_games_dict[full_game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
+    active_games_dict[full_game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
+    active_games_dict[full_game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
+    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
     active_games_dict[full_game_id]["Game #"] = len(game_records_dict) + 1
-    active_games_dict[full_game_id]["Version"] = game_version
-    active_games_dict[full_game_id]["Days Ellapsed"] = 0
-    active_games_dict[full_game_id]["Game Started"] = current_date_string
+    active_games_dict[full_game_id]["Information"]["Version"] = game_version
+    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
+    active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[full_game_id]["Statistics"]["Region Disputes"] = 0
     active_games_dict[full_game_id]["Inactive Events"] = []
     active_games_dict[full_game_id]["Active Events"] = []
     active_games_dict[full_game_id]["Current Event"] = ""
@@ -596,18 +590,21 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     
     #update game_records
     new_game_entry = {}
+    new_game_entry["Game ID"] = "temp"
     new_game_entry["Game #"] = len(game_records_dict) + 1
-    new_game_entry["Player Count"] = int(form_data_dict["Player Count"])
-    new_game_entry["Victory Conditions"] = form_data_dict["Victory Conditions"]
-    new_game_entry["Map"] = form_data_dict["Map"]
-    new_game_entry["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
-    new_game_entry["Turn Duration"] = form_data_dict["Turn Length"]
-    new_game_entry["Fog of War"] = form_data_dict["Fog of War"]
-    new_game_entry["Version"] = game_version
-    new_game_entry["Game End Turn"] = 0
-    new_game_entry["Days Ellapsed"] = 0
-    new_game_entry["Game Started"] = current_date_string
-    new_game_entry["Game Ended"] = 'Present'
+    new_game_entry["Information"] = {}
+    new_game_entry ["Statistics"] = {}
+    new_game_entry["Statistics"]["Player Count"] = int(form_data_dict["Player Count"])
+    new_game_entry["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
+    new_game_entry["Information"]["Map"] = form_data_dict["Map"]
+    new_game_entry["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
+    new_game_entry["Information"]["Turn Duration"] = form_data_dict["Turn Length"]
+    new_game_entry["Information"]["Fog of War"] = form_data_dict["Fog of War"]
+    new_game_entry["Information"]["Version"] = game_version
+    new_game_entry["Statistics"]["Game End Turn"] = 0
+    new_game_entry["Statistics"]["Days Ellapsed"] = 0
+    new_game_entry["Statistics"]["Game Started"] = current_date_string
+    new_game_entry["Statistics"]["Game Ended"] = 'Present'
     game_records_dict[form_data_dict["Game Name"]] = new_game_entry
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
@@ -618,14 +615,12 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
             map = 'united_states'
         case _:
             map = 'united_states'
-    starting_map_images = ['mainmap', 'resourcemap', 'controlmap']
+    starting_map_images = ['resourcemap', 'controlmap']
     files_destination = f'gamedata/{full_game_id}'
-    images_destination = f'{files_destination}/images'
-    shutil.copy(f'maps/{map}/regdata.csv', files_destination)
+    shutil.copy(f"maps/{map}/regdata.csv", files_destination)
     for map_filename in starting_map_images:
-        shutil.copy(f'maps/{map}/{map_filename}.png', images_destination)
-    shutil.copy(f'maps/{map}/mainmap.png', 'static')
-    shutil.move('static/mainmap.png', f'static/{full_game_id}_image.png')
+        shutil.copy(f"maps/{map}/default.png", f"{files_destination}/images")
+        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{full_game_id}/images/{map_filename}.png")
 
     #create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
@@ -918,8 +913,14 @@ def check_for_winner(full_game_id, player_count, current_turn_num):
                 player_data_entry_dict["Victory"] = 1
             player_data_dict[player_global_id] = player_data_entry_dict
         game_records_dict[game_name]["Player Data"] = player_data_dict
-        game_records_dict[game_name]["Game End Turn"] = current_turn_num
-        game_records_dict[game_name]["Game Ended"] = current_date_string
+        game_records_dict[game_name]["Statistics"]["Game End Turn"] = current_turn_num
+        game_records_dict[game_name]["Statistics"]["Game Ended"] = current_date_string
+        game_records_dict[game_name]["Statistics"]["Game Started"] = active_games_dict[full_game_id]["Statistics"]["Game Started"]
+        start_date = game_records_dict[game_name]["Statistics"]["Game Started"]
+        current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
+        start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
+        date_difference = current_date_obj - start_date_obj
+        game_records_dict[game_name]["Statistics"]["Days Ellapsed"] = date_difference.days
         with open('game_records.json', 'w') as json_file:
             json.dump(game_records_dict, json_file, indent=4)
 
@@ -936,7 +937,7 @@ def get_map_name(game_id):
     full_game_id = f'game{game_id}'
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    map_name = active_games_dict[full_game_id]["Map"]
+    map_name = active_games_dict[full_game_id]["Information"]["Map"]
     return map_name
 
 def get_current_turn_num(game_id):
@@ -945,9 +946,9 @@ def get_current_turn_num(game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     try:
-        current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
+        current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
     except:
-        current_turn_num = active_games_dict[full_game_id]["Current Turn"]
+        current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
     return current_turn_num
 
 def update_turn_num(game_id):
@@ -955,9 +956,9 @@ def update_turn_num(game_id):
     full_game_id = f'game{game_id}'
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
+    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
     current_turn_num += 1
-    active_games_dict[full_game_id]["Current Turn"] = str(current_turn_num)
+    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = str(current_turn_num)
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
@@ -1149,8 +1150,8 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Game Name"]
-    current_turn_num = int(active_games_dict[full_game_id]["Current Turn"])
-    accelerated_schedule_str = active_games_dict[full_game_id]["Accelerated Schedule"]
+    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+    accelerated_schedule_str = active_games_dict[full_game_id]["Information"]["Accelerated Schedule"]
     
     #calculate date information
     if not event_pending:
