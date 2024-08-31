@@ -94,7 +94,7 @@ class MainMap:
         full_game_id = f'game{self.game_id}'
         match self.turn_num:
             case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-                main_map_save_location = f'gamedata/{full_game_id}/images/mainmap.png'
+                main_map_save_location = f'gamedata/{full_game_id}/images/0.png'
             case _:
                 main_map_save_location = f'gamedata/{full_game_id}/images/{self.turn_num - 1}.png'
         regdata_location = f'gamedata/{full_game_id}/regdata.csv'
@@ -281,7 +281,7 @@ class ResourceMap:
         resource_list += ["Uranium"] * uranium_count
         resource_list += ["Rare Earth Elements"] * rare_count
         resource_list += ["Empty"] * empty_count
-        resource_list = random.sample(self.resource_list, len(self.resource_list))
+        resource_list = random.sample(resource_list, len(resource_list))
         
         #Update regdata.csv
         regdata_location = f'gamedata/game{self.game_id}/regdata.csv'

@@ -1329,11 +1329,11 @@ def resolve_region_purchases(region_purchase_list, full_game_id, player_action_l
             economy_masterlist[player_id - 1][1][0] = core.update_stockpile(pp_stockpile, pp_cost)
             if region_purchase_counts_dict[region_id] > 1:
                 #the region disputed
-                with open(f'gamedata/{full_game_id}/statistics.json', 'r') as json_file:
-                    statistics_dict = json.load(json_file)
-                statistics_dict["Region Dispute Count"] += 1
-                with open(f'gamedata/{full_game_id}/statistics.json', 'w') as json_file:
-                    json.dump(statistics_dict, json_file, indent=4)
+                with open('active_games.json', 'r') as json_file:
+                    active_games_dict = json.load(json_file)
+                active_games_dict[full_game_id]["Statistics"]["Region Disputes"] += 1
+                with open('active_games.json', 'w') as json_file:
+                    json.dump(active_games_dict, json_file, indent=4)
                 log_str = f'Failed to purchase {region_id} due to a region dispute.'
                 player_action_log.append(log_str)
             else:

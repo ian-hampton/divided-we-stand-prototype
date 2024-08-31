@@ -131,7 +131,6 @@ def games():
 
     #read active games
     for game_id, game_data in active_games_dict.items():
-
         current_turn = game_data["Statistics"]["Current Turn"]
         if current_turn == "Turn N/A":
             continue
@@ -139,6 +138,7 @@ def games():
         match current_turn:
 
             case "Starting Region Selection in Progress":
+                print("I went to Starting Region Selection in Progress")
                 #get title and game link
                 game_name = game_data["Game Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
@@ -146,7 +146,7 @@ def games():
                 game_data["Status"] = current_turn
                 #get player information
                 refined_player_data = []
-                playerdata_list = core.read_file(f'gamedata/{full_game_id}/playerdata.csv', 1)
+                playerdata_list = core.read_file(f'gamedata/{game_id}/playerdata.csv', 1)
                 for playerdata in playerdata_list:
                     profile_id = playerdata[30]
                     username = player_records_dict[profile_id]["Username"]
@@ -156,7 +156,7 @@ def games():
                 game_map = game_data["Information"]["Map"]
                 if game_map == "United States 2.0":
                     game_map = "united_states"
-                image_url = f"../maps/{game_map}/default.png"
+                image_url = url_for('main.get_mainmap', full_game_id=game_id)
                 pass
 
             case "Nation Setup in Progress":
@@ -176,7 +176,7 @@ def games():
                     player_color_2 = check_color_correction(player_color)
                     refined_player_data.append([playerdata[1], 0, 'TBD', username_str, player_color, player_color_2])
                 #get image
-                image_url = f"../gamedata/{game_id}/images/0.png"
+                image_url = url_for('main.get_mainmap', full_game_id=game_id)
                 pass
 
             case _:
@@ -192,7 +192,6 @@ def games():
                 refined_player_data = generate_refined_player_list_active(game_id, current_turn)
                 #get image
                 image_url = url_for('main.get_mainmap', full_game_id=game_id)
-                #image_url = f"../gamedata/{game_id}/images/{int(current_turn) - 1}.png"
                 pass
         
         game_data["Playerdata Masterlist"] = refined_player_data
@@ -233,7 +232,8 @@ def create_game():
         "Map": request.form.get('map_dropdown'),
         "Accelerated Schedule": request.form.get('as_dropdown'),
         "Turn Length": request.form.get('td_dropdown'),
-        "Fog of War": request.form.get('fow_dropdown')
+        "Fog of War": request.form.get('fow_dropdown'),
+        "Deadlines on Weekends": request.form.get('dow_dropdown')
     }
     profile_ids_list = []
     for index, username in enumerate(username_list):
@@ -256,10 +256,12 @@ def create_game():
                     "Victory Conditions": "TBD",
                     "Fog of War": "TBD",
                     "Turn Length": "TBD",
-                    "Accelerated Schedule": "TBD"
+                    "Accelerated Schedule": "TBD",
+                    "Deadlines on Weekends": "TBD"
                 },
                 "Statistics": {
                     "Player Count": "0",
+                    "Region Disputes": 0,
                     "Current Turn": "Turn N/A",
                     "Days Ellapsed": 0,
                     "Game Started": "TBD",
@@ -303,10 +305,12 @@ def archived_games():
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
     
-    #take information from game_record_dict and build new dict
+    #take information from game_record_dict
+    ongoing_list = []
     for game_name, game_data in game_records_dict.items():
         
-        if game_data["Statistics"]["Turns Ellapsed"] == "Present":
+        if game_data["Statistics"]["Game Ended"] == "Present":
+            ongoing_list.append(game_name)
             continue
         
         #get playerdata
@@ -345,6 +349,10 @@ def archived_games():
     
     #display games from newest to oldest
     game_records_dict = dict(sorted(game_records_dict.items(), key=lambda item: item[1]['Game #'], reverse=True))
+
+    #hide ongoing games
+    for game_name in ongoing_list:
+        del game_records_dict[game_name]
 
     #get gameid list (needed for slideshows)
     game_id_list = []
@@ -435,8 +443,8 @@ def generate_profile_route(profile_id):
                 else:
                     players_who_won.append(select_profile_id)
             if profile_id in players_who_lost or profile_id in players_who_won:
-                game_starts.append(game_data.get("Game Started"))
-                game_ends.append(game_data.get("Game Ended"))
+                game_starts.append(game_data['Statistics']["Game Started"])
+                game_ends.append(game_data['Statistics']["Game Ended"])
                 government_choice = game_records_dict[game_name]["Player Data"][profile_id]["Government"]
                 foreign_policy_choice = game_records_dict[game_name]["Player Data"][profile_id]["Foreign Policy"]
                 governments_played[government_choice] += 1
@@ -762,11 +770,15 @@ def wars(full_game_id):
 def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+    current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
     try:
-        current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+        current_turn_num = int(current_turn_num)
         filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'
     except:
-        filepath = f'..\\gamedata\\{full_game_id}\\images\\mainmap.png'
+        if current_turn_num == "Nation Setup in Progress":
+            filepath = f'..\\gamedata\\{full_game_id}\\images\\0.png'
+        else:
+            filepath = f'..\\maps\\united_states\\default.png'
     return send_file(filepath, mimetype='image/png')
 @main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):

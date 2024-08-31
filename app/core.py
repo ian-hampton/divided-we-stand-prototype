@@ -215,17 +215,6 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
         writer = csv.writer(file)
         writer.writerow(trucedata_header)
 
-    #create statistics file
-    statistics_dict = {
-        'Region Dispute Count': 0
-    }
-    trade_count_dict = {}
-    for playerdata in playerdata_list:
-        trade_count_dict[playerdata[1]] = 0
-    statistics_dict['Trade Count'] = trade_count_dict
-    with open(f'gamedata/{full_game_id}/statistics.json', "w") as json_file:
-        json.dump(statistics_dict, json_file, indent=4)
-
     #update misc info in playerdata
     for i in range(player_count):
         player_id = i + 1
@@ -571,6 +560,9 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     current_date_string = current_date.strftime("%m/%d/%Y")
     game_version = "Development"
 
+    #generate game id
+    #to be added
+
     #erase old game files
     erase_game(full_game_id)
     
@@ -582,11 +574,13 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     active_games_dict[full_game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
     active_games_dict[full_game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
     active_games_dict[full_game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
+    active_games_dict[full_game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
     active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
     active_games_dict[full_game_id]["Game #"] = len(game_records_dict) + 1
     active_games_dict[full_game_id]["Information"]["Version"] = game_version
     active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
     active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[full_game_id]["Statistics"]["Region Disputes"] = 0
     active_games_dict[full_game_id]["Inactive Events"] = []
     active_games_dict[full_game_id]["Active Events"] = []
     active_games_dict[full_game_id]["Current Event"] = ""
@@ -596,7 +590,10 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     
     #update game_records
     new_game_entry = {}
+    new_game_entry["Game ID"] = "temp"
     new_game_entry["Game #"] = len(game_records_dict) + 1
+    new_game_entry["Information"] = {}
+    new_game_entry ["Statistics"] = {}
     new_game_entry["Statistics"]["Player Count"] = int(form_data_dict["Player Count"])
     new_game_entry["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
     new_game_entry["Information"]["Map"] = form_data_dict["Map"]
@@ -618,12 +615,12 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
             map = 'united_states'
         case _:
             map = 'united_states'
-    starting_map_images = ['mainmap', 'resourcemap', 'controlmap']
+    starting_map_images = ['resourcemap', 'controlmap']
     files_destination = f'gamedata/{full_game_id}'
     shutil.copy(f"maps/{map}/regdata.csv", files_destination)
     for map_filename in starting_map_images:
-        shutil.copy(f"maps/{map}/reference.png", f"{files_destination}/images")
-        shutil.move(f"{files_destination}/images/reference.png", f"maps/{map}/{map_filename}.png")
+        shutil.copy(f"maps/{map}/default.png", f"{files_destination}/images")
+        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{full_game_id}/images/{map_filename}.png")
 
     #create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
