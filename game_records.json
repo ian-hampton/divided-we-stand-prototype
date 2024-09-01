@@ -4,6 +4,7 @@
         "Game #": 1,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -51,6 +52,7 @@
         "Game #": 2,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -114,6 +116,7 @@
         "Game #": 3,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -193,6 +196,7 @@
         "Game #": 4,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -280,6 +284,7 @@
         "Game #": 5,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "Africa 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -351,6 +356,7 @@
         "Game #": 6,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "Southeast Asia 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -406,6 +412,7 @@
         "Game #": 7,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "Europe 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -485,6 +492,7 @@
         "Game #": 8,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 1.1",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Enabled",
@@ -564,6 +572,7 @@
         "Game #": 9,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "China 1.0",
             "Victory Conditions": "Foreign Policy",
             "Fog of War": "Disabled",
@@ -659,6 +668,7 @@
         "Game #": 10,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
             "Fog of War": "Disabled",
@@ -714,6 +724,7 @@
         "Game #": 11,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
             "Fog of War": "Disabled",

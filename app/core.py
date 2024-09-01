@@ -575,6 +575,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     active_games_dict[full_game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
     active_games_dict[full_game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
     active_games_dict[full_game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
+    active_games_dict[full_game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
     active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
     active_games_dict[full_game_id]["Game #"] = len(game_records_dict) + 1
     active_games_dict[full_game_id]["Information"]["Version"] = game_version
@@ -601,6 +602,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     new_game_entry["Information"]["Turn Duration"] = form_data_dict["Turn Length"]
     new_game_entry["Information"]["Fog of War"] = form_data_dict["Fog of War"]
     new_game_entry["Information"]["Version"] = game_version
+    new_game_entry["Information"]["Scenario"] = form_data_dict["Scenario"]
     new_game_entry["Statistics"]["Game End Turn"] = 0
     new_game_entry["Statistics"]["Days Ellapsed"] = 0
     new_game_entry["Statistics"]["Game Started"] = current_date_string

@@ -233,7 +233,8 @@ def create_game():
         "Accelerated Schedule": request.form.get('as_dropdown'),
         "Turn Length": request.form.get('td_dropdown'),
         "Fog of War": request.form.get('fow_dropdown'),
-        "Deadlines on Weekends": request.form.get('dow_dropdown')
+        "Deadlines on Weekends": request.form.get('dow_dropdown'),
+        "Scenario": request.form.get('scenario_dropdown')
     }
     profile_ids_list = []
     for index, username in enumerate(username_list):
@@ -252,6 +253,7 @@ def create_game():
                 "Game Active": False,
                 "Information": {
                     "Version": "TBD",
+                    "Scenario": "TBD",
                     "Map": "TBD",
                     "Victory Conditions": "TBD",
                     "Fog of War": "TBD",

@@ -5,6 +5,7 @@
         "Game Active": false,
         "Information": {
             "Version": "Development",
+            "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
             "Fog of War": "Disabled",
@@ -35,6 +36,7 @@
         "Game Active": false,
         "Information": {
             "Version": "TBD",
+            "Scenario": "TBD",
             "Map": "TBD",
             "Victory Conditions": "TBD",
             "Fog of War": "TBD",
