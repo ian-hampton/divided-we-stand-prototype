@@ -9,18 +9,19 @@ import re
 from app import core
 
 #END OF TURN CHECKS
-def update_improvement_count(full_game_id, player_id):
+def update_improvement_count(game_id, player_id):
     '''Gets a count of all improvements for a specific player using regdata_list. Updates regdata.csv.'''
     
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 2)
 
 
     #Procedure
-    improvement_name_list = sorted(core.improvement_data_dict.keys())
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
     improvement_data_list = [0] * len(improvement_name_list)
     for region in regdata_list:
         control_data = ast.literal_eval(region[2])
@@ -44,12 +45,12 @@ def update_improvement_count(full_game_id, player_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def ratio_check(full_game_id, player_id):
+def ratio_check(game_id, player_id):
     '''Check if ratios for refineries are still valid.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 2)
 
@@ -62,7 +63,8 @@ def ratio_check(full_game_id, player_id):
 
 
     #Test Ratios
-    improvement_name_list = sorted(core.improvement_data_dict.keys())
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
     refinery_list = ['Advanced Metals Refinery', 'Oil Refinery', 'Uranium Refinery']
     for refinery_improvement in refinery_list:
         adjustment = 0
@@ -103,12 +105,12 @@ def ratio_check(full_game_id, player_id):
         writer.writerow(core.regdata_header_b)
         writer.writerows(regdata_list)
 
-def update_military_capacity(full_game_id):
+def update_military_capacity(game_id):
     '''Updates a player's military capacity.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 2)
     with open('active_games.json', 'r') as json_file:
@@ -124,7 +126,8 @@ def update_military_capacity(full_game_id):
     
 
     #Procedure
-    improvement_name_list = sorted(core.improvement_data_dict.keys())
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
     military_capacity_gross = []
     military_capacity_output = []
     for index, playerdata in enumerate(playerdata_list):
@@ -136,7 +139,7 @@ def update_military_capacity(full_game_id):
         player_improvement_count_list = ast.literal_eval(playerdata[27])
         nation_status = status_masterlist[player_id - 1]
         defensive_improvements_list = []
-        for key, value in core.improvement_data_dict.items():
+        for key, value in improvement_data_dict.items():
             if value.get("Health") != 99:
                 defensive_improvements_list.append(key)
         for defensive_improvement_name in defensive_improvements_list:
@@ -164,8 +167,8 @@ def update_military_capacity(full_game_id):
             di_capacity_value = 0.5
         else:
             di_capacity_value = 0
-        if "Shared Fate" in active_games_dict[full_game_id]["Active Events"]:
-            if active_games_dict[full_game_id]["Active Events"]["Shared Fate"]["Effect"] == "Conflict":
+        if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
+            if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Conflict":
                 bc_capacity_value += 1
         military_capacity_total = (bc_count * bc_capacity_value) + (di_count * di_capacity_value)
         military_capacity_gross.append(military_capacity_total)
@@ -186,8 +189,8 @@ def update_military_capacity(full_game_id):
             for entry in misc_info_list:
                 if f'Militarily Sanctioning Player #{player_id}' in entry:
                     mct_modifier -= 0.2
-        if "Threat Containment" in active_games_dict[full_game_id]["Active Events"]:
-            if active_games_dict[full_game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
+        if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
+            if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
                 mct_modifier -= 0.2
         #apply military capacity modifiers
         if mct_modifier != 1.0:
@@ -838,10 +841,10 @@ def update_income(full_game_id, current_turn_num):
         
         #Pay Upkeep Costs
         unit_count_list = core.get_unit_count_list(player_id, full_game_id)
-        improvement_dollar_upkeep_dict = core.get_upkeep_dictionary('Dollars Upkeep', playerdata, unit_count_list)
-        improvement_energy_upkeep_dict = core.get_upkeep_dictionary('Energy Upkeep', playerdata, unit_count_list)
-        unit_dollar_upkeep_dict = core.get_upkeep_dictionary('Unit Dollars Upkeep', playerdata, unit_count_list)
-        unit_energy_upkeep_dict = core.get_upkeep_dictionary('Unit Oil Upkeep', playerdata, unit_count_list)
+        improvement_dollar_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Dollars Upkeep', playerdata, unit_count_list)
+        improvement_energy_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Energy Upkeep', playerdata, unit_count_list)
+        unit_dollar_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Unit Dollars Upkeep', playerdata, unit_count_list)
+        unit_energy_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Unit Oil Upkeep', playerdata, unit_count_list)
         improvement_dollar_upkeep_count = core.get_upkeep_sum(improvement_dollar_upkeep_dict)
         improvement_energy_upkeep_count = core.get_upkeep_sum(improvement_energy_upkeep_dict)
         unit_dollar_upkeep_count = core.get_upkeep_sum(unit_dollar_upkeep_dict)
@@ -1112,10 +1115,10 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
     green_stockpile = float(stockpile_list[3])
 
     #get upkeep costs
-    dollars_upkeep_dict = core.get_upkeep_dictionary('Dollars Upkeep', playerdata, unit_count_list)
-    energy_upkeep_dict = core.get_upkeep_dictionary('Energy Upkeep', playerdata, unit_count_list)
-    dollars_unit_upkeep_dict = core.get_upkeep_dictionary('Dollars Unit Upkeep', playerdata, unit_count_list)
-    oil_unit_upkeep_dict = core.get_upkeep_dictionary('Oil Unit Upkeep', playerdata, unit_count_list)
+    dollars_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Dollars Upkeep', playerdata, unit_count_list)
+    energy_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Energy Upkeep', playerdata, unit_count_list)
+    dollars_unit_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Dollars Unit Upkeep', playerdata, unit_count_list)
+    oil_unit_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Oil Unit Upkeep', playerdata, unit_count_list)
 
 
     #Resolve Energy Shortages
@@ -1892,14 +1895,14 @@ def gain_resource_market_income(full_game_id, player_id, player_resource_market_
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def update_records(full_game_id, current_turn_num):
+def update_records(game_id, current_turn_num):
     '''Updates the four records that are saved in a file.'''
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 0)
-    largest_military_filepath = f'gamedata/{full_game_id}/largest_military.csv'
-    largest_nation_filepath = f'gamedata/{full_game_id}/largest_nation.csv'
-    most_research_filepath = f'gamedata/{full_game_id}/most_research.csv'
-    strongest_economy_filepath = f'gamedata/{full_game_id}/strongest_economy.csv'
+    largest_military_filepath = f'gamedata/{game_id}/largest_military.csv'
+    largest_nation_filepath = f'gamedata/{game_id}/largest_nation.csv'
+    most_research_filepath = f'gamedata/{game_id}/most_research.csv'
+    strongest_economy_filepath = f'gamedata/{game_id}/strongest_economy.csv'
     largest_military_list = core.read_file(largest_military_filepath, 0)
     largest_nation_list = core.read_file(largest_nation_filepath, 0)
     most_research_list = core.read_file(most_research_filepath, 0)
@@ -1934,8 +1937,9 @@ def update_records(full_game_id, current_turn_num):
             continue
         player_research_list = ast.literal_eval(playerdata_list[index][26])
         player_research_count = len(player_research_list)
+        agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
         for completed_research in player_research_list:
-            if completed_research in list(core.agenda_data_dict.keys()):
+            if completed_research in list(agenda_data_dict.keys()):
                 player_research_count -= 1
         entry.append(player_research_count)
 
@@ -2026,20 +2030,21 @@ def check_top_three(top_three_list):
 
     return bool_list
 
-def check_victory_conditions(full_game_id, player_id, current_turn_num):
+def check_victory_conditions(game_id, player_id, current_turn_num):
     '''Checks victory conditions of a player.'''
     
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
+    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
+    rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 2)
     wardata_list = core.read_file(wardata_filepath, 2)
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
-    improvement_name_list = sorted(core.improvement_data_dict.keys())
-    with open(f'gamedata/{full_game_id}/vc_overrides.json', 'r') as json_file:
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
+    with open(f'gamedata/{game_id}/vc_overrides.json', 'r') as json_file:
         vc_overrides_dict = json.load(json_file)
 
     #get needed masterlists
@@ -2246,15 +2251,15 @@ def check_victory_conditions(full_game_id, player_id, current_turn_num):
     victory_condition_3 = victory_conditions_list[2]
     match victory_condition_3:
         case 'Economic Domination':
-            economy_1st, economy_2nd, economy_3rd =  get_top_three(full_game_id, 'strongest_economy', True)
+            economy_1st, economy_2nd, economy_3rd =  get_top_three(game_id, 'strongest_economy', True)
             if nation_name in economy_1st and (economy_1st[-6:] != economy_2nd[-6:]):
                 vc_3_completed = True
         case 'Empire Building':
-            size_1st, size_2nd, size_3rd =  get_top_three(full_game_id, 'largest_nation', True)
+            size_1st, size_2nd, size_3rd =  get_top_three(game_id, 'largest_nation', True)
             if nation_name in size_1st and (size_1st[-4:] != size_2nd[-4:]):
                 vc_3_completed = True
         case 'Military Superpower':
-            military_1st, military_2nd, military_3rd =  get_top_three(full_game_id, 'largest_military', True)
+            military_1st, military_2nd, military_3rd =  get_top_three(game_id, 'largest_military', True)
             if nation_name in military_1st and (military_1st[-4:] != military_2nd[-4:]):
                 vc_3_completed = True
         case 'Nuclear Deterrent':
@@ -2271,32 +2276,35 @@ def check_victory_conditions(full_game_id, player_id, current_turn_num):
             if len(most_nukes_player_ids) == 1 and player_id in most_nukes_player_ids:
                 vc_3_completed = True
         case 'Scientific Leader':
-            research_1st, research_2nd, research_3rd =  get_top_three(full_game_id, 'most_research', True)
+            research_1st, research_2nd, research_3rd =  get_top_three(game_id, 'most_research', True)
             if nation_name in research_1st and (research_1st[-4:] != research_2nd[-4:]):
                 vc_3_completed = True
         case 'Sphere of Influence':
             agenda_count = 0
+            agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
             for research_name in completed_research_list:
-                if research_name in core.agenda_data_dict:
+                if research_name in agenda_data_dict:
                     agenda_count += 1
             if agenda_count >= 8:
                 vc_3_completed = True
 
 
     #Update vc_extra.csv and return vc score
-    with open(f'gamedata/{full_game_id}/vc_overrides.json', 'w') as json_file:
+    with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
         json.dump(vc_overrides_dict, json_file, indent=4)
     result = [vc_1_completed, vc_2_completed, vc_3_completed]
     return result
 
-def bonus_phase_heals(full_game_id):
+def bonus_phase_heals(game_id):
     
     #define core lists
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     regdata_list = core.read_file(regdata_filepath, 2)
 
 
     #Procedure
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
     for region in regdata_list:
         control_data = ast.literal_eval(region[2])
         improvement_data = ast.literal_eval(region[4])
@@ -2304,18 +2312,18 @@ def bonus_phase_heals(full_game_id):
         improvement_health = improvement_data[1]
         if control_data[0] != 0 and improvement_name != None and improvement_health != 99:
             improvement_health += 2
-            if improvement_health > core.improvement_data_dict[improvement_name]['Health']:
-                improvement_health = core.improvement_data_dict[improvement_name]['Health']
+            if improvement_health > improvement_data_dict[improvement_name]['Health']:
+                improvement_health = improvement_data_dict[improvement_name]['Health']
             improvement_data[1] = improvement_health
             region[4] = str(improvement_data)
         unit_data = ast.literal_eval(region[5])
         unit_abbr = unit_data[0]
-        unit_name = next((unit for unit, data in core.unit_data_dict.items() if data.get('Abbreviation') == unit_abbr), None)
+        unit_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == unit_abbr), None)
         unit_health = unit_data[1]
         if unit_name != None:
             unit_health += 2
-            if unit_health > core.unit_data_dict[unit_name]['Health']:
-                unit_health = core.unit_data_dict[unit_name]['Health']
+            if unit_health > unit_data_dict[unit_name]['Health']:
+                unit_health = unit_data_dict[unit_name]['Health']
             unit_data[1] = unit_health
             region[5] = str(unit_data)
 

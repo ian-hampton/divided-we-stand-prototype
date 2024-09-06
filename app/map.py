@@ -33,8 +33,9 @@ class MainMap:
         regdata_list = core.read_file(regdata_location, 2)
         improvement_exclusion_list = ['Capital', 'Missile Defense System', 'Missile Defense Network', 'Oil Refinery', 'Advanced Metals Refinery', 'Uranium Refinery', 'Nuclear Power Plant', 'Surveillance Center']
         improvement_candidates_list = []
-        for improvement_name in core.improvement_data_dict:
-            if core.improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in improvement_exclusion_list:
+        improvement_data_dict = core.get_scenario_dict(f"game{self.game_id}", "Improvements")
+        for improvement_name in improvement_data_dict:
+            if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in improvement_exclusion_list:
                 improvement_candidates_list.append(improvement_name)
         
         #update regdata.csv
@@ -70,7 +71,7 @@ class MainMap:
                                     improvement_candidates_list.append('Capital')
                                 improvement_roll = random.randint(0, len(improvement_candidates_list) - 1)
                                 improvement_name = improvement_candidates_list[improvement_roll]
-                                if core.improvement_data_dict[improvement_name]['Health'] != 99:
+                                if improvement_data_dict[improvement_name]['Health'] != 99:
                                     region[4] = [improvement_name, 1]
                                 else:
                                     region[4] = [improvement_name, 99]
@@ -100,6 +101,7 @@ class MainMap:
         regdata_location = f'gamedata/{full_game_id}/regdata.csv'
         playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
         background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
+        unit_data_dict = core.get_scenario_dict(f'game{self.game_id}', "Units")
         
         #Build Needed Lists
         playerdata_list = core.read_file(playerdata_location, 1)
@@ -217,7 +219,7 @@ class MainMap:
             region_id = region[0]
             unit_data_list = ast.literal_eval(region[5])
             unit_abbr = unit_data_list[0]
-            unit_name = next((unit for unit, data in core.unit_data_dict.items() if data.get('Abbreviation') == unit_abbr), None)
+            unit_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == unit_abbr), None)
             if unit_name is not None:
                 unit_health = unit_data_list[1]
                 unit_owner_id = unit_data_list[2]
@@ -242,7 +244,7 @@ class MainMap:
                 mask = unit_image.split()[3]
                 main_image.paste(unit_image, unit_cords, mask)
                 #place unit health
-                health_filepath = f"app/static/health/U{unit_health}-{core.unit_data_dict[unit_name]['Health']}.png"
+                health_filepath = f"app/static/health/U{unit_health}-{unit_data_dict[unit_name]['Health']}.png"
                 health_image = Image.open(health_filepath)
                 health_temp = Image.new("RGBA", main_image.size)
                 mask = health_image.split()[3]

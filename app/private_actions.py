@@ -221,16 +221,19 @@ def resolve_unit_disbands(unit_disband_list, full_game_id, player_action_logs):
 
     return player_action_logs
 
-def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs):
+def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
     '''Resolves all unit deployment actions.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 0)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+
+    #get scenario data
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
 
     #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -249,7 +252,7 @@ def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs)
         player_id = deploy_action[0]
         unit_name = deploy_action[1][7:-6]
         region_id = deploy_action[1][-5:]
-        if "Foreign Invasion" not in active_games_dict[full_game_id]["Active Events"] and player_id != 99:
+        if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"] and player_id != 99:
             player_government = nation_info_masterlist[player_id - 1][2]
             player_military_capacity = military_capacity_masterlist[player_id - 1]
             player_research = research_masterlist[player_id - 1]
@@ -268,7 +271,7 @@ def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs)
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        if "Foreign Invasion" not in active_games_dict[full_game_id]["Active Events"] and player_id != 99:
+        if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"] and player_id != 99:
             #get resource stockpiles of player
             stockpile_list = []
             for i in range(len(request_list)):
@@ -287,7 +290,7 @@ def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs)
                 continue
             
             #required research check
-            research_check = core.verify_required_research(core.unit_data_dict[unit_name]['Required Research'], player_research)
+            research_check = core.verify_required_research(unit_data_dict[unit_name]['Required Research'], player_research)
             if research_check == False:
                 player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. You do not have the required research.')
                 player_action_logs[player_id - 1] = player_action_log
@@ -301,11 +304,11 @@ def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs)
                 continue
 
             #attempt to deploy unit
-            dollars_cost = core.unit_data_dict[unit_name]['Dollars Cost']
-            basic_cost = core.unit_data_dict[unit_name]['Basic Materials Cost']
-            common_cost = core.unit_data_dict[unit_name]['Common Metals Cost']
-            advanced_cost = core.unit_data_dict[unit_name]['Advanced Metals Cost']
-            rare_cost = core.unit_data_dict[unit_name]['Rare Earth Elements Cost']
+            dollars_cost = unit_data_dict[unit_name]['Dollars Cost']
+            basic_cost = unit_data_dict[unit_name]['Basic Materials Cost']
+            common_cost = unit_data_dict[unit_name]['Common Metals Cost']
+            advanced_cost = unit_data_dict[unit_name]['Advanced Metals Cost']
+            rare_cost = unit_data_dict[unit_name]['Rare Earth Elements Cost']
             if player_government == 'Military Junta':
                 dollars_cost *= 0.8
                 basic_cost *= 0.8
@@ -320,7 +323,7 @@ def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs)
                 economy_masterlist[player_id - 1][4][0] = core.update_stockpile(rare_stockpile, rare_cost)
                 for region in regdata_list:
                     if region[0] == region_id:
-                        region[5] = [unit_id, core.unit_data_dict[unit_name]['Health'], player_id]
+                        region[5] = [unit_id, unit_data_dict[unit_name]['Health'], player_id]
                 player_military_capacity_list = player_military_capacity.split('/')
                 used_mc = int(player_military_capacity_list[0]) + 1
                 total_mc = float(player_military_capacity_list[1])
@@ -334,7 +337,7 @@ def resolve_unit_deployments(unit_deploy_list, full_game_id, player_action_logs)
         else:
             for region in regdata_list:
                 if region[0] == region_id:
-                    region[5] = [unit_id, core.unit_data_dict[unit_name]['Health'], player_id]
+                    region[5] = [unit_id, unit_data_dict[unit_name]['Health'], player_id]
 
 
     #Update playerdata.csv
@@ -586,16 +589,20 @@ def resolve_war_declarations(war_declaration_list, full_game_id, current_turn_nu
 
     return diplomacy_log, player_action_logs
 
-def resolve_missile_launches(missile_launch_list, full_game_id, player_action_logs):
+def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
     '''Resolves all missile launch actions and missile defense abilities.'''
     
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
+    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 2)
     wardata_list = core.read_file(wardata_filepath, 2)
+
+    #get scenario data
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
 
     #remove actions with bad region names
     missile_launch_list = core.filter_region_names(regdata_list, missile_launch_list)
@@ -670,7 +677,7 @@ def resolve_missile_launches(missile_launch_list, full_game_id, player_action_lo
             continue
 
         #launch capacity check
-        improvement_name_list = sorted(core.improvement_data_dict.keys())
+        improvement_name_list = sorted(improvement_data_dict.keys())
         improvement_count_list = ast.literal_eval(playerdata_list[player_id_2 - 1][27])
         silo_index = improvement_name_list.index('Missile Silo')
         silo_count = improvement_count_list[silo_index]
@@ -718,7 +725,7 @@ def resolve_missile_launches(missile_launch_list, full_game_id, player_action_lo
 
         #missile defense oppertunity
         if target_improvement_name == 'Missile Defense System' or target_improvement_name == 'Missile Defense Network' or ('Localized Missile Defense' in target_player_research and target_improvement_health != 99 and target_improvement_health != 0):
-            missile_alive = core.attempt_missile_defense(missile_type, target_improvement_data, target_nation_name, target_player_research, war_log)
+            missile_alive = core.attempt_missile_defense(game_id, missile_type, target_improvement_data, target_nation_name, target_player_research, war_log)
         else:
             defense_improvement_data = None
             #find defense network if able
@@ -741,7 +748,7 @@ def resolve_missile_launches(missile_launch_list, full_game_id, player_action_lo
                         defense_improvement_data = improvement_data
                         break
             if defense_improvement_data != None:
-                missile_alive = core.attempt_missile_defense(missile_type, defense_improvement_data, target_nation_name, target_player_research, war_log)
+                missile_alive = core.attempt_missile_defense(game_id, missile_type, defense_improvement_data, target_nation_name, target_player_research, war_log)
 
         #missile strike
         if missile_alive and missile_type == 'Standard Missile':
@@ -782,7 +789,7 @@ def resolve_missile_launches(missile_launch_list, full_game_id, player_action_lo
                     updated_improvement_data = ['Capital', 0]
                 regdata_list = core.update_improvement_data(regdata_list, target_region_id, updated_improvement_data)
             if target_unit_id != None:
-                target_unit_name = next((unit for unit, data in core.unit_data_dict.items() if data.get('Abbreviation') == target_unit_id), None)
+                target_unit_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == target_unit_id), None)
                 war_log.append(f'    Nuclear Missile destroyed {nation_name_3} {target_unit_name}.')
                 updated_unit_data = [None, 99]
                 regdata_list = core.update_unit_data(regdata_list, target_region_id, updated_unit_data)
@@ -840,19 +847,19 @@ def resolve_missile_launches(missile_launch_list, full_game_id, player_action_lo
 
     return player_action_logs
 
-def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs):
+def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
     '''Resolves all unit movements, including the resulting combat and occupation.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
+    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 0)
     wardata_list = core.read_file(wardata_filepath, 2)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+    current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
 
     #get needed player info
     nation_name_list = []
@@ -1022,7 +1029,7 @@ def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs)
                 #unit vs unit combat
                 if hostile_unit_present:
                     target_player_id = target_unit_owner_id
-                    if "Foreign Invasion" not in active_games_dict[full_game_id]["Active Events"]:
+                    if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"]:
                         defender_nation_name = nation_name_list[target_player_id - 1]
                     else:
                         defender_nation_name = "Foreign Invasion"
@@ -1032,7 +1039,7 @@ def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs)
                     attacker_data_list = [current_unit_id, current_unit_health, attacker_player_id, war_role_1, current_region_id]
                     defender_data_list = [target_unit_id, target_unit_health, target_player_id, war_role_2, target_region_id]
                     war_statistics_list = [attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost]
-                    current_unit_health, attacker_battles_won, attacker_battles_lost, target_unit_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
+                    current_unit_health, attacker_battles_won, attacker_battles_lost, target_unit_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
                     if current_unit_health > 0:
                         current_unit_data = [current_unit_id, current_unit_health, current_unit_owner_id]
                         regdata_list = core.update_unit_data(regdata_list, current_region_id, current_unit_data)
@@ -1052,7 +1059,7 @@ def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs)
                 #unit vs defensive improvement
                 if attacking_unit_alive and hostile_improvement_present:
                     target_player_id = target_owner_id
-                    if "Foreign Invasion" not in active_games_dict[full_game_id]["Active Events"]:
+                    if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"]:
                         defender_nation_name = nation_name_list[target_owner_id - 1]
                     else:
                         defender_nation_name = "Foreign Invasion"
@@ -1060,7 +1067,7 @@ def resolve_unit_movements(unit_movement_list, full_game_id, player_action_logs)
                     attacker_data_list = [current_unit_id, current_unit_health, attacker_player_id, war_role_1, current_region_id]
                     defender_data_list = [target_improvement_name, target_improvement_health, target_player_id, war_role_2, target_region_id]
                     war_statistics_list = [attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost]
-                    current_unit_health, attacker_battles_won, attacker_battles_lost, target_improvement_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
+                    current_unit_health, attacker_battles_won, attacker_battles_lost, target_improvement_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
                     #resolve combat outcome
                     if current_unit_health > 0:
                         current_unit_data = [current_unit_id, current_unit_health, current_unit_owner_id]
