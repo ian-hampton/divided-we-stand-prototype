@@ -1,0 +1,210 @@
+Region ID,Region Name,Control Data,Resource Data,Improvement Data,Unit Data,Nuke Data,Purchase Cost,Adjacency Data,Edge of Map,Contains Regional Capital,Quarantine,Infection
+5 Letter ID,Full Name,"[Owner #, Occupier #]",Resource Name,"[Type Name, Health #]","[Type Name, Health #, Owner #]","[True/False, Duration #]",Cost,[List of Region IDs],True/False,True/False,True/False,Infection #
+OLYMP,Olympic Peninsula,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PACCA', 'PUGET']",True,False,False,0
+PACCA,Pacific Cascades,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['OLYMP', 'PUGET', 'COLBA', 'NTHOR', 'WILVA']",True,False,False,0
+PUGET,Puget Sound,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTCAS', 'COLBA', 'PACCA', 'OLYMP']",True,True,False,0
+NTCAS,Northern Cascades,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['OKANO', 'COLBA', 'PUGET']",True,False,False,0
+OKANO,Okanagan,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['IDPAN', 'COLBA', 'NTCAS']",True,False,False,0
+COLBA,Columbia Basin,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTCAS', 'OKANO', 'IDPAN', 'EASOR', 'NTHOR', 'PACCA', 'PUGET']",False,False,False,0
+WILVA,Willamette Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PACCA', 'NTHOR', 'STHOR']",True,True,False,0
+NTHOR,Northern Oregon,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PACCA', 'COLBA', 'EASOR', 'STHOR', 'WILVA']",False,False,False,0
+STHOR,Southern Oregon,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WILVA', 'NTHOR', 'EASOR', 'WESNV', 'SHAST', 'NTHCT']",True,False,False,0
+EASOR,Eastern Oregon,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['COLBA', 'IDPAN', 'MAGVA', 'WESNV', 'STHOR', 'NTHOR']",False,False,False,0
+IDPAN,Idaho Panhandle,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['OKANO', 'WESMT', 'STEID', 'MAGVA', 'EASOR', 'COLBA']",True,False,False,0
+MAGVA,Magic Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['IDPAN', 'STEID', 'CACHE', 'EASNV', 'WESNV', 'EASOR']",False,True,False,0
+STEID,Southeastern Idaho,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMT', 'NTHWY', 'STHWY', 'CACHE', 'MAGVA', 'IDPAN']",False,False,False,0
+WESMT,Western Montana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASMT', 'NTHWY', 'STEID', 'IDPAN']",True,True,False,0
+EASMT,Eastern Montana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESND', 'WESSD', 'NTHWY', 'WESMT']",True,False,False,0
+NTHWY,Nothern Wyoming,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMT', 'EASMT', 'WESSD', 'WESNE', 'STHWY', 'STEID']",False,False,False,0
+STHWY,Southern Wyoming,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHWY', 'WESNE', 'NTECO', 'NTWCO', 'UINTA', 'SLTLK', 'CACHE', 'STEID']",False,True,False,0
+NTHCT,North Coast,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHOR', 'SHAST', 'SACRA', 'BAYAR']",True,False,False,0
+SHAST,Shasta Cascade,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHOR', 'WESNV', 'SACRA', 'NTHCT']",False,False,False,0
+SACRA,Sacramento,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHCT', 'SHAST', 'WESNV', 'SINEV', 'SJOVA', 'CENCT', 'BAYAR']",False,True,False,0
+BAYAR,Bay Area,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHCT', 'SACRA', 'CENCT']",True,False,False,0
+SINEV,Sierra Nevada,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNV', 'STHNV', 'LASVE', 'INEMP', 'KERNC', 'SJOVA', 'SACRA']",False,False,False,0
+SJOVA,San Joaquin Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SACRA', 'SINEV', 'KERNC', 'CENCT']",False,False,False,0
+CENCT,Central Coast,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['BAYAR', 'SACRA', 'SJOVA', 'KERNC', 'LOSAN']",True,False,False,0
+KERNC,Kern County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SJOVA', 'SINEV', 'INEMP', 'LOSAN', 'CENCT']",False,False,False,0
+LOSAN,Los Angeles,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENCT', 'KERNC', 'INEMP', 'STHBR']",True,False,False,0
+INEMP,Inland Empire,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['KERNC', 'SINEV', 'LASVE', 'MOHAV', 'YUMAC', 'STHBR', 'LOSAN']",False,False,False,0
+STHBR,Southern Border Region,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['LOSAN', 'INEMP', 'YUMAC']",True,False,False,0
+WESNV,Western Nevada,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SHAST', 'STHOR', 'EASOR', 'MAGVA', 'EASNV', 'STHNV', 'SINEV', 'SACRA']",False,True,False,0
+EASNV,Eastern Nevada,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNV', 'MAGVA', 'CACHE', 'SLTLK', 'STWUT', 'STHNV']",False,False,False,0
+STHNV,Southern Nevada,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNV', 'EASNV', 'STWUT', 'MOHAV', 'LASVE', 'SINEV']",False,False,False,0
+LASVE,Las Vegas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHNV', 'MOHAV', 'INEMP', 'SINEV']",False,False,False,0
+CACHE,Cache County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MAGVA', 'STEID', 'STHWY', 'SLTLK', 'EASNV']",False,False,False,0
+SLTLK,Salt Lake,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CACHE', 'STHWY', 'UINTA', 'STWUT', 'EASNV']",False,True,False,0
+UINTA,Unitah County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SLTLK', 'STHWY', 'NTWCO', 'SANJU', 'STWUT']",False,False,False,0
+STWUT,Southwest Utah,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SLTLK', 'UINTA', 'SANJU', 'EASAZ', 'MOHAV', 'STHNV', 'EASNV']",False,False,False,0
+SANJU,San Juan County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWUT', 'UINTA', 'NTWCO', 'STWCO', 'EASAZ']",False,False,False,0
+NTWCO,Northwest Colorado,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHWY', 'NTECO', 'STECO', 'STWCO', 'SANJU', 'UINTA']",False,False,False,0
+NTECO,Northeast Colorado,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHWY', 'WESNE', 'CENNE', 'NTHKS', 'STHKS', 'STECO', 'NTWCO']",False,True,False,0
+STWCO,Southwest Colorado,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SANJU', 'NTWCO', 'STECO', 'NTENM', 'NTWNM']",False,False,False,0
+STECO,Southeast Colorado,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWCO', 'NTWCO', 'NTECO', 'STHKS', 'REDCA', 'NTENM']",False,False,False,0
+MOHAV,Mohave County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['LASVE', 'STHNV', 'STWUT', 'EASAZ', 'YAVAP', 'YUMAC', 'INEMP']",False,False,False,0
+YUMAC,Yuma County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHBR', 'INEMP', 'MOHAV', 'YAVAP', 'PHOEN', 'STHAZ']",True,False,False,0
+YAVAP,Yavapai County,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MOHAV', 'EASAZ', 'PHOEN', 'YUMAC']",False,False,False,0
+PHOEN,Phoenix,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['YUMAC', 'YAVAP', 'EASAZ', 'STHAZ']",False,True,False,0
+STHAZ,Southern Arizona,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['YUMAC', 'PHOEN', 'EASAZ', 'STWNM']",True,False,False,0
+EASAZ,Eastern Arizona,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHAZ', 'PHOEN', 'YAVAP', 'MOHAV', 'STWUT', 'SANJU', 'NTWNM', 'STWNM']",False,False,False,0
+NTWNM,Northwest New Mexico,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASAZ', 'STWCO', 'NTENM', 'STENM', 'STWNM']",False,False,False,0
+NTENM,Northeast New Mexico,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWNM', 'STWCO', 'STECO', 'REDCA', 'TXPAN', 'STENM']",False,True,False,0
+STWNM,Southwest New Mexico,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASAZ', 'NTWNM', 'STENM', 'WESTX', 'STHAZ']",True,False,False,0
+STENM,Southeast New Mexico,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWNM', 'NTWNM', 'NTENM', 'TXPAN', 'WESTX']",False,False,False,0
+WESND,Western North Dakota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASND', 'WESSD', 'EASMT']",True,True,False,0
+EASND,Eastern North Dakota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWMN', 'EASSD', 'WESSD', 'WESND']",True,False,False,0
+WESSD,Western North Dakota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESND', 'EASND', 'EASSD', 'CENNE', 'WESNE', 'NTHWY', 'EASMT']",False,True,False,0
+EASSD,Eastern North Dakota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASND', 'NTWMN', 'STWMN', 'NTWIA', 'EASNE', 'CENNE', 'WESSD']",False,False,False,0
+WESNE,Western Nebraska,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHWY', 'WESSD', 'CENNE', 'NTECO', 'STHWY']",False,False,False,0
+CENNE,Central Nebraska,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNE', 'WESSD', 'EASSD', 'EASNE', 'NTHKS', 'NTECO']",False,False,False,0
+EASNE,Eastern Nebraska,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENNE', 'EASSD', 'NTWIA', 'STWIA', 'NTHMO', 'EASKS', 'NTHKS']",False,True,False,0
+NTHKS,Northern Kansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENNE', 'EASNE', 'EASKS', 'STHKS', 'NTECO']",False,False,False,0
+STHKS,Southern Kansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHKS', 'EASKS', 'GREEN', 'REDCA', 'STECO', 'NTECO']",False,False,False,0
+EASKS,Eastern Kansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASNE', 'NTHMO', 'WESMO', 'GREEN', 'STHKS', 'NTHKS']",False,True,False,0
+REDCA,Red Carpet Country,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHKS', 'GREEN', 'GRTPL', 'TXPAN', 'NTENM', 'STECO']",False,False,False,0
+GREEN,Green Country,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHKS', 'EASKS', 'WESMO', 'NTWAR', 'CHOCT', 'GRTPL', 'REDCA']",False,True,False,0
+GRTPL,Great Plains Country,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['REDCA', 'GREEN', 'CHOCT', 'METRO', 'TXPAN']",False,False,False,0
+CHOCT,Choctaw Country,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['GREEN', 'NTWAR', 'STWAR', 'NTETX', 'METRO', 'GRTPL']",False,False,False,0
+TXPAN,Texas Panhandle,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['REDCA', 'GRTPL', 'METRO', 'HILLC', 'WESTX', 'STENM', 'NTENM']",False,False,False,0
+METRO,Metroplex,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['GRTPL', 'CHOCT', 'NTETX', 'CENTX', 'HILLC', 'TXPAN']",False,False,False,0
+NTETX,Northeast Texas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CHOCT', 'STWAR', 'SPORT', 'STETX', 'GULCT', 'CENTX', 'METRO']",False,False,False,0
+WESTX,Western Texas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWNM', 'STENM', 'TXPAN', 'HILLC', 'STHTX']",True,False,False,0
+HILLC,Hill Country,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['TXPAN', 'METRO', 'CENTX', 'STHTX', 'WESTX']",False,False,False,0
+CENTX,Central Texas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['METRO', 'NTETX', 'GULCT', 'CBEND', 'STHTX', 'HILLC']",False,True,False,0
+STHTX,Southern Texas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESTX', 'HILLC', 'CENTX', 'CBEND']",True,False,False,0
+CBEND,Coastal Bend,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHTX', 'CENTX', 'GULCT']",True,False,False,0
+GULCT,Gulf Coast,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CBEND', 'CENTX', 'NTETX', 'STETX']",True,False,False,0
+STETX,Southeast Texas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['GULCT', 'NTETX', 'SPORT', 'CROSS', 'ACADI']",True,False,False,0
+NTWMN,Northwest Minnesota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTENM', 'CENMN', 'STWMN', 'EASSD', 'EASND']",True,False,False,0
+NTEMN,Northeast Minnesota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWWI', 'CENMN', 'NTWMN']",True,False,False,0
+CENMN,Central Minnesota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWMN', 'NTEMN', 'NTWWI', 'STEMN', 'STWMN']",False,False,False,0
+STWMN,Southwest Minnesota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWMN', 'CENMN', 'STEMN', 'NTWIA', 'EASSD']",False,False,False,0
+STEMN,Southeast Minnesota,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENMN', 'NTWWI', 'STWWI', 'NTEIA', 'NTWIA', 'STWMN']",False,True,False,0
+NTWIA,Northwest Iowa,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWMN', 'STEMN', 'NTEIA', 'STWIA', 'EASNE', 'EASSD']",False,False,False,0
+NTEIA,Northeast Iowa,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STEMN', 'STWWI', 'NTWIL', 'STEIA', 'STWIA', 'NTWIA']",False,False,False,0
+STWIA,Southwest Iowa,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWIA', 'NTEIA', 'STEIA', 'NTHMO', 'EASNE']",False,True,False,0
+STEIA,Southeast Iowa,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTEIA', 'NTWIL', 'FORGO', 'NTHMO', 'STWIA']",False,False,False,0
+NTHMO,Northern Missouri,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWIA', 'STEIA', 'FORGO', 'STWIL', 'STLOU', 'WESMO', 'EASKS', 'EASNE']",False,False,False,0
+WESMO,Western Missouri,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHMO', 'STLOU', 'OZARK', 'NTWAR', 'GREEN', 'EASKS']",False,False,False,0
+STLOU,St. Louis,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHMO', 'STWIL', 'STEMO', 'OZARK', 'WESMO']",False,True,False,0
+OZARK,Ozark Highlands,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMO', 'STLOU', 'STEMO', 'NTEAR', 'NTWAR']",False,False,False,0
+STEMO,Southeast Missouri,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STLOU', 'STWIL', 'LILEG', 'WESKY', 'NTWTN', 'NTEAR', 'OZARK']",False,False,False,0
+NTWAR,Northwest Arkansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMO', 'OZARK', 'NTEAR', 'STEAR', 'STWAR', 'CHOCT', 'GREEN']",False,False,False,0
+NTEAR,Northeast Arkansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['OZARK', 'STEMO', 'NTWTN', 'STWTN', 'NTHMS', 'STEAR', 'NTWAR']",False,False,False,0
+STWAR,Southwest Arkansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWAR', 'STEAR', 'SPORT', 'NTETX', 'CHOCT']",False,False,False,0
+STEAR,Southeast Arkansas,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWAR', 'NTEAR', 'NTHMS', 'SPORT', 'STWAR']",False,True,False,0
+SPORT,Sportsman's Paradise,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWAR', 'STEAR', 'NTHMS', 'CENMS', 'CROSS', 'STETX', 'NTETX']",False,False,False,0
+CROSS,Crossroads,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SPORT', 'CENMS', 'NEWOR', 'ACADI', 'STETX']",False,False,False,0
+ACADI,Acadiana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CROSS', 'NEWOR', 'STETX']",True,False,False,0
+NEWOR,Greater New Orleans,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['ACADI', 'CROSS', 'CENMS', 'MSGUL']",True,True,False,0
+NTWWI,Northwest Wisconsin,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENWI', 'STWWI', 'STEMN', 'CENMN', 'NTEMN']",True,False,False,0
+CENWI,North Central Wisconsin,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['UPPER', 'NTEWI', 'STEWI', 'STWWI', 'NTWWI']",True,False,False,0
+NTEWI,Northeast Wisconsin,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENWI', 'UPPER', 'STEWI']",True,False,False,0
+STWWI,Southwest Wisconsin,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWWI', 'CENWI', 'STEWI', 'NTWIL', 'NTEIA', 'STEMN']",False,False,False,0
+STEWI,Southeast Wisconsin,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENWI', 'NTEWI', 'CHICA', 'NTWIL', 'STWWI']",True,True,False,0
+UPPER,Upper Peninsula,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENWI', 'NTEWI', 'NTHMI']",True,False,False,0
+NTHMI,Northern Michigan,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['UPPER', 'WESMI', 'MIDMI']",True,False,False,0
+WESMI,West Michigan,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHMI', 'MIDMI', 'STEMI', 'NTWOH', 'NTHIN']",True,False,False,0
+MIDMI,Mid Michigan,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHMI', 'THUMB', 'STEMI', 'WESMI']",True,True,False,0
+THUMB,The Thumb,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MIDMI', 'STEMI']",True,False,False,0
+STEMI,Southeastern Michigan,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMI', 'MIDMI', 'THUMB', 'NTWOH']",True,False,False,0
+NTWIL,Northwest Illinois,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWWI', 'STEWI', 'CHICA', 'CENIL', 'FORGO', 'STEIA', 'NTEIA']",False,False,False,0
+CHICA,Greater Chicago,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHIN', 'EASIL', 'CENIL', 'NTWIL', 'STEWI']",True,False,False,0
+FORGO,Forgottonia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWIL', 'CENIL', 'STWIL', 'NTHMO', 'STEIA']",False,False,False,0
+CENIL,Central Illinois,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWIL', 'CHICA', 'EASIL', 'STWIL', 'FORGO']",False,False,False,0
+STWIL,Southwest Illinois,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENIL', 'EASIL', 'LILEG', 'STEMO', 'STLOU', 'NTHMO', 'FORGO']",False,True,False,0
+EASIL,Eastern Illinois,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CHICA', 'NTHIN', 'CENIN', 'WABAS', 'LILEG', 'STWIL', 'CENIL']",False,False,False,0
+LILEG,Little Egypt,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASIL', 'WABAS', 'STHIN', 'WESKY', 'STEMO', 'STLOU', 'STWIL']",False,False,False,0
+NTHIN,Northern Indiana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMI', 'NTWOH', 'CENIN', 'EASIL', 'CHICA']",True,False,False,0
+CENIN,Central Indiana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHIN', 'NTWOH', 'MIAVA', 'STHIN', 'INDIA', 'WABAS', 'EASIL']",False,False,False,0
+INDIA,Greater Indiana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENIN', 'STHIN', 'WABAS']",False,True,False,0
+WABAS,Wabash Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENIN', 'INDIA', 'STHIN', 'LILEG', 'EASIL']",False,False,False,0
+STHIN,Southern Indiana,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WABAS', 'INDIA', 'CENIN', 'MIAVA', 'CINCI', 'BLUEG', 'PENNY', 'WESKY', 'LILEG']",False,False,False,0
+NTWOH,Northwest Ohio,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMI', 'STEMI', 'CLEVE', 'CENOH', 'MIAVA', 'CENIN', 'NTHIN']",True,False,False,0
+CLEVE,Greater Cleveland,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWPA', 'VALLE', 'STEOH', 'CENOH', 'NTWOH']",True,False,False,0
+MIAVA,Miami Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWOH', 'CENOH', 'CINCI', 'STHIN', 'CENIN']",False,False,False,0
+CENOH,Central Ohio,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWOH', 'CLEVE', 'STEOH', 'STHOH', 'CINCI', 'MIAVA']",False,True,False,0
+CINCI,Cincinnati,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MIAVA', 'CENOH', 'STHOH', 'CUMBE', 'BLUEG', 'STHIN']",False,False,False,0
+STHOH,Southern Ohio,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENOH', 'STEOH', 'VALLE', 'CUMBE', 'CINCI']",False,False,False,0
+STEOH,Southeastern Ohio,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENOH', 'CLEVE', 'VALLE', 'STHOH']",False,False,False,0
+BLUEG,Bluegrass,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHIN', 'CINCI', 'CUMBE', 'PENNY']",False,True,False,0
+WESKY,Western Kentucky,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['LILEG', 'STHIN', 'PENNY', 'NASHV', 'NTWTN', 'STEMO']",False,False,False,0
+PENNY,Pennyroyal Region,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHIN', 'BLUEG', 'CUMBE', 'EASTN', 'MIDTN', 'NASHV', 'WESKY']",False,False,False,0
+CUMBE,Cumberland Plateau,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['BLUEG', 'CINCI', 'STHOH', 'VALLE', 'CHARL', 'STWVA', 'EASTN', 'PENNY']",False,False,False,0
+NTWTN,Northwest Tennessee,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STEMO', 'WESKY', 'NASHV', 'CHATT', 'STWTN', 'NTEAR']",False,False,False,0
+NASHV,Nashville,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESKY', 'PENNY', 'MIDTN', 'CHATT', 'NTWTN']",False,True,False,0
+MIDTN,Middle Tennessee,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PENNY', 'EASTN', 'CHATT', 'NASHV']",False,False,False,0
+EASTN,Eastern Tennessee,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CUMBE', 'STWVA', 'MOUNT', 'CHATT', 'MIDTN', 'PENNY']",False,False,False,0
+STWTN,Southwest Tennessee,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWTN', 'CHATT', 'NTHAL', 'NTHMS', 'NTEAR']",False,False,False,0
+CHATT,Chattanooga,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NASHV', 'MIDTN', 'EASTN', 'MOUNT', 'NTWGA', 'NTHAL', 'STWTN', 'NTWTN']",False,False,False,0
+NTHMS,Northern Mississippi,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWTN', 'NTHAL', 'WESAL', 'CENMS', 'SPORT', 'STEAR', 'NTEAR']",False,False,False,0
+CENMS,Central Mississippi,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHMS', 'WESAL', 'STWAL', 'MSGUL', 'NEWOR', 'CROSS', 'SPORT']",False,True,False,0
+MSGUL,Mississippi Gulf Coast,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENMS', 'STWAL', 'NEWOR']",True,False,False,0
+NTHAL,Northern Alabama,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CHATT', 'NTWGA', 'EASAL', 'WESAL', 'NTHMS', 'STWTN']",False,False,False,0
+WESAL,Western Alabama,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHAL', 'EASAL', 'STEAL', 'STWAL', 'CENMS', 'NTHMS']",False,False,False,0
+EASAL,Eastern Alabama,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHAL', 'NTWGA', 'STEAL', 'WESAL']",False,False,False,0
+STWAL,Southwest Alabama,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESAL', 'STEAL', 'FLPAN', 'CENMS', 'MSGUL']",True,False,False,0
+STEAL,Southeast Alabama,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASAL', 'STWGA', 'FLPAN', 'NTWGA', 'WESAL', 'STWAL']",False,True,False,0
+FLPAN,Florida Panhandle,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWAL', 'STEAL', 'STWGA', 'STEGA', 'GAINE']",True,True,False,0
+GAINE,Greater Gainesville,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['FLPAN', 'STEGA', 'FIRCT', 'HALIF', 'TAMPA']",True,False,False,0
+FIRCT,First Coast,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['GACST', 'STEGA', 'GAINE', 'HALIF']",True,False,False,0
+HALIF,Halifax Area,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['FIRCT', 'GAINE', 'TAMPA', 'STWFL', 'MIAMI']",True,False,False,0
+TAMPA,Tampa Bay Area,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['GAINE', 'HALIF', 'STWFL']",True,False,False,0
+STWFL,Southwest Florida,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['TAMPA', 'HALIF', 'MIAMI']",True,False,False,0
+MIAMI,Greater Miami,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWFL', 'HALIF']",True,False,False,0
+NTWGA,Northwest Georgia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CHATT', 'MOUNT', 'ATHEN', 'ATLAN', 'STWGA', 'STEAL', 'EASAL', 'NTHAL']",False,False,False,0
+ATHEN,Athens–Clarke,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MOUNT', 'PIEDM', 'MDLND', 'EASGA', 'ATLAN', 'NTWGA']",False,False,False,0
+ATLAN,Atlanta,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWGA', 'ATHEN', 'EASGA', 'STWGA']",False,True,False,0
+EASGA,Eastern Georgia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['ATHEN', 'MDLND', 'SCLOW', 'GACST', 'STEGA', 'STWGA', 'ATLAN']",False,False,False,0
+STWGA,Southwest Georgia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWGA', 'ATLAN', 'EASGA', 'STEGA', 'FLPAN', 'STEAL']",False,False,False,0
+STEGA,Southeast Georgia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASGA', 'GACST', 'FIRCT', 'GAINE', 'FLPAN', 'STWGA']",False,False,False,0
+GACST,Georgia Coast,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['SCLOW', 'EASGA', 'STEGA', 'FIRCT']",True,False,False,0
+PIEDM,Piedmont,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MOUNT', 'MDLND', 'ATHEN']",False,False,False,0
+MDLND,Midland,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PIEDM', 'MOUNT', 'MTRLA', 'PEEDE', 'SCLOW', 'EASGA', 'ATHEN']",False,False,False,0
+PEEDE,PeeDee,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['MTRLA', 'SANDH', 'STENC', 'MDLND', 'SCLOW']",True,False,False,0
+SCLOW,Lowcountry,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['GACST', 'EASGA', 'MDLND', 'PEEDE']",True,True,False,0
+MOUNT,Mountain,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWVA', 'MTRLA', 'MDLND', 'PIEDM', 'ATHEN', 'NTWGA', 'CHATT', 'EASTN']",False,False,False,0
+MTRLA,Metrolina,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STWVA', 'STHVA', 'TRIAN', 'SANDH', 'PEEDE', 'MDLND', 'MOUNT']",False,False,False,0
+TRIAN,Triangle,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHVA', 'BANKS', 'STENC', 'SANDH', 'MTRLA']",False,True,False,0
+BANKS,Banks,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['HAMPT', 'STHVA', 'TRIAN', 'STENC']",True,False,False,0
+SANDH,Sandhills,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STENC', 'TRIAN', 'MTRLA', 'PEEDE']",False,False,False,0
+STENC,Southeast North Carolina,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['BANKS', 'TRIAN', 'SANDH', 'PEEDE']",True,False,False,0
+ROANO,Roanoke Region,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHVA', 'RICHM', 'STHVA', 'STWVA', 'CHARL', 'POTOM']",False,False,False,0
+NTHVA,Northern Virginia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESMD', 'HAMPT', 'RICHM', 'ROANO', 'POTOM']",False,False,False,0
+RICHM,Richmond,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHVA', 'HAMPT', 'STHVA', 'ROANO']",False,True,False,0
+STWVA,Southwest Virginia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CHARL', 'ROANO', 'STHVA', 'MTRLA', 'MOUNT', 'EASTN', 'CUMBE']",False,False,False,0
+STHVA,Southside Virginia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['ROANO', 'RICHM', 'HAMPT', 'BANKS', 'TRIAN', 'MTRLA', 'STWVA']",False,False,False,0
+HAMPT,Hampton Roads,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['EASMD', 'WESMD', 'NTHVA', 'RICHM', 'STHVA', 'BANKS']",True,False,False,0
+VALLE,Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PITTS', 'POTOM', 'CHARL', 'CUMBE', 'STHOH', 'STEOH', 'CLEVE', 'NTWPA']",False,False,False,0
+POTOM,Potomac Highlands,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PITTS', 'WESMD', 'NTHVA', 'ROANO', 'CHARL', 'VALLE']",False,False,False,0
+CHARL,Charleston,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['VALLE', 'POTOM', 'ROANO', 'STWVA', 'CUMBE']",False,True,False,0
+WESMD,Western Maryland,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PITTS', 'PAHLR', 'EASMD', 'POTOM', 'NTHVA', 'HAMPT']",True,True,False,0
+EASMD,Eastern Maryland,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['DELEW', 'PHILL', 'PAHLR', 'WESMD', 'HAMPT']",True,False,False,0
+DELEW,State of Deleware,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['PHILL', 'EASMD']",True,True,False,0
+NTWPA,Northwest Pennsylvania,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNY', 'NTHPA', 'PITTS', 'VALLE', 'CLEVE']",True,False,False,0
+NTHPA,Northern Pennsylvania,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNY', 'NTEPA', 'CENPA', 'PITTS', 'NTWPA']",False,False,False,0
+NTEPA,Northeast Pennsylvania,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHNY', 'NEWYO', 'NTHNJ', 'PHILL', 'CENPA', 'NTHPA', 'WESNY']",False,False,False,0
+PITTS,Greater Pittsburg,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTWPA', 'NTHPA', 'CENPA', 'PAHLR', 'WESMD', 'POTOM', 'VALLE']",False,False,False,0
+CENPA,Central Pennsylvania,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHPA', 'NTEPA', 'PHILL', 'PAHLR', 'PITTS']",False,False,False,0
+PAHLR,Pennsylvania Highlands Region,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CENPA', 'PHILL', 'EASMD', 'WESMD', 'PITTS']",False,False,False,0
+PHILL,Greater Philadelphia,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTEPA', 'NTHNJ', 'STHNJ', 'DELEW', 'EASMD', 'PAHLR', 'CENPA']",True,True,False,0
+NTHNJ,North Jersey,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NEWYO', 'NTEPA', 'PHILL', 'STHNJ']",True,True,False,0
+STHNJ,South Jersey,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHNJ', 'PHILL']",True,False,False,0
+NTHNY,North Country,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHVT', 'ALBAN', 'MOHAW', 'FINLA']",True,False,False,0
+WESNY,Western New York,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['FINLA', 'STHNY', 'NTEPA', 'NTHPA', 'NTWPA']",True,False,False,0
+FINLA,Finger Lakes,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHNY', 'MOHAW', 'STHNY', 'WESNY']",True,False,False,0
+MOHAW,Mohawk Valley,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHNY', 'ALBAN', 'STHNY', 'FINLA']",False,False,False,0
+ALBAN,Albany,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHVT', 'STHVT', 'WESMA', 'NEWYO', 'STHNY', 'MOHAW', 'NTHNY']",False,True,False,0
+STHNY,Southern Tier,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['WESNY', 'FINLA', 'MOHAW', 'ALBAN', 'NEWYO', 'NTEPA']",False,False,False,0
+NEWYO,New York City,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CONNE', 'WESMA', 'ALBAN', 'STHNY', 'NTEPA', 'NTHNJ']",True,False,False,0
+CONNE,Connecticut,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NEWYO', 'WESMA', 'NTHMA', 'RHODE']",True,True,False,0
+RHODE,Rhode Island,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CONNE', 'NTHMA', 'STHMA']",True,True,False,0
+WESMA,Western Massachusetts,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['CONNE', 'NTHMA', 'STHNH', 'STHVT', 'ALBAN', 'NEWYO']",False,False,False,0
+NTHMA,Northern Massachusetts,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHMA', 'RHODE', 'CONNE', 'WESMA', 'STHNH']",True,False,False,0
+STHMA,Southern Massachusetts,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHMA', 'RHODE']",True,True,False,0
+NTHVT,Northern Vermont,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHNH', 'STHVT', 'ALBAN', 'NTHNY']",True,False,False,0
+STHVT,Southern Vermont,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHVT', 'NTHNH', 'STHNH', 'WESMA', 'ALBAN']",False,True,False,0
+NTHNH,Northern New Hampshire,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHME', 'STHNH', 'STHVT', 'NTHVT']",True,False,False,0
+STHNH,Southern New Hampshire,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['STHME', 'NTHNH', 'STHVT', 'WESMA', 'NTHMA']",True,True,False,0
+NTHME,Northern Maine,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,['STHME'],True,False,False,0
+STHME,Southern Maine,"[0, 0]",Empty,"[None, 99]","[None, 99, 0]","[False, 0]",5,"['NTHME', 'NTHNH', 'STHNH']",True,True,False,0
