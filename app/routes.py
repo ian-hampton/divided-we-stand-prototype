@@ -273,7 +273,7 @@ def create_game():
                 "Current Event": {}
             }
             core.erase_game(active_game_id)
-        active_games = [key for key, value in game_records_dict.items() if value.get("Game Ended") == "Present"]
+        active_games = [key for key, value in game_records_dict.items() if value.get("Statistics").get("Game Ended") == "Present"]
         for active_game_name in active_games:
             del game_records_dict[active_game_name]
         with open('active_games.json', 'w') as json_file:

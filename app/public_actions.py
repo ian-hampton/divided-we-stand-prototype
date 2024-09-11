@@ -562,10 +562,11 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    with open(f'gamedata/{full_game_id}/steal_tracking.json', 'r') as json_file:
-        steal_tracking_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+
+    #TO DO: add stealing data to active_games
+    steal_tracking_dict = {}
 
     #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)

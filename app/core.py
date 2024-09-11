@@ -196,9 +196,8 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
                 'Streak': 0,
             }
             steal_tracking_dict[player[1]] = inner_dict
-    if steal_tracking_dict != {}:
-        with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
-            json.dump(steal_tracking_dict, json_file, indent=4)
+    with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
+        json.dump(steal_tracking_dict, json_file, indent=4)
     
     #create records
     file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
@@ -587,7 +586,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     active_games_dict[full_game_id]["Statistics"]["Region Disputes"] = 0
     active_games_dict[full_game_id]["Inactive Events"] = []
     active_games_dict[full_game_id]["Active Events"] = []
-    active_games_dict[full_game_id]["Current Event"] = ""
+    active_games_dict[full_game_id]["Current Event"] = {}
     active_games_dict[full_game_id]["Game Active"] = True
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
