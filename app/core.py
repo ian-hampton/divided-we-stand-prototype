@@ -196,9 +196,8 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
                 'Streak': 0,
             }
             steal_tracking_dict[player[1]] = inner_dict
-    if steal_tracking_dict != {}:
-        with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
-            json.dump(steal_tracking_dict, json_file, indent=4)
+    with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
+        json.dump(steal_tracking_dict, json_file, indent=4)
     
     #create records
     file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
@@ -257,8 +256,8 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
     
     #update visuals
     current_turn_num = 1
-    update_announcements_sheet(full_game_id, [], [])
-    map_name = active_games_dict[full_game_id]["Statistics"]["Map"]
+    update_announcements_sheet(full_game_id, False, [], [])
+    map_name = active_games_dict[full_game_id]["Information"]["Map"]
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
 
@@ -275,11 +274,10 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
     wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    game_id = int(full_game_id[-1])
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)
-    current_turn_num = get_current_turn_num(game_id)
-    map_name = get_map_name(game_id)
+    current_turn_num = get_current_turn_num(int(full_game_id[-1]))
+    map_name = get_map_name(int(full_game_id[-1]))
     
     #create logs
     diplomacy_log = []
@@ -511,7 +509,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Update Game_Settings
-    update_turn_num(game_id)
+    update_turn_num(int(full_game_id[-1]))
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     start_date = active_games_dict[full_game_id]["Statistics"]["Game Started"]
@@ -526,13 +524,13 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Update Visuals
-    current_turn_num = get_current_turn_num(game_id)
+    current_turn_num = get_current_turn_num(int(full_game_id[-1]))
     update_announcements_sheet(full_game_id, event_pending, diplomacy_log, reminders_list)
     resgraphs.update_all(full_game_id)
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
+    main_map = map.MainMap(int(full_game_id[-1]), map_name, current_turn_num)
     main_map.update()
     if update_control_map:
-        control_map = map.ControlMap(game_id, map_name)
+        control_map = map.ControlMap(int(full_game_id[-1]), map_name)
         control_map.update()
 
 
@@ -555,6 +553,10 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
 
+    #get scenario data
+    improvement_data_dict = get_scenario_dict(full_game_id, "Improvements")
+
+
     #datetime stuff
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
@@ -575,6 +577,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     active_games_dict[full_game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
     active_games_dict[full_game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
     active_games_dict[full_game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
+    active_games_dict[full_game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
     active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
     active_games_dict[full_game_id]["Game #"] = len(game_records_dict) + 1
     active_games_dict[full_game_id]["Information"]["Version"] = game_version
@@ -583,7 +586,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     active_games_dict[full_game_id]["Statistics"]["Region Disputes"] = 0
     active_games_dict[full_game_id]["Inactive Events"] = []
     active_games_dict[full_game_id]["Active Events"] = []
-    active_games_dict[full_game_id]["Current Event"] = ""
+    active_games_dict[full_game_id]["Current Event"] = {}
     active_games_dict[full_game_id]["Game Active"] = True
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
@@ -601,6 +604,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     new_game_entry["Information"]["Turn Duration"] = form_data_dict["Turn Length"]
     new_game_entry["Information"]["Fog of War"] = form_data_dict["Fog of War"]
     new_game_entry["Information"]["Version"] = game_version
+    new_game_entry["Information"]["Scenario"] = form_data_dict["Scenario"]
     new_game_entry["Statistics"]["Game End Turn"] = 0
     new_game_entry["Statistics"]["Days Ellapsed"] = 0
     new_game_entry["Statistics"]["Game Started"] = current_date_string
@@ -987,16 +991,22 @@ def get_regions_in_radius(random_region_id, radius, regdata_list):
         regions_in_radius.update(new_regions_in_radius)
     return regions_in_radius
 
-def get_library(full_game_id):
+def get_library(game_id):
     '''
     Returns a dictionary containing all game terms. Use this to check validity of actions.
     '''
     
     #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     regdata_list = read_file(regdata_filepath, 2)
+
+    #get scenario files
+    agenda_data_dict = get_scenario_dict(game_id, "Agendas")
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+    research_data_dict = get_scenario_dict(game_id, "Technologies")
+    unit_data_dict = get_scenario_dict(game_id, "Units")
 
     #create library of game terms
     library = {
@@ -1043,6 +1053,7 @@ def run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diploma
     checks.update_income(full_game_id, current_turn_num)
 
     return diplomacy_log
+
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS
 ################################################################################
@@ -1444,7 +1455,7 @@ def update_stockpile(stockpile, cost):
     stockpile = round_total_income(stockpile)
     return stockpile
 
-def get_upkeep_dictionary(upkeep_type, playerdata, unit_count_list):
+def get_upkeep_dictionary(game_id, upkeep_type, playerdata, unit_count_list):
     '''
     Returns a dictionary that represents upkeep cost drain on a specific nation.
     
@@ -1454,8 +1465,10 @@ def get_upkeep_dictionary(upkeep_type, playerdata, unit_count_list):
     '''
 
     #take needed info from playerdata and core
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
     improvement_count_list = ast.literal_eval(playerdata[27])
+    unit_data_dict = get_scenario_dict(game_id, "Units")
     unit_name_list = sorted(unit_data_dict.keys())
     completed_research_list = ast.literal_eval(playerdata[26])
 
@@ -1548,10 +1561,11 @@ def get_upkeep_sum(upkeep_dict):
 
     return upkeep_sum
 
-def get_unit_count_list(player_id, full_game_id):
+def get_unit_count_list(player_id, game_id):
     
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     regdata_list = read_file(regdata_filepath, 2)
+    unit_data_dict = get_scenario_dict(game_id, "Units")
     unit_name_list = sorted(unit_data_dict.keys())
 
     count_list = []
@@ -1627,9 +1641,10 @@ def join_ongoing_war(wardata_list, war_id, player_id, war_side):
             war[player_id] = player_entry_data
     return wardata_list
 
-def calculate_unit_damage_modifier(friendly_unit_id, friendly_player_id, regdata_list, target_type, target_region_id):
+def calculate_unit_damage_modifier(game_id, friendly_unit_id, friendly_player_id, regdata_list, target_type, target_region_id):
     damage_modifier = 0
 
+    unit_data_dict = get_scenario_dict(game_id, "Units")
     unit_ids = [unit['Abbreviation'] for unit in unit_data_dict.values()]
     tank_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Tank']
 
@@ -1659,9 +1674,10 @@ def calculate_unit_damage_modifier(friendly_unit_id, friendly_player_id, regdata
 
     return damage_modifier
 
-def calculate_unit_roll_modifier(friendly_unit_id, friendly_research_list, friendly_player_id, friendly_war_role, regdata_list, target_type, target_region_id):
+def calculate_unit_roll_modifier(game_id, friendly_unit_id, friendly_research_list, friendly_player_id, friendly_war_role, regdata_list, target_type, target_region_id):
     roll_modifier = 0
 
+    unit_data_dict = get_scenario_dict(game_id, "Units")
     infantry_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Infantry']
     attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == friendly_unit_id), None)
 
@@ -1689,10 +1705,14 @@ def calculate_unit_roll_modifier(friendly_unit_id, friendly_research_list, frien
     
     return roll_modifier
 
-def conduct_combat(attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log):
+def conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log):
     '''
     Conducts combat between two units or a unit and a defensive improvement.
     '''
+
+    #get scenario data
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+    unit_data_dict = get_scenario_dict(game_id, "Units")
     
     #get information
     attacker_unit_id, attacker_unit_health, attacker_player_id, attacker_war_role, attacker_region_id = attacker_data_list
@@ -1704,9 +1724,9 @@ def conduct_combat(attacker_data_list, defender_data_list, war_statistics_list, 
     defender_research_list = ast.literal_eval(playerdata_list[defender_player_id - 1][26])
 
     #get modifiers
-    attacker_roll_modifier = calculate_unit_roll_modifier(attacker_unit_id, attacker_research_list, attacker_player_id, attacker_war_role, regdata_list, defender_name, defender_region_id)
-    defender_roll_modifier = calculate_unit_roll_modifier(defender_name, defender_research_list, defender_player_id, defender_war_role, regdata_list, attacker_unit_id, defender_region_id)
-    attacker_damage_modifier = calculate_unit_damage_modifier(attacker_unit_id, attacker_player_id, regdata_list, defender_name, defender_region_id)
+    attacker_roll_modifier = calculate_unit_roll_modifier(game_id, attacker_unit_id, attacker_research_list, attacker_player_id, attacker_war_role, regdata_list, defender_name, defender_region_id)
+    defender_roll_modifier = calculate_unit_roll_modifier(game_id, defender_name, defender_research_list, defender_player_id, defender_war_role, regdata_list, attacker_unit_id, defender_region_id)
+    attacker_damage_modifier = calculate_unit_damage_modifier(game_id, attacker_unit_id, attacker_player_id, regdata_list, defender_name, defender_region_id)
     defender_damage_modifier = 0
 
     #get damage values and hit values
@@ -1715,7 +1735,7 @@ def conduct_combat(attacker_data_list, defender_data_list, war_statistics_list, 
     attacker_victory_damage = unit_data_dict[attacker_name]['Victory Damage'] + attacker_damage_modifier
     attacker_draw_damage = unit_data_dict[attacker_name]['Draw Damage']
     if defender_name in [unit['Abbreviation'] for unit in unit_data_dict.values()]:
-        defender_damage_modifier = calculate_unit_damage_modifier(defender_name, defender_player_id, regdata_list, attacker_unit_id, defender_region_id)
+        defender_damage_modifier = calculate_unit_damage_modifier(game_id, defender_name, defender_player_id, regdata_list, attacker_unit_id, defender_region_id)
         defender_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == defender_name), None)
         defender_combat_value = unit_data_dict[defender_name]['Combat Value']
         defender_victory_damage = unit_data_dict[defender_name]['Victory Damage'] + defender_damage_modifier
@@ -1911,8 +1931,10 @@ def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
             return True
     return False
 
-def attempt_missile_defense(missile_type, improvement_data, target_nation_name, target_player_research, war_log):
+def attempt_missile_defense(game_id, missile_type, improvement_data, target_nation_name, target_player_research, war_log):
     
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+
     improvement_name = improvement_data[0]
     improvement_health = improvement_data[1]
     missile_defense_roll = random.randint(1, 10)
@@ -2088,9 +2110,12 @@ def verify_ownership(regdata_list, region_id, player_id):
             else:
                 return False
 
-def verify_ratio(improvement_count_list, improvement_name):
+def verify_ratio(game_id, improvement_count_list, improvement_name):
+
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     refinery_list = ['Advanced Metals Refinery', 'Oil Refinery', 'Uranium Refinery']
     improvement_name_list = sorted(improvement_data_dict.keys())
+    
     if improvement_name in refinery_list:
         if improvement_name == 'Advanced Metals Refinery':
             ref_index = improvement_name_list.index('Advanced Metals Refinery')
@@ -2110,16 +2135,18 @@ def verify_ratio(improvement_count_list, improvement_name):
     return True
 
 #THE EXEMPT LIST NEEDS TO GET GENERATED FROM THE IMPROVEMENT DICT
-def verify_region_resource(regdata_list, region_id, improvement_name):
+def verify_region_resource(game_id, regdata_list, region_id, improvement_name):
     '''Verifies a region has the resource needed for the desired improvement. Sub-function for resolve_improvement_builds().'''
-    exempt_list = ['Boot Camp', 'Central Bank', 'City', 'Crude Barrier', 'Military Base', 'Military Outpost', 'Missile Defense Network', 'Missile Defense System', 'Nuclear Power Plant', 'Oil Refinery', 'Research Institute', 'Research Laboratory', 'Missile Silo', 'Solar Farm', 'Surveillance Center', 'Wind Farm']
-    if improvement_name not in exempt_list:
-        for region in regdata_list:
-            if region[0] == region_id:
-                region_resource = region[3]
-                break
-        if region_resource != improvement_data_dict[improvement_name]['Required Resource']:
-            return False
+    
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+    
+    for region in regdata_list:
+        if region[0] == region_id:
+            region_resource = region[3]
+            break
+    if region_resource != improvement_data_dict[improvement_name]['Required Resource'] and region_resource is not None:
+        return False
+    
     return True
 
 def verify_required_research(required_research, player_research):
@@ -2134,6 +2161,27 @@ def verify_required_research(required_research, player_research):
         if required_research not in player_research:
             return False
     return True
+
+def get_scenario_dict(game_id, dictionary_name):
+    '''Gets a dictionary from the chosen scenario.'''
+
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+
+    if game_id != "TBD":
+        scenario_name = active_games_dict[game_id]["Information"]["Scenario"]
+        scenario = scenario_name.lower()
+    else:
+        scenario = "standard"
+
+    filename = f"{dictionary_name.lower()}.json"
+    dictionary_filepath = f"scenarios/{scenario}/{filename}"
+
+    with open(dictionary_filepath, 'r') as json_file:
+        chosen_dictionary = json.load(json_file)
+
+    return chosen_dictionary
 
 
 #GLOBAL DICTIONARIES AND LISTS

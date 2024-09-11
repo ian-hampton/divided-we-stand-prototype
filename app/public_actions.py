@@ -364,14 +364,17 @@ def resolve_improvement_removals(improvement_remove_list, full_game_id, player_a
         writer.writerows(regdata_list)
     return player_action_logs
 
-def resolve_improvement_builds(improvement_build_list, full_game_id, player_action_logs):
+def resolve_improvement_builds(improvement_build_list, game_id, player_action_logs):
     '''Resolves all improvement build actions.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 0)
+
+    #get scenario data
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
 
     #remove actions with bad region names
     improvement_build_list = core.filter_region_names(regdata_list, improvement_build_list)
@@ -413,7 +416,7 @@ def resolve_improvement_builds(improvement_build_list, full_game_id, player_acti
         rare_stockpile = float(stockpile_list[4])
 
         #improvement name check
-        improvement_name_list = sorted(core.improvement_data_dict.keys())
+        improvement_name_list = sorted(improvement_data_dict.keys())
         if improvement_name not in improvement_name_list:
             player_action_log.append(f"Failed to build {improvement_name} in region {region_id}. Improvement name not recognized.")
             player_action_logs[player_id - 1] = player_action_log
@@ -427,14 +430,14 @@ def resolve_improvement_builds(improvement_build_list, full_game_id, player_acti
             continue
         
         #required research check
-        research_check = core.verify_required_research(core.improvement_data_dict[improvement_name]['Required Research'], player_research)
+        research_check = core.verify_required_research(improvement_data_dict[improvement_name]['Required Research'], player_research)
         if research_check == False:
             player_action_log.append(f'Failed to build {improvement_name} in region {region_id}. You do not have the required research.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
         #required region resource check
-        resource_check = core.verify_region_resource(regdata_list, region_id, improvement_name)
+        resource_check = core.verify_region_resource(game_id, regdata_list, region_id, improvement_name)
         if resource_check == False:
             player_action_log.append(f'Failed to build {improvement_name} in region {region_id}. The region does not have the resource required for this improvement.')
             player_action_logs[player_id - 1] = player_action_log
@@ -442,7 +445,7 @@ def resolve_improvement_builds(improvement_build_list, full_game_id, player_acti
 
         #ratio check
         improvement_count_list = improvement_count_masterlist[player_id - 1]
-        ratio_check = core.verify_ratio(improvement_count_list, improvement_name)
+        ratio_check = core.verify_ratio(game_id, improvement_count_list, improvement_name)
         if ratio_check == False:
             player_action_log.append(f'Failed to build {improvement_name} in region {region_id}. Refineries must be built in a 1:2 ratio.')
             player_action_logs[player_id - 1] = player_action_log
@@ -461,11 +464,11 @@ def resolve_improvement_builds(improvement_build_list, full_game_id, player_acti
             continue
 
         #attempt to build requested improvement
-        dollars_cost = core.improvement_data_dict[improvement_name]['Dollars Cost']
-        basic_cost = core.improvement_data_dict[improvement_name]['Basic Materials Cost']
-        common_cost = core.improvement_data_dict[improvement_name]['Common Metals Cost']
-        advanced_cost = core.improvement_data_dict[improvement_name]['Advanced Metals Cost']
-        rare_cost = core.improvement_data_dict[improvement_name]['Rare Earth Elements Cost']
+        dollars_cost = improvement_data_dict[improvement_name]['Dollars Cost']
+        basic_cost = improvement_data_dict[improvement_name]['Basic Materials Cost']
+        common_cost = improvement_data_dict[improvement_name]['Common Metals Cost']
+        advanced_cost = improvement_data_dict[improvement_name]['Advanced Metals Cost']
+        rare_cost = improvement_data_dict[improvement_name]['Rare Earth Elements Cost']
         if player_government == 'Remnant' and 'Improvised Defenses' in player_research and (improvement_name == 'Crude Barrier' or improvement_name == 'Military Outpost' or improvement_name == 'Military Base'):
             dollars_cost *= 0.7
             basic_cost *= 0.7
@@ -494,14 +497,14 @@ def resolve_improvement_builds(improvement_build_list, full_game_id, player_acti
             for region in regdata_list:
                 if region[0] == region_id:
                     if improvement_name == 'Surveillance Center':
-                        region[4] = [improvement_name, core.improvement_data_dict[improvement_name]['Health'], 0]
+                        region[4] = [improvement_name, improvement_data_dict[improvement_name]['Health'], 0]
                     elif improvement_name == 'Strip Mine':
                         if 'Open Pit Mining' not in player_research:
-                            region[4] = [improvement_name, core.improvement_data_dict[improvement_name]['Health'], 8]
+                            region[4] = [improvement_name, improvement_data_dict[improvement_name]['Health'], 8]
                         else:
-                            region[4] = [improvement_name, core.improvement_data_dict[improvement_name]['Health'], 4]
+                            region[4] = [improvement_name, improvement_data_dict[improvement_name]['Health'], 4]
                     else:
-                        region[4] = [improvement_name, core.improvement_data_dict[improvement_name]['Health']]
+                        region[4] = [improvement_name, improvement_data_dict[improvement_name]['Health']]
                     break
             costs_list = []
             if dollars_cost > 0:
@@ -559,10 +562,11 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    with open(f'gamedata/{full_game_id}/steal_tracking.json', 'r') as json_file:
-        steal_tracking_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+
+    #TO DO: add stealing data to active_games
+    steal_tracking_dict = {}
 
     #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -1384,14 +1388,18 @@ def resolve_region_purchases(region_purchase_list, full_game_id, player_action_l
     #Update player_action_logs
     return player_action_logs
 
-def resolve_research_actions(research_action_list, full_game_id, player_action_logs):
+def resolve_research_actions(research_action_list, game_id, player_action_logs):
     '''Resolves all research actions.'''
     
     #get needed data
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 0)
+
+    #get scenario data
+    agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
+    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
 
     #get needed economy information from each player
     request_list = ['Political Power', 'Technology']
@@ -1431,18 +1439,18 @@ def resolve_research_actions(research_action_list, full_game_id, player_action_l
         #event check
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
-        if "Humiliation" in active_games_dict[full_game_id]["Active Events"]:
-            chosen_nation_name = active_games_dict[full_game_id]["Active Events"]["Humiliation"]["Chosen Nation Name"]
-            if nation_name == chosen_nation_name and research_name in core.agenda_data_dict:
+        if "Humiliation" in active_games_dict[game_id]["Active Events"]:
+            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Humiliation"]["Chosen Nation Name"]
+            if nation_name == chosen_nation_name and research_name in agenda_data_dict:
                 player_action_log.append(f'Failed to research {research_name} due to Humiliation event.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
 
         #research is a political agenda
-        if research_name in core.agenda_data_dict:
-            agenda_prereq = core.agenda_data_dict[research_name]['Prerequisite']
-            agenda_cost = core.agenda_data_dict[research_name]['Cost']
-            match core.agenda_data_dict[research_name]['Agenda Type']:
+        if research_name in agenda_data_dict:
+            agenda_prereq = agenda_data_dict[research_name]['Prerequisite']
+            agenda_cost = agenda_data_dict[research_name]['Cost']
+            match agenda_data_dict[research_name]['Agenda Type']:
                 case "Diplomacy":
                     if player_fp == "Diplomatic":
                         agenda_cost -= 5
@@ -1476,9 +1484,9 @@ def resolve_research_actions(research_action_list, full_game_id, player_action_l
             else:
                 player_action_log.append(f'Failed to research {research_name}. Not enough political power.')
         #research is a standard tech research
-        elif research_name in core.research_data_dict:
-            research_prereq = core.research_data_dict[research_name]['Prerequisite']
-            research_cost = core.research_data_dict[research_name]['Cost']
+        elif research_name in research_data_dict:
+            research_prereq = research_data_dict[research_name]['Prerequisite']
+            research_cost = research_data_dict[research_name]['Cost']
             #adjust cost based on research agreement allies
             research_agreement_player_ids = core.get_alliances(ast.literal_eval(playerdata[22]), 'Research Agreement')
             if research_agreement_player_ids != []:
@@ -1502,7 +1510,7 @@ def resolve_research_actions(research_action_list, full_game_id, player_action_l
                 player_action_log.append(f'Researched {research_name} for {research_cost} technology.')
                 if player_gov == 'Totalitarian':
                     totalitarian_bonus_list = []
-                    for key, value in core.research_data_dict.items():
+                    for key, value in research_data_dict.items():
                         if value.get("Research Type") in ['Energy', 'Infrastructure']:
                             totalitarian_bonus_list.append(key)
                     if research_name in totalitarian_bonus_list:
@@ -1744,11 +1752,11 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
         trade_action = input("Are there any additional trade actions this turn? (Y/N) ")
         print('==================================================')
 
-def resolve_event_actions(event_action_list, full_game_id, current_turn_num, player_action_logs):
+def resolve_event_actions(event_action_list, game_id, current_turn_num, player_action_logs):
     
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'    
-    trucedata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    regdata_filepath = f'gamedata/{game_id}/regdata.csv'    
+    trucedata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_list = core.read_file(regdata_filepath, 2)
     trucedata_list = core.read_file(trucedata_filepath, 1)
@@ -1757,6 +1765,9 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
         nation_name_list.append(playerdata[1])
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+
+    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
     
     for event_action in event_action_list:
         player_id = event_action[0]
@@ -1767,12 +1778,12 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
         #Format: "Event Host Peace Talks [ID]"
         if 'Host Peace Talks' in event_action_str:
             #required event check
-            if "Nominate Mediator" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Nominate Mediator" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to Host Peace Talks. Nominate Mediator event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
             #mediator check
-            if active_games_dict[full_game_id]["Active Events"]["Nominate Mediator"]["Chosen Nation Name"] != nation_name:
+            if active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Chosen Nation Name"] != nation_name:
                 player_action_log.append(f'Failed to Host Peace Talks. You are not the Mediator.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1782,7 +1793,7 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
                 truce_expire_turn = int(truce[11])
                 if truce_id in event_action_str and truce_expire_turn >= current_turn_num:
                     #already extended check
-                    if truce_id in active_games_dict[full_game_id]["Active Events"]["Nominate Mediator"]["Extended Truces List"]:
+                    if truce_id in active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Extended Truces List"]:
                         player_action_log.append(f'Failed to Host Peace Talks for Truce #{truce[0]}. Truce has already been extended.')
                         player_action_logs[player_id - 1] = player_action_log
                         break
@@ -1798,7 +1809,7 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
                     political_power_economy_data[0] = core.round_total_income(political_power_stored)
                     playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                     truce[11] = truce_expire_turn + 4
-                    active_games_dict[full_game_id]["Active Events"]["Nominate Mediator"]["Extended Truces List"].append(truce_id)
+                    active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Extended Truces List"].append(truce_id)
                     player_action_log.append(f'Used Host Peace Talks on Truce #{truce[0]}.')
                     player_action_logs[player_id - 1] = player_action_log
                     break
@@ -1811,12 +1822,12 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
         #Format: "Event Repeal Sanction [Nation Name] [Sanction Type]"
         elif 'Repeal Sanction' in event_action_str:
             #required event check
-            if "Nominate Mediator" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Nominate Mediator" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to Repeal Sanction. Nominate Mediator event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
             #mediator check
-            if active_games_dict[full_game_id]["Active Events"]["Nominate Mediator"]["Chosen Nation Name"] != nation_name:
+            if active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Chosen Nation Name"] != nation_name:
                 player_action_log.append(f'Failed to Repeal Sanction. You are not the Mediator.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1854,7 +1865,7 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
 
         #Format: "Event Cure Research [Count]"
         elif "Cure Research" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Cure Research action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1870,14 +1881,14 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
             technology_stored -= count
             technology_economy_data[0] = core.round_total_income(technology_stored)
             playerdata_list[player_id - 1][11] = str(technology_economy_data)
-            active_games_dict[full_game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
             player_action_log.append(f'Used Cure Research to spend {count} technology in exchange for {research_amount} cure progress.')
             player_action_logs[player_id - 1] = player_action_log
 
 
         #Format: "Event Fundraise [Count]"
         elif "Fundraise" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Fundraise action . Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1893,13 +1904,13 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
             dollars_stored -= count
             dollars_economy_data[0] = core.round_total_income(dollars_stored)
             playerdata_list[player_id - 1][9] = str(dollars_economy_data)
-            active_games_dict[full_game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
             player_action_log.append(f'Used Fundraise to spend {count} dollars in exchange for {research_amount} cure progress.')
             player_action_logs[player_id - 1] = player_action_log
 
         #Format: "Event Inspect [Region ID]"
         elif "Inspect" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Inspect action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1920,7 +1931,7 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
 
         #Format: "Event Create Quarantine [Region ID]"
         elif "Create Quarantine" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Create Quarantine action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1942,7 +1953,7 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
 
         #Format: "Event End Quarantine [Region ID]"
         elif "End Quarantine" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do End Quarantine action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1964,7 +1975,7 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
 
         #Format: "Event Open Borders"
         elif "Open Borders" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Open Borders action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1976,13 +1987,13 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
                 continue
             political_power_stored -= 10
             political_power_economy_data[0] = core.round_total_income(political_power_stored)
-            active_games_dict[full_game_id]['Active Events']["Pandemic"]["Closed Borders List"].remove(player_id)
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Closed Borders List"].remove(player_id)
             player_action_log.append('Spent 10 political power to Open Borders.')
             player_action_logs[player_id - 1] = player_action_log
 
         #Format: "Event Close Borders"
         elif "Close Borders" in event_action_str:
-            if "Pandemic" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Close Borders action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1994,17 +2005,17 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
                 continue
             political_power_stored -= 10
             political_power_economy_data[0] = core.round_total_income(political_power_stored)
-            active_games_dict[full_game_id]['Active Events']["Pandemic"]["Closed Borders List"].append(player_id)
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Closed Borders List"].append(player_id)
             player_action_log.append('Spent 10 political power to Close Borders.')
             player_action_logs[player_id - 1] = player_action_log
         
         #Format: Event Search For Artifacts [Region ID]
         elif "Search For Artifacts" in event_action_str:
-            if "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Search For Artifacts action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
-            if active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
                 player_action_log.append(f'Failed to Search For Artifacts. You are not the collaborator.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -2037,11 +2048,11 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
 
         #Format: Event Lease Region [Region ID]
         elif "Lease Region" in event_action_str:
-            if "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Lease Region action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
-            if active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
                 player_action_log.append(f'Failed to Lease Region. You are not the collaborator.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -2053,17 +2064,17 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
                 player_action_log.append(f'Failed to do Lease Region action on {region_id}. You do not own that region.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
-            active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"].append(region_id)
+            active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"].append(region_id)
             player_action_log.append(f'Leased region {region_id} to the foreign nation.')
             player_action_logs[player_id - 1] = player_action_log
 
         #Format: Event Outsource Technology [Research Name]
         elif "Outsource Technology" in event_action_str:
-            if "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Outsource Technology action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
-            if active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
                 player_action_log.append(f'Failed to Outsource Technology. You are not the collaborator.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -2074,10 +2085,10 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
                 player_action_logs[player_id - 1] = player_action_log
                 continue
             desired_research_name = None
-            for research_name in core.research_data_dict:
+            for research_name in research_data_dict:
                 if research_name in event_action_str:
                     desired_research_name = research_name
-                    playerdata_list, valid_research = events.gain_free_research(research_name, player_id, playerdata_list)
+                    playerdata_list, valid_research = events.gain_free_research(game_id, research_name, player_id, playerdata_list)
                     political_power_stored -= 10
                     political_power_economy_data[0] = core.round_total_income(political_power_stored)
                     player_action_log.append(f'Used Outsource Technology to research {research_name}.')
@@ -2089,11 +2100,11 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
 
         #Format: Event Military Reinforcements [Unit Type] [Region ID #1],[Region ID #2]
         elif "Military Reinforcements" in event_action_str:
-            if "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
                 player_action_log.append(f'Failed to do Military Reinforcements action. Pandemic event is not active.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
-            if active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation_name:
                 player_action_log.append(f'Failed to Military Reinforcements. You are not the collaborator.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -2106,9 +2117,9 @@ def resolve_event_actions(event_action_list, full_game_id, current_turn_num, pla
             event_action_data = event_action_str.split(" ")
             region_id_str = event_action_data[-1]
             unit_type = event_action_data[-2]
-            if unit_type in core.unit_data_dict:
-                unit_type = core.unit_data_dict[unit_type]['Abbreviation']
-                unit_health = core.unit_data_dict[unit_type]['Health']
+            if unit_type in unit_data_dict:
+                unit_type = unit_data_dict[unit_type]['Abbreviation']
+                unit_health = unit_data_dict[unit_type]['Health']
             region_id_list = region_id_str.split(",")
             for region_id in region_id_list:
                 region = core.get_region_data(regdata_list, region_id)
