@@ -296,6 +296,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             player_actions_list[i] = interpreter.check_action(action, library)
 
     steal_tracking_dict = {}
+    '''
     for playerdata in playerdata_list:
         if playerdata[3] == 'Crime Syndicate':
             inner_dict = {
@@ -306,6 +307,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     if steal_tracking_dict != {}:
         with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
             json.dump(steal_tracking_dict, json_file, indent=4)
+    '''
 
 
     #Declare Action Dictionaries
