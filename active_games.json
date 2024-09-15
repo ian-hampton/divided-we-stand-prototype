@@ -1,28 +1,34 @@
 {
     "game1": {
-        "Game Name": "Open Game Slot",
-        "Game #": 0,
-        "Game Active": false,
+        "Game Name": "Code Test",
+        "Game #": 12,
+        "Game Active": true,
         "Information": {
-            "Version": "TBD",
-            "Scenario": "TBD",
-            "Map": "TBD",
-            "Victory Conditions": "TBD",
-            "Fog of War": "TBD",
-            "Turn Length": "TBD",
-            "Accelerated Schedule": "TBD",
-            "Deadlines on Weekends": "TBD"
+            "Version": "Development",
+            "Scenario": "Standard",
+            "Map": "United States 2.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": "Disabled",
+            "Turn Length": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
         },
         "Statistics": {
-            "Player Count": "0",
+            "Player Count": "4",
             "Region Disputes": 0,
-            "Current Turn": "Turn N/A",
+            "Current Turn": "1",
             "Days Ellapsed": 0,
-            "Game Started": "TBD"
+            "Game Started": "09/15/2024"
         },
         "Inactive Events": [],
-        "Active Events": {},
-        "Current Event": {}
+        "Active Events": [],
+        "Current Event": {},
+        "Steal Action Record": {
+            "Four": {
+                "Nation Name": null,
+                "Streak": 0
+            }
+        }
     },
     "game2": {
         "Game Name": "Open Game Slot",

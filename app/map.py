@@ -1,4 +1,4 @@
-#STANDARD IMPORTS
+# STANDARD IMPORTS
 import ast
 import csv
 from datetime import datetime
@@ -7,87 +7,94 @@ import os
 import random
 import shutil
 
-#UWS ENVIROMENT IMPORTS
+# ENVIROMENT IMPORTS
 from PIL import Image, ImageDraw
 
-#UWS SOURCE IMPORTS
+# UWS IMPORTS
 from app import core
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
 
-#THE MAP CLASSES
 class MainMap:
     
     '''Creates and updates the main map for United We Stood games.'''
 
-    #INITIALIZE
+    # INITIALIZE
     def __init__(self, game_id, map_name, current_turn_num):
         self.game_id = game_id
         self.map_name = map_name
         self.turn_num = current_turn_num
 
 
-    #PLACE RANDOM IMPROVEMENTS
+    # PLACE RANDOM IMPROVEMENTS
     def place_random(self):
         
-        #get filepaths and lists
-        regdata_location = f'gamedata/game{self.game_id}/regdata.csv'
-        regdata_list = core.read_file(regdata_location, 2)
-        improvement_exclusion_list = ['Capital', 'Missile Defense System', 'Missile Defense Network', 'Oil Refinery', 'Advanced Metals Refinery', 'Uranium Refinery', 'Nuclear Power Plant', 'Surveillance Center']
+        # get filepaths and lists
+        EXCLUSION_LIST = ['Capital', 'Central Bank', 'Missile Defense System', 'Missile Defense Network', 'Oil Refinery', 'Advanced Metals Refinery', 'Uranium Refinery', 'Surveillance Center']
         improvement_candidates_list = []
         improvement_data_dict = core.get_scenario_dict(f"game{self.game_id}", "Improvements")
         for improvement_name in improvement_data_dict:
-            if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in improvement_exclusion_list:
+            if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in EXCLUSION_LIST:
                 improvement_candidates_list.append(improvement_name)
+        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        region_id_list = list(regdata_dict.keys())
         
-        #update regdata.csv
+        # determine placement odds and placement quota
+        PLACEMENT_ODDS = 5
+        placement_quota = 15
+        standard_deviation = random.randint(-5, 5)
+        placement_quota += standard_deviation
+        # place improvements randomly
         count = 0
-        placement_quota = 5
-        placement_odds = 5
         while count < placement_quota:
-            for region in regdata_list:
-                placement_roll = random.randint(1, 100)
-                if placement_roll <= placement_odds:
-                    control_data = ast.literal_eval(region[2])
-                    resource_name = region[3]
-                    improvement_data = ast.literal_eval(region[4])
-                    contains_regional_capital = ast.literal_eval(region[10])
-                    if control_data[0] == 0 and improvement_data == [None, 99]:
-                        match resource_name:
-                            case 'Coal':
-                                region[4] = ['Coal Mine', 99]
-                            case 'Oil':
-                                region[4] = ['Oil Well', 99]
-                            case 'Basic Materials':
-                                region[4] = ['Industrial Zone', 99]
-                            case 'Common Metals':
-                                region[4] = ['Common Metals Mine', 99]
-                            case 'Advanced Metals':
-                                region[4] = ['Advanced Metals Mine', 99]
-                            case 'Uranium':
-                                region[4] = ['Uranium Mine', 99]
-                            case 'Rare Earth Elements':
-                                region[4] = ['Rare Earth Elements Mine', 99]
-                            case _:
-                                if contains_regional_capital:
-                                    improvement_candidates_list.append('Capital')
-                                improvement_roll = random.randint(0, len(improvement_candidates_list) - 1)
-                                improvement_name = improvement_candidates_list[improvement_roll]
-                                if improvement_data_dict[improvement_name]['Health'] != 99:
-                                    region[4] = [improvement_name, 1]
-                                else:
-                                    region[4] = [improvement_name, 99]
-                                if contains_regional_capital:
-                                    improvement_candidates_list.remove('Capital')
-                        count += 1
-                                
-        #save regdata.csv
-        with open(regdata_location, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(core.regdata_header_a)
-            writer.writerow(core.regdata_header_b)
-            writer.writerows(regdata_list)
+            placement_roll = random.randint(1, 100)
+            if placement_roll <= PLACEMENT_ODDS:
+                random_region_id = random.choice(region_id_list)
+                random_region = Region(random_region_id, f"game{self.game_id}")
+                random_region_improvement = Improvement(random_region_id, f"game{self.game_id}")
+                # check conditions
+                if random_region.owner_id() != 0 and random_region_improvement.name() is not None:
+                    continue
+                adjacent_region_list = random_region.adjacent_regions()
+                adjacent_improvement_found = False
+                for region_id in adjacent_region_list:
+                    region_improvement = Improvement(region_id, f"game{self.game_id}")
+                    if region_improvement.name() is not None:
+                        adjacent_improvement_found = True
+                        break
+                if adjacent_improvement_found:
+                    continue
+                # place improvement
+                match random_region.resource():
+                    case 'Coal':
+                        random_region_improvement.set_improvement('Coal Mine')
+                    case 'Oil':
+                        random_region_improvement.set_improvement('Oil Well')
+                    case 'Basic Materials':
+                        random_region_improvement.set_improvement('Industrial Zone')
+                    case 'Common Metals':
+                        random_region_improvement.set_improvement('Common Metals Mine')
+                    case 'Advanced Metals':
+                        random_region_improvement.set_improvement('Advanced Metals Mine')
+                    case 'Uranium':
+                        random_region_improvement.set_improvement('Uranium Mine')
+                    case 'Rare Earth Elements':
+                        random_region_improvement.set_improvement('Rare Earth Elements Mine')
+                    case _:
+                        capital_roll = 0
+                        if random_region.is_significant():
+                            capital_roll = random.randint(1, 6)
+                        if capital_roll <= 2:
+                            improvement_roll = random.randint(0, len(improvement_candidates_list) - 1)
+                            improvement_name = improvement_candidates_list[improvement_roll]
+                            random_region_improvement.set_improvement(improvement_name)
+                        else:
+                            random_region_improvement.set_improvement('Capital')
+                count += 1
     
-    
-    #UPDATE
+    # UPDATE
     def update(self):
         print("Updating main map...")
         
@@ -98,7 +105,6 @@ class MainMap:
                 main_map_save_location = f'gamedata/{full_game_id}/images/0.png'
             case _:
                 main_map_save_location = f'gamedata/{full_game_id}/images/{self.turn_num - 1}.png'
-        regdata_location = f'gamedata/{full_game_id}/regdata.csv'
         playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
         background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
         unit_data_dict = core.get_scenario_dict(f'game{self.game_id}', "Units")
@@ -106,10 +112,11 @@ class MainMap:
         #Build Needed Lists
         playerdata_list = core.read_file(playerdata_location, 1)
         nation_info_masterlist = core.get_nation_info(playerdata_list)
-        regdata_list = core.read_file(regdata_location, 2)
         player_color_list = generate_player_color_list(playerdata_location)
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
+        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
 
         #Get Cordinate Dictionaries
         match self.map_name:
@@ -124,11 +131,10 @@ class MainMap:
         
         #Color Regions in Map Image
         main_image = Image.open(main_filepath)
-        for region in regdata_list:
-            region_id = region[0]
-            control_data_list = ast.literal_eval(region[2])
-            owner_id = control_data_list[0]
-            occupier_id = control_data_list[1]
+        for region_id in regdata_dict:
+            region = Region(region_id, full_game_id)
+            owner_id = region.owner_id()
+            occupier_id = region.occupier_id()
             start_cords = improvement_cords_dict[region_id]
             if start_cords != () and owner_id != 0:
                 cord_x = (start_cords[0] + 25)
@@ -142,11 +148,10 @@ class MainMap:
         magnified_image = Image.open(magnified_filepath)
         main_image = Image.alpha_composite(main_image, magnified_image)
         #color magnified regions
-        for region in regdata_list:
-            region_id = region[0]
-            control_data_list = ast.literal_eval(region[2])
-            owner_id = control_data_list[0]
-            occupier_id = control_data_list[1]
+        for region_id in regdata_dict:
+            region = Region(region_id, full_game_id)
+            owner_id = region.owner_id()
+            occupier_id = region.occupier_id()
             improvement_start_cords = improvement_cords_dict[region_id]
             if self.map_name == "United States 2.0":
                 magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELEW", "RHODE", "NTHMA", "STHMA"]
@@ -168,13 +173,12 @@ class MainMap:
         #Place Improvements
         main_image = main_image.convert("RGBA")
         nuke_image = Image.open('app/static/nuke.png')
-        for region in regdata_list:
-            region_id = region[0]
-            improvement_data_list = ast.literal_eval(region[4])
-            improvement_name = improvement_data_list[0]
-            improvement_health = improvement_data_list[1]
-            nuke_data = ast.literal_eval(region[6])
-            nuke = nuke_data[0]
+        for region_id in regdata_dict:
+            region = Region(region_id, full_game_id)
+            region_improvement = Improvement(region_id, full_game_id)
+            improvement_name = region_improvement.name()
+            improvement_health = region_improvement.health()
+            nuke = region.fallout()
             improvement_start_cords = improvement_cords_dict[region_id]
             #place nuclear explosion
             if nuke:
@@ -191,15 +195,7 @@ class MainMap:
             #place improvement if present
             if improvement_start_cords != () and improvement_name is not None:
                 #place improvement image
-                if improvement_name != "Embassy":
-                    improvement_filepath = f'app/static/improvements/{improvement_name}.png'
-                else:
-                    partner_player_id = improvement_data_list[2]
-                    if partner_player_id != 0:
-                        embassy_color_str = nation_info_masterlist[partner_player_id - 1][1]
-                        improvement_filepath = f'app/static/improvements/{improvement_name}{embassy_color_str}.png'
-                    else:
-                        improvement_filepath = f'app/static/improvements/{improvement_name}.png'
+                improvement_filepath = f'app/static/improvements/{improvement_name}.png'
                 improvement_image = Image.open(improvement_filepath)
                 main_image.paste(improvement_image, improvement_start_cords)
                 #place improvement health
@@ -215,14 +211,12 @@ class MainMap:
                     main_image.paste(health_image, health_start_cords)
         
         #Place Units
-        for region in regdata_list:
-            region_id = region[0]
-            unit_data_list = ast.literal_eval(region[5])
-            unit_abbr = unit_data_list[0]
-            unit_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == unit_abbr), None)
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, full_game_id)
+            unit_name = region_unit.name()
+            unit_health = region_unit.health()
+            unit_owner_id = region_unit.owner_id()
             if unit_name is not None:
-                unit_health = unit_data_list[1]
-                unit_owner_id = unit_data_list[2]
                 #get cords
                 if region_id not in unit_cords_dict:
                     #unit placement is the standard 15 pixels to the right of improvement
@@ -237,8 +231,11 @@ class MainMap:
                     cord_y = (unit_cords[1] - 20)
                     unit_cords = (cord_x, cord_y)
                 #get unit color
-                player_color_str = nation_info_masterlist[unit_owner_id - 1][1]
-                unit_filepath = f'app/static/units/{unit_abbr}{player_color_str}.png'
+                if unit_owner_id != 99:
+                    player_color_str = nation_info_masterlist[unit_owner_id - 1][1]
+                elif unit_owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
+                    player_color_str = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
+                unit_filepath = f'app/static/units/{region_unit.abbrev()}{player_color_str}.png'
                 #place unit
                 unit_image = Image.open(unit_filepath)
                 mask = unit_image.split()[3]
@@ -256,25 +253,25 @@ class ResourceMap:
     
     '''Creates and updates the resource map for United We Stood games.'''
 
-    #INITIALIZE
+    # INITIALIZE
     def __init__(self, game_id, map_name):
         self.game_id = game_id
         self.map_name = map_name
 
-    #CREATE RESOURCE MAP DATA
+    # CREATE RESOURCE MAP DATA
     def create(self):
         
-        #Create Resource List
+        # Create Resource List
         resource_list = []
         if self.map_name == "United States 2.0":
-            coal_count = 18
-            oil_count = 18
-            basic_count = 50
+            coal_count = 15
+            oil_count = 15
+            basic_count = 45
             common_count = 30
             advanced_count = 10
             uranium_count = 10
             rare_count = 5
-            empty_count = 67
+            empty_count = 78
         resource_list += ["Coal"] * coal_count
         resource_list += ["Oil"] * oil_count
         resource_list += ["Basic Materials"] * basic_count
@@ -285,18 +282,14 @@ class ResourceMap:
         resource_list += ["Empty"] * empty_count
         resource_list = random.sample(resource_list, len(resource_list))
         
-        #Update regdata.csv
-        regdata_location = f'gamedata/game{self.game_id}/regdata.csv'
-        regdata_list = core.read_file(regdata_location, 0)
-        resource_list.insert(0, "Resource Name")
-        resource_list.insert(0, "Resource Data")
-        for i, region in enumerate(regdata_list):
-            region[3] = resource_list[i]
-        
-        #Save regdata.csv
-        with open(regdata_location, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(regdata_list)
+        # Update regdata.json
+        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        i = 0
+        for region_id in regdata_dict:
+            region = Region(region_id, f'game{self.game_id}')
+            region.set_resource(resource_list[i])
+            i += 1
 
     #UPDATE
     def update(self):
@@ -305,12 +298,9 @@ class ResourceMap:
         #Get Filepaths
         full_game_id = f'game{self.game_id}'
         resource_map_save_location = f'gamedata/{full_game_id}/images/resourcemap.png'
-        regdata_location = f'gamedata/{full_game_id}/regdata.csv'
-        playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
         background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
-        
-        #Build Needed Lists
-        regdata_list = core.read_file(regdata_location, 2)
+        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
         
         #Get Cordinate Dictionaries
         match self.map_name:
@@ -323,9 +313,9 @@ class ResourceMap:
         
         #Color Regions in Map Image
         main_image = Image.open(main_filepath)
-        for region in regdata_list:
-            region_id = region[0]
-            resource_type = region[3]
+        for region_id in regdata_dict:
+            region = Region(region_id, full_game_id)
+            resource_type = region.resource()
             start_cords = improvement_cords_dict[region_id]
             if start_cords != () and resource_type != 'Empty':
                 cord_x = (start_cords[0] + 25)
@@ -361,15 +351,15 @@ class ControlMap:
         #Get Filepaths
         full_game_id = f'game{self.game_id}'
         control_map_save_location = f'gamedata/{full_game_id}/images/controlmap.png'
-        regdata_location = f'gamedata/{full_game_id}/regdata.csv'
         playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
         background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
        
-        #Build Needed Lists
-        regdata_list = core.read_file(regdata_location, 2)
+        #Get Needed Lists
         player_color_list = generate_player_color_list(playerdata_location)
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
+        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
 
         #Get Cordinate Dictionaries
         match self.map_name:
@@ -382,11 +372,10 @@ class ControlMap:
 
         #Color Regions in Map Image
         main_image = Image.open(main_filepath)
-        for region in regdata_list:
-            region_id = region[0]
-            control_data_list = ast.literal_eval(region[2])
-            owner_id = control_data_list[0]
-            occupier_id = control_data_list[1]
+        for region_id in regdata_dict:
+            region = Region(region_id, full_game_id)
+            owner_id = region.owner_id()
+            occupier_id = region.occupier_id()
             start_cords = improvement_cords_dict[region_id]
             if start_cords != () and owner_id != 0:
                 cord_x = (start_cords[0] + 25)

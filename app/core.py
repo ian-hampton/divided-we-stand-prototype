@@ -15,6 +15,9 @@ from app import private_actions
 from app import checks
 from app import resgraphs
 from app import events
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -23,66 +26,67 @@ import gspread
 #TURN PROCESSING PROCEDURE
 ################################################################################
 
-def resolve_stage1_processing(full_game_id, starting_region_list, player_color_list):
+def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
     '''
     Resolves turn processing for a game in stage one.
 
     Parameters:
-    - full_game_id: The full game_id of the active game.
+    - game_id: The full game_id of the active game.
     - starting_region_list: A list of player starting region ids gathered from turn resolution HTML form. 
     - player_color_list: A list of player colors gathered from turn resolution HTML form. 
     '''
-    
-    game_id = int(full_game_id[-1])
+
+    # get game files
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+
+    # create hex color list
     hexadecimal_player_color_list = []
     for player_color in player_color_list:
         new_player_color = player_colors_hex[player_color]
         hexadecimal_player_color_list.append(new_player_color)
    
-    #read and update regdata
-    regdata_list = read_file(f'gamedata/{full_game_id}/regdata.csv', 0)
+    # place starting capitals for players
     random_assignment_list = []
     for index, region_id in enumerate(starting_region_list):
         player_id = index + 1
-        region_found = False
-        for region in regdata_list:
-            if region[0] == region_id:
-                region[2] = str([player_id, 0])
-                region[4] = str(["Capital", 5])
-                region_found = True
-                break
-        if region_found == False:
+        if region_id in regdata_dict:
+            starting_region = Region(region_id, game_id)
+            starting_region_improvement = Improvement(region_id, game_id)
+            starting_region.set_owner_id(player_id)
+            starting_region_improvement.set_improvement("Capital")
+        else:
             random_assignment_list.append(player_id)
+    # place starting capitals for players who want random start
     for random_assignment_player_id in random_assignment_list:
         while True:
+            # randomly select a region
             conflict_detected = False
-            random_region_roll = random.randint(2, len(regdata_list) - 1)
-            random_region_id = regdata_list[random_region_roll][0]
-            regions_in_radius = get_regions_in_radius(random_region_id, 3, regdata_list)
-            for radius_region_id in regions_in_radius:
-                for region in regdata_list:
-                    if region[0] == radius_region_id:
-                        control_data = ast.literal_eval(region[2])
-                        if control_data[0] != 0:
-                            conflict_detected = True
-                            break
+            region_id_list = list(regdata_dict.keys())
+            random_region_id = random.choice(region_id_list)
+            random_region = Region(random_region_id, game_id)
+            # check if there is a player within three regions
+            regions_in_radius = random_region.get_regions_in_radius(3)
+            for candidate_region_id in regions_in_radius:
+                candidate_region = Region(candidate_region_id, game_id)
+                # if player found restart loop
+                if candidate_region.owner_id() != 0:
+                    conflict_detected = True
+                    break
+            # if no player found place player
             if conflict_detected == False:
-                for region in regdata_list:
-                    if region[0] == random_region_id:
-                        region[2] = str([random_assignment_player_id, 0])
-                        region[4] = str(["Capital", 5])
-                        break
+                random_region.set_owner_id(random_assignment_player_id)
+                random_region_improvement = Improvement(random_region_id, game_id)
+                random_region_improvement.set_improvement("Capital")
                 break
-    with open(f'gamedata/{full_game_id}/regdata.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
     
     #read and update playerdata
-    playerdata_list = read_file(f'gamedata/{full_game_id}/playerdata.csv', 1)
+    playerdata_list = read_file(f'gamedata/{game_id}/playerdata.csv', 1)
     for index, player in enumerate(playerdata_list):
         player[2] = hexadecimal_player_color_list[index]
     early_player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count"]
-    with open(f'gamedata/{full_game_id}/playerdata.csv', 'w', newline='') as file:
+    with open(f'gamedata/{game_id}/playerdata.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(early_player_data_header)
         writer.writerows(playerdata_list)
@@ -90,51 +94,50 @@ def resolve_stage1_processing(full_game_id, starting_region_list, player_color_l
     #update active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
     #generate and update maps
-    current_turn_num = get_current_turn_num(game_id)
-    map_name = get_map_name(game_id)
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
-    resource_map = map.ResourceMap(game_id, map_name)
-    control_map = map.ControlMap(game_id, map_name)
+    current_turn_num = get_current_turn_num(int(game_id[-1]))
+    map_name = get_map_name(int(game_id[-1]))
+    main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
+    resource_map = map.ResourceMap(int(game_id[-1]), map_name)
+    control_map = map.ControlMap(int(game_id[-1]), map_name)
     resource_map.create()
     main_map.place_random()
     main_map.update()
     resource_map.update()
     control_map.update()
 
-def resolve_stage2_processing(full_game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
+def resolve_stage2_processing(game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
     '''
     Resolves turn processing for a game in stage two.
 
     Parameters:
-    - full_game_id: The full game_id of the active game.
+    - game_id: The full game_id of the active game.
     - player_nation_name_list: A list of player nation names gathered from turn resolution HTML form. 
     - player_government_list: A list of player government choices gathered from turn resolution HTML form. 
     - player_foreign_policy_list: A list of player fp choices gathered from turn resolution HTML form. 
     - player_victory_condition_set_list: A list of player vc set choices gathered from turn resolution HTML form. 
     '''
 
-    game_id = int(full_game_id[-1])
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)
-    #read and update playerdata
+    # read and update playerdata
     for index, player in enumerate(playerdata_list):
         if player[0] != "":
-            #update basic nation info
+            # update basic nation info
             player[1] = player_nation_name_list[index].title()
             player[3] = player_government_list[index]
             player[4] = player_foreign_policy_list[index]
-            #confirm victory condition set
+            # confirm victory condition set
             if player_victory_condition_set_list[index] == "Set A":
                 del player[9]
             else:
                 del player[8]
-            #apply income rates
+            # apply income rates
             if player[3] == 'Republic':
                 rate_list = republic_rates
             elif player[3] == 'Technocracy':
@@ -157,14 +160,15 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
                 resource_data[3] = rate
                 playerdata_list[index][j] = str(resource_data)
                 j += 1
-            #Determine stability value
+            # determine stability value
             if player[3] == "Republic" or player[3] == "Technocracy" or player[3] == "Protectorate":
                 player[7] = ["Stability 4/10", "4 from Chosen Government"]
             elif player[3] == "Oligarchy" or player[3] == "Totalitarian" or player[3] == "Military Junta":
                 player[7] = ["Stability 3/10", "3 from Chosen Government"]
             else:
                 player[7] = ["Stability 2/10", "2 from Chosen Government"]
-            #Determine unlocked alliances OBSOLETE CODE DELETE ME
+            # determine unlocked alliances
+            # to do: remove this shit, no longer needed but I am scared removing it will break something
             if player[4] == "Diplomatic":
                 player[20] = [True, True, True, False, False]
             elif player[4] == "Commercial":
@@ -173,7 +177,8 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
                 player[20] = [True, False, False, False, False]
             elif player[4] == "Imperialist":
                 player[20] = [True, True, False, False, False]
-            #Give starting research
+            # give starting research
+            # to do: get the five_point_research_list from the technologies file instead of this garbage
             starting_list = []
             five_point_research_list = ['Coal Mining', 'Oil Drilling', 'Wind Turbines', 'City Resettlement', 'Surface Mining', 'Metallurgy', 'Infantry', 'Motorized Infantry', 'Standing Army', 'Basic Defenses']
             if player[3] == "Technocracy":
@@ -187,45 +192,33 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
     
-    #create crime syndicate tracking file
-    steal_tracking_dict = {}
-    for playerdata in playerdata_list:
-        if player[3] == 'Crime Syndicate':
-            inner_dict = {
-                'Nation Name': None,
-                'Streak': 0,
-            }
-            steal_tracking_dict[player[1]] = inner_dict
-    with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
-        json.dump(steal_tracking_dict, json_file, indent=4)
-    
-    #create records
-    file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
+    # create records
+    file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research', 'transactions']
     starting_records_data = [['Turn', 0]]
     for playerdata in playerdata_list:
         starting_records_data.append([playerdata[1], 0])
     for file_name in file_names:
-        with open(f'gamedata/{full_game_id}/{file_name}.csv', 'w', newline='') as file:
+        with open(f'gamedata/{game_id}/{file_name}.csv', 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerows(starting_records_data)
 
-    #create trucedata.csv
-    with open(f'gamedata/{full_game_id}/trucedata.csv', 'w', newline='') as file:
+    # create trucedata.csv
+    with open(f'gamedata/{game_id}/trucedata.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(trucedata_header)
 
-    #update misc info in playerdata
+    # update misc info in playerdata
     for i in range(player_count):
         player_id = i + 1
-        checks.update_misc_info(full_game_id, player_id)
-    #update improvement count in playerdata
+        checks.update_misc_info(game_id, player_id)
+    # update improvement count in playerdata
     for i in range(player_count):
         player_id = i + 1
-        checks.update_improvement_count(full_game_id, player_id)
-    #update income in playerdata
+        checks.update_improvement_count(game_id, player_id)
+    # update income in playerdata
     current_turn_num = 0
-    checks.update_income(full_game_id, current_turn_num)
-    #gain starting resources
+    checks.update_income(game_id, current_turn_num)
+    # gain starting resources
     for player in playerdata_list:
         dollars_data = ast.literal_eval(player[9])
         political_power_data = ast.literal_eval(player[10])
@@ -237,28 +230,37 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
         player[10] = str(political_power_data)
         player[11] = str(technology_data)
 
-    #update playerdata.csv
+    # update playerdata.csv
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
     
-    #read and update game_settings
+    # update game_settings
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "1"
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
-    active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
+    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
+    steal_tracking_dict = {}
+    for playerdata in playerdata_list:
+        if player[3] == 'Crime Syndicate':
+            inner_dict = {
+                'Nation Name': None,
+                'Streak': 0,
+            }
+            steal_tracking_dict[player[1]] = inner_dict
+    active_games_dict[game_id]["Steal Action Record"] = steal_tracking_dict
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
     #update visuals
     current_turn_num = 1
-    update_announcements_sheet(full_game_id, False, [], [])
-    map_name = active_games_dict[full_game_id]["Information"]["Map"]
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
+    update_announcements_sheet(game_id, False, [], [])
+    map_name = active_games_dict[game_id]["Information"]["Map"]
+    main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
     main_map.update()
 
 def resolve_turn_processing(full_game_id, public_actions_list, private_actions_list):
@@ -539,7 +541,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 #TURN PROCESSING FUNCTIONS
 ################################################################################
 
-def create_new_game(full_game_id, form_data_dict, profile_ids_list):
+def create_new_game(game_id, form_data_dict, profile_ids_list):
     '''
     Backend code for creating the files for a new game. Returns nothing.
 
@@ -555,10 +557,6 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
 
-    #get scenario data
-    improvement_data_dict = get_scenario_dict(full_game_id, "Improvements")
-
-
     #datetime stuff
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
@@ -568,28 +566,28 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     #to be added
 
     #erase old game files
-    erase_game(full_game_id)
+    erase_game(game_id)
     
     #update active_games
-    active_games_dict[full_game_id]["Game Name"] = form_data_dict["Game Name"]
-    active_games_dict[full_game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
-    active_games_dict[full_game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
-    active_games_dict[full_game_id]["Information"]["Map"] = form_data_dict["Map"]
-    active_games_dict[full_game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
-    active_games_dict[full_game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
-    active_games_dict[full_game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
-    active_games_dict[full_game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
-    active_games_dict[full_game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
-    active_games_dict[full_game_id]["Game #"] = len(game_records_dict) + 1
-    active_games_dict[full_game_id]["Information"]["Version"] = game_version
-    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
-    active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[full_game_id]["Statistics"]["Region Disputes"] = 0
-    active_games_dict[full_game_id]["Inactive Events"] = []
-    active_games_dict[full_game_id]["Active Events"] = []
-    active_games_dict[full_game_id]["Current Event"] = {}
-    active_games_dict[full_game_id]["Game Active"] = True
+    active_games_dict[game_id]["Game Name"] = form_data_dict["Game Name"]
+    active_games_dict[game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
+    active_games_dict[game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
+    active_games_dict[game_id]["Information"]["Map"] = form_data_dict["Map"]
+    active_games_dict[game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
+    active_games_dict[game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
+    active_games_dict[game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
+    active_games_dict[game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
+    active_games_dict[game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
+    active_games_dict[game_id]["Game #"] = len(game_records_dict) + 1
+    active_games_dict[game_id]["Information"]["Version"] = game_version
+    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
+    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[game_id]["Statistics"]["Region Disputes"] = 0
+    active_games_dict[game_id]["Inactive Events"] = []
+    active_games_dict[game_id]["Active Events"] = []
+    active_games_dict[game_id]["Current Event"] = {}
+    active_games_dict[game_id]["Game Active"] = True
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
@@ -615,18 +613,31 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
-    #copy map data
+    #get scenario data
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+
+    #copy starting map images
+    files_destination = f'gamedata/{game_id}'
     match form_data_dict["Map"]:
         case "United States 2.0":
             map = 'united_states'
         case _:
             map = 'united_states'
     starting_map_images = ['resourcemap', 'controlmap']
-    files_destination = f'gamedata/{full_game_id}'
-    shutil.copy(f"maps/{map}/regdata.csv", files_destination)
     for map_filename in starting_map_images:
         shutil.copy(f"maps/{map}/default.png", f"{files_destination}/images")
-        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{full_game_id}/images/{map_filename}.png")
+        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{game_id}/images/{map_filename}.png")
+    
+    #create regdata.json
+    shutil.copy(f"maps/{map}/regdata.json", files_destination)
+    if form_data_dict["Scenario"] == 'Standard':
+        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        for region_id in regdata_dict:
+            regdata_dict[region_id]["regionData"]["infection"] = 0
+            regdata_dict[region_id]["regionData"]["quarantine"] = False
+        with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
+            json.dump(regdata_dict, json_file, indent=4)
 
     #create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
@@ -642,6 +653,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
         writer.writerow(wardata_header_b)
 
     #create vc_overrides.json
+    # TO DO: replace this with length 3 lists for each nation in active_games
     vc_overrides_dict = {
         "Dual Loyalty": [False, False, False, False, False, False, False, False, False, False],
         "Tight Leash": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -656,7 +668,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count","Status","Global ID"]
     player_data_temp_a = ["TBD","#ffffff","TBD","TBD","0/0","1:1","TBD"]
     victory_conditions_list = []
-    player_data_temp_b = [['0.00',100,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],[False, False, False, False],[0,0],['Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral'],['0.00','0.00','0.00','0.00'],['Capital Resource: None.','Owned Regions: 0','Occupied Regions: 0','Undeveloped Regions: 0','You cannot issue Economic Sanctions.','You cannot issue Military Sanctions.'],"None","[]",[0] * len(improvement_data_dict), 'Independent Nation']
+    player_data_temp_b = [['0.00',100,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],[False, False, False, False],[0,0],['Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral'],['0.00','0.00','0.00','0.00'],['Capital Resource: None.','Owned Regions: 0','Occupied Regions: 0','Undeveloped Regions: 0','You cannot issue Economic Sanctions.','You cannot issue Military Sanctions.'],"[]","[]",[0] * len(improvement_data_dict), 'Independent Nation']
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
@@ -1565,21 +1577,18 @@ def get_upkeep_sum(upkeep_dict):
 
 def get_unit_count_list(player_id, game_id):
     
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    regdata_list = read_file(regdata_filepath, 2)
     unit_data_dict = get_scenario_dict(game_id, "Units")
     unit_name_list = sorted(unit_data_dict.keys())
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     count_list = []
     for unit_name in unit_name_list:
-        unit_abbr = unit_data_dict[unit_name]['Abbreviation']
         count = 0
-        for region in regdata_list:
-            unit_data = ast.literal_eval(region[5])
-            unit_name_in_region = unit_data[0]
-            if unit_name_in_region != None:
-                if unit_data[2] == player_id and unit_abbr == unit_name_in_region:
-                    count += 1
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.owner_id() == player_id and region_unit.name() == unit_name:
+                count += 1
         count_list.append(count)
 
     return count_list

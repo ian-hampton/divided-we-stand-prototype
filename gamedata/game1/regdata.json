@@ -5,14 +5,16 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
             "adjacencyList": [
                 "PACCA",
                 "PUGET"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -40,7 +42,9 @@
                 "COLBA",
                 "NTHOR",
                 "WILVA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -58,7 +62,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -67,7 +71,9 @@
                 "COLBA",
                 "PACCA",
                 "OLYMP"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -85,7 +91,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -93,7 +99,9 @@
                 "OKANO",
                 "COLBA",
                 "PUGET"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -119,7 +127,9 @@
                 "IDPAN",
                 "COLBA",
                 "NTCAS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -149,7 +159,9 @@
                 "NTHOR",
                 "PACCA",
                 "PUGET"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -167,7 +179,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -175,7 +187,9 @@
                 "PACCA",
                 "NTHOR",
                 "STHOR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -203,11 +217,13 @@
                 "EASOR",
                 "STHOR",
                 "WILVA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "City",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -221,7 +237,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -232,7 +248,9 @@
                 "WESNV",
                 "SHAST",
                 "NTHCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -250,7 +268,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -261,7 +279,9 @@
                 "WESNV",
                 "STHOR",
                 "NTHOR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -290,7 +310,9 @@
                 "MAGVA",
                 "EASOR",
                 "COLBA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -308,7 +330,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -319,7 +341,9 @@
                 "EASNV",
                 "WESNV",
                 "EASOR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -337,7 +361,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -348,7 +372,9 @@
                 "CACHE",
                 "MAGVA",
                 "IDPAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -366,7 +392,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -375,7 +401,9 @@
                 "NTHWY",
                 "STEID",
                 "IDPAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -402,10 +430,12 @@
                 "WESSD",
                 "NTHWY",
                 "WESMT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Institute",
             "health": 99
         },
         "unitData": {
@@ -420,7 +450,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -431,7 +461,9 @@
                 "WESNE",
                 "STHWY",
                 "STEID"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -449,7 +481,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -462,7 +494,9 @@
                 "SLTLK",
                 "CACHE",
                 "STEID"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -489,7 +523,9 @@
                 "SHAST",
                 "SACRA",
                 "BAYAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -516,7 +552,9 @@
                 "WESNV",
                 "SACRA",
                 "NTHCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -546,7 +584,9 @@
                 "SJOVA",
                 "CENCT",
                 "BAYAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -564,7 +604,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -572,10 +612,12 @@
                 "NTHCT",
                 "SACRA",
                 "CENCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99
         },
         "unitData": {
@@ -602,7 +644,9 @@
                 "KERNC",
                 "SJOVA",
                 "SACRA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -620,7 +664,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -629,7 +673,9 @@
                 "SINEV",
                 "KERNC",
                 "CENCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -647,7 +693,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -657,7 +703,9 @@
                 "SJOVA",
                 "KERNC",
                 "LOSAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -675,7 +723,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -685,7 +733,9 @@
                 "INEMP",
                 "LOSAN",
                 "CENCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -712,7 +762,9 @@
                 "KERNC",
                 "INEMP",
                 "STHBR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -742,7 +794,9 @@
                 "YUMAC",
                 "STHBR",
                 "LOSAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -768,7 +822,9 @@
                 "LOSAN",
                 "INEMP",
                 "YUMAC"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -783,7 +839,7 @@
     "WESNV": {
         "regionData": {
             "fullName": "Western Nevada",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -799,11 +855,13 @@
                 "STHNV",
                 "SINEV",
                 "SACRA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Capital",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -817,7 +875,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -828,7 +886,9 @@
                 "SLTLK",
                 "STWUT",
                 "STHNV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -846,7 +906,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -857,7 +917,9 @@
                 "MOHAV",
                 "LASVE",
                 "SINEV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -884,7 +946,9 @@
                 "MOHAV",
                 "INEMP",
                 "SINEV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -912,11 +976,13 @@
                 "STHWY",
                 "SLTLK",
                 "EASNV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "City",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -930,7 +996,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -940,7 +1006,9 @@
                 "UINTA",
                 "STWUT",
                 "EASNV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -958,7 +1026,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -968,7 +1036,9 @@
                 "NTWCO",
                 "SANJU",
                 "STWUT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -986,7 +1056,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -998,7 +1068,9 @@
                 "MOHAV",
                 "STHNV",
                 "EASNV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1026,7 +1098,9 @@
                 "NTWCO",
                 "STWCO",
                 "EASAZ"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1044,7 +1118,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1055,7 +1129,9 @@
                 "STWCO",
                 "SANJU",
                 "UINTA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1073,7 +1149,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1085,7 +1161,9 @@
                 "STHKS",
                 "STECO",
                 "NTWCO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1103,7 +1181,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1113,7 +1191,9 @@
                 "STECO",
                 "NTENM",
                 "NTWNM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1142,7 +1222,9 @@
                 "STHKS",
                 "REDCA",
                 "NTENM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1172,7 +1254,9 @@
                 "YAVAP",
                 "YUMAC",
                 "INEMP"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1201,7 +1285,9 @@
                 "YAVAP",
                 "PHOEN",
                 "STHAZ"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1219,7 +1305,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1228,7 +1314,9 @@
                 "EASAZ",
                 "PHOEN",
                 "YUMAC"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1255,7 +1343,9 @@
                 "YAVAP",
                 "EASAZ",
                 "STHAZ"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1282,7 +1372,9 @@
                 "PHOEN",
                 "EASAZ",
                 "STWNM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1313,7 +1405,9 @@
                 "SANJU",
                 "NTWNM",
                 "STWNM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1331,7 +1425,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1341,7 +1435,9 @@
                 "NTENM",
                 "STENM",
                 "STWNM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1359,7 +1455,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1370,10 +1466,12 @@
                 "REDCA",
                 "TXPAN",
                 "STENM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99
         },
         "unitData": {
@@ -1388,7 +1486,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -1398,7 +1496,9 @@
                 "STENM",
                 "WESTX",
                 "STHAZ"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1416,7 +1516,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1426,7 +1526,9 @@
                 "NTENM",
                 "TXPAN",
                 "WESTX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1452,7 +1554,9 @@
                 "EASND",
                 "WESSD",
                 "EASMT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1479,7 +1583,9 @@
                 "EASSD",
                 "WESSD",
                 "WESND"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1497,7 +1603,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1509,7 +1615,9 @@
                 "WESNE",
                 "NTHWY",
                 "EASMT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1527,7 +1635,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1539,7 +1647,9 @@
                 "EASNE",
                 "CENNE",
                 "WESSD"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1567,7 +1677,9 @@
                 "CENNE",
                 "NTECO",
                 "STHWY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1582,7 +1694,7 @@
     "CENNE": {
         "regionData": {
             "fullName": "Central Nebraska",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -1596,11 +1708,13 @@
                 "EASNE",
                 "NTHKS",
                 "NTECO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Capital",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -1626,7 +1740,9 @@
                 "NTHMO",
                 "EASKS",
                 "NTHKS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1644,7 +1760,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1654,7 +1770,9 @@
                 "EASKS",
                 "STHKS",
                 "NTECO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1672,7 +1790,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1683,7 +1801,9 @@
                 "REDCA",
                 "STECO",
                 "NTECO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1712,11 +1832,13 @@
                 "GREEN",
                 "STHKS",
                 "NTHKS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Capital",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -1730,7 +1852,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1741,7 +1863,9 @@
                 "TXPAN",
                 "NTENM",
                 "STECO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1759,7 +1883,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1771,7 +1895,9 @@
                 "CHOCT",
                 "GRTPL",
                 "REDCA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1789,7 +1915,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1799,7 +1925,9 @@
                 "CHOCT",
                 "METRO",
                 "TXPAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1817,7 +1945,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1828,7 +1956,9 @@
                 "NTETX",
                 "METRO",
                 "GRTPL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1846,7 +1976,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1858,7 +1988,9 @@
                 "WESTX",
                 "STENM",
                 "NTENM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1876,7 +2008,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1887,7 +2019,9 @@
                 "CENTX",
                 "HILLC",
                 "TXPAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1902,10 +2036,10 @@
     "NTETX": {
         "regionData": {
             "fullName": "Northeast Texas",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1917,11 +2051,13 @@
                 "GULCT",
                 "CENTX",
                 "METRO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Capital",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -1935,7 +2071,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -1945,7 +2081,9 @@
                 "TXPAN",
                 "HILLC",
                 "STHTX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1963,7 +2101,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1973,7 +2111,9 @@
                 "CENTX",
                 "STHTX",
                 "WESTX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -1991,7 +2131,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2002,7 +2142,9 @@
                 "CBEND",
                 "STHTX",
                 "HILLC"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2020,7 +2162,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2029,7 +2171,9 @@
                 "HILLC",
                 "CENTX",
                 "CBEND"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2047,7 +2191,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2055,7 +2199,9 @@
                 "STHTX",
                 "CENTX",
                 "GULCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2073,7 +2219,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2082,7 +2228,9 @@
                 "CENTX",
                 "NTETX",
                 "STETX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2110,7 +2258,9 @@
                 "SPORT",
                 "CROSS",
                 "ACADI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2128,7 +2278,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2138,7 +2288,9 @@
                 "STWMN",
                 "EASSD",
                 "EASND"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2164,10 +2316,12 @@
                 "NTWWI",
                 "CENMN",
                 "NTWMN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Wind Farm",
             "health": 99
         },
         "unitData": {
@@ -2182,7 +2336,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2192,7 +2346,9 @@
                 "NTWWI",
                 "STEMN",
                 "STWMN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2210,7 +2366,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2220,7 +2376,9 @@
                 "STEMN",
                 "NTWIA",
                 "EASSD"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2238,7 +2396,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2249,7 +2407,9 @@
                 "NTEIA",
                 "NTWIA",
                 "STWMN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2267,7 +2427,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2278,7 +2438,9 @@
                 "STWIA",
                 "EASNE",
                 "EASSD"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2307,7 +2469,9 @@
                 "STEIA",
                 "STWIA",
                 "NTWIA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2325,7 +2489,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2335,7 +2499,9 @@
                 "STEIA",
                 "NTHMO",
                 "EASNE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2353,7 +2519,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2363,7 +2529,9 @@
                 "FORGO",
                 "NTHMO",
                 "STWIA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2381,7 +2549,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2394,7 +2562,9 @@
                 "WESMO",
                 "EASKS",
                 "EASNE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2423,7 +2593,9 @@
                 "NTWAR",
                 "GREEN",
                 "EASKS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2451,7 +2623,9 @@
                 "STEMO",
                 "OZARK",
                 "WESMO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2469,7 +2643,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2479,7 +2653,9 @@
                 "STEMO",
                 "NTEAR",
                 "NTWAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2509,7 +2685,9 @@
                 "NTWTN",
                 "NTEAR",
                 "OZARK"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2527,7 +2705,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2539,7 +2717,9 @@
                 "STWAR",
                 "CHOCT",
                 "GREEN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2557,7 +2737,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2569,7 +2749,9 @@
                 "NTHMS",
                 "STEAR",
                 "NTWAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2587,7 +2769,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2597,7 +2779,9 @@
                 "SPORT",
                 "NTETX",
                 "CHOCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2615,7 +2799,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2625,7 +2809,9 @@
                 "NTHMS",
                 "SPORT",
                 "STWAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2643,7 +2829,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2655,7 +2841,9 @@
                 "CROSS",
                 "STETX",
                 "NTETX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2673,7 +2861,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2683,7 +2871,9 @@
                 "NEWOR",
                 "ACADI",
                 "STETX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2701,7 +2891,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2709,7 +2899,9 @@
                 "CROSS",
                 "NEWOR",
                 "STETX"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2727,7 +2919,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -2736,7 +2928,9 @@
                 "CROSS",
                 "CENMS",
                 "MSGUL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2754,7 +2948,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2764,7 +2958,9 @@
                 "STEMN",
                 "CENMN",
                 "NTEMN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2792,7 +2988,9 @@
                 "STEWI",
                 "STWWI",
                 "NTWWI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2810,7 +3008,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2818,7 +3016,9 @@
                 "CENWI",
                 "UPPER",
                 "STEWI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2836,7 +3036,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2847,7 +3047,9 @@
                 "NTWIL",
                 "NTEIA",
                 "STEMN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2865,7 +3067,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -2875,7 +3077,9 @@
                 "CHICA",
                 "NTWIL",
                 "STWWI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2893,7 +3097,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2901,7 +3105,9 @@
                 "CENWI",
                 "NTEWI",
                 "NTHMI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2927,7 +3133,9 @@
                 "UPPER",
                 "WESMI",
                 "MIDMI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -2942,10 +3150,10 @@
     "WESMI": {
         "regionData": {
             "fullName": "West Michigan",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2955,11 +3163,13 @@
                 "STEMI",
                 "NTWOH",
                 "NTHIN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Capital",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -2973,7 +3183,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -2982,7 +3192,9 @@
                 "THUMB",
                 "STEMI",
                 "WESMI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3007,7 +3219,9 @@
             "adjacencyList": [
                 "MIDMI",
                 "STEMI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3025,7 +3239,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3034,7 +3248,9 @@
                 "MIDMI",
                 "THUMB",
                 "NTWOH"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3052,7 +3268,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3064,7 +3280,9 @@
                 "FORGO",
                 "STEIA",
                 "NTEIA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3092,7 +3310,9 @@
                 "CENIL",
                 "NTWIL",
                 "STEWI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3110,7 +3330,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3120,7 +3340,9 @@
                 "STWIL",
                 "NTHMO",
                 "STEIA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3138,7 +3360,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3148,7 +3370,9 @@
                 "EASIL",
                 "STWIL",
                 "FORGO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3166,7 +3390,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -3178,7 +3402,9 @@
                 "STLOU",
                 "NTHMO",
                 "FORGO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3196,7 +3422,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3208,7 +3434,9 @@
                 "LILEG",
                 "STWIL",
                 "CENIL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3238,7 +3466,9 @@
                 "STEMO",
                 "STLOU",
                 "STWIL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3256,7 +3486,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3266,7 +3496,9 @@
                 "CENIN",
                 "EASIL",
                 "CHICA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3284,7 +3516,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3296,7 +3528,9 @@
                 "INDIA",
                 "WABAS",
                 "EASIL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3314,7 +3548,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -3322,10 +3556,12 @@
                 "CENIN",
                 "STHIN",
                 "WABAS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99
         },
         "unitData": {
@@ -3350,7 +3586,9 @@
                 "STHIN",
                 "LILEG",
                 "EASIL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3368,7 +3606,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3382,7 +3620,9 @@
                 "PENNY",
                 "WESKY",
                 "LILEG"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3412,7 +3652,9 @@
                 "MIAVA",
                 "CENIN",
                 "NTHIN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3430,7 +3672,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3440,7 +3682,9 @@
                 "STEOH",
                 "CENOH",
                 "NTWOH"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3458,7 +3702,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3468,7 +3712,9 @@
                 "CINCI",
                 "STHIN",
                 "CENIN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3486,7 +3732,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -3497,7 +3743,9 @@
                 "STHOH",
                 "CINCI",
                 "MIAVA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3526,7 +3774,9 @@
                 "CUMBE",
                 "BLUEG",
                 "STHIN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3544,7 +3794,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3554,7 +3804,9 @@
                 "VALLE",
                 "CUMBE",
                 "CINCI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3581,11 +3833,13 @@
                 "CLEVE",
                 "VALLE",
                 "STHOH"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Missile Silo",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -3608,7 +3862,9 @@
                 "CINCI",
                 "CUMBE",
                 "PENNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3626,7 +3882,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3637,7 +3893,9 @@
                 "NASHV",
                 "NTWTN",
                 "STEMO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3667,7 +3925,9 @@
                 "MIDTN",
                 "NASHV",
                 "WESKY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3685,7 +3945,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3698,10 +3958,12 @@
                 "STWVA",
                 "EASTN",
                 "PENNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99
         },
         "unitData": {
@@ -3727,7 +3989,9 @@
                 "CHATT",
                 "STWTN",
                 "NTEAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3755,7 +4019,9 @@
                 "MIDTN",
                 "CHATT",
                 "NTWTN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3773,7 +4039,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3782,7 +4048,9 @@
                 "EASTN",
                 "CHATT",
                 "NASHV"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3800,7 +4068,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3811,7 +4079,9 @@
                 "CHATT",
                 "MIDTN",
                 "PENNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3839,7 +4109,9 @@
                 "NTHAL",
                 "NTHMS",
                 "NTEAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3857,7 +4129,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3870,10 +4142,12 @@
                 "NTHAL",
                 "STWTN",
                 "NTWTN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Oil Well",
             "health": 99
         },
         "unitData": {
@@ -3900,7 +4174,9 @@
                 "SPORT",
                 "STEAR",
                 "NTEAR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3930,7 +4206,9 @@
                 "NEWOR",
                 "CROSS",
                 "SPORT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3948,7 +4226,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3956,7 +4234,9 @@
                 "CENMS",
                 "STWAL",
                 "NEWOR"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -3985,7 +4265,9 @@
                 "WESAL",
                 "NTHMS",
                 "STWTN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4014,7 +4296,9 @@
                 "STWAL",
                 "CENMS",
                 "NTHMS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4032,7 +4316,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4041,7 +4325,9 @@
                 "NTWGA",
                 "STEAL",
                 "WESAL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4059,7 +4345,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4069,7 +4355,9 @@
                 "FLPAN",
                 "CENMS",
                 "MSGUL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4098,7 +4386,9 @@
                 "NTWGA",
                 "WESAL",
                 "STWAL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4116,7 +4406,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -4126,7 +4416,9 @@
                 "STWGA",
                 "STEGA",
                 "GAINE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4154,7 +4446,9 @@
                 "FIRCT",
                 "HALIF",
                 "TAMPA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4172,7 +4466,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4181,7 +4475,9 @@
                 "STEGA",
                 "GAINE",
                 "HALIF"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4199,7 +4495,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4209,7 +4505,9 @@
                 "TAMPA",
                 "STWFL",
                 "MIAMI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4235,7 +4533,9 @@
                 "GAINE",
                 "HALIF",
                 "STWFL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4253,7 +4553,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4261,7 +4561,9 @@
                 "TAMPA",
                 "HALIF",
                 "MIAMI"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4279,14 +4581,16 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
             "adjacencyList": [
                 "STWFL",
                 "HALIF"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4304,7 +4608,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4317,7 +4621,9 @@
                 "STEAL",
                 "EASAL",
                 "NTHAL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4335,7 +4641,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4346,7 +4652,9 @@
                 "EASGA",
                 "ATLAN",
                 "NTWGA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4373,11 +4681,13 @@
                 "ATHEN",
                 "EASGA",
                 "STWGA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Capital",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -4391,7 +4701,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4403,7 +4713,9 @@
                 "STEGA",
                 "STWGA",
                 "ATLAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4421,7 +4733,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4432,7 +4744,9 @@
                 "STEGA",
                 "FLPAN",
                 "STEAL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4461,11 +4775,13 @@
                 "GAINE",
                 "FLPAN",
                 "STWGA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Boot Camp",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -4488,7 +4804,9 @@
                 "EASGA",
                 "STEGA",
                 "FIRCT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4514,7 +4832,9 @@
                 "MOUNT",
                 "MDLND",
                 "ATHEN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4544,11 +4864,13 @@
                 "SCLOW",
                 "EASGA",
                 "ATHEN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Missile Silo",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -4562,7 +4884,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4572,7 +4894,9 @@
                 "STENC",
                 "MDLND",
                 "SCLOW"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4590,7 +4914,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -4599,7 +4923,9 @@
                 "EASGA",
                 "MDLND",
                 "PEEDE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4617,7 +4943,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4630,7 +4956,9 @@
                 "NTWGA",
                 "CHATT",
                 "EASTN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4660,7 +4988,9 @@
                 "PEEDE",
                 "MDLND",
                 "MOUNT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4688,7 +5018,9 @@
                 "STENC",
                 "SANDH",
                 "MTRLA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4715,7 +5047,9 @@
                 "STHVA",
                 "TRIAN",
                 "STENC"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4733,7 +5067,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4742,7 +5076,9 @@
                 "TRIAN",
                 "MTRLA",
                 "PEEDE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4760,7 +5096,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4769,7 +5105,9 @@
                 "TRIAN",
                 "SANDH",
                 "PEEDE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4787,7 +5125,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4798,7 +5136,9 @@
                 "STWVA",
                 "CHARL",
                 "POTOM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4816,7 +5156,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4826,7 +5166,9 @@
                 "RICHM",
                 "ROANO",
                 "POTOM"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4853,7 +5195,9 @@
                 "HAMPT",
                 "STHVA",
                 "ROANO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4871,7 +5215,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4883,7 +5227,9 @@
                 "MOUNT",
                 "EASTN",
                 "CUMBE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4913,11 +5259,13 @@
                 "TRIAN",
                 "MTRLA",
                 "STWVA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Military Outpost",
+            "health": 10
         },
         "unitData": {
             "name": null,
@@ -4931,7 +5279,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4942,7 +5290,9 @@
                 "RICHM",
                 "STHVA",
                 "BANKS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4960,7 +5310,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4973,7 +5323,9 @@
                 "STEOH",
                 "CLEVE",
                 "NTWPA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -4991,7 +5343,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5002,7 +5354,9 @@
                 "ROANO",
                 "CHARL",
                 "VALLE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5020,7 +5374,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -5030,7 +5384,9 @@
                 "ROANO",
                 "STWVA",
                 "CUMBE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5048,7 +5404,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5059,7 +5415,9 @@
                 "POTOM",
                 "NTHVA",
                 "HAMPT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5077,7 +5435,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5087,7 +5445,9 @@
                 "PAHLR",
                 "WESMD",
                 "HAMPT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5105,14 +5465,16 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
             "adjacencyList": [
                 "PHILL",
                 "EASMD"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5140,7 +5502,9 @@
                 "PITTS",
                 "VALLE",
                 "CLEVE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5168,7 +5532,9 @@
                 "CENPA",
                 "PITTS",
                 "NTWPA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5186,7 +5552,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5198,7 +5564,9 @@
                 "CENPA",
                 "NTHPA",
                 "WESNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5216,7 +5584,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5228,7 +5596,9 @@
                 "WESMD",
                 "POTOM",
                 "VALLE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5256,7 +5626,9 @@
                 "PHILL",
                 "PAHLR",
                 "PITTS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5274,7 +5646,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5284,7 +5656,9 @@
                 "EASMD",
                 "WESMD",
                 "PITTS"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5314,7 +5688,9 @@
                 "EASMD",
                 "PAHLR",
                 "CENPA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5332,7 +5708,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5341,7 +5717,9 @@
                 "NTEPA",
                 "PHILL",
                 "STHNJ"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5366,7 +5744,9 @@
             "adjacencyList": [
                 "NTHNJ",
                 "PHILL"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5384,7 +5764,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5393,7 +5773,9 @@
                 "ALBAN",
                 "MOHAW",
                 "FINLA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5411,7 +5793,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5421,7 +5803,9 @@
                 "NTEPA",
                 "NTHPA",
                 "NTWPA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5448,7 +5832,9 @@
                 "MOHAW",
                 "STHNY",
                 "WESNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5475,11 +5861,13 @@
                 "ALBAN",
                 "STHNY",
                 "FINLA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "Missile Silo",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -5493,7 +5881,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -5505,7 +5893,9 @@
                 "STHNY",
                 "MOHAW",
                 "NTHNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5523,7 +5913,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5534,7 +5924,9 @@
                 "ALBAN",
                 "NEWYO",
                 "NTEPA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5563,11 +5955,13 @@
                 "STHNY",
                 "NTEPA",
                 "NTHNJ"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99
+            "name": "City",
+            "health": 5
         },
         "unitData": {
             "name": null,
@@ -5581,7 +5975,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5590,7 +5984,9 @@
                 "WESMA",
                 "NTHMA",
                 "RHODE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5616,7 +6012,9 @@
                 "CONNE",
                 "NTHMA",
                 "STHMA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5634,7 +6032,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5645,7 +6043,9 @@
                 "STHVT",
                 "ALBAN",
                 "NEWYO"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5673,7 +6073,9 @@
                 "CONNE",
                 "WESMA",
                 "STHNH"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5698,7 +6100,9 @@
             "adjacencyList": [
                 "NTHMA",
                 "RHODE"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5716,7 +6120,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5725,7 +6129,9 @@
                 "STHVT",
                 "ALBAN",
                 "NTHNY"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5743,7 +6149,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -5753,7 +6159,9 @@
                 "STHNH",
                 "WESMA",
                 "ALBAN"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5771,7 +6179,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5780,7 +6188,9 @@
                 "STHNH",
                 "STHVT",
                 "NTHVT"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5798,7 +6208,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5808,7 +6218,9 @@
                 "STHVT",
                 "WESMA",
                 "NTHMA"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,
@@ -5826,16 +6238,18 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
             "adjacencyList": [
                 "STHME"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Uranium Mine",
             "health": 99
         },
         "unitData": {
@@ -5858,7 +6272,9 @@
                 "NTHME",
                 "NTHNH",
                 "STHNH"
-            ]
+            ],
+            "infection": 0,
+            "quarantine": false
         },
         "improvementData": {
             "name": null,

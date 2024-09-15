@@ -7,6 +7,9 @@ import re
 
 #UWS SOURCE IMPORTS
 from app import core
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
 
 #END OF TURN CHECKS
 def update_improvement_count(game_id, player_id):
@@ -14,21 +17,20 @@ def update_improvement_count(game_id, player_id):
     
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
 
     #Procedure
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
     improvement_data_list = [0] * len(improvement_name_list)
-    for region in regdata_list:
-        control_data = ast.literal_eval(region[2])
-        owner_player_id = control_data[0]
-        improvement_data = ast.literal_eval(region[4])
-        improvement_name = improvement_data[0]
-        if int(owner_player_id) == int(player_id):
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        improvement_name = region_improvement.name()
+        if region.owner_id() == int(player_id):
             if improvement_name:
                 index = improvement_name_list.index(improvement_name)
                 improvement_data_list[index] += 1
@@ -250,15 +252,15 @@ def remove_excess_units(full_game_id, player_id, diplomacy_log):
 
     return diplomacy_log
 
-def update_misc_info(full_game_id, player_id):
+def update_misc_info(game_id, player_id):
     '''Updates misc info list in playerdata.'''
     
     #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
-    with open(f'gamedata/{full_game_id}/vc_overrides.json', 'r') as json_file:
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+    with open(f'gamedata/{game_id}/vc_overrides.json', 'r') as json_file:
         vc_overrides_dict = json.load(json_file)
     
     #get needed information from player
@@ -275,43 +277,48 @@ def update_misc_info(full_game_id, player_id):
     
     #Update Capital Resource (if one not already active)
     if misc_info[0] == 'Capital Resource: None.':
-        for region in regdata_list:
-            control_data = ast.literal_eval(region[2])
-            resource_data = region[3]
-            improvement_data = ast.literal_eval(region[4])
-            if control_data[0] == player_id and control_data[1] == 0 and improvement_data[0] == 'Capital':
-                if resource_data == 'Coal' and 'Coal Mining' in completed_research_list:
-                    misc_info[0] = 'Capital Resource: Coal.'
-                elif resource_data == 'Oil' and 'Oil Drilling' in completed_research_list:
-                    misc_info[0] = 'Capital Resource: Oil.'
-                elif resource_data == 'Basic Materials':
-                    misc_info[0] = 'Capital Resource: Basic Materials.'
-                elif resource_data == 'Common Metals' and 'Surface Mining' in completed_research_list:
-                    misc_info[0] = 'Capital Resource: Common Metals.'
-                elif resource_data == 'Advanced Metals' and 'Metallurgy' in completed_research_list:
-                    misc_info[0] = 'Capital Resource: Advanced Metals.'
-                elif resource_data == 'Uranium' and 'Uranium Extraction' in completed_research_list:
-                    misc_info[0] = 'Capital Resource: Uranium.'
-                elif resource_data == 'Rare Earth Elements' and 'REE Mining' in completed_research_list:
-                    misc_info[0] = 'Capital Resource: Rare Earth Elements.'
-    
-
+        for region_id in regdata_dict:
+            region = Region(region_id, game_id)
+            region_improvement = Improvement(region_id, game_id)
+            if region.owner_id() == player_id and region.occupier_id() == 0 and region_improvement.name() == 'Capital':
+                match region.resource():
+                    case 'Coal':
+                        if 'Coal Mining' in completed_research_list:
+                            misc_info[0] = 'Capital Resource: Coal.'
+                    case 'Oil':
+                        if 'Oil Drilling' in completed_research_list:
+                            misc_info[0] = 'Capital Resource: Oil.'
+                    case 'Basic Materials':
+                        misc_info[0] = 'Capital Resource: Basic Materials.'
+                    case 'Common Metals':
+                        if 'Surface Mining' in completed_research_list:
+                            misc_info[0] = 'Capital Resource: Common Metals.'
+                    case 'Advanced Metals':
+                        if 'Metallurgy' in completed_research_list:
+                            misc_info[0] = 'Capital Resource: Advanced Metals.'
+                    case 'Uranium':
+                        if 'Uranium Extraction' in completed_research_list:
+                            misc_info[0] = 'Capital Resource: Uranium.'
+                    case 'Rare Earth Elements':
+                        if 'REE Mining' in completed_research_list:
+                            misc_info[0] = 'Capital Resource: Rare Earth Elements.'
+                    
     #Update Region Counts
     owned_regions = 0
     occupied_regions = 0
     undeveloped_regions = 0
-    for region in regdata_list:
-        control_data = ast.literal_eval(region[2])
-        improvement_data = ast.literal_eval(region[4])
-        if control_data[0] == player_id and control_data[1] == 0:
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        if region.owner_id() == player_id and region.occupier_id() == 0:
             owned_regions += 1
-            if improvement_data[0] == None:
+            if region_improvement.name() == None:
                 undeveloped_regions += 1
-        elif control_data[0] == player_id and control_data[1] != 0:
+        elif region.owner_id() == player_id and region.occupier_id() != 0:
             occupied_regions += 1
-    misc_info[1] = 'Owned Regions: ' + str(owned_regions)
-    misc_info[2] = 'Occupied Regions: ' + str(occupied_regions)
-    misc_info[3] = 'Undeveloped Regions: ' + str(undeveloped_regions)
+    misc_info[1] = f'Owned Regions: {owned_regions}'
+    misc_info[2] = f'Occupied Regions: {occupied_regions}'
+    misc_info[3] = f'Undeveloped Regions: {undeveloped_regions}'
     
 
     #Update Sanctions
@@ -410,7 +417,7 @@ def update_misc_info(full_game_id, player_id):
         writer.writerows(playerdata_list)
 
     #Update vc_extra.csv
-    with open(f'gamedata/{full_game_id}/vc_overrides.json', 'w') as json_file:
+    with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
         json.dump(vc_overrides_dict, json_file, indent=4)
 
 def update_trade_tax(full_game_id, player_id):
@@ -483,14 +490,14 @@ def update_stockpile_limits(full_game_id, player_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def update_income(full_game_id, current_turn_num):
+def update_income(game_id, current_turn_num):
     '''Updates income by resource and updates the income list in playerdata.'''
     
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -518,10 +525,10 @@ def update_income(full_game_id, current_turn_num):
 
     #get top three records
     if current_turn_num > 4:
-        top_largest_list = get_top_three(full_game_id, 'largest_nation', True)
-        top_economy_list = get_top_three(full_game_id, 'strongest_economy', True)
-        top_military_list = get_top_three(full_game_id, 'largest_military', True)
-        top_research_list = get_top_three(full_game_id, 'most_research', True)
+        top_largest_list = get_top_three(game_id, 'largest_nation', True)
+        top_economy_list = get_top_three(game_id, 'strongest_economy', True)
+        top_military_list = get_top_three(game_id, 'largest_military', True)
+        top_research_list = get_top_three(game_id, 'most_research', True)
         largest_score_not_tied = check_top_three(top_largest_list)
         economy_score_not_tied = check_top_three(top_economy_list)
         military_score_not_tied = check_top_three(top_military_list)
@@ -547,18 +554,13 @@ def update_income(full_game_id, current_turn_num):
         improvement_count_list = ast.literal_eval(playerdata[27])
         
         #remnant bonus
-        remnant_bonus_candidates = []
+        remnant_bonus_candidates = set()
         if player_government == 'Remnant':
-            for region in regdata_list:
-                control_data = ast.literal_eval(region[2])
-                improvement_data = ast.literal_eval(region[4])
-                if control_data[0] == player_id and improvement_data[0] == 'Capital':
-                    adjacency_data = ast.literal_eval(region[8])
-                    for select_region in regdata_list:
-                        select_region_id = select_region[0]
-                        select_control_data = ast.literal_eval(select_region[2])
-                        if select_control_data[0] == player_id and select_region_id in adjacency_data and select_region_id not in remnant_bonus_candidates:
-                            remnant_bonus_candidates.append(select_region_id)
+            for region_id in regdata_dict:
+                region = Region(region_id, game_id)
+                region_improvement = Improvement(region_id, game_id)
+                if region.owner_id() == player_id and region_improvement.name() == 'Capital':
+                    remnant_bonus_candidates.update(region.owned_adjacent_regions())
         
         #calculate improvement incomes based on research
         city_income = 3
@@ -588,12 +590,11 @@ def update_income(full_game_id, current_turn_num):
             strip_mine_coal_income = 6
         
         #get income from improvements
-        for region in regdata_list:
-            region_id = region[0]
-            control_data = ast.literal_eval(region[2])
-            resource_data = region[3]
-            improvement_data = ast.literal_eval(region[4])
-            improvement_name = improvement_data[0]
+        for region_id in regdata_dict:
+            region = Region(region_id, game_id)
+            region_improvement = Improvement(region_id, game_id)
+            region_resource = region.resource()
+            improvement_name = region_improvement.name()
             #skip if no improvement
             if improvement_name == None:
                 continue
@@ -608,9 +609,9 @@ def update_income(full_game_id, current_turn_num):
             else:
                 multiplier = 1
             #get pandemic multiplier
-            if "Pandemic" in active_games_dict[full_game_id]["Active Events"]:
-                region_quarantine = region[11]
-                infection_score = region[12]
+            if "Pandemic" in active_games_dict[game_id]["Active Events"]:
+                region_quarantine = region.is_quarantined()
+                infection_score = region.infection()
                 infection_penalty = 0
                 if infection_score > 0:
                     infection_penalty = infection_score * (0.1 * multiplier)
@@ -622,7 +623,7 @@ def update_income(full_game_id, current_turn_num):
                 if multiplier < 0:
                     multiplier = 0
             #get income based on improvement type
-            if control_data[0] == player_id and control_data[1] == 0:
+            if region.owner_id() == player_id and region.occupier_id() == 0:
                 match improvement_name:
                     case 'Advanced Metals Mine':
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, advanced_index, 1, multiplier)
@@ -637,25 +638,25 @@ def update_income(full_game_id, current_turn_num):
                         income_strings_masterlist[player_id - 1][dollars_index] += [f'&Tab;+5 from {plural_improvement_name}']
                         income_strings_masterlist[player_id - 1][tech_index] += [f'&Tab;+2 from {plural_improvement_name}']
                         income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+1 from {plural_improvement_name}']
-                        if resource_data == 'Coal' and 'Coal Mining' in player_research_list:
+                        if region_resource == 'Coal' and 'Coal Mining' in player_research_list:
                             gross_income_masterlist[player_id - 1][coal_index] += 1
                             income_strings_masterlist[player_id - 1][coal_index] += [f'&Tab;+1 from capital location.']
-                        elif resource_data == 'Oil' and 'Oil Drilling' in player_research_list:
+                        elif region_resource == 'Oil' and 'Oil Drilling' in player_research_list:
                             gross_income_masterlist[player_id - 1][oil_index] += 1
                             income_strings_masterlist[player_id - 1][oil_index] += [f'&Tab;+1 from capital location.']
-                        elif resource_data == 'Basic Materials':
+                        elif region_resource == 'Basic Materials':
                             gross_income_masterlist[player_id - 1][basic_index] += 1
                             income_strings_masterlist[player_id - 1][basic_index] += [f'&Tab;+1 from capital location.']
-                        elif resource_data == 'Common Metals' and 'Surface Mining' in player_research_list:
+                        elif region_resource == 'Common Metals' and 'Surface Mining' in player_research_list:
                             gross_income_masterlist[player_id - 1][common_index] += 1
                             income_strings_masterlist[player_id - 1][common_index] += [f'&Tab;+1 from capital location.']
-                        elif resource_data == 'Advanced Metals' and 'Metallurgy' in player_research_list:
+                        elif region_resource == 'Advanced Metals' and 'Metallurgy' in player_research_list:
                             gross_income_masterlist[player_id - 1][advanced_index] += 1
                             income_strings_masterlist[player_id - 1][advanced_index] += [f'&Tab;+1 from capital location.']
-                        elif resource_data == 'Uranium' and 'Uranium Extraction' in player_research_list:
+                        elif region_resource == 'Uranium' and 'Uranium Extraction' in player_research_list:
                             gross_income_masterlist[player_id - 1][uranium_index] += 1
                             income_strings_masterlist[player_id - 1][uranium_index] += [f'&Tab;+1 from capital location.']
-                        elif resource_data == 'Rare Earth Elements' and 'REE Mining' in player_research_list:
+                        elif region_resource == 'Rare Earth Elements' and 'REE Mining' in player_research_list:
                             gross_income_masterlist[player_id - 1][rare_index] += 1
                             income_strings_masterlist[player_id - 1][rare_index] += [f'&Tab;+1 from capital location.']
                     case 'City':
@@ -744,15 +745,15 @@ def update_income(full_game_id, current_turn_num):
                 used_mc -= 0.1
 
         #political power from events
-        if "Influence Through Trade" in active_games_dict[full_game_id]["Active Events"]:
-            income_bonus_winner = active_games_dict[full_game_id]["Active Events"]["Influence Through Trade"]["Income Bonus Winner"]
+        if "Influence Through Trade" in active_games_dict[game_id]["Active Events"]:
+            income_bonus_winner = active_games_dict[game_id]["Active Events"]["Influence Through Trade"]["Income Bonus Winner"]
             if nation_name == income_bonus_winner:
                 gross_income_masterlist[player_id - 1][pp_index] += 0.5
                 income_strings_masterlist[player_id - 1][pp_index] += [f'+0.5 from events.']
-        if "Faustian Bargain" in active_games_dict[full_game_id]["Active Events"]:
-            chosen_nation_name = active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"]
+        if "Faustian Bargain" in active_games_dict[game_id]["Active Events"]:
+            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"]
             if nation_name == chosen_nation_name:
-                pp_from_lease = 0.2 * len(active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"])
+                pp_from_lease = 0.2 * len(active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"])
                 if pp_from_lease > 0:
                     gross_income_masterlist[player_id - 1][pp_index] += pp_from_lease
                     income_strings_masterlist[player_id - 1][pp_index] += [f'+{pp_from_lease} from events.']
@@ -840,11 +841,11 @@ def update_income(full_game_id, current_turn_num):
         
         
         #Pay Upkeep Costs
-        unit_count_list = core.get_unit_count_list(player_id, full_game_id)
-        improvement_dollar_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Dollars Upkeep', playerdata, unit_count_list)
-        improvement_energy_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Energy Upkeep', playerdata, unit_count_list)
-        unit_dollar_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Unit Dollars Upkeep', playerdata, unit_count_list)
-        unit_energy_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Unit Oil Upkeep', playerdata, unit_count_list)
+        unit_count_list = core.get_unit_count_list(player_id, game_id)
+        improvement_dollar_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Dollars Upkeep', playerdata, unit_count_list)
+        improvement_energy_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Energy Upkeep', playerdata, unit_count_list)
+        unit_dollar_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Unit Dollars Upkeep', playerdata, unit_count_list)
+        unit_energy_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Unit Oil Upkeep', playerdata, unit_count_list)
         improvement_dollar_upkeep_count = core.get_upkeep_sum(improvement_dollar_upkeep_dict)
         improvement_energy_upkeep_count = core.get_upkeep_sum(improvement_energy_upkeep_dict)
         unit_dollar_upkeep_count = core.get_upkeep_sum(unit_dollar_upkeep_dict)
@@ -2035,11 +2036,11 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     wardata_list = core.read_file(wardata_filepath, 2)
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
@@ -2140,14 +2141,15 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             player_has_advanced = False
             player_has_uranium = False
             player_has_rare = False
-            for region in regdata_list:
-                control_data = ast.literal_eval(region[2])
-                resource_data = region[3]
-                if control_data[0] == player_id and resource_data == 'Advanced Metals':
+            for region_id in regdata_dict:
+                region = Region(region_id, game_id)
+                owner_id = region.owner_id()
+                region_resource = region.resource()
+                if owner_id == player_id and region_resource == 'Advanced Metals':
                     player_has_advanced = True
-                elif control_data[0] == player_id and resource_data == 'Uranium':
+                elif owner_id == player_id and region_resource == 'Uranium':
                     player_has_uranium = True
-                elif control_data[0] == player_id and resource_data == 'Rare Earth Elements':
+                elif owner_id == player_id and region_resource == 'Rare Earth Elements':
                     player_has_rare = True
             if player_has_advanced and player_has_uranium and player_has_rare:
                 vc_1_completed = True
@@ -2172,11 +2174,11 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                    vc_2_completed = True
         case 'Diversified Army':
             unit_types_found = []
-            for region in regdata_list:
-                unit_data = ast.literal_eval(region[5])
-                if unit_data[0] != None:
-                    if unit_data[0] not in unit_types_found and unit_data[2] == player_id:
-                        unit_types_found.append(unit_data[0])
+            for region_id in regdata_dict:
+                region_unit = Unit(region_id, game_id)
+                if region_unit.name() != None and region_unit.owner_id() == player_id:
+                    if region_unit.name() not in unit_types_found:
+                        unit_types_found.append(region_unit.name())
             if len(unit_types_found) >= 5:
                 vc_2_completed = True
         case 'Diversified Economy':
@@ -2293,6 +2295,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
         json.dump(vc_overrides_dict, json_file, indent=4)
     result = [vc_1_completed, vc_2_completed, vc_3_completed]
+
     return result
 
 def bonus_phase_heals(game_id):

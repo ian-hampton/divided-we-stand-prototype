@@ -138,7 +138,6 @@ def games():
         match current_turn:
 
             case "Starting Region Selection in Progress":
-                print("I went to Starting Region Selection in Progress")
                 #get title and game link
                 game_name = game_data["Game Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
