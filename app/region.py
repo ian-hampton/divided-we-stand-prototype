@@ -23,6 +23,7 @@ class Region:
         self.data = region_data
         self.game_id = game_id
         self.regdata_filepath = regdata_filepath
+        self.claim_list = []
 
     def _save_changes(self) -> None:
         '''
@@ -91,11 +92,25 @@ class Region:
         self.data["ownerID"] = new_owner_id
         self._save_changes()
 
+    def set_occupier_id(self, new_owner_id: int) -> None:
+        '''
+        Changes the occupier of a region.
+        '''
+        self.data["occupierID"] = new_owner_id
+        self._save_changes()
+
     def set_resource(self, new_resource: str) -> None:
         '''
         Changes the resource in a region.
         '''
         self.data["regionResource"] = new_resource
+        self._save_changes()
+    
+    def decrease_fallout(self) -> None:
+        '''
+        Decreases fallout by one turn.
+        '''
+        self.data["nukeTurns"] -= 1
         self._save_changes()
 
     def owned_adjacent_regions(self) -> list:

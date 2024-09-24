@@ -18,16 +18,17 @@
             "Region Disputes": 0,
             "Current Turn": "1",
             "Days Ellapsed": 0,
-            "Game Started": "09/15/2024"
+            "Game Started": "09/19/2024"
         },
         "Inactive Events": [],
         "Active Events": [],
         "Current Event": {},
-        "Steal Action Record": {
-            "Four": {
-                "Nation Name": null,
-                "Streak": 0
-            }
+        "Steal Action Record": {},
+        "Transactions Record": {
+            "One": 0,
+            "Two": 0,
+            "Three": 0,
+            "Four": 0
         }
     },
     "game2": {

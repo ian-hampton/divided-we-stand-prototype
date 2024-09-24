@@ -7,6 +7,9 @@ import json
 #UWS SOURCE IMPORTS
 from app import core
 from app import events
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -807,11 +810,8 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
             player_action_logs[player_id - 1] = player_action_log
 
             #update statistics
-            with open(f'gamedata/{full_game_id}/statistics.json', 'r') as json_file:
-                statistics_dict = json.load(json_file)
-            statistics_dict["Trade Count"][nation_name] += desired_count
-            with open(f'gamedata/{full_game_id}/statistics.json', 'w') as json_file:
-                json.dump(statistics_dict, json_file, indent=4)
+            transactions_dict = active_games_dict[full_game_id]["Transactions Record"]
+            transactions_dict[nation_name] += desired_count
 
 
     #Process Negative Values
@@ -1562,7 +1562,7 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
     
     return player_action_logs
 
-def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomacy_log):
+def resolve_trades(game_id, diplomacy_log):
     '''Resolves trade actions between players through the terminial.'''
 
     trade_action = input("Are there any trade actions this turn? (Y/N) ")
@@ -1571,14 +1571,15 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
     while trade_action == 'Y':
         nation1_name = input("Enter 1st nation name: ")
         nation2_name = input("Enter 2nd nation name: ")
+        playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
-        regdata_list = core.read_file(regdata_filepath, 2)
         nation_info_masterlist = core.get_nation_info(playerdata_list)
         request_list = ['Dollars', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
         economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-        game_region_id_list = []
-        for region in regdata_list:
-            game_region_id_list.append(region[0])
+        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
         
         #get player ids
         nation1_id = 0
@@ -1621,7 +1622,7 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
                 nation1_region_trades_list = nation1_region_trades_str.split(',')
                 invalid_region_given = False
                 for region_id in nation1_region_trades_list:
-                    if region_id not in game_region_id_list and region_id != 'NONE':
+                    if region_id not in regdata_dict and region_id != 'NONE':
                         invalid_region_given = True
                         print("An invalid region id was provided. Please try again.")
                         break
@@ -1631,7 +1632,7 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
                 nation2_region_trades_list = nation2_region_trades_str.split(',')
                 invalid_region_given = False
                 for region_id in nation2_region_trades_list:
-                    if region_id not in game_region_id_list and region_id != 'NONE':
+                    if region_id not in regdata_dict and region_id != 'NONE':
                         invalid_region_given = True
                         print("An invalid region id was provided. Please try again.")
                         break
@@ -1700,25 +1701,20 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
                     economy_masterlist[nation1_id-1][index][0] = nation1_resource_stockpile
                     economy_masterlist[nation2_id-1][index][0] = nation2_resource_stockpile
                     #update statistics
-                    with open(f'gamedata/{full_game_id}/statistics.json', 'r') as json_file:
-                        statistics_dict = json.load(json_file)
-                    statistics_dict["Trade Count"][nation1_name] += abs(resource_difference)
-                    statistics_dict["Trade Count"][nation2_name] += abs(resource_difference)
-                    with open(f'gamedata/{full_game_id}/statistics.json', 'w') as json_file:
-                        json.dump(statistics_dict, json_file, indent=4)
+                    transactions_dict = active_games_dict[game_id]["Transactions Record"]
+                    transactions_dict[nation1_name] += abs(resource_difference)
+                    transactions_dict[nation2_name] += abs(resource_difference)
         
         #Process Traded Regions
         if trade_valid == True and region_trade == 'Y':
             if nation1_region_trades_list != 'NONE':
                 for region_id in nation1_region_trades_list:
-                    for region in regdata_list:
-                        if region[0] == region_id:
-                            region[2] = [nation2_id, 0]
+                    region = Region(region_id, game_id)
+                    region.set_owner_id(nation2_id)
             if nation2_region_trades_list != 'NONE':
                 for region_id in nation2_region_trades_list:
-                    for region in regdata_list:
-                        if region[0] == region_id:
-                            region[2] = [nation1_id, 0]
+                    region = Region(region_id, game_id)
+                    region.set_owner_id(nation1_id)
         
         #Process Trade Tax
         if trade_valid == True and resource_trade == 'Y':
@@ -1731,6 +1727,7 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
             economy_masterlist[nation1_id-1][0][0] = core.round_total_income(nation1_dollars_stockpile)
             economy_masterlist[nation2_id-1][0][0] = core.round_total_income(nation2_dollars_stockpile)
         
+
         #Update playerdata.csv
         if trade_valid == True:
             for i, playerdata in enumerate(playerdata_list):
@@ -1740,13 +1737,10 @@ def resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomac
                 writer = csv.writer(file)
                 writer.writerow(core.player_data_header)
                 writer.writerows(playerdata_list)
-        
-        #Update regdata.csv
-        with open(regdata_filepath, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(core.regdata_header_a)
-            writer.writerow(core.regdata_header_b)
-            writer.writerows(regdata_list)
+
+        #Update active games
+        with open('active_games.json', 'w') as json_file:
+            json.dump(active_games_dict, json_file, indent=4)
         
         diplomacy_log.append(f'{nation1_name} traded with {nation2_name}.')
         trade_action = input("Are there any additional trade actions this turn? (Y/N) ")

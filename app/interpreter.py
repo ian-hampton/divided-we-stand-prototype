@@ -1,14 +1,17 @@
 from app import core
 import re
+import json
 
-def check_action(action, library):
+def check_action(action, library, game_id):
     '''
     Takes an action string and checks it for errors. Returns properly formatted action string.
 
     Parameters:
     - action: A player action string.
-    - full_game_id: The full game_id of the active game.
+    - game_id: The full game_id of the active game.
     '''
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     
     #get action type and strip action
     action_type = core.identify(action)
@@ -27,7 +30,7 @@ def check_action(action, library):
 
     #make all region ids all caps
     if action_type not in ['Surrender', 'White Peace', 'Sanction', 'Research', 'Alliance', 'Republic', 'Steal', 'Make', 'Buy', 'Sell', 'War']:
-        for region_id in library['Region IDs']:
+        for region_id in regdata_dict:
             if region_id.title() in action:
                 action = replace_target(action, region_id.title(), region_id.upper())
             elif region_id.lower() in action:
@@ -41,7 +44,7 @@ def check_action(action, library):
                 break
 
     #validate action
-    action_valid = validate(action, action_type, library)
+    action_valid = validate(action, action_type, library, regdata_dict)
     if not action_valid:
         print(f'The action: "{action}" of type {action_type} is not valid.')
         new_action = input("Please re-enter the action: ")
@@ -92,7 +95,7 @@ def replace_target(string, target, replacement):
 
     return new_string
 
-def validate(action, action_type, library):
+def validate(action, action_type, library, regdata_dict):
     '''
     Compares an action to the library of game terms. Gives oppertunity to correct an action if error found.
     '''
@@ -106,10 +109,10 @@ def validate(action, action_type, library):
         'Surrender': [check_nation_name(action, library)],
         'White Peace': [check_nation_name(action, library)],
         'Sanction': [check_sanction_name(action, library), check_nation_name(action, library)],
-        'Purchase': [check_region_id(action, library)],
+        'Purchase': [check_region_id(action, regdata_dict)],
         'Research': [check_research_name(action, library)],
-        'Remove': [check_region_id(action, library)],
-        'Build': [check_improvement_name(action, library), check_region_id(action, library)],
+        'Remove': [check_region_id(action, regdata_dict)],
+        'Build': [check_improvement_name(action, library), check_region_id(action, regdata_dict)],
         'Alliance': [check_alliance_name(action, library), check_nation_name(action, library)],
         'Republic': [check_resource_name(action, library)],
         'Steal': [check_nation_name(action, library)],
@@ -117,10 +120,10 @@ def validate(action, action_type, library):
         'Buy': [check_resource_name(action, library)],
         'Sell': [check_resource_name(action, library)],
         'Withdraw': [check_region_id(region_id, library) for region_id in move_regions_list],
-        'Disband': [check_region_id(action, library)],
-        'Deploy': [check_unit_name(action, library), check_region_id(action, library)],
+        'Disband': [check_region_id(action, regdata_dict)],
+        'Deploy': [check_unit_name(action, library), check_region_id(action, regdata_dict)],
         'War': [check_justification_name(action, library), check_nation_name(action, library)],
-        'Launch': [check_missile_name(action, library), check_region_id(action, library)],
+        'Launch': [check_missile_name(action, library), check_region_id(action, regdata_dict)],
         'Move': [check_region_id(region_id, library) for region_id in move_regions_list],
         'Event': [],
     }
@@ -231,8 +234,8 @@ def check_sanction_name(action, library):
             return True
     return False
 
-def check_region_id(action, library):
-    for region_id in library['Region IDs']:
+def check_region_id(action, regdata_dict):
+    for region_id in regdata_dict:
         if region_id in action:
             return True
     return False

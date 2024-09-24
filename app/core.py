@@ -193,7 +193,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         writer.writerows(playerdata_list)
     
     # create records
-    file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research', 'transactions']
+    file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
     starting_records_data = [['Turn', 0]]
     for playerdata in playerdata_list:
         starting_records_data.append([playerdata[1], 0])
@@ -246,13 +246,17 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
     steal_tracking_dict = {}
     for playerdata in playerdata_list:
-        if player[3] == 'Crime Syndicate':
+        if playerdata[3] == 'Crime Syndicate':
             inner_dict = {
                 'Nation Name': None,
                 'Streak': 0,
             }
-            steal_tracking_dict[player[1]] = inner_dict
+            steal_tracking_dict[playerdata[1]] = inner_dict
     active_games_dict[game_id]["Steal Action Record"] = steal_tracking_dict
+    transactions_dict = {}
+    for playerdata in playerdata_list:
+        transactions_dict[playerdata[1]] = 0
+    active_games_dict[game_id]["Transactions Record"] = transactions_dict
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
@@ -273,7 +277,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     - private_actions_list: A list of player private actions gathered from turn resolution HTML form. 
     '''
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
     wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
@@ -296,20 +299,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     for player_actions_list in private_actions_list:
         for i, action in enumerate(player_actions_list):
             player_actions_list[i] = interpreter.check_action(action, library)
-
-    steal_tracking_dict = {}
-    '''
-    for playerdata in playerdata_list:
-        if playerdata[3] == 'Crime Syndicate':
-            inner_dict = {
-                'Nation Name': None,
-                'Streak': 0,
-            }
-            steal_tracking_dict[playerdata[1]] = inner_dict
-    if steal_tracking_dict != {}:
-        with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
-            json.dump(steal_tracking_dict, json_file, indent=4)
-    '''
 
 
     #Declare Action Dictionaries
@@ -352,7 +341,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
                 if action_type in public_actions_dict:
                     public_actions_dict[action_type].append(action)
     #process actions
-    public_actions.resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomacy_log)
+    public_actions.resolve_trades(full_game_id, diplomacy_log)
     if public_actions_list != []:
         update_control_map = False
         if len(public_actions_dict['Surrender'] + public_actions_dict['White Peace']) > 0:
@@ -1012,9 +1001,7 @@ def get_library(game_id):
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
-    regdata_list = read_file(regdata_filepath, 2)
 
     #get scenario files
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
@@ -1025,7 +1012,6 @@ def get_library(game_id):
     #create library of game terms
     library = {
         'Nation Name List': [playerdata[1] for playerdata in playerdata_list],
-        'Region IDs': [region[0] for region in regdata_list],
         'Sanction Type List': ['Economic Sanctions', 'Military Sanctions'],
         'Research Name List': list(agenda_data_dict.keys()) + list(research_data_dict.keys()),
         'Improvement List': list(improvement_data_dict.keys()),
@@ -1810,11 +1796,13 @@ def conduct_combat(game_id, attacker_data_list, defender_data_list, war_statisti
             war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Draw!')
     return attacker_unit_health, attacker_battles_won, attacker_battles_lost, defender_health, defender_battles_won, defender_battles_lost, war_log
 
-def war_resolution(player_id_1, war_justifications_list, signatories_list, current_turn_num, playerdata_list, regdata_list):
+def war_resolution(game_id, player_id_1, war_justifications_list, signatories_list, current_turn_num, playerdata_list):
     '''Resolves a war that ends in an attacker or defender victory.'''
     
     looser_playerdata = playerdata_list[player_id_1 - 1]
     duration = current_turn_num + 11
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     #resolve each winning war justification
     for war_justification in war_justifications_list:
@@ -1827,13 +1815,12 @@ def war_resolution(player_id_1, war_justifications_list, signatories_list, curre
         #resolve war justification
         match victor_war_justification:
             case 'Border Skirmish' | 'Conquest' | 'Annexation':
-                for region in regdata_list:
-                    region_id = region[0]
+                for region_id in regdata_dict:
                     if region_id in victor_war_claims_list:
-                        control_data = ast.literal_eval(region[2])
-                        if control_data[0] == player_id_1:
-                            new_data = [victor_player_id, 0]
-                            region[2] = str(new_data)
+                        region = Region(region_id, game_id)
+                        if region.owner_id() == player_id_1:
+                            region.set_owner_id(victor_player_id)
+                            region.set_occupier_id(0)
             case 'Animosity':
                 pp_resource_data_winner = ast.literal_eval(victor_playerdata[10])
                 pp_stockpile_winner = float(pp_resource_data_winner[0])
@@ -1874,16 +1861,14 @@ def war_resolution(player_id_1, war_justifications_list, signatories_list, curre
 
 
     #End Remaining Occupations
-    for region in regdata_list:
-        if len(region[0]) == 5:
-            control_data = ast.literal_eval(region[2])
-            owner_id = control_data[0]
-            occupier_id = control_data[1]
-            if signatories_list[owner_id - 1] and signatories_list[occupier_id - 1]:
-                new_data = [owner_id, 0]
-                region[2] = str(new_data)
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        owner_id = region.owner_id()
+        occupier_id = region.occupier_id()
+        if signatories_list[owner_id - 1] and signatories_list[occupier_id - 1]:
+            region.set_occupier_id(0)
 
-    return playerdata_list, regdata_list
+    return playerdata_list
 
 def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_num):
     '''Creates a truce period between the players marked in the signatories list. Length depends on war outcome.'''
@@ -2038,55 +2023,56 @@ def get_nation_info(playerdata_list):
         nation_info_masterlist.append(nation_info_list)
     return nation_info_masterlist
 
-def search_and_destroy(player_id, desired_improvement, regdata_list):
+def search_and_destroy(game_id, player_id, target_improvement):
+    '''
+    Searches for a specific improvement and removes it.
+    '''
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+    
+    # find all regions belonging to a player with target improvement
     candidate_region_ids = []
-    for region in regdata_list:
-        region_id = region[0]
-        control_data = ast.literal_eval(region[2])
-        owner_id = control_data[0]
-        improvement_data = ast.literal_eval(region[4])
-        improvement_name = improvement_data[0]
-        if improvement_name == desired_improvement and player_id == owner_id:
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        if region_improvement.name() == target_improvement and player_id == region.owner_id():
             candidate_region_ids.append(region_id)
 
-    #randomly select one of the candidate regions
+    # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    for region in regdata_list:
-        if region[0] == chosen_region_id:
-            region[4] = '[None, 99]'
-            break
-    return chosen_region_id, regdata_list
+    target_region_improvement = Improvement(chosen_region_id, game_id)
+    target_region_improvement.clear()
+    
+    return chosen_region_id
 
-def search_and_destroy_unit(player_id, desired_unit_id, regdata_list):
-    '''Randomly destroys one unit of a given type belonging to a specific player.'''
+def search_and_destroy_unit(game_id, player_id, desired_unit_name):
+    '''
+    Randomly destroys one unit of a given type belonging to a specific player.
+    '''
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
-    #get list of regions with desired_unit_id owned by player_id
+    # get list of regions with desired_unit_id owned by player_id
     candidate_region_ids = []
-    if desired_unit_id in unit_ids:
-        for region in regdata_list:
-            region_id = region[0]
-            unit_data = ast.literal_eval(region[5])
-            if unit_data[0] == desired_unit_id:
-                if unit_data[2] == player_id:
-                    candidate_region_ids.append(region_id)
-    elif desired_unit_id == 'ANY':
-        for region in regdata_list:
-            region_id = region[0]
-            unit_data = ast.literal_eval(region[5])
-            if unit_data[0] in unit_ids:
-                if unit_data[2] == player_id:
-                    candidate_region_ids.append(region_id)
+    if desired_unit_name in unit_ids:
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.name == desired_unit_name and region_unit.owner_id() == player_id:
+                candidate_region_ids.append(region_id)
+    elif desired_unit_name == 'ANY':
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.owner_id() == player_id:
+                candidate_region_ids.append(region_id)
 
-    #randomly select one of the candidate regions
+    # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    for region in regdata_list:
-        if region[0] == chosen_region_id:
-            region[5] = '[None, 99]'
-            break
+    target_region_unit = Unit(chosen_region_id, game_id)
+    target_region_unit.clear()
 
-    return chosen_region_id, regdata_list
+    return chosen_region_id
 
 def update_improvement_data(regdata_list, region_id, improvement_data):
     '''Replaces the unit data of a region with the inputed list.'''

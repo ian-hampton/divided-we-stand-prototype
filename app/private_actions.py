@@ -6,18 +6,21 @@ import random
 
 #UWS SOURCE IMPORTS
 from app import core
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
 
 #PRIVATE ACTION FUNCTIONS
-def resolve_unit_withdraws(unit_withdraw_list, full_game_id, player_action_logs, current_turn_num):
+def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, current_turn_num):
     '''Preforms unit withdraws.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
     wardata_list = core.read_file(wardata_filepath, 2)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     #get needed info from each player
     military_capacity_masterlist = []
@@ -38,65 +41,38 @@ def resolve_unit_withdraws(unit_withdraw_list, full_game_id, player_action_logs,
         player_action_log = player_action_logs[player_id - 1]
 
         #get info on current region
-        current_region = None
-        for region in regdata_list:
-            if region[0] == current_region_id:
-                current_region = region
-                break
-        if current_region == None:
-            print(f'Action {unit_withdraw} failed. Bad starting region id given.')
-            continue
-        current_unit_data = ast.literal_eval(current_region[5])
-        current_unit_id = current_unit_data[0]
-        current_unit_owner_id = 0
-        if current_unit_id != None:
-            current_unit_health = current_unit_data[1]
-            current_unit_owner_id = current_unit_data[2]
+        current_region_unit = Unit(current_region_id, game_id)
+        current_unit_name = current_region_unit.name()
+        current_unit_owner_id = current_region_unit.owner_id()
 
         #unit present check
-        if current_unit_id == None or player_id != current_unit_owner_id:
+        if current_unit_name == None or player_id != current_unit_owner_id:
             player_action_log.append(f'Failed to perform a withdraw action from {current_region_id}. You do not control a unit there.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
         #get information on target region
-        target_region = None
-        for region in regdata_list:
-            if region[0] == target_region_id:
-                target_region = region
-                break
-        if target_region == None:
-            print(f'Action {unit_withdraw} failed. Bad target region id given.')
-            continue
-        target_control_data = ast.literal_eval(target_region[2])
-        target_owner_id = target_control_data[0]
-        target_occupier_id = target_control_data[1]
-        target_unit_data = ast.literal_eval(target_region[5])
-        target_unit_id = target_unit_data[0]
+        target_region = Region(target_region_id, game_id)
+        target_region_unit = Unit(target_region_id, game_id)
+        target_owner_id = target_region.owner_id()
+        target_occupier_id = target_region.occupier_id()
+        target_unit_name = target_region_unit.name()
 
         #destination owned by player check
         if target_owner_id != player_id and target_occupier_id != player_id:
-            player_action_log.append(f'Failed to withdraw {current_unit_id} {current_region_id} - {target_region_id}. The destination region is not controlled by you.')
+            player_action_log.append(f'Failed to withdraw {current_unit_name} {current_region_id} - {target_region_id}. The destination region is not controlled by you.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
         #destination unoccupied check
-        if target_unit_id != None:
-            player_action_log.append(f'Failed to withdraw {current_unit_id} {current_region_id} - {target_region_id}. The destination region is occupied by another unit.')
+        if target_unit_name != None:
+            player_action_log.append(f'Failed to withdraw {current_unit_name} {current_region_id} - {target_region_id}. The destination region is occupied by another unit.')
             player_action_logs[player_id - 1] = player_action_log
             continue
         
         #withdraw unit
-        for region in regdata_list:
-            if region[0] == target_region_id:
-                region[5] = str(current_unit_data)
-                break
-        for region in regdata_list:
-            if region[0] == current_region_id:
-                empty_data = [None, 99]
-                region[5] = str(empty_data)
-                break
-        player_action_log.append(f'Withdrew {current_unit_id} {current_region_id} - {target_region_id}.')
+        target_region_unit.move(target_region_id, withdraw=True)
+        player_action_log.append(f'Withdrew {current_unit_name} {current_region_id} - {target_region_id}.')
         player_action_logs[player_id - 1] = player_action_log
 
     #Remove Units That Did Not Withdraw
@@ -119,20 +95,14 @@ def resolve_unit_withdraws(unit_withdraw_list, full_game_id, player_action_logs,
                 disallowed_list.append(player_id_2)
         
         #remove units
-        for region in regdata_list:
-            if len(region[0]) == 5:
-                region_id = region[0]
-                control_data = ast.literal_eval(region[2])
-                owner_id = control_data[0]
-                unit_data = ast.literal_eval(region[5])
-                unit_id = unit_data[0]
-                if unit_id != None:
-                    if unit_data[2] == player_id and owner_id in disallowed_list:
-                        empty_data = [None, 99]
-                        region[5] = str(empty_data)
-                        used_mc -= 1
-                        player_action_log.append(f'{unit_id} {region_id} was lost due to no withdraw order.')
-                        player_action_logs[player_id - 1] = player_action_log
+        for region_id in regdata_dict:
+            region = Region(region_id, game_id)
+            region_unit = Unit(region_id, game_id)
+            if region_unit.owner_id() == player_id and region.owner_id() in disallowed_list:
+                region_unit.clear()
+                used_mc -= 1
+                player_action_log.append(f'{region_unit.name()} {region_id} was lost due to no withdraw order.')
+                player_action_logs[player_id - 1] = player_action_log
         diplomatic_relations_masterlist[player_id - 1] = diplomatic_relations_list
         military_capacity_masterlist[player_id - 1] = f'{used_mc}/{total_mc}'
 
@@ -144,11 +114,6 @@ def resolve_unit_withdraws(unit_withdraw_list, full_game_id, player_action_logs,
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    #Update regiondata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
 
     return player_action_logs
 

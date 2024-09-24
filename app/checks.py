@@ -7,6 +7,7 @@ import re
 
 #UWS SOURCE IMPORTS
 from app import core
+from app import map
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
@@ -52,9 +53,7 @@ def ratio_check(game_id, player_id):
 
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
 
     #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -88,33 +87,26 @@ def ratio_check(game_id, player_id):
                 break
             if ref_count != 0 and sub_count == 0:
                 adjustment += 1
-                region_id, regdata_list = core.search_and_destroy(player_id, refinery_improvement, regdata_list)
+                region_id = core.search_and_destroy(game_id, player_id, refinery_improvement)
                 adjustment_str = f'{desired_nation_name} lost {refinery_improvement} in {region_id}. Not enough supporting improvements.'
                 print(adjustment_str)
                 continue
             if ref_count / sub_count > 0.5:
                 adjustment += 1
-                region_id, regdata_list = core.search_and_destroy(player_id, refinery_improvement, regdata_list)
+                region_id = core.search_and_destroy(game_id, player_id, refinery_improvement)
                 adjustment_str = f'{desired_nation_name} lost {refinery_improvement} in {region_id}. Not enough supporting improvements.'
                 print(adjustment_str)
             else:
                 break
-
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
 
 def update_military_capacity(game_id):
     '''Updates a player's military capacity.'''
 
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -154,11 +146,10 @@ def update_military_capacity(game_id):
         
         #Calculate Military Capacity
         used_military_capacity = 0
-        for region in regdata_list:
-            unit_data = ast.literal_eval(region[5])
-            if unit_data[0] != None:
-                if unit_data[2] == player_id:
-                    used_military_capacity += 1
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.owner_id() == player_id:
+                used_military_capacity += 1
         draft_research_check = core.verify_required_research('Draft', player_research_list)
         training_research_check = core.verify_required_research('Mandatory Service', player_research_list)
         if draft_research_check:
@@ -210,30 +201,29 @@ def update_military_capacity(game_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def remove_excess_units(full_game_id, player_id, diplomacy_log):
-    '''Removes excess units if a players military capacity has been exceeded.'''
+def remove_excess_units(game_id, player_id, diplomacy_log):
+    '''
+    Removes excess units if a players military capacity has been exceeded.
+    '''
 
-    #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    # define core lists
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
 
-
-    #Process
+    # Process
     playerdata = playerdata_list[player_id - 1]
     player_nation_name = playerdata[1]
     player_military_capacity_data = playerdata[5]
     used_mc, total_mc = core.read_military_capacity(player_military_capacity_data)
     units_lost = 0
     while used_mc > total_mc:
-        chosen_region_id, regdata_list = core.search_and_destroy_unit(player_id, 'ANY', regdata_list)
+        chosen_region_id = core.search_and_destroy_unit(game_id, player_id, 'ANY')
         used_mc -= 1
         units_lost += 1
     if units_lost > 0:
         diplomacy_log.append(f'{player_nation_name} lost {units_lost} units due to insufficient military capacity.')
 
-    #Update playerdata.csv
+    # Update playerdata.csv
     output_str = f'{used_mc}/{total_mc}'
     playerdata[5] = output_str
     playerdata_list[player_id - 1] = playerdata
@@ -242,18 +232,12 @@ def remove_excess_units(full_game_id, player_id, diplomacy_log):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-    
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
     return diplomacy_log
 
 def update_misc_info(game_id, player_id):
-    '''Updates misc info list in playerdata.'''
+    '''
+    Updates misc info list in playerdata.
+    '''
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
@@ -420,9 +404,12 @@ def update_misc_info(game_id, player_id):
     with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
         json.dump(vc_overrides_dict, json_file, indent=4)
 
-def update_trade_tax(full_game_id, player_id):
+def update_trade_tax(game_id, player_id):
+    '''
+    Calculate's a player's trade tax.
+    '''
     
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -436,18 +423,21 @@ def update_trade_tax(full_game_id, player_id):
         if f'Player #{player_id}' in economic_sanctions_status:
             sanction_count += 1
         #if threat containment applies to target nation count it
-        if "Threat Containment" in active_games_dict[full_game_id]["Active Events"]:
-            if active_games_dict[full_game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
+        if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
+            if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
                 sanction_count += 1
 
     trade_value = 1 + sanction_count
     trade_tax_str = f"{trade_value}:1"
     playerdata_list[player_id - 1][6] = trade_tax_str
 
-def update_stockpile_limits(full_game_id, player_id):
+def update_stockpile_limits(game_id, player_id):
+    '''
+    Updates a player's resource stockpile capacity.
+    '''
     
     #get needed data
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     playerdata = playerdata_list[player_id - 1]
     improvement_count_list = ast.literal_eval(playerdata[27])
@@ -988,11 +978,13 @@ def update_income(game_id, current_turn_num):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def gain_income(full_game_id, player_id):
-    '''Updates resource stockpiles by adding given income totals to stockpile totals.'''
+def gain_income(game_id, player_id):
+    '''
+    Updates resource stockpiles by adding given income totals to stockpile totals.
+    '''
 
     #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
 
     #get needed data
@@ -1033,80 +1025,53 @@ def gain_income(full_game_id, player_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def countdown(full_game_id, map_name):
-    '''Resolves improvements/units that have countdowns associated with them.'''
+def countdown(game_id, map_name):
+    '''
+    Resolves improvements/units that have countdowns associated with them.
+    '''
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    # Resolve Strip Mines
+    removed_strip_mine = False
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        if region_improvement.name() == "Strip Mine":
+            region_improvement.decrease_timer()
+            if region_improvement.turn_timer() <= 0:
+                region_improvement.clear()
+                region.set_resource("Empty")
     
-    #define core lists
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    regdata_list = core.read_file(regdata_filepath, 2)
+    # Resolve Nuked Regions
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        if region.fallout() != 0:
+            region.decrease_fallout()
 
-
-    #Resolve Strip Mines
-    flagged_for_removal = []
-    for region in regdata_list:
-        region_id = region[0]
-        improvement_data = ast.literal_eval(region[4])
-        if improvement_data[0] == 'Strip Mine':
-            improvement_data[2] -= 1
-            if improvement_data[2] > 0:
-                region[4] = str(improvement_data)
-            else:
-                empty_data = [None, 99]
-                region[4] = str(empty_data)
-                flagged_for_removal.append(region_id)
-    if flagged_for_removal != []:
-        for region_id in flagged_for_removal:
-            for region in regdata_list:
-                if region[0] == region_id:
-                    region[3] = 'Empty'
-    
-    
-    #Resolve Nuked Regions
-    for region in regdata_list:
-        nuke_data = ast.literal_eval(region[6])
-        if nuke_data[0]:
-            nuke_data[1] -= 1
-            if nuke_data[1] > 0:
-                region[6] = str(nuke_data)
-            else:
-                empty_data = [False, 0]
-                region[6] = str(empty_data)
-
-    
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
-
-    #Update Resource Map if Needed
-    game_id = int(full_game_id[-1])
-    if flagged_for_removal != []:
-        resource_map = map.ResourceMap(game_id, map_name)
+    # Update Resource Map if Needed
+    if removed_strip_mine:
+        resource_map = map.ResourceMap(int(game_id[-1]), map_name)
         resource_map.update()
 
-def resolve_shortages(full_game_id, player_id, diplomacy_log): 
+def resolve_shortages(game_id, player_id, diplomacy_log): 
     '''
     Resolves negative resource values after income is processed.
     '''
 
-    #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    # define core lists
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
 
-    #get needed information from player
+    # get needed information from player
     playerdata = playerdata_list[player_id - 1]
     nation_name = playerdata[1]
     request_list = ['Dollars', 'Coal', 'Oil', 'Green Energy']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-    unit_count_list = core.get_unit_count_list(player_id, full_game_id)
+    unit_count_list = core.get_unit_count_list(player_id, game_id)
     upkeep_manager_list = ast.literal_eval(playerdata[23])
 
-    #get resource stockpiles
+    # get resource stockpiles
     stockpile_list = []
     for i in range(len(request_list)):
         stockpile_list.append(economy_masterlist[player_id - 1][i][0])
@@ -1115,24 +1080,24 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
     oil_stockpile = float(stockpile_list[2])
     green_stockpile = float(stockpile_list[3])
 
-    #get upkeep costs
-    dollars_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Dollars Upkeep', playerdata, unit_count_list)
-    energy_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Energy Upkeep', playerdata, unit_count_list)
-    dollars_unit_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Dollars Unit Upkeep', playerdata, unit_count_list)
-    oil_unit_upkeep_dict = core.get_upkeep_dictionary(full_game_id, 'Oil Unit Upkeep', playerdata, unit_count_list)
+    # get upkeep costs
+    dollars_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Dollars Upkeep', playerdata, unit_count_list)
+    energy_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Energy Upkeep', playerdata, unit_count_list)
+    dollars_unit_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Dollars Unit Upkeep', playerdata, unit_count_list)
+    oil_unit_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Oil Unit Upkeep', playerdata, unit_count_list)
 
 
-    #Resolve Energy Shortages
+    # Resolve Energy Shortages
     while oil_stockpile < 0:
         for improvement_name in energy_upkeep_dict:
             improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                #destroy random improvement of that type
-                region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
+                # destroy random improvement of that type
+                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to oil shortages.')
                 oil_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
-                #adjust upkeep manager
+                # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
                 total_dedicated_upkeep -= improvement_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
@@ -1142,12 +1107,12 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
         for unit_name in oil_unit_upkeep_dict:
             unit_upkeep = oil_unit_upkeep_dict[unit_name]['Improvement Upkeep']
             while oil_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
-                #destroy random unit of that type
-                region_id, regdata_list = core.search_and_destroy_unit(player_id, unit_name, regdata_list)
+                # destroy random unit of that type
+                region_id = core.search_and_destroy_unit(game_id, player_id, unit_name)
                 diplomacy_log.append(f'{nation_name} lost a {unit_name} in {region_id} due to oil shortages.')
                 oil_stockpile += unit_upkeep
                 oil_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
-                #adjust upkeep manager
+                # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
                 total_dedicated_upkeep -= unit_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
@@ -1158,12 +1123,12 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
         for improvement_name in energy_upkeep_dict:
             improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                #destroy random improvement of that type
-                region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
+                # destroy random improvement of that type
+                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to coal shortages.')
                 coal_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
-                #adjust upkeep manager
+                # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
                 total_dedicated_upkeep -= improvement_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
@@ -1174,12 +1139,12 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
         for improvement_name in energy_upkeep_dict:
             improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                #destroy random improvement of that type
-                region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
+                # destroy random improvement of that type
+                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to green energy shortages.')
                 green_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
-                #adjust upkeep manager
+                # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
                 total_dedicated_upkeep -= improvement_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
@@ -1188,7 +1153,7 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
                 upkeep_manager_list[2] = core.round_total_income(dedicated_green_upkeep)
 
 
-    #Resolve Dollars Shortages
+    # Resolve Dollars Shortages
     while dollars_stockpile < 0:
         for improvement_name in dollars_upkeep_dict:
             improvement_upkeep = dollars_upkeep_dict[improvement_name]['Improvement Upkeep']
@@ -1204,12 +1169,12 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
                 diplomacy_log.append(f'{nation_name} lost a {unit_name} in {region_id} due to dollars shortages.')
                 dollars_stockpile += unit_upkeep
                 dollars_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
-        #escape hatch because dollars income is allowed to be negative
+        # escape hatch because dollars income is allowed to be negative
         if dollars_stockpile < 0:
             break
     
     
-    #Update playerdata.csv
+    # Update playerdata.csv
     stockpile_list = [dollars_stockpile, coal_stockpile, oil_stockpile, green_stockpile]
     for i, stockpile in enumerate(stockpile_list):
         stockpile = core.round_total_income(stockpile)
@@ -1226,14 +1191,6 @@ def resolve_shortages(full_game_id, player_id, diplomacy_log):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
 
     return diplomacy_log
 
@@ -1552,14 +1509,14 @@ def update_stability(full_game_id, player_id, current_turn_num):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
+def check_stability(game_id, player_id, current_turn_num, diplomacy_log):
     
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
     stability_punishments = ['Compromised Military Secrets', 'Material Shortage', 'Embezzlement', 'Secession', 'Low Morale', 'Widespread Instability']
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     #get needed information from player
     playerdata = playerdata_list[player_id - 1]
@@ -1641,38 +1598,28 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
         
         elif punishment_name == 'Secession':
             candidates_list = []
-            for region in regdata_list:
-                region_id = region[0]
-                control_data = ast.literal_eval(region[2])
-                improvement_data = ast.literal_eval(region[4])
-                adjacency_data = ast.literal_eval(region[8])
-                if control_data[0] == player_id and improvement_data[0] != 'Capital':
-                    for adjacent_region_id in adjacency_data:
-                        adjacent_region_data = core.get_region_data(regdata_list, adjacent_region_id)
-                        adjacent_control_data = ast.literal_eval(adjacent_region_data[2])
-                        if adjacent_control_data[0] != player_id and adjacent_control_data[0] != 0:
+            for region_id in regdata_dict:
+                region = Region(region_id, game_id)
+                region_improvement = Improvement(region_id, game_id)
+                if region.owner_id() == player_id and region_improvement.name() != 'Capital':
+                    for adjacent_region_id in region.adjacent_regions():
+                        adjacent_region = Region(adjacent_region_id, game_id)
+                        if adjacent_region.owner_id() != player_id and adjacent_region.owner_id() != 0:
                             candidates_list.append(region_id)
                             break
             random.shuffle(candidates_list)
             chosen_list = candidates_list[:3]
             for chosen_region_id in chosen_list:
-                for region in regdata_list:
-                    if chosen_region_id == region[0]:
-                        control_data = ast.literal_eval(region[2])
-                        adjacency_data = ast.literal_eval(region[8])
-                        neighbor_player_ids = []
-                        for adjacent_region_id in adjacency_data:
-                            adjacent_region_data = core.get_region_data(regdata_list, adjacent_region_id)
-                            adjacent_control_data = ast.literal_eval(adjacent_region_data[2])
-                            adjacent_owner_id = adjacent_control_data[0]
-                            if adjacent_owner_id != player_id and adjacent_owner_id != 0:
-                                if adjacent_owner_id not in neighbor_player_ids:
-                                    neighbor_player_ids.append(adjacent_owner_id)
-                        random.shuffle(neighbor_player_ids)
-                        new_owner_id = neighbor_player_ids.pop()
-                        control_data[0] = new_owner_id
-                        control_data[1] = 0
-                        region[2] = str(control_data)
+                chosen_region = Region(chosen_region_id, game_id)
+                neighbor_player_ids = []
+                for adjacent_region_id in chosen_region.adjacent_regions():
+                    adjacent_region = Region(adjacent_region_id, game_id)
+                    if adjacent_region.owner_id() != player_id and adjacent_region.owner_id() != 0 and adjacent_region.owner_id() not in neighbor_player_ids:
+                        neighbor_player_ids.append(adjacent_region.owner_id())
+                random.shuffle(neighbor_player_ids)
+                new_owner_id = neighbor_player_ids.pop()
+                chosen_region.set_owner_id(new_owner_id)
+                chosen_region.set_occupier_id(0)
             temp_stability = 1
             current_stability_level += 1
         
@@ -1685,15 +1632,13 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
             pp_resource_data = ast.literal_eval(playerdata[10])
             pp_resource_data[0] = '0.00'
             playerdata[10] = str(pp_resource_data)
-            for region in regdata_list:
-                region_id = region[0]
-                control_data = ast.literal_eval(region[2])
-                improvement_data = ast.literal_eval(region[4])
-                if control_data[0] == player_id and improvement_data[0] != None:
+            for region_id in regdata_dict:
+                region = Region(region_id, game_id)
+                region_improvement = Improvement(region_id, game_id)
+                if region.owner_id() == player_id and region_improvement.name() != None:
                     improvement_roll = random.randint(1, 10)
                     if improvement_roll > 8:
-                        empty_data = [None, 99]
-                        region[4] = str(empty_data)
+                        region_improvement.clear()
             temp_stability = 2
             current_stability_level += 2
         
@@ -1711,27 +1656,17 @@ def check_stability(full_game_id, player_id, current_turn_num, diplomacy_log):
         writer.writerows(playerdata_list)
 
 
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
-
     #Update Stability
-    update_stability(full_game_id, player_id, current_turn_num)
+    update_stability(game_id, player_id, current_turn_num)
 
     return diplomacy_log
 
-def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_log):
+def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
     
     #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
     wardata_list = core.read_file(wardata_filepath, 2)
     nation_name_list = []
     for playerdata in playerdata_list:
@@ -1739,13 +1674,15 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
     diplomatic_relations_masterlist = []
     for player in playerdata_list:
         diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     #check all regions for occupation
     non_occupied_found_list = [False] * len(playerdata_list)
-    for region in regdata_list:
-        control_data = ast.literal_eval(region[2])
-        owner_id = control_data[0]
-        if owner_id != 0 and owner_id != 99 and control_data[1] == 0:
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        owner_id = region.owner_id()
+        if owner_id != 0 and owner_id != 99 and region.occupier_id() == 0:
             non_occupied_found_list[owner_id - 1] = True
     
     #if no unoccupied region found for a player force surrender if main combatant
@@ -1793,8 +1730,8 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
                                 war_justifications_entry = [claimer_player_id, selected_war_justification, war_claims_list]
                                 war_justifications_list.append(war_justifications_entry)
                     #resolve war and update diplomacy log
-                    core.war_resolution(surrender_player_id, war_justifications_list, signatories_list, current_turn_num, playerdata_list, regdata_list)
-                    core.add_truce_period(full_game_id, signatories_list, winner_war_justification, current_turn_num)
+                    playerdata_list = core.war_resolution(game_id, surrender_player_id, war_justifications_list, signatories_list, current_turn_num, playerdata_list)
+                    core.add_truce_period(game_id, signatories_list, winner_war_justification, current_turn_num)
                     war[15] = current_turn_num
                     diplomacy_log.append(f'{looser_nation_name} surrendered to {winner_nation_name}.')
                     diplomacy_log.append(f'{war_name} has ended.')
@@ -1812,14 +1749,6 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
     
     #Update wardata.csv
     with open(wardata_filepath, 'w', newline='') as file:
@@ -1830,12 +1759,14 @@ def total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_
 
     return diplomacy_log
 
-def gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes):
+def gain_resource_market_income(game_id, player_id, player_resource_market_incomes):
     '''Applies the resources gained/lost from resource market activities to player stockpiles.'''
     
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
 
     #get needed economy information from each player
     nation_name_list = []
@@ -1867,12 +1798,8 @@ def gain_resource_market_income(full_game_id, player_id, player_resource_market_
             economy_masterlist[player_id - 1][i][0] = stockpile
             #update statistics
             if i != 0:
-                nation_name = nation_name_list[player_id - 1]
-                with open(f'gamedata/{full_game_id}/statistics.json', 'r') as json_file:
-                    statistics_dict = json.load(json_file)
-                statistics_dict["Trade Count"][nation_name] += resource_market_income[i]
-                with open(f'gamedata/{full_game_id}/statistics.json', 'w') as json_file:
-                    json.dump(statistics_dict, json_file, indent=4)
+                transactions_dict = active_games_dict[game_id]["Transactions Record"]
+                transactions_dict[nation_name_list[player_id - 1]] += resource_market_income[i]
 
 
     #Update playerdata.csv
@@ -1968,13 +1895,13 @@ def update_records(game_id, current_turn_num):
             writer = csv.writer(file)
             writer.writerows(record_list[index])
 
-def get_top_three(full_game_id, record_name, display_values):
+def get_top_three(game_id, record_name, display_values):
     '''Returns the top three of a recorded record.'''
 
     #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    record_filepath = f'gamedata/{full_game_id}/{record_name}.csv'
+    record_filepath = f'gamedata/{game_id}/{record_name}.csv'
     record_list = core.read_file(record_filepath, 0)
 
     #get nation names
@@ -2019,7 +1946,7 @@ def check_top_three(top_three_list):
     if scores[0] == scores[1] and scores[0] == scores[2]:
         bool_list = [False, False, False]
     elif scores[0] == scores[1]:
-        bool_list = [False, False, True]
+        bool_list = [False, False, False]
     elif scores[1] == scores[2]:
         bool_list = [True, False, False]
     else:
@@ -2299,44 +2226,23 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     return result
 
 def bonus_phase_heals(game_id):
-    
-    #define core lists
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    regdata_list = core.read_file(regdata_filepath, 2)
+    '''
+    Heals all units and defensive improvements by 2 health.
+    '''
 
-
-    #Procedure
-    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-    unit_data_dict = core.get_scenario_dict(game_id, "Units")
-    for region in regdata_list:
-        control_data = ast.literal_eval(region[2])
-        improvement_data = ast.literal_eval(region[4])
-        improvement_name = improvement_data[0]
-        improvement_health = improvement_data[1]
-        if control_data[0] != 0 and improvement_name != None and improvement_health != 99:
-            improvement_health += 2
-            if improvement_health > improvement_data_dict[improvement_name]['Health']:
-                improvement_health = improvement_data_dict[improvement_name]['Health']
-            improvement_data[1] = improvement_health
-            region[4] = str(improvement_data)
-        unit_data = ast.literal_eval(region[5])
-        unit_abbr = unit_data[0]
-        unit_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == unit_abbr), None)
-        unit_health = unit_data[1]
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        region_unit = Unit(region_id, game_id)
+        improvement_name = region_improvement.name()
+        improvement_health = region_improvement.health()
+        if region.owner_id() != 0 and improvement_name != None and improvement_health != 99:
+            region_improvement.heal(2)
+        unit_name = region_unit.name()
         if unit_name != None:
-            unit_health += 2
-            if unit_health > unit_data_dict[unit_name]['Health']:
-                unit_health = unit_data_dict[unit_name]['Health']
-            unit_data[1] = unit_health
-            region[5] = str(unit_data)
-
-    
-    #Update regiondata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
+            region_unit.heal(2)
 
 def prompt_for_missing_war_justifications(full_game_id):
     '''

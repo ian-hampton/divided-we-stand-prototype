@@ -1,3 +1,4 @@
+import copy
 import json
 
 from app import core
@@ -38,15 +39,15 @@ class Unit:
 
     def name(self) -> str:
         '''
-        Returns the improvement name.
-        Returns None if no improvement is present.
+        Returns the unit name.
+        Returns None if no unit is present.
         '''
         return self.data["name"]
     
     def health(self) -> int:
         '''
-        Returns the improvement health.
-        Returns 99 if the improvement has no health bar.
+        Returns the unit health.
+        Returns 99 if the unit has no health bar.
         '''
         return self.data["health"]
     
@@ -58,8 +59,8 @@ class Unit:
     
     def abbrev(self) -> str:
         '''
-        Returns the improvement name abbreviation.
-        Returns None if no improvement is present.
+        Returns the unit name abbreviation.
+        Returns None if no unit is present.
         '''
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         unit_name = self.data["name"]
@@ -67,3 +68,42 @@ class Unit:
             return unit_data_dict[unit_name]["Abbreviation"]
         else:
             return None
+        
+    def heal(self, health_count: int) -> None:
+        '''
+        Heals unit by x health.
+        Will not heal beyond max health value.
+        '''
+        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+        current_health = self.health()
+        max_health = unit_data_dict[self.name()]["Health"]
+        current_health += health_count
+        if current_health > max_health:
+            current_health = max_health
+        self.data["health"] = current_health
+        self._save_changes()
+
+    def clear(self) -> None:
+        '''
+        Removes the unit in a region.
+        '''
+        self.data["name"] = None
+        self.data["health"] = 99
+        self.data["ownerID"] = 99
+        self._save_changes()
+
+    def move(self, target_region_id: str, withdraw=False) -> None:
+        '''
+        Moves a unit to a new region.
+        Returns True if move succeeded, otherwise False.
+        '''
+        target_region_unit = Unit(target_region_id, self.game_id)
+        if withdraw:
+            # TBA: add checks from withdraw action function to here when player log class is made
+            target_region_unit = copy.deepcopy(self)
+            target_region_unit._save_changes()
+            self.clear()
+        else:
+            #if target unit friendly cancel move
+            #if target unit hostile conduct combat
+            pass
