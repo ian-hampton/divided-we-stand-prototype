@@ -160,13 +160,6 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
                 resource_data[3] = rate
                 playerdata_list[index][j] = str(resource_data)
                 j += 1
-            # determine stability value
-            if player[3] == "Republic" or player[3] == "Technocracy" or player[3] == "Protectorate":
-                player[7] = ["Stability 4/10", "4 from Chosen Government"]
-            elif player[3] == "Oligarchy" or player[3] == "Totalitarian" or player[3] == "Military Junta":
-                player[7] = ["Stability 3/10", "3 from Chosen Government"]
-            else:
-                player[7] = ["Stability 2/10", "2 from Chosen Government"]
             # determine unlocked alliances
             # to do: remove this shit, no longer needed but I am scared removing it will break something
             if player[4] == "Diplomatic":
@@ -178,7 +171,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
             elif player[4] == "Imperialist":
                 player[20] = [True, True, False, False, False]
             # give starting research
-            # to do: get the five_point_research_list from the technologies file instead of this garbage
+            # to do: get the five_point_research_list from the technologies file instead of this hardcoded garbage
             starting_list = []
             five_point_research_list = ['Coal Mining', 'Oil Drilling', 'Wind Turbines', 'City Resettlement', 'Surface Mining', 'Metallurgy', 'Infantry', 'Motorized Infantry', 'Standing Army', 'Basic Defenses']
             if player[3] == "Technocracy":
@@ -305,7 +298,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     public_actions_dict = {
         'Surrender': [],
         'White Peace': [],
-        'Sanction': [],
         'Purchase': [],
         'Research': [],
         'Remove': [],
@@ -350,8 +342,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             update_control_map = True
         if len(public_actions_dict['Research']) > 0:
             player_action_logs = public_actions.resolve_research_actions(public_actions_dict['Research'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Sanction']) > 0:
-            diplomacy_log, player_action_logs = public_actions.resolve_declared_sanctions(public_actions_dict['Sanction'], full_game_id, current_turn_num, diplomacy_log, player_action_logs)
         if len(public_actions_dict['Alliance']) > 0:
             diplomacy_log, player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance'], current_turn_num, full_game_id, diplomacy_log, player_action_logs)
         if len(public_actions_dict['Purchase']) > 0:
@@ -463,16 +453,10 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         checks.update_improvement_count(full_game_id, player_id)
     #update income in playerdata
     checks.update_income(full_game_id, current_turn_num)
-    #update sanctions
-    diplomacy_log, reminders_list = checks.update_sanctions(full_game_id, diplomacy_log, reminders_list)
     #update alliances
     diplomacy_log, reminders_list = checks.update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_list)
     for i in range(player_count):
         player_id = i + 1
-        #update stability
-        checks.update_stability(full_game_id, player_id, current_turn_num)
-        #zero stability check
-        diplomacy_log = checks.check_stability(full_game_id, player_id, current_turn_num, diplomacy_log)
         #collect resource market income
         checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
     #update income in playerdata
@@ -492,8 +476,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         #event procedure
         if current_turn_num % 8 == 0:
             diplomacy_log = events.trigger_event(full_game_id, current_turn_num, diplomacy_log)
-            checks.update_stability(full_game_id, player_id, current_turn_num)
-            diplomacy_log = checks.check_stability(full_game_id, player_id, current_turn_num, diplomacy_log)
         with open(f'active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
         current_event_dict = active_games_dict[full_game_id]["Current Event"]
@@ -732,7 +714,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     playerdata = playerdata_list[player_id - 1]
     player_research_list = ast.literal_eval(playerdata[26])
     player_information_dict = {
-        'Stability': {},
         'Victory Conditions Data': {},
         'Resource Data': {},
         'Alliance Data': {},
@@ -750,12 +731,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Military Capacity'] = playerdata[5]
     player_information_dict['Trade Fee'] = playerdata[6]
     player_information_dict['Status'] = playerdata[28]
-
-    #get stability data
-    stability_raw_list = ast.literal_eval(playerdata[7])
-    player_information_dict['Stability']['Header'] = stability_raw_list.pop(0)
-    stability_data = "<br>".join(stability_raw_list)
-    player_information_dict['Stability']['Data'] = stability_data
     
     #get victory condition data
     victory_conditions_list = ast.literal_eval(playerdata[8])
@@ -847,14 +822,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Misc Info']['Owned Regions'] = misc_info[1]
     player_information_dict['Misc Info']['Occupied Regions'] = misc_info[2]
     player_information_dict['Misc Info']['Undeveloped Regions'] = misc_info[3]
-    if 'Sanctioning' not in misc_info[4]:
-        player_information_dict['Misc Info']['Economic Sanctions'] = misc_info[4]
-    else:
-        player_information_dict['Misc Info']['Economic Sanctions'] = misc_info[4][:-5]
-    if 'Sanctioning' not in misc_info[5]:
-        player_information_dict['Misc Info']['Military Sanctions'] = misc_info[5]
-    else:
-        player_information_dict['Misc Info']['Military Sanctions'] = misc_info[5][:-5]
 
     #income details
     income_details = ast.literal_eval(playerdata[25])
@@ -970,7 +937,7 @@ def update_turn_num(game_id):
         json.dump(active_games_dict, json_file, indent=4)
 
 def identify(action):
-    ACTIONS_LIST = ['Surrender', 'White Peace', 'Sanction', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
+    ACTIONS_LIST = ['Surrender', 'White Peace', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
     for action_type in ACTIONS_LIST:
         if action_type.lower() == action[:len(action_type)].lower():
             return action_type
@@ -1012,7 +979,6 @@ def get_library(game_id):
     #create library of game terms
     library = {
         'Nation Name List': [playerdata[1] for playerdata in playerdata_list],
-        'Sanction Type List': ['Economic Sanctions', 'Military Sanctions'],
         'Research Name List': list(agenda_data_dict.keys()) + list(research_data_dict.keys()),
         'Improvement List': list(improvement_data_dict.keys()),
         'Alliance Type List': ALLIANCE_LIST,
@@ -1800,7 +1766,6 @@ def war_resolution(game_id, player_id_1, war_justifications_list, signatories_li
     '''Resolves a war that ends in an attacker or defender victory.'''
     
     looser_playerdata = playerdata_list[player_id_1 - 1]
-    duration = current_turn_num + 11
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
@@ -1811,7 +1776,6 @@ def war_resolution(game_id, player_id_1, war_justifications_list, signatories_li
         victor_war_claims_list = war_justification[2]
         victor_playerdata = playerdata_list[victor_player_id - 1]
         victor_nation_name = victor_playerdata[1]
-        defeat_penalty = 1
         #resolve war justification
         match victor_war_justification:
             case 'Border Skirmish' | 'Conquest' | 'Annexation':
@@ -1830,34 +1794,12 @@ def war_resolution(game_id, player_id_1, war_justifications_list, signatories_li
                 pp_resource_data_looser = ast.literal_eval(looser_playerdata[10])
                 pp_resource_data_looser[0] = '0.00'
                 looser_playerdata[10] = pp_resource_data_looser
-                defeat_penalty = 2
             case 'Subjugation':
-                looser_stability_data = ast.literal_eval(looser_playerdata[7])
                 subject_type = 'Puppet State'
-                looser_stability_data.append('-1 from Puppet State status')
-                looser_playerdata[7] = str(looser_stability_data)
                 looser_status = f'{subject_type} of {victor_nation_name}'
                 looser_playerdata[28] = looser_status
             case 'Independence':
-                winner_stability_data = ast.literal_eval(victor_playerdata[7])
-                winner_stability_data_filtered = []
-                for entry in winner_stability_data:
-                    if entry != '-1 from Puppet State status':
-                        winner_stability_data_filtered.append(entry)
-                victor_playerdata[7] = str(winner_stability_data_filtered)
                 looser_playerdata[28] = 'Independent Nation'
-        #resolve stability bonus
-        winner_stability_data = ast.literal_eval(victor_playerdata[7])
-        winner_stability_data.append(f'1 from Victory through turn {duration}')
-        victor_playerdata[7] = str(winner_stability_data)
-        playerdata_list[victor_player_id - 1] = victor_playerdata
-    
-    
-    #Resolve Stability Penalty
-    looser_stability_data = ast.literal_eval(looser_playerdata[7])
-    looser_stability_data.append(f'-{defeat_penalty} from Defeat through turn {duration}')
-    looser_playerdata[7] = str(looser_stability_data)
-    playerdata_list[player_id_1 - 1] = looser_playerdata
 
 
     #End Remaining Occupations
@@ -2159,6 +2101,22 @@ def verify_required_research(required_research, player_research):
             return False
     return True
 
+def has_capital(player_id, game_id):
+    '''
+    Checks if a player has a capital in their territory.
+    '''
+    regdata_filepath = f'gamedata/{game_id}/regdata.json'
+    with open(regdata_filepath, 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        if region.owner_id() == player_id and region_improvement.name() == 'Capital':
+            return True
+        
+    return False
+
 def get_scenario_dict(game_id, dictionary_name):
     '''Gets a dictionary from the chosen scenario.'''
 
@@ -2180,6 +2138,34 @@ def get_scenario_dict(game_id, dictionary_name):
 
     return chosen_dictionary
 
+def get_lowest_in_record(game_id, record_name):
+    # get core lists
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = read_file(playerdata_filepath, 1)
+
+    # get nation names
+    nation_name_list = []
+    for playerdata in playerdata_list:
+        nation_name_list.append(playerdata[1])
+    
+    #get lowest
+    if record_name != "most_transactions":
+        record_filepath = f'gamedata/{game_id}/{record_name}.csv'
+        record_list = read_file(record_filepath, 0)
+        candidates = []
+        for index, record in enumerate(record_list):
+            if index == 0:
+                continue
+            if record_name == 'strongest_economy':
+                value = float(record[-1])
+            else:
+                value = int(record[-1])
+            nation_name = nation_name_list[index - 1]
+            candidates.append([nation_name, value])
+        sorted_candidates = sorted(candidates, key = lambda x: x[-1], reverse = False)
+        return sorted_candidates[0][0]
+    else:
+        pass
 
 #GLOBAL DICTIONARIES AND LISTS
 ################################################################################

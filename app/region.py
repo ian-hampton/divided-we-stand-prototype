@@ -1,5 +1,7 @@
 import json
 
+from app.improvement import Improvement
+
 class Region:
 
     def __init__(self, region_id: str, game_id: str):
@@ -41,11 +43,25 @@ class Region:
         '''
         return self.data["ownerID"]
     
+    def set_owner_id(self, new_owner_id: int) -> None:
+        '''
+        Changes the owner of a region.
+        '''
+        self.data["ownerID"] = new_owner_id
+        self._save_changes()
+    
     def occupier_id(self) -> int:
         '''
         Returns the player_id of the region occupier.
         '''
         return self.data["occupierID"]
+    
+    def set_occupier_id(self, new_owner_id: int) -> None:
+        '''
+        Changes the occupier of a region.
+        '''
+        self.data["occupierID"] = new_owner_id
+        self._save_changes()
     
     def fallout(self) -> int:
         '''
@@ -53,11 +69,31 @@ class Region:
         '''
         return self.data["nukeTurns"]
     
+    def set_fallout(self, amount=2) -> None:
+        '''
+        Sets fallout amount. Default is 2 turns.
+        '''
+        self.data["nukeTurns"] = amount
+        self._save_changes()
+    
+    def decrease_fallout(self) -> None:
+        '''
+        Decreases fallout by one turn.
+        '''
+        self.data["nukeTurns"] -= 1
+        self._save_changes()
+    
     def resource(self) -> str:
         '''
         Returns resource present in region.
         '''
         return self.data["regionResource"]
+    
+    def is_edge(self) -> bool:
+        '''
+        Returns True if region is on the edge of the map.
+        '''
+        return self.data["edgeOfMap"]
     
     def is_significant(self) -> bool:
         '''
@@ -70,34 +106,6 @@ class Region:
         Returns the region_ids of adjacent regions.
         '''
         return self.data["adjacencyList"]
-    
-    def infection(self) -> int:
-        '''
-        Returns infection score of region.
-        Used for Pandemic event.
-        '''
-        return self.data["infection"]
-    
-    def is_quarantined(self) -> bool:
-        '''
-        Returns True if region is quarantined.
-        Used for Pandemic event.
-        '''
-        return self.data["quarantine"]
-
-    def set_owner_id(self, new_owner_id: int) -> None:
-        '''
-        Changes the owner of a region.
-        '''
-        self.data["ownerID"] = new_owner_id
-        self._save_changes()
-
-    def set_occupier_id(self, new_owner_id: int) -> None:
-        '''
-        Changes the occupier of a region.
-        '''
-        self.data["occupierID"] = new_owner_id
-        self._save_changes()
 
     def set_resource(self, new_resource: str) -> None:
         '''
@@ -105,13 +113,11 @@ class Region:
         '''
         self.data["regionResource"] = new_resource
         self._save_changes()
+
     
-    def decrease_fallout(self) -> None:
-        '''
-        Decreases fallout by one turn.
-        '''
-        self.data["nukeTurns"] -= 1
-        self._save_changes()
+    
+    # basic methods
+    ################################################################################
 
     def owned_adjacent_regions(self) -> list:
         '''
@@ -138,4 +144,58 @@ class Region:
                 new_regions_in_radius.update(region.adjacent_regions())
             regions_in_radius.update(new_regions_in_radius)
         return regions_in_radius
+    
+    def check_for_adjacent_improvement(self, improvement_names: set) -> bool:
+        '''
+        Checks if there is an improvement in improvement_names in an owned adjacent region.
+        
+        :param improvement_names: A set of improvement names.
+        :return: True if improvement found. False otherwise.
+        '''
+        owned_adjacent_list = self.owned_adjacent_regions()
+        for region_id in owned_adjacent_list:
+            region_improvement = Improvement(region_id, self.game_id)
+            if region_improvement.name() in improvement_names:
+                return True
+
+        return False
+    
+    # event specific methods
+    ################################################################################
+
+    def infection(self) -> int:
+        '''
+        Returns infection score of region.
+        Used for Pandemic event.
+        '''
+        return self.data["infection"]
+    
+    def add_infection(self, amount=1) -> int:
+        '''
+        Increases infection score of region.
+        Used for Pandemic event.
+        '''
+        self.data["infection"] += amount
+        if self.data["infection"] > 10:
+            self.data["infection"] = 10
+        elif self.data["infection"] < 0:
+            self.data["infection"] = 0
+        self._save_changes()
+    
+    def is_quarantined(self) -> bool:
+        '''
+        Returns True if region is quarantined.
+        Used for Pandemic event.
+        '''
+        return self.data["quarantine"]
+    
+    def set_quarantine(self, enable=True) -> None:
+        '''
+        Toggles region. quarantine
+        Used for Pandemic event.
+        '''
+        self.data["quarantine"] = enable
+        self._save_changes()
+
+    
         

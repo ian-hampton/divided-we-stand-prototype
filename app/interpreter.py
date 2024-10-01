@@ -29,7 +29,7 @@ def check_action(action, library, game_id):
     action = action.title()
 
     #make all region ids all caps
-    if action_type not in ['Surrender', 'White Peace', 'Sanction', 'Research', 'Alliance', 'Republic', 'Steal', 'Make', 'Buy', 'Sell', 'War']:
+    if action_type not in ['Surrender', 'White Peace', 'Research', 'Alliance', 'Republic', 'Steal', 'Make', 'Buy', 'Sell', 'War']:
         for region_id in regdata_dict:
             if region_id.title() in action:
                 action = replace_target(action, region_id.title(), region_id.upper())
@@ -108,7 +108,6 @@ def validate(action, action_type, library, regdata_dict):
     validate_resolution_dict = {
         'Surrender': [check_nation_name(action, library)],
         'White Peace': [check_nation_name(action, library)],
-        'Sanction': [check_sanction_name(action, library), check_nation_name(action, library)],
         'Purchase': [check_region_id(action, regdata_dict)],
         'Research': [check_research_name(action, library)],
         'Remove': [check_region_id(action, regdata_dict)],
@@ -225,12 +224,6 @@ resource_errors_dict = {
 def check_nation_name(action, library):
     for nation_name in library['Nation Name List']:
         if nation_name in action:
-            return True
-    return False
-
-def check_sanction_name(action, library):
-    for sanction_type in library['Sanction Type List']:
-        if sanction_type in action:
             return True
     return False
 

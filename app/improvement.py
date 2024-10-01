@@ -56,17 +56,7 @@ class Improvement:
         Returns 99 if the improvement has no health bar.
         '''
         return self.data["turnTimer"]
-
-    def set_improvement(self, improvement_name: str) -> None:
-        '''
-        Changes the improvement in a region.
-        '''
-        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
-        self.clear()
-        self.data["name"] = improvement_name
-        self.data["health"] = improvement_data_dict[improvement_name]["Health"]
-        self._save_changes()
-
+    
     def decrease_timer(self) -> None:
         '''
         Decreases improvement turn timer by one.
@@ -74,6 +64,34 @@ class Improvement:
         if self.data["turnTimer"] != 99:
             self.data["turnTimer"] -= 1
             self._save_changes()
+
+    def clear(self) -> None:
+        '''
+        Removes the improvement in a region.
+        '''
+        self.data["name"] = None
+        self.data["health"] = 99
+        self.data["turnTimer"] = 99
+        self._save_changes()
+
+    # basic methods
+    ################################################################################
+
+    def set_improvement(self, improvement_name: str, health=0) -> None:
+        '''
+        Changes the improvement in a region.
+        
+        :param improvement_name: Name of improvement.
+        :param health: Initial improvement health. Default is full health.
+        '''
+        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
+        self.clear()
+        self.data["name"] = improvement_name
+        if health == 0:
+            self.data["health"] = improvement_data_dict[improvement_name]["Health"]
+        else:
+            self.data["health"] == health
+        self._save_changes()
 
     def heal(self, health_count: int) -> None:
         '''
@@ -89,11 +107,4 @@ class Improvement:
         self.data["health"] = current_health
         self._save_changes()
 
-    def clear(self) -> None:
-        '''
-        Removes the improvement in a region.
-        '''
-        self.data["name"] = None
-        self.data["health"] = 99
-        self.data["turnTimer"] = 99
-        self._save_changes()
+    

@@ -75,20 +75,9 @@ pre {
 .standard_table td{
     vertical-align: top;
 }
-.stability_table {
-    width: 100%;
-    height: 170px;
-    margin-bottom: 20px;
-}
-.stability_table th {
-    padding: 5px;
-}
-.stability_table td {
-    vertical-align: top;
-}
 .victory_table {
     width: 100%;
-    height: 60px;
+    height: 80px;
     margin: 0px;
 }
 .victory_table th {
@@ -109,12 +98,13 @@ pre {
 }
 .alliances_table {
     width: 100%;
-    height: 110px;
+    height: 115px;
     margin-bottom: 20px;
 }
 .ballistics_table {
     width: 100%;
-    height: 75px;
+    height: 60px;
+    margin-bottom: 20px;
 }
 
 .alpha-2 {
@@ -143,11 +133,11 @@ pre {
 }
 .misc_info_table {
     width: 100%;
-    height: 150px;
+    height: 100px;
 }
 .income_table {
     width: 100%;
-    height: 650px;
+    height: 595px;
 }
 .income_table th {
     padding: 5px;
@@ -163,7 +153,7 @@ pre {
 }
 .research_table {
     width: 100%;
-    height: 650px;
+    height: 595px;
 }
 .research_table th {
     padding: 5px;
@@ -233,13 +223,15 @@ pre {
                     <tr><th>Trade Fee</th></tr>
                     <tr><td>{{ player_information_dict['Trade Fee'] }}</td></tr>
                 </table>
-                <table class="stability_table">
+                <table class="alliances_table">
                     <tr>
-                        <th>{{ player_information_dict['Stability']['Header'] }}</th></tr>
+                        <th class="subtitle" style="padding-top:3px">{{ player_information_dict['Alliance Data']['Header'] }}</th></tr>
                     </tr>
-                    <tr>
-                        <td style="height:100%;text-align:left;padding-left:5px;">{% autoescape false %} {{ player_information_dict['Stability']['Data'] }} {% endautoescape %}</td>
-                    </tr>
+                    {% for i in range(0, player_information_dict['Alliance Data']['Name List']|length) %}
+                        <tr>
+                            <td style="color:{{ player_information_dict['Alliance Data']['Color List'][i] }}"> {{ player_information_dict['Alliance Data']['Name List'][i] }}</td>
+                        </tr>
+                    {% endfor %}
                 </table>
                 <table class="victory_table">
                     <tr>
@@ -272,25 +264,28 @@ pre {
                         </tr>
                     {% endfor %}
                 </table>
-                <table class="alliances_table">
+                <table class="upkeep_manager_table">
                     <tr>
-                        <th class="subtitle">{{ player_information_dict['Alliance Data']['Header'] }}</th></tr>
+                        <th colspan="2">Upkeep Manager</th>
                     </tr>
-                    {% for i in range(0, player_information_dict['Alliance Data']['Name List']|length) %}
-                        <tr>
-                            <td style="color:{{ player_information_dict['Alliance Data']['Color List'][i] }}"> {{ player_information_dict['Alliance Data']['Name List'][i] }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                <table class="ballistics_table">
-                    <tr>
-                        <th class="subtitle">Ballistic Weapons</th></tr>
+                    <tr class="subtitle">
+                        <td style="width:50%;">Resource Name</td>
+                        <td>Amount Dedicated</td>
                     </tr>
-                    <tr>
-                        <td>{{ player_information_dict['Missile Data']['Standard'] }}</td>
+                    <tr class="coal">
+                        <td><b>Coal</b></td>
+                        <td>{{ player_information_dict['Upkeep Manager']['Coal'] }}</td>
                     </tr>
-                    <tr>
-                        <td>{{ player_information_dict['Missile Data']['Nuclear'] }}</td>
+                    <tr class="oil">
+                        <td><b>Oil</b></td>
+                        <td>{{ player_information_dict['Upkeep Manager']['Oil'] }}</td>
+                    </tr>
+                    <tr class="green">
+                        <td><b>Green Energy</b></td>
+                        <td>{{ player_information_dict['Upkeep Manager']['Green Energy'] }}</td>
+                    </tr>
+                    <tr class="subtitle">
+                        <td colspan="2">Total upkeep costs: -{{ player_information_dict['Upkeep Manager']['Total'] }}</td>
                     </tr>
                 </table>
             </div>
@@ -312,33 +307,20 @@ pre {
                 </tr>
             {% endfor %}
         </table>
-        <table class="upkeep_manager_table">
+        <table class="ballistics_table">
             <tr>
-                <th colspan="2">Upkeep Manager</th>
+                <th class="subtitle"style="padding-top:3px">Ballistic Weapons</th></tr>
             </tr>
-            <tr class="subtitle">
-                <td style="width:50%;">Resource Name</td>
-                <td>Amount Dedicated</td>
+            <tr>
+                <td>{{ player_information_dict['Missile Data']['Standard'] }}</td>
             </tr>
-            <tr class="coal">
-                <td><b>Coal</b></td>
-                <td>{{ player_information_dict['Upkeep Manager']['Coal'] }}</td>
-            </tr>
-            <tr class="oil">
-                <td><b>Oil</b></td>
-                <td>{{ player_information_dict['Upkeep Manager']['Oil'] }}</td>
-            </tr>
-            <tr class="green">
-                <td><b>Green Energy</b></td>
-                <td>{{ player_information_dict['Upkeep Manager']['Green Energy'] }}</td>
-            </tr>
-            <tr class="subtitle">
-                <td colspan="2">Total upkeep costs: -{{ player_information_dict['Upkeep Manager']['Total'] }}</td>
+            <tr>
+                <td>{{ player_information_dict['Missile Data']['Nuclear'] }}</td>
             </tr>
         </table>
         <table class="misc_info_table">
             <tr>
-                <th>Miscellaneous Information</th>
+                <th style="padding-top:3px">Miscellaneous Information</th>
             </tr>
             <tr>
                 <td>{{ player_information_dict['Misc Info']['Capital Resource'] }}</td>
@@ -351,12 +333,6 @@ pre {
             </tr>
             <tr>
                 <td>{{ player_information_dict['Misc Info']['Undeveloped Regions'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ player_information_dict['Misc Info']['Economic Sanctions'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ player_information_dict['Misc Info']['Military Sanctions'] }}</td>
             </tr>
         </table>
     </div>

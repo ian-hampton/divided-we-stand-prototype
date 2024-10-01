@@ -57,6 +57,13 @@ class Unit:
         '''
         return self.data["ownerID"]
     
+    def set_owner_id(self, new_owner_id: int) -> None:
+        '''
+        Changes the owner of a unit.
+        '''
+        self.data["ownerID"] = new_owner_id
+        self._save_changes()
+    
     def abbrev(self) -> str:
         '''
         Returns the unit name abbreviation.
@@ -68,6 +75,16 @@ class Unit:
             return unit_data_dict[unit_name]["Abbreviation"]
         else:
             return None
+        
+    def set_unit(self, unit_name: str, owner_id: int) -> None:
+        '''
+        Sets unit in region.
+        '''
+        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+        self.data["name"] = unit_name
+        self.data["health"] = unit_data_dict[unit_name]["Health"]
+        self.data["ownerID"] = owner_id
+        self._save_changes()
         
     def heal(self, health_count: int) -> None:
         '''

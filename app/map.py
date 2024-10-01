@@ -89,9 +89,13 @@ class MainMap:
                         if capital_roll <= 2:
                             improvement_roll = random.randint(0, len(improvement_candidates_list) - 1)
                             improvement_name = improvement_candidates_list[improvement_roll]
-                            random_region_improvement.set_improvement(improvement_name)
+                            improvement_health = improvement_data_dict[improvement_name]["Health"]
+                            if improvement_health == 99:
+                                random_region_improvement.set_improvement(improvement_name)
+                            else:
+                                random_region_improvement.set_improvement(improvement_name, 1)
                         else:
-                            random_region_improvement.set_improvement('Capital')
+                            random_region_improvement.set_improvement('Capital', 1)
                 count += 1
     
     # UPDATE
