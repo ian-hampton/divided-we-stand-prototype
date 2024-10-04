@@ -1164,142 +1164,137 @@ def resolve_peace_actions(peace_action_list, full_game_id, current_turn_num, dip
     
     return diplomacy_log, player_action_logs
 
-def resolve_region_purchases(region_purchase_list, full_game_id, player_action_logs):
+def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
     '''Resolves all region purchase actions and region disputes.'''
     
-    #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    # get core lists
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
 
-    #remove actions with bad region names
-    region_purchase_list = core.filter_region_names(regdata_list, region_purchase_list)
-
-    #get needed economy information from each player
+    # get needed economy information from each player
     request_list = ['Dollars', 'Political Power']
     nation_info_masterlist = core.get_nation_info(playerdata_list)
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
 
-    #count number of times a region is purchased by a player
-    region_purchase_counts_dict = {}
-    for region_purchase in region_purchase_list:
-        region_id = region_purchase[1][-5:]
-        if region_id in region_purchase_counts_dict:
-            region_purchase_counts_dict[region_id] += 1
-        else:
-            region_purchase_counts_dict[region_id] = 1
 
-    
-    #Execute Actions
+    # Execute Actions
+    region_queue: list[Region] = []
     for region_purchase in region_purchase_list:
         player_id = region_purchase[0]
         region_id = region_purchase[1][-5:]
         player_action_log = player_action_logs[player_id - 1]
+        region = Region(region_id, game_id)
 
-        #ownership check
-        for region in regdata_list:
-            if region[0] == region_id:
-                control_data = ast.literal_eval(region[2])
-                owner_id = control_data[0]
-        if owner_id != 0:
-            region_purchase_counts_dict[region_id] -= 1
+        # ownership check
+        if region.owner_id() != 0:
             player_action_log.append(f'Failed to purchase {region_id}. This region is already claimed by another nation.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        #event check
+        # adjacency check
+        # to be added
+
+        # event check
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
-        if "Widespread Civil Disorder" in active_games_dict[full_game_id]["Active Events"]:
-            region_purchase_counts_dict[region_id] -= 1
+        if "Widespread Civil Disorder" in active_games_dict[game_id]["Active Events"]:
             player_action_log.append(f'Failed to purchase {region_id} due to the Widespread Civil Disorder event.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        #check if player can afford region
+        # affordability check
         player_government = nation_info_masterlist[player_id - 1][2]
         dollars_stockpile = economy_masterlist[player_id - 1][0][0]
         dollars_stockpile = float(dollars_stockpile)
         pp_stockpile = economy_masterlist[player_id - 1][1][0]
         pp_stockpile = float(pp_stockpile)
-        for region in regdata_list:
-            if region[0] == region_id:
-                purchase_cost = region[7]
-                purchase_cost = int(purchase_cost)
         if player_government != 'Remnant':
             pp_cost = 0
         else:
             pp_cost = 0.20
-        if (dollars_stockpile - purchase_cost) >= 0 and (pp_stockpile - pp_cost) >= 0:
-            #player can afford region
-            economy_masterlist[player_id - 1][0][0] = core.update_stockpile(dollars_stockpile, purchase_cost)
-            economy_masterlist[player_id - 1][1][0] = core.update_stockpile(pp_stockpile, pp_cost)
-            if region_purchase_counts_dict[region_id] > 1:
-                #the region disputed
-                with open('active_games.json', 'r') as json_file:
-                    active_games_dict = json.load(json_file)
-                active_games_dict[full_game_id]["Statistics"]["Region Disputes"] += 1
-                with open('active_games.json', 'w') as json_file:
-                    json.dump(active_games_dict, json_file, indent=4)
-                log_str = f'Failed to purchase {region_id} due to a region dispute.'
-                player_action_log.append(log_str)
-            else:
-                #the region purchased
-                for region in regdata_list:
-                    if region[0] == region_id:
-                        region[2] = [player_id, 0]
-                log_str = f'Successfully purchased region {region_id} for {purchase_cost} dollars.'
-                player_action_log.append(log_str)
+        purchase_cost = region.purchase_cost()
+        if (dollars_stockpile - purchase_cost) < 0 or (pp_stockpile - pp_cost) < 0:
+            player_action_log.append(f'Failed to purchase {region_id}. Insufficient resources.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # all checks passed add to region_queue
+        if region not in region_queue:
+            region.add_claim(player_id)
+            region_queue.append(region)
         else:
-            #player cannot afford region
-            region_purchase_counts_dict[region_id] -= 1
-            log_str = f'Failed to purchase {region_id}. Insufficient resources.'
-            player_action_log.append(log_str)
-        #update player_action_logs
+            index = region_queue.index(region)
+            existing_region = region_queue[index]
+            existing_region.add_claim(player_id)
+            region_queue[index] = existing_region
+    
+
+    # Process Queue
+    for region in region_queue:
+        region_claim_list = region.get_claim_list()
+
+        # region purchase successful
+        if len(region_claim_list) == 1:
+            player_id = region_claim_list[0]
+            player_action_log = player_action_logs[player_id - 1]
+            pay_for_region(region, economy_masterlist, nation_info_masterlist, player_id)
+            region.set_owner_id(player_id)
+            player_action_log.append(f'Successfully purchased region {region_id} for {purchase_cost} dollars.')
+
+        # region dispute
+        else:
+            region.increase_purchase_cost()
+            for player_id in region_claim_list:
+                player_id = region_claim_list[0]
+                player_action_log = player_action_logs[player_id - 1]
+                pay_for_region(region, economy_masterlist, nation_info_masterlist, player_id)
+                player_action_log.append(f'Failed to purchase {region_id} due to a region dispute.')
+
         player_action_logs[player_id - 1] = player_action_log
     
-    #raise purchase price for regions that had a region dispute
-    for region_id in region_purchase_counts_dict:
-        if region_purchase_counts_dict[region_id] > 1:      
-            for region in regdata_list:
-                if region[0] == region_id:
-                    purchase_cost = region[7]
-                    region[7] = int(purchase_cost) + 5
-    
-    
+
     #Update playerdata.csv
     for economy_list in economy_masterlist:
         for resource_data_list in economy_list:
             resource_data_list = str(resource_data_list)
-    i = 0
-    for playerdata in playerdata_list:
+    for i, playerdata in enumerate(playerdata_list):
         playerdata[9] = economy_masterlist[i][0]
         playerdata[10] = economy_masterlist[i][1]
-        i += 1
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
     
-    
-    #Update regiondata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
-    
-    
-    #Update player_action_logs
     return player_action_logs
+
+def pay_for_region(region:Region, economy_masterlist, nation_info_masterlist, player_id):
+    '''
+    Helper function for resolve_region_purchases()
+    I intend to remove this once the playerdata class is made.
+    '''
+    player_government = nation_info_masterlist[player_id - 1][2]
+    dollars_stockpile = economy_masterlist[player_id - 1][0][0]
+    dollars_stockpile = float(dollars_stockpile)
+    pp_stockpile = economy_masterlist[player_id - 1][1][0]
+    pp_stockpile = float(pp_stockpile)
+    if player_government != 'Remnant':
+        pp_cost = 0
+    else:
+        pp_cost = 0.20
+    purchase_cost = region.purchase_cost()
+    economy_masterlist[player_id - 1][0][0] = core.update_stockpile(dollars_stockpile, purchase_cost)
+    economy_masterlist[player_id - 1][1][0] = core.update_stockpile(pp_stockpile, pp_cost)
+    return economy_masterlist
 
 def resolve_research_actions(research_action_list, game_id, player_action_logs):
     '''Resolves all research actions.'''
     
     #get needed data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
+    regdata_filepath = f'gamedata/{game_id}/regdata.json'
+    with open(regdata_filepath, 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     #get scenario data
     agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
@@ -1422,15 +1417,12 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
                         player_action_log.append(f'Gained 1 political power for researching {research_name}.')
                 #update strip mine timers if needed
                 if research_name == 'Open Pit Mining':
-                    for region in regdata_list:
-                        region_id = region[0]
-                        if len(region_id) == 5:
-                            control_data = ast.literal_eval(region[2])
-                            improvement_data = ast.literal_eval(region[4])
-                            if improvement_data[0] == 'Strip Mine' and control_data[0] == player_id:
-                                if improvement_data[2] > 4:
-                                    improvement_data[2] = 4
-                                    region[4] = str(improvement_data)
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        region_improvement = Improvement(region_id, game_id)
+                        if region_improvement.name() == 'Strip Mine' and region.owner_id() == player_id:
+                            if region_improvement.turn_timer() > 4:
+                                region_improvement.set_turn_timer()
             else:
                 #player cannot afford the research
                 log_str = f'Failed to research {research_name}. Not enough technology.'
@@ -1457,12 +1449,6 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-    
-
-    #Update regiondata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
     
     return player_action_logs
 

@@ -52,10 +52,19 @@ class Improvement:
     
     def turn_timer(self) -> int:
         '''
-        Returns the improvement health.
-        Returns 99 if the improvement has no health bar.
+        Returns the improvement turn timer.
+        Returns 99 if the improvement has no timer.
         '''
         return self.data["turnTimer"]
+    
+    def set_turn_timer(self, amount=4) -> None:
+        '''
+        Sets the improvement turn timer.
+
+        :param amount: Turns desired. Default is 4.
+        '''
+        self.data["turnTimer"] = amount
+        self._save_changes()
     
     def decrease_timer(self) -> None:
         '''

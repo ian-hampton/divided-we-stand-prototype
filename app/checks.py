@@ -1766,23 +1766,40 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
 
     return result
 
-def bonus_phase_heals(game_id):
+def bonus_phase_heals(player_id, game_id):
     '''
     Heals all units and defensive improvements by 2 health.
     '''
-
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
+
+    playerdata = playerdata_list[player_id - 1]
+    player_research_list = ast.literal_eval(playerdata[26])
+    
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
         region_unit = Unit(region_id, game_id)
-        improvement_name = region_improvement.name()
-        improvement_health = region_improvement.health()
-        if region.owner_id() != 0 and improvement_name != None and improvement_health != 99:
+        
+        # unit heal checks
+        heal_allowed = False
+        if region.owner_id() == region_unit.owner_id():
+            heal_allowed = True
+        elif "Scorched Earth" in player_research_list:
+            heal_allowed = True
+        else:
+            for adjacent_region_id in region.adjacent_regions():
+                adjacent_region_unit = Unit(adjacent_region_id, game_id)
+                if adjacent_region_unit.owner_id() == region_unit.owner_id():
+                    heal_allowed = True
+
+        # heal unit or improvement
+        if region.owner_id() != 0 and region_improvement.name() != None and region_improvement.health() != 99:
             region_improvement.heal(2)
         unit_name = region_unit.name()
-        if unit_name != None:
+        if unit_name != None and heal_allowed:
             region_unit.heal(2)
 
 def prompt_for_missing_war_justifications(full_game_id):

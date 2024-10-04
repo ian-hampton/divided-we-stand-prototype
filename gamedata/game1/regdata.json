@@ -4199,7 +4199,7 @@
     "EASTN": {
         "regionData": {
             "fullName": "Eastern Tennessee",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -4516,7 +4516,7 @@
     "STEAL": {
         "regionData": {
             "fullName": "Southeast Alabama",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Common Metals",
@@ -4579,7 +4579,7 @@
     "GAINE": {
         "regionData": {
             "fullName": "Greater Gainesville",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Coal",
@@ -4671,7 +4671,7 @@
     "TAMPA": {
         "regionData": {
             "fullName": "Tampa Bay Area",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Advanced Metals",
@@ -4886,7 +4886,7 @@
     "STWGA": {
         "regionData": {
             "fullName": "Southwest Georgia",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5009,7 +5009,7 @@
     "MDLND": {
         "regionData": {
             "fullName": "Midland",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Common Metals",
@@ -5103,7 +5103,7 @@
     "MOUNT": {
         "regionData": {
             "fullName": "Mountain",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5384,7 +5384,7 @@
     "STWVA": {
         "regionData": {
             "fullName": "Southwest Virginia",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -5732,7 +5732,7 @@
     "NTEPA": {
         "regionData": {
             "fullName": "Northeast Pennsylvania",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -5765,7 +5765,7 @@
     "PITTS": {
         "regionData": {
             "fullName": "Greater Pittsburg",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -5798,7 +5798,7 @@
     "CENPA": {
         "regionData": {
             "fullName": "Central Pennsylvania",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Uranium",
@@ -5860,7 +5860,7 @@
     "PHILL": {
         "regionData": {
             "fullName": "Greater Philadelphia",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5893,7 +5893,7 @@
     "NTHNJ": {
         "regionData": {
             "fullName": "North Jersey",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6319,7 +6319,7 @@
     "NTHVT": {
         "regionData": {
             "fullName": "Northern Vermont",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6380,7 +6380,7 @@
     "NTHNH": {
         "regionData": {
             "fullName": "Northern New Hampshire",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -6441,7 +6441,7 @@
     "NTHME": {
         "regionData": {
             "fullName": "Northern Maine",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -6468,7 +6468,7 @@
     "STHME": {
         "regionData": {
             "fullName": "Southern Maine",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Uranium",

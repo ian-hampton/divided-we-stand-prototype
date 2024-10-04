@@ -766,6 +766,123 @@ def wars(full_game_id):
         war_masterlist.append(war_entry)
     return render_template('wars.html', page_title = page_title, war_masterlist = war_masterlist)
 
+#RESEARCH PAGE
+@main.route('/<full_game_id>/technologies')
+def technologies(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Technology Trees'
+    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
+
+
+    # Get Research Information
+    refined_dict = {}
+    research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
+    
+    # get scenario data
+    if scenario == "Standard":
+        categories = ["Energy", "Infrastructure", "Military", "Defense"]
+        for category in categories:
+            refined_dict[f'{category} Technologies'] = {}
+        refined_dict["Energy Technologies"]["Colors"] = ["#5555554D", "#CC58264D", "#106A254D", "NONE"]
+        refined_dict["Infrastructure Technologies"]["Colors"] = ["#F9CB304D", "#754C244D", "#5555554D", "#0583C54D"]
+        refined_dict["Military Technologies"]["Colors"] = ["#C419194D", "#5F2F8C4D", "#106A254D", "#CC58264D"]
+        refined_dict["Defense Technologies"]["Colors"] = ["#0583C54D", "#F9CB304D", "#C419194D", "NONE"]
+        color_complements_dict = {
+            "#555555": "#636363",
+            "#CC5826": "#E0622B",
+            "#106A25": "#197B30",
+            "#F9CB30": "#FFDF70",
+            "#754C24": "#8C6239",
+            "#0583C5": "#1591D1",
+            "#5F2F8C": "#713BA4",
+            "#C41919": "#D43939"
+        }
+    
+    # create research table
+    for category in categories:
+        table_contents = {
+            "A": [None] * 4,
+            "B": [None] * 4,
+            "C": [None] * 4,
+            "D": [None] * 4,
+        }
+        refined_dict[f'{category} Technologies']["Table"] = table_contents
+    
+    # hide fow techs if not fog of war
+    if active_games_dict[full_game_id]["Information"]["Fog of War"] == "Disabled":
+        del research_data_dict["Surveillance Operations"]
+        del research_data_dict["Economic Reports"]
+        del research_data_dict["Military Intelligence"]
+
+    # load techs to table
+    for key, value in research_data_dict.items():
+        research_type = value["Research Type"]
+        if research_type in categories:
+            pos = value["Location"]
+            row_pos = pos[0]
+            col_pos = int(pos[1])
+            value["Name"] = key
+            refined_dict[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
+    
+    return render_template('research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+
+#RESEARCH PAGE
+@main.route('/<full_game_id>/agendas')
+def agendas(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Political Agendas'
+    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
+
+
+    # Get Research Information
+    refined_dict = {}
+    agenda_data_dict = core.get_scenario_dict(full_game_id, "Agendas")
+    
+    # get scenario data
+    if scenario == "Standard":
+        categories = ["Agendas"]
+        for category in categories:
+            refined_dict[category] = {}
+        refined_dict["Agendas"]["Colors"] = ["#0583C54D", "#106A254D", "#5F2F8C4D", "#C419194D"]
+        color_complements_dict = {
+            "#555555": "#636363",
+            "#CC5826": "#E0622B",
+            "#106A25": "#197B30",
+            "#F9CB30": "#FFDF70",
+            "#754C24": "#8C6239",
+            "#0583C5": "#1591D1",
+            "#5F2F8C": "#713BA4",
+            "#C41919": "#D43939"
+        }
+    
+    # create research table
+    for category in categories:
+        table_contents = {
+            "A": [None] * 4,
+            "B": [None] * 4,
+            "C": [None] * 4,
+            "D": [None] * 4,
+        }
+        refined_dict[category]["Table"] = table_contents
+
+    # load techs to table
+    for key, value in agenda_data_dict.items():
+        pos = value["Location"]
+        row_pos = pos[0]
+        col_pos = int(pos[1])
+        value["Name"] = key
+        refined_dict["Agendas"]["Table"][row_pos][col_pos] = value
+    
+    return render_template('agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):

@@ -216,7 +216,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         dollars_data = ast.literal_eval(player[9])
         political_power_data = ast.literal_eval(player[10])
         technology_data = ast.literal_eval(player[11])
-        dollars_data[0] = '5.00'
+        dollars_data[0] = '15.00'
         political_power_data[0] = '1.00'
         technology_data[0] = '2.00'
         player[9] = str(dollars_data)
@@ -288,10 +288,10 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     library = get_library(full_game_id)
     for player_actions_list in public_actions_list:
         for i, action in enumerate(player_actions_list):
-            player_actions_list[i] = interpreter.check_action(action, library)
+            player_actions_list[i] = interpreter.check_action(action, library, full_game_id)
     for player_actions_list in private_actions_list:
         for i, action in enumerate(player_actions_list):
-            player_actions_list[i] = interpreter.check_action(action, library)
+            player_actions_list[i] = interpreter.check_action(action, library, full_game_id)
 
 
     #Declare Action Dictionaries
@@ -471,7 +471,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     event_pending = False
     if not player_has_won:
         if current_turn_num % 4 == 0:
-            checks.bonus_phase_heals(full_game_id)
+            checks.bonus_phase_heals(player_id, full_game_id)
             diplomacy_log.append('All units and defensive improvements have regained 2 health.')
         #event procedure
         if current_turn_num % 8 == 0:
@@ -501,7 +501,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #Update Visuals
     current_turn_num = get_current_turn_num(int(full_game_id[-1]))
     update_announcements_sheet(full_game_id, event_pending, diplomacy_log, reminders_list)
-    resgraphs.update_all(full_game_id)
+    #resgraphs.update_all(full_game_id)
     main_map = map.MainMap(int(full_game_id[-1]), map_name, current_turn_num)
     main_map.update()
     if update_control_map:
@@ -1884,7 +1884,7 @@ def attempt_missile_defense(game_id, missile_type, improvement_data, target_nati
                 defense_hit_value = 6
             elif improvement_name == 'Missile Defense Network':
                 defense_hit_value = 3
-            elif 'Localized Missile Defense' in target_player_research and improvement_health != 99 and improvement_health != 0:
+            elif 'Local Missile Defense' in target_player_research and improvement_health != 99 and improvement_health != 0:
                 defense_hit_value = improvement_data_dict[improvement_name]['Combat Value']
         case 'Nuclear Missile':
             if improvement_name == 'Missile Defense Network':

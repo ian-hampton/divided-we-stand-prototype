@@ -646,18 +646,14 @@ def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
         improvement_count_list = ast.literal_eval(playerdata_list[player_id_2 - 1][27])
         silo_index = improvement_name_list.index('Missile Silo')
         silo_count = improvement_count_list[silo_index]
-        effective_launch_capacity = silo_count * 2
-        for region in regdata_list:
-            select_improvement_data = ast.literal_eval(region[4])
-            if select_improvement_data[0] == 'Missile Silo':
-                effective_launch_capacity += 2
+        effective_launch_capacity = silo_count * 3
         if missile_type == 'Standard Missile':
             if effective_launch_capacity - missiles_launched[player_id - 1] - 1 < 0:
                 player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. Insufficient launch capacity!')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
         elif missile_type == 'Nuclear Missile':
-            if effective_launch_capacity - missiles_launched[player_id - 1] - 2 < 0:
+            if effective_launch_capacity - missiles_launched[player_id - 1] - 3 < 0:
                 player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. Insufficient launch capacity!')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -689,7 +685,7 @@ def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
         missile_data_masterlist[player_id - 1] = player_missile_data
 
         #missile defense oppertunity
-        if target_improvement_name == 'Missile Defense System' or target_improvement_name == 'Missile Defense Network' or ('Localized Missile Defense' in target_player_research and target_improvement_health != 99 and target_improvement_health != 0):
+        if target_improvement_name == 'Missile Defense System' or target_improvement_name == 'Missile Defense Network' or ('Local Missile Defense' in target_player_research and target_improvement_health != 99 and target_improvement_health != 0):
             missile_alive = core.attempt_missile_defense(game_id, missile_type, target_improvement_data, target_nation_name, target_player_research, war_log)
         else:
             defense_improvement_data = None

@@ -3,96 +3,112 @@
         "Agenda Type": "Diplomacy",
         "Prerequisite": null,
         "Cost": 15,
-        "Location": "A1"
+        "Description": "New Alliance: Non-Aggression Pact.",
+        "Location": "A0"
     },
     "Defensive Agreements": {
         "Agenda Type": "Diplomacy",
         "Prerequisite": "Peace Accords",
         "Cost": 15,
-        "Location": "A2"
+        "Description": "New Alliance: Defense Pact.",
+        "Location": "A1"
     },
-    "Military Sanctions": {
+    "Power Broker": {
         "Agenda Type": "Diplomacy",
         "Prerequisite": "Defensive Agreements",
         "Cost": 15,
-        "Location": "A3"
+        "Description": "+1 alliance capacity. Gain an additional +0.25 political power per turn from alliances.",
+        "Location": "A2"
     },
-    "International Cooperation": {
+    "With Open Arms": {
         "Agenda Type": "Diplomacy",
-        "Prerequisite": "Military Sanctions",
+        "Prerequisite": "Power Broker",
         "Cost": 15,
-        "Location": "A4"
+        "Description": "Other nations no longer need the required agenda to join alliances that you have already founded.",
+        "Location": "A3"
     },
     "Trade Routes": {
         "Agenda Type": "Economy",
         "Prerequisite": null,
         "Cost": 15,
-        "Location": "B1"
+        "Description": "New Alliance: Trade Agreement.",
+        "Location": "B0"
     },
     "Research Exchange": {
         "Agenda Type": "Economy",
         "Prerequisite": "Trade Routes",
         "Cost": 15,
-        "Location": "B2"
+        "Description": "New Alliance: Research Agreement.",
+        "Location": "B1"
     },
-    "Economic Sanctions": {
+    "Improved Logistics": {
         "Agenda Type": "Economy",
         "Prerequisite": "Research Exchange",
         "Cost": 15,
-        "Location": "B3"
+        "Description": "Trade fee lowered to 1 dollar for every two resources.",
+        "Location": "B2"
     },
     "Efficient Bureaucracy": {
         "Agenda Type": "Economy",
-        "Prerequisite": "Economic Sanctions",
+        "Prerequisite": "Improved Logistics",
         "Cost": 15,
-        "Location": "B4"
+        "Description": "All dollars upkeep costs for improvements in your nation are reduced by 50%.",
+        "Location": "B3"
     },
     "Defensive Tactics": {
         "Agenda Type": "Security",
         "Prerequisite": null,
         "Cost": 15,
-        "Location": "C1"
+        "Description": "+1 to combat rolls for all defensive improvements during a defensive war.",
+        "Location": "C0"
     },
     "Mobilization": {
         "Agenda Type": "Security",
         "Prerequisite": "Defensive Tactics",
         "Cost": 15,
-        "Location": "C2"
+        "Description": "Your units gain +1 movement when they move strictly within your own territory.",
+        "Location": "C1"
     },
-    "Cost Of War": {
+    "Unyielding": {
         "Agenda Type": "Security",
         "Prerequisite": "Mobilization",
         "Cost": 15,
-        "Location": "C3"
+        "Description": "Your nation will surrender at -150 war score instead of -100 war score.",
+        "Location": "C2"
     },
     "Counter Offensive": {
         "Agenda Type": "Security",
-        "Prerequisite": "Cost Of War",
+        "Prerequisite": "Unyielding",
         "Cost": 15,
-        "Location": "C4"
+        "Description": "If an enemy unit causes a draw during a defensive war, it is resolved as a defender victory instead.",
+        "Location": "C3"
     },
     "Superior Training": {
         "Agenda Type": "Warfare",
         "Prerequisite": null,
         "Cost": 15,
-        "Location": "D1"
+        "Description": "+1 to combat rolls for all units during an offensive war.",
+        "Location": "D0"
     },
     "Early Expansion": {
         "Agenda Type": "Warfare",
         "Prerequisite": "Superior Training",
         "Cost": 15,
-        "Location": "D2"
+        "Description": "New War Justification: Conquest.",
+        "Location": "D1"
     },
     "Dominion": {
         "Agenda Type": "Warfare",
         "Prerequisite": "Early Expansion",
         "Cost": 15,
-        "Location": "D3"
+        "Description": "New War Justification: Subjugation.",
+        "Location": "D2"
     },
-    "New Empire": {
+    "Scorched Earth": {
         "Agenda Type": "Warfare",
         "Prerequisite": "Dominion",
         "Cost": 15,
-        "Location": "D4"
+        "Description": "Gain an additional +1 war score per turn for each enemy region your nation occupies. Your units will always heal regardless of positioning.",
+        "Location": "D3"
     }
 }

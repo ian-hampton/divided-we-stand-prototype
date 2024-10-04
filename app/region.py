@@ -26,6 +26,14 @@ class Region:
         self.game_id = game_id
         self.regdata_filepath = regdata_filepath
         self.claim_list = []
+    
+    def __eq__(self, other):
+        '''
+        Equality comparison.
+        '''
+        if isinstance(other, Region):
+            return self.region_id == other.region_id
+        return False
 
     def _save_changes(self) -> None:
         '''
@@ -62,16 +70,43 @@ class Region:
         '''
         self.data["occupierID"] = new_owner_id
         self._save_changes()
+
+    def purchase_cost(self) -> int:
+        '''
+        Returns purchase cost of region.
+        '''
+        return self.data["purchaseCost"]
     
+    def increase_purchase_cost(self, amount=5) -> None:
+        '''
+        Increases purchase cost of the region.
+        Default value is 5 dollars.
+        '''
+        self.data["purchaseCost"] += amount
+        self._save_changes()
+    
+    def resource(self) -> str:
+        '''
+        Returns resource present in region.
+        '''
+        return self.data["regionResource"]
+    
+    def set_resource(self, new_resource: str) -> None:
+        '''
+        Changes the resource in a region.
+        '''
+        self.data["regionResource"] = new_resource
+        self._save_changes()
+
     def fallout(self) -> int:
         '''
         Returns the amount of remaining turns that a region is under the effects of a nuke.
         '''
         return self.data["nukeTurns"]
     
-    def set_fallout(self, amount=2) -> None:
+    def set_fallout(self, amount=4) -> None:
         '''
-        Sets fallout amount. Default is 2 turns.
+        Sets fallout amount. Default is 4 turns.
         '''
         self.data["nukeTurns"] = amount
         self._save_changes()
@@ -82,12 +117,6 @@ class Region:
         '''
         self.data["nukeTurns"] -= 1
         self._save_changes()
-    
-    def resource(self) -> str:
-        '''
-        Returns resource present in region.
-        '''
-        return self.data["regionResource"]
     
     def is_edge(self) -> bool:
         '''
@@ -106,16 +135,21 @@ class Region:
         Returns the region_ids of adjacent regions.
         '''
         return self.data["adjacencyList"]
-
-    def set_resource(self, new_resource: str) -> None:
-        '''
-        Changes the resource in a region.
-        '''
-        self.data["regionResource"] = new_resource
-        self._save_changes()
-
     
-    
+    def add_claim(self, player_id: int) -> None:
+        '''
+        Adds player id to claim list.
+        Used for region purchase action.
+        '''
+        self.claim_list.append(player_id)
+
+    def get_claim_list(self) -> list:
+        '''
+        Returns list of player_ids claiming this region.
+        Used for region purchase action.
+        '''
+        return self.claim_list
+
     # basic methods
     ################################################################################
 
