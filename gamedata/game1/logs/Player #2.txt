@@ -1,1 +1,3 @@
-Successfully purchased region PHILL for 5 dollars.
+Researched Surface Mining for 5 technology.
+Researched Oil Drilling for 5 technology.
+Successfully purchased region WESMD for 5 dollars.

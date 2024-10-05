@@ -21,7 +21,7 @@ app = Flask(__name__)
 main = Blueprint('main', __name__)
 @main.route('/')
 def main_function():
-    return render_template('UWS.html')
+    return render_template('index.html')
 
 #SITE FUNCTIONS
 ################################################################################
@@ -196,7 +196,7 @@ def games():
         game_data["Playerdata Masterlist"] = refined_player_data
         game_data["image_url"] = image_url
     
-    return render_template('Games.html', dict = active_games_dict, full_game_id = game_id)
+    return render_template('temp_games.html', dict = active_games_dict, full_game_id = game_id)
 
 #SETTINGS PAGE
 @main.route('/settings')
@@ -204,7 +204,7 @@ def settings():
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
-    return render_template('Settings.html', username_list = username_list)
+    return render_template('temp_settings.html', username_list = username_list)
 
 #SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
@@ -294,11 +294,6 @@ def create_game():
         print("Error: No inactive game found to overwrite.")
         quit()
 
-#GAME CREATED
-@main.route('/game_created')
-def game_created():
-    return render_template('Game Created.html')
-
 #GAMES ARCHIVE PAGE
 @main.route('/archived_games')
 def archived_games():
@@ -362,7 +357,7 @@ def archived_games():
     game_id_list.reverse()
     slide_index_list = [1] * len(game_id_list)
     
-    return render_template('Games Archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
+    return render_template('temp_archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
 
 #LEADERBOARD PAGE
 @main.route('/leaderboard')
@@ -388,7 +383,7 @@ def leaderboard():
     leaderboard_height = f'{(len(leaderboard_data) * 15) + 50}px'
     with open('leaderboard_records.json', 'r') as json_file:
         leaderboard_records_dict = json.load(json_file)
-    return render_template('Leaderboard.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_height = leaderboard_height, leaderboard_records_dict = leaderboard_records_dict)
+    return render_template('temp_leaderboard.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_height = leaderboard_height, leaderboard_records_dict = leaderboard_records_dict)
 
 #GENRATE PROFILE PAGES
 def generate_profile_route(profile_id):
@@ -483,7 +478,7 @@ def generate_profile_route(profile_id):
         reliability = reliability * 100
         reliability = int(reliability)
         reliability = f'{reliability}%'
-        return render_template('Profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
+        return render_template('temp_profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
 with open('player_records.json', 'r') as json_file:
     player_records_dict = json.load(json_file)
 profile_id_list = list(player_records_dict.keys())
@@ -550,7 +545,7 @@ def game_load(full_game_id):
         elif len(players_who_won_list) == 0:
             victory_string = (f'Game drawn.')
         victory_string = color_nation_names(victory_string, full_game_id)
-        return render_template('stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
+        return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
     
     #load active state
     match game1_turn:
@@ -572,7 +567,7 @@ def game_load(full_game_id):
                         refined_player_data = [player_number, player_id, player_color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, regioninput_id, colordropdown_id]
                         player_data.append(refined_player_data)
                 active_player_data = player_data.pop(0)
-            return render_template('stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case "Nation Setup in Progress":
             form_key = "main.stage2_resolution"
@@ -593,7 +588,7 @@ def game_load(full_game_id):
                         refined_player_data = [player_number, player_id, player_color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, nameinput_id, govinput_id, fpinput_id, vcinput_id]
                         player_data.append(refined_player_data)
                 active_player_data = player_data.pop(0)
-            return render_template('stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case _:
             form_key = "main.turn_resolution"
@@ -619,7 +614,7 @@ def game_load(full_game_id):
             current_event_dict = active_games_dict[full_game_id]["Current Event"]
             if current_event_dict != {}:
                 form_key = "main.event_resolution"
-            return render_template('stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
 
 #GENERATE NATION SHEET PAGES
 def generate_player_route(full_game_id, player_id):
@@ -630,7 +625,7 @@ def generate_player_route(full_game_id, player_id):
         game_id = int(full_game_id[-1])
         current_turn_num = core.get_current_turn_num(game_id)
         player_information_dict = core.get_data_for_nation_sheet(full_game_id, player_id, current_turn_num)
-        return render_template('nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
+        return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
 
 #GENERATION PROCEDURE
 game_ids = ['game1', 'game2']
@@ -764,7 +759,7 @@ def wars(full_game_id):
         war_entry.append(war_status_bar)
         #add war to list
         war_masterlist.append(war_entry)
-    return render_template('wars.html', page_title = page_title, war_masterlist = war_masterlist)
+    return render_template('temp_wars.html', page_title = page_title, war_masterlist = war_masterlist)
 
 #RESEARCH PAGE
 @main.route('/<full_game_id>/technologies')
@@ -818,6 +813,16 @@ def technologies(full_game_id):
         del research_data_dict["Economic Reports"]
         del research_data_dict["Military Intelligence"]
 
+    # add player research data
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    for research_name in research_data_dict:
+        research_data_dict[research_name]["Player Research"] = [None] * len(playerdata_list)
+    for index, playerdata in enumerate(playerdata_list):
+        player_research_list = ast.literal_eval(playerdata[26])
+        for research_name in player_research_list:
+            research_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+
     # load techs to table
     for key, value in research_data_dict.items():
         research_type = value["Research Type"]
@@ -828,7 +833,7 @@ def technologies(full_game_id):
             value["Name"] = key
             refined_dict[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
     
-    return render_template('research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+    return render_template('temp_research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
 
 #RESEARCH PAGE
 @main.route('/<full_game_id>/agendas')
@@ -873,6 +878,16 @@ def agendas(full_game_id):
         }
         refined_dict[category]["Table"] = table_contents
 
+    # add player research data
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    for research_name in agenda_data_dict:
+        agenda_data_dict[research_name]["Player Research"] = [None] * len(playerdata_list)
+    for index, playerdata in enumerate(playerdata_list):
+        player_research_list = ast.literal_eval(playerdata[26])
+        for research_name in player_research_list:
+            agenda_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+
     # load techs to table
     for key, value in agenda_data_dict.items():
         pos = value["Location"]
@@ -881,7 +896,7 @@ def agendas(full_game_id):
         value["Name"] = key
         refined_dict["Agendas"]["Table"][row_pos][col_pos] = value
     
-    return render_template('agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+    return render_template('temp_agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
 
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')

@@ -4548,7 +4548,7 @@
     "FLPAN": {
         "regionData": {
             "fullName": "Florida Panhandle",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -4853,7 +4853,7 @@
     "EASGA": {
         "regionData": {
             "fullName": "Eastern Georgia",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Oil",
@@ -5579,7 +5579,7 @@
     "WESMD": {
         "regionData": {
             "fullName": "Western Maryland",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5829,7 +5829,7 @@
     "PAHLR": {
         "regionData": {
             "fullName": "Pennsylvania Highlands Region",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Oil",
@@ -6072,7 +6072,7 @@
     "ALBAN": {
         "regionData": {
             "fullName": "Albany",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Oil",

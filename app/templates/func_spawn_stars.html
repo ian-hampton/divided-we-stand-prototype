@@ -1,0 +1,28 @@
+{% set star_size = 25 %}
+{% for tup in tech_dict["Player Research"] %}
+    {% if tup %}
+        {% set color = tup[0] %}
+        {% set nation_name = tup[1] %}
+        {% set star_url = 'stars/' + color + '.png' %}
+        {% set star_id = table_id + color %}
+        <img src = "{{ url_for('static', filename=star_url) }}"
+                class = 'star'
+                style = "width:{{ star_size }}px;"
+                title = "{{ nation_name }} has researched this."
+                id = "{{ star_id }}">
+        {% set index = loop.index0 %}
+        <!-- move star -->
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var table = document.getElementById('{{ table_id }}');
+            var rect = table.getBoundingClientRect();
+            var starDistance = 30;
+            var star = document.getElementById('{{ star_id }}')
+            var x = rect.left + 5 + (starDistance * {{ index }}) + 'px'
+            var y = rect.bottom - 17 + 'px'
+            star.style.top = y;
+            star.style.left = x;
+        });
+        </script>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>UWS Leaderboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
+<style>
+:root {
+    --leaderboard-height: {{ leaderboard_height }};
+}
+.main {
+    width:80%;
+    margin-left:10%;
+    display: flex;
+}
+.leaderboard {
+    border-collapse: collapse;
+    margin: 0px;
+    padding: 0px;
+    width: 70%;
+    padding-right: 20px;
+    background-color: #434343;
+    color: white;
+    height: var(--leaderboard-height);
+    opacity: 0.9;
+}
+.leaderboard th {   
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 18px;
+}
+.leaderboard td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 18px;
+}
+.records_box {
+    flex-direction: column;
+    width: 30%;
+    padding-left: 20px;
+}
+.record_table {
+    width: 100%;
+    background-color: #434343;
+    border-collapse: collapse;
+    color: white;
+    opacity: 0.9;
+    margin: 0px;
+    margin-bottom: 20px;
+    padding: 0px;
+}
+.record_table .record_table_title {
+    text-align: left;
+    font-size: 28px;
+    background-color: #2a2a2a;
+    padding: 8px;
+}
+.record_table .record_table_text {
+    text-align: left;
+    font-size: 18px;
+    padding: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.record_table .record_table_italic {
+    text-align: left;
+    font-size: 18px;
+    font-style: italic;
+    padding: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 7px;
+}
+</style>
+
+<body>
+
+<header>
+    <div class="left-header">
+        <p id="title">Leaderboards</p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:48px;"></a>
+    </div>
+</header>
+
+<div class="main">
+
+    <table class="leaderboard">
+        <tr>
+            <th style="font-size: 28px;background-color: #2a2a2a" colspan="5">Player Leaderboard</th>
+        </tr>
+        <tr>
+            <th width="20%">Player</th>
+            <th width="20%">Games Won</th>
+            <th width="20%">Total Score</th>
+            <th width="20%">Average Score</th>
+            <th width="20%">Games Played</th>
+        </tr>
+        {% for row in leaderboard_data %}
+        <tr>
+            <td >{% autoescape false %} {{ row[0] }} {% endautoescape %}</td>
+            <td> {{ row[1] }}</td>
+            <td> {{ row[2] }}</td>
+            <td> {{ row[3] }}</td>
+            <td> {{ row[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="records_box">
+
+        <table class="record_table">
+            <tr>
+                <td class="record_table_title">Player Records</td>
+            </tr>
+            {% for key, value in leaderboard_records_dict.items() %}
+                {% if loop.index <= 7 %}
+                    {% if loop.index == 1 %}
+                        <tr>
+                            <td class="record_table_text" style="padding-top:5px;"><b>{{ key }}</b> </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td class="record_table_text"><b>{{ key }}</b> </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="record_table_text">{{ leaderboard_records_dict[key]["Value"] }} - {{ value["Player Name"] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="record_table_italic">as {{ value["Nation Name"] }} ({{ value["Game Name"] }})</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td class="record_table_text"><b>Longest War:</b> {{ leaderboard_records_dict["Longest War"]["Value"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_text">{{ leaderboard_records_dict["Longest War"]["War Name"] }}</td>
+            </tr>
+            <tr>
+                <td class="record_table_italic">{{ leaderboard_records_dict["Longest War"]["Player Name"] }} ({{ leaderboard_records_dict["Longest War"]["Game Name"] }})</td>
+            </tr>
+        </table>
+
+        <table class="record_table">
+            <tr>
+                <td class="record_table_title" colspan=2>Game Records</td>
+            </tr>
+            {% for key, value in leaderboard_records_dict["Game Records"].items() %}
+                {% if loop.index == 1 %}
+                    <tr>
+                        <td class="record_table_text" style="padding-top:5px;;padding-bottom:7px;"><b>{{ key }}:</b></td>
+                        <td class="record_table_text" style="text-align:right;padding-bottom:7px;">{{value["Value"] }} ({{ value["Game Name"] }})</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td class="record_table_text" style="padding-bottom:7px;"><b>{{ key }}:</b></td>
+                        <td class="record_table_text" style="text-align:right;padding-bottom:7px;">{{value["Value"] }} ({{ value["Game Name"] }})</td>
+                    </tr>
+                {% endif %}
+            
+            {% endfor %}
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

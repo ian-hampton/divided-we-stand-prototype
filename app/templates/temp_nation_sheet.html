@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>{{page_title}}</title>
+
+<style>
+body {
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    font-family: 'Droid Serif', serif;
+    margin: 0;
+    background-color: {{ player_information_dict['Color'] }};
+}
+table {
+    background-color: white;
+    border: 3px solid black;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    border-collapse: collapse;
+}
+th {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+}
+td {
+    font-size: 12px;
+}
+pre {
+    font-family: inherit;
+    margin: 0;
+    padding: 0;
+}
+.title {
+    font-weight: bold;
+    font-size: 32px;
+    text-align: center;
+    padding-top: 10px;
+}
+.subtitle {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+}
+.container {
+    display: flex;
+}
+
+.alpha-1 {
+    width: 40%;
+    margin-right: 10px;
+}
+.title_table {
+    width: 100%;
+    height: 75px;
+    margin-bottom: 20px;
+}
+.charlie {
+    flex-direction: row;
+    display: flex;
+}
+.beta-1 {
+    width: 40%;
+    margin-right: 10px;
+    flex-direction: column;
+}
+.standard_table {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+}
+.standard_table td{
+    vertical-align: top;
+}
+.victory_table {
+    width: 100%;
+    height: 80px;
+    margin: 0px;
+}
+.victory_table th {
+    padding: 5px;
+}
+.beta-2 {
+    width: 60%;
+    margin-left: 10px;
+}
+.resource_table {
+    width: 100%;
+    height: 325px;
+    margin-bottom: 20px;
+}
+.resource_table td {
+    border: 1px solid rgb(88, 88, 88);
+    border-collapse: collapse;
+}
+.alliances_table {
+    width: 100%;
+    height: 115px;
+    margin-bottom: 20px;
+}
+.ballistics_table {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.alpha-2 {
+    width: 20%;
+    margin-left: 10px;
+    margin-right: 10px;
+    flex-direction: column;
+}
+.diplomatic_relations_table {
+    width: 100%;
+    height: 310px;
+    margin-bottom: 20px;
+}
+.diplomatic_relations_table td {
+    border: 1px solid rgb(88, 88, 88);
+    border-collapse: collapse;
+}
+.upkeep_manager_table {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 20px;
+}
+.upkeep_manager_table td {
+    border: 1px solid rgb(88, 88, 88);
+    border-collapse: collapse;
+}
+.misc_info_table {
+    width: 100%;
+    height: 100px;
+}
+.income_table {
+    width: 100%;
+    height: 595px;
+}
+.income_table th {
+    padding: 5px;
+}
+.income_table td {
+    vertical-align: top;
+}
+
+.alpha-3 {
+    width: 10%;
+    margin-left: 10px;
+    flex-direction: column;
+}
+.research_table {
+    width: 100%;
+    height: 595px;
+}
+.research_table th {
+    padding: 5px;
+}
+.research_table td {
+    vertical-align: top;
+}
+
+.dollars {
+    color: #38761d;
+}
+.political {
+    color: #6c2f01;
+}
+.technology {
+    color: #1155cc;
+}
+.coal {
+    color: #a67c52;
+}
+.oil {
+    color: #603913;
+}
+.green {
+    color: #93c47d;
+}
+.basic {
+    color: #cccccc;
+}
+.common {
+    color: #b7b7b7;
+}
+.advanced {
+    color: #999999;
+}
+.uranium {
+    color: #00ff00;
+}
+.rare {
+    color: #f1c232;
+}
+</style>
+
+<body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Droid+Serif:wght@400;700&display=swap">
+<div class="container">
+    <div class="alpha-1">
+        <table class="title_table">
+            <tr><td class="title">{{ player_information_dict['Nation Name'] }}</td></tr>
+            <tr><td class="subtitle" style="padding-bottom: 10px;font-size: 12px;">{{ player_information_dict['Status'] }}</td></tr>
+        </table>
+        <div class="charlie">
+            <div class="beta-1">
+                <table class="standard_table">
+                    <tr><th>Government</th></tr>
+                    <tr><td>{{ player_information_dict['Government'] }}</td></tr>
+                </table>
+                <table class="standard_table">
+                    <tr><th>Foreign Policy</th></tr>
+                    <tr><td>{{ player_information_dict['Foreign Policy'] }}</td></tr>
+                </table>
+                <table class="standard_table">
+                    <tr><th>Military Capacity</th></tr>
+                    <tr><td>{{ player_information_dict['Military Capacity'] }}</td></tr>
+                </table>
+                <table class="standard_table">
+                    <tr><th>Trade Fee</th></tr>
+                    <tr><td>{{ player_information_dict['Trade Fee'] }}</td></tr>
+                </table>
+                <table class="alliances_table">
+                    <tr>
+                        <th class="subtitle" style="padding-top:3px">{{ player_information_dict['Alliance Data']['Header'] }}</th></tr>
+                    </tr>
+                    {% for i in range(0, player_information_dict['Alliance Data']['Name List']|length) %}
+                        <tr>
+                            <td style="color:{{ player_information_dict['Alliance Data']['Color List'][i] }}"> {{ player_information_dict['Alliance Data']['Name List'][i] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <table class="victory_table">
+                    <tr>
+                        <th class="subtitle">Victory Conditions</th></tr>
+                    </tr>
+                    {% for i in range(0, player_information_dict['Victory Conditions Data']['Conditions List']|length ) %}
+                        <tr>
+                            <td style="color:{{ player_information_dict['Victory Conditions Data']['Color List'][i] }}">{{ player_information_dict['Victory Conditions Data']['Conditions List'][i] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="beta-2">
+                <table class="resource_table">
+                    <tr>
+                        <th colspan="4">Resources</th></tr>
+                    </tr>
+                    <tr class="subtitle">
+                        <td style="width:40%">Resource Name</td>
+                        <td style="width:20%">Stored</td>
+                        <td style="width:20%">Income</td>
+                        <td style="width:20%">Rate</td>
+                    </tr>
+                    {% for i in range(0, player_information_dict['Resource Data']['Class List']|length) %}
+                        <tr class="{{ player_information_dict['Resource Data']['Class List'][i] }}">
+                            <td><b>{{ player_information_dict['Resource Data']['Name List'][i] }}</b></td>
+                            <td>{{ player_information_dict['Resource Data']['Stored List'][i] }}</td>
+                            <td>{{ player_information_dict['Resource Data']['Income List'][i] }}</td>
+                            <td>{{ player_information_dict['Resource Data']['Rate List'][i] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <table class="upkeep_manager_table">
+                    <tr>
+                        <th colspan="2">Upkeep Manager</th>
+                    </tr>
+                    <tr class="subtitle">
+                        <td style="width:50%;">Resource Name</td>
+                        <td>Amount Dedicated</td>
+                    </tr>
+                    <tr class="coal">
+                        <td><b>Coal</b></td>
+                        <td>{{ player_information_dict['Upkeep Manager']['Coal'] }}</td>
+                    </tr>
+                    <tr class="oil">
+                        <td><b>Oil</b></td>
+                        <td>{{ player_information_dict['Upkeep Manager']['Oil'] }}</td>
+                    </tr>
+                    <tr class="green">
+                        <td><b>Green Energy</b></td>
+                        <td>{{ player_information_dict['Upkeep Manager']['Green Energy'] }}</td>
+                    </tr>
+                    <tr class="subtitle">
+                        <td colspan="2">Total upkeep costs: -{{ player_information_dict['Upkeep Manager']['Total'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="alpha-2">
+        <table class="diplomatic_relations_table">
+            <tr>
+                <th colspan="2">Diplomatic Relations</th>
+            </tr>
+            <tr class="subtitle">
+                <td style="width:30%;">Player</td>
+                <td>Status</td>
+            </tr>
+            {% for i in range(0, player_information_dict['Relations Data']['Name List']|length) %}
+                <tr>
+                    <td>{{ player_information_dict['Relations Data']['Name List'][i] }}</td>
+                    <td style="color:{{ player_information_dict['Relations Data']['Color List'][i] }}">{{ player_information_dict['Relations Data']['Status List'][i] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table class="ballistics_table">
+            <tr>
+                <th class="subtitle"style="padding-top:3px">Ballistic Weapons</th></tr>
+            </tr>
+            <tr>
+                <td>{{ player_information_dict['Missile Data']['Standard'] }}</td>
+            </tr>
+            <tr>
+                <td>{{ player_information_dict['Missile Data']['Nuclear'] }}</td>
+            </tr>
+        </table>
+        <table class="misc_info_table">
+            <tr>
+                <th style="padding-top:3px">Miscellaneous Information</th>
+            </tr>
+            <tr>
+                <td>{{ player_information_dict['Misc Info']['Capital Resource'] }}</td>
+            </tr>
+            <tr>
+                <td>{{ player_information_dict['Misc Info']['Owned Regions'] }}</td>
+            </tr>
+            <tr>
+                <td>{{ player_information_dict['Misc Info']['Occupied Regions'] }}</td>
+            </tr>
+            <tr>
+                <td>{{ player_information_dict['Misc Info']['Undeveloped Regions'] }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="alpha-2">
+        <table class="income_table">
+            <tr><th>Income Details</th></tr>
+            <tr style="height:100%;text-align:left;padding-left:5px;"><td>{% autoescape false %} {{ player_information_dict['Income Details'] }} {% endautoescape %}</td></tr>
+        </table>
+    </div>
+    <div class="alpha-3">
+        <table class="research_table">
+            <tr><th>Completed Research</th></tr>
+            <tr style="height: 100%"><td>{% autoescape false %} {{ player_information_dict['Research Details'] }} {% endautoescape %}</td></tr>
+        </table>
+    </div>
+</div>
+</body>
+
+</html>
