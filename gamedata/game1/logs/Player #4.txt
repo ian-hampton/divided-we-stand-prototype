@@ -1,6 +1,2 @@
-Researched City Resettlement for 5 technology.
-Gained 1 political power for researching City Resettlement.
-Researched Surface Mining for 5 technology.
-Gained 1 political power for researching Surface Mining.
-Successfully purchased region WESMD for 5 dollars.
-Successfully purchased region WESMD for 5 dollars.
+Built Industrial Zone in region NTEPA for 5 dollars.
+Built Industrial Zone in region PITTS for 5 dollars.

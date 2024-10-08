@@ -150,7 +150,7 @@
         "Research Type": "Infrastructure",
         "Prerequisite": "REE Mining",
         "Cost": 20,
-        "Description": "+1 uranium from Uranium Mine improvements. +1 rare earth elements from Rare Earth Elements Mine improvements.",
+        "Description": "+1 advanced metals from Advanced Metal Mine improvements. +1 uranium from Uranium Mine improvements.",
         "Location": "C3"
     },
     "Laboratories": {

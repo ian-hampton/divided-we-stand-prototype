@@ -697,7 +697,7 @@ def erase_game(full_game_id):
 
 def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     '''
-    Gathers all the needed data for a player's nation sheet data and spits it out as massive unorganized list that only nation_sheet.html can make sense of.
+    Gathers all the needed data for a player's nation sheet data and spits it as a dict.
 
     Parameters:
     - game_id: The full game_id of the active game.
@@ -707,7 +707,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     RELATIONS_NAME_LIST = ['Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', ]
@@ -760,12 +759,7 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Resource Data']['Rate List'] = rate_list
 
     #alliance data
-    alliance_count, alliance_capacity = get_alliance_count(playerdata)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
-        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
-            alliance_capacity += 1
+    alliance_count, alliance_capacity = get_alliance_count(game_id, playerdata)
     player_information_dict['Alliance Data']['Name List'] = ALLIANCE_LIST
     alliance_colors = []
     alliance_data_list = update_alliance_data(player_research_list)
@@ -1304,15 +1298,19 @@ def update_text_color_new(wks, cell_range, color):
 #DIPLOMACY SUB-FUNCTIONS
 ################################################################################
 
-def get_alliance_count(playerdata):
+def get_alliance_count(game_id, playerdata):
     '''
     Gets a count of a player's active alliances and their total alliance capacity.
 
     Parameters:
     - playerdata: A single playerdata list from playerdata.csv.
     '''
-    alliance_count = 0
     relations_data = ast.literal_eval(playerdata[22])
+    player_research_list = ast.literal_eval(playerdata[26])
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    
+    alliance_count = 0
     for index, relation in enumerate(relations_data):
         if index == 0:
             continue
@@ -1321,9 +1319,18 @@ def get_alliance_count(playerdata):
             alliance_type = f'{entry_data[0]} {entry_data[1]}'
             if alliance_type in ALLIANCE_LIST and alliance_type != 'Non-Aggression Pact':
                 alliance_count += 1
+    
     alliance_limit = 2
     if 'International Cooperation' in ast.literal_eval(playerdata[26]):
         alliance_limit += 1
+    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
+        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
+            alliance_limit += 1
+    if playerdata[3] == 'Republic':
+        alliance_limit += 1
+    if 'Power Broker' in player_research_list:
+        alliance_limit += 1
+
     return alliance_count, alliance_limit
 
 def get_alliances(relations_data_list, requested_alliance_type):
@@ -1454,6 +1461,10 @@ def get_upkeep_dictionary(game_id, upkeep_type, playerdata, unit_count_list):
                     improvement_dollars_upkeep = 1
                 elif improvement_name == 'Research Laboratory' and 'Upgraded Facilities' in completed_research_list:
                     improvement_dollars_upkeep = 2
+                elif improvement_name == 'Wind Farm' and 'Green Energy Subsidies' in completed_research_list:
+                    improvement_dollars_upkeep = 1
+                elif improvement_name == 'Solar Farm' and 'Green Energy Subsidies' in completed_research_list:
+                    improvement_dollars_upkeep = 1
                 #check for efficient bureaucracy
                 if 'Efficient Bureaucracy' in completed_research_list:
                     improvement_dollars_upkeep *= 0.5
@@ -1762,7 +1773,7 @@ def conduct_combat(game_id, attacker_data_list, defender_data_list, war_statisti
             war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Draw!')
     return attacker_unit_health, attacker_battles_won, attacker_battles_lost, defender_health, defender_battles_won, defender_battles_lost, war_log
 
-def war_resolution(game_id, player_id_1, war_justifications_list, signatories_list, current_turn_num, playerdata_list):
+def war_resolution(game_id, player_id_1, war_justifications_list, signatories_list, playerdata_list):
     '''Resolves a war that ends in an attacker or defender victory.'''
     
     looser_playerdata = playerdata_list[player_id_1 - 1]
@@ -2073,7 +2084,6 @@ def verify_ratio(game_id, improvement_count_list, improvement_name):
             return False
     return True
 
-#THE EXEMPT LIST NEEDS TO GET GENERATED FROM THE IMPROVEMENT DICT
 def verify_region_resource(game_id, regdata_list, region_id, improvement_name):
     '''Verifies a region has the resource needed for the desired improvement. Sub-function for resolve_improvement_builds().'''
     
@@ -2118,11 +2128,12 @@ def has_capital(player_id, game_id):
     return False
 
 def get_scenario_dict(game_id, dictionary_name):
-    '''Gets a dictionary from the chosen scenario.'''
+    '''
+    Gets a dictionary from the chosen scenario.
+    '''
 
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-
 
     if game_id != "TBD":
         scenario_name = active_games_dict[game_id]["Information"]["Scenario"]

@@ -5,11 +5,13 @@
         "Required Resource": "Advanced Metals",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 5,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Advanced Metals Refinery": {
         "Health": 99,
@@ -17,11 +19,11 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Dollars": 0,
+        "Basic Materials": 0,
+        "Common Metals": 10,
+        "Advanced Metals": 0,
+        "Rare Earth Elements": 0
     },
     "Boot Camp": {
         "Health": 5,
@@ -32,11 +34,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Capital": {
         "Health": 5,
@@ -45,7 +49,8 @@
         "Draw Damage": 1,
         "Combat Value": 9,
         "Dollars Upkeep": 0,
-        "Energy Upkeep": 0
+        "Energy Upkeep": 0,
+        "Build Costs": {}
     },
     "Central Bank": {
         "Health": 5,
@@ -56,11 +61,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 5,
+            "Common Metals": 10,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "City": {
         "Health": 5,
@@ -71,11 +78,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Coal Mine": {
         "Health": 99,
@@ -83,11 +92,13 @@
         "Required Resource": "Coal",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 5,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Common Metals Mine": {
         "Health": 99,
@@ -95,11 +106,13 @@
         "Required Resource": "Common Metals",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Crude Barrier": {
         "Health": 5,
@@ -110,11 +123,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 5,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Industrial Zone": {
         "Health": 99,
@@ -122,11 +137,13 @@
         "Required Resource": "Basic Materials",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 5,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Military Base": {
         "Health": 10,
@@ -137,11 +154,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 5,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 5,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 0
+        }
     },
     "Military Outpost": {
         "Health": 10,
@@ -152,11 +171,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 5,
+            "Common Metals": 5,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Missile Defense Network": {
         "Health": 99,
@@ -164,11 +185,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 5,
-        "Rare Earth Elements Cost": 1
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 1
+        }
     },
     "Missile Defense System": {
         "Health": 99,
@@ -176,11 +199,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 1
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 1
+        }
     },
     "Nuclear Power Plant": {
         "Health": 99,
@@ -188,11 +213,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 10,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 10,
+            "Rare Earth Elements": 0
+        }
     },
     "Oil Refinery": {
         "Health": 99,
@@ -200,11 +227,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 2,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Oil Well": {
         "Health": 99,
@@ -212,11 +241,13 @@
         "Required Resource": "Oil",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 5,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Uranium Mine": {
         "Health": 99,
@@ -224,11 +255,13 @@
         "Required Resource": "Uranium",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 5,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 0
+        }
     },
     "Uranium Refinery": {
         "Health": 99,
@@ -236,11 +269,11 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Dollars": 0,
+        "Basic Materials": 0,
+        "Common Metals": 10,
+        "Advanced Metals": 0,
+        "Rare Earth Elements": 0
     },
     "Rare Earth Elements Mine": {
         "Health": 99,
@@ -248,23 +281,27 @@
         "Required Resource": "Rare Earth Elements",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 5,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 0
+        }
     },
     "Research Institute": {
         "Health": 99,
         "Required Research": "Research Institutes",
         "Required Resource": null,
-        "Dollars Upkeep": 5,
+        "Dollars Upkeep": 3,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 5,
+            "Common Metals": 10,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Research Laboratory": {
         "Health": 99,
@@ -272,11 +309,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 5,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Missile Silo": {
         "Health": 5,
@@ -287,11 +326,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Solar Farm": {
         "Health": 99,
@@ -299,11 +340,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 2
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 1
+        }
     },
     "Strip Mine": {
         "Health": 99,
@@ -311,11 +354,13 @@
         "Required Resource": "Coal",
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 25,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 25,
+            "Basic Materials": 0,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Surveillance Center": {
         "Health": 99,
@@ -323,11 +368,13 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Wind Farm": {
         "Health": 99,
@@ -335,10 +382,12 @@
         "Required Resource": null,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 5,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     }
 }

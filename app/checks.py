@@ -14,7 +14,7 @@ from app.unit import Unit
 
 #END OF TURN CHECKS
 def update_improvement_count(game_id, player_id):
-    '''Gets a count of all improvements for a specific player using regdata_list. Updates regdata.csv.'''
+    '''Gets a count of all improvements for a specific player using regdata_dict. Updates regdata.csv.'''
     
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
@@ -449,41 +449,55 @@ def update_income(game_id, current_turn_num):
         player_research_list = ast.literal_eval(playerdata[26])
         improvement_count_list = ast.literal_eval(playerdata[27])
         
-        #remnant bonus
-        remnant_bonus_candidates = set()
-        if player_government == 'Remnant':
-            for region_id in regdata_dict:
-                region = Region(region_id, game_id)
-                region_improvement = Improvement(region_id, game_id)
-                if region.owner_id() == player_id and region_improvement.name() == 'Capital':
-                    remnant_bonus_candidates.update(region.owned_adjacent_regions())
-        
         #calculate improvement incomes based on research
-        city_income = 3
         if 'Power Grid Restoration' in player_research_list and 'Central Banking System' in player_research_list:
             city_income = 7
         elif 'Power Grid Restoration' in player_research_list:
             city_income = 5
-        coal_mine_income = 1
+        else:
+            city_income = 3
         if 'Coal Subsidies' in player_research_list:
             coal_mine_income = 2
-        common_metals_mine_income = 1
+        else:
+            coal_mine_income = 1
         if 'Underground Mining' in player_research_list:
             common_metals_mine_income = 2
-        industrial_zone_income = 1
+        else:
+            common_metals_mine_income = 1
         if 'Industrial Advancements' in player_research_list:
             industrial_zone_income = 2
-        oil_well_income = 1
+        else:
+            industrial_zone_income = 1
         if 'Oil Subsidies' in player_research_list and 'Fracking' in player_research_list:
             oil_well_income = 3
         elif 'Oil Subsidies' in player_research_list:
             oil_well_income = 2
-        research_lab_income = 1
+        else:
+            oil_well_income = 1
         if 'Upgraded Facilities' in player_research_list:
             research_lab_income = 2
-        strip_mine_coal_income = 4
+        else:
+            research_lab_income = 1
+        if 'Green Energy Subsidies' in player_research_list:
+            solar_farm_income = 3
+        else:
+            solar_farm_income = 2
         if 'Open Pit Mining' in player_research_list:
             strip_mine_coal_income = 6
+        else:
+            strip_mine_coal_income = 4
+        if 'Green Energy Subsidies' in player_research_list:
+            wind_farm_income = 2
+        else:
+            wind_farm_income = 1
+        if 'Resource Enrichment'  in player_research_list:
+            amm_mine_income = 2
+        else:
+            amm_mine_income = 1
+        if 'Resource Enrichment'  in player_research_list:
+            uranium_mine_income = 2
+        else:
+            uranium_mine_income = 1
         
         #get income from improvements
         for region_id in regdata_dict:
@@ -500,10 +514,13 @@ def update_income(game_id, current_turn_num):
             else:
                 plural_improvement_name = f'{improvement_name[:-1]}ies'
             #get remnant multiplier
-            if region_id in remnant_bonus_candidates:
+            if player_government == 'Remnant' and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
                 multiplier = 2
             else:
                 multiplier = 1
+            #get central bank multiplier
+            if region.check_for_adjacent_improvement(improvement_names = {'Central Bank'}):
+                multiplier *= 1.2
             #get pandemic multiplier
             if "Pandemic" in active_games_dict[game_id]["Active Events"]:
                 region_quarantine = region.is_quarantined()
@@ -522,11 +539,8 @@ def update_income(game_id, current_turn_num):
             if region.owner_id() == player_id and region.occupier_id() == 0:
                 match improvement_name:
                     case 'Advanced Metals Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, advanced_index, 1, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, advanced_index, 1, multiplier, plural_improvement_name)
-                    case 'Advanced Metals Refinery':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, advanced_index, 1, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, advanced_index, 1, multiplier, plural_improvement_name)
+                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, advanced_index, amm_mine_income, multiplier)
+                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, advanced_index, amm_mine_income, multiplier, plural_improvement_name)
                     case 'Capital':
                         gross_income_masterlist[player_id - 1][dollars_index] += 5
                         gross_income_masterlist[player_id - 1][tech_index] += 2
@@ -568,8 +582,8 @@ def update_income(game_id, current_turn_num):
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, basic_index, industrial_zone_income, multiplier)
                         income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, basic_index, industrial_zone_income, multiplier, plural_improvement_name)
                     case 'Nuclear Power Plant':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, 8, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, 8, multiplier, plural_improvement_name)
+                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, 6, multiplier)
+                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, 6, multiplier, plural_improvement_name)
                     case 'Oil Refinery':
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, oil_index, 2, multiplier)
                         income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, oil_index, 2, multiplier, plural_improvement_name)
@@ -586,22 +600,19 @@ def update_income(game_id, current_turn_num):
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, tech_index, research_lab_income, multiplier)
                         income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, tech_index, research_lab_income, multiplier, plural_improvement_name)
                     case 'Solar Farm':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, green_index, 2, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, 2, multiplier, plural_improvement_name)
+                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, green_index, solar_farm_income, multiplier)
+                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, solar_farm_income, multiplier, plural_improvement_name)
                     case 'Strip Mine':
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, coal_index, strip_mine_coal_income, multiplier)
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, common_index, 2, multiplier)
                         income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, coal_index, strip_mine_coal_income, multiplier, plural_improvement_name)
                         income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, common_index, 2, multiplier, plural_improvement_name)
                     case 'Uranium Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, 1, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, uranium_index, 1, multiplier, plural_improvement_name)
-                    case 'Uranium Refinery':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, 1, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, uranium_index, 1, multiplier, plural_improvement_name)
+                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, uranium_mine_income, multiplier)
+                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, uranium_index, uranium_mine_income, multiplier, plural_improvement_name)
                     case 'Wind Farm':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, green_index, 1, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, 1, multiplier, plural_improvement_name)
+                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, green_index, wind_farm_income, multiplier)
+                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, wind_farm_income, multiplier, plural_improvement_name)
         
         #political power income from top three
         if current_turn_num > 4:
@@ -622,9 +633,9 @@ def update_income(game_id, current_turn_num):
                     income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from relative research progress.']
 
         #political power income from alliances
-        alliance_count, alliance_capacity = core.get_alliance_count(playerdata)
-        if player_government == 'Republic':
-            alliance_income = 1
+        alliance_count, alliance_capacity = core.get_alliance_count(game_id, playerdata)
+        if 'Power Broker' in player_research_list:
+            alliance_income = 0.75
         else:
             alliance_income = 0.5
         if alliance_income * alliance_count > 0:
@@ -774,8 +785,8 @@ def update_income(game_id, current_turn_num):
         #pay uranium upkeep
         nuclear_power_plant_count = improvement_count_list[15]
         if nuclear_power_plant_count > 0:
-            net_income_masterlist[player_id - 1][uranium_index] -= nuclear_power_plant_count
-            income_strings_masterlist[player_id - 1][uranium_index] += [f'&Tab;-1 from Nuclear Power Plant upkeep [{nuclear_power_plant_count}x]']
+            net_income_masterlist[player_id - 1][uranium_index] -= (nuclear_power_plant_count * 0.5)
+            income_strings_masterlist[player_id - 1][uranium_index] += [f'&Tab;-0.5 from Nuclear Power Plant upkeep [{nuclear_power_plant_count}x]']
         #pay dollars upkeep
         if dollars_upkeep_costs > 0:
             net_income_masterlist[player_id - 1][dollars_index] -= dollars_upkeep_costs
@@ -1036,14 +1047,14 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
         for improvement_name in dollars_upkeep_dict:
             improvement_upkeep = dollars_upkeep_dict[improvement_name]['Improvement Upkeep']
             while dollars_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                region_id, regdata_list = core.search_and_destroy(player_id, improvement_name, regdata_list)
+                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
                 diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to dollars shortages.')
                 dollars_stockpile += improvement_upkeep
                 dollars_upkeep_dict[improvement_name]['Improvement Count'] -= 1
         for unit_name in dollars_unit_upkeep_dict:
             unit_upkeep = dollars_unit_upkeep_dict[unit_name]['Improvement Upkeep']
             while dollars_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
-                region_id, regdata_list = core.search_and_destroy_unit(player_id, unit_name, regdata_list)
+                region_id = core.search_and_destroy_unit(game_id, player_id, unit_name)
                 diplomacy_log.append(f'{nation_name} lost a {unit_name} in {region_id} due to dollars shortages.')
                 dollars_stockpile += unit_upkeep
                 dollars_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
@@ -1275,7 +1286,7 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
                                 war_justifications_entry = [claimer_player_id, selected_war_justification, war_claims_list]
                                 war_justifications_list.append(war_justifications_entry)
                     #resolve war and update diplomacy log
-                    playerdata_list = core.war_resolution(game_id, surrender_player_id, war_justifications_list, signatories_list, current_turn_num, playerdata_list)
+                    playerdata_list = core.war_resolution(game_id, surrender_player_id, war_justifications_list, signatories_list, playerdata_list)
                     core.add_truce_period(game_id, signatories_list, winner_war_justification, current_turn_num)
                     war[15] = current_turn_num
                     diplomacy_log.append(f'{looser_nation_name} surrendered to {winner_nation_name}.')

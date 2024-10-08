@@ -81,6 +81,7 @@ class Unit:
         Sets unit in region.
         '''
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+        # handle abbreviation case
         self.data["name"] = unit_name
         self.data["health"] = unit_data_dict[unit_name]["Health"]
         self.data["ownerID"] = owner_id

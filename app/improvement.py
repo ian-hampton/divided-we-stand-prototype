@@ -86,7 +86,7 @@ class Improvement:
     # basic methods
     ################################################################################
 
-    def set_improvement(self, improvement_name: str, health=0) -> None:
+    def set_improvement(self, improvement_name: str, health=0, player_research=[]) -> None:
         '''
         Changes the improvement in a region.
         
@@ -95,11 +95,19 @@ class Improvement:
         '''
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         self.clear()
+        
         self.data["name"] = improvement_name
         if health == 0:
             self.data["health"] = improvement_data_dict[improvement_name]["Health"]
         else:
             self.data["health"] == health
+        if self.name() == 'Strip Mine' and 'Open Pit Mining' in player_research:
+            self.set_turn_timer = 4
+        elif self.name() == 'Strip Mine':
+            self.set_turn_timer = 8
+        if self.name() == 'Surveillance Center':
+            pass
+        
         self._save_changes()
 
     def heal(self, health_count: int) -> None:

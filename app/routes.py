@@ -821,7 +821,8 @@ def technologies(full_game_id):
     for index, playerdata in enumerate(playerdata_list):
         player_research_list = ast.literal_eval(playerdata[26])
         for research_name in player_research_list:
-            research_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+            if research_name in research_data_dict:
+                research_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
 
     # load techs to table
     for key, value in research_data_dict.items():
@@ -886,7 +887,8 @@ def agendas(full_game_id):
     for index, playerdata in enumerate(playerdata_list):
         player_research_list = ast.literal_eval(playerdata[26])
         for research_name in player_research_list:
-            agenda_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+            if research_name in agenda_data_dict:
+                agenda_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
 
     # load techs to table
     for key, value in agenda_data_dict.items():

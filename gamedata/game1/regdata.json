@@ -4757,7 +4757,7 @@
     "NTWGA": {
         "regionData": {
             "fullName": "Northwest Georgia",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5404,7 +5404,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -5752,7 +5752,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -5785,7 +5785,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -6455,7 +6455,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
