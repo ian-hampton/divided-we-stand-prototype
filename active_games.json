@@ -16,19 +16,34 @@
         "Statistics": {
             "Player Count": "4",
             "Region Disputes": 0,
-            "Current Turn": "7",
-            "Days Ellapsed": 16,
-            "Game Started": "09/19/2024"
+            "Current Turn": "23",
+            "Days Ellapsed": 5,
+            "Game Started": "10/10/2024"
         },
-        "Inactive Events": [],
-        "Active Events": [],
+        "Inactive Events": [
+            "Nominate Mediator"
+        ],
+        "Active Events": {
+            "Diplomatic Summit": {
+                "Expiration": 25,
+                "Attendance": [
+                    "Peak Cringeoid",
+                    "Bruh"
+                ]
+            }
+        },
         "Current Event": {},
-        "Steal Action Record": {},
+        "Steal Action Record": {
+            "Filthy Imperialist": {
+                "Nation Name": null,
+                "Streak": 0
+            }
+        },
         "Transactions Record": {
-            "One": 0,
-            "Two": 0,
-            "Three": 0,
-            "Four": 0
+            "Filthy Imperialist": 6,
+            "Techbro": 25,
+            "Peak Cringeoid": 0,
+            "Bruh": 0
         }
     },
     "game2": {

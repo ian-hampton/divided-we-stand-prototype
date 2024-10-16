@@ -1,0 +1,64 @@
+{
+    "Filthy Imperialist Conquest of Techbro": {
+        "startTurn": 22,
+        "endTurn": 0,
+        "outcome": "TBD",
+        "combatants": {
+            "Filthy Imperialist": {
+                "role": "Main Attacker",
+                "warJustification": "Conquest",
+                "warClaims": [
+                    "PENNY",
+                    "WESKY",
+                    "NASHV",
+                    "NTWTN",
+                    "STWTN"
+                ],
+                "statistics": {
+                    "battlesWon": 0,
+                    "battlesLost": 0,
+                    "enemyUnitsDestroyed": 0,
+                    "enemyImprovementsDestroyed": 0,
+                    "friendlyUnitsDestroyed": 0,
+                    "friendlyImprovementsDestroyed": 0,
+                    "missilesLaunched": 0,
+                    "nukesLaunched": 0
+                }
+            },
+            "Techbro": {
+                "role": "Main Defender",
+                "warJustification": "TBD",
+                "warClaims": [],
+                "statistics": {
+                    "battlesWon": 0,
+                    "battlesLost": 0,
+                    "enemyUnitsDestroyed": 0,
+                    "enemyImprovementsDestroyed": 0,
+                    "friendlyUnitsDestroyed": 0,
+                    "friendlyImprovementsDestroyed": 0,
+                    "missilesLaunched": 0,
+                    "nukesLaunched": 0
+                }
+            }
+        },
+        "attackerWarScore": {
+            "total": 0,
+            "occupation": 0,
+            "combatVictories": 0,
+            "enemyUnitsDestroyed": 0,
+            "enemyImprovementsDestroyed": 0,
+            "capitalCaptures": 0,
+            "nukes": 0
+        },
+        "defenderWarScore": {
+            "total": 0,
+            "occupation": 0,
+            "combatVictories": 0,
+            "enemyUnitsDestroyed": 0,
+            "enemyImprovementsDestroyed": 0,
+            "capitalCaptures": 0,
+            "nukes": 0
+        },
+        "warLog": []
+    }
+}

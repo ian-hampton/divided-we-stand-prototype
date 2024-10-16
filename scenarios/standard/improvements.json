@@ -13,18 +13,6 @@
             "Rare Earth Elements": 0
         }
     },
-    "Advanced Metals Refinery": {
-        "Health": 99,
-        "Required Research": "Metal Refinement",
-        "Required Resource": null,
-        "Dollars Upkeep": 0,
-        "Energy Upkeep": 1,
-        "Dollars": 0,
-        "Basic Materials": 0,
-        "Common Metals": 10,
-        "Advanced Metals": 0,
-        "Rare Earth Elements": 0
-    },
     "Boot Camp": {
         "Health": 5,
         "Victory Damage": 3,
@@ -262,18 +250,6 @@
             "Advanced Metals": 5,
             "Rare Earth Elements": 0
         }
-    },
-    "Uranium Refinery": {
-        "Health": 99,
-        "Required Research": "Uranium Refinement",
-        "Required Resource": null,
-        "Dollars Upkeep": 0,
-        "Energy Upkeep": 1,
-        "Dollars": 0,
-        "Basic Materials": 0,
-        "Common Metals": 10,
-        "Advanced Metals": 0,
-        "Rare Earth Elements": 0
     },
     "Rare Earth Elements Mine": {
         "Health": 99,

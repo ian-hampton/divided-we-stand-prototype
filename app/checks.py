@@ -66,20 +66,14 @@ def ratio_check(game_id, player_id):
     #Test Ratios
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
-    refinery_list = ['Advanced Metals Refinery', 'Oil Refinery', 'Uranium Refinery']
+    refinery_list = ['Oil Refinery']
     for refinery_improvement in refinery_list:
         adjustment = 0
         while True:
             #get counts
-            if refinery_improvement == 'Advanced Metals Refinery':
-                ref_index = improvement_name_list.index('Advanced Metals Refinery') 
-                sub_index = improvement_name_list.index('Advanced Metals Mine')
-            elif refinery_improvement == 'Oil Refinery':
+            if refinery_improvement == 'Oil Refinery':
                 ref_index = improvement_name_list.index('Oil Refinery')
                 sub_index = improvement_name_list.index('Oil Well')
-            elif refinery_improvement == 'Uranium Refinery':
-                ref_index = improvement_name_list.index('Uranium Refinery')
-                sub_index = improvement_name_list.index('Uranium Mine')
             ref_count = improvement_count_list[ref_index] - adjustment
             sub_count = improvement_count_list[sub_index]
             #remove a refinery if too many, otherwise move on to next refinery type
@@ -347,7 +341,7 @@ def update_stockpile_limits(game_id, player_id):
     playerdata_list = core.read_file(playerdata_filepath, 1)
     playerdata = playerdata_list[player_id - 1]
     improvement_count_list = ast.literal_eval(playerdata[27])
-    player_central_bank_count = improvement_count_list[4]
+    player_central_bank_count = improvement_count_list[3] # yes this index is hardcoded. too bad!
     request_list = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
     
@@ -1221,9 +1215,8 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = core.read_file(wardata_filepath, 2)
+    wardata_list = []
     nation_name_list = []
     for playerdata in playerdata_list:
         nation_name_list.append(playerdata[1])
@@ -1294,7 +1287,7 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
 
     
     #Repair Diplomatic Relations
-    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, wardata_list)
+    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
 
 
     #Update playerdata.csv
@@ -1304,14 +1297,6 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    
-    #Update wardata.csv
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
 
     return diplomacy_log
 
@@ -1521,13 +1506,13 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     '''Checks victory conditions of a player.'''
     
     #define core lists
+    # to do - replace wardata.csv with new wardata
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
-    wardata_list = core.read_file(wardata_filepath, 2)
+    wardata_list = []
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
@@ -1823,9 +1808,8 @@ def prompt_for_missing_war_justifications(full_game_id):
 
     #get core lists
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = core.read_file(wardata_filepath, 2)
+    wardata_list = []
 
     #prompt logic
     for index, war in enumerate(wardata_list):
@@ -1844,13 +1828,6 @@ def prompt_for_missing_war_justifications(full_game_id):
                                 player_info.append(claims)
                             war[player_id] = str(player_info)
                             wardata_list[index] = war
-    
-    #update wardata.csv
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
 
 #UPDATE INCOME HELPER FUNCTIONS
 def update_gross_income_masterlist(gross_income_masterlist, player_id, index, income, remnant_multiplier):

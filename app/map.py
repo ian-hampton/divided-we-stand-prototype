@@ -31,11 +31,11 @@ class MainMap:
     def place_random(self):
         
         # get filepaths and lists
-        EXCLUSION_LIST = ['Capital', 'Central Bank', 'Missile Defense System', 'Missile Defense Network', 'Oil Refinery', 'Advanced Metals Refinery', 'Uranium Refinery', 'Surveillance Center']
+        EXCLUSION_SET = {'Capital', 'Central Bank', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery', 'Research Institute', 'Surveillance Center'}
         improvement_candidates_list = []
         improvement_data_dict = core.get_scenario_dict(f"game{self.game_id}", "Improvements")
         for improvement_name in improvement_data_dict:
-            if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in EXCLUSION_LIST:
+            if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in EXCLUSION_SET:
                 improvement_candidates_list.append(improvement_name)
         with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
@@ -46,6 +46,7 @@ class MainMap:
         placement_quota = 15
         standard_deviation = random.randint(-5, 5)
         placement_quota += standard_deviation
+        
         # place improvements randomly
         count = 0
         while count < placement_quota:
@@ -66,7 +67,9 @@ class MainMap:
                         break
                 if adjacent_improvement_found:
                     continue
+                
                 # place improvement
+                count += 1
                 match random_region.resource():
                     case 'Coal':
                         random_region_improvement.set_improvement('Coal Mine')
@@ -87,8 +90,7 @@ class MainMap:
                         if random_region.is_significant():
                             capital_roll = random.randint(1, 6)
                         if capital_roll <= 2:
-                            improvement_roll = random.randint(0, len(improvement_candidates_list) - 1)
-                            improvement_name = improvement_candidates_list[improvement_roll]
+                            improvement_name = random.sample(improvement_candidates_list, 1)[0]
                             improvement_health = improvement_data_dict[improvement_name]["Health"]
                             if improvement_health == 99:
                                 random_region_improvement.set_improvement(improvement_name)
@@ -96,7 +98,6 @@ class MainMap:
                                 random_region_improvement.set_improvement(improvement_name, 1)
                         else:
                             random_region_improvement.set_improvement('Capital', 1)
-                count += 1
     
     # UPDATE
     def update(self):

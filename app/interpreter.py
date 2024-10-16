@@ -36,12 +36,20 @@ def check_action(action, library, game_id):
             elif region_id.lower() in action:
                 action = replace_target(action, region_id.lower(), region_id.upper())
     
-    #make all unit abbreviations all caps
+    #replace all unit abbreviations
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
     if action_type == 'Deploy':
-        for unit_id in library['Unit Abbreviation List']:
-            if unit_id.title() in action:
-                action = replace_target(action, unit_id.title(), unit_id)
-                break
+        unit_input = action[7:-6].title()
+        print(unit_input)
+        if unit_input in library['Unit Name List']:
+            unit_name = unit_input
+            action = replace_target(action, action[7:-6], unit_name)
+        elif unit_input.upper() in library['Unit Abbreviation List']:
+            unit_abbrev = unit_input.upper()
+            for unit_name in unit_data_dict:
+                if unit_data_dict[unit_name]["Abbreviation"] == unit_abbrev:
+                    action = replace_target(action, action[7:-6], unit_name)
+                    break
 
     #validate action
     action_valid = validate(action, action_type, library, regdata_dict)
@@ -264,8 +272,8 @@ def check_missile_name(action, library):
     return False
 
 def check_unit_name(action, library):
-    for unit_type in (library['Unit Name List'] + library['Unit Abbreviation List']):
-        if unit_type in action:
+    for unit_name in library['Unit Name List']:
+        if unit_name in action:
             return True
     return False
 

@@ -9,6 +9,7 @@ from app import core
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
+from app.wardata import WarData
 
 #PRIVATE ACTION FUNCTIONS
 def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, current_turn_num):
@@ -16,9 +17,8 @@ def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, curr
 
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = core.read_file(wardata_filepath, 2)
+    wardata_list = []
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
@@ -117,17 +117,14 @@ def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, curr
 
     return player_action_logs
 
-def resolve_unit_disbands(unit_disband_list, full_game_id, player_action_logs):
-    '''Resolves all unit disband actions.'''
+def resolve_unit_disbands(unit_disband_list, game_id, player_action_logs):
+    '''
+    Resolves all unit disband actions.
+    '''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
-
-    #remove actions with bad region names
-    unit_disband_list = core.filter_region_names(regdata_list, unit_disband_list)
 
     #get needed info from each player
     military_capacity_masterlist = []
@@ -140,33 +137,32 @@ def resolve_unit_disbands(unit_disband_list, full_game_id, player_action_logs):
     for disband_action in unit_disband_list:
         player_id = disband_action[0]
         region_id = disband_action[1][-5:]
+        region = Region(region_id, game_id)
+        region_unit = Unit(region_id, game_id)
+        unit_name = region_unit.name()
         player_military_capacity = military_capacity_masterlist[player_id - 1]
         player_action_log = player_action_logs[player_id - 1]
 
-        #get unit data
-        for region in regdata_list:
-            if region[0] == region_id:
-                unit_data = ast.literal_eval(region[5])
-                #attempt removal
-                unit_id = unit_data[0]
-                if unit_id:
-                    index = core.unit_ids.index(unit_id)
-                    unit_name = core.unit_names[index]
-                    owner_id = unit_data[2]
-                else:
-                    player_action_log.append(f'Failed to disband a unit in {region_id}. There is no unit to disband.')
-                    continue
-                if owner_id == player_id and unit_id:
-                    #success
-                    region[5] = str([None, 99])
-                    player_military_capacity_list = player_military_capacity.split('/')
-                    used_mc = int(player_military_capacity_list[0]) - 1
-                    total_mc = player_military_capacity_list[1]
-                    player_military_capacity = f'{used_mc}/{total_mc}'
-                    military_capacity_masterlist[player_id - 1] = player_military_capacity
-                    player_action_log.append(f'Disbanded {unit_name} in {region_id}.')
-                else:
-                    player_action_log.append(f'Failed to disband {unit_name} in {region_id}.')
+        # unit present check
+        if unit_name is None:
+            player_action_log.append(f'Failed to disband unit in {region_id}. There is no unit to disband.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # region ownership check
+        if region.owner_id() != player_id:
+            player_action_log.append(f'Failed to disband unit in region {region_id}. You do not own or control this region.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # disband unit
+        region_unit.clear()
+        player_military_capacity_list = player_military_capacity.split('/')
+        used_mc = int(player_military_capacity_list[0]) - 1
+        total_mc = player_military_capacity_list[1]
+        player_military_capacity = f'{used_mc}/{total_mc}'
+        military_capacity_masterlist[player_id - 1] = player_military_capacity
+        player_action_log.append(f'Disbanded {unit_name} in {region_id}.')
         player_action_logs[player_id - 1] = player_action_log
         
     
@@ -177,30 +173,22 @@ def resolve_unit_disbands(unit_disband_list, full_game_id, player_action_logs):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-    
-
-    #Update regiondata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
 
     return player_action_logs
 
 def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
     '''Resolves all unit deployment actions.'''
 
-    #define core lists
+    # define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    #get scenario data
+    # get scenario data
     unit_data_dict = core.get_scenario_dict(game_id, "Units")
 
-    #get needed economy information from each player
+    # get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
     request_list = ['Dollars', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Rare Earth Elements']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
@@ -212,100 +200,108 @@ def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
         player_research_list = ast.literal_eval(player[26])
         research_masterlist.append(player_research_list)
 
-    #Execute Actions
+    # Execute Actions
     for deploy_action in unit_deploy_list:
         player_id = deploy_action[0]
         unit_name = deploy_action[1][7:-6]
         region_id = deploy_action[1][-5:]
+        region = Region(region_id, game_id)
+        region_unit = Unit(region_id, game_id)
         if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"] and player_id != 99:
             player_government = nation_info_masterlist[player_id - 1][2]
             player_military_capacity = military_capacity_masterlist[player_id - 1]
             player_research = research_masterlist[player_id - 1]
             player_action_log = player_action_logs[player_id - 1]
 
-        #unit name check
-        if unit_name in core.unit_names:
-            index = core.unit_names.index(unit_name)
-            unit_id = core.unit_ids[index]
-        elif unit_name in core.unit_ids:
-            unit_id = unit_name
-            index = core.unit_ids.index(unit_id)
-            unit_name = core.unit_names[index]
-        else:
-            player_action_log.append(f'Failed to deploy {unit_name} {region_id}. Unit name/id not recognized.')
+        # foreign invasion case
+        if "Foreign Invasion" in active_games_dict[game_id]["Active Events"] and player_id == 99:
+            region_unit = Unit(region_id, game_id)
+            region_unit.set_unit(unit_name, player_id)
+            continue
+
+        #get resource stockpiles of player
+        stockpile_list = []
+        for i in range(len(request_list)):
+            stockpile_list.append(economy_masterlist[player_id - 1][i][0])
+        player_stockpile_dict = {
+            "Dollars": float(stockpile_list[0]),
+            "Basic Materials": float(stockpile_list[1]),
+            "Common Metals": float(stockpile_list[2]),
+            "Advanced Metals": float(stockpile_list[3]),
+            "Rare Earth Elements": float(stockpile_list[4])
+        }
+
+        # ownership check
+        if region.owner_id() != player_id:
+            player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. You do not own this region.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"] and player_id != 99:
-            #get resource stockpiles of player
-            stockpile_list = []
-            for i in range(len(request_list)):
-                stockpile_list.append(economy_masterlist[player_id - 1][i][0])
-            dollars_stockpile = float(stockpile_list[0])
-            basic_stockpile = float(stockpile_list[1])
-            common_stockpile = float(stockpile_list[2])
-            advanced_stockpile = float(stockpile_list[3])
-            rare_stockpile = float(stockpile_list[4])
-
-            #ownership check
-            ownership_check = core.verify_ownership(regdata_list, region_id, player_id)
-            if ownership_check == False:
-                player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. You do not own this region.')
-                player_action_logs[player_id - 1] = player_action_log
-                continue
-            
-            #required research check
-            research_check = core.verify_required_research(unit_data_dict[unit_name]['Required Research'], player_research)
-            if research_check == False:
-                player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. You do not have the required research.')
-                player_action_logs[player_id - 1] = player_action_log
-                continue
-
-            #capacity check
-            capacity_check = core.check_military_capacity(military_capacity_masterlist[player_id - 1], 1)
-            if capacity_check == False:
-                player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. Insufficient military capacity.')
-                player_action_logs[player_id - 1] = player_action_log
-                continue
-
-            #attempt to deploy unit
-            dollars_cost = unit_data_dict[unit_name]['Dollars Cost']
-            basic_cost = unit_data_dict[unit_name]['Basic Materials Cost']
-            common_cost = unit_data_dict[unit_name]['Common Metals Cost']
-            advanced_cost = unit_data_dict[unit_name]['Advanced Metals Cost']
-            rare_cost = unit_data_dict[unit_name]['Rare Earth Elements Cost']
-            if player_government == 'Military Junta':
-                dollars_cost *= 0.8
-                basic_cost *= 0.8
-                common_cost *= 0.8
-                advanced_cost *= 0.8
-            if (dollars_stockpile - dollars_cost >= 0) and (basic_stockpile - basic_cost >= 0) and (common_stockpile - common_cost >= 0) and (advanced_stockpile - advanced_cost >= 0):
-                #unit successfully purchased
-                economy_masterlist[player_id - 1][0][0] = core.update_stockpile(dollars_stockpile, dollars_cost)
-                economy_masterlist[player_id - 1][1][0] = core.update_stockpile(basic_stockpile, basic_cost)
-                economy_masterlist[player_id - 1][2][0] = core.update_stockpile(common_stockpile, common_cost)
-                economy_masterlist[player_id - 1][3][0] = core.update_stockpile(advanced_stockpile, advanced_cost)
-                economy_masterlist[player_id - 1][4][0] = core.update_stockpile(rare_stockpile, rare_cost)
-                for region in regdata_list:
-                    if region[0] == region_id:
-                        region[5] = [unit_id, unit_data_dict[unit_name]['Health'], player_id]
-                player_military_capacity_list = player_military_capacity.split('/')
-                used_mc = int(player_military_capacity_list[0]) + 1
-                total_mc = float(player_military_capacity_list[1])
-                player_military_capacity = f'{used_mc}/{total_mc}'
-                military_capacity_masterlist[player_id - 1] = player_military_capacity
-                player_action_log.append(f'Deployed {unit_name} in region {region_id}.')
-            else:
-                #unit too expensive
-                player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. Insufficient resources.')
+        # occupied check
+        if region.occupier_id() != 0:
+            player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. This region is occupied.')
             player_action_logs[player_id - 1] = player_action_log
+            continue
+        
+        # required research check
+        if unit_data_dict[unit_name]['Required Research'] not in player_research:
+            player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. You do not have the required research.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # capacity check
+        capacity_check = core.check_military_capacity(military_capacity_masterlist[player_id - 1], 1)
+        if capacity_check == False:
+            player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. Insufficient military capacity.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+        
+        # calculate deploy cost
+        build_cost_dict = unit_data_dict[unit_name]["Build Costs"]
+        if player_government == 'Military Junta':
+            for key in build_cost_dict:
+                build_cost_dict[key] *= 0.8
+        
+        # cost check
+        cost_check_passed = True
+        for key in build_cost_dict:
+            cost = build_cost_dict[key]
+            stockpile = player_stockpile_dict[key]
+            if stockpile - cost < 0:
+                cost_check_passed = False
+        if not cost_check_passed:
+            player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. Insufficient resources.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # pay for unit
+        i = 0
+        costs_list = []
+        for key in build_cost_dict:
+            cost = build_cost_dict[key]
+            stockpile = player_stockpile_dict[key]
+            economy_masterlist[player_id - 1][i][0] = core.update_stockpile(stockpile, cost)
+            if cost > 0:
+                costs_list.append(f"{cost} {key.lower()}")
+            i += 1
+
+        # deploy unit
+        region_unit.set_unit(unit_name, player_id)
+        if len(costs_list) <= 2:
+            costs_str = " and ".join(costs_list)
         else:
-            for region in regdata_list:
-                if region[0] == region_id:
-                    region[5] = [unit_id, unit_data_dict[unit_name]['Health'], player_id]
+            costs_str = ", ".join(costs_list)
+            costs_str = " and ".join(costs_str.rsplit(", ", 1))
+        player_military_capacity_list = player_military_capacity.split('/')
+        used_mc = int(player_military_capacity_list[0]) + 1
+        total_mc = float(player_military_capacity_list[1])
+        player_military_capacity = f'{used_mc}/{total_mc}'
+        military_capacity_masterlist[player_id - 1] = player_military_capacity
+        player_action_log.append(f"Deployed {unit_name} in region {region_id} for {costs_str}.")
+        player_action_logs[player_id - 1] = player_action_log
 
 
-    #Update playerdata.csv
+    # Update playerdata.csv
     for economy_list in economy_masterlist:
         for resource_data_list in economy_list:
             resource_data_list = str(resource_data_list)
@@ -323,24 +319,15 @@ def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-
-    #Update regiondata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
-
     return player_action_logs
 
-def resolve_war_declarations(war_declaration_list, full_game_id, current_turn_num, diplomacy_log, player_action_logs):  
+def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, diplomacy_log, player_action_logs):  
     '''Resolves all war declarations.'''
 
     #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = core.read_file(wardata_filepath, 2)
     trucedata_list = core.read_file(trucedata_filepath, 1)
 
     #get needed player info
@@ -365,13 +352,13 @@ def resolve_war_declarations(war_declaration_list, full_game_id, current_turn_nu
         attacker_player_id = war_declaration[0]
         attacker_nation_name = nation_info_masterlist[attacker_player_id - 1][0]
         war_declaration_str = war_declaration[1][4:]
-        defender_nation_name = ""
+        defender_nation_name = None
         for name in nation_name_list:
             if name.lower() in war_declaration_str.lower():
                defender_nation_name = name
         defender_player_id = nation_name_list.index(defender_nation_name) + 1
-        war_justification = ""
-        for justification in core.war_justifications_list:
+        war_justification = None
+        for justification in core.WAR_JUSTIFICATIONS_LIST:
             if justification in war_declaration_str:
                 war_justification = justification
         attacker_mc_data = military_capacity_masterlist[attacker_player_id - 1]
@@ -382,7 +369,7 @@ def resolve_war_declarations(war_declaration_list, full_game_id, current_turn_nu
         player_action_log = player_action_logs[attacker_player_id - 1]
 
         #valid order check
-        if defender_nation_name == "" or war_justification == "":
+        if not defender_nation_name or not war_justification:
             player_action_log.append('Failed to declare war. Either the main defender or war justification was not recognized.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
@@ -425,13 +412,6 @@ def resolve_war_declarations(war_declaration_list, full_game_id, current_turn_nu
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #independence check
-        if attacker_status != "Independent Nation":
-            if defender_nation_name not in attacker_status and "Puppet State" in attacker_status:
-                player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. As a puppet state, you cannot declare war.')
-                player_action_logs[attacker_player_id - 1] = player_action_log
-                continue
-
         #already at war check
         already_at_war_check = False
         attacker_at_war_list = core.get_wars(attacker_relations_data)
@@ -443,106 +423,50 @@ def resolve_war_declarations(war_declaration_list, full_game_id, current_turn_nu
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #resolve war declaration
-        new_war_data = ['ID #', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', 'War Name', current_turn_num, 'Ongoing', [], 'TBD']
-        war_count = len(wardata_list)
-        war_id = war_count + 1
-        new_war_data[0] = war_id
-        #main attacker entry
-        main_attacker_entry = ['Main Attacker', war_justification, 0, 0, 0, 0]
-        if war_justification == 'Border Skirmish' or war_justification == 'Conquest' or war_justification == 'Annexation':
-            war_justification_details = input(f'List the regions that {attacker_nation_name} is claiming using {war_justification}: ')
-            main_attacker_entry.append(war_justification_details)
-        new_war_data[attacker_player_id] = main_attacker_entry
-        #main defender entry
-        main_defender_entry = ['Main Defender', 'TBD', 0, 0, 0, 0]
-        new_war_data[defender_player_id] = main_defender_entry
-        #call in main attacker allies
-        secondary_attacker_entry = ['Secondary Attacker', 'TBD', 0, 0, 0, 0]
-        attacker_puppet_states_list = core.get_subjects(playerdata_list, attacker_nation_name, "Puppet State")
-        for select_player_id in attacker_puppet_states_list:
-            subject_truce_check = core.check_for_truce(trucedata_list, select_player_id, defender_player_id, current_turn_num)
-            if not subject_truce_check:
-                new_war_data[select_player_id] = secondary_attacker_entry
-                select_player_relations_data = relations_data_masterlist[select_player_id - 1]
-                select_player_relations_data[defender_player_id] = 'At War'
-                relations_data_masterlist[select_player_id - 1] = select_player_relations_data
-        #call in main defender allies
-        secondary_defender_entry = ['Secondary Defender', 'TBD', 0, 0, 0, 0]
-        defender_puppet_states_list = core.get_subjects(playerdata_list, defender_nation_name, "Puppet State")
-        for select_player_id in defender_puppet_states_list:
-            subject_truce_check = core.check_for_truce(trucedata_list, select_player_id, attacker_player_id, current_turn_num)
-            if not subject_truce_check:
-                new_war_data[select_player_id] = secondary_defender_entry
-                select_player_relations_data = relations_data_masterlist[select_player_id - 1]
-                select_player_relations_data[attacker_player_id] = 'At War'
-                relations_data_masterlist[select_player_id - 1] = select_player_relations_data
-        defender_status = playerdata_list[defender_player_id - 1][28]
-        if defender_status != "Independent Nation":
-            overlord_nation_name = False
-            for name in nation_name_list:
-                if name.lower() in defender_status.lower():
-                    overlord_nation_name = name
-            if overlord_nation_name:
-                overlord_player_id = nation_name_list.index(overlord_nation_name) + 1
-                subject_truce_check = core.check_for_truce(trucedata_list, overlord_player_id, attacker_player_id, current_turn_num)
-                if not subject_truce_check:
-                    new_war_data[overlord_player_id] = secondary_defender_entry
-                    select_player_relations_data = relations_data_masterlist[overlord_player_id - 1]
-                    select_player_relations_data[attacker_player_id] = 'At War'
-                    relations_data_masterlist[overlord_player_id - 1] = select_player_relations_data
-        defender_defensive_pacts_list = core.get_alliances(defender_relations_data, "Defense Pact")
-        for select_player_id in defender_defensive_pacts_list:
-            subject_truce_check = core.check_for_truce(trucedata_list, select_player_id, attacker_player_id, current_turn_num)
-            if not subject_truce_check:
-                new_war_data[select_player_id] = secondary_defender_entry
-                select_player_relations_data = relations_data_masterlist[select_player_id - 1]
-                select_player_relations_data[attacker_player_id] = 'At War'
-                relations_data_masterlist[select_player_id - 1] = select_player_relations_data
+        #independence check
+        if attacker_status != "Independent Nation":
+            if defender_nation_name not in attacker_status and "Puppet State" in attacker_status:
+                player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. As a puppet state, you cannot declare war.')
+                player_action_logs[attacker_player_id - 1] = player_action_log
+                continue
 
-        #generate war name
-        war_names_list = []
-        war_prefixes = ['2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th']
-        for war in wardata_list:
-            war_names_list.append(war[11])
-        if war_justification == 'Animosity' or war_justification == 'Border Skirmish':
-            base_war_name = f'{attacker_nation_name} - {defender_nation_name} Conflict'
-        elif war_justification == 'Conquest' or war_justification == 'Annexation':
-            base_war_name = f'{attacker_nation_name} - {defender_nation_name} War'
-        elif war_justification == 'Independence':
-            base_war_name = f'{attacker_nation_name} War for Independence'
-        elif war_justification == 'Subjugation':
-            base_war_name = f'{attacker_nation_name} Subjugation War'
-        attempts = 0
-        while True:
-            if base_war_name not in war_names_list:
-                new_war_name = base_war_name
-                break
-            new_war_name = f'{war_prefixes[attempts]} {base_war_name}'
-            if new_war_name not in war_names_list:
-                break
-            else:
-                attempts += 1
-        new_war_data[11] = new_war_name
+        #resolve war declaration
+        region_claims_list = []
+        if war_justification == 'Border Skirmish' or war_justification == 'Conquest' or war_justification == 'Annexation':
+            region_claims_str = input(f'List the regions that {attacker_nation_name} is claiming using {war_justification}: ')
+            region_claims_list = region_claims_str.split(',')
+        wardata = WarData(game_id)
+        war_name = wardata.create_war(attacker_player_id, defender_player_id, war_justification, current_turn_num, region_claims_list)
         diplomacy_log.append(f'{attacker_nation_name} declared war on {defender_nation_name}.')
-        wardata_list.append(new_war_data)
         player_action_log.append(f'Declared war on {defender_nation_name}.')
         player_action_logs[attacker_player_id - 1] = player_action_log
 
         #update relations
-        attacker_relations_data[defender_player_id] = 'At War'
-        defender_relations_data[attacker_player_id] = 'At War'
-        relations_data_masterlist[attacker_player_id - 1] = attacker_relations_data
-        relations_data_masterlist[defender_player_id - 1] = defender_relations_data
-
+        combatant_list = wardata.get_combatant_names(war_name)
+        attacker_ids = []
+        defender_ids = []
+        for nation_name in combatant_list:
+            player_id = nation_name_list.index(nation_name) + 1
+            war_role = wardata.get_war_role(nation_name, war_name)
+            if 'Attacker' in war_role:
+                attacker_ids.append(player_id)
+            elif 'Defender' in war_role:
+                defender_ids.append(player_id)
+        for nation_name in combatant_list:
+            player_id = nation_name_list.index(nation_name) + 1
+            war_role = wardata.get_war_role(nation_name, war_name)
+            match war_role:
+                case 'Main Attacker' | 'Secondary Attacker':
+                    relations_data = relations_data_masterlist[player_id - 1]
+                    for enemy_id in defender_ids:
+                        relations_data[enemy_id] = 'At War'
+                    relations_data_masterlist[player_id - 1] = relations_data
+                case 'Main Defender' | 'Secondary Defender':
+                    relations_data = relations_data_masterlist[player_id - 1]
+                    for enemy_id in attacker_ids:
+                        relations_data[enemy_id] = 'At War'
+                    relations_data_masterlist[player_id - 1] = relations_data
         
-    #Update wardata.csv
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
-
 
     #Update playerdata.csv
     for index, player in enumerate(playerdata_list):

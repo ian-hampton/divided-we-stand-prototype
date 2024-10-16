@@ -75,7 +75,19 @@ class Unit:
             return unit_data_dict[unit_name]["Abbreviation"]
         else:
             return None
-        
+
+    def clear(self) -> None:
+        '''
+        Removes the unit in a region.
+        '''
+        self.data["name"] = None
+        self.data["health"] = 99
+        self.data["ownerID"] = 99
+        self._save_changes()
+
+    # basic methods
+    ################################################################################
+    
     def set_unit(self, unit_name: str, owner_id: int) -> None:
         '''
         Sets unit in region.
@@ -86,7 +98,7 @@ class Unit:
         self.data["health"] = unit_data_dict[unit_name]["Health"]
         self.data["ownerID"] = owner_id
         self._save_changes()
-        
+
     def heal(self, health_count: int) -> None:
         '''
         Heals unit by x health.
@@ -99,15 +111,6 @@ class Unit:
         if current_health > max_health:
             current_health = max_health
         self.data["health"] = current_health
-        self._save_changes()
-
-    def clear(self) -> None:
-        '''
-        Removes the unit in a region.
-        '''
-        self.data["name"] = None
-        self.data["health"] = 99
-        self.data["ownerID"] = 99
         self._save_changes()
 
     def move(self, target_region_id: str, withdraw=False) -> None:

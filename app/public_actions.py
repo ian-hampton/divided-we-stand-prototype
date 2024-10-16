@@ -251,6 +251,7 @@ def resolve_improvement_removals(improvement_remove_list, game_id, player_action
         # remove improvement
         region_improvement.clear()
         player_action_log.append(f'Removed improvement in region {region_id}.')
+        player_action_logs[player_id - 1] = player_action_log
 
     return player_action_logs
 
@@ -368,7 +369,7 @@ def resolve_improvement_builds(improvement_build_list, game_id, player_action_lo
             i += 1
         
         # place improvement
-        region_improvement.set_improvement(improvement_name, player_research)
+        region_improvement.set_improvement(improvement_name, player_research=player_research)
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
         else:
@@ -991,7 +992,7 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
 
 
     # Repair Diplomatic Relations
-    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, wardata_list)
+    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
 
 
     # Invite Overlord to Subject's Wars

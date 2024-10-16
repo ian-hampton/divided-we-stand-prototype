@@ -9,11 +9,13 @@
         "Combat Value": 9,
         "Dollars Upkeep": 0.25,
         "Oil Upkeep": 0,
-        "Dollars Cost": 5,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 5,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Artillery": {
         "Required Research": "Artillery",
@@ -25,11 +27,13 @@
         "Combat Value": 9,
         "Dollars Upkeep": 0.5,
         "Oil Upkeep": 0,
-        "Dollars Cost": 10,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 10,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Mechanized Infantry": {
         "Required Research": "Mechanized Infantry",
@@ -41,11 +45,13 @@
         "Combat Value": 7,
         "Dollars Upkeep": 0.5,
         "Oil Upkeep": 0,
-        "Dollars Cost": 10,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 10,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Special Forces": {
         "Required Research": "Special Operations",
@@ -57,11 +63,13 @@
         "Combat Value": 5,
         "Dollars Upkeep": 1,
         "Oil Upkeep": 0,
-        "Dollars Cost": 15,
-        "Basic Materials Cost": 15,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 15,
+            "Basic Materials": 15,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Motorized Infantry": {
         "Required Research": "Motorized Infantry",
@@ -73,11 +81,13 @@
         "Combat Value": 8,
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.25,
-        "Dollars Cost": 5,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 0,
+            "Common Metals": 5,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Light Tank": {
         "Required Research": "Light Tanks",
@@ -89,11 +99,13 @@
         "Combat Value": 6,
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.5,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 1,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 1,
+            "Rare Earth Elements": 0
+        }
     },
     "Heavy Tank": {
         "Required Research": "Heavy Tanks",
@@ -105,11 +117,13 @@
         "Combat Value": 6,
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.5,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 12,
-        "Advanced Metals Cost": 3,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 12,
+            "Advanced Metals": 3,
+            "Rare Earth Elements": 0
+        }
     },
     "Main Battle Tank": {
         "Required Research": "Main Battle Tanks",
@@ -121,10 +135,12 @@
         "Combat Value": 4,
         "Dollars Upkeep": 0,
         "Oil Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 15,
-        "Advanced Metals Cost": 5,
-        "Rare Earth Elements Cost": 1
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 15,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 1
+        }
     }
 }

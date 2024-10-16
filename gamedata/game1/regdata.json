@@ -5,7 +5,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -33,7 +33,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -123,7 +123,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -152,7 +152,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -185,7 +185,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -245,7 +245,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -261,8 +261,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Missile Silo",
-            "health": 5,
+            "name": "Industrial Zone",
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -277,7 +277,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -309,7 +309,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -341,7 +341,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -373,7 +373,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -405,7 +405,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -435,7 +435,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -465,7 +465,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -497,7 +497,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -531,7 +531,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -591,7 +591,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -608,7 +608,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -624,7 +624,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -653,7 +653,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -686,7 +686,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -747,7 +747,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -778,7 +778,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -808,7 +808,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -825,7 +825,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Oil Well",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -841,7 +841,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -870,7 +870,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Rare Earth Elements",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -936,7 +936,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -952,7 +952,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Common Metals Mine",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -968,7 +968,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -998,7 +998,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1029,7 +1029,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1044,8 +1044,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Capital",
+            "health": 1,
             "turnTimer": 99
         },
         "unitData": {
@@ -1060,7 +1060,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1091,7 +1091,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1124,7 +1124,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1155,7 +1155,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1171,7 +1171,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Industrial Zone",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -1220,7 +1220,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1251,7 +1251,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1283,7 +1283,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1316,7 +1316,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -1348,7 +1348,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1378,7 +1378,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1408,7 +1408,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Rare Earth Elements",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -1438,7 +1438,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1472,7 +1472,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1503,7 +1503,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1535,7 +1535,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -1566,7 +1566,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1597,7 +1597,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -1626,7 +1626,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -1653,10 +1653,10 @@
     "WESSD": {
         "regionData": {
             "fullName": "Western North Dakota",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1686,7 +1686,7 @@
     "EASSD": {
         "regionData": {
             "fullName": "Eastern North Dakota",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -1706,8 +1706,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -1722,7 +1722,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1750,10 +1750,10 @@
     "CENNE": {
         "regionData": {
             "fullName": "Central Nebraska",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1769,7 +1769,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Uranium Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -1782,10 +1782,10 @@
     "EASNE": {
         "regionData": {
             "fullName": "Eastern Nebraska",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1802,8 +1802,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -1815,10 +1815,10 @@
     "NTHKS": {
         "regionData": {
             "fullName": "Northern Kansas",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Rare Earth Elements",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1827,38 +1827,6 @@
                 "EASNE",
                 "EASKS",
                 "STHKS",
-                "NTECO"
-            ],
-            "infection": 0,
-            "quarantine": false
-        },
-        "improvementData": {
-            "name": null,
-            "health": 99,
-            "turnTimer": 99
-        },
-        "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
-        }
-    },
-    "STHKS": {
-        "regionData": {
-            "fullName": "Southern Kansas",
-            "ownerID": 0,
-            "occupierID": 0,
-            "purchaseCost": 5,
-            "regionResource": "Basic Materials",
-            "nukeTurns": 0,
-            "edgeOfMap": false,
-            "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHKS",
-                "EASKS",
-                "GREEN",
-                "REDCA",
-                "STECO",
                 "NTECO"
             ],
             "infection": 0,
@@ -1875,23 +1843,23 @@
             "ownerID": 99
         }
     },
-    "EASKS": {
+    "STHKS": {
         "regionData": {
-            "fullName": "Eastern Kansas",
-            "ownerID": 0,
+            "fullName": "Southern Kansas",
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
-            "containsRegionalCapital": true,
+            "containsRegionalCapital": false,
             "adjacencyList": [
-                "EASNE",
-                "NTHMO",
-                "WESMO",
+                "NTHKS",
+                "EASKS",
                 "GREEN",
-                "STHKS",
-                "NTHKS"
+                "REDCA",
+                "STECO",
+                "NTECO"
             ],
             "infection": 0,
             "quarantine": false
@@ -1907,13 +1875,45 @@
             "ownerID": 99
         }
     },
+    "EASKS": {
+        "regionData": {
+            "fullName": "Eastern Kansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASNE",
+                "NTHMO",
+                "WESMO",
+                "GREEN",
+                "STHKS",
+                "NTHKS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
     "REDCA": {
         "regionData": {
             "fullName": "Red Carpet Country",
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -1945,7 +1945,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -1978,7 +1978,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2009,7 +2009,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2038,10 +2038,10 @@
     "TXPAN": {
         "regionData": {
             "fullName": "Texas Panhandle",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2074,7 +2074,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2106,7 +2106,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2136,10 +2136,10 @@
     "WESTX": {
         "regionData": {
             "fullName": "Western Texas",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2154,8 +2154,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Capital",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -2167,10 +2167,10 @@
     "HILLC": {
         "regionData": {
             "fullName": "Hill Country",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2201,7 +2201,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2230,7 +2230,7 @@
     "STHTX": {
         "regionData": {
             "fullName": "Southern Texas",
-            "ownerID": 0,
+            "ownerID": 3,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -2292,7 +2292,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2322,7 +2322,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Rare Earth Elements",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2350,10 +2350,10 @@
     "NTWMN": {
         "regionData": {
             "fullName": "Northwest Minnesota",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2381,10 +2381,10 @@
     "NTEMN": {
         "regionData": {
             "fullName": "Northeast Minnesota",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -2410,10 +2410,10 @@
     "CENMN": {
         "regionData": {
             "fullName": "Central Minnesota",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2428,8 +2428,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Capital",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -2441,10 +2441,10 @@
     "STWMN": {
         "regionData": {
             "fullName": "Southwest Minnesota",
-            "ownerID": 0,
+            "ownerID": 4,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2472,10 +2472,10 @@
     "STEMN": {
         "regionData": {
             "fullName": "Southeast Minnesota",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2504,10 +2504,10 @@
     "NTWIA": {
         "regionData": {
             "fullName": "Northwest Iowa",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2523,7 +2523,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -2536,10 +2536,10 @@
     "NTEIA": {
         "regionData": {
             "fullName": "Northeast Iowa",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2568,10 +2568,10 @@
     "STWIA": {
         "regionData": {
             "fullName": "Southwest Iowa",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2586,7 +2586,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Advanced Metals Mine",
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -2599,10 +2599,10 @@
     "STEIA": {
         "regionData": {
             "fullName": "Southeast Iowa",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2617,8 +2617,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -2630,10 +2630,10 @@
     "NTHMO": {
         "regionData": {
             "fullName": "Northern Missouri",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2664,10 +2664,10 @@
     "WESMO": {
         "regionData": {
             "fullName": "Western Missouri",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2683,7 +2683,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Oil Well",
             "health": 99,
             "turnTimer": 99
         },
@@ -2696,10 +2696,10 @@
     "STLOU": {
         "regionData": {
             "fullName": "St. Louis",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -2714,7 +2714,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -2727,7 +2727,7 @@
     "OZARK": {
         "regionData": {
             "fullName": "Ozark Highlands",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -2745,7 +2745,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -2758,10 +2758,10 @@
     "STEMO": {
         "regionData": {
             "fullName": "Southeast Missouri",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2778,7 +2778,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -2791,10 +2791,10 @@
     "NTWAR": {
         "regionData": {
             "fullName": "Northwest Arkansas",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2811,7 +2811,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -2824,10 +2824,10 @@
     "NTEAR": {
         "regionData": {
             "fullName": "Northeast Arkansas",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2844,7 +2844,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -2860,7 +2860,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -2888,7 +2888,7 @@
     "STEAR": {
         "regionData": {
             "fullName": "Southeast Arkansas",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -2906,7 +2906,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -2955,7 +2955,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3015,7 +3015,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -3029,7 +3029,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3042,7 +3042,7 @@
     "NTWWI": {
         "regionData": {
             "fullName": "Northwest Wisconsin",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -3073,10 +3073,10 @@
     "CENWI": {
         "regionData": {
             "fullName": "North Central Wisconsin",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3091,7 +3091,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -3104,7 +3104,7 @@
     "NTEWI": {
         "regionData": {
             "fullName": "Northeast Wisconsin",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -3120,8 +3120,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -3133,10 +3133,10 @@
     "STWWI": {
         "regionData": {
             "fullName": "Southwest Wisconsin",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3165,10 +3165,10 @@
     "STEWI": {
         "regionData": {
             "fullName": "Southeast Wisconsin",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -3183,7 +3183,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3196,7 +3196,7 @@
     "UPPER": {
         "regionData": {
             "fullName": "Upper Peninsula",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -3212,7 +3212,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Solar Farm",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -3228,7 +3228,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3254,10 +3254,10 @@
     "WESMI": {
         "regionData": {
             "fullName": "West Michigan",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3285,10 +3285,10 @@
     "MIDMI": {
         "regionData": {
             "fullName": "Mid Michigan",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Rare Earth Elements",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -3315,10 +3315,10 @@
     "THUMB": {
         "regionData": {
             "fullName": "The Thumb",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3330,7 +3330,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3343,10 +3343,10 @@
     "STEMI": {
         "regionData": {
             "fullName": "Southeastern Michigan",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3360,8 +3360,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -3373,10 +3373,10 @@
     "NTWIL": {
         "regionData": {
             "fullName": "Northwest Illinois",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3393,7 +3393,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3406,10 +3406,10 @@
     "CHICA": {
         "regionData": {
             "fullName": "Greater Chicago",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3424,7 +3424,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3437,7 +3437,7 @@
     "FORGO": {
         "regionData": {
             "fullName": "Forgottonia",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -3455,8 +3455,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Capital",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -3468,7 +3468,7 @@
     "CENIL": {
         "regionData": {
             "fullName": "Central Illinois",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -3486,7 +3486,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Boot Camp",
+            "name": "City",
             "health": 5,
             "turnTimer": 99
         },
@@ -3499,10 +3499,10 @@
     "STWIL": {
         "regionData": {
             "fullName": "Southwest Illinois",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -3519,7 +3519,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3532,10 +3532,10 @@
     "EASIL": {
         "regionData": {
             "fullName": "Eastern Illinois",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3552,7 +3552,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3565,10 +3565,10 @@
     "LILEG": {
         "regionData": {
             "fullName": "Little Egypt",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3598,10 +3598,10 @@
     "NTHIN": {
         "regionData": {
             "fullName": "Northern Indiana",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Rare Earth Elements",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3621,18 +3621,18 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "CENIN": {
         "regionData": {
             "fullName": "Central Indiana",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3649,14 +3649,14 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "INDIA": {
@@ -3665,7 +3665,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -3691,10 +3691,10 @@
     "WABAS": {
         "regionData": {
             "fullName": "Wabash Valley",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3709,7 +3709,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3744,7 +3744,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Missile Defense System",
             "health": 99,
             "turnTimer": 99
         },
@@ -3757,10 +3757,10 @@
     "NTWOH": {
         "regionData": {
             "fullName": "Northwest Ohio",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3790,10 +3790,10 @@
     "CLEVE": {
         "regionData": {
             "fullName": "Greater Cleveland",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -3808,8 +3808,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Capital",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -3821,10 +3821,10 @@
     "MIAVA": {
         "regionData": {
             "fullName": "Miami Valley",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3839,7 +3839,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3852,7 +3852,7 @@
     "CENOH": {
         "regionData": {
             "fullName": "Central Ohio",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -3871,7 +3871,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3884,10 +3884,10 @@
     "CINCI": {
         "regionData": {
             "fullName": "Cincinnati",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3903,8 +3903,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -3916,10 +3916,10 @@
     "STHOH": {
         "regionData": {
             "fullName": "Southern Ohio",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3934,7 +3934,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -3947,10 +3947,10 @@
     "STEOH": {
         "regionData": {
             "fullName": "Southeastern Ohio",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -3964,7 +3964,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3977,10 +3977,10 @@
     "BLUEG": {
         "regionData": {
             "fullName": "Bluegrass",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -3999,18 +3999,18 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "WESKY": {
         "regionData": {
             "fullName": "Western Kentucky",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4026,8 +4026,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -4039,10 +4039,10 @@
     "PENNY": {
         "regionData": {
             "fullName": "Pennyroyal Region",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4059,7 +4059,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -4072,7 +4072,7 @@
     "CUMBE": {
         "regionData": {
             "fullName": "Cumberland Plateau",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -4093,23 +4093,23 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "NTWTN": {
         "regionData": {
             "fullName": "Northwest Tennessee",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4138,10 +4138,10 @@
     "NASHV": {
         "regionData": {
             "fullName": "Nashville",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -4156,8 +4156,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "City",
-            "health": 5,
+            "name": "Industrial Zone",
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -4172,7 +4172,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4199,7 +4199,7 @@
     "EASTN": {
         "regionData": {
             "fullName": "Eastern Tennessee",
-            "ownerID": 2,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -4231,10 +4231,10 @@
     "STWTN": {
         "regionData": {
             "fullName": "Southwest Tennessee",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4249,7 +4249,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -4265,7 +4265,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4299,7 +4299,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4365,7 +4365,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4394,7 +4394,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4426,7 +4426,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4458,7 +4458,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4488,7 +4488,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4516,10 +4516,10 @@
     "STEAL": {
         "regionData": {
             "fullName": "Southeast Alabama",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -4535,7 +4535,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Common Metals Mine",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -4548,10 +4548,10 @@
     "FLPAN": {
         "regionData": {
             "fullName": "Florida Panhandle",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -4566,7 +4566,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -4579,10 +4579,10 @@
     "GAINE": {
         "regionData": {
             "fullName": "Greater Gainesville",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4613,7 +4613,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4643,7 +4643,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4658,8 +4658,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Crude Barrier",
+            "health": 1,
             "turnTimer": 99
         },
         "unitData": {
@@ -4671,10 +4671,10 @@
     "TAMPA": {
         "regionData": {
             "fullName": "Tampa Bay Area",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4700,10 +4700,10 @@
     "STWFL": {
         "regionData": {
             "fullName": "Southwest Florida",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4716,8 +4716,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Capital",
-            "health": 5,
+            "name": null,
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -4732,7 +4732,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4757,10 +4757,10 @@
     "NTWGA": {
         "regionData": {
             "fullName": "Northwest Georgia",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4794,7 +4794,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4826,7 +4826,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -4853,10 +4853,10 @@
     "EASGA": {
         "regionData": {
             "fullName": "Eastern Georgia",
-            "ownerID": 2,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4886,10 +4886,10 @@
     "STWGA": {
         "regionData": {
             "fullName": "Southwest Georgia",
-            "ownerID": 1,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4921,7 +4921,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4953,7 +4953,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -4983,7 +4983,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -4996,7 +4996,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5009,10 +5009,10 @@
     "MDLND": {
         "regionData": {
             "fullName": "Midland",
-            "ownerID": 2,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5045,7 +5045,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5073,10 +5073,10 @@
     "SCLOW": {
         "regionData": {
             "fullName": "Lowcountry",
-            "ownerID": 2,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5090,8 +5090,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Capital",
-            "health": 5,
+            "name": null,
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -5103,7 +5103,7 @@
     "MOUNT": {
         "regionData": {
             "fullName": "Mountain",
-            "ownerID": 2,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5173,7 +5173,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -5204,7 +5204,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5234,7 +5234,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5264,7 +5264,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5291,10 +5291,10 @@
     "ROANO": {
         "regionData": {
             "fullName": "Roanoke Region",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Coal",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5323,10 +5323,10 @@
     "NTHVA": {
         "regionData": {
             "fullName": "Northern Virginia",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5341,8 +5341,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -5357,7 +5357,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -5384,10 +5384,10 @@
     "STWVA": {
         "regionData": {
             "fullName": "Southwest Virginia",
-            "ownerID": 2,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5404,8 +5404,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Industrial Zone",
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -5420,7 +5420,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5453,7 +5453,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5482,10 +5482,10 @@
     "VALLE": {
         "regionData": {
             "fullName": "Valley",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Advanced Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5503,7 +5503,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -5516,10 +5516,10 @@
     "POTOM": {
         "regionData": {
             "fullName": "Potomac Highlands",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5535,7 +5535,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Oil Well",
             "health": 99,
             "turnTimer": 99
         },
@@ -5548,10 +5548,10 @@
     "CHARL": {
         "regionData": {
             "fullName": "Charleston",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Common Metals",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -5566,7 +5566,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -5579,10 +5579,10 @@
     "WESMD": {
         "regionData": {
             "fullName": "Western Maryland",
-            "ownerID": 4,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5614,7 +5614,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5670,10 +5670,10 @@
     "NTWPA": {
         "regionData": {
             "fullName": "Northwest Pennsylvania",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5688,8 +5688,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -5701,10 +5701,10 @@
     "NTHPA": {
         "regionData": {
             "fullName": "Northern Pennsylvania",
-            "ownerID": 4,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5719,8 +5719,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Capital",
-            "health": 5,
+            "name": "Oil Well",
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -5732,10 +5732,10 @@
     "NTEPA": {
         "regionData": {
             "fullName": "Northeast Pennsylvania",
-            "ownerID": 4,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5752,7 +5752,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Industrial Zone",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -5765,10 +5765,10 @@
     "PITTS": {
         "regionData": {
             "fullName": "Greater Pittsburg",
-            "ownerID": 4,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5785,8 +5785,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Industrial Zone",
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -5798,10 +5798,10 @@
     "CENPA": {
         "regionData": {
             "fullName": "Central Pennsylvania",
-            "ownerID": 4,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5816,7 +5816,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -5829,10 +5829,10 @@
     "PAHLR": {
         "regionData": {
             "fullName": "Pennsylvania Highlands Region",
-            "ownerID": 4,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -5847,7 +5847,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5860,10 +5860,10 @@
     "PHILL": {
         "regionData": {
             "fullName": "Greater Philadelphia",
-            "ownerID": 4,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5880,7 +5880,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5893,10 +5893,10 @@
     "NTHNJ": {
         "regionData": {
             "fullName": "North Jersey",
-            "ownerID": 4,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -5910,8 +5910,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Capital",
-            "health": 5,
+            "name": null,
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -5926,7 +5926,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5951,10 +5951,10 @@
     "NTHNY": {
         "regionData": {
             "fullName": "North Country",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5968,8 +5968,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Boot Camp",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -5981,10 +5981,10 @@
     "WESNY": {
         "regionData": {
             "fullName": "Western New York",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -5999,7 +5999,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -6012,10 +6012,10 @@
     "FINLA": {
         "regionData": {
             "fullName": "Finger Lakes",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -6029,7 +6029,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -6042,10 +6042,10 @@
     "MOHAW": {
         "regionData": {
             "fullName": "Mohawk Valley",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Basic Materials",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -6059,7 +6059,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -6072,10 +6072,10 @@
     "ALBAN": {
         "regionData": {
             "fullName": "Albany",
-            "ownerID": 3,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
@@ -6092,8 +6092,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Boot Camp",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -6105,10 +6105,10 @@
     "STHNY": {
         "regionData": {
             "fullName": "Southern Tier",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Coal",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -6124,7 +6124,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Oil Well",
             "health": 99,
             "turnTimer": 99
         },
@@ -6172,7 +6172,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Oil",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -6202,7 +6202,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
@@ -6231,7 +6231,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Common Metals",
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
@@ -6263,7 +6263,7 @@
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Oil",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -6319,10 +6319,10 @@
     "NTHVT": {
         "regionData": {
             "fullName": "Northern Vermont",
-            "ownerID": 3,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Empty",
+            "regionResource": "Uranium",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -6349,7 +6349,7 @@
     "STHVT": {
         "regionData": {
             "fullName": "Southern Vermont",
-            "ownerID": 3,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -6367,8 +6367,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Capital",
-            "health": 5,
+            "name": null,
+            "health": 99,
             "turnTimer": 99
         },
         "unitData": {
@@ -6380,10 +6380,10 @@
     "NTHNH": {
         "regionData": {
             "fullName": "Northern New Hampshire",
-            "ownerID": 3,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -6441,10 +6441,10 @@
     "NTHME": {
         "regionData": {
             "fullName": "Northern Maine",
-            "ownerID": 3,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Basic Materials",
+            "regionResource": "Advanced Metals",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
@@ -6455,7 +6455,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Industrial Zone",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
@@ -6468,10 +6468,10 @@
     "STHME": {
         "regionData": {
             "fullName": "Southern Maine",
-            "ownerID": 3,
+            "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
-            "regionResource": "Uranium",
+            "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,

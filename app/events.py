@@ -9,6 +9,7 @@ from app import checks
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
+from app.wardata import WarData
 
 #EVENT INITIATION CODE
 ################################################################################
@@ -29,9 +30,6 @@ def trigger_event(full_game_id, current_turn_num, diplomacy_log):
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
 
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    wardata_list = core.read_file(wardata_filepath, 2)
-
     events_list = list(EVENT_DICT.keys())
     random.shuffle(events_list)
     event_conditions_dict = build_event_conditions_dict(full_game_id, current_turn_num, playerdata_list, active_games_dict)
@@ -47,7 +45,7 @@ def trigger_event(full_game_id, current_turn_num, diplomacy_log):
             chosen_event = event_override
         if event_conditions_met(chosen_event, event_conditions_dict, full_game_id, active_games_dict) and chosen_event not in already_chosen_events_list:
             print(chosen_event)
-            active_games_dict, playerdata_list, wardata_list, diplomacy_log = initiate_event(chosen_event, event_conditions_dict, full_game_id, current_turn_num, active_games_dict, playerdata_list, wardata_list, diplomacy_log)
+            active_games_dict, playerdata_list, diplomacy_log = initiate_event(chosen_event, event_conditions_dict, full_game_id, current_turn_num, active_games_dict, playerdata_list, diplomacy_log)
             break
 
     with open('active_games.json', 'w') as json_file:
@@ -57,12 +55,6 @@ def trigger_event(full_game_id, current_turn_num, diplomacy_log):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
 
     return diplomacy_log
 
@@ -77,14 +69,12 @@ def build_event_conditions_dict(game_id, current_turn_num, playerdata_list, acti
     - active_games_dict: A dictionary derived from the active_games.json file.
     '''
 
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
-    wardata_list = core.read_file(wardata_filepath, 2)
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
 
     event_conditions_dict = {
         "At Peace For At Least 8 Turns": [],
         "Event Count": len(active_games_dict[game_id]["Active Events"]) + len(active_games_dict[game_id]["Inactive Events"]),
-        "Global Improvement Count List": [0 * len(improvement_data_dict)],
+        "Global Improvement Count List": [0] * len(improvement_data_dict.keys()),
         "Most Research": "N/A",
         "Ongoing Wars": [],
         "Players at War": [],
@@ -105,8 +95,8 @@ def build_event_conditions_dict(game_id, current_turn_num, playerdata_list, acti
             if nation_name in research_1st:
                 event_conditions_dict["Most Research"] = nation_name
                 break
-    
-    wardata_list = wardata_list.reverse()
+    wardata = WarData(game_id)
+    '''
     try:
         for war in wardata_list:
             event_conditions_dict["Ongoing Wars"].append(war[11])
@@ -125,6 +115,7 @@ def build_event_conditions_dict(game_id, current_turn_num, playerdata_list, acti
     except(TypeError):
         for player_id in range(1, len(playerdata_list) + 1):
             event_conditions_dict["At Peace For At Least 8 Turns"].append(player_id)
+    '''
 
     return event_conditions_dict
 
@@ -169,7 +160,9 @@ def event_conditions_met(chosen_event, event_conditions_dict, game_id, active_ga
                     if event in major_event_list:
                         return False
             case _:
+                print(condition)
                 improvement_name_list = sorted(improvement_data_dict.keys())
+                print(f"{len(event_conditions_dict["Global Improvement Count List"])} vs {len(improvement_name_list)}")
                 for improvement in improvement_name_list:
                     if improvement in condition:
                         improvement_index = improvement_name_list.index(improvement)
@@ -180,7 +173,7 @@ def event_conditions_met(chosen_event, event_conditions_dict, game_id, active_ga
     
     return True
 
-def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_num, active_games_dict, playerdata_list, wardata_list, diplomacy_log):
+def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_num, active_games_dict, playerdata_list, diplomacy_log):
     '''
     Initiates the chosen event. If it is an instant resolution event, it will be resolved.
 
@@ -256,6 +249,9 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
                     victim_data["Victim Player ID"] = player_id
                     victim_data["Main Opponent Player ID"] = 0
                     defection_victims_dict[nation_name] = victim_data'''
+            #tba add code to idenity main opponent player id
+            wardata = WarData(game_id)
+            '''
             for nation_name in defection_victims_dict:
                 victim_player_id = defection_victims_dict[nation_name]["Victim Player ID"]
                 for war in wardata_list:
@@ -268,6 +264,7 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
                                     break
                         defection_victims_dict[nation_name]["Main Opponent Player ID"] = opponent_player_id
                         break
+            '''
             #resolve event now
             for region_id in regdata_dict:
                 region = Region(region_id, game_id)
@@ -380,6 +377,9 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
 
         case "United Nations Peacekeeping Mandate":
             #resolve event now
+            # to do - add code that ends all ongoing wars
+            wardata = WarData(game_id)
+            '''
             for war in wardata_list:
                 if war[13] == 'Ongoing':
                     signatories_list = [False, False, False, False, False, False, False, False, False, False]
@@ -396,11 +396,12 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
                     war[13] = 'White Peace'
                     war[15] = current_turn_num
                     diplomacy_log.append(f'{war_name} has ended with a white peace.')
+            '''
             #update playerdata
             diplomatic_relations_masterlist = []
             for playerdata in playerdata_list:
                 diplomatic_relations_masterlist.append(ast.literal_eval(playerdata[22]))
-            diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, wardata_list)
+            diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
             for index, playerdata in enumerate(playerdata_list):
                 playerdata[22] = str(diplomatic_relations_masterlist[index])
             #save to inactive events list
@@ -519,7 +520,7 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             political_power_economy_data[0] = '0.00'
             playerdata[10] = str(political_power_economy_data)
     
-    return active_games_dict, playerdata_list, wardata_list, diplomacy_log
+    return active_games_dict, playerdata_list, diplomacy_log
 
 def save_as_standard_delayed_event(chosen_event, active_games_dict, full_game_id, playerdata_list):
     '''
@@ -628,6 +629,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         while not valid_research:
                             research_name = input(f"Enter military research: ")
                             playerdata_list, valid_research = gain_free_research(game_id, research_name, player_id, playerdata_list)
+                        break
             active_event_dict = {}
             active_event_dict["Expiration"] = current_turn_num + 8
             active_event_dict["Attendance"] = summit_attendance_list
@@ -756,7 +758,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} has been embargoed.')
@@ -790,7 +792,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} has been humiliated.')
@@ -824,7 +826,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} will receive the foreign investment.')
@@ -858,7 +860,8 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            print(sorted_vote_tally_dict)
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} has been elected Mediator.')
@@ -938,7 +941,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         break
             if vote_tally_dict != {}:
                 sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-                top_two = sorted_vote_tally_dict[:2]
+                top_two = list(sorted_vote_tally_dict.items())[:2]
                 (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             else:
                 count_1 = 0
@@ -1024,7 +1027,7 @@ def gain_free_research(game_id, research_name, player_id, playerdata_list):
     valid_research = True
     if research_name in player_research_list:
         valid_research = False
-    if research_prereq not in player_research_list and research_prereq != None:
+    if research_prereq != None and research_prereq not in player_research_list:
         valid_research = False
     if valid_research:
         player_research_list.append(research_name)
@@ -1034,8 +1037,9 @@ def gain_free_research(game_id, research_name, player_id, playerdata_list):
                 if value.get("Research Type") in ['Energy', 'Infrastructure']:
                     totalitarian_bonus_list.append(key)
             if research_name in totalitarian_bonus_list:
-                player_stored_political_power += 1
+                player_stored_political_power += 2
 
+    print(valid_research)
     player_political_power_data[0] = core.round_total_income(player_stored_political_power)
     playerdata_list[player_id - 1][10] = str(player_political_power_data)
     playerdata_list[player_id - 1][26] = str(player_research_list)
@@ -1059,7 +1063,8 @@ def resolve_active_events(turn_status, public_actions_dict, private_actions_dict
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    for event_name in active_games_dict[full_game_id]["Active Events"]:
+    active_events_list = list(active_games_dict[full_game_id]["Active Events"].keys())
+    for event_name in active_events_list:
         public_actions_dict, private_actions_dict, active_games_dict, diplomacy_log = handle_active_event(event_name, public_actions_dict, private_actions_dict, active_games_dict, full_game_id, turn_status, diplomacy_log)
     
     with open('active_games.json', 'w') as json_file:
@@ -1228,7 +1233,6 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                     del active_games_dict[game_id]['Active Events'][event_name]
                     active_games_dict[game_id]["Inactive Events"].append(event_name)
                     diplomacy_log.append(f"{event_name} event has ended.")
-
 
     #retire active events if expired at end of turn
     current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])

@@ -669,8 +669,9 @@ def wars(full_game_id):
     playerdata_list = core.read_file(playerdata_filepath, 0)
     
     #read wardata.csv
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    wardata_list = core.read_file(wardata_filepath, 2)
+    # to do - update this to use new wardata
+    wardata_filepath = f''
+    wardata_list = []
     war_masterlist = []
     for war in wardata_list:
         war_entry = []

@@ -13,11 +13,11 @@ from app import interpreter
 from app import public_actions
 from app import private_actions
 from app import checks
-from app import resgraphs
 from app import events
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
+from app.wardata import WarData
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -46,8 +46,9 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
     for player_color in player_color_list:
         new_player_color = player_colors_hex[player_color]
         hexadecimal_player_color_list.append(new_player_color)
-   
-    # place starting capitals for players
+    
+
+    # Place Starting Capitals For Players
     random_assignment_list = []
     for index, region_id in enumerate(starting_region_list):
         player_id = index + 1
@@ -58,14 +59,21 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
             starting_region_improvement.set_improvement("Capital")
         else:
             random_assignment_list.append(player_id)
+    
     # place starting capitals for players who want random start
+    NO_RANDOM_PLACEMENT_SET = {'UPPER', 'NTHMI', 'WESMI', 'MIDMI', 'THUMB', 'STEMI',
+                                'FLPAN', 'GAINE', 'FIRCT', 'HALIF', 'TAMPA', 'STWFL', 'MIAMI',
+                                'WESNY', 'FINLA', 'STHNY', 'MOHAW', 'NTHNY', 'ALBAN', 'NEWYO', 'CONNE', 'RHODE', 'WESMA', 'NTHMA', 'STHMA', 'NTHVT', 'STHVT', 'NTHNH', 'STHNH', 'STHME', 'NTHME'}
     for random_assignment_player_id in random_assignment_list:
         while True:
             # randomly select a region
             conflict_detected = False
-            region_id_list = list(regdata_dict.keys())
-            random_region_id = random.choice(region_id_list)
+            region_id_list = list(regdata_dict.keys()) 
+            random_region_id = random.sample(region_id_list, 1)[0]
             random_region = Region(random_region_id, game_id)
+            # if region not allowed restart loop
+            if random_region_id in NO_RANDOM_PLACEMENT_SET:
+                continue
             # check if there is a player within three regions
             regions_in_radius = random_region.get_regions_in_radius(3)
             for candidate_region_id in regions_in_radius:
@@ -81,7 +89,7 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
                 random_region_improvement.set_improvement("Capital")
                 break
     
-    #read and update playerdata
+    # read and update playerdata
     playerdata_list = read_file(f'gamedata/{game_id}/playerdata.csv', 1)
     for index, player in enumerate(playerdata_list):
         player[2] = hexadecimal_player_color_list[index]
@@ -91,14 +99,14 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
         writer.writerow(early_player_data_header)
         writer.writerows(playerdata_list)
     
-    #update active_games.json
+    # update active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     active_games_dict[game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    #generate and update maps
+    # generate and update maps
     current_turn_num = get_current_turn_num(int(game_id[-1]))
     map_name = get_map_name(int(game_id[-1]))
     main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
@@ -121,10 +129,16 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     - player_foreign_policy_list: A list of player fp choices gathered from turn resolution HTML form. 
     - player_victory_condition_set_list: A list of player vc set choices gathered from turn resolution HTML form. 
     '''
-
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)
+    research_data_dict = get_scenario_dict(game_id, "Technologies")
+    five_point_research_list = []
+    for key in research_data_dict:
+        tech = research_data_dict[key]
+        if tech["Cost"] == 5:
+            five_point_research_list.append(key)
+    
     # read and update playerdata
     for index, player in enumerate(playerdata_list):
         if player[0] != "":
@@ -160,26 +174,10 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
                 resource_data[3] = rate
                 playerdata_list[index][j] = str(resource_data)
                 j += 1
-            # determine unlocked alliances
-            # to do: remove this shit, no longer needed but I am scared removing it will break something
-            if player[4] == "Diplomatic":
-                player[20] = [True, True, True, False, False]
-            elif player[4] == "Commercial":
-                player[20] = [True, True, False, False, False]
-            elif player[4] == "Isolationist":
-                player[20] = [True, False, False, False, False]
-            elif player[4] == "Imperialist":
-                player[20] = [True, True, False, False, False]
             # give starting research
-            # to do: get the five_point_research_list from the technologies file instead of this hardcoded garbage
-            starting_list = []
-            five_point_research_list = ['Coal Mining', 'Oil Drilling', 'Wind Turbines', 'City Resettlement', 'Surface Mining', 'Metallurgy', 'Infantry', 'Motorized Infantry', 'Standing Army', 'Basic Defenses']
             if player[3] == "Technocracy":
-                random_hard_list = random.sample(five_point_research_list, len(five_point_research_list))
-                for j in range(3):
-                    starting_list.append(random_hard_list.pop())
-                    j += 1
-            player[26] = starting_list
+                starting_list = random.sample(five_point_research_list, 3)
+                player[26] = str(starting_list)
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
@@ -211,6 +209,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     # update income in playerdata
     current_turn_num = 0
     checks.update_income(game_id, current_turn_num)
+    
     # gain starting resources
     for player in playerdata_list:
         dollars_data = ast.literal_eval(player[9])
@@ -270,8 +269,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     - private_actions_list: A list of player private actions gathered from turn resolution HTML form. 
     '''
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)
     current_turn_num = get_current_turn_num(int(full_game_id[-1]))
@@ -325,6 +322,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
     
     #Sort Player Entered Public Actions
+    print("Resolving public actions...")
     if public_actions_list != []:
         for i, player_public_actions_list in enumerate(public_actions_list):
             for public_action in player_public_actions_list:
@@ -358,7 +356,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             player_action_logs = public_actions.resolve_missile_builds(public_actions_dict['Make'], full_game_id, player_action_logs)
         if len(public_actions_dict['Event']) > 0:
             player_action_logs = public_actions.resolve_event_actions(public_actions_dict['Event'], full_game_id, current_turn_num, player_action_logs)
-        print('Public action processing completed!')
 
 
     #Post Public Action Checks
@@ -373,6 +370,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Sort Player Entered Private Actions
+    print("Resolving private actions...")
     if private_actions_list != []:
         for i, player_private_actions_list in enumerate(private_actions_list):
             for private_action in player_private_actions_list:
@@ -396,7 +394,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         if len(private_actions_dict['Move']) > 0:
             player_action_logs = private_actions.resolve_unit_movements(private_actions_dict['Move'], full_game_id, player_action_logs)
             update_control_map = True
-        print('Private action processing completed!')
 
 
     #Save Player Logs
@@ -410,6 +407,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Save War Logs
+    '''
     wardata_list = read_file(wardata_filepath, 2)
     for wardata in wardata_list:
         war_id = int(wardata[0])
@@ -428,9 +426,11 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         writer.writerow(wardata_header_a)
         writer.writerow(wardata_header_b)
         writer.writerows(wardata_list)
+    '''
 
 
     #End of Turn Checks and Updates
+    print("Resolving end of turn updates...")
     diplomacy_log = checks.total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_log)
     diplomacy_log = run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diplomacy_log)
     for i in range(player_count):
@@ -475,6 +475,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             diplomacy_log.append('All units and defensive improvements have regained 2 health.')
         #event procedure
         if current_turn_num % 8 == 0:
+            print("Triggering an event...")
             diplomacy_log = events.trigger_event(full_game_id, current_turn_num, diplomacy_log)
         with open(f'active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
@@ -556,7 +557,7 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
     active_games_dict[game_id]["Statistics"]["Region Disputes"] = 0
     active_games_dict[game_id]["Inactive Events"] = []
-    active_games_dict[game_id]["Active Events"] = []
+    active_games_dict[game_id]["Active Events"] = {}
     active_games_dict[game_id]["Current Event"] = {}
     active_games_dict[game_id]["Game Active"] = True
     with open('active_games.json', 'w') as json_file:
@@ -616,12 +617,10 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
         writer = csv.writer(file)
         writer.writerow(rm_header)
     
-    #create wardata.csv file
-    wardata_filepath = f'{files_destination}/wardata.csv'
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(wardata_header_a)
-        writer.writerow(wardata_header_b)
+    # create wardata.json
+    wardata_dict = {}
+    with open(f'gamedata/{game_id}/wardata.json', 'w') as json_file:
+        json.dump(wardata_dict, json_file, indent=4)
 
     #create vc_overrides.json
     # TO DO: replace this with length 3 lists for each nation in active_games
@@ -1102,10 +1101,9 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
     '''
 
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
-    wardata_list = read_file(wardata_filepath, 2)
+    wardata_list = []
     trucedata_list = read_file(trucedata_filepath, 1)
 
     #get needed data from playerdata.csv
@@ -1773,7 +1771,7 @@ def conduct_combat(game_id, attacker_data_list, defender_data_list, war_statisti
             war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Draw!')
     return attacker_unit_health, attacker_battles_won, attacker_battles_lost, defender_health, defender_battles_won, defender_battles_lost, war_log
 
-def war_resolution(game_id, player_id_1, war_justifications_list, signatories_list, playerdata_list):
+def war_resolution(game_id, player_id_1, WAR_JUSTIFICATIONS_LIST, signatories_list, playerdata_list):
     '''Resolves a war that ends in an attacker or defender victory.'''
     
     looser_playerdata = playerdata_list[player_id_1 - 1]
@@ -1781,7 +1779,7 @@ def war_resolution(game_id, player_id_1, war_justifications_list, signatories_li
         regdata_dict = json.load(json_file)
 
     #resolve each winning war justification
-    for war_justification in war_justifications_list:
+    for war_justification in WAR_JUSTIFICATIONS_LIST:
         victor_player_id = war_justification[0]
         victor_war_justification = war_justification[1]
         victor_war_claims_list = war_justification[2]
@@ -1847,11 +1845,12 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
         writer = csv.writer(file)
         writer.writerows(trucedata_list)
 
-def repair_relations(diplomatic_relations_masterlist, wardata_list):
+def repair_relations(diplomatic_relations_masterlist, game_id):
     '''
     Restores diplomatic relations to neutral if there is no longer a war between two players.
     '''
-
+    wardata = WarData(game_id)
+    '''
     for i, diplomatic_relations_list in enumerate(diplomatic_relations_masterlist):
         player_id_1 = i + 1
         for player_id_2, relation in enumerate(diplomatic_relations_list):
@@ -1868,7 +1867,7 @@ def repair_relations(diplomatic_relations_masterlist, wardata_list):
                             break
                 if war_found == False:
                     diplomatic_relations_masterlist[i][player_id_2] = 'Neutral'
-    
+    '''
     return diplomatic_relations_masterlist
 
 def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
@@ -2207,7 +2206,7 @@ crime_syndicate_rates = [80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 #war and unit/improvement list data
 ALLIANCE_LIST = ['Non-Aggression Pact', 'Defense Pact', 'Trade Agreement', 'Research Agreement']
 RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-war_justifications_list = ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
+WAR_JUSTIFICATIONS_LIST = ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
 unit_names = ['Infantry', 'Artillery', 'Mechanized Infantry', 'Special Forces', 'Motorized Infantry', 'Light Tank', 'Heavy Tank', 'Main Battle Tank']
 unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
 ten_health_improvements_list = ['military outpost', 'military base', 'Military Outpost', 'Military Base']

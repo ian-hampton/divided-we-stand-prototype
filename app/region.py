@@ -21,10 +21,10 @@ class Region:
             print(f"Error: {region_id} not recognized during Region class initialization.")
 
         # set attributes now that all checks have passed
-        self.region_id = region_id
+        self.region_id: str = region_id
         self.data = region_data
-        self.game_id = game_id
-        self.regdata_filepath = regdata_filepath
+        self.game_id: str = game_id
+        self.regdata_filepath: str = regdata_filepath
         self.claim_list = []
     
     def __eq__(self, other):
