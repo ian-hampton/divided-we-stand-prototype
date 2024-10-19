@@ -243,7 +243,7 @@ def resolve_improvement_removals(improvement_remove_list, game_id, player_action
         player_action_log = player_action_logs[player_id - 1]
 
         #ownership check
-        if region.owner_id() != player_id:
+        if region.owner_id != player_id:
             player_action_log.append(f'Failed to remove improvement in region {region_id}. You do not own or control this region.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -306,7 +306,7 @@ def resolve_improvement_builds(improvement_build_list, game_id, player_action_lo
         }
 
         # ownership check
-        if region.owner_id() != player_id or region.occupier_id() != 0:
+        if region.owner_id != player_id or region.occupier_id != 0:
             player_action_log.append(f'Failed to build {improvement_name} in region {region_id}. You do not own or control this region.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -983,7 +983,7 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
                         signatories_list[i - 1] = True
                 for region_id in regdata_dict:
                     region = Region(region_id, game_id)
-                    if signatories_list[region.owner_id() - 1] and signatories_list[region.occupier_id() - 1]:
+                    if signatories_list[region.owner_id - 1] and signatories_list[region.occupier_id - 1]:
                         region.set_occupier_id(0)
                 core.add_truce_period(game_id, signatories_list, 'White Peace', current_turn_num)
                 war[15] = current_turn_num
@@ -1111,7 +1111,7 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
         region = Region(region_id, game_id)
 
         # ownership check
-        if region.owner_id() != 0:
+        if region.owner_id != 0:
             player_action_log.append(f'Failed to purchase {region_id}. This region is already claimed by another nation.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -1351,7 +1351,7 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
                 for region_id in regdata_dict:
                     region = Region(region_id, game_id)
                     region_improvement = Improvement(region_id, game_id)
-                    if region_improvement.name() == 'Strip Mine' and region.owner_id() == player_id:
+                    if region_improvement.name == 'Strip Mine' and region.owner_id == player_id:
                         if region_improvement.turn_timer() > 4:
                             region_improvement.set_turn_timer()
         player_research_list.append(research_name)
@@ -1786,7 +1786,7 @@ def resolve_event_actions(event_action_list, game_id, current_turn_num, player_a
             event_action_data = event_action_str.split(" ")
             region_id = event_action_data[-1]
             region = Region(region_id, game_id)
-            if region.owner_id() != player_id:
+            if region.owner_id != player_id:
                 player_action_log.append(f'Failed to do Search For Artifacts action on {region_id}. You do not own that region.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1822,7 +1822,7 @@ def resolve_event_actions(event_action_list, game_id, current_turn_num, player_a
             event_action_data = event_action_str.split(" ")
             region_id = event_action_data[-1]
             region = Region(region_id, game_id)
-            if region.owner_id() != player_id:
+            if region.owner_id != player_id:
                 player_action_log.append(f'Failed to do Lease Region action on {region_id}. You do not own that region.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
@@ -1883,7 +1883,7 @@ def resolve_event_actions(event_action_list, game_id, current_turn_num, player_a
             for region_id in region_id_list:
                 region = Region(region_id, game_id)
                 region_unit = Unit(region_id, game_id)
-                if region.owner_id() != player_id:
+                if region.owner_id != player_id:
                     player_action_log.append(f'Failed to use Used Military Reinforcements to deploy {unit_type} {region_id}. You do not own that region.')
                     player_action_logs[player_id - 1] = player_action_log
                     continue

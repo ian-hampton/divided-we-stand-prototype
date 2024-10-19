@@ -216,8 +216,8 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             for region_id in regdata_dict:
                 region = Region(region_id, game_id)
                 region_improvement = Improvement(region_id, game_id)
-                victim_player_id = region.owner_id()
-                improvement_name = region_improvement.name()
+                victim_player_id = region.owner_id
+                improvement_name = region_improvement.name
                 victim_nation_name = nation_name_list[victim_player_id - 1]
                 if victim_nation_name not in top_three_economy and improvement_name in ['Coal Mine', 'Strip Mine', 'Oil Well', 'Oil Refinery', 'Solar Farm', 'Wind Farm']:
                     decay_roll = random.randint(1, 10)
@@ -269,10 +269,10 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             for region_id in regdata_dict:
                 region = Region(region_id, game_id)
                 region_unit = Unit(region_id, game_id)
-                player_id = region.owner_id()
+                player_id = region.owner_id
                 nation_name = nation_name_list[player_id - 1]
-                unit_name = region_unit.name()
-                unit_owner_id = region_unit.owner_id()
+                unit_name = region_unit.name
+                unit_owner_id = region_unit.owner_id
                 if nation_name in defection_victims_dict and unit_owner_id != 99:
                     if unit_owner_id == defection_victims_dict[nation_name]["Victim Player ID"]:
                         victim_nation_name = nation_name
@@ -351,7 +351,7 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             meltdown_candidates = []
             for region_id in regdata_dict:
                 region_improvement = Improvement(region_id, game_id)
-                if region_improvement.name() == "Nuclear Power Plant":
+                if region_improvement.name == "Nuclear Power Plant":
                     meltdown_candidates.append(region_id)
             random.shuffle(meltdown_candidates)
             meltdown_region_id = meltdown_candidates.pop()
@@ -359,7 +359,7 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             region = Region(meltdown_region_id, game_id)
             region_improvement = Improvement(meltdown_region_id, game_id)
             region_unit = Unit(meltdown_region_id, game_id)
-            victim_player_id = region.owner_id()
+            victim_player_id = region.owner_id
             victim_nation_name = playerdata_list[victim_player_id - 1][1]
             region_improvement.clear()
             region_unit.clear()
@@ -388,7 +388,7 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
                             signatories_list[i - 1] = True
                     for region_id in regdata_dict:
                         region = Region(region_id, game_id)
-                        owner_id = region.owner_id()
+                        owner_id = region.owner_id
                         if signatories_list[owner_id - 1]:
                             region.set_occupier_id = 0
                     core.add_truce_period(game_id, signatories_list, 'White Peace', current_turn_num)
@@ -1095,7 +1095,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 for region_id in regdata_dict:
                     region = Region(region_id, game_id)
                     region_unit = Unit(region_id, game_id)
-                    if region_unit.name() != None and region_unit.owner_id() == 0:
+                    if region_unit.name != None and region_unit.owner_id == 0:
                         ending_region_id = determine_target_region(region.adjacent_regions(), game_id)
                         if ending_region_id is not None:
                             movement_action_str = f'Move {region_id}-{ending_region_id}'
@@ -1103,7 +1103,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 #add deploy orders to action dictionary
                 for region_id in regdata_dict:
                     region = Region(region_id, game_id)
-                    if region.owner_id() == 99 and region.occupier_id() == 0:
+                    if region.owner_id == 99 and region.occupier_id == 0:
                         if current_turn_num >= 24:
                             unit_abbrev = 'HT'
                         elif current_turn_num >= 16:
@@ -1118,7 +1118,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 invasion_unit_count = 0
                 for region_id in regdata_dict:
                     region_unit = Unit(region_id, game_id)
-                    if region_unit.name() != None and region_unit.owner_id() == 0:
+                    if region_unit.name != None and region_unit.owner_id == 0:
                         invasion_unit_count += 1
                 if invasion_unit_count == 0:
                     end_foreign_invasion(game_id)
@@ -1126,7 +1126,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 invasion_unoccupied_count = 0
                 for region_id in active_games_dict[game_id]['Active Events'][event_name]["Reinforcements Regions"]:
                     region = Region(region_id, game_id)
-                    if region.occupier_id() == 0:
+                    if region.occupier_id == 0:
                         invasion_unoccupied_count += 1
                 if invasion_unoccupied_count == 0:
                     end_foreign_invasion(game_id)
@@ -1167,11 +1167,11 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                         if infection_score > 0:
                             for adjacent_region_id in region.adjacent_regions():
                                 adjacent_region = Region(adjacent_region_id, game_id)
-                                adjacent_owner_id = adjacent_region.owner_id()
+                                adjacent_owner_id = adjacent_region.owner_id
                                 adjacent_infection_score = adjacent_region.infection()
                                 if adjacent_infection_score == 0:
                                     # to do - make closed_borders_player_ids_list a dictionary instead of a list to improve runtime
-                                    if not quarantined and (region.owner_id() != adjacent_owner_id and adjacent_owner_id not in closed_borders_player_ids_list):
+                                    if not quarantined and (region.owner_id != adjacent_owner_id and adjacent_owner_id not in closed_borders_player_ids_list):
                                         spread_roll = random.randint(1, 10)
                                         if spread_roll < spread_value:
                                             continue
@@ -1184,7 +1184,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 infection_scores = [0 * len(playerdata_list)]
                 for region_id in regdata_dict:
                     region = Region(region_id, game_id)
-                    owner_id = region.owner_id()
+                    owner_id = region.owner_id
                     infection_score = region.infection()
                     if owner_id in range(1, len(infection_scores) + 1):
                         infection_scores[owner_id - 1] += infection_score
@@ -1219,7 +1219,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 #check if leased regions have changed hands
                 for region_id in active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
                     region = Region(region_id, game_id)
-                    if region.owner_id() != player_id:
+                    if region.owner_id != player_id:
                         active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"].remove(region_id)
                         diplomacy_log.append(f"{region_id} is no longer being leased to the foreign nation.")
                 #check if event has ended
@@ -1272,11 +1272,11 @@ def determine_target_region(adjacency_list, game_id):
         region = Region(game_id, adjacent_region_id)
         region_improvement = Improvement(game_id, adjacent_region_id)
         region_unit = Unit(game_id, adjacent_region_id)
-        region_owner_id = region.owner_id()
-        region_occupier_id = region.occupier_id()
-        improvement_name = region_improvement.name()
+        region_owner_id = region.owner_id
+        region_occupier_id = region.occupier_id
+        improvement_name = region_improvement.name
         improvement_health = region_improvement.health()
-        unit_name = region_unit.name()
+        unit_name = region_unit.name
         candidate_region_priority = 0
         candidate_region_health = 0
         #evaluate candidate region priority
@@ -1288,12 +1288,12 @@ def determine_target_region(adjacency_list, game_id):
             candidate_region_priority += 2
         elif region_owner_id == 0:
             continue
-        if unit_name != None and region_unit.owner_id() != 0:
+        if unit_name != None and region_unit.owner_id != 0:
             candidate_region_priority += 1
         #evaluate candidate region health
         if improvement_name != None and improvement_health != 99 and region_owner_id != 99:
             candidate_region_health += improvement_health
-        if unit_name != None and region_unit.owner_id() != 0:
+        if unit_name != None and region_unit.owner_id != 0:
             candidate_region_health += region_unit.health()
         #check if candidate region is an easier or higher priority target
         if candidate_region_priority > target_region_priority:
@@ -1315,12 +1315,12 @@ def end_foreign_invasion(game_id):
     for region_id in regdata_dict:
         region = Region(game_id, region_id)
         region_unit = Unit(game_id, region_id)
-        if region.owner_id() == 99:
+        if region.owner_id == 99:
             region.set_owner_id(0)
             region.set_occupier_id(0)
-        if region.occupier_id() == 99:
+        if region.occupier_id == 99:
             region.set_occupier_id(0)
-        if region_unit.name() != None and region_unit.owner_id() != 0:
+        if region_unit.name != None and region_unit.owner_id != 0:
             region_unit.clear()
 
 

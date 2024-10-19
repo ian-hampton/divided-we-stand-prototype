@@ -42,8 +42,8 @@ def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, curr
 
         #get info on current region
         current_region_unit = Unit(current_region_id, game_id)
-        current_unit_name = current_region_unit.name()
-        current_unit_owner_id = current_region_unit.owner_id()
+        current_unit_name = current_region_unit.name
+        current_unit_owner_id = current_region_unit.owner_id
 
         #unit present check
         if current_unit_name == None or player_id != current_unit_owner_id:
@@ -54,9 +54,9 @@ def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, curr
         #get information on target region
         target_region = Region(target_region_id, game_id)
         target_region_unit = Unit(target_region_id, game_id)
-        target_owner_id = target_region.owner_id()
-        target_occupier_id = target_region.occupier_id()
-        target_unit_name = target_region_unit.name()
+        target_owner_id = target_region.owner_id
+        target_occupier_id = target_region.occupier_id
+        target_unit_name = target_region_unit.name
 
         #destination owned by player check
         if target_owner_id != player_id and target_occupier_id != player_id:
@@ -71,7 +71,7 @@ def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, curr
             continue
         
         #withdraw unit
-        target_region_unit.move(target_region_id, withdraw=True)
+        movement_status = target_region_unit.move(target_region, withdraw=True)
         player_action_log.append(f'Withdrew {current_unit_name} {current_region_id} - {target_region_id}.')
         player_action_logs[player_id - 1] = player_action_log
 
@@ -98,10 +98,10 @@ def resolve_unit_withdraws(unit_withdraw_list, game_id, player_action_logs, curr
         for region_id in regdata_dict:
             region = Region(region_id, game_id)
             region_unit = Unit(region_id, game_id)
-            if region_unit.owner_id() == player_id and region.owner_id() in disallowed_list:
+            if region_unit.owner_id == player_id and region.owner_id in disallowed_list:
                 region_unit.clear()
                 used_mc -= 1
-                player_action_log.append(f'{region_unit.name()} {region_id} was lost due to no withdraw order.')
+                player_action_log.append(f'{region_unit.name} {region_id} was lost due to no withdraw order.')
                 player_action_logs[player_id - 1] = player_action_log
         diplomatic_relations_masterlist[player_id - 1] = diplomatic_relations_list
         military_capacity_masterlist[player_id - 1] = f'{used_mc}/{total_mc}'
@@ -139,7 +139,7 @@ def resolve_unit_disbands(unit_disband_list, game_id, player_action_logs):
         region_id = disband_action[1][-5:]
         region = Region(region_id, game_id)
         region_unit = Unit(region_id, game_id)
-        unit_name = region_unit.name()
+        unit_name = region_unit.name
         player_military_capacity = military_capacity_masterlist[player_id - 1]
         player_action_log = player_action_logs[player_id - 1]
 
@@ -150,7 +150,7 @@ def resolve_unit_disbands(unit_disband_list, game_id, player_action_logs):
             continue
 
         # region ownership check
-        if region.owner_id() != player_id:
+        if region.owner_id != player_id:
             player_action_log.append(f'Failed to disband unit in region {region_id}. You do not own or control this region.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -232,13 +232,13 @@ def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
         }
 
         # ownership check
-        if region.owner_id() != player_id:
+        if region.owner_id != player_id:
             player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. You do not own this region.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
         # occupied check
-        if region.occupier_id() != 0:
+        if region.occupier_id != 0:
             player_action_log.append(f'Failed to deploy {unit_name} in region {region_id}. This region is occupied.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -733,20 +733,18 @@ def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
     return player_action_logs
 
 def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
-    '''Resolves all unit movements, including the resulting combat and occupation.'''
+    '''
+    Resolves all unit movements, including the resulting combat and occupation.
+    '''
 
-    #define core lists
+    # define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 0)
-    wardata_list = core.read_file(wardata_filepath, 2)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
 
-    #get needed player info
+    # get needed player info
     nation_name_list = []
     relations_data_masterlist = []
     research_masterlist = []
@@ -755,7 +753,7 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
         relations_data_masterlist.append(ast.literal_eval(playerdata[22]))
         research_masterlist.append(ast.literal_eval(playerdata[26]))
 
-    #determine movement order
+    # determine movement order
     players_moving_units = []
     for unit_movement in unit_movement_list:
         player_id = unit_movement[0]
@@ -774,7 +772,7 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
         print(f'{position}. {nation_name}')
 
 
-    #Execute Actions
+    # Execute Actions
     for unit_movement in ordered_unit_movement_list:
         attacker_player_id = unit_movement[0]
         region_str = unit_movement[1][5:]
@@ -787,213 +785,187 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
         else:
             attacker_nation_name = "Foreign Invasion"
 
-        #move the unit one region at a time
+        # Move Unit One Region at a Time
         current_region_id = origin_region_id
         for target_region_id in move_list:
-            #get information on current region
-            current_region_data = core.get_region_data(regdata_list, current_region_id)
-            current_unit_data = ast.literal_eval(current_region_data[5])
-            current_unit_id = current_unit_data[0]
-            current_unit_owner_id = 0
-            if current_unit_id != None:
-                current_unit_health = current_unit_data[1]
-                current_unit_owner_id = current_unit_data[2]
-            current_adjacency_list = core.get_adjacency_list(regdata_list, current_region_id)
-            current_unit_index = core.unit_ids.index(current_unit_id)
-            current_unit_name = core.unit_names[current_unit_index]
-            #current region checks
-            if current_unit_id == None or attacker_player_id != current_unit_owner_id:
+            
+            # get current region classes
+            current_region = Region(current_region_id, game_id)
+            current_region_unit = Unit(current_region_id, game_id)
+
+            # current region checks
+            if current_region_unit.name == None or attacker_player_id != current_region_unit.owner_id:
                 if attacker_player_id != 99:
                     player_action_log.append(f'Failed to perform a move action from {current_region_id}. You do not control a unit there.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
                 continue
-            if target_region_id not in current_adjacency_list:
+            if target_region_id not in current_region.adjacent_regions():
                 if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. Target region not adjacent to current region.')
+                    player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. Target region not adjacent to current region.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
                 continue
             if target_region_id == current_region_id:
                 continue
-            #get information on target region
-            target_region_data = core.get_region_data(regdata_list, target_region_id)
-            target_control_data = ast.literal_eval(target_region_data[2])
-            target_improvement_data = ast.literal_eval(target_region_data[4])
-            target_unit_data = ast.literal_eval(target_region_data[5])
-            target_owner_id = target_control_data[0]
-            target_occupier_id = target_control_data[1]
-            target_improvement_name = target_improvement_data[0]
-            target_improvement_health = target_improvement_data[1]
-            target_unit_id = target_unit_data[0]
-            target_unit_owner_id = 0
-            if target_unit_id != None:
-                target_unit_health = target_unit_data[1]
-                target_unit_owner_id = target_unit_data[2]
-            #generate player_id lists
-            if attacker_player_id != 99:
-                at_war_with_active_player_list = core.get_wars(attacker_relations_data)
-                defensive_pact_with_active_player_list = core.get_alliances(attacker_relations_data, "Defense Pact")
-                puppet_state_of_active_player_list = core.get_subjects(playerdata_list, attacker_nation_name, "Puppet State")
-                revolting_puppet_state_of_active_player_list = []
-                for select_player_id in puppet_state_of_active_player_list:
-                    if select_player_id in at_war_with_active_player_list:
-                        revolting_puppet_state_of_active_player_list.append(select_player_id)
-            else:
-                at_war_with_active_player_list = [i for i in range(1, len(playerdata_list) + 1)]
-                defensive_pact_with_active_player_list = []
-                puppet_state_of_active_player_list = []
-                revolting_puppet_state_of_active_player_list = []
+
+            # get target region classes
+            target_region = Region(target_region_id, game_id)
+            target_region_improvement = Improvement(target_region_id, game_id)
+            target_region_unit = Unit(target_region_id, game_id)
+
             #target region checks
-            if target_owner_id == 0:
+            if target_region.owner_id == 0:
                 if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.')
+                    player_action_log.append(f'Failed to move {target_region_unit.name} {current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
             #illegal move check
-            both_units_owned_by_attacker = (attacker_player_id == target_unit_owner_id)
-            defending_unit_owned_by_ally = (target_unit_owner_id in defensive_pact_with_active_player_list)
-            defending_unit_owned_by_loyal_puppet_state = (target_unit_owner_id in puppet_state_of_active_player_list and target_unit_owner_id not in at_war_with_active_player_list)
-            if both_units_owned_by_attacker or defending_unit_owned_by_ally or defending_unit_owned_by_loyal_puppet_state:
+            if not target_region_unit.is_hostile(current_region_unit.owner_id):
                 if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. A friendly unit is present in the target region.')
+                    player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. A friendly unit is present in the target region.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
                     continue
-            if target_owner_id not in at_war_with_active_player_list and target_owner_id not in defensive_pact_with_active_player_list and target_owner_id not in puppet_state_of_active_player_list:
-                if target_owner_id != attacker_player_id:
-                    if attacker_player_id != 99:
-                        player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}. Region is controlled by a player that is neither your ally nor enemy.')
-                        player_action_logs[attacker_player_id - 1] = player_action_log
-                        continue
+            if not target_region.is_valid_move(current_region_unit.owner_id):
+                if attacker_player_id != 99:
+                    player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.')
+                    player_action_logs[attacker_player_id - 1] = player_action_log
+                    continue
             
-            #combat will occur if hostile unit present and/or defensive improvement present
-            attacking_unit_alive = True
-            no_opposition = True
-            hostile_unit_present = target_unit_id != None and target_unit_owner_id in at_war_with_active_player_list
-            hostile_improvement_present = (target_owner_id in at_war_with_active_player_list and target_improvement_health != 99) or (target_improvement_name == 'Capital' and target_improvement_health != 0 and (target_owner_id in at_war_with_active_player_list or target_occupier_id in at_war_with_active_player_list))
-            if hostile_unit_present or hostile_improvement_present:
-                #identify war this combat is a part of and get war data
-                if attacker_player_id != 99 or target_owner_id != 99 or target_unit_owner_id != 99:
-                    war_role_1 = None
-                    war_role_2 = None
-                    for war in wardata_list:
-                        if war[attacker_player_id] != '-' and war[target_unit_owner_id] != '-' and war[13] == 'Ongoing':
-                            attacker_war_data = ast.literal_eval(war[attacker_player_id])
-                            if target_unit_id != None:
-                                    defender_war_data = ast.literal_eval(war[target_unit_owner_id])
-                            else: 
-                                defender_war_data = ast.literal_eval(war[target_owner_id])
-                            attacker_role = attacker_war_data[0]
-                            defender_role = defender_war_data[0]
-                            war_role_1 = attacker_role
-                            war_role_2 = defender_role
-                            if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Defender' in war_role_1 and 'Attacker' in war_role_2):
-                                attacker_battles_won = attacker_war_data[2]
-                                attacker_battles_lost = attacker_war_data[3]
-                                attacker_unit_casualties = attacker_war_data[4]
-                                attacker_improvements_lost = attacker_war_data[5]
-                                defender_battles_won = defender_war_data[2]
-                                defender_battles_lost = defender_war_data[3]
-                                defender_unit_casualties = defender_war_data[4]
-                                defender_improvements_lost = defender_war_data[5]
-                                war_log = ast.literal_eval(war[14])
-                                break
+            # Execute Movement Order
+            movement_status = current_region_unit.move(target_region)
+            # update player log
+            if movement_status == True:
+                player_action_log.append(f'Successfully moved {current_region_unit.name} {current_region_id} - {target_region_id}.')
+            else:
+                player_action_log.append(f'Failed to complete move {current_region_unit.name} {current_region_id} - {target_region_id}. Check combat log for details.')
+            player_action_logs[attacker_player_id - 1] = player_action_log
+            continue
+
+            #### old code below ####
+
+            #identify war this combat is a part of and get war data
+            if attacker_player_id != 99 or target_owner_id != 99 or target_unit_owner_id != 99:
+                war_role_1 = None
+                war_role_2 = None
+                for war in wardata_list:
+                    if war[attacker_player_id] != '-' and war[target_unit_owner_id] != '-' and war[13] == 'Ongoing':
+                        attacker_war_data = ast.literal_eval(war[attacker_player_id])
+                        if target_unit_id != None:
+                                defender_war_data = ast.literal_eval(war[target_unit_owner_id])
+                        else: 
+                            defender_war_data = ast.literal_eval(war[target_owner_id])
+                        attacker_role = attacker_war_data[0]
+                        defender_role = defender_war_data[0]
+                        war_role_1 = attacker_role
+                        war_role_2 = defender_role
+                        if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Defender' in war_role_1 and 'Attacker' in war_role_2):
+                            attacker_battles_won = attacker_war_data[2]
+                            attacker_battles_lost = attacker_war_data[3]
+                            attacker_unit_casualties = attacker_war_data[4]
+                            attacker_improvements_lost = attacker_war_data[5]
+                            defender_battles_won = defender_war_data[2]
+                            defender_battles_lost = defender_war_data[3]
+                            defender_unit_casualties = defender_war_data[4]
+                            defender_improvements_lost = defender_war_data[5]
+                            war_log = ast.literal_eval(war[14])
+                            break
+                else:
+                    attacker_battles_won = 0
+                    attacker_battles_lost = 0
+                    attacker_unit_casualties = 0
+                    attacker_improvements_lost = 0
+                    defender_battles_won = 0
+                    defender_battles_lost = 0
+                    defender_unit_casualties = 0
+                    defender_improvements_lost = 0
+                    war_log = []
+                    if attacker_nation_name == "Foreign Invasion":
+                        war_role_1 = "Main Attacker"
+                        war_role_2 = "Main Defender"
                     else:
-                        attacker_battles_won = 0
-                        attacker_battles_lost = 0
-                        attacker_unit_casualties = 0
-                        attacker_improvements_lost = 0
-                        defender_battles_won = 0
-                        defender_battles_lost = 0
-                        defender_unit_casualties = 0
-                        defender_improvements_lost = 0
-                        war_log = []
-                        if attacker_nation_name == "Foreign Invasion":
-                            war_role_1 = "Main Attacker"
-                            war_role_2 = "Main Defender"
-                        else:
-                            war_role_1 = "Main Defender"
-                            war_role_2 = "Main Attacker"
-                #unit vs unit combat
-                if hostile_unit_present:
-                    target_player_id = target_unit_owner_id
-                    if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"]:
-                        defender_nation_name = nation_name_list[target_player_id - 1]
+                        war_role_1 = "Main Defender"
+                        war_role_2 = "Main Attacker"
+            #unit vs unit combat
+            if hostile_unit_present:
+                target_player_id = target_unit_owner_id
+                if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"]:
+                    defender_nation_name = nation_name_list[target_player_id - 1]
+                else:
+                    defender_nation_name = "Foreign Invasion"
+                target_unit_index = core.unit_ids.index(target_unit_id)
+                target_unit_name = core.unit_names[target_unit_index]
+                #conduct combat
+                attacker_data_list = [current_unit_id, current_unit_health, attacker_player_id, war_role_1, current_region_id]
+                defender_data_list = [target_unit_id, target_unit_health, target_player_id, war_role_2, target_region_id]
+                war_statistics_list = [attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost]
+                current_unit_health, attacker_battles_won, attacker_battles_lost, target_unit_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
+                if current_unit_health > 0:
+                    current_unit_data = [current_unit_id, current_unit_health, current_unit_owner_id]
+                    regdata_list = core.update_unit_data(regdata_list, current_region_id, current_unit_data)
+                else:
+                    attacker_unit_casualties += 1
+                    attacking_unit_alive = False
+                    regdata_list = core.update_unit_data(regdata_list, current_region_id, core.empty_unit_data)
+                    war_log.append(f'    {attacker_nation_name} {current_unit_name} {current_region_id} has been lost.')
+                if target_unit_health > 0:
+                    no_opposition = False
+                    target_unit_data = [target_unit_id, target_unit_health, target_player_id]
+                    regdata_list = core.update_unit_data(regdata_list, target_region_id, target_unit_data)
+                else:
+                    defender_unit_casualties += 1
+                    regdata_list = core.update_unit_data(regdata_list, target_region_id, core.empty_unit_data)
+                    war_log.append(f'    {defender_nation_name} {target_unit_name} {target_region_id} has been lost.')
+            #unit vs defensive improvement
+            if attacking_unit_alive and hostile_improvement_present:
+                target_player_id = target_owner_id
+                if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"]:
+                    defender_nation_name = nation_name_list[target_owner_id - 1]
+                else:
+                    defender_nation_name = "Foreign Invasion"
+                #conduct combat
+                attacker_data_list = [current_unit_id, current_unit_health, attacker_player_id, war_role_1, current_region_id]
+                defender_data_list = [target_improvement_name, target_improvement_health, target_player_id, war_role_2, target_region_id]
+                war_statistics_list = [attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost]
+                current_unit_health, attacker_battles_won, attacker_battles_lost, target_improvement_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
+                #resolve combat outcome
+                if current_unit_health > 0:
+                    current_unit_data = [current_unit_id, current_unit_health, current_unit_owner_id]
+                    regdata_list = core.update_unit_data(regdata_list, current_region_id, current_unit_data)
+                else:
+                    attacker_unit_casualties += 1
+                    attacking_unit_alive = False
+                    regdata_list = core.update_unit_data(regdata_list, current_region_id, core.empty_unit_data)
+                    war_log.append(f'    {attacker_nation_name} {current_unit_name} {current_region_id} has been lost.')
+                if target_improvement_health > 0:
+                    no_opposition = False
+                    target_improvement_data = [target_improvement_name, target_improvement_health]
+                    regdata_list = core.update_improvement_data(regdata_list, target_region_id, target_improvement_data)
+                else:
+                    if target_improvement_name != 'Capital':
+                        defender_improvements_lost += 1
+                        regdata_list = core.update_improvement_data(regdata_list, target_region_id, core.empty_improvement_data)
+                        war_log.append(f'    {defender_nation_name} {target_improvement_name} {target_region_id} has been destroyed.')
                     else:
-                        defender_nation_name = "Foreign Invasion"
-                    target_unit_index = core.unit_ids.index(target_unit_id)
-                    target_unit_name = core.unit_names[target_unit_index]
-                    #conduct combat
-                    attacker_data_list = [current_unit_id, current_unit_health, attacker_player_id, war_role_1, current_region_id]
-                    defender_data_list = [target_unit_id, target_unit_health, target_player_id, war_role_2, target_region_id]
-                    war_statistics_list = [attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost]
-                    current_unit_health, attacker_battles_won, attacker_battles_lost, target_unit_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
-                    if current_unit_health > 0:
-                        current_unit_data = [current_unit_id, current_unit_health, current_unit_owner_id]
-                        regdata_list = core.update_unit_data(regdata_list, current_region_id, current_unit_data)
-                    else:
-                        attacker_unit_casualties += 1
-                        attacking_unit_alive = False
-                        regdata_list = core.update_unit_data(regdata_list, current_region_id, core.empty_unit_data)
-                        war_log.append(f'    {attacker_nation_name} {current_unit_name} {current_region_id} has been lost.')
-                    if target_unit_health > 0:
-                        no_opposition = False
-                        target_unit_data = [target_unit_id, target_unit_health, target_player_id]
-                        regdata_list = core.update_unit_data(regdata_list, target_region_id, target_unit_data)
-                    else:
-                        defender_unit_casualties += 1
-                        regdata_list = core.update_unit_data(regdata_list, target_region_id, core.empty_unit_data)
-                        war_log.append(f'    {defender_nation_name} {target_unit_name} {target_region_id} has been lost.')
-                #unit vs defensive improvement
-                if attacking_unit_alive and hostile_improvement_present:
-                    target_player_id = target_owner_id
-                    if "Foreign Invasion" not in active_games_dict[game_id]["Active Events"]:
-                        defender_nation_name = nation_name_list[target_owner_id - 1]
-                    else:
-                        defender_nation_name = "Foreign Invasion"
-                    #conduct combat
-                    attacker_data_list = [current_unit_id, current_unit_health, attacker_player_id, war_role_1, current_region_id]
-                    defender_data_list = [target_improvement_name, target_improvement_health, target_player_id, war_role_2, target_region_id]
-                    war_statistics_list = [attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost]
-                    current_unit_health, attacker_battles_won, attacker_battles_lost, target_improvement_health, defender_battles_won, defender_battles_lost, war_log = core.conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log)
-                    #resolve combat outcome
-                    if current_unit_health > 0:
-                        current_unit_data = [current_unit_id, current_unit_health, current_unit_owner_id]
-                        regdata_list = core.update_unit_data(regdata_list, current_region_id, current_unit_data)
-                    else:
-                        attacker_unit_casualties += 1
-                        attacking_unit_alive = False
-                        regdata_list = core.update_unit_data(regdata_list, current_region_id, core.empty_unit_data)
-                        war_log.append(f'    {attacker_nation_name} {current_unit_name} {current_region_id} has been lost.')
-                    if target_improvement_health > 0:
-                        no_opposition = False
-                        target_improvement_data = [target_improvement_name, target_improvement_health]
+                        target_improvement_data = ['Capital', 0]
                         regdata_list = core.update_improvement_data(regdata_list, target_region_id, target_improvement_data)
-                    else:
-                        if target_improvement_name != 'Capital':
-                            defender_improvements_lost += 1
-                            regdata_list = core.update_improvement_data(regdata_list, target_region_id, core.empty_improvement_data)
-                            war_log.append(f'    {defender_nation_name} {target_improvement_name} {target_region_id} has been destroyed.')
-                        else:
-                            target_improvement_data = ['Capital', 0]
-                            regdata_list = core.update_improvement_data(regdata_list, target_region_id, target_improvement_data)
-                            war_log.append(f'    {defender_nation_name} {target_improvement_name} {target_region_id} has been defeated.')
-                #repackage war data now that combat is over
-                if attacker_player_id != 99 or target_owner_id != 99 or target_unit_owner_id != 99:
-                    for war in wardata_list:
-                        if war[attacker_player_id] != '-' and war[target_unit_owner_id] != '-' and war[13] == 'Ongoing':
-                            if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Defender' in war_role_1 and 'Attacker' in war_role_2):
-                                attacker_war_data[2] = attacker_battles_won
-                                attacker_war_data[3] = attacker_battles_lost
-                                attacker_war_data[4] = attacker_unit_casualties
-                                attacker_war_data[5] = attacker_improvements_lost
-                                war[attacker_player_id] = str(attacker_war_data)
-                                defender_war_data[2] = defender_battles_won
-                                defender_war_data[3] = defender_battles_lost
-                                defender_war_data[4] = defender_unit_casualties
-                                defender_war_data[5] = defender_improvements_lost
-                                if target_unit_id != None:
-                                    war[target_unit_owner_id] = str(defender_war_data)
-                                else: 
-                                    war[target_owner_id] = str(defender_war_data)
-                                war[14] = str(war_log)
+                        war_log.append(f'    {defender_nation_name} {target_improvement_name} {target_region_id} has been defeated.')
+            #repackage war data now that combat is over
+            if attacker_player_id != 99 or target_owner_id != 99 or target_unit_owner_id != 99:
+                for war in wardata_list:
+                    if war[attacker_player_id] != '-' and war[target_unit_owner_id] != '-' and war[13] == 'Ongoing':
+                        if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Defender' in war_role_1 and 'Attacker' in war_role_2):
+                            attacker_war_data[2] = attacker_battles_won
+                            attacker_war_data[3] = attacker_battles_lost
+                            attacker_war_data[4] = attacker_unit_casualties
+                            attacker_war_data[5] = attacker_improvements_lost
+                            war[attacker_player_id] = str(attacker_war_data)
+                            defender_war_data[2] = defender_battles_won
+                            defender_war_data[3] = defender_battles_lost
+                            defender_war_data[4] = defender_unit_casualties
+                            defender_war_data[5] = defender_improvements_lost
+                            if target_unit_id != None:
+                                war[target_unit_owner_id] = str(defender_war_data)
+                            else: 
+                                war[target_owner_id] = str(defender_war_data)
+                            war[14] = str(war_log)
             
             #resolve movement
             if target_unit_owner_id == attacker_player_id:
@@ -1034,19 +1006,5 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
                 if attacker_player_id != 99:
                     player_action_log.append(f'Failed to move {current_unit_id} {current_region_id} - {target_region_id}.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
-
-
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
-
-
-    #Update wardata.csv
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
 
     return player_action_logs

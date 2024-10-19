@@ -837,7 +837,7 @@ def technologies(full_game_id):
     
     return render_template('temp_research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
 
-#RESEARCH PAGE
+#AGENDAS PAGE
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
@@ -900,6 +900,31 @@ def agendas(full_game_id):
         refined_dict["Agendas"]["Table"][row_pos][col_pos] = value
     
     return render_template('temp_agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+
+#UNITS PAGE
+@main.route('/<full_game_id>/units')
+def units(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Unit Reference'
+    
+    # get unit dict
+    unit_dict = core.get_scenario_dict(full_game_id, "Units")
+
+    # add reference colors
+    for unit_name in unit_dict:
+        if "Motorized Infantry" == unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-purple"
+            continue
+        if "Infantry" in unit_name or "Artillery" in unit_name or "Special Forces" in unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-red"
+        elif "Tank" in unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-purple"
+
+    return render_template('temp_units.html', page_title = page_title, dict = unit_dict)
 
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')

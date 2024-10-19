@@ -1,6 +1,8 @@
 import json
 
 from app.improvement import Improvement
+from app.unit import Unit
+from app.wardata import WarData
 
 class Region:
 
@@ -23,6 +25,8 @@ class Region:
         # set attributes now that all checks have passed
         self.region_id: str = region_id
         self.data = region_data
+        self.owner_id: int = self.data["ownerID"]
+        self.occupier_id: int = self.data["occupierID"]
         self.game_id: str = game_id
         self.regdata_filepath: str = regdata_filepath
         self.claim_list = []
@@ -44,30 +48,20 @@ class Region:
         regdata_dict[self.region_id]["regionData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
-
-    def owner_id(self) -> int:
-        '''
-        Returns the player_id of the region owner.
-        '''
-        return self.data["ownerID"]
     
     def set_owner_id(self, new_owner_id: int) -> None:
         '''
         Changes the owner of a region.
         '''
+        self.owner_id = new_owner_id
         self.data["ownerID"] = new_owner_id
         self._save_changes()
-    
-    def occupier_id(self) -> int:
-        '''
-        Returns the player_id of the region occupier.
-        '''
-        return self.data["occupierID"]
     
     def set_occupier_id(self, new_owner_id: int) -> None:
         '''
         Changes the occupier of a region.
         '''
+        self.occupier_id = new_owner_id
         self.data["occupierID"] = new_owner_id
         self._save_changes()
 
@@ -161,7 +155,7 @@ class Region:
         owned_adjacent_list = []
         for region_id in adjacent_list:
             temp = Region(region_id, self.game_id)
-            if temp.owner_id() == self.owner_id():
+            if temp.owner_id == self.owner_id:
                 owned_adjacent_list.append(region_id)
         return owned_adjacent_list
 
@@ -189,11 +183,57 @@ class Region:
         owned_adjacent_list = self.owned_adjacent_regions()
         for region_id in owned_adjacent_list:
             region_improvement = Improvement(region_id, self.game_id)
-            if region_improvement.name() in improvement_names:
+            if region_improvement.name in improvement_names:
                 return True
 
         return False
     
+    def check_for_adjacent_unit(self, unit_names: set) -> bool:
+        '''
+        Checks if there is an unit in unit_names in an owned adjacent region.
+        
+        :param unit_names: A set of unit names.
+        :return: True if unit found. False otherwise.
+        '''
+        owned_adjacent_list = self.owned_adjacent_regions()
+        for region_id in owned_adjacent_list:
+            region_unit = Unit(region_id, self.game_id)
+            if region_unit.name in unit_names:
+                return True
+
+        return False
+    
+    # combat methods
+    ################################################################################
+
+    def is_valid_move(self, other_player_id: int) -> bool:
+        '''
+        Determines if a unit owned by other_player_id can move into this region.
+        Only takes into account ownership. Does not consider adjacency or other disqualifiers.
+
+        :param other_player_id: player_id to compare to
+        :return: True if all checks pass. False otherwise.
+        '''
+        wardata = WarData(self.game_id)
+
+        # you can always move into regions owned by you
+        if self.owner_id == other_player_id:
+            return True
+
+        # you may move into unoccupied regions owned by an enemy
+        if wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id == 0:
+            return True
+        # you may move into occupied regions owned by an enemy in two cases
+        elif wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id != 0:
+            # you are the occupier
+            if self.occupier_id == other_player_id:
+                return True
+            # you are also at war with the occupier
+            if wardata.are_at_war(self.occupier_id, other_player_id):
+                return True
+                
+        return False
+
     # event specific methods
     ################################################################################
 
@@ -204,7 +244,7 @@ class Region:
         '''
         return self.data["infection"]
     
-    def add_infection(self, amount=1) -> int:
+    def add_infection(self, amount=1) -> None:
         '''
         Increases infection score of region.
         Used for Pandemic event.

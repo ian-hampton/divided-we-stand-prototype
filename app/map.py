@@ -56,13 +56,13 @@ class MainMap:
                 random_region = Region(random_region_id, f"game{self.game_id}")
                 random_region_improvement = Improvement(random_region_id, f"game{self.game_id}")
                 # check conditions
-                if random_region.owner_id() != 0 and random_region_improvement.name() is not None:
+                if random_region.owner_id != 0 and random_region_improvement.name is not None:
                     continue
                 adjacent_region_list = random_region.adjacent_regions()
                 adjacent_improvement_found = False
                 for region_id in adjacent_region_list:
                     region_improvement = Improvement(region_id, f"game{self.game_id}")
-                    if region_improvement.name() is not None:
+                    if region_improvement.name is not None:
                         adjacent_improvement_found = True
                         break
                 if adjacent_improvement_found:
@@ -138,8 +138,8 @@ class MainMap:
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
             region = Region(region_id, full_game_id)
-            owner_id = region.owner_id()
-            occupier_id = region.occupier_id()
+            owner_id = region.owner_id
+            occupier_id = region.occupier_id
             start_cords = improvement_cords_dict[region_id]
             if start_cords != () and owner_id != 0:
                 cord_x = (start_cords[0] + 25)
@@ -155,8 +155,8 @@ class MainMap:
         #color magnified regions
         for region_id in regdata_dict:
             region = Region(region_id, full_game_id)
-            owner_id = region.owner_id()
-            occupier_id = region.occupier_id()
+            owner_id = region.owner_id
+            occupier_id = region.occupier_id
             improvement_start_cords = improvement_cords_dict[region_id]
             if self.map_name == "United States 2.0":
                 magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELEW", "RHODE", "NTHMA", "STHMA"]
@@ -181,7 +181,7 @@ class MainMap:
         for region_id in regdata_dict:
             region = Region(region_id, full_game_id)
             region_improvement = Improvement(region_id, full_game_id)
-            improvement_name = region_improvement.name()
+            improvement_name = region_improvement.name
             improvement_health = region_improvement.health()
             nuke = region.fallout()
             improvement_start_cords = improvement_cords_dict[region_id]
@@ -218,9 +218,9 @@ class MainMap:
         #Place Units
         for region_id in regdata_dict:
             region_unit = Unit(region_id, full_game_id)
-            unit_name = region_unit.name()
+            unit_name = region_unit.name
             unit_health = region_unit.health()
-            unit_owner_id = region_unit.owner_id()
+            unit_owner_id = region_unit.owner_id
             if unit_name is not None:
                 #get cords
                 if region_id not in unit_cords_dict:
@@ -379,8 +379,8 @@ class ControlMap:
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
             region = Region(region_id, full_game_id)
-            owner_id = region.owner_id()
-            occupier_id = region.occupier_id()
+            owner_id = region.owner_id
+            occupier_id = region.occupier_id
             start_cords = improvement_cords_dict[region_id]
             if start_cords != () and owner_id != 0:
                 cord_x = (start_cords[0] + 25)

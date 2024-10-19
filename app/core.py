@@ -79,7 +79,7 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
             for candidate_region_id in regions_in_radius:
                 candidate_region = Region(candidate_region_id, game_id)
                 # if player found restart loop
-                if candidate_region.owner_id() != 0:
+                if candidate_region.owner_id != 0:
                     conflict_detected = True
                     break
             # if no player found place player
@@ -1548,7 +1548,7 @@ def get_unit_count_list(player_id, game_id):
         count = 0
         for region_id in regdata_dict:
             region_unit = Unit(region_id, game_id)
-            if region_unit.owner_id() == player_id and region_unit.name() == unit_name:
+            if region_unit.owner_id == player_id and region_unit.name == unit_name:
                 count += 1
         count_list.append(count)
 
@@ -1791,7 +1791,7 @@ def war_resolution(game_id, player_id_1, WAR_JUSTIFICATIONS_LIST, signatories_li
                 for region_id in regdata_dict:
                     if region_id in victor_war_claims_list:
                         region = Region(region_id, game_id)
-                        if region.owner_id() == player_id_1:
+                        if region.owner_id == player_id_1:
                             region.set_owner_id(victor_player_id)
                             region.set_occupier_id(0)
             case 'Animosity':
@@ -1814,8 +1814,8 @@ def war_resolution(game_id, player_id_1, WAR_JUSTIFICATIONS_LIST, signatories_li
     #End Remaining Occupations
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
-        owner_id = region.owner_id()
-        occupier_id = region.occupier_id()
+        owner_id = region.owner_id
+        occupier_id = region.occupier_id
         if signatories_list[owner_id - 1] and signatories_list[occupier_id - 1]:
             region.set_occupier_id(0)
 
@@ -1987,7 +1987,7 @@ def search_and_destroy(game_id, player_id, target_improvement):
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
-        if region_improvement.name() == target_improvement and player_id == region.owner_id():
+        if region_improvement.name == target_improvement and player_id == region.owner_id:
             candidate_region_ids.append(region_id)
 
     # randomly select one of the candidate regions
@@ -2010,12 +2010,12 @@ def search_and_destroy_unit(game_id, player_id, desired_unit_name):
     if desired_unit_name in unit_ids:
         for region_id in regdata_dict:
             region_unit = Unit(region_id, game_id)
-            if region_unit.name == desired_unit_name and region_unit.owner_id() == player_id:
+            if region_unit.name == desired_unit_name and region_unit.owner_id == player_id:
                 candidate_region_ids.append(region_id)
     elif desired_unit_name == 'ANY':
         for region_id in regdata_dict:
             region_unit = Unit(region_id, game_id)
-            if region_unit.owner_id() == player_id:
+            if region_unit.owner_id == player_id:
                 candidate_region_ids.append(region_id)
 
     # randomly select one of the candidate regions
@@ -2121,7 +2121,7 @@ def has_capital(player_id, game_id):
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
-        if region.owner_id() == player_id and region_improvement.name() == 'Capital':
+        if region.owner_id == player_id and region_improvement.name == 'Capital':
             return True
         
     return False

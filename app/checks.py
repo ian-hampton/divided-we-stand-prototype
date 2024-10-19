@@ -30,8 +30,8 @@ def update_improvement_count(game_id, player_id):
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
-        improvement_name = region_improvement.name()
-        if region.owner_id() == int(player_id):
+        improvement_name = region_improvement.name
+        if region.owner_id == int(player_id):
             if improvement_name:
                 index = improvement_name_list.index(improvement_name)
                 improvement_data_list[index] += 1
@@ -142,7 +142,7 @@ def update_military_capacity(game_id):
         used_military_capacity = 0
         for region_id in regdata_dict:
             region_unit = Unit(region_id, game_id)
-            if region_unit.owner_id() == player_id:
+            if region_unit.owner_id == player_id:
                 used_military_capacity += 1
         draft_research_check = core.verify_required_research('Draft', player_research_list)
         training_research_check = core.verify_required_research('Mandatory Service', player_research_list)
@@ -253,7 +253,7 @@ def update_misc_info(game_id, player_id):
         for region_id in regdata_dict:
             region = Region(region_id, game_id)
             region_improvement = Improvement(region_id, game_id)
-            if region.owner_id() == player_id and region.occupier_id() == 0 and region_improvement.name() == 'Capital':
+            if region.owner_id == player_id and region.occupier_id == 0 and region_improvement.name == 'Capital':
                 match region.resource():
                     case 'Coal':
                         if 'Coal Mining' in completed_research_list:
@@ -283,11 +283,11 @@ def update_misc_info(game_id, player_id):
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
-        if region.owner_id() == player_id and region.occupier_id() == 0:
+        if region.owner_id == player_id and region.occupier_id == 0:
             owned_regions += 1
-            if region_improvement.name() == None:
+            if region_improvement.name == None:
                 undeveloped_regions += 1
-        elif region.owner_id() == player_id and region.occupier_id() != 0:
+        elif region.owner_id == player_id and region.occupier_id != 0:
             occupied_regions += 1
     misc_info[1] = f'Owned Regions: {owned_regions}'
     misc_info[2] = f'Occupied Regions: {occupied_regions}'
@@ -498,7 +498,7 @@ def update_income(game_id, current_turn_num):
             region = Region(region_id, game_id)
             region_improvement = Improvement(region_id, game_id)
             region_resource = region.resource()
-            improvement_name = region_improvement.name()
+            improvement_name = region_improvement.name
             #skip if no improvement
             if improvement_name == None:
                 continue
@@ -530,7 +530,7 @@ def update_income(game_id, current_turn_num):
                 if multiplier < 0:
                     multiplier = 0
             #get income based on improvement type
-            if region.owner_id() == player_id and region.occupier_id() == 0:
+            if region.owner_id == player_id and region.occupier_id == 0:
                 match improvement_name:
                     case 'Advanced Metals Mine':
                         gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, advanced_index, amm_mine_income, multiplier)
@@ -920,7 +920,7 @@ def countdown(game_id, map_name):
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
-        if region_improvement.name() == "Strip Mine":
+        if region_improvement.name == "Strip Mine":
             region_improvement.decrease_timer()
             if region_improvement.turn_timer() <= 0:
                 region_improvement.clear()
@@ -1230,8 +1230,8 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
     non_occupied_found_list = [False] * len(playerdata_list)
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
-        owner_id = region.owner_id()
-        if owner_id != 0 and owner_id != 99 and region.occupier_id() == 0:
+        owner_id = region.owner_id
+        if owner_id != 0 and owner_id != 99 and region.occupier_id == 0:
             non_occupied_found_list[owner_id - 1] = True
     
     #if no unoccupied region found for a player force surrender if main combatant
@@ -1613,7 +1613,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             player_has_rare = False
             for region_id in regdata_dict:
                 region = Region(region_id, game_id)
-                owner_id = region.owner_id()
+                owner_id = region.owner_id
                 region_resource = region.resource()
                 if owner_id == player_id and region_resource == 'Advanced Metals':
                     player_has_advanced = True
@@ -1646,9 +1646,9 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             unit_types_found = []
             for region_id in regdata_dict:
                 region_unit = Unit(region_id, game_id)
-                if region_unit.name() != None and region_unit.owner_id() == player_id:
-                    if region_unit.name() not in unit_types_found:
-                        unit_types_found.append(region_unit.name())
+                if region_unit.name != None and region_unit.owner_id == player_id:
+                    if region_unit.name not in unit_types_found:
+                        unit_types_found.append(region_unit.name)
             if len(unit_types_found) >= 5:
                 vc_2_completed = True
         case 'Diversified Economy':
@@ -1781,20 +1781,20 @@ def bonus_phase_heals(player_id, game_id):
         
         # unit heal checks
         heal_allowed = False
-        if region.owner_id() == region_unit.owner_id():
+        if region.owner_id == region_unit.owner_id:
             heal_allowed = True
         elif "Scorched Earth" in player_research_list:
             heal_allowed = True
         else:
             for adjacent_region_id in region.adjacent_regions():
                 adjacent_region_unit = Unit(adjacent_region_id, game_id)
-                if adjacent_region_unit.owner_id() == region_unit.owner_id():
+                if adjacent_region_unit.owner_id == region_unit.owner_id:
                     heal_allowed = True
 
         # heal unit or improvement
-        if region.owner_id() != 0 and region_improvement.name() != None and region_improvement.health() != 99:
+        if region.owner_id != 0 and region_improvement.name != None and region_improvement.health() != 99:
             region_improvement.heal(2)
-        unit_name = region_unit.name()
+        unit_name = region_unit.name
         if unit_name != None and heal_allowed:
             region_unit.heal(2)
 

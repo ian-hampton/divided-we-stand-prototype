@@ -60,3 +60,9 @@ h1 {
 .tech-table .desc {
     font-size: 16px;
 }
+.star {
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

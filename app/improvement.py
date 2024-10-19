@@ -1,6 +1,7 @@
 import json
 
 from app import core
+from app.wardata import WarData
 
 class Improvement:
 
@@ -25,6 +26,11 @@ class Improvement:
         self.data = improvement_data
         self.game_id = game_id
         self.regdata_filepath = regdata_filepath
+        self.name = self.data["name"]
+        from app.region import Region
+        region_obj = Region(region_id, game_id)
+        self.owner_id = region_obj.owner_id
+        self.occupier_id = region_obj.occupier_id
 
     def _save_changes(self) -> None:
         '''
@@ -35,13 +41,6 @@ class Improvement:
         regdata_dict[self.region_id]["improvementData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
-
-    def name(self) -> str:
-        '''
-        Returns the improvement name.
-        Returns None if no improvement is present.
-        '''
-        return self.data["name"]
     
     def health(self) -> int:
         '''
@@ -78,6 +77,7 @@ class Improvement:
         '''
         Removes the improvement in a region.
         '''
+        self.name = None
         self.data["name"] = None
         self.data["health"] = 99
         self.data["turnTimer"] = 99
@@ -96,16 +96,17 @@ class Improvement:
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         self.clear()
         
+        self.name = improvement_name
         self.data["name"] = improvement_name
         if health == 0:
             self.data["health"] = improvement_data_dict[improvement_name]["Health"]
         else:
             self.data["health"] = health
-        if self.name() == 'Strip Mine' and 'Open Pit Mining' in player_research:
-            self.set_turn_timer = 4
-        elif self.name() == 'Strip Mine':
-            self.set_turn_timer = 8
-        if self.name() == 'Surveillance Center':
+        if self.name == 'Strip Mine' and 'Open Pit Mining' in player_research:
+            self.set_turn_timer(4)
+        elif self.name == 'Strip Mine':
+            self.set_turn_timer(8)
+        if self.name == 'Surveillance Center':
             pass
         
         self._save_changes()
@@ -117,11 +118,42 @@ class Improvement:
         '''
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         current_health = self.health()
-        max_health = improvement_data_dict[self.name()]["Health"]
+        max_health = improvement_data_dict[self.name]["Health"]
         current_health += health_count
         if current_health > max_health:
             current_health = max_health
         self.data["health"] = current_health
         self._save_changes()
+
+    # combat methods
+    ################################################################################
+
+    def is_hostile(self, other_player_id: int) -> bool:
+        '''
+        Determines if this improvement is hostile to the given player_id.
+
+        :param other_player_id: player_id to compare to
+        :return: True if this unit is hostile to provided player_id. False otherwise.
+        '''
+        wardata = WarData(self.game_id)
+
+        # regions without an improvement cannot have a hostile improvement
+        if self.name is None:
+            return False
+        
+        # improvements with no health can never be hostile
+        if self.health() != 99 or self.health == 0:
+            return False
+
+        # defensive improvements in a region that is owned by you and is unoccupied is never hostile
+        if self.owner_id == other_player_id and self.occupier_id == 0:
+            return False
+        # defensive improvements in a region you don't own are not hostile under the following conditions
+        elif self.owner_id != other_player_id:
+            # you already occupy the region
+            if self.occupier_id == other_player_id:
+                return False
+        
+        return True
 
     

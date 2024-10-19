@@ -7,6 +7,8 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 9,
+        "Movement": 1,
+        "Abilities": [],
         "Dollars Upkeep": 0.25,
         "Oil Upkeep": 0,
         "Build Costs": {
@@ -19,12 +21,16 @@
     },
     "Artillery": {
         "Required Research": "Artillery",
-        "Unit Type": "Infantry",
+        "Unit Type": "Artillery",
         "Abbreviation": "AR",
         "Health": 6,
-        "Victory Damage": 2,
+        "Victory Damage": 3,
         "Draw Damage": 1,
-        "Combat Value": 9,
+        "Combat Value": 7,
+        "Movement": 1,
+        "Abilities": [
+            "All of your units that are adjacent to one of your Artillery units gain +1 victory damage and +1 draw damage. If multiple Artillery are adjacent, this bonus does not stack."
+        ],
         "Dollars Upkeep": 0.5,
         "Oil Upkeep": 0,
         "Build Costs": {
@@ -43,6 +49,10 @@
         "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 7,
+        "Movement": 2,
+        "Abilities": [
+            "All of your Tank-type units that are adjacent to one of your Mechanized Infantry units gain +1 to all combat rolls. If multiple Mechanized Infantry are adjacent, this bonus does not stack."
+        ],
         "Dollars Upkeep": 0.5,
         "Oil Upkeep": 0,
         "Build Costs": {
@@ -55,12 +65,17 @@
     },
     "Special Forces": {
         "Required Research": "Special Operations",
-        "Unit Type": "Infantry",
+        "Unit Type": "Special Forces",
         "Abbreviation": "SF",
         "Health": 10,
-        "Victory Damage": 4,
+        "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 5,
+        "Movement": 2,
+        "Abilities": [
+            "Automatically defeats improvements that are not defended by an enemy unit.",
+            "Always heals during the bonus phase regardless of its positioning."
+        ],
         "Dollars Upkeep": 1,
         "Oil Upkeep": 0,
         "Build Costs": {
@@ -79,6 +94,8 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 8,
+        "Movement": 2,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.25,
         "Build Costs": {
@@ -97,6 +114,10 @@
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 6,
+        "Movement": 2,
+        "Abilities": [
+            "All of your Infantry-type units that are adjacent to one of your Light Tank units gain +1 to all combat rolls. If multiple Light Tank are adjacent, this bonus does not stack."
+        ],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.5,
         "Build Costs": {
@@ -115,6 +136,10 @@
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 6,
+        "Movement": 1,
+        "Abilities": [
+            "+1 to combat rolls against enemy improvements."
+        ],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.5,
         "Build Costs": {
@@ -133,6 +158,11 @@
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 4,
+        "Movement": 2,
+        "Abilities": [
+            "+1 to combat rolls against enemy Infantry-type units.",
+            "+1 to combat rolls against enemy improvements."
+        ],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 1,
         "Build Costs": {
