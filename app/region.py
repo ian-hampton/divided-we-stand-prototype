@@ -1,9 +1,5 @@
 import json
 
-from app.improvement import Improvement
-from app.unit import Unit
-from app.wardata import WarData
-
 class Region:
 
     def __init__(self, region_id: str, game_id: str):
@@ -180,6 +176,7 @@ class Region:
         :param improvement_names: A set of improvement names.
         :return: True if improvement found. False otherwise.
         '''
+        from app.improvement import Improvement
         owned_adjacent_list = self.owned_adjacent_regions()
         for region_id in owned_adjacent_list:
             region_improvement = Improvement(region_id, self.game_id)
@@ -195,6 +192,7 @@ class Region:
         :param unit_names: A set of unit names.
         :return: True if unit found. False otherwise.
         '''
+        from app.unit import Unit
         owned_adjacent_list = self.owned_adjacent_regions()
         for region_id in owned_adjacent_list:
             region_unit = Unit(region_id, self.game_id)
@@ -214,6 +212,7 @@ class Region:
         :param other_player_id: player_id to compare to
         :return: True if all checks pass. False otherwise.
         '''
+        from app.wardata import WarData
         wardata = WarData(self.game_id)
 
         # you can always move into regions owned by you

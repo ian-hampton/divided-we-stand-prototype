@@ -1275,7 +1275,7 @@ def determine_target_region(adjacency_list, game_id):
         region_owner_id = region.owner_id
         region_occupier_id = region.occupier_id
         improvement_name = region_improvement.name
-        improvement_health = region_improvement.health()
+        improvement_health = region_improvement.health
         unit_name = region_unit.name
         candidate_region_priority = 0
         candidate_region_health = 0
@@ -1294,7 +1294,7 @@ def determine_target_region(adjacency_list, game_id):
         if improvement_name != None and improvement_health != 99 and region_owner_id != 99:
             candidate_region_health += improvement_health
         if unit_name != None and region_unit.owner_id != 0:
-            candidate_region_health += region_unit.health()
+            candidate_region_health += region_unit.health
         #check if candidate region is an easier or higher priority target
         if candidate_region_priority > target_region_priority:
             target_region_id = adjacent_region_id

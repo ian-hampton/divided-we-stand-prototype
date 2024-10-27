@@ -1352,7 +1352,7 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
                     region = Region(region_id, game_id)
                     region_improvement = Improvement(region_id, game_id)
                     if region_improvement.name == 'Strip Mine' and region.owner_id == player_id:
-                        if region_improvement.turn_timer() > 4:
+                        if region_improvement.turn_timer > 4:
                             region_improvement.set_turn_timer()
         player_research_list.append(research_name)
         research_masterlist[player_id - 1] = player_research_list

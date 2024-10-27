@@ -6,9 +6,18 @@ from app.wardata import WarData
 class Improvement:
 
     def __init__(self, region_id: str, game_id: str):
+        '''
+        '''
+        self.region_id = region_id
+        self.game_id = game_id
+        self.load_attributes()
+
+    def load_attributes(self) -> None:
+        '''
+        '''
         
         # check if game id is valid
-        regdata_filepath = f'gamedata/{game_id}/regdata.json'
+        regdata_filepath = f'gamedata/{self.game_id}/regdata.json'
         try:
             with open(regdata_filepath, 'r') as json_file:
                 regdata_dict = json.load(json_file)
@@ -17,18 +26,24 @@ class Improvement:
 
         # check if region id is valid
         try:
-            improvement_data = regdata_dict[region_id]["improvementData"]
+            improvement_data = regdata_dict[self.region_id]["improvementData"]
         except KeyError:
-            print(f"Error: {region_id} not recognized during Region class initialization.")
+            print(f"Error: {self.region_id} not recognized during Region class initialization.")
 
         # set attributes now that all checks have passed
-        self.region_id = region_id
+        
         self.data = improvement_data
-        self.game_id = game_id
         self.regdata_filepath = regdata_filepath
         self.name = self.data["name"]
+        self.health = self.data["health"]
+        self.turn_timer = self.data["turnTimer"]
+        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
+        if self.name is not None:
+            self.hit_value = improvement_data_dict[self.name]["Combat Value"]
+        else:
+            self.hit_value = None
         from app.region import Region
-        region_obj = Region(region_id, game_id)
+        region_obj = Region(self.region_id, self.game_id)
         self.owner_id = region_obj.owner_id
         self.occupier_id = region_obj.occupier_id
 
@@ -38,23 +53,12 @@ class Improvement:
         '''
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+        self.data["name"] = self.name
+        self.data["health"] = self.health
+        self.data["turnTimer"] = self.turn_timer
         regdata_dict[self.region_id]["improvementData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
-    
-    def health(self) -> int:
-        '''
-        Returns the improvement health.
-        Returns 99 if the improvement has no health bar.
-        '''
-        return self.data["health"]
-    
-    def turn_timer(self) -> int:
-        '''
-        Returns the improvement turn timer.
-        Returns 99 if the improvement has no timer.
-        '''
-        return self.data["turnTimer"]
     
     def set_turn_timer(self, amount=4) -> None:
         '''
@@ -62,15 +66,15 @@ class Improvement:
 
         :param amount: Turns desired. Default is 4.
         '''
-        self.data["turnTimer"] = amount
+        self.turn_timer = amount
         self._save_changes()
     
     def decrease_timer(self) -> None:
         '''
         Decreases improvement turn timer by one.
         '''
-        if self.data["turnTimer"] != 99:
-            self.data["turnTimer"] -= 1
+        if self.turn_timer != 99:
+            self.turn_timer -= 1
             self._save_changes()
 
     def clear(self) -> None:
@@ -78,9 +82,8 @@ class Improvement:
         Removes the improvement in a region.
         '''
         self.name = None
-        self.data["name"] = None
-        self.data["health"] = 99
-        self.data["turnTimer"] = 99
+        self.health = 99
+        self.turn_timer = 99
         self._save_changes()
 
     # basic methods
@@ -97,11 +100,10 @@ class Improvement:
         self.clear()
         
         self.name = improvement_name
-        self.data["name"] = improvement_name
         if health == 0:
-            self.data["health"] = improvement_data_dict[improvement_name]["Health"]
+            self.health = improvement_data_dict[improvement_name]["Health"]
         else:
-            self.data["health"] = health
+            self.health = health
         if self.name == 'Strip Mine' and 'Open Pit Mining' in player_research:
             self.set_turn_timer(4)
         elif self.name == 'Strip Mine':
@@ -117,12 +119,12 @@ class Improvement:
         Will not heal beyond max health value.
         '''
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
-        current_health = self.health()
+        current_health = self.health
         max_health = improvement_data_dict[self.name]["Health"]
         current_health += health_count
         if current_health > max_health:
             current_health = max_health
-        self.data["health"] = current_health
+        self.health = current_health
         self._save_changes()
 
     # combat methods
@@ -133,16 +135,15 @@ class Improvement:
         Determines if this improvement is hostile to the given player_id.
 
         :param other_player_id: player_id to compare to
-        :return: True if this unit is hostile to provided player_id. False otherwise.
+        :return: True if this improvement is hostile to provided player_id. False otherwise.
         '''
-        wardata = WarData(self.game_id)
 
         # regions without an improvement cannot have a hostile improvement
         if self.name is None:
             return False
         
         # improvements with no health can never be hostile
-        if self.health() != 99 or self.health == 0:
+        if self.health == 99 or self.health == 0:
             return False
 
         # defensive improvements in a region that is owned by you and is unoccupied is never hostile

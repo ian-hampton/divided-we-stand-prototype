@@ -1,1 +1,16 @@
-Declared war on Techbro.
+Researched Light Tanks for 10 technology.
+Successfully purchased region INDIA for 5 dollars.
+Successfully purchased region INDIA for 5 dollars.
+Successfully purchased region INDIA for 5 dollars.
+Successfully purchased region INDIA for 5 dollars.
+Successfully purchased region INDIA for 5 dollars.
+Built Coal Mine in region WESMI for 5 dollars.
+Built Coal Mine in region NTWOH for 5 dollars.
+Built Coal Mine in region ROANO for 5 dollars.
+Built Oil Well in region NTHMA for 5 basic materials.
+Built Advanced Metals Mine in region BLUEG for 5 common metals.
+Failed to build Common Metals Mine in region WESMA. Insufficient resources.
+Built Common Metals Mine in region WESMA for 5 dollars.
+Failed to complete move Motorized Infantry NTHMI - UPPER. Check combat log for details.
+Failed to complete move Motorized Infantry BLUEG - PENNY. Check combat log for details.
+Failed to complete move Motorized Infantry CUMBE - PENNY. Check combat log for details.

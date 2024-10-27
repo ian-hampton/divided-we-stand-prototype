@@ -269,7 +269,7 @@
         "Research Type": "Military",
         "Prerequisite": "Draft",
         "Cost": 15,
-        "Description": "+0.5 military capacity from all defensive improvements except Boot Camps.",
+        "Description": "+0.5 military capacity from all defensive improvements except Boot Camps and Capitals.",
         "Location": "D2"
     },
     "Basic Defenses": {

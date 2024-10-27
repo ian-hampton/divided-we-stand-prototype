@@ -130,13 +130,17 @@ def update_military_capacity(game_id):
         for key, value in improvement_data_dict.items():
             if value.get("Health") != 99:
                 defensive_improvements_list.append(key)
+        di_count = 0
         for defensive_improvement_name in defensive_improvements_list:
-            if defensive_improvement_name != "Boot Camp":
-                di_index = improvement_name_list.index(defensive_improvement_name)
-                di_count = player_improvement_count_list[di_index]
-            else:
+            if defensive_improvement_name == "Boot Camp":
                 bc_index = improvement_name_list.index(defensive_improvement_name)
                 bc_count = player_improvement_count_list[bc_index]
+            elif defensive_improvement_name == 'Capital':
+                cap_index = improvement_name_list.index(defensive_improvement_name)
+                cap_count = player_improvement_count_list[cap_index]
+            else:
+                di_index = improvement_name_list.index(defensive_improvement_name)
+                di_count += player_improvement_count_list[di_index]
         
         #Calculate Military Capacity
         used_military_capacity = 0
@@ -144,31 +148,40 @@ def update_military_capacity(game_id):
             region_unit = Unit(region_id, game_id)
             if region_unit.owner_id == player_id:
                 used_military_capacity += 1
-        draft_research_check = core.verify_required_research('Draft', player_research_list)
-        training_research_check = core.verify_required_research('Mandatory Service', player_research_list)
-        if draft_research_check:
+        
+        if 'Draft' in player_research_list:
             bc_capacity_value = 3
         else:
             bc_capacity_value = 2
-        if training_research_check:
+        
+        if 'Mandatory Service' in player_research_list:
             di_capacity_value = 0.5
         else:
             di_capacity_value = 0
+
+        if 'Defensive Tactics' in player_research_list:
+            cap_capacity_value = 2
+        else:
+            cap_capacity_value = 0
+        
         if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
             if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Conflict":
                 bc_capacity_value += 1
-        military_capacity_total = (bc_count * bc_capacity_value) + (di_count * di_capacity_value)
+        
+        # calculate final military capacity
+        military_capacity_total = (bc_count * bc_capacity_value) + (di_count * di_capacity_value) + (cap_count * cap_capacity_value)
         military_capacity_gross.append(military_capacity_total)
         #gain military capacity bonus from your puppet states
         for j, nation_status in enumerate(status_masterlist):
             if player_name in nation_status and 'Puppet State' in nation_status:
                 troll_toll = military_capacity_gross[j] * 0.2
                 military_capacity_total += troll_toll
+        
         #gain military capacity bonus from government choice
         mct_modifier = 1.0
         if player_gov == 'Totalitarian':
             mct_modifier += 0.2
-        #loose military capacity from being a puppet state
+       #loose military capacity from being a puppet state
         if 'Puppet State' in nation_status:
             mct_modifier -= 0.2
         if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
@@ -922,7 +935,7 @@ def countdown(game_id, map_name):
         region_improvement = Improvement(region_id, game_id)
         if region_improvement.name == "Strip Mine":
             region_improvement.decrease_timer()
-            if region_improvement.turn_timer() <= 0:
+            if region_improvement.turn_timer <= 0:
                 region_improvement.clear()
                 region.set_resource("Empty")
     
@@ -1781,9 +1794,11 @@ def bonus_phase_heals(player_id, game_id):
         
         # unit heal checks
         heal_allowed = False
-        if region.owner_id == region_unit.owner_id:
+        if region_unit.name == 'Special Forces':
             heal_allowed = True
         elif "Scorched Earth" in player_research_list:
+            heal_allowed = True
+        elif region.owner_id == region_unit.owner_id:
             heal_allowed = True
         else:
             for adjacent_region_id in region.adjacent_regions():
@@ -1792,7 +1807,7 @@ def bonus_phase_heals(player_id, game_id):
                     heal_allowed = True
 
         # heal unit or improvement
-        if region.owner_id != 0 and region_improvement.name != None and region_improvement.health() != 99:
+        if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
             region_improvement.heal(2)
         unit_name = region_unit.name
         if unit_name != None and heal_allowed:

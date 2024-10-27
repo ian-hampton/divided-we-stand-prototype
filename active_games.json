@@ -16,22 +16,16 @@
         "Statistics": {
             "Player Count": "4",
             "Region Disputes": 0,
-            "Current Turn": "23",
-            "Days Ellapsed": 5,
+            "Current Turn": "26",
+            "Days Ellapsed": 17,
             "Game Started": "10/10/2024"
         },
         "Inactive Events": [
-            "Nominate Mediator"
+            "Nominate Mediator",
+            "Lost Nuclear Weapons",
+            "Diplomatic Summit"
         ],
-        "Active Events": {
-            "Diplomatic Summit": {
-                "Expiration": 25,
-                "Attendance": [
-                    "Peak Cringeoid",
-                    "Bruh"
-                ]
-            }
-        },
+        "Active Events": {},
         "Current Event": {},
         "Steal Action Record": {
             "Filthy Imperialist": {

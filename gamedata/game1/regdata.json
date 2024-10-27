@@ -1673,8 +1673,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Boot Camp",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -1865,8 +1865,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Boot Camp",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -2651,7 +2651,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3212,8 +3212,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Crude Barrier",
+            "health": 3,
             "turnTimer": 99
         },
         "unitData": {
@@ -3225,7 +3225,7 @@
     "NTHMI": {
         "regionData": {
             "fullName": "Northern Michigan",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Uranium",
@@ -3246,9 +3246,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "WESMI": {
@@ -3272,7 +3272,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3429,9 +3429,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Infantry",
+            "health": 6,
+            "ownerID": 2
         }
     },
     "FORGO": {
@@ -3557,9 +3557,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Infantry",
+            "health": 6,
+            "ownerID": 2
         }
     },
     "LILEG": {
@@ -3585,7 +3585,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3616,7 +3616,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Oil Well",
             "health": 99,
             "turnTimer": 99
         },
@@ -3662,7 +3662,7 @@
     "INDIA": {
         "regionData": {
             "fullName": "Greater Indiana",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Oil",
@@ -3683,9 +3683,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Infantry",
+            "health": 6,
+            "ownerID": 2
         }
     },
     "WABAS": {
@@ -3722,7 +3722,7 @@
     "STHIN": {
         "regionData": {
             "fullName": "Southern Indiana",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -3749,9 +3749,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Infantry",
+            "health": 6,
+            "ownerID": 2
         }
     },
     "NTWOH": {
@@ -3777,7 +3777,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3844,9 +3844,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "CENOH": {
@@ -3994,7 +3994,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -4064,9 +4064,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Infantry",
+            "health": 4,
+            "ownerID": 2
         }
     },
     "CUMBE": {
@@ -4099,7 +4099,7 @@
         },
         "unitData": {
             "name": "Motorized Infantry",
-            "health": 6,
+            "health": 4,
             "ownerID": 1
         }
     },
@@ -4125,7 +4125,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5310,7 +5310,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Coal Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5354,7 +5354,7 @@
     "RICHM": {
         "regionData": {
             "fullName": "Richmond",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5371,8 +5371,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -6228,7 +6228,7 @@
     "WESMA": {
         "regionData": {
             "fullName": "Western Massachusetts",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Common Metals",
@@ -6247,7 +6247,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -6260,7 +6260,7 @@
     "NTHMA": {
         "regionData": {
             "fullName": "Northern Massachusetts",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Oil",
@@ -6278,7 +6278,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Oil Well",
             "health": 99,
             "turnTimer": 99
         },
@@ -6319,7 +6319,7 @@
     "NTHVT": {
         "regionData": {
             "fullName": "Northern Vermont",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Uranium",
@@ -6349,7 +6349,7 @@
     "STHVT": {
         "regionData": {
             "fullName": "Southern Vermont",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -6380,7 +6380,7 @@
     "NTHNH": {
         "regionData": {
             "fullName": "Northern New Hampshire",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6410,7 +6410,7 @@
     "STHNH": {
         "regionData": {
             "fullName": "Southern New Hampshire",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6441,7 +6441,7 @@
     "NTHME": {
         "regionData": {
             "fullName": "Northern Maine",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Advanced Metals",
@@ -6468,7 +6468,7 @@
     "STHME": {
         "regionData": {
             "fullName": "Southern Maine",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",

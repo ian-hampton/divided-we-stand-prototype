@@ -2,6 +2,7 @@ import ast
 import copy
 import json
 from json.decoder import JSONDecodeError
+import os
 import random
 
 from app import core
@@ -23,8 +24,9 @@ class WarData:
 
         # set attributes now that all checks have passed
         self.game_id: str = game_id
-        self.wardata_filepath: str = wardata_filepath
+        
         self.wardata_dict = wardata_dict
+        self.wardata_filepath: str = wardata_filepath
         self.war_template = {
             "startTurn": 0,
             "endTurn": 0,
@@ -273,5 +275,55 @@ class WarData:
 
         return None
 
+    def statistic_add(self, war_name: str, nation_name: str, stat_name: str, count = 1):
+        '''
+        Updates a given war statistic.
+
+        :param war_name: war name string
+        :param nation_name: nation name str
+        :param stat_name: statistic name string, must match key exactly
+        :param count: increment int
+        '''
+        self.wardata_dict[war_name]["combatants"][nation_name]["statistics"][stat_name] += count
+        self._save_changes()
+
+    def warscore_add(self, war_name: str, war_role: str, stat_name: str, count = 1) -> None:
+        '''
+        Increases the score of a warscore entry.
+        '''
+        if 'Attacker' in war_role:
+            war_role_key = "attackerWarScore"
+        elif 'Defender' in war_role:
+            war_role_key = "defenderWarScore"
+        self.wardata_dict[war_name][war_role_key][stat_name] += count
+        self._save_changes()
+
     # log methods
     ################################################################################
+
+    def append_war_log(self, war_name: str, message: str) -> None:
+        '''
+        Adds new entry to the war log of a given war.
+        '''
+        self.wardata_dict[war_name]["warLog"].append(message)
+        self._save_changes()
+
+    # war score methods
+    ################################################################################
+
+    def export_all_logs(self) -> None:
+        '''
+        Saves all of the combat logs for ongoing wars as .txt files. Then wipes the logs.
+        '''
+
+        directory = f'gamedata/{self.game_id}/logs'
+        for war_name, war_data in self.wardata_dict.items():
+            if war_data["outcome"] == "TBD":
+                os.makedirs(directory, exist_ok=True)
+                filename = os.path.join(directory, f'{war_name} Log.txt')
+                with open(filename, 'w') as file:
+                    for entry in self.wardata_dict[war_name]["warLog"]:
+                        file.write(entry + '\n')
+            self.wardata_dict[war_name]["warLog"] = []
+
+        self._save_changes()

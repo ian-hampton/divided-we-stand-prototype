@@ -182,7 +182,7 @@ class MainMap:
             region = Region(region_id, full_game_id)
             region_improvement = Improvement(region_id, full_game_id)
             improvement_name = region_improvement.name
-            improvement_health = region_improvement.health()
+            improvement_health = region_improvement.health
             nuke = region.fallout()
             improvement_start_cords = improvement_cords_dict[region_id]
             #place nuclear explosion
@@ -219,7 +219,7 @@ class MainMap:
         for region_id in regdata_dict:
             region_unit = Unit(region_id, full_game_id)
             unit_name = region_unit.name
-            unit_health = region_unit.health()
+            unit_health = region_unit.health
             unit_owner_id = region_unit.owner_id
             if unit_name is not None:
                 #get cords

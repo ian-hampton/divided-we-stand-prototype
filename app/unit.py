@@ -2,33 +2,48 @@ import copy
 import json
 
 from app import core
-from app.wardata import WarData
+from app.region import Region
+from app.improvement import Improvement
 
 class Unit:
 
     def __init__(self, region_id: str, game_id: str):
+        '''
+        '''
+        self.region_id = region_id
+        self.game_id = game_id
+        self.load_attributes()
+
+    def load_attributes(self) -> None:
+        '''
+        '''
         
         # check if game id is valid
-        regdata_filepath = f'gamedata/{game_id}/regdata.json'
+        regdata_filepath = f'gamedata/{self.game_id}/regdata.json'
         try:
             with open(regdata_filepath, 'r') as json_file:
                 regdata_dict = json.load(json_file)
         except FileNotFoundError:
             print(f"Error: Unable to locate {regdata_filepath} during Unit class initialization.")
-
+        
         # check if region id is valid
         try:
-            unit_data = regdata_dict[region_id]["unitData"]
+            unit_data = regdata_dict[self.region_id]["unitData"]
         except KeyError:
-            print(f"Error: {region_id} not recognized during Unit class initialization.")
-
-        # set attributes now that all checks have passed
-        self.region_id = region_id
+            print(f"Error: {self.region_id} not recognized during Unit class initialization.")
         self.data = unit_data
-        self.game_id = game_id
         self.regdata_filepath = regdata_filepath
+
         self.name: str = self.data["name"]
+        self.health: int = self.data["health"]
         self.owner_id: int = self.data["ownerID"]
+        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+        if self.name is not None:
+            self.type = unit_data_dict[self.name]["Unit Type"]
+            self.hit_value = unit_data_dict[self.name]["Combat Value"]
+        else:
+            self.type = None
+            self.hit_value = None
 
     def _save_changes(self) -> None:
         '''
@@ -36,23 +51,18 @@ class Unit:
         '''
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+        self.data["name"] = self.name
+        self.data["health"] = self.health
+        self.data["ownerID"] = self.owner_id
         regdata_dict[self.region_id]["unitData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
-    
-    def health(self) -> int:
-        '''
-        Returns the unit health.
-        Returns 99 if the unit has no health bar.
-        '''
-        return self.data["health"]
     
     def set_owner_id(self, new_owner_id: int) -> None:
         '''
         Changes the owner of a unit.
         '''
         self.owner_id = new_owner_id
-        self.data["ownerID"] = new_owner_id
         self._save_changes()
     
     def abbrev(self) -> str:
@@ -71,10 +81,10 @@ class Unit:
         Removes the unit in a region.
         '''
         self.name = None
+        self.health = 99
         self.owner_id = 99
-        self.data["name"] = None
-        self.data["health"] = 99
-        self.data["ownerID"] = 99
+        self.type = None
+        self.hit_value = 99
         self._save_changes()
 
     # basic methods
@@ -86,10 +96,10 @@ class Unit:
         '''
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         self.name = unit_name
-        self.data["name"] = unit_name
-        self.data["health"] = unit_data_dict[unit_name]["Health"]
+        self.health = unit_data_dict[unit_name]["Health"]
         self.owner_id = owner_id
-        self.data["ownerID"] = owner_id
+        self.type = unit_data_dict[self.name]["Unit Type"]
+        self.hit_value = unit_data_dict[self.name]["Combat Value"]
         self._save_changes()
 
     def heal(self, health_count: int) -> None:
@@ -98,15 +108,15 @@ class Unit:
         Will not heal beyond max health value.
         '''
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
-        current_health = self.health()
+        current_health = self.health
         max_health = unit_data_dict[self.name]["Health"]
         current_health += health_count
         if current_health > max_health:
             current_health = max_health
-        self.data["health"] = current_health
+        self.health = current_health
         self._save_changes()
 
-    def move(self, target_region, *, withdraw=False) -> bool:
+    def move(self, target_region: Region, *, withdraw=False) -> bool:
         '''
         Attempts to move a unit to a new region.
         Returns True if move succeeded, otherwise False.
@@ -115,8 +125,8 @@ class Unit:
         :param target_region_improvement: Improvement class unless withdraw=True
         :param withdraw: True if withdraw action. False otherwise.
         '''
-        from app.region import Region
-        from app.improvement import Improvement
+        from app import combat
+        from app.wardata import WarData
         target_region_id = target_region.region_id
         target_region_improvement = Improvement(target_region_id, self.game_id)
         target_region_unit = Unit(target_region_id, self.game_id)
@@ -127,23 +137,51 @@ class Unit:
             target_region_unit._save_changes()
             self.clear()
             return True
+        
         else:
             # to-do add checks from movement action to here when player log class is made
+
+            # get war information
+            wardata = WarData(self.game_id)
+
             # if target unit hostile conduct combat
             if target_region_unit.is_hostile(self.owner_id):
-                target_region_unit = self.attack_unit(target_region_unit)
+                combat.unit_vs_unit(self, target_region_unit)
+            
             # if target improvement hostile conduct combat
             if target_region_improvement.is_hostile(self.owner_id):
-                target_region_improvement = self.attack_improvement(target_region_improvement)
+                combat.unit_vs_improvement(self, target_region_improvement)
+                
+            # reload objects
+            self.load_attributes()
+            target_region_unit.load_attributes()
+            target_region_improvement.load_attributes()
+
             # if no resistance and still alive complete move
             if not target_region_unit.is_hostile(self.owner_id) and not target_region_improvement.is_hostile(self.owner_id) and self.name is not None:
-                # move unit via deep copy
-                # destroy improvement or capture improvement if needed
-                # clear old unit
+                # move unit
+                original_player_id = copy.deepcopy(self.owner_id)
+                original_region_id = copy.deepcopy(self.region_id)
+                self.region_id = target_region_unit.region_id
+                self._save_changes()
+                self.region_id = original_region_id
+                self.clear()
+                # destroy improvement if needed
+                if target_region_improvement.name is not None and target_region_improvement.name != 'Capital' and target_region.owner_id != original_player_id:
+                    playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+                    playerdata_list = core.read_file(playerdata_filepath, 1)
+                    defender_nation_name = playerdata_list[target_region_improvement.owner_id - 1][1]
+                    war_name = wardata.are_at_war(original_player_id, target_region_improvement.owner_id, True)
+                    wardata.append_war_log(war_name, f"    {defender_nation_name} {target_region_improvement.name} has been destroyed!")
+                    target_region_improvement.clear()
                 # region occupation step
-                # improvement occupation step
-                # return true
-                pass
+                if target_region.owner_id != original_player_id:
+                    target_region.set_occupier_id(original_player_id)
+                else:
+                    target_region.set_occupier_id(0)
+                target_region._save_changes()
+
+                return True
 
         return False
 
@@ -157,6 +195,7 @@ class Unit:
         :param other_player_id: player_id to compare to
         :return: rue if this unit is hostile to provided player_id. False otherwise.
         '''
+        from app.wardata import WarData
         wardata = WarData(self.game_id)
 
         # if no unit return False
@@ -172,36 +211,3 @@ class Unit:
             return True
         else:
             return False
-    
-    def attack_unit(self, hostile_unit: 'Unit'):
-        '''
-        Resolves unit vs unit combat.
-        '''
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
-        wardata = WarData(self.game_id)
-
-        # get nation names and war roles
-        attacker_nation_name = playerdata_list[self.owner_id - 1][1]
-        defender_nation_name = playerdata_list[hostile_unit.owner_id - 1][1]
-        war_name = wardata.are_at_war(self.owner_id, hostile_unit.owner_id, True)
-        attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
-        defender_war_role = wardata.get_war_role(defender_nation_name, war_name)
-
-        # calculate modifiers
-        attacker_roll_modifier = 0
-        defender_roll_modifier = 0
-        attacker_damage_modifier = 0
-        defender_damage_modifier = 0
-
-        return hostile_unit
-
-    def attack_improvement(self, hostile_improvement):
-        '''
-        Resolves unit vs improvement combat.
-        '''
-
-        return hostile_improvement
-
-        
-

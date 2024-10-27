@@ -59,7 +59,7 @@
         "Agenda Type": "Security",
         "Prerequisite": null,
         "Cost": 15,
-        "Description": "+1 to combat rolls for all defensive improvements during a defensive war.",
+        "Description": "+2 military capacity from Capital improvements. +1 to all combat rolls for all defensive improvements.",
         "Location": "C0"
     },
     "Mobilization": {
@@ -69,18 +69,18 @@
         "Description": "Your units gain +1 movement when they move strictly within your own territory.",
         "Location": "C1"
     },
-    "Unyielding": {
+    "Peacetime Recovery": {
         "Agenda Type": "Security",
         "Prerequisite": "Mobilization",
         "Cost": 15,
-        "Description": "Your nation will surrender at -150 war score instead of -100 war score.",
+        "Description": "All of your units and improvements will heal to full health during the bonus phase if you are not at war.",
         "Location": "C2"
     },
-    "Counter Offensive": {
+    "Unyielding": {
         "Agenda Type": "Security",
-        "Prerequisite": "Unyielding",
+        "Prerequisite": "Peacetime Recovery",
         "Cost": 15,
-        "Description": "If an enemy unit causes a draw during a defensive war, it is resolved as a defender victory instead.",
+        "Description": "Your nation will surrender at -150 war score instead of -100 war score. +1 to combat rolls for all units during a defensive war.",
         "Location": "C3"
     },
     "Superior Training": {

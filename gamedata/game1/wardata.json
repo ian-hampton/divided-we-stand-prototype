@@ -15,8 +15,8 @@
                     "STWTN"
                 ],
                 "statistics": {
-                    "battlesWon": 0,
-                    "battlesLost": 0,
+                    "battlesWon": 2,
+                    "battlesLost": 1,
                     "enemyUnitsDestroyed": 0,
                     "enemyImprovementsDestroyed": 0,
                     "friendlyUnitsDestroyed": 0,
@@ -30,8 +30,8 @@
                 "warJustification": "TBD",
                 "warClaims": [],
                 "statistics": {
-                    "battlesWon": 0,
-                    "battlesLost": 0,
+                    "battlesWon": 1,
+                    "battlesLost": 2,
                     "enemyUnitsDestroyed": 0,
                     "enemyImprovementsDestroyed": 0,
                     "friendlyUnitsDestroyed": 0,
@@ -44,7 +44,7 @@
         "attackerWarScore": {
             "total": 0,
             "occupation": 0,
-            "combatVictories": 0,
+            "combatVictories": 2,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 0,
             "capitalCaptures": 0,
@@ -53,7 +53,7 @@
         "defenderWarScore": {
             "total": 0,
             "occupation": 0,
-            "combatVictories": 0,
+            "combatVictories": 1,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 0,
             "capitalCaptures": 0,

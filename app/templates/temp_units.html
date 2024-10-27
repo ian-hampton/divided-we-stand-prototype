@@ -43,7 +43,6 @@
         <div class="top-break"> {{ability}} </div>
     {% endfor %}
 
-    <!-- weird hack to display text on first non-zero value -->
     {% set ns = namespace(foo=True) %}
     {% for resource, cost in unit_data["Build Costs"].items() %}
         {% if cost != 0 and ns.foo %} 

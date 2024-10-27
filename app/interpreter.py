@@ -40,7 +40,6 @@ def check_action(action, library, game_id):
     unit_data_dict = core.get_scenario_dict(game_id, "Units")
     if action_type == 'Deploy':
         unit_input = action[7:-6].title()
-        print(unit_input)
         if unit_input in library['Unit Name List']:
             unit_name = unit_input
             action = replace_target(action, action[7:-6], unit_name)
@@ -56,7 +55,7 @@ def check_action(action, library, game_id):
     if not action_valid:
         print(f'The action: "{action}" of type {action_type} is not valid.')
         new_action = input("Please re-enter the action: ")
-        action = check_action(new_action, library)
+        action = check_action(new_action, library, game_id)
 
     return action
 
@@ -107,41 +106,41 @@ def validate(action, action_type, library, regdata_dict):
     '''
     Compares an action to the library of game terms. Gives oppertunity to correct an action if error found.
     '''
-        
-    move_regions_list = []
-    if action_type == 'Move' or action_type == 'Withdraw':
+    region_id_list = []
+    if action_type in {'Build', 'Disband', 'Move', 'Purchase', 'Remove', 'Withdraw', 'Deploy', 'Launch'}:
         action_data_list = action.split(' ')
         move_regions_list = action_data_list[-1].split('-')
 
-    validate_resolution_dict = {
-        'Surrender': [check_nation_name(action, library)],
-        'White Peace': [check_nation_name(action, library)],
-        'Purchase': [check_region_id(action, regdata_dict)],
-        'Research': [check_research_name(action, library)],
-        'Remove': [check_region_id(action, regdata_dict)],
-        'Build': [check_improvement_name(action, library), check_region_id(action, regdata_dict)],
-        'Alliance': [check_alliance_name(action, library), check_nation_name(action, library)],
-        'Republic': [check_resource_name(action, library)],
-        'Steal': [check_nation_name(action, library)],
-        'Make': [check_missile_name(action, library)],
-        'Buy': [check_resource_name(action, library)],
-        'Sell': [check_resource_name(action, library)],
-        'Withdraw': [check_region_id(region_id, library) for region_id in move_regions_list],
-        'Disband': [check_region_id(action, regdata_dict)],
-        'Deploy': [check_unit_name(action, library), check_region_id(action, regdata_dict)],
-        'War': [check_justification_name(action, library), check_nation_name(action, library)],
-        'Launch': [check_missile_name(action, library), check_region_id(action, regdata_dict)],
-        'Move': [check_region_id(region_id, library) for region_id in move_regions_list],
-        'Event': [],
-    }
-
-    if action_type not in validate_resolution_dict:
-        return False
-    
-    for i in range(len(validate_resolution_dict[action_type])):
-        check = validate_resolution_dict[action_type][i]
-        if not check:
+    match action_type:
+        case 'Surrender' | 'White Peace' | 'Steal':
+            test_list = [check_nation_name(action, library)]
+        case 'Purchase' | 'Remove' | 'Disband' | 'Withdraw' | 'Move':
+            test_list = [check_region_ids(region_id_list, regdata_dict)]
+        case 'Research':
+            test_list = [check_research_name(action, library)]
+        case 'Build':
+            test_list = [check_improvement_name(action, library), check_region_ids(region_id_list, regdata_dict)]
+        case 'Alliance':
+            test_list = [check_alliance_name(action, library), check_nation_name(action, library)]
+        case 'Republic' | 'Buy' | 'Sell' :
+            test_list = [check_resource_name(action, library)]
+        case 'Make':
+            test_list = [check_missile_name(action, library)]
+        case 'Deploy':
+            test_list = [check_unit_name(action, library), check_region_ids(region_id_list, regdata_dict)]
+        case 'War':
+            test_list = [check_justification_name(action, library), check_nation_name(action, library)]
+        case 'Launch':
+            test_list = [check_missile_name(action, library), check_region_ids(region_id_list, regdata_dict)]
+        case 'Event':
+            test_list = []
+        case _:
             return False
+
+    for test in test_list:
+        if not test:
+            return False
+    
     return True
 
 improvement_abbreviations_dict = {
@@ -235,11 +234,11 @@ def check_nation_name(action, library):
             return True
     return False
 
-def check_region_id(action, regdata_dict):
-    for region_id in regdata_dict:
-        if region_id in action:
-            return True
-    return False
+def check_region_ids(move_regions_list, regdata_dict):
+    for region_id in move_regions_list:
+        if region_id not in regdata_dict:
+            return False
+    return True
 
 def check_research_name(action, library):
     for research_name in library['Research Name List']:

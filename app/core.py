@@ -322,7 +322,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
     
     #Sort Player Entered Public Actions
-    print("Resolving public actions...")
     if public_actions_list != []:
         for i, player_public_actions_list in enumerate(public_actions_list):
             for public_action in player_public_actions_list:
@@ -332,6 +331,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
                     public_actions_dict[action_type].append(action)
     #process actions
     public_actions.resolve_trades(full_game_id, diplomacy_log)
+    print("Resolving public actions...")
     if public_actions_list != []:
         update_control_map = False
         if len(public_actions_dict['Surrender'] + public_actions_dict['White Peace']) > 0:
@@ -370,7 +370,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Sort Player Entered Private Actions
-    print("Resolving private actions...")
     if private_actions_list != []:
         for i, player_private_actions_list in enumerate(private_actions_list):
             for private_action in player_private_actions_list:
@@ -381,6 +380,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #process actions
     player_resource_market_incomes = False
     player_action_logs, player_resource_market_incomes = public_actions.resolve_market_actions(public_actions_dict['Buy'], public_actions_dict['Sell'], private_actions_dict['Steal'], full_game_id, current_turn_num, player_count, player_action_logs)    
+    print("Resolving private actions...")
     if private_actions_list != []:
         player_action_logs = private_actions.resolve_unit_withdraws(private_actions_dict['Withdraw'], full_game_id, player_action_logs, current_turn_num)
         if len(private_actions_dict['Disband']) > 0:
@@ -396,37 +396,20 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             update_control_map = True
 
 
-    #Save Player Logs
+    #Save Logs
+    # clear all files in log directory
+    directory = f'gamedata/{full_game_id}/logs'
+    os.makedirs(directory, exist_ok=True)
+    # player logs
     for index, action_log in enumerate(player_action_logs):
-        directory = f'gamedata/{full_game_id}/logs'
-        os.makedirs(directory, exist_ok=True)
         filename = os.path.join(directory, f'Player #{index + 1}.txt')
         with open(filename, 'w') as file:
             for string in action_log:
                 file.write(string + '\n')
-
-
-    #Save War Logs
-    '''
-    wardata_list = read_file(wardata_filepath, 2)
-    for wardata in wardata_list:
-        war_id = int(wardata[0])
-        war_status = wardata[13]
-        war_log = ast.literal_eval(wardata[14])
-        os.makedirs(directory, exist_ok=True)
-        filename = os.path.join(directory, f'War #{war_id}.txt')
-        if war_status == 'Ongoing':
-            with open(filename, 'w') as file:
-                for entry in war_log:
-                    file.write(entry + '\n')
-    for wardata in wardata_list:
-        wardata[14] = str([])
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(wardata_header_a)
-        writer.writerow(wardata_header_b)
-        writer.writerows(wardata_list)
-    '''
+    # war logs
+    from app.wardata import WarData
+    wardata = WarData(full_game_id)
+    wardata.export_all_logs()
 
 
     #End of Turn Checks and Updates
@@ -1089,7 +1072,7 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
 #SHEETS API BULLSHIT
 ################################################################################
 
-def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, reminders_list):
+def update_announcements_sheet(full_game_id, event_pending, diplomacy_log: list, reminders_list: list):
     '''
     Updates the Announcements Google Sheet.
 
@@ -1103,7 +1086,6 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
-    wardata_list = []
     trucedata_list = read_file(trucedata_filepath, 1)
 
     #get needed data from playerdata.csv
@@ -1133,11 +1115,12 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
         game_name_output = f'''"{game_name}"'''
         date_output = f'{season} {year} - Turn {current_turn_num} Bonus Phase'
 
-    #get needed data from wardata.csv
-    for war in wardata_list:
-        if war[13] == 'Ongoing':
-            war_name = war[11]
-            diplomacy_log.insert(0, f'{war_name} is ongoing.')
+    #get needed data from wardata
+    from app.wardata import WarData
+    wardata = WarData(full_game_id)
+    for war in wardata.wardata_dict:
+        if wardata.wardata_dict[war]["outcome"] == "TBD":
+            diplomacy_log.insert(0, f'{war} is ongoing.')
 
     #get needed data from trucedata.csv
     for truce in trucedata_list:
@@ -1612,164 +1595,6 @@ def join_ongoing_war(wardata_list, war_id, player_id, war_side):
         if war[0] == war_id:
             war[player_id] = player_entry_data
     return wardata_list
-
-def calculate_unit_damage_modifier(game_id, friendly_unit_id, friendly_player_id, regdata_list, target_type, target_region_id):
-    damage_modifier = 0
-
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    unit_ids = [unit['Abbreviation'] for unit in unit_data_dict.values()]
-    tank_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Tank']
-
-    #damage bonus from nearby artillery
-    target_adjacency_list = get_adjacency_list(regdata_list, target_region_id)
-    for select_region_id in target_adjacency_list:
-        select_region_data = get_region_data(regdata_list, select_region_id)
-        select_unit_data = ast.literal_eval(select_region_data[5])
-        select_unit_id = select_unit_data[0]
-        if select_unit_id != None:
-            select_unit_owner_id = select_unit_data[2]
-            if select_unit_id == 'AR' and select_unit_owner_id == friendly_player_id:
-                damage_modifier += 1
-                break
-
-    #damage bonus from heavy tank abilities
-    if friendly_unit_id == 'HT' and target_type == 'LT':
-        damage_modifier += 1
-    elif friendly_unit_id == 'HT' and target_type not in unit_ids:
-        damage_modifier += 1
-
-    #damage bonus from main battle tank abilities
-    if friendly_unit_id == 'BT' and target_type in tank_type_units:
-        damage_modifier += 1
-    elif friendly_unit_id == 'BT' and target_type not in unit_ids:
-        damage_modifier += 1
-
-    return damage_modifier
-
-def calculate_unit_roll_modifier(game_id, friendly_unit_id, friendly_research_list, friendly_player_id, friendly_war_role, regdata_list, target_type, target_region_id):
-    roll_modifier = 0
-
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    infantry_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Infantry']
-    attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == friendly_unit_id), None)
-
-    #roll bonus from research
-    if 'Attacker' in friendly_war_role and 'Superior Training' in friendly_research_list:
-        roll_modifier += 1
-    elif 'Defender' in friendly_war_role and 'Defensive Tactics' in friendly_research_list and attacker_name not in infantry_type_units:
-        roll_modifier += 1
-
-    #roll bonus from special forces ability
-    if friendly_unit_id == 'SF' and target_type in infantry_type_units:
-        roll_modifier += 1
-
-    #roll bonus from nearby light tank
-    target_adjacency_list = get_adjacency_list(regdata_list, target_region_id)
-    for select_region_id in target_adjacency_list:
-        select_region_data = get_region_data(regdata_list, select_region_id)
-        select_unit_data = ast.literal_eval(select_region_data[5])
-        select_unit_id = select_unit_data[0]
-        if select_unit_id != None:
-            select_unit_owner_id = select_unit_data[2]
-            if friendly_unit_id in infantry_type_units and select_unit_id == 'LT' and select_unit_owner_id == friendly_player_id:
-                roll_modifier += 1
-                break
-    
-    return roll_modifier
-
-def conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log):
-    '''
-    Conducts combat between two units or a unit and a defensive improvement.
-    '''
-
-    #get scenario data
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    
-    #get information
-    attacker_unit_id, attacker_unit_health, attacker_player_id, attacker_war_role, attacker_region_id = attacker_data_list
-    defender_name, defender_health, defender_player_id, defender_war_role, defender_region_id = defender_data_list
-    attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost, = war_statistics_list
-    attacker_nation_name = playerdata_list[attacker_player_id - 1][1]
-    defender_nation_name = playerdata_list[defender_player_id - 1][1]
-    attacker_research_list = ast.literal_eval(playerdata_list[attacker_player_id - 1][26])
-    defender_research_list = ast.literal_eval(playerdata_list[defender_player_id - 1][26])
-
-    #get modifiers
-    attacker_roll_modifier = calculate_unit_roll_modifier(game_id, attacker_unit_id, attacker_research_list, attacker_player_id, attacker_war_role, regdata_list, defender_name, defender_region_id)
-    defender_roll_modifier = calculate_unit_roll_modifier(game_id, defender_name, defender_research_list, defender_player_id, defender_war_role, regdata_list, attacker_unit_id, defender_region_id)
-    attacker_damage_modifier = calculate_unit_damage_modifier(game_id, attacker_unit_id, attacker_player_id, regdata_list, defender_name, defender_region_id)
-    defender_damage_modifier = 0
-
-    #get damage values and hit values
-    attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == attacker_unit_id), None)
-    attacker_combat_value = unit_data_dict[attacker_name]['Combat Value']
-    attacker_victory_damage = unit_data_dict[attacker_name]['Victory Damage'] + attacker_damage_modifier
-    attacker_draw_damage = unit_data_dict[attacker_name]['Draw Damage']
-    if defender_name in [unit['Abbreviation'] for unit in unit_data_dict.values()]:
-        defender_damage_modifier = calculate_unit_damage_modifier(game_id, defender_name, defender_player_id, regdata_list, attacker_unit_id, defender_region_id)
-        defender_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == defender_name), None)
-        defender_combat_value = unit_data_dict[defender_name]['Combat Value']
-        defender_victory_damage = unit_data_dict[defender_name]['Victory Damage'] + defender_damage_modifier
-        defender_draw_damage = unit_data_dict[defender_name]['Draw Damage']
-    else:
-        defender_combat_value = improvement_data_dict[defender_name]['Combat Value']
-        defender_victory_damage = improvement_data_dict[defender_name]['Victory Damage']
-        defender_draw_damage = improvement_data_dict[defender_name]['Draw Damage']
-    
-    #execute combat
-    attacker_roll = random.randint(1, 10) + attacker_roll_modifier
-    defender_roll = random.randint(1, 10) + defender_roll_modifier
-    attacker_hit = False
-    defender_hit = False
-    if attacker_roll >= attacker_combat_value:
-        attacker_hit = True
-    if defender_roll >= defender_combat_value:
-        defender_hit = True
-    war_log.append(f'{attacker_nation_name} {attacker_name} {attacker_region_id} vs {defender_nation_name} {defender_name} {defender_region_id}')
-    #attacker victory
-    if attacker_hit and not defender_hit:
-        defender_health -= attacker_victory_damage
-        attacker_battles_won += 1
-        defender_battles_lost += 1
-        if attacker_roll_modifier > 0 and defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Attacker victory!')
-        elif attacker_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll}. Attacker victory!')
-        elif defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Attacker victory!')
-        else:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Attacker victory!')
-        if attacker_damage_modifier > 0:
-            war_log.append(f'        {attacker_nation_name} {attacker_name} dealt an additional {attacker_damage_modifier} damage.')
-    #defender victory
-    elif not attacker_hit and defender_hit or (attacker_hit == defender_hit and 'Counter Offensive' in defender_research_list):
-        attacker_unit_health -= defender_victory_damage
-        defender_battles_won += 1
-        attacker_battles_lost += 1
-        if attacker_roll_modifier > 0 and defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Defender victory!')
-        elif attacker_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll}. Defender victory!')
-        elif defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Defender victory!')
-        else:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Defender victory!')
-        if defender_damage_modifier > 0:
-            war_log.append(f'        {defender_nation_name} {defender_name} dealt an additional {defender_damage_modifier} damage.')
-    #draw
-    else:
-        attacker_unit_health -= defender_draw_damage
-        defender_health -= attacker_draw_damage
-        if attacker_roll_modifier > 0 and defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Draw!')
-        elif attacker_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll}. Draw!')
-        elif defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Draw!')
-        else:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Draw!')
-    return attacker_unit_health, attacker_battles_won, attacker_battles_lost, defender_health, defender_battles_won, defender_battles_lost, war_log
 
 def war_resolution(game_id, player_id_1, WAR_JUSTIFICATIONS_LIST, signatories_list, playerdata_list):
     '''Resolves a war that ends in an attacker or defender victory.'''

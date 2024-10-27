@@ -1,0 +1,11 @@
+Researched Mechanized Infantry for 15 technology.
+Failed to research Upgraded Facilities. Not enough technology.
+Successfully purchased region INDIA for 5 dollars.
+Successfully purchased region INDIA for 5 dollars.
+Built Common Metals Mine in region NTHMO for 5 dollars.
+Built Common Metals Mine in region LILEG for 5 dollars.
+Built Common Metals Mine in region NTWTN for 5 dollars.
+Built Boot Camp in region WESSD for 10 basic materials.
+Built Boot Camp in region STHKS for 10 basic materials.
+Successfully moved None WABAS - INDIA.
+Successfully moved None WESKY - STHIN.

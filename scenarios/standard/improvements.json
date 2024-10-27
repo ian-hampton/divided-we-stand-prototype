@@ -1,8 +1,12 @@
 {
     "Advanced Metals Mine": {
-        "Health": 99,
         "Required Research": "Metallurgy",
         "Required Resource": "Advanced Metals",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -14,12 +18,13 @@
         }
     },
     "Boot Camp": {
-        "Health": 5,
-        "Victory Damage": 3,
-        "Combat Value": 9,
-        "Draw Damage": 1,
         "Required Research": "Standing Army",
         "Required Resource": null,
+        "Health": 5,
+        "Victory Damage": 3,
+        "Draw Damage": 1,
+        "Combat Value": 9,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -31,22 +36,25 @@
         }
     },
     "Capital": {
-        "Health": 5,
+        "Required Research": null,
         "Required Resource": null,
+        "Health": 5,
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 9,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {}
     },
     "Central Bank": {
+        "Required Research": "Central Banking System",
+        "Required Resource": null,
         "Health": 5,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
-        "Required Research": "Central Banking System",
-        "Required Resource": null,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
         "Build Costs": {
@@ -58,12 +66,13 @@
         }
     },
     "City": {
+        "Required Research": "City Resettlement",
+        "Required Resource": null,
         "Health": 5,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
-        "Required Research": "City Resettlement",
-        "Required Resource": null,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -75,9 +84,13 @@
         }
     },
     "Coal Mine": {
-        "Health": 99,
         "Required Research": "Coal Mining",
         "Required Resource": "Coal",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -89,9 +102,13 @@
         }
     },
     "Common Metals Mine": {
-        "Health": 99,
         "Required Research": "Surface Mining",
         "Required Resource": "Common Metals",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -103,12 +120,13 @@
         }
     },
     "Crude Barrier": {
-        "Health": 5,
-        "Victory Damage": 4,
-        "Combat Value": 9,
-        "Draw Damage": 2,
         "Required Research": "Basic Defenses",
         "Required Resource": null,
+        "Health": 5,
+        "Victory Damage": 4,
+        "Draw Damage": 2,
+        "Combat Value": 9,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -120,9 +138,13 @@
         }
     },
     "Industrial Zone": {
-        "Health": 99,
         "Required Research": null,
         "Required Resource": "Basic Materials",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -134,12 +156,13 @@
         }
     },
     "Military Base": {
+        "Required Research": "Military Bases",
+        "Required Resource": null,
         "Health": 10,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 5,
-        "Required Research": "Military Bases",
-        "Required Resource": null,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
         "Build Costs": {
@@ -151,12 +174,13 @@
         }
     },
     "Military Outpost": {
+        "Required Research": "Military Outposts",
+        "Required Resource": null,
         "Health": 10,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 7,
-        "Required Research": "Military Outposts",
-        "Required Resource": null,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
         "Build Costs": {
@@ -168,9 +192,13 @@
         }
     },
     "Missile Defense Network": {
-        "Health": 99,
         "Required Research": "Missile Defense Network",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
         "Build Costs": {
@@ -182,9 +210,13 @@
         }
     },
     "Missile Defense System": {
-        "Health": 99,
         "Required Research": "Missile Defense System",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
         "Build Costs": {
@@ -196,9 +228,13 @@
         }
     },
     "Nuclear Power Plant": {
-        "Health": 99,
         "Required Research": "Nuclear Power",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -210,9 +246,13 @@
         }
     },
     "Oil Refinery": {
-        "Health": 99,
         "Required Research": "Oil Refinement",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 2,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -224,9 +264,13 @@
         }
     },
     "Oil Well": {
-        "Health": 99,
         "Required Research": "Oil Drilling",
         "Required Resource": "Oil",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -238,9 +282,13 @@
         }
     },
     "Uranium Mine": {
-        "Health": 99,
         "Required Research": "Uranium Extraction",
         "Required Resource": "Uranium",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -252,9 +300,13 @@
         }
     },
     "Rare Earth Elements Mine": {
-        "Health": 99,
         "Required Research": "REE Mining",
         "Required Resource": "Rare Earth Elements",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -266,9 +318,13 @@
         }
     },
     "Research Institute": {
-        "Health": 99,
         "Required Research": "Research Institutes",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 3,
         "Energy Upkeep": 1,
         "Build Costs": {
@@ -280,9 +336,13 @@
         }
     },
     "Research Laboratory": {
-        "Health": 99,
         "Required Research": "Laboratories",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -294,12 +354,13 @@
         }
     },
     "Missile Silo": {
+        "Required Research": "Launch Codes",
+        "Required Resource": null,
         "Health": 5,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 7,
-        "Required Research": "Launch Codes",
-        "Required Resource": null,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
         "Build Costs": {
@@ -311,9 +372,13 @@
         }
     },
     "Solar Farm": {
-        "Health": 99,
         "Required Research": "Solar Panels",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -325,9 +390,13 @@
         }
     },
     "Strip Mine": {
-        "Health": 99,
         "Required Research": "Strip Mining",
         "Required Resource": "Coal",
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
@@ -339,9 +408,13 @@
         }
     },
     "Surveillance Center": {
-        "Health": 99,
         "Required Research": "Surveillance Operations",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
         "Build Costs": {
@@ -353,9 +426,13 @@
         }
     },
     "Wind Farm": {
-        "Health": 99,
         "Required Research": "Wind Turbines",
         "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Energy Upkeep": 0,
         "Build Costs": {
