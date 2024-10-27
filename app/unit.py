@@ -133,8 +133,10 @@ class Unit:
 
         if withdraw:
             # to-do: add checks from withdraw action function to here when player log class is made
-            target_region_unit = copy.deepcopy(self)
-            target_region_unit._save_changes()
+            original_region_id = copy.deepcopy(self.region_id)
+            self.region_id = target_region_unit.region_id
+            self._save_changes()
+            self.region_id = original_region_id
             self.clear()
             return True
         
