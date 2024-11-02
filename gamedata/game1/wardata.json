@@ -42,22 +42,22 @@
             }
         },
         "attackerWarScore": {
-            "total": 0,
+            "total": 2,
             "occupation": 0,
             "combatVictories": 2,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 0,
             "capitalCaptures": 0,
-            "nukes": 0
+            "nukedEnemyRegions": 0
         },
         "defenderWarScore": {
-            "total": 0,
+            "total": 1,
             "occupation": 0,
             "combatVictories": 1,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 0,
             "capitalCaptures": 0,
-            "nukes": 0
+            "nukedEnemyRegions": 0
         },
         "warLog": []
     }

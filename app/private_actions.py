@@ -329,6 +329,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
     trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     trucedata_list = core.read_file(trucedata_filepath, 1)
+    wardata = WarData(game_id)
 
     #get needed player info
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -364,8 +365,6 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
         attacker_mc_data = military_capacity_masterlist[attacker_player_id - 1]
         attacker_research_list = research_masterlist[attacker_player_id - 1]
         attacker_status = playerdata_list[attacker_player_id - 1][28]
-        attacker_relations_data = relations_data_masterlist[attacker_player_id - 1]
-        defender_relations_data = relations_data_masterlist[defender_player_id - 1]
         player_action_log = player_action_logs[attacker_player_id - 1]
 
         #valid order check
@@ -413,12 +412,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
             continue
 
         #already at war check
-        already_at_war_check = False
-        attacker_at_war_list = core.get_wars(attacker_relations_data)
-        for select_player_id in attacker_at_war_list:
-            if select_player_id == defender_player_id:
-                already_at_war_check = True
-        if already_at_war_check:
+        if wardata.are_at_war(attacker_player_id, defender_player_id):
             player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. You are already at war with this nation.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
@@ -435,7 +429,6 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
         if war_justification == 'Border Skirmish' or war_justification == 'Conquest' or war_justification == 'Annexation':
             region_claims_str = input(f'List the regions that {attacker_nation_name} is claiming using {war_justification}: ')
             region_claims_list = region_claims_str.split(',')
-        wardata = WarData(game_id)
         war_name = wardata.create_war(attacker_player_id, defender_player_id, war_justification, current_turn_num, region_claims_list)
         diplomacy_log.append(f'{attacker_nation_name} declared war on {defender_nation_name}.')
         player_action_log.append(f'Declared war on {defender_nation_name}.')

@@ -1,279 +1,280 @@
 <!DOCTYPE html>
 <html>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-<title>{{ page_title }}</title>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/basic.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_header.css') }}">
 <style>
-.main {
-    width: 80%;
-    margin-left: 10%;
+body {
+    font-family: "Palatino", "Palatino Linotype", "Book Antiqua", serif;
+    background-image: url("{{ url_for('static', filename='background-strips-alternate.png') }}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+table {
+    width: 75%;
+    padding: 0px;
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border-width: 0px;
+    color: white;
+    opacity: 1.0;
+    height: min-content;
+}
+.flex-container {
+    margin-left: 25%;
+    width: 50%;
     display: flex;
     flex-direction: column;
 }
-.war-box {
-    width: 50%;
+.war {
+    width: 100%;
+    color: white;
+    line-height: 1;
+    border: 2px solid white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.75);
+    background-color: rgba(45, 45, 45, 0.5);
+    vertical-align: top;
     margin: 0px;
-    padding: 0px;
-    background-color: #2a2a2a;
+    margin-top: 20px;
     margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 1.0;
 }
-.war-title {
-    border: none;
-    font-size: 24px;
-    background-color: #2a2a2a;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-    padding: 0;
-    padding-top: 2px;
-}
-.war-subtitle {
-    border: none;
-    font-size: 14px;
-    background-color: #2a2a2a;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 5px;
-}
-.contents {
+.war .top-bar {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    background-color: rgba(41, 41, 41, 0.75);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 15px;
 }
-.left-table {
-    width: 50%;
-    margin: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 5px;
-    background-color: #2a2a2a;
-    border-collapse: collapse;
-    border-width: 0px;
-    background-image: linear-gradient(to right, #cc4125, #eb5a3d);
-    color: white;
-    opacity: 1.0;
-    height: min-content;
+.war .table-background-color {
+    background-color: rgba(41, 41, 41, 0.75);
+    padding-bottom: 15px;
+}
+.war .title {
+    font-weight: bold;
+    font-size: 24px;
     text-align: left;
+    margin: 0px;
+    padding-left: 0px;
 }
-.left-table th {
-    border: none;
+.war .middle-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.war .middle-bar .nation-box {
+    flex-basis: calc(50% - 50px);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    background-color: rgba(41, 41, 41, 0.75);
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.war .middle-bar .nation-box .entry {
+    margin: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.war .entry .nation-name {
     font-size: 18px;
-    font-weight: bold;
-    margin: 0px;
-    padding: 0px;
-    padding-left: 50px;
 }
-.left-table td {
-    border: none;
-    padding: 0px;
-    margin: 0px;
-    padding-left: 50px;
-}
-.right-table {
-    width: 50%;
-    margin: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 5px;
-    padding-right: 50px;
-    background-color: #2a2a2a;
-    border-collapse: collapse;
-    border-width: 0px;
-    background-image: linear-gradient(to left, #3c78d8, #5793f3);
-    color: white;
-    opacity: 1.0;
-    height: min-content;
-    text-align: right;
-}
-.right-table th {
-    border: none;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 0px;
-    margin: 0px;
-    padding-right: 50px;
-}
-.right-table td {
-    border: none;
-    padding: 0px;
-    margin: 0px;
-    padding-right: 50px;
-}
-.bar-table {
-    width: calc(100% - 300px);
-    padding: 0px;
-    margin: 0px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 3px;
-    margin-bottom: 10px;
-    border-collapse: collapse;
-    border-width: 0px;
-    color: white;
-    opacity: 1.0;
-    height: min-content;
-}
-img {
-    padding: 0px;
-    margin: 0px;
-}
-.nation-name {
+.war .entry .nation-details {
     font-size: 14px;
+    padding-top: 3px;
+    margin-left: 20px;
 }
-.nation-info {
-    font-size: 10px;
+.war .bottom-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+}
+.war .bottom-bar .war-box {
+    flex-basis: calc(22.5% - 70px);
+    background-color: rgba(41, 41, 41, 0.75);
+    margin: 0px;
+    padding: 10px;
+}
+.war .bottom-bar .log-box {
+    flex-basis: calc(55%);
+    background-color: rgba(41, 41, 41, 0.75);
+    margin: 0px;
+    padding: 10px;
+}
+.war .bottom-bar .war-box .record-bar {
+    width: 100%;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.war .bottom-bar .war-box .record {
+    padding-top: 3px;
+}
+.war .actual-bottom {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.war .actual-bottom div {
+    font-size: 14px;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    background-color: rgba(41, 41, 41, 0.75);
+}
+.war .color-red {
+    color: #eb5a3d
+}
+.war .color-blue {
+    color: #5793f3
 }
 </style>
 
-<body>
+
+<title>{{ page_title }}</title>
+
+
 <header>
     <div class="left-header">
         <p id="title">{{ page_title }}</p>
     </div>
     <div class="right-header">
-        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:48px;"></a>
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
     </div>
 </header>
-<div class="main">
-    {% for row in war_masterlist %}
-    <div class="war-box">
-        <p class="war-title">{{ row[0] }}</p>
-        <p class="war-subtitle">{{ row[1] }}</p>
+
+
+<body>
+<div class="flex-container">
+
+{% for war_name, war_data in dict.items() %}
+<div class="war">
+    
+    <div class="top-bar">
+        <div class="title"> {{ war_name }} </div>
+        <div class="title"> {{ war_data["timeframe"] }} </div>
+    </div>
+
+    <div class="table-background-color">
         <table class="bar-table">
             <tr>
-                {% for entry in row[8] %}
+            {% for entry in war_data["scoreBar"] %}
                 {% autoescape false %}
                 <td style="{{ entry }}">&nbsp;</td>
                 {% endautoescape %}
-                {% endfor %}
+            {% endfor %}
             </tr>
         </table>
-        <div class="contents">
-            <table class="left-table">
-                <tr>
-                    <td style="padding-top: 10px;"></td>
-                </tr>
-                <tr>
-                    <th>Main Attacker</th>
-                </tr>
-                <tr>
-                    <td class="nation-name">{{ row[2][0] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Justification: {{ row[2][1] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Claims: {{ row[2][2] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Won: {{ row[2][3] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Lost: {{ row[2][4] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Units Lost: {{ row[2][5] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Improvements Lost: {{ row[2][6] }}</td>
-                </tr>
-                <tr>
-                    <th style="padding-top: 5px; {{ row[4] }};">Supporting Attackers</th>
-                </tr>
-                {% for entry in row[6] %}
-                <tr>
-                    <td class="nation-name">{{ entry[0] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Justification: {{ entry[1] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Claims: {{ entry[2] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Won: {{ entry[3] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Lost: {{ entry[4] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Units Lost: {{ entry[5] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Improvements Lost: {{ entry[6] }}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td style="padding-bottom: 10px;"></td>
-                </tr>
-            </table>
-            <table class="right-table">
-                <tr>
-                    <td style="padding-top: 10px;"></td>
-                </tr>
-                <tr>
-                    <th>Main Defender</th>
-                </tr>
-                <tr>
-                    <td class="nation-name">{{ row[3][0] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Justification: {{ row[3][1] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Claims: {{ row[3][2] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Won: {{ row[3][3] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Lost: {{ row[3][4] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Units Lost: {{ row[3][5] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Improvements Lost: {{ row[3][6] }}</td>
-                </tr>
-                <tr>
-                    <th style="padding-top: 5px; {{ row[5] }};">Supporting Defenders</th>
-                </tr>
-                {% for entry in row[7] %}
-                <tr>
-                    <td class="nation-name">{{ entry[0] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Justification: {{ entry[1] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">War Claims: {{ entry[2] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Won: {{ entry[3] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Battles Lost: {{ entry[4] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Units Lost: {{ entry[5] }}</td>
-                </tr>
-                <tr>
-                    <td class="nation-info">Improvements Lost: {{ entry[6] }}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td style="padding-bottom: 10px;"></td>
-                </tr>
-            </table>
-        </div>
     </div>
-    {% endfor %}
+    
+
+    <div class="middle-bar">
+        
+        <div class="nation-box">
+            {% for nation_name, nation_data in war_data["combatants"].items() %}
+                {% if "Attacker" in nation_data["role"] %}
+                    <div class="entry">
+                        <div class="nation-name"> {{ nation_name }} </div>
+                        <div class="nation-details">War Role: <span class="color-red"> {{ nation_data["role"] }} </span> </div>
+                        <div class="nation-details">War Justification: <span class="color-red"> {{ nation_data["warJustification"] }} </span> </div>
+                        {% if nation_data["warClaims"] %}
+                            <div class="nation-details">War Claims: <span class="color-red"> {{ nation_data["warClaims"]|join(", ") }} </span> </div>
+                        {% else %}
+                            <div class="nation-details">War Claims: <span class="color-red"> None </span> </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="nation-box">
+            {% for nation_name, nation_data in war_data["combatants"].items() %}
+                
+                {% if "Defender" in nation_data["role"] %}
+                    <div class="entry">
+                        <div class="nation-name"> {{ nation_name }} </div>
+                        <div class="nation-details">War Role: <span class="color-blue"> {{ nation_data["role"] }} </span> </div>
+                        <div class="nation-details">War Justification: <span class="color-blue"> {{ nation_data["warJustification"] }} </span> </div>
+                        {% if nation_data["warClaims"] %}
+                            <div class="nation-details">War Claims: <span class="color-blue"> {{ nation_data["warClaims"]|join(", ") }} </span> </div>
+                        {% else %}
+                            <div class="nation-details">War Claims: <span class="color-blue"> None </span> </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="bottom-bar">
+
+        <div class="war-box">
+            {% for key, value in war_data["attackerWarScore"].items() %}
+                <div class="record-bar">
+                {% if loop.first %}
+                    <div> {{ key }}: </div>
+                    <div> <span class="color-red"> {{ value }} </span> </div>
+                {% else %}
+                    <div class="record"> {{ key }}: </div>
+                    <div class="record"> <span class="color-red"> {{ value }} </span> </div>
+                {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="log-box"></div>
+
+        <div class="war-box">
+            {% for key, value in war_data["defenderWarScore"].items() %}
+                <div class="record-bar">
+                {% if loop.first %}
+                    <div> {{ key }}: </div>
+                    <div> <span class="color-blue"> {{ value }} </span> </div>
+                {% else %}
+                    <div class="record"> {{ key }}: </div>
+                    <div class="record"> <span class="color-blue"> {{ value }} </span> </div>
+                {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    
+    <div class="actual-bottom">
+
+        {% autoescape false %}
+        <div style="padding-top: 10px;padding-bottom:5px"> {{ war_data["canEnd"] }} </div>
+        
+        <div style="padding-top: 5px;padding-bottom:10px"> {{ war_data["forcedEnd"] }} </div>
+        {% endautoescape %}
+
+    </div>
+
+</div>
+{% endfor %}
+
 </div>
 </body>

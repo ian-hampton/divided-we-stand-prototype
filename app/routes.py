@@ -6,6 +6,7 @@ import json
 from operator import itemgetter
 import os
 import random
+import re
 import shutil
 import uuid
 
@@ -638,129 +639,135 @@ for full_game_id in game_ids:
 #WARS PAGE
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
+
+    # define helper functions
+    def camel_to_title(camel_str):
+        # Insert a space before each uppercase letter and capitalize the words
+        title_str = re.sub(r'([A-Z])', r' \1', camel_str).title()
+        return title_str.strip()
     
-    #function defs
-    def process_wardata(output_list, war_data, i):
-        nation_name = playerdata_list[i][1]
-        output_list.append(nation_name)
-        if len(war_data) == 6:
-            war_data.insert(2, "None")
-        else:
-            war_data.insert(2, war_data.pop(6))
-        war_data.pop(0)
-        output_list += war_data
-        return output_list
-    def calculate_war_score(main_nation_data, secondary_nation_list):
-        war_score = 0
-        war_score += int(main_nation_data[3])
-        for secondary_nation_data in secondary_nation_list:
-            war_score += int(secondary_nation_data[3])
-        return war_score
-    
-    #read the contents of active_games.json
+    # read from game files
+    from app.wardata import WarData
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_id = int(full_game_id[-1])
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} Wars List'
-    
-    #read playerdata.csv
+    current_turn_num = core.get_current_turn_num(int(full_game_id[-1]))
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 0)
-    
-    #read wardata.csv
-    # to do - update this to use new wardata
-    wardata_filepath = f''
-    wardata_list = []
-    war_masterlist = []
-    for war in wardata_list:
-        war_entry = []
-        #get war title
-        war_entry.append(war[11])
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_name_list = []
+    for nation_info in playerdata_list:
+        nation_name_list.append(nation_info[1])
+    wardata = WarData(full_game_id)
+
+    # read wars
+    for war_name, war_data in wardata.wardata_dict.items():
+        
         #get war timeframe
-        war_start = int(war[12])
+        war_start = war_data["startTurn"]
         season, year = core.date_from_turn_num(war_start)
         war_start = f'{season} {year}'
-        war_end = war[15]
-        if war_end.isdigit():
+        war_end = war_data["endTurn"]
+        if war_end != 0:
             war_end = int(war_end)
             season, year = core.date_from_turn_num(war_end)
             war_end = f'{season} {year}'
         else:
             war_end = "Present"
-        war_entry.append(f'{war_start} - {war_end}')
-        #get main attacker and defender
-        main_attacker_data = []
-        main_defender_data = []
-        for i in range(1, 11):
-            if war[i] != '-':
-                war_data = ast.literal_eval(war[i])
-                if war_data[0] == 'Main Attacker':
-                    main_attacker_data = process_wardata(main_attacker_data, war_data, i)
-                elif war_data[0] == 'Main Defender':
-                    main_defender_data = process_wardata(main_defender_data, war_data, i)
-            if main_attacker_data != [] and main_defender_data != []:
-                break
-        war_entry.append(main_attacker_data)
-        war_entry.append(main_defender_data)
-        #get secondary attackers/defenders
-        supporting_attackers = []
-        supporting_defenders = []
-        for i in range(1, 11):
-            secondary_data = []
-            if war[i] != '-':
-                war_data = ast.literal_eval(war[i])
-                if war_data[0] == 'Secondary Attacker':
-                    secondary_data = process_wardata(secondary_data, war_data, i)
-                    supporting_attackers.append(secondary_data)
-                elif war_data[0] == 'Secondary Defender':
-                    secondary_data = process_wardata(secondary_data, war_data, i)
-                    supporting_defenders.append(secondary_data)
-        if supporting_attackers != []:
-            war_entry.append("visibility: visible")
-        else:
-            war_entry.append("display: none")
-        if supporting_defenders != []:
-            war_entry.append("visibility: visible")
-        else:
-            war_entry.append("display: none")
-        war_entry.append(supporting_attackers)
-        war_entry.append(supporting_defenders)
-        #get war status
-        war_status = war[13]
-        attacker_color = ["""background-image: linear-gradient(#cc4125, #eb5a3d)"""]
-        defender_color = ["""background-image: linear-gradient(#3c78d8, #5793f3)"""]
-        white_color = ["""background-image: linear-gradient(#c0c0c0, #b0b0b0)"""]
+        wardata.wardata_dict[war_name]["timeframe"] = f'{war_start} - {war_end}'
+
+        # check for Unyielding
+        ma_has_unyielding = False
+        md_has_unyielding = False
+        for combatant_name, combatant_data in war_data["combatants"].items():
+            combatant_id = nation_name_list.index(combatant_name)
+            combatant_research_list = ast.literal_eval(playerdata_list[combatant_id - 1][26])
+            if combatant_data["role"] == "Main Attacker" and "Unyielding" in combatant_research_list:
+                ma_has_unyielding = True
+            elif combatant_data["role"] == "Main Defender" and "Unyielding" in combatant_research_list:
+                md_has_unyielding = True
+
+        # implement a score bar using an html table >:)
+        war_status = wardata.wardata_dict[war_name]["outcome"]
+        attacker_color = """background-image: linear-gradient(#cc4125, #eb5a3d)"""
+        defender_color = """background-image: linear-gradient(#3c78d8, #5793f3)"""
+        white_color = """background-image: linear-gradient(#c0c0c0, #b0b0b0)"""
         match war_status:
             case "Attacker Victory":
-                war_status_bar = attacker_color * 1
+                # set bar entirely red
+                war_status_bar = [attacker_color] * 1
             case "Defender Victory":
-                war_status_bar = defender_color * 1
+                # set bar entirely blue
+                war_status_bar = [defender_color] * 1
             case "White Peace":
-                war_status_bar = white_color * 1
-            case "Ongoing":
-                attacker_score = calculate_war_score(main_attacker_data, supporting_attackers)
-                defender_score = calculate_war_score(main_defender_data, supporting_defenders)
+                # set bar entirely white
+                war_status_bar = [white_color] * 1
+            case "TBD":
+                # color bar based on percentage
+                attacker_score = wardata.wardata_dict[war_name]["attackerWarScore"]["total"]
+                defender_score = wardata.wardata_dict[war_name]["defenderWarScore"]["total"]
                 if attacker_score != 0 and defender_score == 0:
-                    war_status_bar = attacker_color * 1
+                    war_status_bar = [attacker_color] * 1
                 elif attacker_score == 0 and defender_score != 0:
-                    war_status_bar = defender_color * 1
+                    war_status_bar = [defender_color] * 1
                 elif attacker_score == 0 and defender_score == 0:
                     war_status_bar = attacker_color * 1
-                    war_status_bar += defender_color * 1
+                    war_status_bar += [defender_color] * 1
                 else:
+                    # calculate attacker value
                     attacker_percent = float(attacker_score) / float(attacker_score + defender_score)
-                    attacker_percent = round(attacker_percent, 1)
-                    attacker_value = int(attacker_percent * 10)
+                    attacker_percent = round(attacker_percent, 2)
+                    attacker_points = int(attacker_percent * 100)
+                    attacker_steps = round(attacker_points / 5)
+                    # calculate defender value
                     defender_percent = float(defender_score) / float(attacker_score + defender_score)
-                    defender_percent = round(defender_percent, 1)
-                    defender_value = int(defender_percent * 10)
-                    war_status_bar = attacker_color * attacker_value
-                    war_status_bar += defender_color * defender_value
-        war_entry.append(war_status_bar)
-        #add war to list
-        war_masterlist.append(war_entry)
-    return render_template('temp_wars.html', page_title = page_title, war_masterlist = war_masterlist)
+                    defender_percent = round(defender_percent, 2)
+                    defender_points = int(defender_percent * 100)
+                    defender_steps = round(defender_points / 5)
+                    # add to score bar
+                    war_status_bar = [attacker_color] * attacker_steps
+                    war_status_bar += [defender_color] * defender_steps
+        wardata.wardata_dict[war_name]["scoreBar"] = war_status_bar
+
+        # convert warscore keys from camel case to title case with spaces
+        copy = {}
+        for key, value in wardata.wardata_dict[war_name]["attackerWarScore"].items():
+            new_key = camel_to_title(key)
+            if new_key == "Total":
+                new_key += " War Score"
+            elif new_key == "Enemy Improvements Destroyed":
+                new_key = "Enemy Impr. Destroyed"
+            copy[new_key] = value
+        wardata.wardata_dict[war_name]["attackerWarScore"] = copy
+        copy = {}
+        for key, value in wardata.wardata_dict[war_name]["defenderWarScore"].items():
+            new_key = camel_to_title(key)
+            if new_key == "Total":
+                new_key += " War Score"
+            elif new_key == "Enemy Improvements Destroyed":
+                new_key = "Enemy Impr. Destroyed"
+            copy[new_key] = value
+        wardata.wardata_dict[war_name]["defenderWarScore"] = copy
+
+        # create war resolution strings
+        if current_turn_num - war_data["startTurn"] < 4:
+            can_end_str = f"A peace deal may be negotiated by the main combatants in {current_turn_num - war_data["startTurn"]} turns."
+        else:
+            can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
+        wardata.wardata_dict[war_name]["canEnd"] = can_end_str
+        if attacker_score > defender_score:
+            goal = defender_score + 100
+            if md_has_unyielding:
+                goal += 50
+            forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {goal} </span> war score."""
+        else:
+            goal = attacker_score + 100
+            if ma_has_unyielding:
+                goal += 50
+            forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {goal} </span> war score."""
+        wardata.wardata_dict[war_name]["forcedEnd"] = forced_end_str
+
+    return render_template('temp_wars.html', page_title = page_title, dict = wardata.wardata_dict)
 
 #RESEARCH PAGE
 @main.route('/<full_game_id>/technologies')

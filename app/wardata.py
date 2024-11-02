@@ -39,7 +39,7 @@ class WarData:
                 "enemyUnitsDestroyed": 0,
                 "enemyImprovementsDestroyed": 0,
                 "capitalCaptures": 0,
-                "nukes": 0
+                "nukedEnemyRegions": 0
             },
             "defenderWarScore": {
                 "total": 0,
@@ -48,7 +48,7 @@ class WarData:
                 "enemyUnitsDestroyed": 0,
                 "enemyImprovementsDestroyed": 0,
                 "capitalCaptures": 0,
-                "nukes": 0
+                "nukedEnemyRegions": 0
             },
             "warLog": []
         }
