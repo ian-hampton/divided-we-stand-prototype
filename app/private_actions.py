@@ -474,22 +474,16 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
 def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
     '''Resolves all missile launch actions and missile defense abilities.'''
     
-    #define core lists
+    # get game data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_list = core.read_file(regdata_filepath, 2)
-    wardata_list = core.read_file(wardata_filepath, 2)
-
-    #get scenario data
+    wardata = WarData(game_id)
+    
+    # get scenario data
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-    unit_data_dict = core.get_scenario_dict(game_id, "Units")
+    improvement_name_list = sorted(improvement_data_dict.keys())
 
-    #remove actions with bad region names
-    missile_launch_list = core.filter_region_names(regdata_list, missile_launch_list)
-
-    #get needed player info
+    # get needed player info
     nation_name_list = []
     missile_data_masterlist = []
     research_masterlist = []
@@ -502,17 +496,31 @@ def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
         research_masterlist.append(player_research_list)
 
 
-    #Execute Actions
-    missiles_launched = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # Calculate Missile Launch Capacity
+    missiles_launched_list = [0] * len(playerdata_list)
+    launch_capacity_list = [0] * len(playerdata_list)
+    for index, playerdata in enumerate(playerdata_list):
+        improvement_count_list = ast.literal_eval(playerdata_list[index][27])
+        silo_index = improvement_name_list.index('Missile Silo')
+        silo_count = improvement_count_list[silo_index]
+        launch_capacity_list[index] = silo_count * 3
+
+    
+    # Execute Actions
     for missile_launch in missile_launch_list:
         player_id = missile_launch[0]
+        nation_name = nation_name_list[player_id - 1]
         missile_launch_list = missile_launch[1].split(' ')
         target_region_id = missile_launch_list[-1]
         missile_type = ' '.join(missile_launch_list[1:3])
         player_missile_data = missile_data_masterlist[player_id - 1]
+        player_research_list = research_masterlist[player_id - 1]
         player_action_log = player_action_logs[player_id - 1]
-
-        #player has missile to launch check
+        target_region = Region(target_region_id, game_id)
+        target_region_improvement = Improvement(target_region_id, game_id)
+        target_region_unit = Unit(target_region_id, game_id)
+        
+        # check if player actually has a missile to launch
         missile_check = True
         if missile_type == 'Standard Missile':
             if player_missile_data[0] == 0:
@@ -525,179 +533,176 @@ def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        #target region belongs to target player check
-        for region in regdata_list:
-            if region[0] == target_region_id:
-                target_control_data = ast.literal_eval(region[2])
-                target_improvement_data = ast.literal_eval(region[4])
-                target_unit_data = ast.literal_eval(region[5])
-                if target_unit_data[0] != None:
-                    target_unit_owner_id = target_unit_data[2]
-                player_id_2 = target_control_data[0]
-                break
-        
-        #player at war with target player check
-        war_check = False
-        if player_id != player_id_2:
-            for war in wardata_list:
-                if war[player_id] != '-' and war[player_id_2] != '-' and war[13] == 'Ongoing':
-                    wardata_1 = ast.literal_eval(war[player_id])
-                    war_role_1 = wardata_1[0]
-                    wardata_2 = ast.literal_eval(war[player_id_2])
-                    war_role_2 = wardata_2[0]
-                    if target_unit_data[0] != None:
-                        if target_unit_owner_id != player_id_2:
-                            wardata_3 = ast.literal_eval(war[target_unit_owner_id])
-                    #make sure player 1 is at war with player 2 in selected war
-                    if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Defender' in war_role_1 and 'Attacker' in war_role_2):
-                        war_check = True
-                        war_log = ast.literal_eval(war[14])
-                        break
-        if war_check == False:
-            player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. You are not at war with the player who controls {target_region_id}.')
+        # check if target region is valid
+        # notice we are not checking if region actually has something to hit - you are allowed to waste missiles
+        if missile_type == 'Nuclear Missile':
+            if player_id == target_region.owner_id:
+                player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. You cannot nuke your own region.')
+                player_action_logs[player_id - 1] = player_action_log
+                continue
+        target_region_is_valid = False
+        # you can strike an enemy region provided it is unoccupied
+        if wardata.are_at_war(player_id, target_region.owner_id) and target_region.owner_id == 0:
+            target_player_id = target_region.owner_id
+            target_region_is_valid = True
+        # you can strike your own region provided it is occupied
+        elif target_region.owner_id == player_id and target_region.occupier_id != 0 and wardata.are_at_war(player_id, target_region.occupier_id):
+            target_player_id = target_region.occupier_id
+            target_region_is_valid = True
+        # if either case true strike is valid
+        if not target_region_is_valid:
+            player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. You are not at war with the nation that controls this region.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        #launch capacity check
-        improvement_name_list = sorted(improvement_data_dict.keys())
-        improvement_count_list = ast.literal_eval(playerdata_list[player_id_2 - 1][27])
-        silo_index = improvement_name_list.index('Missile Silo')
-        silo_count = improvement_count_list[silo_index]
-        effective_launch_capacity = silo_count * 3
+        # launch capacity check
+        launch_capacity_check = True
         if missile_type == 'Standard Missile':
-            if effective_launch_capacity - missiles_launched[player_id - 1] - 1 < 0:
-                player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. Insufficient launch capacity!')
-                player_action_logs[player_id - 1] = player_action_log
-                continue
+            if missiles_launched_list[player_id - 1] + 1 > launch_capacity_list[player_id - 1]:
+                launch_capacity_check = False
         elif missile_type == 'Nuclear Missile':
-            if effective_launch_capacity - missiles_launched[player_id - 1] - 3 < 0:
-                player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. Insufficient launch capacity!')
-                player_action_logs[player_id - 1] = player_action_log
-                continue
+            if missiles_launched_list[player_id - 1] + 3 > launch_capacity_list[player_id - 1]:
+                launch_capacity_check = False
+        if not launch_capacity_check:
+            player_action_log.append(f'Failed to launch {missile_type} at {target_region_id}. Insufficient launch capacity!')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
 
-        
-        #Missile Launch Procedure
-        missile_alive = True
-        attacker_nation_name = nation_name_list[player_id - 1]
-        target_nation_name = nation_name_list[player_id_2 - 1]
-        target_improvement_name = target_improvement_data[0]
-        target_improvement_health = target_improvement_data[1]
-        target_player_research = research_masterlist[player_id_2 - 1]
-        target_unit_id = target_unit_data[0]
-        #unit present in region may not belong to target player
-        target_unit_owner_id = 0
-        if target_unit_id != None:
-            target_unit_owner_id = target_unit_data[2]
-            nation_name_3 = nation_name_list[target_unit_owner_id - 1]
-
-        #fire missile
+        # all checks passed - fire missile
         if missile_type == 'Standard Missile':
             player_missile_data[0] -= 1
-            missiles_launched[player_id - 1] += 1
-            war_log.append(f'{attacker_nation_name} launched a Standard Missile toward {target_region_id} in {target_nation_name}.')
+            missiles_launched_list[player_id - 1] += 1
         elif missile_type == 'Nuclear Missile':
-            player_missile_data[0] -= 1
-            missiles_launched[player_id - 1] += 2
-            war_log.append(f'{attacker_nation_name} launched a Nuclear Missile toward {target_region_id} in {target_nation_name}.')
+            player_missile_data[1] -= 1
+            missiles_launched_list[player_id - 1] += 3
         missile_data_masterlist[player_id - 1] = player_missile_data
 
-        #missile defense oppertunity
-        if target_improvement_name == 'Missile Defense System' or target_improvement_name == 'Missile Defense Network' or ('Local Missile Defense' in target_player_research and target_improvement_health != 99 and target_improvement_health != 0):
-            missile_alive = core.attempt_missile_defense(game_id, missile_type, target_improvement_data, target_nation_name, target_player_research, war_log)
-        else:
-            defense_improvement_data = None
-            #find defense network if able
-            missile_defense_network_candidates_list = core.get_regions_in_radius(target_region_id, 2, regdata_list)
-            for select_region_id in missile_defense_network_candidates_list:
-                region_data_list = core.get_region_data(regdata_list, select_region_id)
-                control_data = ast.literal_eval(region_data_list[2])
-                improvement_data = ast.literal_eval(region_data_list[4])
-                if improvement_data[0] == 'Missile Defense Network' and control_data[0] == player_id_2:
-                    defense_improvement_data = improvement_data
-                    break
-            #find defense system if able
-            if defense_improvement_data == None:
-                missile_defense_system_candidates_list = core.get_regions_in_radius(target_region_id, 1, regdata_list)
-                for select_region_id in missile_defense_system_candidates_list:
-                    region_data_list = core.get_region_data(regdata_list, select_region_id)
-                    control_data = ast.literal_eval(region_data_list[2])
-                    improvement_data = ast.literal_eval(region_data_list[4])
-                    if improvement_data[0] == 'Missile Defense System' and control_data[0] == player_id_2:
-                        defense_improvement_data = improvement_data
-                        break
-            if defense_improvement_data != None:
-                missile_alive = core.attempt_missile_defense(game_id, missile_type, defense_improvement_data, target_nation_name, target_player_research, war_log)
-
-        #missile strike
-        if missile_alive and missile_type == 'Standard Missile':
-            if target_improvement_name != None:
-                if target_improvement_health != 99:
-                    target_improvement_health -= 2
-                    if target_improvement_health <= 0:
-                        war_log.append(f'    Standard Missile successfully struck the {target_improvement_name} in {target_region_id}. Improvement destroyed!')
-                        if target_improvement_name != 'Capital':
-                            updated_improvement_data = [None, 99]
-                            wardata_2[4] += 1
-                        else:
-                            updated_improvement_data = ['Capital', 0]
-                        regdata_list = core.update_improvement_data(regdata_list, target_region_id, updated_improvement_data)
-                    else:
-                        war_log.append(f'    Standard Missile successfully struck the {target_improvement_name} in {target_region_id} and dealt 2 damage.')
-                        updated_improvement_data = [target_improvement_name, target_improvement_health]
-                        regdata_list = core.update_improvement_data(regdata_list, target_region_id, updated_improvement_data)
-                else:
-                    missile_accuracy_roll = random.randint(1, 10)
-                    war_log.append(f'    Standard Missile rolled a {missile_accuracy_roll} for accuracy.')
-                    if missile_accuracy_roll >= 8:
-                        war_log.append(f'    Standard Missile struck {target_nation_name} {target_improvement_name}. Improvement destroyed!')
-                        updated_improvement_data = [None, 99]
-                        regdata_list = core.update_improvement_data(regdata_list, target_region_id, updated_improvement_data)
-                        wardata_2[4] += 1
-                    else:
-                        war_log.append(f'    Standard Missile missed {target_nation_name} {target_improvement_name}.')
-            else:
-                war_log.append(f'    Standard Missile successfully struck {target_region_id}, but damaged nothing of importance.')
-        elif missile_alive and missile_type == 'Nuclear Missile':
-            if target_improvement_name != None:
-                war_log.append(f'    Nuclear Missile destroyed {target_nation_name} {target_improvement_name}.')
-                if target_improvement_name != 'Capital':
-                    updated_improvement_data = [None, 99]
-                    wardata_2[4] += 1
-                else:
-                    updated_improvement_data = ['Capital', 0]
-                regdata_list = core.update_improvement_data(regdata_list, target_region_id, updated_improvement_data)
-            if target_unit_id != None:
-                target_unit_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == target_unit_id), None)
-                war_log.append(f'    Nuclear Missile destroyed {nation_name_3} {target_unit_name}.')
-                updated_unit_data = [None, 99]
-                regdata_list = core.update_unit_data(regdata_list, target_region_id, updated_unit_data)
-                if target_unit_owner_id == player_id_2:
-                    wardata_2[5] += 1
-                else:
-                    wardata_3[5] += 1
-            if target_improvement_name == None and target_unit_id == None:
-                war_log.append(f'    Nuclear Missile successfully struck {target_region_id}, but damaged nothing of importance.')
-            nuke_data = [True, 2]
-            regdata_list = core.update_nuke_data(regdata_list, target_region_id, nuke_data)
-        
-
-        #update war info
-        for war in wardata_list:
-            if war[player_id] != '-' and war[player_id_2] != '-' and war[13] == 'Ongoing':
-                if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Defender' in war_role_1 and 'Attacker' in war_role_2):
-                    war[player_id] = str(wardata_1)
-                    war[player_id_2] = str(wardata_2)
-                    if target_unit_data[0] != None:
-                        if target_unit_owner_id != player_id_2:
-                            war[target_unit_owner_id] = str(wardata_3)
-                    war[14] = str(war_log)
-                    break
-        if missile_alive:
-            player_action_log.append(f'Launched {missile_type} at {target_region_id}.')
-        else:
-           player_action_log.append(f'{missile_type} launched at {target_region_id} was shot down before reaching target.')
+        # identify war and log launch
+        target_nation_name = nation_name_list[target_player_id - 1]
+        war_name = wardata.are_at_war(player_id, target_player_id , True)
+        war_role = wardata.get_war_role(nation_name, war_name)
+        log_str = f'{nation_name} launched a {missile_type} at {target_region_id} in {target_nation_name}.'
+        wardata.append_war_log(war_name, log_str)
+        player_action_log.append(f'Launched {missile_type} at {target_region_id}. See combat log for details.')
         player_action_logs[player_id - 1] = player_action_log
-    
+
+        # engage missile defenses
+        if "Local Missile Defense" in player_research_list:
+            local_missile_defense = True
+        else:
+            local_missile_defense = False
+        missile_intercepted, log_str_1, log_str_2 = target_region.activate_missile_defenses(missile_type, local_missile_defense)
+        if log_str_1:
+            wardata.append_war_log(war_name, log_str_1)
+        if log_str_2:
+            wardata.append_war_log(war_name, log_str_2)
+
+        # conduct missile strike
+        from app import combat
+        if not missile_intercepted:
+            
+            if missile_type == 'Standard Missile':
+
+                # update statistic
+                wardata.statistic_add(war_name, nation_name, "missilesLaunched")
+                
+                # attempt to damage improvement
+                if target_region_improvement.name != None and target_region_improvement.health != 0 and target_region_improvement.health != 99:
+                    accuracy_roll = random.randint(1, 10)
+                    wardata.append_war_log(war_name, f'    Standard Missile rolled a {accuracy_roll} for accuracy.')
+                    if accuracy_roll > 3:
+                        target_region_improvement.health -= 1
+                        # improvement survived - save damage
+                        if target_region_improvement.health > 0:
+                            wardata.append_war_log(war_name, f'    Standard Missile struck {target_region_improvement.name} in {target_region_id} and dealt 1 damage.')
+                            target_region_improvement._save_changes()
+                        # improvement destroyed
+                        elif target_region_improvement.health <= 0 and target_region_improvement.name != 'Capital':
+                            wardata.statistic_add(war_name, nation_name, "enemyImprovementsDestroyed")
+                            wardata.statistic_add(war_name, target_nation_name, "friendlyImprovementsDestroyed")
+                            wardata.warscore_add(war_name, war_role, "enemyImprovementsDestroyed", 2)
+                            wardata.append_war_log(war_name, f'    Standard Missile struck {target_region_improvement.name} in {target_region_id} and dealt 1 damage. Improvement destroyed!')
+                            target_region_improvement.clear()
+                        # improvement destroyed but is capital so set health to zero instead
+                        elif target_region_improvement.health <= 0 and target_region_improvement.name == 'Capital':
+                            wardata.append_war_log(war_name, f'    Standard Missile struck {target_region_improvement.name} in {target_region_id} and dealt 1 damage. Improvement devastated!')
+                            target_region_improvement.health = 0
+                            target_region_improvement._save_changes()
+                    # if accuracy roll failed print war log
+                    else:
+                        wardata.append_war_log(war_name, f'    Standard Missile missed its target.')
+                elif target_region_improvement.name != None and target_region_improvement.health == 99:
+                    accuracy_roll = random.randint(1, 10)
+                    wardata.append_war_log(war_name, f'    Standard Missile rolled a {accuracy_roll} for accuracy.')
+                    if accuracy_roll > 7:
+                        wardata.append_war_log(war_name, f'    Standard Missile destroyed {target_region_improvement.name} in {target_region_id}.')
+                        wardata.statistic_add(war_name, nation_name, "enemyImprovementsDestroyed")
+                        wardata.statistic_add(war_name, target_nation_name, "friendlyImprovementsDestroyed")
+                        wardata.warscore_add(war_name, war_role, "enemyImprovementsDestroyed", 2)
+                        target_region_improvement.clear()
+                    else:
+                        wardata.append_war_log(war_name, f'    Standard Missile missed its target.')
+
+                # attempt to damage unit
+                if target_region_unit.name != None:
+                    accuracy_roll = random.randint(1, 10)
+                    wardata.append_war_log(war_name, f'    Standard Missile rolled a {accuracy_roll} for accuracy.')
+                    if accuracy_roll > 3:
+                        target_region_unit.health -= 1
+                        # unit survived - save damage
+                        if target_region_unit.health > 0:
+                            wardata.append_war_log(war_name, f'    Standard Missile struck {target_region_unit.name} in {target_region_id} and dealt 1 damage.')
+                            target_region_unit._save_changes()
+                        # unit destroyed
+                        elif target_region_unit.health <= 0:
+                            wardata.append_war_log(war_name, f'    Standard Missile struck {target_region_unit.name} in {target_region_id} and dealt 1 damage. Unit destroyed!')
+                            wardata.statistic_add(war_name, nation_name, "enemyUnitsDestroyed")
+                            wardata.statistic_add(war_name, target_nation_name, "friendlyUnitsDestroyed")
+                            unit_bounty = combat._get_warscore_from_unit(target_region_unit.name)
+                            wardata.warscore_add(war_name, war_role, "enemyUnitsDestroyed", unit_bounty)
+                            target_region_unit.clear()
+                    # if accuracy roll failed print war log
+                    else:
+                        wardata.append_war_log(war_name, f'    Standard Missile missed its target.')
+
+                # add message if missile hit nothing
+                if target_region_improvement.name is None and target_region_unit.name is None:
+                    wardata.append_war_log(war_name, f'    Standard Missile has struck {target_region_id}, but destroyed nothing of importance.')
+            
+            elif missile_type == 'Nuclear Missile':
+                
+                # update statistic and add fallout
+                wardata.statistic_add(war_name, nation_name, "nukesLaunched")
+                wardata.warscore_add(war_name, war_role, "nukedEnemyRegions", 5)
+                if target_region_improvement.name != 'Capital':
+                    target_region.set_fallout()
+                
+                # destroy improvement if present
+                if target_region_improvement.name != None and target_region_improvement.name != 'Capital':
+                    wardata.append_war_log(war_name, f'    Nuclear Missile destroyed {target_region_improvement.name} in {target_region_id}.')
+                    wardata.statistic_add(war_name, nation_name, "enemyImprovementsDestroyed")
+                    wardata.statistic_add(war_name, target_nation_name, "friendlyImprovementsDestroyed")
+                    wardata.warscore_add(war_name, war_role, "enemyImprovementsDestroyed", 2)
+                    target_region_improvement.clear()
+                # improvement destroyed but is capital so set health to zero instead
+                elif target_region_improvement.name == 'Capital':
+                    wardata.append_war_log(war_name, f'    Nuclear Missile devastated {target_region_improvement.name} in {target_region_id}.')
+                    target_region_improvement.health = 0
+                    target_region_improvement._save_changes()
+                
+                # destroy unit if present
+                if target_region_unit.name != None:
+                    wardata.append_war_log(war_name, f'    Nuclear Missile destroyed {target_region_unit.name} in {target_region_id}.')
+                    wardata.statistic_add(war_name, nation_name, "enemyUnitsDestroyed")
+                    wardata.statistic_add(war_name, target_nation_name, "friendlyUnitsDestroyed")
+                    unit_bounty = combat._get_warscore_from_unit(target_region_unit.name)
+                    wardata.warscore_add(war_name, war_role, "enemyUnitsDestroyed", unit_bounty)
+                    target_region_unit.clear()
+
+                # add message if missile hit nothing
+                if target_region_improvement.name is None and target_region_unit.name is None:
+                    wardata.append_war_log(war_name, f'    Nuclear Missile successfully struck {target_region_id}, but destroyed nothing.')
+
     
     #Update playerdata.csv
     for index, playerdata in enumerate(playerdata_list):
@@ -707,24 +712,8 @@ def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-
-    #Update regdata.csv
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
-
-    #Update wardata.csv
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
-
     return player_action_logs
-
+    
 def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
     '''
     Resolves all unit movements, including the resulting combat and occupation.

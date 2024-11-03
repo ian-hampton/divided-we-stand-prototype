@@ -1704,36 +1704,6 @@ def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
             return True
     return False
 
-def attempt_missile_defense(game_id, missile_type, improvement_data, target_nation_name, target_player_research, war_log):
-    
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-
-    improvement_name = improvement_data[0]
-    improvement_health = improvement_data[1]
-    missile_defense_roll = random.randint(1, 10)
-    defense_hit_value = 9999999
-    
-    match missile_type:
-        case 'Standard Missile':
-            if improvement_name == 'Missile Defense System':
-                defense_hit_value = 6
-            elif improvement_name == 'Missile Defense Network':
-                defense_hit_value = 3
-            elif 'Local Missile Defense' in target_player_research and improvement_health != 99 and improvement_health != 0:
-                defense_hit_value = improvement_data_dict[improvement_name]['Combat Value']
-        case 'Nuclear Missile':
-            if improvement_name == 'Missile Defense Network':
-                defense_hit_value = 6
-    
-    if defense_hit_value != 9999999:
-        war_log.append(f'    {target_nation_name} {improvement_name} rolled a {missile_defense_roll}.')
-        if missile_defense_roll >= defense_hit_value:
-            war_log.append(f'    Hit! Incoming {missile_type} was shot down!')
-            return False
-        else:
-            war_log.append(f'    Miss! {improvement_name} defenses failed!')
-    return True
-
 
 #MISC SUB-FUNCTIONS
 ################################################################################

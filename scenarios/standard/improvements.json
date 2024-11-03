@@ -199,6 +199,8 @@
         "Draw Damage": 99,
         "Combat Value": 99,
         "Abilities": [],
+        "Standard Missile Defense": 3,
+        "Nuclear Missile Defense": 6,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 2,
         "Build Costs": {
@@ -217,6 +219,8 @@
         "Draw Damage": 99,
         "Combat Value": 99,
         "Abilities": [],
+        "Standard Missile Defense": 6,
+        "Nuclear Missile Defense": 99,
         "Dollars Upkeep": 0,
         "Energy Upkeep": 1,
         "Build Costs": {

@@ -680,12 +680,22 @@ def wars(full_game_id):
         ma_has_unyielding = False
         md_has_unyielding = False
         for combatant_name, combatant_data in war_data["combatants"].items():
-            combatant_id = nation_name_list.index(combatant_name)
+            combatant_id = nation_name_list.index(combatant_name) + 1
             combatant_research_list = ast.literal_eval(playerdata_list[combatant_id - 1][26])
             if combatant_data["role"] == "Main Attacker" and "Unyielding" in combatant_research_list:
                 ma_has_unyielding = True
             elif combatant_data["role"] == "Main Defender" and "Unyielding" in combatant_research_list:
                 md_has_unyielding = True
+
+        # check for crime syndicate
+        ma_is_crime = False
+        md_is_crime = False
+        for combatant_name, combatant_data in war_data["combatants"].items():
+            combatant_id = nation_name_list.index(combatant_name) + 1
+            if combatant_data["role"] == "Main Attacker" and playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
+                ma_is_crime = combatant_name
+            elif combatant_data["role"] == "Main Defender" and playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
+                md_is_crime = combatant_name
 
         # implement a score bar using an html table >:)
         war_status = wardata.wardata_dict[war_name]["outcome"]
@@ -759,12 +769,18 @@ def wars(full_game_id):
             goal = defender_score + 100
             if md_has_unyielding:
                 goal += 50
-            forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {goal} </span> war score."""
+            if md_is_crime:
+                forced_end_str = f"""The <span class="color-red"> attackers </span> cannot win this war using war score since <span class="color-blue"> {md_is_crime} </span> is a Crime Syndicate."""
+            else:
+                forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {goal} </span> war score."""
         else:
             goal = attacker_score + 100
             if ma_has_unyielding:
                 goal += 50
-            forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {goal} </span> war score."""
+            if ma_is_crime:
+                forced_end_str = f"""The <span class="color-blue"> defenders </span> cannot win this war using war score since <span class="color-red"> {ma_is_crime} </span> is a Crime Syndicate."""
+            else:
+                forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {goal} </span> war score."""
         wardata.wardata_dict[war_name]["forcedEnd"] = forced_end_str
 
     return render_template('temp_wars.html', page_title = page_title, dict = wardata.wardata_dict)
