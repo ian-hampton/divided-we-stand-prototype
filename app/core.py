@@ -416,6 +416,8 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     print("Resolving end of turn updates...")
     diplomacy_log = checks.total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_log)
     diplomacy_log = run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diplomacy_log)
+    wardata.add_warscore_from_occupations()
+    wardata.update_totals()
     for i in range(player_count):
         player_id = i + 1
         checks.gain_income(full_game_id, player_id)

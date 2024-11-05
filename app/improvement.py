@@ -1,7 +1,6 @@
 import json
 
 from app import core
-from app.wardata import WarData
 
 class Improvement:
 
@@ -143,7 +142,7 @@ class Improvement:
             return False
         
         # improvements with no health can never be hostile
-        if self.health == 99 or self.health == 0:
+        if self.health == 99 or self.health == 0 or other_player_id == 99:
             return False
 
         # defensive improvements in a region that is owned by you and is unoccupied is never hostile

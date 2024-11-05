@@ -1,6 +1,10 @@
-Filthy Imperialist Motorized Infantry NTHMI vs Techbro Crude Barrier UPPER
-    Filthy Imperialist rolled 8 (+1). Techbro rolled 8 (+1). Attacker victory!
-Filthy Imperialist Motorized Infantry BLUEG vs Techbro Infantry PENNY
-    Filthy Imperialist rolled 11 (+1). Techbro rolled 8. Attacker victory!
 Filthy Imperialist Motorized Infantry CUMBE vs Techbro Infantry PENNY
-    Filthy Imperialist rolled 7 (+1). Techbro rolled 9. Defender victory!
+    Filthy Imperialist rolled 6 (+1). Techbro rolled 1. Draw!
+    Techbro Industrial Zone has been destroyed!
+Filthy Imperialist Motorized Infantry NTHIN vs Techbro Infantry CHICA
+    Filthy Imperialist rolled 5 (+1). Techbro rolled 9. Defender victory!
+Filthy Imperialist Motorized Infantry NTHMI vs Techbro Mechanized Infantry UPPER
+    Filthy Imperialist rolled 10 (+1). Techbro rolled 2. Attacker victory!
+Filthy Imperialist Motorized Infantry NTHMI vs Techbro Crude Barrier UPPER
+    Filthy Imperialist rolled 2 (+1). Techbro rolled 9 (+1). Defender victory!
+    Filthy Imperialist Motorized Infantry has been lost!

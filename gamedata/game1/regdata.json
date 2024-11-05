@@ -2555,7 +2555,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3213,13 +3213,13 @@
         },
         "improvementData": {
             "name": "Crude Barrier",
-            "health": 3,
+            "health": 2,
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Mechanized Infantry",
+            "health": 5,
+            "ownerID": 2
         }
     },
     "NTHMI": {
@@ -3246,9 +3246,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Motorized Infantry",
-            "health": 6,
-            "ownerID": 1
+            "name": null,
+            "health": 99,
+            "ownerID": 99
         }
     },
     "WESMI": {
@@ -3491,9 +3491,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
         }
     },
     "STWIL": {
@@ -3590,9 +3590,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
         }
     },
     "NTHIN": {
@@ -3622,7 +3622,7 @@
         },
         "unitData": {
             "name": "Motorized Infantry",
-            "health": 6,
+            "health": 4,
             "ownerID": 1
         }
     },
@@ -3999,9 +3999,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Motorized Infantry",
-            "health": 6,
-            "ownerID": 1
+            "name": null,
+            "health": 99,
+            "ownerID": 99
         }
     },
     "WESKY": {
@@ -4040,7 +4040,7 @@
         "regionData": {
             "fullName": "Pennyroyal Region",
             "ownerID": 2,
-            "occupierID": 0,
+            "occupierID": 1,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
             "nukeTurns": 0,
@@ -4059,14 +4059,14 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": "Industrial Zone",
+            "name": null,
             "health": 99,
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Infantry",
-            "health": 4,
-            "ownerID": 2
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
         }
     },
     "CUMBE": {
@@ -4099,7 +4099,7 @@
         },
         "unitData": {
             "name": "Motorized Infantry",
-            "health": 4,
+            "health": 2,
             "ownerID": 1
         }
     },
@@ -6137,7 +6137,7 @@
     "NEWYO": {
         "regionData": {
             "fullName": "New York City",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Common Metals",
@@ -6169,7 +6169,7 @@
     "CONNE": {
         "regionData": {
             "fullName": "Connecticut",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6186,8 +6186,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -6199,7 +6199,7 @@
     "RHODE": {
         "regionData": {
             "fullName": "Rhode Island",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6215,8 +6215,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -6291,7 +6291,7 @@
     "STHMA": {
         "regionData": {
             "fullName": "Southern Massachusetts",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -6306,8 +6306,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {

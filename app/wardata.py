@@ -287,6 +287,36 @@ class WarData:
         self.wardata_dict[war_name]["combatants"][nation_name]["statistics"][stat_name] += count
         self._save_changes()
 
+    # log methods
+    ################################################################################
+
+    def append_war_log(self, war_name: str, message: str) -> None:
+        '''
+        Adds new entry to the war log of a given war.
+        '''
+        self.wardata_dict[war_name]["warLog"].append(message)
+        self._save_changes()
+
+    def export_all_logs(self) -> None:
+        '''
+        Saves all of the combat logs for ongoing wars as .txt files. Then wipes the logs.
+        '''
+        directory = f'gamedata/{self.game_id}/logs'
+
+        for war_name, war_data in self.wardata_dict.items():
+            if war_data["outcome"] == "TBD":
+                os.makedirs(directory, exist_ok=True)
+                filename = os.path.join(directory, f'{war_name} Log.txt')
+                with open(filename, 'w') as file:
+                    for entry in self.wardata_dict[war_name]["warLog"]:
+                        file.write(entry + '\n')
+            self.wardata_dict[war_name]["warLog"] = []
+
+        self._save_changes()
+
+    # war score methods
+    ################################################################################
+
     def warscore_add(self, war_name: str, war_role: str, stat_name: str, count = 1) -> None:
         '''
         Increases the score of a warscore entry.
@@ -298,32 +328,51 @@ class WarData:
         self.wardata_dict[war_name][war_role_key][stat_name] += count
         self._save_changes()
 
-    # log methods
-    ################################################################################
-
-    def append_war_log(self, war_name: str, message: str) -> None:
+    def add_warscore_from_occupations(self) -> None:
         '''
-        Adds new entry to the war log of a given war.
+        Adds warscore from occupied regions.
         '''
-        self.wardata_dict[war_name]["warLog"].append(message)
-        self._save_changes()
+        from app.region import Region
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
 
-    # war score methods
-    ################################################################################
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
 
-    def export_all_logs(self) -> None:
+        # for every region that is occupied
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            if region.occupier_id != 0:
+                # get occupier information
+                war_name = self.are_at_war(region.owner_id, region.occupier_id, True)
+                occupier_nation_name = playerdata_list[region.occupier_id - 1][1]
+                occupier_war_role = self.get_war_role(occupier_nation_name, war_name)
+                occupier_research_list = ast.literal_eval(playerdata_list[region.occupier_id - 1][26])
+                # add warscore
+                if 'Scorched Earth' in occupier_research_list:
+                    score = 3
+                else:
+                    score = 2
+                self.warscore_add(war_name, occupier_war_role, "occupation", score)
+
+    def update_totals(self) -> None:
         '''
-        Saves all of the combat logs for ongoing wars as .txt files. Then wipes the logs.
+        Updates the total war scores of all ongoing wars.
         '''
-
-        directory = f'gamedata/{self.game_id}/logs'
         for war_name, war_data in self.wardata_dict.items():
             if war_data["outcome"] == "TBD":
-                os.makedirs(directory, exist_ok=True)
-                filename = os.path.join(directory, f'{war_name} Log.txt')
-                with open(filename, 'w') as file:
-                    for entry in self.wardata_dict[war_name]["warLog"]:
-                        file.write(entry + '\n')
-            self.wardata_dict[war_name]["warLog"] = []
+                
+                new_total = 0
+                for key, value in war_data["attackerWarScore"].items():
+                    if key != 'total':
+                        new_total += value
+                self.wardata_dict[war_name]["attackerWarScore"]["total"] = new_total
+
+                new_total = 0
+                for key, value in war_data["defenderWarScore"].items():
+                    if key != 'total':
+                        new_total += value
+                self.wardata_dict[war_name]["defenderWarScore"]["total"] = new_total
 
         self._save_changes()
+    

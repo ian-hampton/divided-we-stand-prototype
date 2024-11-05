@@ -151,6 +151,7 @@ class Unit:
                 combat.unit_vs_unit(self, target_region_unit)
             
             # if target improvement hostile conduct combat
+            self.load_attributes()
             if target_region_improvement.is_hostile(self.owner_id):
                 combat.unit_vs_improvement(self, target_region_improvement)
                 
@@ -172,8 +173,15 @@ class Unit:
                 if target_region_improvement.name is not None and target_region_improvement.name != 'Capital' and target_region.owner_id != original_player_id:
                     playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
                     playerdata_list = core.read_file(playerdata_filepath, 1)
+                    attacker_nation_name = playerdata_list[original_player_id - 1][1]
                     defender_nation_name = playerdata_list[target_region_improvement.owner_id - 1][1]
                     war_name = wardata.are_at_war(original_player_id, target_region_improvement.owner_id, True)
+                    attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
+                    # award points
+                    wardata.statistic_add(war_name, attacker_nation_name, "enemyImprovementsDestroyed")
+                    wardata.statistic_add(war_name, defender_nation_name, "friendlyImprovementsDestroyed")
+                    wardata.warscore_add(war_name, attacker_war_role, "enemyImprovementsDestroyed", 2)
+                    # log and destroy
                     wardata.append_war_log(war_name, f"    {defender_nation_name} {target_region_improvement.name} has been destroyed!")
                     target_region_improvement.clear()
                 # region occupation step
@@ -201,7 +209,7 @@ class Unit:
         wardata = WarData(self.game_id)
 
         # if no unit return False
-        if self.owner_id == 99:
+        if self.owner_id == 99 or other_player_id == 99:
             return False
 
         # if player_ids are the same than return False

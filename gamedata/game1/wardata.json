@@ -15,11 +15,11 @@
                     "STWTN"
                 ],
                 "statistics": {
-                    "battlesWon": 2,
-                    "battlesLost": 1,
+                    "battlesWon": 3,
+                    "battlesLost": 3,
                     "enemyUnitsDestroyed": 0,
                     "enemyImprovementsDestroyed": 0,
-                    "friendlyUnitsDestroyed": 0,
+                    "friendlyUnitsDestroyed": 1,
                     "friendlyImprovementsDestroyed": 0,
                     "missilesLaunched": 0,
                     "nukesLaunched": 0
@@ -30,9 +30,9 @@
                 "warJustification": "TBD",
                 "warClaims": [],
                 "statistics": {
-                    "battlesWon": 1,
-                    "battlesLost": 2,
-                    "enemyUnitsDestroyed": 0,
+                    "battlesWon": 3,
+                    "battlesLost": 3,
+                    "enemyUnitsDestroyed": 1,
                     "enemyImprovementsDestroyed": 0,
                     "friendlyUnitsDestroyed": 0,
                     "friendlyImprovementsDestroyed": 0,
@@ -42,19 +42,19 @@
             }
         },
         "attackerWarScore": {
-            "total": 2,
-            "occupation": 0,
-            "combatVictories": 2,
+            "total": 7,
+            "occupation": 2,
+            "combatVictories": 3,
             "enemyUnitsDestroyed": 0,
-            "enemyImprovementsDestroyed": 0,
+            "enemyImprovementsDestroyed": 2,
             "capitalCaptures": 0,
             "nukedEnemyRegions": 0
         },
         "defenderWarScore": {
-            "total": 1,
+            "total": 6,
             "occupation": 0,
-            "combatVictories": 1,
-            "enemyUnitsDestroyed": 0,
+            "combatVictories": 3,
+            "enemyUnitsDestroyed": 3,
             "enemyImprovementsDestroyed": 0,
             "capitalCaptures": 0,
             "nukedEnemyRegions": 0

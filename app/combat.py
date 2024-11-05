@@ -134,6 +134,7 @@ def unit_vs_improvement(attacking_unit: Unit, defending_improvement: Improvement
     # get information from playerdata
     playerdata_filepath = f'gamedata/{attacking_unit.game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    print(f"{attacking_unit.region_id} - {attacking_unit.owner_id}")
     attacker_nation_name = playerdata_list[attacking_unit.owner_id - 1][1]
     defender_nation_name = playerdata_list[defending_improvement.owner_id - 1][1]
     attacker_research_list = ast.literal_eval(playerdata_list[attacking_unit.owner_id - 1][26])
