@@ -242,7 +242,7 @@ def check_region_ids(move_regions_list, regdata_dict):
 
 def check_research_name(action, library):
     for research_name in library['Research Name List']:
-        if research_name in action:
+        if research_name.title() in action:
             return True
     return False
 

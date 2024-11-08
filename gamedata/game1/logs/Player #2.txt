@@ -1,0 +1,12 @@
+Researched Improved Logistics for 10 political power.
+Researched Efficient Bureaucracy for 10 political power.
+Researched Uranium Extraction for 10 technology.
+Researched REE Mining for 15 technology.
+Built Advanced Metals Mine in region STEMN for 5 common metals.
+Built Advanced Metals Mine in region STWWI for 5 common metals.
+Failed to build Oil Well in region NTHIN. You do not own or control this region.
+Deployed Mechanized Infantry in region WABAS for 10 dollars and 10 basic materials.
+Successfully moved None LILEG - WESKY.
+Failed to complete move Infantry INDIA - CENIN. Check combat log for details.
+Failed to complete move Infantry EASIL - CENIN. Check combat log for details.
+Failed to complete move Mechanized Infantry UPPER - NTHMI. Check combat log for details.

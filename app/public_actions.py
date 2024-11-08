@@ -954,6 +954,8 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
     # get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
 
     # get needed economy information from each player
     request_list = ['Dollars', 'Political Power']
@@ -979,8 +981,6 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
         # to be added
 
         # event check
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
         if "Widespread Civil Disorder" in active_games_dict[game_id]["Active Events"]:
             player_action_log.append(f'Failed to purchase {region_id} due to the Widespread Civil Disorder event.')
             player_action_logs[player_id - 1] = player_action_log
@@ -1028,6 +1028,7 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
         # region dispute
         else:
             region.increase_purchase_cost()
+            active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
             for player_id in region_claim_list:
                 player_id = region_claim_list[0]
                 player_action_log = player_action_logs[player_id - 1]
@@ -1048,6 +1049,10 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
+
+    #Update Active Games
+    with open('active_games.json', 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
     
     return player_action_logs
 
@@ -1128,6 +1133,8 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
                 continue
 
         # identify research type
+        if research_name == 'Ree Mining':
+            research_name = 'REE Mining'
         if research_name in agenda_data_dict:
             tech_type = "Agenda"
             tech_dict = agenda_data_dict

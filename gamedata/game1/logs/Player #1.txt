@@ -1,5 +1,19 @@
-Failed to complete move Motorized Infantry CUMBE - PENNY. Check combat log for details.
-Successfully moved None BLUEG - PENNY.
-Failed to move Motorized Infantry CENIN - CHICA. Target region not adjacent to current region.
-Failed to complete move Motorized Infantry NTHIN - CHICA. Check combat log for details.
-Failed to complete move None NTHMI - UPPER. Check combat log for details.
+Researched Scorched Earth for 10 political power.
+Researched Defensive Tactics for 15 political power.
+Researched Infantry for 5 technology.
+Researched Artillery for 10 technology.
+Successfully purchased region HAMPT for 5 dollars.
+Successfully purchased region HAMPT for 5 dollars.
+Successfully purchased region HAMPT for 5 dollars.
+Successfully purchased region HAMPT for 5 dollars.
+Successfully purchased region HAMPT for 5 dollars.
+Successfully purchased region HAMPT for 5 dollars.
+Successfully purchased region HAMPT for 5 dollars.
+Built Advanced Metals Mine in region STHNJ for 5 common metals.
+Built Common Metals Mine in region HAMPT for 5 dollars.
+Built Industrial Zone in region NTHNJ for 5 dollars.
+Sold 20 Basic Materials to the resource market for 45.4 dollars.
+Deployed Light Tank in region NTHMI for 10 common metals and 1 advanced metals.
+Deployed Light Tank in region BLUEG for 10 common metals and 1 advanced metals.
+Failed to complete move Motorized Infantry MIAVA - STHIN. Check combat log for details.
+Successfully moved None CUMBE - CINCI.

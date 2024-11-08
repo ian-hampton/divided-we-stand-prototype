@@ -11,6 +11,7 @@ from app import map
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
+from app.wardata import WarData
 
 #END OF TURN CHECKS
 def update_improvement_count(game_id, player_id):
@@ -1236,6 +1237,7 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
     '''
     
     #get core lists
+    wardata = WarData(game_id)
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     nation_name_list = []
@@ -1257,53 +1259,26 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
     
     #if no unoccupied region found for a player force surrender if main combatant
     for index, region_found in enumerate(non_occupied_found_list):
-        surrender_player_id = index + 1
-        looser_nation_name = nation_name_list[surrender_player_id - 1]
+        player_id_1 = index + 1
+        nation_name_1 = nation_name_list[player_id_1 - 1]
         if not region_found:
             #look for wars to surrender to
-            for war in wardata_list:
-                if war[surrender_player_id] != '-' and war[13] == 'Ongoing':
-                    #get war data
-                    war_name = war[11]
-                    surrender_player_wardata = ast.literal_eval(war[surrender_player_id])
-                    looser_war_role = surrender_player_wardata[0]
-                    if looser_war_role not in ['Main Attacker', 'Main Defender']:
-                        continue
-                    for j, entry in enumerate(war):
-                        if j in range(1, 11) and entry != '-':
-                            wardata = ast.literal_eval(entry)
-                            war_role = wardata[0]
-                            if war_role in ['Main Attacker', 'Main Defender'] and war_role != looser_war_role:
-                                winner_war_role = war_role
-                                winner_war_justification = wardata[1]
-                                winner_nation_name = nation_name_list[j - 1]
-                                if looser_war_role == 'Main Attacker':
-                                    war[13] = 'Defender Victory'
-                                elif looser_war_role == 'Main Defender':
-                                    war[13] = 'Attacker Victory'
-                    #get war justifications that will be fullfilled
-                    signatories_list = [False, False, False, False, False, False, False, False, False, False]
-                    war_justifications_list = []
-                    for i in range(1, 11):
-                        claimer_player_id = i
-                        if war[i] != '-':
-                            selected_wardata = ast.literal_eval(war[i])
-                            selected_war_role = selected_wardata[0]
-                            selected_war_justification = selected_wardata[1]
-                            signatories_list[i - 1] = True
-                            if selected_war_justification == 'Border Skirmish' or selected_war_justification == 'Conquest' or selected_war_justification == 'Annexation':
-                                war_claims = selected_wardata[6]
-                                war_claims_list = war_claims.split(',')
-                            else:
-                                war_claims_list = None
-                            if winner_war_role in selected_war_role:
-                                war_justifications_entry = [claimer_player_id, selected_war_justification, war_claims_list]
-                                war_justifications_list.append(war_justifications_entry)
-                    #resolve war and update diplomacy log
-                    playerdata_list = core.war_resolution(game_id, surrender_player_id, war_justifications_list, signatories_list, playerdata_list)
-                    core.add_truce_period(game_id, signatories_list, winner_war_justification, current_turn_num)
-                    war[15] = current_turn_num
-                    diplomacy_log.append(f'{looser_nation_name} surrendered to {winner_nation_name}.')
+            for war_name, war_data in wardata.wardata_dict.items():
+                combatant_dict = war_data["combatants"]
+                if war_data["outcome"] == "TBD" and nation_name_1 in combatant_dict and 'Main' in combatant_dict[nation_name_1]["role"]:
+                    war_role_1 = combatant_dict[nation_name_1]["role"]
+                    for nation_name in combatant_dict:
+                        if 'Main' in combatant_dict[nation_name]["role"] and war_role_1 != combatant_dict[nation_name]["role"]:
+                            nation_name_2 = nation_name
+                            war_role_2 = combatant_dict[nation_name_2]["role"]
+                            break
+                    # process surrender
+                    if 'Attacker' in war_role_1:
+                        outcome = 'Attacker Victory'
+                    else:
+                        outcome = 'Defender Victory'
+                    wardata.end_war(war_name, outcome)
+                    diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
                     diplomacy_log.append(f'{war_name} has ended.')
 
     
@@ -1787,7 +1762,6 @@ def bonus_phase_heals(player_id, game_id):
     '''
     Heals all units and defensive improvements by 2 health.
     '''
-    from app.wardata import WarData
     wardata = WarData(game_id)
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
@@ -1827,36 +1801,17 @@ def bonus_phase_heals(player_id, game_id):
             if 'Peacetime Recovery' in player_research_list and wardata.is_at_peace(player_id):
                 region_unit.heal(100)
 
-def prompt_for_missing_war_justifications(full_game_id):
+def prompt_for_missing_war_justifications(game_id):
     '''
     Prompts in terminal when a war justification has not been entered for an ongoing war.
 
-    Parameters:
-    - full_game_id: The full game_id of the active game.
+    :param game_id: The full game_id of the active game.
     '''
+    wardata = WarData(game_id)
 
-    #get core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = []
-
-    #prompt logic
-    for index, war in enumerate(wardata_list):
-        if war[13] == 'Ongoing':
-            for player_id in range(1, 11):
-                if war[player_id] != '-':
-                    player_info = ast.literal_eval(war[player_id])
-                    if player_info[1] == 'TBD':
-                        war_name = war[11]
-                        nation_name = playerdata_list[player_id - 1][1]
-                        war_justification = input(f'Please enter {nation_name} war justification for the {war_name} or enter SKIP to postpone: ')
-                        if war_justification != 'SKIP':
-                            player_info[1] = war_justification
-                            if war_justification == 'Border Skirmish' or war_justification == 'Conquest' or war_justification == 'Annexation':
-                                claims = input(f'Please enter region claims: ')
-                                player_info.append(claims)
-                            war[player_id] = str(player_info)
-                            wardata_list[index] = war
+    for war_name, war_data in wardata.wardata_dict.items():
+        if war_data["outcome"] == "TBD":
+            wardata.add_missing_war_justifications(war_name)
 
 #UPDATE INCOME HELPER FUNCTIONS
 def update_gross_income_masterlist(gross_income_masterlist, player_id, index, income, remnant_multiplier):

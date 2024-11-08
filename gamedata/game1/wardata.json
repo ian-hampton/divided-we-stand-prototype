@@ -34,7 +34,7 @@
             },
             "Techbro": {
                 "role": "Main Defender",
-                "warJustification": "TBD",
+                "warJustification": "Animosity",
                 "warClaims": [],
                 "warClaimsOriginalOwners": [],
                 "statistics": {
@@ -50,8 +50,8 @@
             }
         },
         "attackerWarScore": {
-            "total": 7,
-            "occupation": 2,
+            "total": 10,
+            "occupation": 5,
             "combatVictories": 3,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 2,

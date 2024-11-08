@@ -2491,7 +2491,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3152,7 +3152,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -3213,12 +3213,12 @@
         },
         "improvementData": {
             "name": "Crude Barrier",
-            "health": 2,
+            "health": 4,
             "turnTimer": 99
         },
         "unitData": {
             "name": "Mechanized Infantry",
-            "health": 5,
+            "health": 6,
             "ownerID": 2
         }
     },
@@ -3246,9 +3246,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Light Tank",
+            "health": 8,
+            "ownerID": 1
         }
     },
     "WESMI": {
@@ -3590,9 +3590,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Mechanized Infantry",
-            "health": 8,
-            "ownerID": 2
+            "name": null,
+            "health": 99,
+            "ownerID": 99
         }
     },
     "NTHIN": {
@@ -3622,7 +3622,7 @@
         },
         "unitData": {
             "name": "Motorized Infantry",
-            "health": 4,
+            "health": 6,
             "ownerID": 1
         }
     },
@@ -3714,9 +3714,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
         }
     },
     "STHIN": {
@@ -3908,9 +3908,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 4,
+            "ownerID": 1
         }
     },
     "STHOH": {
@@ -3999,9 +3999,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Light Tank",
+            "health": 8,
+            "ownerID": 1
         }
     },
     "WESKY": {
@@ -4031,9 +4031,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
         }
     },
     "PENNY": {
@@ -4098,9 +4098,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Motorized Infantry",
-            "health": 2,
-            "ownerID": 1
+            "name": null,
+            "health": 99,
+            "ownerID": 99
         }
     },
     "NTWTN": {
@@ -5450,7 +5450,7 @@
     "HAMPT": {
         "regionData": {
             "fullName": "Hampton Roads",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Common Metals",
@@ -5469,7 +5469,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Common Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5579,7 +5579,7 @@
     "WESMD": {
         "regionData": {
             "fullName": "Western Maryland",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Advanced Metals",
@@ -5611,7 +5611,7 @@
     "EASMD": {
         "regionData": {
             "fullName": "Eastern Maryland",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Uranium",
@@ -5642,7 +5642,7 @@
     "DELEW": {
         "regionData": {
             "fullName": "State of Deleware",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -5732,7 +5732,7 @@
     "NTEPA": {
         "regionData": {
             "fullName": "Northeast Pennsylvania",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Uranium",
@@ -5893,7 +5893,7 @@
     "NTHNJ": {
         "regionData": {
             "fullName": "North Jersey",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Basic Materials",
@@ -5910,7 +5910,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -5923,7 +5923,7 @@
     "STHNJ": {
         "regionData": {
             "fullName": "South Jersey",
-            "ownerID": 0,
+            "ownerID": 1,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Advanced Metals",
@@ -5938,7 +5938,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99,
             "turnTimer": 99
         },

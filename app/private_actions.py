@@ -329,8 +329,6 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
     trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     trucedata_list = core.read_file(trucedata_filepath, 1)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
     wardata = WarData(game_id)
 
     #get needed player info
@@ -429,40 +427,13 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
         # validate war claims
         region_claims_list = []
         if war_justification == 'Border Skirmish' or war_justification == 'Conquest':
-            while True:
+            all_claims_valid = False
+            while not all_claims_valid:
                 # get region claims
                 region_claims_str = input(f'List the regions that {attacker_nation_name} is claiming using {war_justification}: ')
                 region_claims_list = region_claims_str.split(',')
-                # get war justification info
-                if war_justification == 'Border Skirmish':
-                    free_claims = 3
-                    max_claims = 6
-                    claim_cost = 5
-                elif war_justification == 'Conquest':
-                    free_claims = 5
-                    max_claims = 10
-                    claim_cost = 3
-                # check that all claims are valid
-                all_claims_valid = True
-                for count, region_id in region_claims_list:
-                    if region_id not in regdata_dict:
-                        all_claims_valid = False
-                        break
-                    if count > free_claims:
-                        pp_economy_data = ast.literal_eval(playerdata_list[attacker_player_id - 1][10])
-                        new_sum = float(pp_economy_data[0]) - claim_cost
-                        if new_sum >= 0:
-                            pp_economy_data[0] = str(new_sum)
-                            playerdata_list[attacker_player_id - 1][10] = str(pp_economy_data)
-                        else:
-                            all_claims_valid = False
-                            break
-                    if count > max_claims:
-                        all_claims_valid = False
-                        break
-                if all_claims_valid:
-                    break
-
+                all_claims_valid, playerdata_list = wardata.validate_war_claims(war_justification, region_claims_list, attacker_player_id, playerdata_list)
+        
         #resolve war declaration
         war_name = wardata.create_war(attacker_player_id, defender_player_id, war_justification, current_turn_num, region_claims_list)
         diplomacy_log.append(f'{attacker_nation_name} declared war on {defender_nation_name}.')

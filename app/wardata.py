@@ -342,6 +342,10 @@ class WarData:
 
     def is_at_peace(self, player_id) -> bool:
         '''
+        Checks if a nation is at peace.
+
+        :param payer_id: id of nation we want to check
+        :returns: True if at peace, False if involved in at least one war.
         '''
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
@@ -365,6 +369,86 @@ class WarData:
             return combatants_dict[nation_name]["role"]
 
         return None
+
+    def add_missing_war_justifications(self, war_name: str) -> None:
+        '''
+        Given a war name, prompts all nations that haven't submitted a war justification yet.
+        '''
+        from app.region import Region
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+
+        # check every nation involved in the war
+        combatants_dict: dict = self.wardata_dict[war_name]["combatants"]
+        for nation_name in combatants_dict:
+            if combatants_dict[nation_name]["warJustification"] == "TBD":
+                war_justification = input(f'Please enter {nation_name} war justification for the {war_name} or enter SKIP to postpone: ')
+                if war_justification != 'SKIP':
+                    
+                    # validate war claims
+                    region_claims_list = []
+                    if war_justification == 'Border Skirmish' or war_justification == 'Conquest':
+                        all_claims_valid = False
+                        while not all_claims_valid:
+                            # get region claims
+                            region_claims_str = input(f'List the regions that {nation_name} is claiming using {war_justification}: ')
+                            region_claims_list = region_claims_str.split(',')
+                            all_claims_valid, playerdata_list = self.validate_war_claims(war_justification, region_claims_list, nation_name, playerdata_list)
+
+                    # save information
+                    combatants_dict[nation_name]["warJustification"] = war_justification
+                    combatants_dict[nation_name]["warClaims"] = region_claims_list 
+                    original_region_owners_list = []
+                    for region_id in region_claims_list:
+                        region = Region(region_id, self.game_id)
+                        original_region_owners_list.append(region.owner_id)
+                    combatants_dict[nation_name]["warClaimsOriginalOwners"] = original_region_owners_list
+
+        self.wardata_dict[war_name]["combatants"] = combatants_dict
+        self._save_changes()
+
+        #Update playerdata.csv
+        with open(playerdata_filepath, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(core.player_data_header)
+            writer.writerows(playerdata_list)
+    
+    def validate_war_claims(self, war_justification, region_claims_list, nation_name, playerdata_list):
+        '''
+        Checks if all provided region_ids are valid. Kind of a patch job, might upgrade later.
+        '''
+        nation_name_list = []
+        for playerdata in playerdata_list:
+            nation_name_list.append(playerdata[1])
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+
+        # get war justification info
+        if war_justification == 'Border Skirmish':
+            free_claims = 3
+            max_claims = 6
+            claim_cost = 5
+        elif war_justification == 'Conquest':
+            free_claims = 5
+            max_claims = 10
+            claim_cost = 3
+        # check that all claims are valid
+        attacker_player_id = nation_name_list.index(nation_name) + 1
+        for count, region_id in region_claims_list:
+            if region_id not in regdata_dict:
+                return False, playerdata_list
+            if count > free_claims:
+                pp_economy_data = ast.literal_eval(playerdata_list[attacker_player_id - 1][10])
+                new_sum = float(pp_economy_data[0]) - claim_cost
+                if new_sum >= 0:
+                    pp_economy_data[0] = str(new_sum)
+                    playerdata_list[attacker_player_id - 1][10] = str(pp_economy_data)
+                else:
+                    return False, playerdata_list
+            if count > max_claims:
+                return False, playerdata_list
+
+        return True, playerdata_list
 
     def statistic_add(self, war_name: str, nation_name: str, stat_name: str, count = 1):
         '''
