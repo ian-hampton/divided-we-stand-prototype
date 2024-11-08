@@ -1,5 +1,6 @@
 import ast
 import copy
+import csv
 import json
 from json.decoder import JSONDecodeError
 import os
@@ -56,6 +57,7 @@ class WarData:
             "role": "",
             "warJustification": "TBD",
             "warClaims": [],
+            "warClaimsOriginalOwners": [],
             "statistics": {
                 "battlesWon": 0,
                 "battlesLost": 0,
@@ -67,6 +69,7 @@ class WarData:
                 "nukesLaunched": 0,
             }
         }
+
 
     # private methods
     ################################################################################
@@ -138,6 +141,73 @@ class WarData:
 
         return war_name
 
+    def _resolve_war_justification(self, nation_name, war_dict: dict) -> None:
+        '''
+        Resolves a player's war justification.
+        '''
+        from app.region import Region
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+        nation_name_list = []
+        for playerdata in playerdata_list:
+            nation_name_list.append(playerdata[1])
+
+        # get information for winner
+        war_justification = war_dict[nation_name]["warJustification"]
+        war_claims = war_dict[nation_name]["warClaims"]
+        war_claims_original_ids = war_dict[nation_name]["warClaimsOriginalOwners"]
+        winner_role = war_dict[nation_name]["role"]
+        winner_player_id = nation_name_list.index(nation_name) + 1
+
+        # get information for main looser if no war claims
+        if war_claims == []:
+            for temp_nation_name in war_dict:
+                war_role = war_dict[temp_nation_name]["role"]
+                if 'Main' in war_role and winner_role != war_role:
+                    looser_player_id = nation_name_list.index(temp_nation_name) + 1
+                    break
+
+        # resolve war justification
+        match war_justification:
+            
+            case 'Border Skirmish' | 'Conquest':
+                for index, region_id in enumerate(war_claims):
+                    region = Region(region_id, self.game_id)
+                    if region.owner_id == war_claims_original_ids[index]:
+                        region.set_owner_id(winner_player_id)
+                        region.set_occupier_id(0)
+            
+            case 'Animosity':
+                # give winner 10 political power
+                pp_economy_data = ast.literal_eval(playerdata_list[winner_player_id - 1][10])
+                new_sum = float(pp_economy_data[0]) + 10
+                pp_economy_data[0] = str(new_sum)
+                playerdata_list[winner_player_id - 1][10] = str(pp_economy_data)
+                # give winner 10 technology
+                tech_economy_data = ast.literal_eval(playerdata_list[winner_player_id - 1][11])
+                new_sum = float(tech_economy_data[0]) + 10
+                tech_economy_data[0] = str(new_sum)
+                playerdata_list[winner_player_id - 1][11] = str(tech_economy_data)
+                # set looser to 0 political power
+                pp_economy_data = ast.literal_eval(playerdata_list[looser_player_id - 1][10])
+                pp_economy_data[0] = '0.00'
+                playerdata_list[looser_player_id - 1][10] = str(pp_economy_data)
+            
+            case 'Subjugation':
+                subject_type = 'Puppet State'
+                looser_status = f'{subject_type} of {nation_name}'
+                playerdata_list[looser_player_id - 1][28] = looser_status
+            
+            case 'Independence':
+                playerdata_list[winner_player_id - 1][28] = 'Independent Nation'
+        
+        # save playerdata.csv
+        with open(playerdata_filepath, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(core.player_data_header)
+            writer.writerows(playerdata_list)
+
+
     # data methods
     ################################################################################
     
@@ -153,6 +223,7 @@ class WarData:
         :returns: War name
         '''
         # import other game files
+        from app.region import Region
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
         trucedata_filepath = f'gamedata/{self.game_id}/trucedata.csv'
@@ -177,8 +248,13 @@ class WarData:
         combatant_dict["role"] = "Main Attacker"
         combatant_dict["warJustification"] = main_attacker_war_justification
         combatant_dict["warClaims"] = region_claims_list
+        original_region_owners_list = []
+        for region_id in region_claims_list:
+            region = Region(region_id, self.game_id)
+            original_region_owners_list.append(region.owner_id)
+        combatant_dict["warClaimsOriginalOwners"] = original_region_owners_list
         self.wardata_dict[war_name]["combatants"][main_attacker_name] = combatant_dict
-
+        
         # add main defender
         combatant_dict = copy.deepcopy(self.combatant_template)
         combatant_dict["role"] = "Main Defender"
@@ -195,7 +271,7 @@ class WarData:
             truce_with_md = core.check_for_truce(trucedata_list, player_id, main_defender_id, current_turn_num)
             already_at_war_with_md = self.are_at_war(player_id, main_defender_id)
             if not allied_with_md and not truce_with_md and not already_at_war_with_md:
-                combatant_dict = self.combatant_template
+                combatant_dict = copy.deepcopy(self.combatant_template)
                 combatant_dict["role"] = "Secondary Attacker"
                 self.wardata_dict[war_name]["combatants"][nation_name] = combatant_dict
 
@@ -209,7 +285,7 @@ class WarData:
             truce_with_ma = core.check_for_truce(trucedata_list, player_id, main_attacker_id, current_turn_num)
             already_at_war_with_ma = self.are_at_war(player_id, main_attacker_id)
             if not allied_with_ma and not truce_with_ma and not already_at_war_with_ma:
-                combatant_dict = self.combatant_template
+                combatant_dict = copy.deepcopy(self.combatant_template)
                 combatant_dict["role"] = "Secondary Defender"
                 self.wardata_dict[war_name]["combatants"][nation_name] = combatant_dict
         defender_status = playerdata_list[main_defender_id - 1][28]
@@ -222,7 +298,7 @@ class WarData:
                 overlord_player_id = nation_name_list.index(overlord_nation_name) + 1
                 subject_truce_check = core.check_for_truce(trucedata_list, overlord_player_id, main_attacker_id, current_turn_num)
                 if not subject_truce_check:
-                    combatant_dict = self.combatant_template
+                    combatant_dict = copy.deepcopy(self.combatant_template)
                     combatant_dict["role"] = "Secondary Defender"
                     self.wardata_dict[war_name]["combatants"][overlord_nation_name] = combatant_dict
         
@@ -263,7 +339,22 @@ class WarData:
                     return True
         
         return False
-    
+
+    def is_at_peace(self, player_id) -> bool:
+        '''
+        '''
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+
+        for i in range(len(playerdata_list)):
+            player_id_2 = i + 1
+            if player_id == player_id_2:
+                continue
+            if self.are_at_war(player_id, player_id_2):
+                return False
+
+        return True
+
     def get_war_role(self, nation_name: str, war_name: str) -> str:
         '''
         Returns the war role of a given nation in a given war.
@@ -286,6 +377,66 @@ class WarData:
         '''
         self.wardata_dict[war_name]["combatants"][nation_name]["statistics"][stat_name] += count
         self._save_changes()
+
+    def end_war(self, war_name: str, outcome: str):
+        '''
+        Calling this function does all the paperwork to end a war.
+        
+        :param war_name: Name of war to end
+        :param outcome: Result of the war
+        '''
+        from app.region import Region
+        war_dict: dict = self.wardata_dict[war_name]
+        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        main_war_justification = None
+
+        # resolve war justifications
+        match outcome:
+            
+            case 'Attacker Victory':
+                for nation_name, nation_war_data in war_dict.items():
+                    if 'Attacker' in nation_war_data["role"]:
+                        self._resolve_war_justification(nation_name, war_dict)
+                    if 'Main Attacker' == nation_war_data["role"]:
+                        main_war_justification = nation_war_data["warJustification"]
+
+            case 'Defender Victory':
+                for nation_name, nation_war_data in war_dict.items():
+                    if 'Attacker' in nation_war_data["role"]:
+                        self._resolve_war_justification(nation_name, war_dict)
+                    if 'Main Attacker' == nation_war_data["role"]:
+                        main_war_justification = nation_war_data["warJustification"]
+            
+            case 'White Peace':
+                # stupid hack to make it so white peace always has a 8 turn truce period
+                main_war_justification = 'Conquest'
+
+        # add truce period
+        # to do - come up with better solution for managing truce periods that doesn't involve a shitty csv file
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+        nation_name_list = []
+        for playerdata in playerdata_list:
+            nation_name_list.append(playerdata[1])
+        signatories_list = [False, False, False, False, False, False, False, False, False, False]
+        for nation_name in war_dict:
+            index = nation_name_list.index(nation_name)
+            signatories_list[index] = True
+        core.add_truce_period(self.game_id, signatories_list, main_war_justification, current_turn_num)
+
+        # update wardata
+        war_dict["endTurn"] = current_turn_num
+        war_dict["outcome"] = outcome
+        self.wardata_dict[war_name] = war_dict
+
+        # end occupations
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            if not self.are_at_war(region.owner_id, region.occupier_id):
+                region.set_occupier_id(0)
+
 
     # log methods
     ################################################################################
@@ -313,6 +464,7 @@ class WarData:
             self.wardata_dict[war_name]["warLog"] = []
 
         self._save_changes()
+
 
     # war score methods
     ################################################################################

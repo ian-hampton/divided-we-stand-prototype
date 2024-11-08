@@ -10,6 +10,7 @@ from app import events
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
+from app.wardata import WarData
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -854,14 +855,7 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
 
     # get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
-    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = core.read_file(wardata_filepath, 2)
-    trucedata_list = core.read_file(trucedata_filepath, 1)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-    white_peace_dict = {}
 
     # get needed information from players
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -871,221 +865,86 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
     diplomatic_relations_masterlist = []
     for player in playerdata_list:
         diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
-    player_count = len(playerdata_list)
+
 
     # Execute Actions
+    wardata = WarData(game_id)
+    white_peace_dict = {}
     for peace_action in peace_action_list:
+        
+        # decrypt action
         player_id_1 = peace_action[0]
+        action_str = peace_action[1]
         nation_name_1 = nation_name_list[player_id_1 - 1]
+        nation_name_2 = action_str[10:]
+        player_id_2 = nation_name_list.index(nation_name_2) + 1
         player_action_log = player_action_logs[player_id_1 - 1]
-        # execute surrender action
-        war_found = False
-        if 'Surrender' in peace_action[1]:
-            nation_name_2 = peace_action[1][10:]
-            player_id_2 = nation_name_list.index(nation_name_2) + 1
-            for war in wardata_list:
-                if war[player_id_1] != '-' and war[player_id_2] != '-' and war[13] == 'Ongoing':
-                    wardata_1 = ast.literal_eval(war[player_id_1])
-                    war_role_1 = wardata_1[0]
-                    wardata_2 = ast.literal_eval(war[player_id_2])
-                    war_role_2 = wardata_2[0]
-                    winner_war_justification = wardata_2[1]
-                    war_name = war[11]
-                    # make sure player 1 is at war with player 2 in selected war
-                    if ('Attacker' in war_role_1 and 'Attacker' in war_role_2) or ('Defender' in war_role_1 and 'Defender' in war_role_2):
-                        continue
-                    # player 1 and player 2 are main combatants check
-                    if war_role_1 == 'Main Attacker' and war_role_2 == 'Main Defender':
-                        war_found = True
-                        winner_war_role = 'Defender'
-                        war[13] = 'Defender Victory'
-                        break
-                    elif war_role_2 == 'Main Attacker' and war_role_1 == 'Main Defender':
-                        war_found = True
-                        winner_war_role = 'Attacker'
-                        war[13] = 'Attacker Victory'
-                        break
-                    else:
-                        player_action_log.append(f'Failed to surrender to {nation_name_2}. You are not the main attacker/defender or {nation_name_2} is not the main attacker/defender.')
-                        player_action_logs[player_id_1 - 1] = player_action_log
-                        break
-            # war not found check
-            if war_found == False:
+
+        # process for surrender action
+        if 'Surrender' in action_str:
+
+            # check if player 1 has the authority to surrender
+            war_name = wardata.are_at_war(player_id_1, player_id_2)
+            if not war_name:
                 player_action_log.append(f'Failed to surrender to {nation_name_2}. You are not at war with that nation.')
                 player_action_logs[player_id_1 - 1] = player_action_log
                 continue
-            # get war justifications that will be fullfilled
-            signatories_list = [False, False, False, False, False, False, False, False, False, False]
-            war_justifications_list = []
-            for i in range(1, 11):
-                claimer_player_id = i
-                if war[i] != '-':
-                    selected_wardata = ast.literal_eval(war[i])
-                    selected_war_role = selected_wardata[0]
-                    selected_war_justification = selected_wardata[1]
-                    signatories_list[i - 1] = True
-                    if selected_war_justification == 'Border Skirmish' or selected_war_justification == 'Conquest' or selected_war_justification == 'Annexation':
-                        war_claims = selected_wardata[6]
-                        war_claims_list = war_claims.split(',')
-                    else:
-                        war_claims_list = None
-                    if winner_war_role in selected_war_role:
-                        war_justifications_entry = [claimer_player_id, selected_war_justification, war_claims_list]
-                        war_justifications_list.append(war_justifications_entry)
-            # resolve war and update diplomacy log
-            playerdata_list = core.war_resolution(game_id, player_id_1, war_justifications_list, signatories_list, playerdata_list)
-            core.add_truce_period(game_id, signatories_list, winner_war_justification, current_turn_num)
-            war[15] = current_turn_num
+            war_role_1 = wardata.get_war_role(nation_name_1, war_name)
+            if 'Main' not in war_role_1:
+                player_action_log.append(f'Failed to surrender to {nation_name_2}. You are not the main attacker/defender or {nation_name_2} is not the main attacker/defender.')
+                player_action_logs[player_id_1 - 1] = player_action_log
+                continue
+
+            # resolve war
+            if 'Attacker' in war_role_1:
+                outcome = 'Attacker Victory'
+            else:
+                outcome = 'Defender Victory'
+            wardata.end_war(war_name, outcome)
             diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
             diplomacy_log.append(f'{war_name} has ended.')
-        elif 'White Peace' in peace_action[1]:
-            nation_name_2 = peace_action[1][12:]
-            player_id_2 = nation_name_list.index(nation_name_2) + 1
-            for war in wardata_list:
-                if war[player_id_1] != '-' and war[player_id_2] != '-' and war[13] == 'Ongoing':
-                    wardata_1 = ast.literal_eval(war[player_id_1])
-                    war_role_1 = wardata_1[0]
-                    wardata_2 = ast.literal_eval(war[player_id_2])
-                    war_role_2 = wardata_2[0]
-                    war_name = war[11]
-                    # make sure player 1 is at war with player 2 in selected war
-                    if ('Attacker' in war_role_1 and 'Attacker' in war_role_2) or ('Defender' in war_role_1 and 'Defender' in war_role_2):
-                        continue
-                    if (war_role_1 == 'Main Attacker' and war_role_2 == 'Main Defender') or (war_role_2 == 'Main Attacker' and war_role_1 == 'Main Defender'):
-                        war_found = True
-                        if war_name in white_peace_dict:
-                            white_peace_dict[war_name] += 1
-                        else:
-                            white_peace_dict[war_name] = 1
-                        break
-                    else:
-                        player_action_log.append(f'Failed to white peace with {nation_name_2}. You are not the main attacker/defender or {nation_name_2} is not the main attacker/defender.')
-                        player_action_logs[player_id_1 - 1] = player_action_log
-                        break
-            # war not found check
-            if war_found == False:
+            
+        # process for white peace action
+        elif 'White Peace' in action_str:
+            
+            # check if player 1 has the authority to white peace
+            war_name = wardata.are_at_war(player_id_1, player_id_2)
+            if not war_name:
                 player_action_log.append(f'Failed to white peace with {nation_name_2}. You are not at war with that nation.')
                 player_action_logs[player_id_1 - 1] = player_action_log
                 continue
-        else:
-            print(f'{peace_action} not recognized!')
-            continue
-    # resolve white peace actions
+            war_role_1 = wardata.get_war_role(nation_name_1, war_name)
+            if 'Main' not in war_role_1:
+                player_action_log.append(f'Failed to white peace with {nation_name_2}. You are not the main attacker/defender or {nation_name_2} is not the main attacker/defender.')
+                player_action_logs[player_id_1 - 1] = player_action_log
+                continue
+                
+            # add white peace request to white_peace_dict
+            if war_name in white_peace_dict:
+                white_peace_dict[war_name] += 1
+            else:
+                white_peace_dict[war_name] = 1
+            break
+    
+    # process white peace if both sides agreed
     for war_name in white_peace_dict:
-        if white_peace_dict[war_name] < 2:
-            continue
-        for war in wardata_list:
-            if war[11] == war_name:
-                war[13] = 'White Peace'
-                signatories_list = [False, False, False, False, False, False, False, False, False, False]
-                for i in range(1, 11):
-                    if war[i] != '-':
-                        signatories_list[i - 1] = True
-                for region_id in regdata_dict:
-                    region = Region(region_id, game_id)
-                    if signatories_list[region.owner_id - 1] and signatories_list[region.occupier_id - 1]:
-                        region.set_occupier_id(0)
-                core.add_truce_period(game_id, signatories_list, 'White Peace', current_turn_num)
-                war[15] = current_turn_num
-                diplomacy_log.append(f'{war_name} has ended with a white peace.')
-                break
+        if white_peace_dict[war_name] == 2:
+            outcome = 'White Peace'
+            wardata.end_war(war_name, outcome)
+            diplomacy_log.append(f'{war_name} has ended with a white peace.')
 
 
     # Repair Diplomatic Relations
     diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
 
-
-    # Invite Overlord to Subject's Wars
-    war_join_list = []
-    for war in wardata_list:
-        overlord_id = 0
-        overlord_role = None
-        subject_id = 0
-        # check if war is a subjugation war that was just won 
-        if war[13] != "White Peace" and not isinstance(war[15], str):
-            if current_turn_num == int(war[15]):
-                for select_player_id in range(1, 11):
-                    if war[select_player_id] != '-':
-                        war_player_info = ast.literal_eval(war[select_player_id])
-                        if war_player_info[1] == "Subjugation":
-                            overlord_id = select_player_id
-                            overlord_role = war_player_info[0]
-                            break
-                for select_player_id in range(1, 11):
-                    if war[select_player_id] != '-':
-                        war_player_info = ast.literal_eval(war[select_player_id])
-                        if overlord_role == "Main Attacker":
-                            if war_player_info[0] == "Main Defender":
-                                subject_id = select_player_id
-                                break
-                        elif overlord_role == "Main Defender":
-                            if war_player_info[0] == "Main Attacker":
-                                subject_id = select_player_id
-                                break
-        if overlord_role != None and overlord_id != 0 and subject_id != 0:
-            if overlord_role[5:] in war[13]:
-                # get information on overlord and subject
-                overlord_name = playerdata_list[overlord_id - 1][1]
-                subject_name = playerdata_list[subject_id - 1][1]
-                overlord_relations_data = playerdata_list[overlord_id - 1][22]
-                subject_relations_data = playerdata_list[subject_id - 1][22]
-                overlord_truce_list = core.get_truces(trucedata_list, player_id_1, player_id_2, current_turn_num, player_count)
-                overlord_alliance_list = []
-                overlord_alliance_list += core.get_alliances(overlord_relations_data, "Non-Aggression Pact")
-                overlord_alliance_list += core.get_alliances(overlord_relations_data, "Defense Pact")
-                overlord_alliance_list += core.get_alliances(overlord_relations_data, "Trade Agreement")
-                overlord_alliance_list += core.get_alliances(overlord_relations_data, "Research Agreement")
-                subject_at_war_list = core.get_wars(subject_relations_data)
-                # iterate through subject's ongoing wars and check if overlord is allowed join war
-                for select_war in wardata_list:
-                    entry_allowed = True
-                    select_war_id = war[0]
-                    select_war_name = select_war[11]
-                    # check if war is ongoing and subject is involved
-                    if select_war[13] != "Ongoing" or select_war[overlord_id] != '-' or select_war[subject_id] == '-':
-                        continue
-                    # check every opposing player does not have truce or alliance with overlord
-                    subject_role = select_war[subject_id][0]
-                    for select_player_id in range(1, 11):
-                        if select_player_id == overlord_id:
-                            continue
-                        elif select_player_id == subject_id:
-                            continue
-                        elif select_war[select_player_id] == '-':
-                            continue
-                        select_war_player_info = ast.literal_eval(select_war[select_player_id])
-                        if subject_role[5:] not in select_war_player_info[0]:
-                            if select_player_id in overlord_truce_list or select_player_id in overlord_alliance_list or select_player_id in subject_at_war_list:
-                                entry_allowed = False
-                    # make the offer if entry is allowed
-                    if entry_allowed:
-                        print(f"{overlord_name} Join War Oppertunity:")
-                        overlord_choice = input(f"Would you like to join the {select_war_name} on behalf of your subject {subject_name}? (Y/N)")
-                        if overlord_choice == 'Y':
-                            war_join_list.append([select_war_id, overlord_id, subject_role[5:]])
-    # add overlord to war
-    for war_join_request in war_join_list:
-        war_id = war_join_request[0]
-        player_id = war_join_request[1]
-        war_side = war_join_request[2]
-        wardata_list = core.join_ongoing_war(wardata_list, war_id, player_id, war_side)
-    
-
     # Update playerdata.csv
+    playerdata_list = core.read_file(playerdata_filepath, 1)
     for index, player in enumerate(playerdata_list):
         player[22] = str(diplomatic_relations_masterlist[index])
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-
-    # Update wardata.csv
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
     
     return diplomacy_log, player_action_logs
 

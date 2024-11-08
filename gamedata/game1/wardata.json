@@ -14,6 +14,13 @@
                     "NTWTN",
                     "STWTN"
                 ],
+                "warClaimsOriginalOwners": [
+                    2,
+                    2,
+                    2,
+                    2,
+                    2
+                ],
                 "statistics": {
                     "battlesWon": 3,
                     "battlesLost": 3,
@@ -29,6 +36,7 @@
                 "role": "Main Defender",
                 "warJustification": "TBD",
                 "warClaims": [],
+                "warClaimsOriginalOwners": [],
                 "statistics": {
                     "battlesWon": 3,
                     "battlesLost": 3,

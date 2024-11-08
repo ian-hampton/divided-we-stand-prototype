@@ -332,16 +332,22 @@ def update_trade_tax(game_id, player_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    sanction_count = 0
+    change = 0
     player_name = playerdata_list[player_id - 1][1]
-    for playerdata in playerdata_list:
-        #if threat containment applies to target nation count it
-        if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
-            if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
-                sanction_count += 1
+    player_research = ast.literal_eval(playerdata_list[player_id - 1][26])
 
-    trade_value = 1 + sanction_count
-    trade_tax_str = f"{trade_value}:1"
+    # check if Improved Logistics in player research
+    if 'Improved Logistics' in player_research:
+        change -= 1
+    # if threat containment applies to target nation count it
+    if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
+        if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
+            change += 1
+
+    if change >= 0:
+        trade_tax_str = f"{change + 1}:1"
+    elif change < 0:
+        trade_tax_str = f"1:{abs(change) + 1}"
     playerdata_list[player_id - 1][6] = trade_tax_str
 
 def update_stockpile_limits(game_id, player_id):
@@ -1225,11 +1231,13 @@ def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_li
     return diplomacy_log, reminders_list
 
 def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
+    '''
+    Forces a player to surrender if they are totally occupied.
+    '''
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata_list = []
     nation_name_list = []
     for playerdata in playerdata_list:
         nation_name_list.append(playerdata[1])
@@ -1779,6 +1787,8 @@ def bonus_phase_heals(player_id, game_id):
     '''
     Heals all units and defensive improvements by 2 health.
     '''
+    from app.wardata import WarData
+    wardata = WarData(game_id)
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
@@ -1809,9 +1819,13 @@ def bonus_phase_heals(player_id, game_id):
         # heal unit or improvement
         if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
             region_improvement.heal(2)
+            if 'Peacetime Recovery' in player_research_list and wardata.is_at_peace(player_id):
+                region_improvement.heal(100)
         unit_name = region_unit.name
         if unit_name != None and heal_allowed:
             region_unit.heal(2)
+            if 'Peacetime Recovery' in player_research_list and wardata.is_at_peace(player_id):
+                region_unit.heal(100)
 
 def prompt_for_missing_war_justifications(full_game_id):
     '''

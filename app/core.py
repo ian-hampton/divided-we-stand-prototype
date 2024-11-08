@@ -1598,56 +1598,6 @@ def join_ongoing_war(wardata_list, war_id, player_id, war_side):
             war[player_id] = player_entry_data
     return wardata_list
 
-def war_resolution(game_id, player_id_1, WAR_JUSTIFICATIONS_LIST, signatories_list, playerdata_list):
-    '''Resolves a war that ends in an attacker or defender victory.'''
-    
-    looser_playerdata = playerdata_list[player_id_1 - 1]
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-    #resolve each winning war justification
-    for war_justification in WAR_JUSTIFICATIONS_LIST:
-        victor_player_id = war_justification[0]
-        victor_war_justification = war_justification[1]
-        victor_war_claims_list = war_justification[2]
-        victor_playerdata = playerdata_list[victor_player_id - 1]
-        victor_nation_name = victor_playerdata[1]
-        #resolve war justification
-        match victor_war_justification:
-            case 'Border Skirmish' | 'Conquest' | 'Annexation':
-                for region_id in regdata_dict:
-                    if region_id in victor_war_claims_list:
-                        region = Region(region_id, game_id)
-                        if region.owner_id == player_id_1:
-                            region.set_owner_id(victor_player_id)
-                            region.set_occupier_id(0)
-            case 'Animosity':
-                pp_resource_data_winner = ast.literal_eval(victor_playerdata[10])
-                pp_stockpile_winner = float(pp_resource_data_winner[0])
-                pp_stockpile_winner += 10
-                pp_resource_data_winner[0] = round_total_income(pp_stockpile_winner)
-                victor_playerdata[10] = pp_resource_data_winner
-                pp_resource_data_looser = ast.literal_eval(looser_playerdata[10])
-                pp_resource_data_looser[0] = '0.00'
-                looser_playerdata[10] = pp_resource_data_looser
-            case 'Subjugation':
-                subject_type = 'Puppet State'
-                looser_status = f'{subject_type} of {victor_nation_name}'
-                looser_playerdata[28] = looser_status
-            case 'Independence':
-                looser_playerdata[28] = 'Independent Nation'
-
-
-    #End Remaining Occupations
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        owner_id = region.owner_id
-        occupier_id = region.occupier_id
-        if signatories_list[owner_id - 1] and signatories_list[occupier_id - 1]:
-            region.set_occupier_id(0)
-
-    return playerdata_list
-
 def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_num):
     '''Creates a truce period between the players marked in the signatories list. Length depends on war outcome.'''
 
@@ -1664,7 +1614,7 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
     #generate output
     truce_id = len(trucedata_list)
     signatories_list.insert(0, truce_id)
-    signatories_list.append(current_turn_num + truce_length - 1)
+    signatories_list.append(current_turn_num + truce_length)
     trucedata_list.append(signatories_list)
 
     #update trucedata.csv
