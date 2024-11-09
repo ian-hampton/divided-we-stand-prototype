@@ -266,9 +266,17 @@ table {
     <div class="actual-bottom">
 
         {% autoescape false %}
-        <div style="padding-top: 10px;padding-bottom:5px"> {{ war_data["canEnd"] }} </div>
+        {% if war_data["outcome"] == "TBD" %}
+
+            <div style="padding-top: 10px;padding-bottom: 5px"> {{ war_data["canEndStr"] }} </div>
+            
+            <div style="padding-top: 5px;padding-bottom: 10px"> {{ war_data["forcedEndStr"] }} </div>
         
-        <div style="padding-top: 5px;padding-bottom:10px"> {{ war_data["forcedEnd"] }} </div>
+        {% else %}
+
+            <div style="padding-top: 10px;padding-bottom: 10px"> {{ war_data["warEndStr"] }} </div>
+
+        {% endif %}
         {% endautoescape %}
 
     </div>

@@ -1231,71 +1231,6 @@ def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_li
 
     return diplomacy_log, reminders_list
 
-def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
-    '''
-    Forces a player to surrender if they are totally occupied.
-    '''
-    
-    #get core lists
-    wardata = WarData(game_id)
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    nation_name_list = []
-    for playerdata in playerdata_list:
-        nation_name_list.append(playerdata[1])
-    diplomatic_relations_masterlist = []
-    for player in playerdata_list:
-        diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-    #check all regions for occupation
-    non_occupied_found_list = [False] * len(playerdata_list)
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        owner_id = region.owner_id
-        if owner_id != 0 and owner_id != 99 and region.occupier_id == 0:
-            non_occupied_found_list[owner_id - 1] = True
-    
-    #if no unoccupied region found for a player force surrender if main combatant
-    for index, region_found in enumerate(non_occupied_found_list):
-        player_id_1 = index + 1
-        nation_name_1 = nation_name_list[player_id_1 - 1]
-        if not region_found:
-            #look for wars to surrender to
-            for war_name, war_data in wardata.wardata_dict.items():
-                combatant_dict = war_data["combatants"]
-                if war_data["outcome"] == "TBD" and nation_name_1 in combatant_dict and 'Main' in combatant_dict[nation_name_1]["role"]:
-                    war_role_1 = combatant_dict[nation_name_1]["role"]
-                    for nation_name in combatant_dict:
-                        if 'Main' in combatant_dict[nation_name]["role"] and war_role_1 != combatant_dict[nation_name]["role"]:
-                            nation_name_2 = nation_name
-                            war_role_2 = combatant_dict[nation_name_2]["role"]
-                            break
-                    # process surrender
-                    if 'Attacker' in war_role_1:
-                        outcome = 'Attacker Victory'
-                    else:
-                        outcome = 'Defender Victory'
-                    wardata.end_war(war_name, outcome)
-                    diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
-                    diplomacy_log.append(f'{war_name} has ended.')
-
-    
-    #Repair Diplomatic Relations
-    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
-
-
-    #Update playerdata.csv
-    for index, player in enumerate(playerdata_list):
-        player[22] = str(diplomatic_relations_masterlist[index])
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
-
-    return diplomacy_log
-
 def gain_resource_market_income(game_id, player_id, player_resource_market_incomes):
     '''Applies the resources gained/lost from resource market activities to player stockpiles.'''
     
@@ -1812,6 +1747,118 @@ def prompt_for_missing_war_justifications(game_id):
     for war_name, war_data in wardata.wardata_dict.items():
         if war_data["outcome"] == "TBD":
             wardata.add_missing_war_justifications(war_name)
+
+def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
+    '''
+    Forces a player to surrender if they are totally occupied.
+    '''
+    
+    # get core lists
+    wardata = WarData(game_id)
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_name_list = []
+    for playerdata in playerdata_list:
+        nation_name_list.append(playerdata[1])
+    diplomatic_relations_masterlist = []
+    for player in playerdata_list:
+        diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    # check all regions for occupation
+    non_occupied_found_list = [False] * len(playerdata_list)
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        owner_id = region.owner_id
+        if owner_id != 0 and owner_id != 99 and region.occupier_id == 0:
+            non_occupied_found_list[owner_id - 1] = True
+    
+    # if no unoccupied region found for a player force surrender if main combatant
+    for index, region_found in enumerate(non_occupied_found_list):
+        player_id_1 = index + 1
+        nation_name_1 = nation_name_list[player_id_1 - 1]
+        if not region_found:
+            #look for wars to surrender to
+            for war_name, war_data in wardata.wardata_dict.items():
+                combatant_dict = war_data["combatants"]
+                if war_data["outcome"] == "TBD" and nation_name_1 in combatant_dict and 'Main' in combatant_dict[nation_name_1]["role"]:
+                    war_role_1 = combatant_dict[nation_name_1]["role"]
+                    for nation_name in combatant_dict:
+                        if 'Main' in combatant_dict[nation_name]["role"] and war_role_1 != combatant_dict[nation_name]["role"]:
+                            nation_name_2 = nation_name
+                            war_role_2 = combatant_dict[nation_name_2]["role"]
+                            break
+                    # process surrender
+                    if 'Attacker' in war_role_1:
+                        outcome = 'Attacker Victory'
+                    else:
+                        outcome = 'Defender Victory'
+                    wardata.end_war(war_name, outcome)
+                    diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
+                    diplomacy_log.append(f'{war_name} has ended due to total occupation.')
+
+    
+    # Repair Diplomatic Relations
+    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
+
+
+    # Update playerdata.csv
+    for index, player in enumerate(playerdata_list):
+        player[22] = str(diplomatic_relations_masterlist[index])
+    with open(playerdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.player_data_header)
+        writer.writerows(playerdata_list)
+
+    return diplomacy_log
+
+def war_score_forced_surrender(game_id, diplomacy_log):
+    '''
+    Forces a side to surrender if critical war score difference reached.
+    '''
+
+    # get core lists
+    wardata = WarData(game_id)
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_name_list = []
+    for playerdata in playerdata_list:
+        nation_name_list.append(playerdata[1])
+    diplomatic_relations_masterlist = []
+    for player in playerdata_list:
+        diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
+
+    for war_name, war_data in wardata.wardata_dict.items():
+        
+        # get war score information
+        attacker_war_score = war_data["attackerWarScore"]["total"]
+        defender_war_score = war_data["defenderWarScore"]["total"]
+        attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
+        ma_name, md_name = wardata.get_main_combatants(war_name)
+
+        # end war if a threshold was met
+        if attacker_war_score >= attacker_threshold:
+            wardata.end_war(war_name, "Attacker Victory")
+            diplomacy_log.append(f'{md_name} surrendered to {ma_name}.')
+            diplomacy_log.append(f'{war_name} has ended due to war score.')
+        elif defender_war_score >= defender_threshold:
+            wardata.end_war(war_name, "Defender Victory")
+            diplomacy_log.append(f'{ma_name} surrendered to {md_name}.')
+            diplomacy_log.append(f'{war_name} has ended due to war score.')
+
+    # repair relations
+    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
+
+    # update playerdata.csv
+    for index, player in enumerate(playerdata_list):
+        player[22] = str(diplomatic_relations_masterlist[index])
+    with open(playerdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.player_data_header)
+        writer.writerows(playerdata_list)
+
+    return diplomacy_log
 
 #UPDATE INCOME HELPER FUNCTIONS
 def update_gross_income_masterlist(gross_income_masterlist, player_id, index, income, remnant_multiplier):

@@ -564,6 +564,65 @@ class WarData:
         self.wardata_dict[war_name][war_role_key][stat_name] += count
         self._save_changes()
 
+    def calculate_score_threshold(self, war_name: str):
+        '''
+        Calculates the war score threshold for victory for each side of a war.
+
+        :param war_name: Name of the war to compute threshold scores for.
+        '''
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+        nation_name_list = []
+        for nation_info in playerdata_list:
+            nation_name_list.append(nation_info[1])
+        war_dict = self.wardata_dict[war_name]
+
+        # initial threshold is a 100 point difference
+        attacker_threshold = 0
+        defender_threshold = 0
+
+        # check for unyielding and crime syndicate
+        for combatant_name, combatant_data in war_dict["combatants"].items():
+            combatant_id = nation_name_list.index(combatant_name) + 1
+            combatant_research_list = ast.literal_eval(playerdata_list[combatant_id - 1][26])
+            if combatant_data["role"] == "Main Attacker" and defender_threshold == 0:
+                if playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
+                    defender_threshold = None
+                elif "Unyielding" in combatant_research_list:
+                    defender_threshold = 50
+            elif combatant_data["role"] == "Main Defender" and attacker_threshold == 0:
+                if playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
+                    attacker_threshold = None
+                elif "Unyielding" in combatant_research_list:
+                    attacker_threshold = 50
+
+        # if not crime syndicate compute remaining threshold
+        if attacker_threshold is not None:
+            attacker_threshold += 100 + war_dict["defenderWarScore"]["total"]
+        if defender_threshold is not None:
+            defender_threshold += 100 + war_dict["attackerWarScore"]["total"]
+
+        return attacker_threshold, defender_threshold
+    
+    def get_main_combatants(self, war_name: str):
+        '''
+        Returns the nation names of the two main combatants.
+        '''
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+        nation_name_list = []
+        for nation_info in playerdata_list:
+            nation_name_list.append(nation_info[1])
+        war_dict = self.wardata_dict[war_name]
+
+        for combatant_name, combatant_data in war_dict["combatants"].items():
+            if combatant_data["role"] == "Main Attacker":
+                main_attacker_name = combatant_name
+            elif combatant_data["role"] == "Main Defender":
+                main_defender_name = combatant_name
+        
+        return main_attacker_name, main_defender_name
+
     def add_warscore_from_occupations(self) -> None:
         '''
         Adds warscore from occupied regions.
@@ -611,4 +670,3 @@ class WarData:
                 self.wardata_dict[war_name]["defenderWarScore"]["total"] = new_total
 
         self._save_changes()
-    

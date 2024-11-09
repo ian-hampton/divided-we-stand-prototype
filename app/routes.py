@@ -653,11 +653,6 @@ def wars(full_game_id):
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} Wars List'
     current_turn_num = core.get_current_turn_num(int(full_game_id[-1]))
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    nation_name_list = []
-    for nation_info in playerdata_list:
-        nation_name_list.append(nation_info[1])
     wardata = WarData(full_game_id)
 
     # read wars
@@ -676,26 +671,11 @@ def wars(full_game_id):
             war_end = "Present"
         wardata.wardata_dict[war_name]["timeframe"] = f'{war_start} - {war_end}'
 
-        # check for Unyielding
-        ma_has_unyielding = False
-        md_has_unyielding = False
-        for combatant_name, combatant_data in war_data["combatants"].items():
-            combatant_id = nation_name_list.index(combatant_name) + 1
-            combatant_research_list = ast.literal_eval(playerdata_list[combatant_id - 1][26])
-            if combatant_data["role"] == "Main Attacker" and "Unyielding" in combatant_research_list:
-                ma_has_unyielding = True
-            elif combatant_data["role"] == "Main Defender" and "Unyielding" in combatant_research_list:
-                md_has_unyielding = True
-
-        # check for crime syndicate
-        ma_is_crime = False
-        md_is_crime = False
-        for combatant_name, combatant_data in war_data["combatants"].items():
-            combatant_id = nation_name_list.index(combatant_name) + 1
-            if combatant_data["role"] == "Main Attacker" and playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
-                ma_is_crime = combatant_name
-            elif combatant_data["role"] == "Main Defender" and playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
-                md_is_crime = combatant_name
+        # get war score information
+        attacker_war_score = war_data["attackerWarScore"]["total"]
+        defender_war_score = war_data["defenderWarScore"]["total"]
+        attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
+        ma_name, md_name = wardata.get_main_combatants(war_name)
 
         # implement a score bar using an html table >:)
         war_status = wardata.wardata_dict[war_name]["outcome"]
@@ -760,28 +740,43 @@ def wars(full_game_id):
         wardata.wardata_dict[war_name]["defenderWarScore"] = copy
 
         # create war resolution strings
-        if current_turn_num - war_data["startTurn"] < 4:
-            can_end_str = f"A peace deal may be negotiated by the main combatants in {current_turn_num - war_data["startTurn"]} turns."
-        else:
-            can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
-        wardata.wardata_dict[war_name]["canEnd"] = can_end_str
-        if attacker_score > defender_score:
-            goal = defender_score + 100
-            if md_has_unyielding:
-                goal += 50
-            if md_is_crime:
-                forced_end_str = f"""The <span class="color-red"> attackers </span> cannot win this war using war score since <span class="color-blue"> {md_is_crime} </span> is a Crime Syndicate."""
-            else:
-                forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {goal} </span> war score."""
-        else:
-            goal = attacker_score + 100
-            if ma_has_unyielding:
-                goal += 50
-            if ma_is_crime:
-                forced_end_str = f"""The <span class="color-blue"> defenders </span> cannot win this war using war score since <span class="color-red"> {ma_is_crime} </span> is a Crime Syndicate."""
-            else:
-                forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {goal} </span> war score."""
-        wardata.wardata_dict[war_name]["forcedEnd"] = forced_end_str
+        match war_status:
+            
+            case "Attacker Victory":
+
+                war_end_str = """This war concluded with an <span class="color-red"> attacker victory </span>."""
+                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+            
+            case "Defender Victory":
+                
+                war_end_str = """This war concluded with a <span class="color-blue"> defender victory </span>."""
+                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+            
+            case "White Peace":
+                
+                war_end_str = """This war concluded with a white peace."""
+                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+            
+            case "TBD":
+            
+                if current_turn_num - war_data["startTurn"] < 4:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants in {current_turn_num - war_data["startTurn"]} turns."
+                else:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
+                wardata.wardata_dict[war_name]["canEndStr"] = can_end_str
+                
+                if attacker_war_score > defender_war_score:
+                    if attacker_threshold is not None:
+                        forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {attacker_threshold} </span> war score."""
+                    else:
+                        forced_end_str = f"""The <span class="color-red"> attackers </span> cannot win this war using war score since <span class="color-blue"> {md_name} </span> is a Crime Syndicate."""
+                else:
+                    if defender_threshold is not None:
+                        forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {defender_threshold} </span> war score."""
+                    else:
+                        forced_end_str = f"""The <span class="color-blue"> defenders </span> cannot win this war using war score since <span class="color-red"> {ma_name} </span> is a Crime Syndicate."""
+                    
+                wardata.wardata_dict[war_name]["forcedEndStr"] = forced_end_str
 
     return render_template('temp_wars.html', page_title = page_title, dict = wardata.wardata_dict)
 
