@@ -82,14 +82,18 @@ class WarData:
             json.dump(wardata_dict, json_file, indent=4)
 
     def _generate_war_name(self, main_attacker_name: str, main_defender_name: str, war_justification: str, current_turn_num: int) -> str:
-        '''
+        """
         Generates a unique war name. Called only by create_war()
 
-        :param main_attacker_name: Nation name of main attacker
-        :param main_defender_name: Nation name of main defender
-        :param war_justification: War justification of main attacker
-        :param current_turn_num: Current turn number
-        '''
+        Params:
+            main_attacker_name (str): nation name of main attacker
+            main_defender_name (str): nation name of main defender
+            war_justification (str): war justification of main attacker
+            current_turn_num (int): current turn number
+
+        Returns:
+            war_name (str): generated war name
+        """
         season, year = core.date_from_turn_num(current_turn_num)
         match war_justification:
             case 'Animosity':
@@ -142,9 +146,9 @@ class WarData:
         return war_name
 
     def _resolve_war_justification(self, nation_name, war_dict: dict) -> None:
-        '''
+        """
         Resolves a player's war justification.
-        '''
+        """
         from app.region import Region
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
@@ -212,7 +216,7 @@ class WarData:
     ################################################################################
     
     def create_war(self, main_attacker_id: int, main_defender_id: int, main_attacker_war_justification: str, current_turn_num: int, region_claims_list: list) -> str:
-        '''
+        """
         Fills out all the paperwork for a new war.
 
         :param main_attacker_id: Main attacker player_id
@@ -221,7 +225,7 @@ class WarData:
         :param current_turn_num: Current turn number
         :param region_claims_list: List of regions provided by main attacker
         :returns: War name
-        '''
+        """
         # import other game files
         from app.region import Region
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
@@ -306,9 +310,9 @@ class WarData:
         return war_name
 
     def get_combatant_names(self, war_name: str) -> list:
-        '''
+        """
         Gets a list of all nations participating in a given war.
-        '''
+        """
         result = []
 
         if war_name in self.wardata_dict:
@@ -319,12 +323,12 @@ class WarData:
         return result
 
     def are_at_war(self, player_id_1: int, player_id_2: int, return_war_name=False):
-        '''
+        """
         Checks if two players are currently at war.
 
         :param return_war_name: Function will return war name as a string.
         :returns: True or False or war name string.
-        '''
+        """
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
         nation_name_1 = playerdata_list[player_id_1 - 1][1]
@@ -341,12 +345,12 @@ class WarData:
         return False
 
     def is_at_peace(self, player_id) -> bool:
-        '''
+        """
         Checks if a nation is at peace.
 
         :param payer_id: id of nation we want to check
         :returns: True if at peace, False if involved in at least one war.
-        '''
+        """
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
 
@@ -360,9 +364,9 @@ class WarData:
         return True
 
     def get_war_role(self, nation_name: str, war_name: str) -> str:
-        '''
+        """
         Returns the war role of a given nation in a given war.
-        '''
+        """
         combatants_dict = self.wardata_dict[war_name]["combatants"]
 
         if nation_name in combatants_dict:
@@ -370,10 +374,33 @@ class WarData:
 
         return None
 
+    def query(self, nation_name: str, war_position: str, war_side: str, war_outcome: str) -> bool:
+        """
+        Checks if a war exists with the given parameters.
+        Used for victory condition functions. Might replace this with something better later.
+
+        Args:
+            nation_name (str): nation name
+            war_position (str): position rank of nation (main or secondary)
+            war_side (str): side nation is on (attacker or defender)
+            war_outcome (str): war result
+
+        Returns:
+            result (bool): True if war found False otherwise
+        """
+
+        for war, war_data in self.wardata_dict.items():
+            if nation_name in war_data["combatants"] and war_data["outcome"] == war_outcome:
+                player_war_role = war_data["combatants"][nation_name]["role"]
+                if war_side in player_war_role and war_position in player_war_role:
+                    return True
+
+        return False
+
     def add_missing_war_justifications(self, war_name: str) -> None:
-        '''
+        """
         Given a war name, prompts all nations that haven't submitted a war justification yet.
-        '''
+        """
         from app.region import Region
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
@@ -414,9 +441,9 @@ class WarData:
             writer.writerows(playerdata_list)
     
     def validate_war_claims(self, war_justification, region_claims_list, nation_name, playerdata_list):
-        '''
+        """
         Checks if all provided region_ids are valid. Kind of a patch job, might upgrade later.
-        '''
+        """
         nation_name_list = []
         for playerdata in playerdata_list:
             nation_name_list.append(playerdata[1])
@@ -451,24 +478,24 @@ class WarData:
         return True, playerdata_list
 
     def statistic_add(self, war_name: str, nation_name: str, stat_name: str, count = 1):
-        '''
+        """
         Updates a given war statistic.
 
         :param war_name: war name string
         :param nation_name: nation name str
         :param stat_name: statistic name string, must match key exactly
         :param count: increment int
-        '''
+        """
         self.wardata_dict[war_name]["combatants"][nation_name]["statistics"][stat_name] += count
         self._save_changes()
 
     def end_war(self, war_name: str, outcome: str):
-        '''
+        """
         Calling this function does all the paperwork to end a war.
         
         :param war_name: Name of war to end
         :param outcome: Result of the war
-        '''
+        """
         from app.region import Region
         war_dict: dict = self.wardata_dict[war_name]
         current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
@@ -526,16 +553,16 @@ class WarData:
     ################################################################################
 
     def append_war_log(self, war_name: str, message: str) -> None:
-        '''
+        """
         Adds new entry to the war log of a given war.
-        '''
+        """
         self.wardata_dict[war_name]["warLog"].append(message)
         self._save_changes()
 
     def export_all_logs(self) -> None:
-        '''
+        """
         Saves all of the combat logs for ongoing wars as .txt files. Then wipes the logs.
-        '''
+        """
         directory = f'gamedata/{self.game_id}/logs'
 
         for war_name, war_data in self.wardata_dict.items():
@@ -554,9 +581,9 @@ class WarData:
     ################################################################################
 
     def warscore_add(self, war_name: str, war_role: str, stat_name: str, count = 1) -> None:
-        '''
+        """
         Increases the score of a warscore entry.
-        '''
+        """
         if 'Attacker' in war_role:
             war_role_key = "attackerWarScore"
         elif 'Defender' in war_role:
@@ -565,11 +592,11 @@ class WarData:
         self._save_changes()
 
     def calculate_score_threshold(self, war_name: str):
-        '''
+        """
         Calculates the war score threshold for victory for each side of a war.
 
         :param war_name: Name of the war to compute threshold scores for.
-        '''
+        """
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
         nation_name_list = []
@@ -605,9 +632,9 @@ class WarData:
         return attacker_threshold, defender_threshold
     
     def get_main_combatants(self, war_name: str):
-        '''
+        """
         Returns the nation names of the two main combatants.
-        '''
+        """
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
         nation_name_list = []
@@ -624,9 +651,9 @@ class WarData:
         return main_attacker_name, main_defender_name
 
     def add_warscore_from_occupations(self) -> None:
-        '''
+        """
         Adds warscore from occupied regions.
-        '''
+        """
         from app.region import Region
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
@@ -651,9 +678,9 @@ class WarData:
                 self.warscore_add(war_name, occupier_war_role, "occupation", score)
 
     def update_totals(self) -> None:
-        '''
+        """
         Updates the total war scores of all ongoing wars.
-        '''
+        """
         for war_name, war_data in self.wardata_dict.items():
             if war_data["outcome"] == "TBD":
                 

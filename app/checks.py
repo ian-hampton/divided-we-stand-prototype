@@ -1437,20 +1437,19 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     '''Checks victory conditions of a player.'''
     
     #define core lists
-    # to do - replace wardata.csv with new wardata
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    wardata = WarData(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
-    wardata_list = []
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
     with open(f'gamedata/{game_id}/vc_overrides.json', 'r') as json_file:
         vc_overrides_dict = json.load(json_file)
 
-    #get needed masterlists
+    #get needed masterlists from playerdata
     nation_name_masterlist = []
     diplomatic_relations_masterlist = []
     for playerdata in playerdata_list:
@@ -1569,10 +1568,8 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             improvement_count = improvement_count_list[improvement_index]
             if improvement_count >= 2:
                 vc_2_completed = True
-            for war in wardata_list:
-                player_war_data = war[player_id]
-                if 'Defender' in player_war_data[0] and war[13] == 'Defender Victory':
-                   vc_2_completed = True
+            if wardata.query(nation_name, 'Main', 'Defender', 'Defender Victory'):
+                vc_2_completed = True
         case 'Diversified Army':
             unit_types_found = []
             for region_id in regdata_dict:
@@ -1631,12 +1628,10 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             if nation_name in longest_alliance_str:
                 vc_2_completed = True
             #won war as secondary attacker/defender check
-            for war in wardata_list:
-                player_war_data = war[player_id]
-                if 'Secondary Attacker' in player_war_data[0] and war[13] == 'Attacker Victory':
-                   vc_2_completed = True
-                elif 'Secondary Defender' in player_war_data[0] and war[13] == 'Defender Victory':
-                   vc_2_completed = True
+            if wardata.query(nation_name, 'Secondary', 'Attacker', 'Attacker Victory'):
+                vc_2_completed = True
+            elif wardata.query(nation_name, 'Secondary', 'Defender', 'Defender Victory'):
+                vc_2_completed = True
         case 'Road to Recovery':
             player_road_to_recovery_bool = vc_overrides_dict['Road to Recovery'][player_id - 1]
             if player_road_to_recovery_bool:

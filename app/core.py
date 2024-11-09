@@ -1623,28 +1623,27 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
         writer.writerows(trucedata_list)
 
 def repair_relations(diplomatic_relations_masterlist, game_id):
-    '''
+    """
     Restores diplomatic relations to neutral if there is no longer a war between two players.
-    '''
+    The hope is to eventually replace this cringe with a player relations graph.
+
+    Params:
+        diplomatic_relations_masterlist (list of lists): hellish list of lists from playerdata.csv
+        game_id (str): game id
+
+    Returns:
+        diplomatic_relations_masterlist (list of lists): hellish list of lists from playerdata.csv
+    """
+
     wardata = WarData(game_id)
-    '''
     for i, diplomatic_relations_list in enumerate(diplomatic_relations_masterlist):
         player_id_1 = i + 1
         for player_id_2, relation in enumerate(diplomatic_relations_list):
-            if relation == 'At War':
-                war_found = False
-                for war in wardata_list:
-                    if war[player_id_1] != '-' and war[player_id_2] != '-' and war[13] == 'Ongoing':
-                        wardata_1 = ast.literal_eval(war[player_id_1])
-                        war_role_1 = wardata_1[0]
-                        wardata_2 = ast.literal_eval(war[player_id_2])
-                        war_role_2 = wardata_2[0]
-                        if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Attacker' in war_role_2 and 'Defender' in war_role_1):
-                            war_found = True
-                            break
-                if war_found == False:
-                    diplomatic_relations_masterlist[i][player_id_2] = 'Neutral'
-    '''
+            if player_id_2 == 0:
+                continue
+            if relation == 'At War' and not wardata.are_at_war(player_id_1, player_id_2):
+                diplomatic_relations_masterlist[i][player_id_2] = 'Neutral'
+
     return diplomatic_relations_masterlist
 
 def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
