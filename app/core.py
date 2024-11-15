@@ -691,7 +691,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     RELATIONS_NAME_LIST = ['Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', ]
     playerdata = playerdata_list[player_id - 1]
