@@ -344,7 +344,7 @@ class WarData:
         
         return False
 
-    def is_at_peace(self, player_id) -> bool:
+    def is_at_peace(self, player_id, value = False) -> bool | str:
         """
         Checks if a nation is at peace.
 
@@ -353,6 +353,7 @@ class WarData:
         """
         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
         playerdata_list = core.read_file(playerdata_filepath, 1)
+        nation_name = playerdata_list[player_id - 1][1]
 
         for i in range(len(playerdata_list)):
             player_id_2 = i + 1
@@ -360,8 +361,16 @@ class WarData:
                 continue
             if self.are_at_war(player_id, player_id_2):
                 return False
-
-        return True
+        
+        if value:
+            at_peace_since = 0
+            for war, war_data in self.wardata_dict.items():
+                if nation_name in war_data["combatants"] and war_data["outcome"] != "TBD":
+                    if war_data["endTurn"] > at_peace_since:
+                        at_peace_since = war_data["endTurn"]
+            return at_peace_since
+        else:
+            return True
 
     def get_war_role(self, nation_name: str, war_name: str) -> str:
         """

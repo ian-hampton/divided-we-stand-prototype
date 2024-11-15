@@ -453,7 +453,18 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
         bought_last_12 = total_exchanged[i][0]
         sold_last_12 = total_exchanged[i][1]
         this_turn_price = base_price * ( (bought_last_12 + 25) / (sold_last_12 + 25) )
+        if "Market Inflation" in active_games_dict[game_id]["Active Events"]:
+            for resource_name in active_games_dict[game_id]["Active Events"]["Market Inflation"]["Affected Resources"]:
+                event_resource_index = request_list.index(resource_name) - 1
+                if i == event_resource_index:
+                    this_turn_price *= 2
+        elif "Market Recession" in active_games_dict[game_id]["Active Events"]:
+            for resource_name in active_games_dict[game_id]["Active Events"]["Market Recession"]["Affected Resources"]:
+                event_resource_index = request_list.index(resource_name) - 1
+                if i == event_resource_index:
+                    this_turn_price *= 0.5
         current_prices[i] = round(this_turn_price, 2)
+
     
 
     #Process Buy Actions
@@ -614,6 +625,16 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
         bought_last_11 = total_exchanged[i][0]
         sold_last_11 = total_exchanged[i][1]
         next_turn_price = base_price * ( (bought_last_11 + 25) / (sold_last_11 + 25) )
+        if "Market Inflation" in active_games_dict[game_id]["Active Events"]:
+            for resource_name in active_games_dict[game_id]["Active Events"]["Market Inflation"]["Affected Resources"]:
+                event_resource_index = request_list.index(resource_name) - 1
+                if i == event_resource_index:
+                    next_turn_price *= 2
+        elif "Market Recession" in active_games_dict[game_id]["Active Events"]:
+            for resource_name in active_games_dict[game_id]["Active Events"]["Market Recession"]["Affected Resources"]:
+                event_resource_index = request_list.index(resource_name) - 1
+                if i == event_resource_index:
+                    next_turn_price *= 0.5
         next_prices[i] = round(next_turn_price, 2)
 
 
