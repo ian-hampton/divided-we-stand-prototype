@@ -8,15 +8,22 @@ from app.improvement import Improvement
 class Unit:
 
     def __init__(self, region_id: str, game_id: str):
-        '''
-        '''
+        """
+        Initializes unit class. Calls load_attributes() to load data from game files.
+
+        Params:
+            region_id (str): Unique five letter string used to identify a region.
+            game_id (str): Unique string used to identify a game.
+
+        """
         self.region_id = region_id
         self.game_id = game_id
         self.load_attributes()
 
     def load_attributes(self) -> None:
-        '''
-        '''
+        """
+        Loads data from game files for this class.
+        """
         
         # check if game id is valid
         regdata_filepath = f'gamedata/{self.game_id}/regdata.json'
@@ -46,9 +53,9 @@ class Unit:
             self.hit_value = None
 
     def _save_changes(self) -> None:
-        '''
+        """
         Saves changes made to Unit object to game files.
-        '''
+        """
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
         self.data["name"] = self.name
@@ -59,27 +66,29 @@ class Unit:
             json.dump(regdata_dict, json_file, indent=4)
     
     def set_owner_id(self, new_owner_id: int) -> None:
-        '''
+        """
         Changes the owner of a unit.
-        '''
+        """
         self.owner_id = new_owner_id
         self._save_changes()
     
     def abbrev(self) -> str:
-        '''
-        Returns the unit name abbreviation.
-        Returns None if no unit is present.
-        '''
+        """
+        Returns the unit name abbreviation or None if no unit is present.
+        """
+
+        # This function is used for only one purpose and that is rendering the units. Should be thrown into the dustbin of commit history next time I update unit rendering.
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+
         if self.name is not None:
             return unit_data_dict[self.name]["Abbreviation"]
         else:
             return None
 
     def clear(self) -> None:
-        '''
+        """
         Removes the unit in a region.
-        '''
+        """
         self.name = None
         self.health = 99
         self.owner_id = 99
@@ -91,9 +100,13 @@ class Unit:
     ################################################################################
     
     def set_unit(self, unit_name: str, owner_id: int) -> None:
-        '''
+        """
         Sets unit in region.
-        '''
+
+        Params:
+            unit_name (str): Name of unit.
+            owner_id (int): ID of player that owns this unit.
+        """
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         self.name = unit_name
         self.health = unit_data_dict[unit_name]["Health"]
@@ -103,10 +116,12 @@ class Unit:
         self._save_changes()
 
     def heal(self, health_count: int) -> None:
-        '''
-        Heals unit by x health.
-        Will not heal beyond max health value.
-        '''
+        """
+        Heals unit by x health. Will not heal beyond max health value.
+
+        Params:
+            health_count (int): Amount to increase health by.
+        """
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         current_health = self.health
         max_health = unit_data_dict[self.name]["Health"]
@@ -117,14 +132,17 @@ class Unit:
         self._save_changes()
 
     def move(self, target_region: Region, *, withdraw=False) -> bool:
-        '''
+        """
         Attempts to move a unit to a new region.
         Returns True if move succeeded, otherwise False.
 
-        :param target_region: Region class
-        :param target_region_improvement: Improvement class unless withdraw=True
-        :param withdraw: True if withdraw action. False otherwise.
-        '''
+        Params:
+            target_region (Region): Region object of target region (where this unit is moving to)
+            withdraw: True if withdraw action. False otherwise.
+        
+        Returns:
+            bool: True if action succeeded, False otherwise.
+        """
         from app import combat
         from app.wardata import WarData
         target_region_id = target_region.region_id
@@ -199,12 +217,15 @@ class Unit:
     ################################################################################
 
     def is_hostile(self, other_player_id: int) -> bool:
-        '''
+        """
         Determines if this unit is hostile to the given player_id.
 
-        :param other_player_id: player_id to compare to
-        :return: rue if this unit is hostile to provided player_id. False otherwise.
-        '''
+        Params:
+            other_player_id (int): player_id to compare to
+        
+        Returns:
+            bool: True if this unit is hostile to provided player_id. False otherwise.
+        """
         from app.wardata import WarData
         wardata = WarData(self.game_id)
 

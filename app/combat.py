@@ -1,6 +1,6 @@
 import ast
 import random
-from typing import Union
+from typing import Union, Tuple
 
 from app import core
 from app.region import Region
@@ -9,9 +9,13 @@ from app.unit import Unit
 from app.wardata import WarData
 
 def unit_vs_unit(attacking_unit: Unit, defending_unit: Unit) -> None:
-    '''
+    """
     Resolves unit vs unit combat.
-    '''
+
+    Params:
+        attacking_unit (Unit): object representing attacking unit
+        defending_unit (Unit): object representing defending unit
+    """
 
     # get classes
     attacker_region = Region(attacking_unit.region_id, attacking_unit.game_id)
@@ -124,9 +128,13 @@ def unit_vs_unit(attacking_unit: Unit, defending_unit: Unit) -> None:
         defending_unit.clear()
 
 def unit_vs_improvement(attacking_unit: Unit, defending_improvement: Improvement) -> None:
-    '''
+    """
     Resolves unit vs improvement combat.
-    '''
+
+    Params:
+        attacking_unit (Unit): object representing attacking unit
+        defending_unit (Improvement): object representing defending improvement
+    """
     # get classes
     attacker_region = Region(attacking_unit.region_id, attacking_unit.game_id)
     wardata = WarData(attacking_unit.game_id)
@@ -231,9 +239,24 @@ def unit_vs_improvement(attacking_unit: Unit, defending_improvement: Improvement
             defending_improvement.health = 0
             defending_improvement._save_changes()
 
-def _conduct_combat(attacking_unit: Unit, other: Union[Unit, Improvement], attacker_nation_name: str, attacker_roll_modifier: int, defender_nation_name: str, defender_roll_modifier: int):
-    '''
-    '''
+def _conduct_combat(attacking_unit: Unit, other: Union[Unit, Improvement], attacker_nation_name: str, attacker_roll_modifier: int, defender_nation_name: str, defender_roll_modifier: int) -> Tuple[bool, bool, str]:
+    """
+    Calculates result of combat between an attacking unit and some defender.
+
+    Params:
+        attacking_unit (Unit): Object representing attacking unit
+        other (Unit or Improvement): Object representing defending force
+        attacker_nation_name (str):
+        attacker_roll_modifier (int):
+        defender_nation_name (str):
+        defender_roll_modifier (int):
+
+    Returns:
+        tuple: A tuple containing:
+            - attacker_hit (bool)
+            - defender_hit (bool)
+            - battle_str (str)
+    """
     attacker_roll = random.randint(1, 10) + attacker_roll_modifier
     defender_roll = random.randint(1, 10) + defender_roll_modifier
     attacker_hit = False
@@ -254,9 +277,16 @@ def _conduct_combat(attacking_unit: Unit, other: Union[Unit, Improvement], attac
 
     return attacker_hit, defender_hit, battle_str
 
-def _get_warscore_from_unit(unit_name):
-    '''
-    '''
+def _get_warscore_from_unit(unit_name: str) -> int:
+    """
+    Fetches the war score rewarded from defeating a unit.
+
+    Params:
+        unit_name (str):
+
+    Returns:
+        int: calculated war score
+    """
     match unit_name:
         case 'Infantry' | 'Artillery' | 'Motorized Infantry':
             return 3
