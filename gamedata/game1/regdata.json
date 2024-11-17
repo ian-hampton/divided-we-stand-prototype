@@ -2919,7 +2919,7 @@
     "SPORT": {
         "regionData": {
             "fullName": "Sportsman's Paradise",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -2939,7 +2939,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -3125,9 +3125,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
         }
     },
     "STWWI": {
@@ -3213,12 +3213,12 @@
         },
         "improvementData": {
             "name": "Crude Barrier",
-            "health": 4,
+            "health": 1,
             "turnTimer": 99
         },
         "unitData": {
             "name": "Mechanized Infantry",
-            "health": 6,
+            "health": 3,
             "ownerID": 2
         }
     },
@@ -3247,7 +3247,7 @@
         },
         "unitData": {
             "name": "Light Tank",
-            "health": 8,
+            "health": 5,
             "ownerID": 1
         }
     },
@@ -3430,7 +3430,7 @@
         },
         "unitData": {
             "name": "Infantry",
-            "health": 6,
+            "health": 4,
             "ownerID": 2
         }
     },
@@ -3558,7 +3558,7 @@
         },
         "unitData": {
             "name": "Infantry",
-            "health": 6,
+            "health": 4,
             "ownerID": 2
         }
     },
@@ -3749,8 +3749,8 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Infantry",
-            "health": 6,
+            "name": "Special Forces",
+            "health": 8,
             "ownerID": 2
         }
     },
@@ -3845,7 +3845,7 @@
         },
         "unitData": {
             "name": "Motorized Infantry",
-            "health": 6,
+            "health": 4,
             "ownerID": 1
         }
     },
@@ -3908,9 +3908,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Motorized Infantry",
-            "health": 4,
-            "ownerID": 1
+            "name": null,
+            "health": 99,
+            "ownerID": 99
         }
     },
     "STHOH": {
@@ -4000,7 +4000,7 @@
         },
         "unitData": {
             "name": "Light Tank",
-            "health": 8,
+            "health": 6,
             "ownerID": 1
         }
     },
@@ -4098,9 +4098,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "health": 99,
-            "ownerID": 99
+            "name": "Motorized Infantry",
+            "health": 1,
+            "ownerID": 1
         }
     },
     "NTWTN": {
@@ -4296,7 +4296,7 @@
     "NTHMS": {
         "regionData": {
             "fullName": "Northern Mississippi",
-            "ownerID": 0,
+            "ownerID": 2,
             "occupierID": 0,
             "purchaseCost": 5,
             "regionResource": "Empty",
@@ -4316,7 +4316,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -5598,7 +5598,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -5657,8 +5657,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "City",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {
@@ -6367,7 +6367,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Industrial Zone",
             "health": 99,
             "turnTimer": 99
         },
@@ -6397,7 +6397,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -6428,7 +6428,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Research Laboratory",
             "health": 99,
             "turnTimer": 99
         },
@@ -6455,7 +6455,7 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
+            "name": "Advanced Metals Mine",
             "health": 99,
             "turnTimer": 99
         },
@@ -6484,8 +6484,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Boot Camp",
+            "health": 5,
             "turnTimer": 99
         },
         "unitData": {

@@ -22,8 +22,8 @@
                     2
                 ],
                 "statistics": {
-                    "battlesWon": 3,
-                    "battlesLost": 3,
+                    "battlesWon": 7,
+                    "battlesLost": 5,
                     "enemyUnitsDestroyed": 0,
                     "enemyImprovementsDestroyed": 0,
                     "friendlyUnitsDestroyed": 1,
@@ -38,8 +38,8 @@
                 "warClaims": [],
                 "warClaimsOriginalOwners": [],
                 "statistics": {
-                    "battlesWon": 3,
-                    "battlesLost": 3,
+                    "battlesWon": 5,
+                    "battlesLost": 7,
                     "enemyUnitsDestroyed": 1,
                     "enemyImprovementsDestroyed": 0,
                     "friendlyUnitsDestroyed": 0,
@@ -50,18 +50,18 @@
             }
         },
         "attackerWarScore": {
-            "total": 10,
-            "occupation": 5,
-            "combatVictories": 3,
+            "total": 17,
+            "occupation": 8,
+            "combatVictories": 7,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 2,
             "capitalCaptures": 0,
             "nukedEnemyRegions": 0
         },
         "defenderWarScore": {
-            "total": 6,
+            "total": 8,
             "occupation": 0,
-            "combatVictories": 3,
+            "combatVictories": 5,
             "enemyUnitsDestroyed": 3,
             "enemyImprovementsDestroyed": 0,
             "capitalCaptures": 0,

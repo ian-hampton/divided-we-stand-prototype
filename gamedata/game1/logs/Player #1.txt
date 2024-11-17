@@ -1,19 +1,15 @@
-Researched Scorched Earth for 10 political power.
-Researched Defensive Tactics for 15 political power.
-Researched Infantry for 5 technology.
-Researched Artillery for 10 technology.
-Successfully purchased region HAMPT for 5 dollars.
-Successfully purchased region HAMPT for 5 dollars.
-Successfully purchased region HAMPT for 5 dollars.
-Successfully purchased region HAMPT for 5 dollars.
-Successfully purchased region HAMPT for 5 dollars.
-Successfully purchased region HAMPT for 5 dollars.
-Successfully purchased region HAMPT for 5 dollars.
-Built Advanced Metals Mine in region STHNJ for 5 common metals.
-Built Common Metals Mine in region HAMPT for 5 dollars.
-Built Industrial Zone in region NTHNJ for 5 dollars.
-Sold 20 Basic Materials to the resource market for 45.4 dollars.
-Deployed Light Tank in region NTHMI for 10 common metals and 1 advanced metals.
-Deployed Light Tank in region BLUEG for 10 common metals and 1 advanced metals.
+Researched Heavy Tanks for 15 technology.
+Researched Launch Codes for 10 technology.
+Built Advanced Metals Mine in region WESMD for 5 common metals.
+Built Advanced Metals Mine in region NTHME for 5 common metals.
+Built Industrial Zone in region STHVT for 5 dollars.
+Built City in region DELEW for 10 basic materials.
+Built Boot Camp in region STHME for 10 basic materials.
+Built Research Laboratory in region NTHNH for 5 basic materials.
+Built Research Laboratory in region STHNH for 5 basic materials.
+Failed to complete move Motorized Infantry CINCI - STHIN. Check combat log for details.
+Successfully moved None CINCI - CUMBE.
 Failed to complete move Motorized Infantry MIAVA - STHIN. Check combat log for details.
-Successfully moved None CUMBE - CINCI.
+Failed to complete move Light Tank BLUEG - STHIN. Check combat log for details.
+Failed to move Light Tank BLUEG - INDIA. Target region not adjacent to current region.
+Failed to complete move Light Tank NTHMI - UPPER. Check combat log for details.

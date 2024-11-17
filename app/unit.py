@@ -167,16 +167,19 @@ class Unit:
             # if target unit hostile conduct combat
             if target_region_unit.is_hostile(self.owner_id):
                 combat.unit_vs_unit(self, target_region_unit)
-            
+                # reload objects
+                self.load_attributes()
+                target_region_unit.load_attributes()
+
             # if target improvement hostile conduct combat
-            self.load_attributes()
             if target_region_improvement.is_hostile(self.owner_id):
-                combat.unit_vs_improvement(self, target_region_improvement)
-                
-            # reload objects
-            self.load_attributes()
-            target_region_unit.load_attributes()
-            target_region_improvement.load_attributes()
+                if self.name == 'Special Forces' and not target_region_unit.is_hostile(self.owner_id):
+                    combat.special_forces_improvement_takedown(self, target_region_improvement)
+                else:
+                    combat.unit_vs_improvement(self, target_region_improvement)
+                # reload objects
+                self.load_attributes()
+                target_region_improvement.load_attributes()
 
             # if no resistance and still alive complete move
             if not target_region_unit.is_hostile(self.owner_id) and not target_region_improvement.is_hostile(self.owner_id) and self.name is not None:

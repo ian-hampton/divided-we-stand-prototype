@@ -813,12 +813,13 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
                     continue
             
             # Execute Movement Order
+            unit_name = current_region_unit.name
             movement_status = current_region_unit.move(target_region)
             # update player log
             if movement_status == True:
-                player_action_log.append(f'Successfully moved {current_region_unit.name} {current_region_id} - {target_region_id}.')
+                player_action_log.append(f'Successfully moved {unit_name} {current_region_id} - {target_region_id}.')
             else:
-                player_action_log.append(f'Failed to complete move {current_region_unit.name} {current_region_id} - {target_region_id}. Check combat log for details.')
+                player_action_log.append(f'Failed to complete move {unit_name} {current_region_id} - {target_region_id}. Check combat log for details.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 

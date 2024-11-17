@@ -147,7 +147,7 @@ def unit_vs_improvement(attacking_unit: Unit, defending_improvement: Improvement
     attacker_research_list = ast.literal_eval(playerdata_list[attacking_unit.owner_id - 1][26])
     defender_research_list = ast.literal_eval(playerdata_list[defending_improvement.owner_id - 1][26])
 
-    # get information from wartdata
+    # get information from wardata
     war_name = wardata.are_at_war(attacking_unit.owner_id, defending_improvement.owner_id, True)
     attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
     defender_war_role = wardata.get_war_role(defender_nation_name, war_name)
@@ -238,6 +238,48 @@ def unit_vs_improvement(attacking_unit: Unit, defending_improvement: Improvement
             wardata.append_war_log(war_name, f"    {defender_nation_name} {defending_improvement.name} has been captured!")
             defending_improvement.health = 0
             defending_improvement._save_changes()
+
+def special_forces_improvement_takedown(attacking_unit: Unit, defending_improvement: Improvement) -> None:
+    """
+    Resolves special case of special forces vs a lone defensive improvement.
+
+    Params:
+        attacking_unit (Unit): object representing attacking unit
+        defending_unit (Improvement): object representing defending improvement
+    """
+    # get classes
+    wardata = WarData(attacking_unit.game_id)
+
+    # get information from playerdata
+    playerdata_filepath = f'gamedata/{attacking_unit.game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    attacker_nation_name = playerdata_list[attacking_unit.owner_id - 1][1]
+    defender_nation_name = playerdata_list[defending_improvement.owner_id - 1][1]
+
+    # get information from wardata
+    war_name = wardata.are_at_war(attacking_unit.owner_id, defending_improvement.owner_id, True)
+    attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
+    wardata.append_war_log(war_name, f"{attacker_nation_name} {attacking_unit.name} {attacking_unit.region_id} vs {defender_nation_name} {defending_improvement.name} {defending_improvement.region_id}")
+
+    # determine outcome - special forces always wins
+    wardata.statistic_add(war_name, attacker_nation_name, "battlesWon")
+    wardata.statistic_add(war_name, defender_nation_name, "battlesLost")
+    wardata.warscore_add(war_name, attacker_war_role, "combatVictories")
+    battle_str = f"    {attacker_nation_name} {attacking_unit.name} has defeated {defender_nation_name} {defending_improvement.name}."
+    wardata.append_war_log(war_name, battle_str)
+    
+    # resolve outcome
+    wardata.statistic_add(war_name, attacker_nation_name, "enemyImprovementsDestroyed")
+    wardata.statistic_add(war_name, defender_nation_name, "friendlyImprovementsDestroyed")
+    if defending_improvement.name != 'Capital':
+        wardata.warscore_add(war_name, attacker_war_role, "enemyImprovementsDestroyed", 2)
+        wardata.append_war_log(war_name, f"    {defender_nation_name} {defending_improvement.name} has been destroyed!")
+        defending_improvement.clear()
+    else:
+        wardata.warscore_add(war_name, attacker_war_role, "capitalCaptures", 20)
+        wardata.append_war_log(war_name, f"    {defender_nation_name} {defending_improvement.name} has been captured!")
+        defending_improvement.health = 0
+        defending_improvement._save_changes()
 
 def _conduct_combat(attacking_unit: Unit, other: Union[Unit, Improvement], attacker_nation_name: str, attacker_roll_modifier: int, defender_nation_name: str, defender_roll_modifier: int) -> Tuple[bool, bool, str]:
     """
