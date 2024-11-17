@@ -1,0 +1,68 @@
+body {
+    font-family: "Palatino", "Palatino Linotype", "Book Antiqua", serif;
+    background-image: url("/static/paper.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: white;
+}
+h1 {
+    font-size: 48px;
+    color: white;
+    text-align: center;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
+    margin: 0;
+    margin-bottom: var(--h1-margin-bottom);
+    padding: 0;
+    line-height: 1;
+}
+.tree {
+    display: flex;
+    justify-content: space-evenly;
+    height: var(--tree-height);
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    margin-bottom: var(--tree-margin-bottom);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5),
+                0px 0px 20px rgba(0, 0, 0, 0.5);
+}
+.tech-table {
+    border: 3px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
+    margin: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: var(--tech-width);
+}
+.tech-table .name {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 1;
+}
+.tech-table .cost {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    font-size: calc(var(--tree-height) * 0.3);
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1;
+}
+.tech-table .desc {
+    font-size: 16px;
+}
+.star {
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

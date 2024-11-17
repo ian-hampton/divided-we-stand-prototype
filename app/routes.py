@@ -6,6 +6,7 @@ import json
 from operator import itemgetter
 import os
 import random
+import re
 import shutil
 import uuid
 
@@ -21,7 +22,7 @@ app = Flask(__name__)
 main = Blueprint('main', __name__)
 @main.route('/')
 def main_function():
-    return render_template('UWS.html')
+    return render_template('index.html')
 
 #SITE FUNCTIONS
 ################################################################################
@@ -138,7 +139,6 @@ def games():
         match current_turn:
 
             case "Starting Region Selection in Progress":
-                print("I went to Starting Region Selection in Progress")
                 #get title and game link
                 game_name = game_data["Game Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
@@ -197,7 +197,7 @@ def games():
         game_data["Playerdata Masterlist"] = refined_player_data
         game_data["image_url"] = image_url
     
-    return render_template('Games.html', dict = active_games_dict, full_game_id = game_id)
+    return render_template('temp_games.html', dict = active_games_dict, full_game_id = game_id)
 
 #SETTINGS PAGE
 @main.route('/settings')
@@ -205,7 +205,7 @@ def settings():
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
-    return render_template('Settings.html', username_list = username_list)
+    return render_template('temp_settings.html', username_list = username_list)
 
 #SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
@@ -295,11 +295,6 @@ def create_game():
         print("Error: No inactive game found to overwrite.")
         quit()
 
-#GAME CREATED
-@main.route('/game_created')
-def game_created():
-    return render_template('Game Created.html')
-
 #GAMES ARCHIVE PAGE
 @main.route('/archived_games')
 def archived_games():
@@ -363,7 +358,7 @@ def archived_games():
     game_id_list.reverse()
     slide_index_list = [1] * len(game_id_list)
     
-    return render_template('Games Archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
+    return render_template('temp_archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
 
 #LEADERBOARD PAGE
 @main.route('/leaderboard')
@@ -389,7 +384,7 @@ def leaderboard():
     leaderboard_height = f'{(len(leaderboard_data) * 15) + 50}px'
     with open('leaderboard_records.json', 'r') as json_file:
         leaderboard_records_dict = json.load(json_file)
-    return render_template('Leaderboard.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_height = leaderboard_height, leaderboard_records_dict = leaderboard_records_dict)
+    return render_template('temp_leaderboard.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_height = leaderboard_height, leaderboard_records_dict = leaderboard_records_dict)
 
 #GENRATE PROFILE PAGES
 def generate_profile_route(profile_id):
@@ -484,7 +479,7 @@ def generate_profile_route(profile_id):
         reliability = reliability * 100
         reliability = int(reliability)
         reliability = f'{reliability}%'
-        return render_template('Profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
+        return render_template('temp_profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
 with open('player_records.json', 'r') as json_file:
     player_records_dict = json.load(json_file)
 profile_id_list = list(player_records_dict.keys())
@@ -551,7 +546,7 @@ def game_load(full_game_id):
         elif len(players_who_won_list) == 0:
             victory_string = (f'Game drawn.')
         victory_string = color_nation_names(victory_string, full_game_id)
-        return render_template('stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
+        return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
     
     #load active state
     match game1_turn:
@@ -573,7 +568,7 @@ def game_load(full_game_id):
                         refined_player_data = [player_number, player_id, player_color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, regioninput_id, colordropdown_id]
                         player_data.append(refined_player_data)
                 active_player_data = player_data.pop(0)
-            return render_template('stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case "Nation Setup in Progress":
             form_key = "main.stage2_resolution"
@@ -594,7 +589,7 @@ def game_load(full_game_id):
                         refined_player_data = [player_number, player_id, player_color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, nameinput_id, govinput_id, fpinput_id, vcinput_id]
                         player_data.append(refined_player_data)
                 active_player_data = player_data.pop(0)
-            return render_template('stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case _:
             form_key = "main.turn_resolution"
@@ -620,7 +615,7 @@ def game_load(full_game_id):
             current_event_dict = active_games_dict[full_game_id]["Current Event"]
             if current_event_dict != {}:
                 form_key = "main.event_resolution"
-            return render_template('stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
 
 #GENERATE NATION SHEET PAGES
 def generate_player_route(full_game_id, player_id):
@@ -631,7 +626,7 @@ def generate_player_route(full_game_id, player_id):
         game_id = int(full_game_id[-1])
         current_turn_num = core.get_current_turn_num(game_id)
         player_information_dict = core.get_data_for_nation_sheet(full_game_id, player_id, current_turn_num)
-        return render_template('nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
+        return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
 
 #GENERATION PROCEDURE
 game_ids = ['game1', 'game2']
@@ -644,128 +639,310 @@ for full_game_id in game_ids:
 #WARS PAGE
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
+
+    # define helper functions
+    def camel_to_title(camel_str):
+        # Insert a space before each uppercase letter and capitalize the words
+        title_str = re.sub(r'([A-Z])', r' \1', camel_str).title()
+        return title_str.strip()
     
-    #function defs
-    def process_wardata(output_list, war_data, i):
-        nation_name = playerdata_list[i][1]
-        output_list.append(nation_name)
-        if len(war_data) == 6:
-            war_data.insert(2, "None")
-        else:
-            war_data.insert(2, war_data.pop(6))
-        war_data.pop(0)
-        output_list += war_data
-        return output_list
-    def calculate_war_score(main_nation_data, secondary_nation_list):
-        war_score = 0
-        war_score += int(main_nation_data[3])
-        for secondary_nation_data in secondary_nation_list:
-            war_score += int(secondary_nation_data[3])
-        return war_score
-    
-    #read the contents of active_games.json
+    # read from game files
+    from app.wardata import WarData
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_id = int(full_game_id[-1])
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} Wars List'
-    
-    #read playerdata.csv
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 0)
-    
-    #read wardata.csv
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    wardata_list = core.read_file(wardata_filepath, 2)
-    war_masterlist = []
-    for war in wardata_list:
-        war_entry = []
-        #get war title
-        war_entry.append(war[11])
+    current_turn_num = core.get_current_turn_num(int(full_game_id[-1]))
+    wardata = WarData(full_game_id)
+
+    # read wars
+    for war_name, war_data in wardata.wardata_dict.items():
+        
         #get war timeframe
-        war_start = int(war[12])
+        war_start = war_data["startTurn"]
         season, year = core.date_from_turn_num(war_start)
         war_start = f'{season} {year}'
-        war_end = war[15]
-        if war_end.isdigit():
+        war_end = war_data["endTurn"]
+        if war_end != 0:
             war_end = int(war_end)
             season, year = core.date_from_turn_num(war_end)
             war_end = f'{season} {year}'
         else:
             war_end = "Present"
-        war_entry.append(f'{war_start} - {war_end}')
-        #get main attacker and defender
-        main_attacker_data = []
-        main_defender_data = []
-        for i in range(1, 11):
-            if war[i] != '-':
-                war_data = ast.literal_eval(war[i])
-                if war_data[0] == 'Main Attacker':
-                    main_attacker_data = process_wardata(main_attacker_data, war_data, i)
-                elif war_data[0] == 'Main Defender':
-                    main_defender_data = process_wardata(main_defender_data, war_data, i)
-            if main_attacker_data != [] and main_defender_data != []:
-                break
-        war_entry.append(main_attacker_data)
-        war_entry.append(main_defender_data)
-        #get secondary attackers/defenders
-        supporting_attackers = []
-        supporting_defenders = []
-        for i in range(1, 11):
-            secondary_data = []
-            if war[i] != '-':
-                war_data = ast.literal_eval(war[i])
-                if war_data[0] == 'Secondary Attacker':
-                    secondary_data = process_wardata(secondary_data, war_data, i)
-                    supporting_attackers.append(secondary_data)
-                elif war_data[0] == 'Secondary Defender':
-                    secondary_data = process_wardata(secondary_data, war_data, i)
-                    supporting_defenders.append(secondary_data)
-        if supporting_attackers != []:
-            war_entry.append("visibility: visible")
-        else:
-            war_entry.append("display: none")
-        if supporting_defenders != []:
-            war_entry.append("visibility: visible")
-        else:
-            war_entry.append("display: none")
-        war_entry.append(supporting_attackers)
-        war_entry.append(supporting_defenders)
-        #get war status
-        war_status = war[13]
-        attacker_color = ["""background-image: linear-gradient(#cc4125, #eb5a3d)"""]
-        defender_color = ["""background-image: linear-gradient(#3c78d8, #5793f3)"""]
-        white_color = ["""background-image: linear-gradient(#c0c0c0, #b0b0b0)"""]
+        wardata.wardata_dict[war_name]["timeframe"] = f'{war_start} - {war_end}'
+
+        # get war score information
+        attacker_war_score = war_data["attackerWarScore"]["total"]
+        defender_war_score = war_data["defenderWarScore"]["total"]
+        attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
+        ma_name, md_name = wardata.get_main_combatants(war_name)
+
+        # implement a score bar using an html table >:)
+        war_status = wardata.wardata_dict[war_name]["outcome"]
+        attacker_color = """background-image: linear-gradient(#cc4125, #eb5a3d)"""
+        defender_color = """background-image: linear-gradient(#3c78d8, #5793f3)"""
+        white_color = """background-image: linear-gradient(#c0c0c0, #b0b0b0)"""
         match war_status:
             case "Attacker Victory":
-                war_status_bar = attacker_color * 1
+                # set bar entirely red
+                war_status_bar = [attacker_color] * 1
             case "Defender Victory":
-                war_status_bar = defender_color * 1
+                # set bar entirely blue
+                war_status_bar = [defender_color] * 1
             case "White Peace":
-                war_status_bar = white_color * 1
-            case "Ongoing":
-                attacker_score = calculate_war_score(main_attacker_data, supporting_attackers)
-                defender_score = calculate_war_score(main_defender_data, supporting_defenders)
+                # set bar entirely white
+                war_status_bar = [white_color] * 1
+            case "TBD":
+                # color bar based on percentage
+                attacker_score = wardata.wardata_dict[war_name]["attackerWarScore"]["total"]
+                defender_score = wardata.wardata_dict[war_name]["defenderWarScore"]["total"]
                 if attacker_score != 0 and defender_score == 0:
-                    war_status_bar = attacker_color * 1
+                    war_status_bar = [attacker_color] * 1
                 elif attacker_score == 0 and defender_score != 0:
-                    war_status_bar = defender_color * 1
+                    war_status_bar = [defender_color] * 1
                 elif attacker_score == 0 and defender_score == 0:
                     war_status_bar = attacker_color * 1
-                    war_status_bar += defender_color * 1
+                    war_status_bar += [defender_color] * 1
                 else:
+                    # calculate attacker value
                     attacker_percent = float(attacker_score) / float(attacker_score + defender_score)
-                    attacker_percent = round(attacker_percent, 1)
-                    attacker_value = int(attacker_percent * 10)
+                    attacker_percent = round(attacker_percent, 2)
+                    attacker_points = int(attacker_percent * 100)
+                    attacker_steps = round(attacker_points / 5)
+                    # calculate defender value
                     defender_percent = float(defender_score) / float(attacker_score + defender_score)
-                    defender_percent = round(defender_percent, 1)
-                    defender_value = int(defender_percent * 10)
-                    war_status_bar = attacker_color * attacker_value
-                    war_status_bar += defender_color * defender_value
-        war_entry.append(war_status_bar)
-        #add war to list
-        war_masterlist.append(war_entry)
-    return render_template('wars.html', page_title = page_title, war_masterlist = war_masterlist)
+                    defender_percent = round(defender_percent, 2)
+                    defender_points = int(defender_percent * 100)
+                    defender_steps = round(defender_points / 5)
+                    # add to score bar
+                    war_status_bar = [attacker_color] * attacker_steps
+                    war_status_bar += [defender_color] * defender_steps
+        wardata.wardata_dict[war_name]["scoreBar"] = war_status_bar
+
+        # convert warscore keys from camel case to title case with spaces
+        copy = {}
+        for key, value in wardata.wardata_dict[war_name]["attackerWarScore"].items():
+            new_key = camel_to_title(key)
+            if new_key == "Total":
+                new_key += " War Score"
+            elif new_key == "Enemy Improvements Destroyed":
+                new_key = "Enemy Impr. Destroyed"
+            copy[new_key] = value
+        wardata.wardata_dict[war_name]["attackerWarScore"] = copy
+        copy = {}
+        for key, value in wardata.wardata_dict[war_name]["defenderWarScore"].items():
+            new_key = camel_to_title(key)
+            if new_key == "Total":
+                new_key += " War Score"
+            elif new_key == "Enemy Improvements Destroyed":
+                new_key = "Enemy Impr. Destroyed"
+            copy[new_key] = value
+        wardata.wardata_dict[war_name]["defenderWarScore"] = copy
+
+        # create war resolution strings
+        match war_status:
+            
+            case "Attacker Victory":
+
+                war_end_str = """This war concluded with an <span class="color-red"> attacker victory </span>."""
+                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+            
+            case "Defender Victory":
+                
+                war_end_str = """This war concluded with a <span class="color-blue"> defender victory </span>."""
+                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+            
+            case "White Peace":
+                
+                war_end_str = """This war concluded with a white peace."""
+                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+            
+            case "TBD":
+            
+                if current_turn_num - war_data["startTurn"] < 4:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants in {current_turn_num - war_data["startTurn"]} turns."
+                else:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
+                wardata.wardata_dict[war_name]["canEndStr"] = can_end_str
+                
+                if attacker_war_score > defender_war_score:
+                    if attacker_threshold is not None:
+                        forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {attacker_threshold} </span> war score."""
+                    else:
+                        forced_end_str = f"""The <span class="color-red"> attackers </span> cannot win this war using war score since <span class="color-blue"> {md_name} </span> is a Crime Syndicate."""
+                else:
+                    if defender_threshold is not None:
+                        forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {defender_threshold} </span> war score."""
+                    else:
+                        forced_end_str = f"""The <span class="color-blue"> defenders </span> cannot win this war using war score since <span class="color-red"> {ma_name} </span> is a Crime Syndicate."""
+                    
+                wardata.wardata_dict[war_name]["forcedEndStr"] = forced_end_str
+
+    return render_template('temp_wars.html', page_title = page_title, dict = wardata.wardata_dict)
+
+#RESEARCH PAGE
+@main.route('/<full_game_id>/technologies')
+def technologies(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Technology Trees'
+    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
+
+
+    # Get Research Information
+    refined_dict = {}
+    research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
+    
+    # get scenario data
+    if scenario == "Standard":
+        categories = ["Energy", "Infrastructure", "Military", "Defense"]
+        for category in categories:
+            refined_dict[f'{category} Technologies'] = {}
+        refined_dict["Energy Technologies"]["Colors"] = ["#5555554D", "#CC58264D", "#106A254D", "NONE"]
+        refined_dict["Infrastructure Technologies"]["Colors"] = ["#F9CB304D", "#754C244D", "#5555554D", "#0583C54D"]
+        refined_dict["Military Technologies"]["Colors"] = ["#C419194D", "#5F2F8C4D", "#106A254D", "#CC58264D"]
+        refined_dict["Defense Technologies"]["Colors"] = ["#0583C54D", "#F9CB304D", "#C419194D", "NONE"]
+        color_complements_dict = {
+            "#555555": "#636363",
+            "#CC5826": "#E0622B",
+            "#106A25": "#197B30",
+            "#F9CB30": "#FFDF70",
+            "#754C24": "#8C6239",
+            "#0583C5": "#1591D1",
+            "#5F2F8C": "#713BA4",
+            "#C41919": "#D43939"
+        }
+    
+    # create research table
+    for category in categories:
+        table_contents = {
+            "A": [None] * 4,
+            "B": [None] * 4,
+            "C": [None] * 4,
+            "D": [None] * 4,
+        }
+        refined_dict[f'{category} Technologies']["Table"] = table_contents
+    
+    # hide fow techs if not fog of war
+    if active_games_dict[full_game_id]["Information"]["Fog of War"] == "Disabled":
+        del research_data_dict["Surveillance Operations"]
+        del research_data_dict["Economic Reports"]
+        del research_data_dict["Military Intelligence"]
+
+    # add player research data
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    for research_name in research_data_dict:
+        research_data_dict[research_name]["Player Research"] = [None] * len(playerdata_list)
+    for index, playerdata in enumerate(playerdata_list):
+        player_research_list = ast.literal_eval(playerdata[26])
+        for research_name in player_research_list:
+            if research_name in research_data_dict:
+                research_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+
+    # load techs to table
+    for key, value in research_data_dict.items():
+        research_type = value["Research Type"]
+        if research_type in categories:
+            pos = value["Location"]
+            row_pos = pos[0]
+            col_pos = int(pos[1])
+            value["Name"] = key
+            refined_dict[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
+    
+    return render_template('temp_research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+
+#AGENDAS PAGE
+@main.route('/<full_game_id>/agendas')
+def agendas(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Political Agendas'
+    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
+
+
+    # Get Research Information
+    refined_dict = {}
+    agenda_data_dict = core.get_scenario_dict(full_game_id, "Agendas")
+    
+    # get scenario data
+    if scenario == "Standard":
+        categories = ["Agendas"]
+        for category in categories:
+            refined_dict[category] = {}
+        refined_dict["Agendas"]["Colors"] = ["#0583C54D", "#106A254D", "#5F2F8C4D", "#C419194D"]
+        color_complements_dict = {
+            "#555555": "#636363",
+            "#CC5826": "#E0622B",
+            "#106A25": "#197B30",
+            "#F9CB30": "#FFDF70",
+            "#754C24": "#8C6239",
+            "#0583C5": "#1591D1",
+            "#5F2F8C": "#713BA4",
+            "#C41919": "#D43939"
+        }
+    
+    # create research table
+    for category in categories:
+        table_contents = {
+            "A": [None] * 4,
+            "B": [None] * 4,
+            "C": [None] * 4,
+            "D": [None] * 4,
+        }
+        refined_dict[category]["Table"] = table_contents
+
+    # add player research data
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    for research_name in agenda_data_dict:
+        agenda_data_dict[research_name]["Player Research"] = [None] * len(playerdata_list)
+    for index, playerdata in enumerate(playerdata_list):
+        player_research_list = ast.literal_eval(playerdata[26])
+        for research_name in player_research_list:
+            if research_name in agenda_data_dict:
+                agenda_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+
+    # load techs to table
+    for key, value in agenda_data_dict.items():
+        pos = value["Location"]
+        row_pos = pos[0]
+        col_pos = int(pos[1])
+        value["Name"] = key
+        refined_dict["Agendas"]["Table"][row_pos][col_pos] = value
+    
+    return render_template('temp_agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+
+#UNITS PAGE
+@main.route('/<full_game_id>/units')
+def units(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Unit Reference'
+    
+    # get unit dict
+    unit_dict = core.get_scenario_dict(full_game_id, "Units")
+
+    # add reference colors
+    for unit_name in unit_dict:
+        if "Motorized Infantry" == unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-purple"
+            continue
+        if "Infantry" in unit_name or "Artillery" in unit_name or "Special Forces" in unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-red"
+        elif "Tank" in unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-purple"
+
+    return render_template('temp_units.html', page_title = page_title, dict = unit_dict)
 
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')

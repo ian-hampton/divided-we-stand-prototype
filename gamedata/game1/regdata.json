@@ -1,0 +1,6497 @@
+{
+    "OLYMP": {
+        "regionData": {
+            "fullName": "Olympic Peninsula",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PACCA",
+                "PUGET"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PACCA": {
+        "regionData": {
+            "fullName": "Pacific Cascades",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OLYMP",
+                "PUGET",
+                "COLBA",
+                "NTHOR",
+                "WILVA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PUGET": {
+        "regionData": {
+            "fullName": "Puget Sound",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegional": true,
+            "adjacencyList": [
+                "NTCAS",
+                "COLBA",
+                "PACCA",
+                "OLYMP"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTCAS": {
+        "regionData": {
+            "fullName": "Northern Cascades",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OKANO",
+                "COLBA",
+                "PUGET"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "OKANO": {
+        "regionData": {
+            "fullName": "Okanagan",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "IDPAN",
+                "COLBA",
+                "NTCAS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "COLBA": {
+        "regionData": {
+            "fullName": "Columbia Basin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTCAS",
+                "OKANO",
+                "IDPAN",
+                "EASOR",
+                "NTHOR",
+                "PACCA",
+                "PUGET"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WILVA": {
+        "regionData": {
+            "fullName": "Willamette Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "PACCA",
+                "NTHOR",
+                "STHOR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHOR": {
+        "regionData": {
+            "fullName": "Northern Oregon",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PACCA",
+                "COLBA",
+                "EASOR",
+                "STHOR",
+                "WILVA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHOR": {
+        "regionData": {
+            "fullName": "Southern Oregon",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WILVA",
+                "NTHOR",
+                "EASOR",
+                "WESNV",
+                "SHAST",
+                "NTHCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASOR": {
+        "regionData": {
+            "fullName": "Eastern Oregon",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "COLBA",
+                "IDPAN",
+                "MAGVA",
+                "WESNV",
+                "STHOR",
+                "NTHOR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "IDPAN": {
+        "regionData": {
+            "fullName": "Idaho Panhandle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OKANO",
+                "WESMT",
+                "STEID",
+                "MAGVA",
+                "EASOR",
+                "COLBA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MAGVA": {
+        "regionData": {
+            "fullName": "Magic Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "IDPAN",
+                "STEID",
+                "CACHE",
+                "EASNV",
+                "WESNV",
+                "EASOR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEID": {
+        "regionData": {
+            "fullName": "Southeastern Idaho",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMT",
+                "NTHWY",
+                "STHWY",
+                "CACHE",
+                "MAGVA",
+                "IDPAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMT": {
+        "regionData": {
+            "fullName": "Western Montana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASMT",
+                "NTHWY",
+                "STEID",
+                "IDPAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASMT": {
+        "regionData": {
+            "fullName": "Eastern Montana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESND",
+                "WESSD",
+                "NTHWY",
+                "WESMT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHWY": {
+        "regionData": {
+            "fullName": "Nothern Wyoming",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMT",
+                "EASMT",
+                "WESSD",
+                "WESNE",
+                "STHWY",
+                "STEID"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHWY": {
+        "regionData": {
+            "fullName": "Southern Wyoming",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHWY",
+                "WESNE",
+                "NTECO",
+                "NTWCO",
+                "UINTA",
+                "SLTLK",
+                "CACHE",
+                "STEID"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHCT": {
+        "regionData": {
+            "fullName": "North Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHOR",
+                "SHAST",
+                "SACRA",
+                "BAYAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SHAST": {
+        "regionData": {
+            "fullName": "Shasta Cascade",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHOR",
+                "WESNV",
+                "SACRA",
+                "NTHCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SACRA": {
+        "regionData": {
+            "fullName": "Sacramento",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHCT",
+                "SHAST",
+                "WESNV",
+                "SINEV",
+                "SJOVA",
+                "CENCT",
+                "BAYAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "BAYAR": {
+        "regionData": {
+            "fullName": "Bay Area",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHCT",
+                "SACRA",
+                "CENCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SINEV": {
+        "regionData": {
+            "fullName": "Sierra Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNV",
+                "STHNV",
+                "LASVE",
+                "INEMP",
+                "KERNC",
+                "SJOVA",
+                "SACRA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SJOVA": {
+        "regionData": {
+            "fullName": "San Joaquin Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SACRA",
+                "SINEV",
+                "KERNC",
+                "CENCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENCT": {
+        "regionData": {
+            "fullName": "Central Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "BAYAR",
+                "SACRA",
+                "SJOVA",
+                "KERNC",
+                "LOSAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "KERNC": {
+        "regionData": {
+            "fullName": "Kern County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SJOVA",
+                "SINEV",
+                "INEMP",
+                "LOSAN",
+                "CENCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "LOSAN": {
+        "regionData": {
+            "fullName": "Los Angeles",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENCT",
+                "KERNC",
+                "INEMP",
+                "STHBR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "INEMP": {
+        "regionData": {
+            "fullName": "Inland Empire",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "KERNC",
+                "SINEV",
+                "LASVE",
+                "MOHAV",
+                "YUMAC",
+                "STHBR",
+                "LOSAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHBR": {
+        "regionData": {
+            "fullName": "Southern Border Region",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "LOSAN",
+                "INEMP",
+                "YUMAC"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESNV": {
+        "regionData": {
+            "fullName": "Western Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "SHAST",
+                "STHOR",
+                "EASOR",
+                "MAGVA",
+                "EASNV",
+                "STHNV",
+                "SINEV",
+                "SACRA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASNV": {
+        "regionData": {
+            "fullName": "Eastern Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNV",
+                "MAGVA",
+                "CACHE",
+                "SLTLK",
+                "STWUT",
+                "STHNV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNV": {
+        "regionData": {
+            "fullName": "Southern Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNV",
+                "EASNV",
+                "STWUT",
+                "MOHAV",
+                "LASVE",
+                "SINEV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "LASVE": {
+        "regionData": {
+            "fullName": "Las Vegas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHNV",
+                "MOHAV",
+                "INEMP",
+                "SINEV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CACHE": {
+        "regionData": {
+            "fullName": "Cache County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MAGVA",
+                "STEID",
+                "STHWY",
+                "SLTLK",
+                "EASNV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SLTLK": {
+        "regionData": {
+            "fullName": "Salt Lake",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CACHE",
+                "STHWY",
+                "UINTA",
+                "STWUT",
+                "EASNV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 1,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "UINTA": {
+        "regionData": {
+            "fullName": "Unitah County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SLTLK",
+                "STHWY",
+                "NTWCO",
+                "SANJU",
+                "STWUT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWUT": {
+        "regionData": {
+            "fullName": "Southwest Utah",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SLTLK",
+                "UINTA",
+                "SANJU",
+                "EASAZ",
+                "MOHAV",
+                "STHNV",
+                "EASNV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SANJU": {
+        "regionData": {
+            "fullName": "San Juan County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWUT",
+                "UINTA",
+                "NTWCO",
+                "STWCO",
+                "EASAZ"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWCO": {
+        "regionData": {
+            "fullName": "Northwest Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHWY",
+                "NTECO",
+                "STECO",
+                "STWCO",
+                "SANJU",
+                "UINTA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTECO": {
+        "regionData": {
+            "fullName": "Northeast Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHWY",
+                "WESNE",
+                "CENNE",
+                "NTHKS",
+                "STHKS",
+                "STECO",
+                "NTWCO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWCO": {
+        "regionData": {
+            "fullName": "Southwest Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SANJU",
+                "NTWCO",
+                "STECO",
+                "NTENM",
+                "NTWNM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STECO": {
+        "regionData": {
+            "fullName": "Southeast Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWCO",
+                "NTWCO",
+                "NTECO",
+                "STHKS",
+                "REDCA",
+                "NTENM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MOHAV": {
+        "regionData": {
+            "fullName": "Mohave County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "LASVE",
+                "STHNV",
+                "STWUT",
+                "EASAZ",
+                "YAVAP",
+                "YUMAC",
+                "INEMP"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "YUMAC": {
+        "regionData": {
+            "fullName": "Yuma County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHBR",
+                "INEMP",
+                "MOHAV",
+                "YAVAP",
+                "PHOEN",
+                "STHAZ"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "YAVAP": {
+        "regionData": {
+            "fullName": "Yavapai County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MOHAV",
+                "EASAZ",
+                "PHOEN",
+                "YUMAC"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PHOEN": {
+        "regionData": {
+            "fullName": "Phoenix",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "YUMAC",
+                "YAVAP",
+                "EASAZ",
+                "STHAZ"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHAZ": {
+        "regionData": {
+            "fullName": "Southern Arizona",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "YUMAC",
+                "PHOEN",
+                "EASAZ",
+                "STWNM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASAZ": {
+        "regionData": {
+            "fullName": "Eastern Arizona",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHAZ",
+                "PHOEN",
+                "YAVAP",
+                "MOHAV",
+                "STWUT",
+                "SANJU",
+                "NTWNM",
+                "STWNM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWNM": {
+        "regionData": {
+            "fullName": "Northwest New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASAZ",
+                "STWCO",
+                "NTENM",
+                "STENM",
+                "STWNM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTENM": {
+        "regionData": {
+            "fullName": "Northeast New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWNM",
+                "STWCO",
+                "STECO",
+                "REDCA",
+                "TXPAN",
+                "STENM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWNM": {
+        "regionData": {
+            "fullName": "Southwest New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASAZ",
+                "NTWNM",
+                "STENM",
+                "WESTX",
+                "STHAZ"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STENM": {
+        "regionData": {
+            "fullName": "Southeast New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWNM",
+                "NTWNM",
+                "NTENM",
+                "TXPAN",
+                "WESTX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESND": {
+        "regionData": {
+            "fullName": "Western North Dakota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASND",
+                "WESSD",
+                "EASMT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASND": {
+        "regionData": {
+            "fullName": "Eastern North Dakota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWMN",
+                "EASSD",
+                "WESSD",
+                "WESND"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESSD": {
+        "regionData": {
+            "fullName": "Western North Dakota",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "WESND",
+                "EASND",
+                "EASSD",
+                "CENNE",
+                "WESNE",
+                "NTHWY",
+                "EASMT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASSD": {
+        "regionData": {
+            "fullName": "Eastern North Dakota",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASND",
+                "NTWMN",
+                "STWMN",
+                "NTWIA",
+                "EASNE",
+                "CENNE",
+                "WESSD"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESNE": {
+        "regionData": {
+            "fullName": "Western Nebraska",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHWY",
+                "WESSD",
+                "CENNE",
+                "NTECO",
+                "STHWY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENNE": {
+        "regionData": {
+            "fullName": "Central Nebraska",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNE",
+                "WESSD",
+                "EASSD",
+                "EASNE",
+                "NTHKS",
+                "NTECO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Uranium Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASNE": {
+        "regionData": {
+            "fullName": "Eastern Nebraska",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENNE",
+                "EASSD",
+                "NTWIA",
+                "STWIA",
+                "NTHMO",
+                "EASKS",
+                "NTHKS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHKS": {
+        "regionData": {
+            "fullName": "Northern Kansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENNE",
+                "EASNE",
+                "EASKS",
+                "STHKS",
+                "NTECO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHKS": {
+        "regionData": {
+            "fullName": "Southern Kansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHKS",
+                "EASKS",
+                "GREEN",
+                "REDCA",
+                "STECO",
+                "NTECO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASKS": {
+        "regionData": {
+            "fullName": "Eastern Kansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASNE",
+                "NTHMO",
+                "WESMO",
+                "GREEN",
+                "STHKS",
+                "NTHKS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "REDCA": {
+        "regionData": {
+            "fullName": "Red Carpet Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHKS",
+                "GREEN",
+                "GRTPL",
+                "TXPAN",
+                "NTENM",
+                "STECO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GREEN": {
+        "regionData": {
+            "fullName": "Green Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHKS",
+                "EASKS",
+                "WESMO",
+                "NTWAR",
+                "CHOCT",
+                "GRTPL",
+                "REDCA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GRTPL": {
+        "regionData": {
+            "fullName": "Great Plains Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "REDCA",
+                "GREEN",
+                "CHOCT",
+                "METRO",
+                "TXPAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHOCT": {
+        "regionData": {
+            "fullName": "Choctaw Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GREEN",
+                "NTWAR",
+                "STWAR",
+                "NTETX",
+                "METRO",
+                "GRTPL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "TXPAN": {
+        "regionData": {
+            "fullName": "Texas Panhandle",
+            "ownerID": 3,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "REDCA",
+                "GRTPL",
+                "METRO",
+                "HILLC",
+                "WESTX",
+                "STENM",
+                "NTENM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "METRO": {
+        "regionData": {
+            "fullName": "Metroplex",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GRTPL",
+                "CHOCT",
+                "NTETX",
+                "CENTX",
+                "HILLC",
+                "TXPAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTETX": {
+        "regionData": {
+            "fullName": "Northeast Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHOCT",
+                "STWAR",
+                "SPORT",
+                "STETX",
+                "GULCT",
+                "CENTX",
+                "METRO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESTX": {
+        "regionData": {
+            "fullName": "Western Texas",
+            "ownerID": 3,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWNM",
+                "STENM",
+                "TXPAN",
+                "HILLC",
+                "STHTX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "HILLC": {
+        "regionData": {
+            "fullName": "Hill Country",
+            "ownerID": 3,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "TXPAN",
+                "METRO",
+                "CENTX",
+                "STHTX",
+                "WESTX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENTX": {
+        "regionData": {
+            "fullName": "Central Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "METRO",
+                "NTETX",
+                "GULCT",
+                "CBEND",
+                "STHTX",
+                "HILLC"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHTX": {
+        "regionData": {
+            "fullName": "Southern Texas",
+            "ownerID": 3,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESTX",
+                "HILLC",
+                "CENTX",
+                "CBEND"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CBEND": {
+        "regionData": {
+            "fullName": "Coastal Bend",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHTX",
+                "CENTX",
+                "GULCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GULCT": {
+        "regionData": {
+            "fullName": "Gulf Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CBEND",
+                "CENTX",
+                "NTETX",
+                "STETX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STETX": {
+        "regionData": {
+            "fullName": "Southeast Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GULCT",
+                "NTETX",
+                "SPORT",
+                "CROSS",
+                "ACADI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWMN": {
+        "regionData": {
+            "fullName": "Northwest Minnesota",
+            "ownerID": 4,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTENM",
+                "CENMN",
+                "STWMN",
+                "EASSD",
+                "EASND"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEMN": {
+        "regionData": {
+            "fullName": "Northeast Minnesota",
+            "ownerID": 4,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWWI",
+                "CENMN",
+                "NTWMN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENMN": {
+        "regionData": {
+            "fullName": "Central Minnesota",
+            "ownerID": 4,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWMN",
+                "NTEMN",
+                "NTWWI",
+                "STEMN",
+                "STWMN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWMN": {
+        "regionData": {
+            "fullName": "Southwest Minnesota",
+            "ownerID": 4,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWMN",
+                "CENMN",
+                "STEMN",
+                "NTWIA",
+                "EASSD"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEMN": {
+        "regionData": {
+            "fullName": "Southeast Minnesota",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENMN",
+                "NTWWI",
+                "STWWI",
+                "NTEIA",
+                "NTWIA",
+                "STWMN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWIA": {
+        "regionData": {
+            "fullName": "Northwest Iowa",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWMN",
+                "STEMN",
+                "NTEIA",
+                "STWIA",
+                "EASNE",
+                "EASSD"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEIA": {
+        "regionData": {
+            "fullName": "Northeast Iowa",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STEMN",
+                "STWWI",
+                "NTWIL",
+                "STEIA",
+                "STWIA",
+                "NTWIA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWIA": {
+        "regionData": {
+            "fullName": "Southwest Iowa",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWIA",
+                "NTEIA",
+                "STEIA",
+                "NTHMO",
+                "EASNE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEIA": {
+        "regionData": {
+            "fullName": "Southeast Iowa",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTEIA",
+                "NTWIL",
+                "FORGO",
+                "NTHMO",
+                "STWIA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMO": {
+        "regionData": {
+            "fullName": "Northern Missouri",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWIA",
+                "STEIA",
+                "FORGO",
+                "STWIL",
+                "STLOU",
+                "WESMO",
+                "EASKS",
+                "EASNE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMO": {
+        "regionData": {
+            "fullName": "Western Missouri",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHMO",
+                "STLOU",
+                "OZARK",
+                "NTWAR",
+                "GREEN",
+                "EASKS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STLOU": {
+        "regionData": {
+            "fullName": "St. Louis",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMO",
+                "STWIL",
+                "STEMO",
+                "OZARK",
+                "WESMO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "OZARK": {
+        "regionData": {
+            "fullName": "Ozark Highlands",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMO",
+                "STLOU",
+                "STEMO",
+                "NTEAR",
+                "NTWAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEMO": {
+        "regionData": {
+            "fullName": "Southeast Missouri",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STLOU",
+                "STWIL",
+                "LILEG",
+                "WESKY",
+                "NTWTN",
+                "NTEAR",
+                "OZARK"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWAR": {
+        "regionData": {
+            "fullName": "Northwest Arkansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMO",
+                "OZARK",
+                "NTEAR",
+                "STEAR",
+                "STWAR",
+                "CHOCT",
+                "GREEN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEAR": {
+        "regionData": {
+            "fullName": "Northeast Arkansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OZARK",
+                "STEMO",
+                "NTWTN",
+                "STWTN",
+                "NTHMS",
+                "STEAR",
+                "NTWAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWAR": {
+        "regionData": {
+            "fullName": "Southwest Arkansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWAR",
+                "STEAR",
+                "SPORT",
+                "NTETX",
+                "CHOCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEAR": {
+        "regionData": {
+            "fullName": "Southeast Arkansas",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWAR",
+                "NTEAR",
+                "NTHMS",
+                "SPORT",
+                "STWAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SPORT": {
+        "regionData": {
+            "fullName": "Sportsman's Paradise",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWAR",
+                "STEAR",
+                "NTHMS",
+                "CENMS",
+                "CROSS",
+                "STETX",
+                "NTETX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CROSS": {
+        "regionData": {
+            "fullName": "Crossroads",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SPORT",
+                "CENMS",
+                "NEWOR",
+                "ACADI",
+                "STETX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ACADI": {
+        "regionData": {
+            "fullName": "Acadiana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CROSS",
+                "NEWOR",
+                "STETX"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NEWOR": {
+        "regionData": {
+            "fullName": "Greater New Orleans",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "ACADI",
+                "CROSS",
+                "CENMS",
+                "MSGUL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWWI": {
+        "regionData": {
+            "fullName": "Northwest Wisconsin",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENWI",
+                "STWWI",
+                "STEMN",
+                "CENMN",
+                "NTEMN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENWI": {
+        "regionData": {
+            "fullName": "North Central Wisconsin",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "UPPER",
+                "NTEWI",
+                "STEWI",
+                "STWWI",
+                "NTWWI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEWI": {
+        "regionData": {
+            "fullName": "Northeast Wisconsin",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENWI",
+                "UPPER",
+                "STEWI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
+        }
+    },
+    "STWWI": {
+        "regionData": {
+            "fullName": "Southwest Wisconsin",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWWI",
+                "CENWI",
+                "STEWI",
+                "NTWIL",
+                "NTEIA",
+                "STEMN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEWI": {
+        "regionData": {
+            "fullName": "Southeast Wisconsin",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENWI",
+                "NTEWI",
+                "CHICA",
+                "NTWIL",
+                "STWWI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "UPPER": {
+        "regionData": {
+            "fullName": "Upper Peninsula",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENWI",
+                "NTEWI",
+                "NTHMI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Crude Barrier",
+            "health": 1,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Mechanized Infantry",
+            "health": 3,
+            "ownerID": 2
+        }
+    },
+    "NTHMI": {
+        "regionData": {
+            "fullName": "Northern Michigan",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "UPPER",
+                "WESMI",
+                "MIDMI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Light Tank",
+            "health": 5,
+            "ownerID": 1
+        }
+    },
+    "WESMI": {
+        "regionData": {
+            "fullName": "West Michigan",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHMI",
+                "MIDMI",
+                "STEMI",
+                "NTWOH",
+                "NTHIN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIDMI": {
+        "regionData": {
+            "fullName": "Mid Michigan",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMI",
+                "THUMB",
+                "STEMI",
+                "WESMI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "THUMB": {
+        "regionData": {
+            "fullName": "The Thumb",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MIDMI",
+                "STEMI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEMI": {
+        "regionData": {
+            "fullName": "Southeastern Michigan",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMI",
+                "MIDMI",
+                "THUMB",
+                "NTWOH"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWIL": {
+        "regionData": {
+            "fullName": "Northwest Illinois",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWWI",
+                "STEWI",
+                "CHICA",
+                "CENIL",
+                "FORGO",
+                "STEIA",
+                "NTEIA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHICA": {
+        "regionData": {
+            "fullName": "Greater Chicago",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHIN",
+                "EASIL",
+                "CENIL",
+                "NTWIL",
+                "STEWI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "health": 4,
+            "ownerID": 2
+        }
+    },
+    "FORGO": {
+        "regionData": {
+            "fullName": "Forgottonia",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWIL",
+                "CENIL",
+                "STWIL",
+                "NTHMO",
+                "STEIA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENIL": {
+        "regionData": {
+            "fullName": "Central Illinois",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWIL",
+                "CHICA",
+                "EASIL",
+                "STWIL",
+                "FORGO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
+        }
+    },
+    "STWIL": {
+        "regionData": {
+            "fullName": "Southwest Illinois",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENIL",
+                "EASIL",
+                "LILEG",
+                "STEMO",
+                "STLOU",
+                "NTHMO",
+                "FORGO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASIL": {
+        "regionData": {
+            "fullName": "Eastern Illinois",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHICA",
+                "NTHIN",
+                "CENIN",
+                "WABAS",
+                "LILEG",
+                "STWIL",
+                "CENIL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "health": 4,
+            "ownerID": 2
+        }
+    },
+    "LILEG": {
+        "regionData": {
+            "fullName": "Little Egypt",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASIL",
+                "WABAS",
+                "STHIN",
+                "WESKY",
+                "STEMO",
+                "STLOU",
+                "STWIL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHIN": {
+        "regionData": {
+            "fullName": "Northern Indiana",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMI",
+                "NTWOH",
+                "CENIN",
+                "EASIL",
+                "CHICA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
+        }
+    },
+    "CENIN": {
+        "regionData": {
+            "fullName": "Central Indiana",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHIN",
+                "NTWOH",
+                "MIAVA",
+                "STHIN",
+                "INDIA",
+                "WABAS",
+                "EASIL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
+        }
+    },
+    "INDIA": {
+        "regionData": {
+            "fullName": "Greater Indiana",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENIN",
+                "STHIN",
+                "WABAS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "health": 6,
+            "ownerID": 2
+        }
+    },
+    "WABAS": {
+        "regionData": {
+            "fullName": "Wabash Valley",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENIN",
+                "INDIA",
+                "STHIN",
+                "LILEG",
+                "EASIL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
+        }
+    },
+    "STHIN": {
+        "regionData": {
+            "fullName": "Southern Indiana",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WABAS",
+                "INDIA",
+                "CENIN",
+                "MIAVA",
+                "CINCI",
+                "BLUEG",
+                "PENNY",
+                "WESKY",
+                "LILEG"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Missile Defense System",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Special Forces",
+            "health": 8,
+            "ownerID": 2
+        }
+    },
+    "NTWOH": {
+        "regionData": {
+            "fullName": "Northwest Ohio",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMI",
+                "STEMI",
+                "CLEVE",
+                "CENOH",
+                "MIAVA",
+                "CENIN",
+                "NTHIN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CLEVE": {
+        "regionData": {
+            "fullName": "Greater Cleveland",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWPA",
+                "VALLE",
+                "STEOH",
+                "CENOH",
+                "NTWOH"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIAVA": {
+        "regionData": {
+            "fullName": "Miami Valley",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWOH",
+                "CENOH",
+                "CINCI",
+                "STHIN",
+                "CENIN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Motorized Infantry",
+            "health": 4,
+            "ownerID": 1
+        }
+    },
+    "CENOH": {
+        "regionData": {
+            "fullName": "Central Ohio",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWOH",
+                "CLEVE",
+                "STEOH",
+                "STHOH",
+                "CINCI",
+                "MIAVA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CINCI": {
+        "regionData": {
+            "fullName": "Cincinnati",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MIAVA",
+                "CENOH",
+                "STHOH",
+                "CUMBE",
+                "BLUEG",
+                "STHIN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHOH": {
+        "regionData": {
+            "fullName": "Southern Ohio",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENOH",
+                "STEOH",
+                "VALLE",
+                "CUMBE",
+                "CINCI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEOH": {
+        "regionData": {
+            "fullName": "Southeastern Ohio",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENOH",
+                "CLEVE",
+                "VALLE",
+                "STHOH"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "BLUEG": {
+        "regionData": {
+            "fullName": "Bluegrass",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHIN",
+                "CINCI",
+                "CUMBE",
+                "PENNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Light Tank",
+            "health": 6,
+            "ownerID": 1
+        }
+    },
+    "WESKY": {
+        "regionData": {
+            "fullName": "Western Kentucky",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "LILEG",
+                "STHIN",
+                "PENNY",
+                "NASHV",
+                "NTWTN",
+                "STEMO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Mechanized Infantry",
+            "health": 8,
+            "ownerID": 2
+        }
+    },
+    "PENNY": {
+        "regionData": {
+            "fullName": "Pennyroyal Region",
+            "ownerID": 2,
+            "occupierID": 1,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHIN",
+                "BLUEG",
+                "CUMBE",
+                "EASTN",
+                "MIDTN",
+                "NASHV",
+                "WESKY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Motorized Infantry",
+            "health": 6,
+            "ownerID": 1
+        }
+    },
+    "CUMBE": {
+        "regionData": {
+            "fullName": "Cumberland Plateau",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "BLUEG",
+                "CINCI",
+                "STHOH",
+                "VALLE",
+                "CHARL",
+                "STWVA",
+                "EASTN",
+                "PENNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Motorized Infantry",
+            "health": 1,
+            "ownerID": 1
+        }
+    },
+    "NTWTN": {
+        "regionData": {
+            "fullName": "Northwest Tennessee",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STEMO",
+                "WESKY",
+                "NASHV",
+                "CHATT",
+                "STWTN",
+                "NTEAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NASHV": {
+        "regionData": {
+            "fullName": "Nashville",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "WESKY",
+                "PENNY",
+                "MIDTN",
+                "CHATT",
+                "NTWTN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIDTN": {
+        "regionData": {
+            "fullName": "Middle Tennessee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PENNY",
+                "EASTN",
+                "CHATT",
+                "NASHV"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASTN": {
+        "regionData": {
+            "fullName": "Eastern Tennessee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CUMBE",
+                "STWVA",
+                "MOUNT",
+                "CHATT",
+                "MIDTN",
+                "PENNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWTN": {
+        "regionData": {
+            "fullName": "Southwest Tennessee",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWTN",
+                "CHATT",
+                "NTHAL",
+                "NTHMS",
+                "NTEAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHATT": {
+        "regionData": {
+            "fullName": "Chattanooga",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NASHV",
+                "MIDTN",
+                "EASTN",
+                "MOUNT",
+                "NTWGA",
+                "NTHAL",
+                "STWTN",
+                "NTWTN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMS": {
+        "regionData": {
+            "fullName": "Northern Mississippi",
+            "ownerID": 2,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWTN",
+                "NTHAL",
+                "WESAL",
+                "CENMS",
+                "SPORT",
+                "STEAR",
+                "NTEAR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENMS": {
+        "regionData": {
+            "fullName": "Central Mississippi",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMS",
+                "WESAL",
+                "STWAL",
+                "MSGUL",
+                "NEWOR",
+                "CROSS",
+                "SPORT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MSGUL": {
+        "regionData": {
+            "fullName": "Mississippi Gulf Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENMS",
+                "STWAL",
+                "NEWOR"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHAL": {
+        "regionData": {
+            "fullName": "Northern Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHATT",
+                "NTWGA",
+                "EASAL",
+                "WESAL",
+                "NTHMS",
+                "STWTN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESAL": {
+        "regionData": {
+            "fullName": "Western Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHAL",
+                "EASAL",
+                "STEAL",
+                "STWAL",
+                "CENMS",
+                "NTHMS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASAL": {
+        "regionData": {
+            "fullName": "Eastern Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHAL",
+                "NTWGA",
+                "STEAL",
+                "WESAL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWAL": {
+        "regionData": {
+            "fullName": "Southwest Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESAL",
+                "STEAL",
+                "FLPAN",
+                "CENMS",
+                "MSGUL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEAL": {
+        "regionData": {
+            "fullName": "Southeast Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASAL",
+                "STWGA",
+                "FLPAN",
+                "NTWGA",
+                "WESAL",
+                "STWAL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FLPAN": {
+        "regionData": {
+            "fullName": "Florida Panhandle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STWAL",
+                "STEAL",
+                "STWGA",
+                "STEGA",
+                "GAINE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GAINE": {
+        "regionData": {
+            "fullName": "Greater Gainesville",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "FLPAN",
+                "STEGA",
+                "FIRCT",
+                "HALIF",
+                "TAMPA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FIRCT": {
+        "regionData": {
+            "fullName": "First Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GACST",
+                "STEGA",
+                "GAINE",
+                "HALIF"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "HALIF": {
+        "regionData": {
+            "fullName": "Halifax Area",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "FIRCT",
+                "GAINE",
+                "TAMPA",
+                "STWFL",
+                "MIAMI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Crude Barrier",
+            "health": 1,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "TAMPA": {
+        "regionData": {
+            "fullName": "Tampa Bay Area",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GAINE",
+                "HALIF",
+                "STWFL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWFL": {
+        "regionData": {
+            "fullName": "Southwest Florida",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "TAMPA",
+                "HALIF",
+                "MIAMI"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIAMI": {
+        "regionData": {
+            "fullName": "Greater Miami",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWFL",
+                "HALIF"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWGA": {
+        "regionData": {
+            "fullName": "Northwest Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHATT",
+                "MOUNT",
+                "ATHEN",
+                "ATLAN",
+                "STWGA",
+                "STEAL",
+                "EASAL",
+                "NTHAL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ATHEN": {
+        "regionData": {
+            "fullName": "Athens\u00e2\u20ac\u201cClarke",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MOUNT",
+                "PIEDM",
+                "MDLND",
+                "EASGA",
+                "ATLAN",
+                "NTWGA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ATLAN": {
+        "regionData": {
+            "fullName": "Atlanta",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWGA",
+                "ATHEN",
+                "EASGA",
+                "STWGA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASGA": {
+        "regionData": {
+            "fullName": "Eastern Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "ATHEN",
+                "MDLND",
+                "SCLOW",
+                "GACST",
+                "STEGA",
+                "STWGA",
+                "ATLAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWGA": {
+        "regionData": {
+            "fullName": "Southwest Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWGA",
+                "ATLAN",
+                "EASGA",
+                "STEGA",
+                "FLPAN",
+                "STEAL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEGA": {
+        "regionData": {
+            "fullName": "Southeast Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASGA",
+                "GACST",
+                "FIRCT",
+                "GAINE",
+                "FLPAN",
+                "STWGA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GACST": {
+        "regionData": {
+            "fullName": "Georgia Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SCLOW",
+                "EASGA",
+                "STEGA",
+                "FIRCT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PIEDM": {
+        "regionData": {
+            "fullName": "Piedmont",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MOUNT",
+                "MDLND",
+                "ATHEN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MDLND": {
+        "regionData": {
+            "fullName": "Midland",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PIEDM",
+                "MOUNT",
+                "MTRLA",
+                "PEEDE",
+                "SCLOW",
+                "EASGA",
+                "ATHEN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PEEDE": {
+        "regionData": {
+            "fullName": "PeeDee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MTRLA",
+                "SANDH",
+                "STENC",
+                "MDLND",
+                "SCLOW"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SCLOW": {
+        "regionData": {
+            "fullName": "Lowcountry",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "GACST",
+                "EASGA",
+                "MDLND",
+                "PEEDE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MOUNT": {
+        "regionData": {
+            "fullName": "Mountain",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWVA",
+                "MTRLA",
+                "MDLND",
+                "PIEDM",
+                "ATHEN",
+                "NTWGA",
+                "CHATT",
+                "EASTN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MTRLA": {
+        "regionData": {
+            "fullName": "Metrolina",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWVA",
+                "STHVA",
+                "TRIAN",
+                "SANDH",
+                "PEEDE",
+                "MDLND",
+                "MOUNT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "TRIAN": {
+        "regionData": {
+            "fullName": "Triangle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHVA",
+                "BANKS",
+                "STENC",
+                "SANDH",
+                "MTRLA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "BANKS": {
+        "regionData": {
+            "fullName": "Banks",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "HAMPT",
+                "STHVA",
+                "TRIAN",
+                "STENC"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SANDH": {
+        "regionData": {
+            "fullName": "Sandhills",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STENC",
+                "TRIAN",
+                "MTRLA",
+                "PEEDE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STENC": {
+        "regionData": {
+            "fullName": "Southeast North Carolina",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "BANKS",
+                "TRIAN",
+                "SANDH",
+                "PEEDE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ROANO": {
+        "regionData": {
+            "fullName": "Roanoke Region",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHVA",
+                "RICHM",
+                "STHVA",
+                "STWVA",
+                "CHARL",
+                "POTOM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHVA": {
+        "regionData": {
+            "fullName": "Northern Virginia",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMD",
+                "HAMPT",
+                "RICHM",
+                "ROANO",
+                "POTOM"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "RICHM": {
+        "regionData": {
+            "fullName": "Richmond",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHVA",
+                "HAMPT",
+                "STHVA",
+                "ROANO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWVA": {
+        "regionData": {
+            "fullName": "Southwest Virginia",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHARL",
+                "ROANO",
+                "STHVA",
+                "MTRLA",
+                "MOUNT",
+                "EASTN",
+                "CUMBE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHVA": {
+        "regionData": {
+            "fullName": "Southside Virginia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "ROANO",
+                "RICHM",
+                "HAMPT",
+                "BANKS",
+                "TRIAN",
+                "MTRLA",
+                "STWVA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "HAMPT": {
+        "regionData": {
+            "fullName": "Hampton Roads",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASMD",
+                "WESMD",
+                "NTHVA",
+                "RICHM",
+                "STHVA",
+                "BANKS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "VALLE": {
+        "regionData": {
+            "fullName": "Valley",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PITTS",
+                "POTOM",
+                "CHARL",
+                "CUMBE",
+                "STHOH",
+                "STEOH",
+                "CLEVE",
+                "NTWPA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "POTOM": {
+        "regionData": {
+            "fullName": "Potomac Highlands",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PITTS",
+                "WESMD",
+                "NTHVA",
+                "ROANO",
+                "CHARL",
+                "VALLE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHARL": {
+        "regionData": {
+            "fullName": "Charleston",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "VALLE",
+                "POTOM",
+                "ROANO",
+                "STWVA",
+                "CUMBE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMD": {
+        "regionData": {
+            "fullName": "Western Maryland",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "PITTS",
+                "PAHLR",
+                "EASMD",
+                "POTOM",
+                "NTHVA",
+                "HAMPT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASMD": {
+        "regionData": {
+            "fullName": "Eastern Maryland",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "DELEW",
+                "PHILL",
+                "PAHLR",
+                "WESMD",
+                "HAMPT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "DELEW": {
+        "regionData": {
+            "fullName": "State of Deleware",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "PHILL",
+                "EASMD"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWPA": {
+        "regionData": {
+            "fullName": "Northwest Pennsylvania",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNY",
+                "NTHPA",
+                "PITTS",
+                "VALLE",
+                "CLEVE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHPA": {
+        "regionData": {
+            "fullName": "Northern Pennsylvania",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNY",
+                "NTEPA",
+                "CENPA",
+                "PITTS",
+                "NTWPA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEPA": {
+        "regionData": {
+            "fullName": "Northeast Pennsylvania",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHNY",
+                "NEWYO",
+                "NTHNJ",
+                "PHILL",
+                "CENPA",
+                "NTHPA",
+                "WESNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PITTS": {
+        "regionData": {
+            "fullName": "Greater Pittsburg",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWPA",
+                "NTHPA",
+                "CENPA",
+                "PAHLR",
+                "WESMD",
+                "POTOM",
+                "VALLE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENPA": {
+        "regionData": {
+            "fullName": "Central Pennsylvania",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHPA",
+                "NTEPA",
+                "PHILL",
+                "PAHLR",
+                "PITTS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PAHLR": {
+        "regionData": {
+            "fullName": "Pennsylvania Highlands Region",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENPA",
+                "PHILL",
+                "EASMD",
+                "WESMD",
+                "PITTS"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PHILL": {
+        "regionData": {
+            "fullName": "Greater Philadelphia",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTEPA",
+                "NTHNJ",
+                "STHNJ",
+                "DELEW",
+                "EASMD",
+                "PAHLR",
+                "CENPA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHNJ": {
+        "regionData": {
+            "fullName": "North Jersey",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NEWYO",
+                "NTEPA",
+                "PHILL",
+                "STHNJ"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNJ": {
+        "regionData": {
+            "fullName": "South Jersey",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNJ",
+                "PHILL"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHNY": {
+        "regionData": {
+            "fullName": "North Country",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHVT",
+                "ALBAN",
+                "MOHAW",
+                "FINLA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESNY": {
+        "regionData": {
+            "fullName": "Western New York",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "FINLA",
+                "STHNY",
+                "NTEPA",
+                "NTHPA",
+                "NTWPA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FINLA": {
+        "regionData": {
+            "fullName": "Finger Lakes",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNY",
+                "MOHAW",
+                "STHNY",
+                "WESNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MOHAW": {
+        "regionData": {
+            "fullName": "Mohawk Valley",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNY",
+                "ALBAN",
+                "STHNY",
+                "FINLA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ALBAN": {
+        "regionData": {
+            "fullName": "Albany",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHVT",
+                "STHVT",
+                "WESMA",
+                "NEWYO",
+                "STHNY",
+                "MOHAW",
+                "NTHNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNY": {
+        "regionData": {
+            "fullName": "Southern Tier",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNY",
+                "FINLA",
+                "MOHAW",
+                "ALBAN",
+                "NEWYO",
+                "NTEPA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NEWYO": {
+        "regionData": {
+            "fullName": "New York City",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CONNE",
+                "WESMA",
+                "ALBAN",
+                "STHNY",
+                "NTEPA",
+                "NTHNJ"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CONNE": {
+        "regionData": {
+            "fullName": "Connecticut",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NEWYO",
+                "WESMA",
+                "NTHMA",
+                "RHODE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "RHODE": {
+        "regionData": {
+            "fullName": "Rhode Island",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CONNE",
+                "NTHMA",
+                "STHMA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMA": {
+        "regionData": {
+            "fullName": "Western Massachusetts",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CONNE",
+                "NTHMA",
+                "STHNH",
+                "STHVT",
+                "ALBAN",
+                "NEWYO"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMA": {
+        "regionData": {
+            "fullName": "Northern Massachusetts",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHMA",
+                "RHODE",
+                "CONNE",
+                "WESMA",
+                "STHNH"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHMA": {
+        "regionData": {
+            "fullName": "Southern Massachusetts",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMA",
+                "RHODE"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHVT": {
+        "regionData": {
+            "fullName": "Northern Vermont",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNH",
+                "STHVT",
+                "ALBAN",
+                "NTHNY"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHVT": {
+        "regionData": {
+            "fullName": "Southern Vermont",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHVT",
+                "NTHNH",
+                "STHNH",
+                "WESMA",
+                "ALBAN"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHNH": {
+        "regionData": {
+            "fullName": "Northern New Hampshire",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHME",
+                "STHNH",
+                "STHVT",
+                "NTHVT"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNH": {
+        "regionData": {
+            "fullName": "Southern New Hampshire",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHME",
+                "NTHNH",
+                "STHVT",
+                "WESMA",
+                "NTHMA"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHME": {
+        "regionData": {
+            "fullName": "Northern Maine",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHME"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHME": {
+        "regionData": {
+            "fullName": "Southern Maine",
+            "ownerID": 1,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHME",
+                "NTHNH",
+                "STHNH"
+            ],
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 5,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    }
+}

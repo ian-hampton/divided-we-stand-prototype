@@ -806,5 +806,25 @@
                 "Victory": 0
             }
         }
+    },
+    "Code Test": {
+        "Game ID": "temp",
+        "Game #": 12,
+        "Information": {
+            "Victory Conditions": "Randomized Sets",
+            "Map": "United States 2.0",
+            "Accelerated Schedule": "Enabled",
+            "Turn Duration": "48 hours",
+            "Fog of War": "Disabled",
+            "Version": "Development",
+            "Scenario": "Standard"
+        },
+        "Statistics": {
+            "Player Count": 4,
+            "Game End Turn": 0,
+            "Days Ellapsed": 0,
+            "Game Started": "10/10/2024",
+            "Game Ended": "Present"
+        }
     }
 }

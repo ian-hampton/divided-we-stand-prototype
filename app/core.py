@@ -13,8 +13,11 @@ from app import interpreter
 from app import public_actions
 from app import private_actions
 from app import checks
-from app import resgraphs
 from app import events
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
+from app.wardata import WarData
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -23,118 +26,132 @@ import gspread
 #TURN PROCESSING PROCEDURE
 ################################################################################
 
-def resolve_stage1_processing(full_game_id, starting_region_list, player_color_list):
+def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
     '''
     Resolves turn processing for a game in stage one.
 
     Parameters:
-    - full_game_id: The full game_id of the active game.
+    - game_id: The full game_id of the active game.
     - starting_region_list: A list of player starting region ids gathered from turn resolution HTML form. 
     - player_color_list: A list of player colors gathered from turn resolution HTML form. 
     '''
-    
-    game_id = int(full_game_id[-1])
+
+    # get game files
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+
+    # create hex color list
     hexadecimal_player_color_list = []
     for player_color in player_color_list:
         new_player_color = player_colors_hex[player_color]
         hexadecimal_player_color_list.append(new_player_color)
-   
-    #read and update regdata
-    regdata_list = read_file(f'gamedata/{full_game_id}/regdata.csv', 0)
+    
+
+    # Place Starting Capitals For Players
     random_assignment_list = []
     for index, region_id in enumerate(starting_region_list):
         player_id = index + 1
-        region_found = False
-        for region in regdata_list:
-            if region[0] == region_id:
-                region[2] = str([player_id, 0])
-                region[4] = str(["Capital", 5])
-                region_found = True
-                break
-        if region_found == False:
+        if region_id in regdata_dict:
+            starting_region = Region(region_id, game_id)
+            starting_region_improvement = Improvement(region_id, game_id)
+            starting_region.set_owner_id(player_id)
+            starting_region_improvement.set_improvement("Capital")
+        else:
             random_assignment_list.append(player_id)
+    
+    # place starting capitals for players who want random start
+    NO_RANDOM_PLACEMENT_SET = {'UPPER', 'NTHMI', 'WESMI', 'MIDMI', 'THUMB', 'STEMI',
+                                'FLPAN', 'GAINE', 'FIRCT', 'HALIF', 'TAMPA', 'STWFL', 'MIAMI',
+                                'WESNY', 'FINLA', 'STHNY', 'MOHAW', 'NTHNY', 'ALBAN', 'NEWYO', 'CONNE', 'RHODE', 'WESMA', 'NTHMA', 'STHMA', 'NTHVT', 'STHVT', 'NTHNH', 'STHNH', 'STHME', 'NTHME'}
     for random_assignment_player_id in random_assignment_list:
         while True:
+            # randomly select a region
             conflict_detected = False
-            random_region_roll = random.randint(2, len(regdata_list) - 1)
-            random_region_id = regdata_list[random_region_roll][0]
-            regions_in_radius = get_regions_in_radius(random_region_id, 3, regdata_list)
-            for radius_region_id in regions_in_radius:
-                for region in regdata_list:
-                    if region[0] == radius_region_id:
-                        control_data = ast.literal_eval(region[2])
-                        if control_data[0] != 0:
-                            conflict_detected = True
-                            break
+            region_id_list = list(regdata_dict.keys()) 
+            random_region_id = random.sample(region_id_list, 1)[0]
+            random_region = Region(random_region_id, game_id)
+            # if region not allowed restart loop
+            if random_region_id in NO_RANDOM_PLACEMENT_SET:
+                continue
+            # check if there is a player within three regions
+            regions_in_radius = random_region.get_regions_in_radius(3)
+            for candidate_region_id in regions_in_radius:
+                candidate_region = Region(candidate_region_id, game_id)
+                # if player found restart loop
+                if candidate_region.owner_id != 0:
+                    conflict_detected = True
+                    break
+            # if no player found place player
             if conflict_detected == False:
-                for region in regdata_list:
-                    if region[0] == random_region_id:
-                        region[2] = str([random_assignment_player_id, 0])
-                        region[4] = str(["Capital", 5])
-                        break
+                random_region.set_owner_id(random_assignment_player_id)
+                random_region_improvement = Improvement(random_region_id, game_id)
+                random_region_improvement.set_improvement("Capital")
                 break
-    with open(f'gamedata/{full_game_id}/regdata.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(regdata_list)
     
-    #read and update playerdata
-    playerdata_list = read_file(f'gamedata/{full_game_id}/playerdata.csv', 1)
+    # read and update playerdata
+    playerdata_list = read_file(f'gamedata/{game_id}/playerdata.csv', 1)
     for index, player in enumerate(playerdata_list):
         player[2] = hexadecimal_player_color_list[index]
     early_player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count"]
-    with open(f'gamedata/{full_game_id}/playerdata.csv', 'w', newline='') as file:
+    with open(f'gamedata/{game_id}/playerdata.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(early_player_data_header)
         writer.writerows(playerdata_list)
     
-    #update active_games.json
+    # update active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    #generate and update maps
-    current_turn_num = get_current_turn_num(game_id)
-    map_name = get_map_name(game_id)
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
-    resource_map = map.ResourceMap(game_id, map_name)
-    control_map = map.ControlMap(game_id, map_name)
+    # generate and update maps
+    current_turn_num = get_current_turn_num(int(game_id[-1]))
+    map_name = get_map_name(int(game_id[-1]))
+    main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
+    resource_map = map.ResourceMap(int(game_id[-1]), map_name)
+    control_map = map.ControlMap(int(game_id[-1]), map_name)
     resource_map.create()
     main_map.place_random()
     main_map.update()
     resource_map.update()
     control_map.update()
 
-def resolve_stage2_processing(full_game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
+def resolve_stage2_processing(game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
     '''
     Resolves turn processing for a game in stage two.
 
     Parameters:
-    - full_game_id: The full game_id of the active game.
+    - game_id: The full game_id of the active game.
     - player_nation_name_list: A list of player nation names gathered from turn resolution HTML form. 
     - player_government_list: A list of player government choices gathered from turn resolution HTML form. 
     - player_foreign_policy_list: A list of player fp choices gathered from turn resolution HTML form. 
     - player_victory_condition_set_list: A list of player vc set choices gathered from turn resolution HTML form. 
     '''
-
-    game_id = int(full_game_id[-1])
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)
-    #read and update playerdata
+    research_data_dict = get_scenario_dict(game_id, "Technologies")
+    five_point_research_list = []
+    for key in research_data_dict:
+        tech = research_data_dict[key]
+        if tech["Cost"] == 5:
+            five_point_research_list.append(key)
+    
+    # read and update playerdata
     for index, player in enumerate(playerdata_list):
         if player[0] != "":
-            #update basic nation info
+            # update basic nation info
             player[1] = player_nation_name_list[index].title()
             player[3] = player_government_list[index]
             player[4] = player_foreign_policy_list[index]
-            #confirm victory condition set
+            # confirm victory condition set
             if player_victory_condition_set_list[index] == "Set A":
                 del player[9]
             else:
                 del player[8]
-            #apply income rates
+            # apply income rates
             if player[3] == 'Republic':
                 rate_list = republic_rates
             elif player[3] == 'Technocracy':
@@ -157,108 +174,89 @@ def resolve_stage2_processing(full_game_id, player_nation_name_list, player_gove
                 resource_data[3] = rate
                 playerdata_list[index][j] = str(resource_data)
                 j += 1
-            #Determine stability value
-            if player[3] == "Republic" or player[3] == "Technocracy" or player[3] == "Protectorate":
-                player[7] = ["Stability 4/10", "4 from Chosen Government"]
-            elif player[3] == "Oligarchy" or player[3] == "Totalitarian" or player[3] == "Military Junta":
-                player[7] = ["Stability 3/10", "3 from Chosen Government"]
-            else:
-                player[7] = ["Stability 2/10", "2 from Chosen Government"]
-            #Determine unlocked alliances OBSOLETE CODE DELETE ME
-            if player[4] == "Diplomatic":
-                player[20] = [True, True, True, False, False]
-            elif player[4] == "Commercial":
-                player[20] = [True, True, False, False, False]
-            elif player[4] == "Isolationist":
-                player[20] = [True, False, False, False, False]
-            elif player[4] == "Imperialist":
-                player[20] = [True, True, False, False, False]
-            #Give starting research
-            starting_list = []
-            five_point_research_list = ['Coal Mining', 'Oil Drilling', 'Wind Turbines', 'City Resettlement', 'Surface Mining', 'Metallurgy', 'Infantry', 'Motorized Infantry', 'Standing Army', 'Basic Defenses']
+            # give starting research
             if player[3] == "Technocracy":
-                random_hard_list = random.sample(five_point_research_list, len(five_point_research_list))
-                for j in range(3):
-                    starting_list.append(random_hard_list.pop())
-                    j += 1
-            player[26] = starting_list
+                starting_list = random.sample(five_point_research_list, 3)
+                player[26] = str(starting_list)
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
     
-    #create crime syndicate tracking file
-    steal_tracking_dict = {}
-    for playerdata in playerdata_list:
-        if player[3] == 'Crime Syndicate':
-            inner_dict = {
-                'Nation Name': None,
-                'Streak': 0,
-            }
-            steal_tracking_dict[player[1]] = inner_dict
-    with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
-        json.dump(steal_tracking_dict, json_file, indent=4)
-    
-    #create records
+    # create records
     file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
     starting_records_data = [['Turn', 0]]
     for playerdata in playerdata_list:
         starting_records_data.append([playerdata[1], 0])
     for file_name in file_names:
-        with open(f'gamedata/{full_game_id}/{file_name}.csv', 'w', newline='') as file:
+        with open(f'gamedata/{game_id}/{file_name}.csv', 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerows(starting_records_data)
 
-    #create trucedata.csv
-    with open(f'gamedata/{full_game_id}/trucedata.csv', 'w', newline='') as file:
+    # create trucedata.csv
+    with open(f'gamedata/{game_id}/trucedata.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(trucedata_header)
 
-    #update misc info in playerdata
+    # update misc info in playerdata
     for i in range(player_count):
         player_id = i + 1
-        checks.update_misc_info(full_game_id, player_id)
-    #update improvement count in playerdata
+        checks.update_misc_info(game_id, player_id)
+    # update improvement count in playerdata
     for i in range(player_count):
         player_id = i + 1
-        checks.update_improvement_count(full_game_id, player_id)
-    #update income in playerdata
+        checks.update_improvement_count(game_id, player_id)
+    # update income in playerdata
     current_turn_num = 0
-    checks.update_income(full_game_id, current_turn_num)
-    #gain starting resources
+    checks.update_income(game_id, current_turn_num)
+    
+    # gain starting resources
     for player in playerdata_list:
         dollars_data = ast.literal_eval(player[9])
         political_power_data = ast.literal_eval(player[10])
         technology_data = ast.literal_eval(player[11])
-        dollars_data[0] = '5.00'
+        dollars_data[0] = '15.00'
         political_power_data[0] = '1.00'
         technology_data[0] = '2.00'
         player[9] = str(dollars_data)
         player[10] = str(political_power_data)
         player[11] = str(technology_data)
 
-    #update playerdata.csv
+    # update playerdata.csv
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
     
-    #read and update game_settings
+    # update game_settings
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "1"
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
-    active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
+    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
+    steal_tracking_dict = {}
+    for playerdata in playerdata_list:
+        if playerdata[3] == 'Crime Syndicate':
+            inner_dict = {
+                'Nation Name': None,
+                'Streak': 0,
+            }
+            steal_tracking_dict[playerdata[1]] = inner_dict
+    active_games_dict[game_id]["Steal Action Record"] = steal_tracking_dict
+    transactions_dict = {}
+    for playerdata in playerdata_list:
+        transactions_dict[playerdata[1]] = 0
+    active_games_dict[game_id]["Transactions Record"] = transactions_dict
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
     #update visuals
     current_turn_num = 1
-    update_announcements_sheet(full_game_id, False, [], [])
-    map_name = active_games_dict[full_game_id]["Information"]["Map"]
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
+    update_announcements_sheet(game_id, False, [], [])
+    map_name = active_games_dict[game_id]["Information"]["Map"]
+    main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
     main_map.update()
 
 def resolve_turn_processing(full_game_id, public_actions_list, private_actions_list):
@@ -271,9 +269,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     - private_actions_list: A list of player private actions gathered from turn resolution HTML form. 
     '''
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)
     current_turn_num = get_current_turn_num(int(full_game_id[-1]))
@@ -290,29 +285,16 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     library = get_library(full_game_id)
     for player_actions_list in public_actions_list:
         for i, action in enumerate(player_actions_list):
-            player_actions_list[i] = interpreter.check_action(action, library)
+            player_actions_list[i] = interpreter.check_action(action, library, full_game_id)
     for player_actions_list in private_actions_list:
         for i, action in enumerate(player_actions_list):
-            player_actions_list[i] = interpreter.check_action(action, library)
-
-    steal_tracking_dict = {}
-    for playerdata in playerdata_list:
-        if playerdata[3] == 'Crime Syndicate':
-            inner_dict = {
-                'Nation Name': None,
-                'Streak': 0,
-            }
-            steal_tracking_dict[playerdata[1]] = inner_dict
-    if steal_tracking_dict != {}:
-        with open(f'gamedata/{full_game_id}/steal_tracking.json', 'w') as json_file:
-            json.dump(steal_tracking_dict, json_file, indent=4)
+            player_actions_list[i] = interpreter.check_action(action, library, full_game_id)
 
 
     #Declare Action Dictionaries
     public_actions_dict = {
         'Surrender': [],
         'White Peace': [],
-        'Sanction': [],
         'Purchase': [],
         'Research': [],
         'Remove': [],
@@ -348,7 +330,8 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
                 if action_type in public_actions_dict:
                     public_actions_dict[action_type].append(action)
     #process actions
-    public_actions.resolve_trades(playerdata_filepath, regdata_filepath, full_game_id, diplomacy_log)
+    public_actions.resolve_trades(full_game_id, diplomacy_log)
+    print("Resolving public actions...")
     if public_actions_list != []:
         update_control_map = False
         if len(public_actions_dict['Surrender'] + public_actions_dict['White Peace']) > 0:
@@ -357,8 +340,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             update_control_map = True
         if len(public_actions_dict['Research']) > 0:
             player_action_logs = public_actions.resolve_research_actions(public_actions_dict['Research'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Sanction']) > 0:
-            diplomacy_log, player_action_logs = public_actions.resolve_declared_sanctions(public_actions_dict['Sanction'], full_game_id, current_turn_num, diplomacy_log, player_action_logs)
         if len(public_actions_dict['Alliance']) > 0:
             diplomacy_log, player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance'], current_turn_num, full_game_id, diplomacy_log, player_action_logs)
         if len(public_actions_dict['Purchase']) > 0:
@@ -375,7 +356,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             player_action_logs = public_actions.resolve_missile_builds(public_actions_dict['Make'], full_game_id, player_action_logs)
         if len(public_actions_dict['Event']) > 0:
             player_action_logs = public_actions.resolve_event_actions(public_actions_dict['Event'], full_game_id, current_turn_num, player_action_logs)
-        print('Public action processing completed!')
 
 
     #Post Public Action Checks
@@ -400,6 +380,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #process actions
     player_resource_market_incomes = False
     player_action_logs, player_resource_market_incomes = public_actions.resolve_market_actions(public_actions_dict['Buy'], public_actions_dict['Sell'], private_actions_dict['Steal'], full_game_id, current_turn_num, player_count, player_action_logs)    
+    print("Resolving private actions...")
     if private_actions_list != []:
         player_action_logs = private_actions.resolve_unit_withdraws(private_actions_dict['Withdraw'], full_game_id, player_action_logs, current_turn_num)
         if len(private_actions_dict['Disband']) > 0:
@@ -413,43 +394,30 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         if len(private_actions_dict['Move']) > 0:
             player_action_logs = private_actions.resolve_unit_movements(private_actions_dict['Move'], full_game_id, player_action_logs)
             update_control_map = True
-        print('Private action processing completed!')
 
 
-    #Save Player Logs
+    #Save Logs
+    # clear all files in log directory
+    directory = f'gamedata/{full_game_id}/logs'
+    os.makedirs(directory, exist_ok=True)
+    # player logs
     for index, action_log in enumerate(player_action_logs):
-        directory = f'gamedata/{full_game_id}/logs'
-        os.makedirs(directory, exist_ok=True)
         filename = os.path.join(directory, f'Player #{index + 1}.txt')
         with open(filename, 'w') as file:
             for string in action_log:
                 file.write(string + '\n')
-
-
-    #Save War Logs
-    wardata_list = read_file(wardata_filepath, 2)
-    for wardata in wardata_list:
-        war_id = int(wardata[0])
-        war_status = wardata[13]
-        war_log = ast.literal_eval(wardata[14])
-        os.makedirs(directory, exist_ok=True)
-        filename = os.path.join(directory, f'War #{war_id}.txt')
-        if war_status == 'Ongoing':
-            with open(filename, 'w') as file:
-                for entry in war_log:
-                    file.write(entry + '\n')
-    for wardata in wardata_list:
-        wardata[14] = str([])
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(wardata_header_a)
-        writer.writerow(wardata_header_b)
-        writer.writerows(wardata_list)
+    # war logs
+    from app.wardata import WarData
+    wardata = WarData(full_game_id)
+    wardata.export_all_logs()
 
 
     #End of Turn Checks and Updates
+    print("Resolving end of turn updates...")
     diplomacy_log = checks.total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_log)
     diplomacy_log = run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diplomacy_log)
+    wardata.add_warscore_from_occupations()
+    wardata.update_totals()
     for i in range(player_count):
         player_id = i + 1
         checks.gain_income(full_game_id, player_id)
@@ -470,16 +438,10 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         checks.update_improvement_count(full_game_id, player_id)
     #update income in playerdata
     checks.update_income(full_game_id, current_turn_num)
-    #update sanctions
-    diplomacy_log, reminders_list = checks.update_sanctions(full_game_id, diplomacy_log, reminders_list)
     #update alliances
     diplomacy_log, reminders_list = checks.update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_list)
     for i in range(player_count):
         player_id = i + 1
-        #update stability
-        checks.update_stability(full_game_id, player_id, current_turn_num)
-        #zero stability check
-        diplomacy_log = checks.check_stability(full_game_id, player_id, current_turn_num, diplomacy_log)
         #collect resource market income
         checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
     #update income in playerdata
@@ -494,13 +456,12 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     event_pending = False
     if not player_has_won:
         if current_turn_num % 4 == 0:
-            checks.bonus_phase_heals(full_game_id)
+            checks.bonus_phase_heals(player_id, full_game_id)
             diplomacy_log.append('All units and defensive improvements have regained 2 health.')
         #event procedure
         if current_turn_num % 8 == 0:
+            print("Triggering an event...")
             diplomacy_log = events.trigger_event(full_game_id, current_turn_num, diplomacy_log)
-            checks.update_stability(full_game_id, player_id, current_turn_num)
-            diplomacy_log = checks.check_stability(full_game_id, player_id, current_turn_num, diplomacy_log)
         with open(f'active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
         current_event_dict = active_games_dict[full_game_id]["Current Event"]
@@ -526,7 +487,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #Update Visuals
     current_turn_num = get_current_turn_num(int(full_game_id[-1]))
     update_announcements_sheet(full_game_id, event_pending, diplomacy_log, reminders_list)
-    resgraphs.update_all(full_game_id)
+    #resgraphs.update_all(full_game_id)
     main_map = map.MainMap(int(full_game_id[-1]), map_name, current_turn_num)
     main_map.update()
     if update_control_map:
@@ -537,7 +498,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 #TURN PROCESSING FUNCTIONS
 ################################################################################
 
-def create_new_game(full_game_id, form_data_dict, profile_ids_list):
+def create_new_game(game_id, form_data_dict, profile_ids_list):
     '''
     Backend code for creating the files for a new game. Returns nothing.
 
@@ -553,10 +514,6 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
 
-    #get scenario data
-    improvement_data_dict = get_scenario_dict(full_game_id, "Improvements")
-
-
     #datetime stuff
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
@@ -566,28 +523,28 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     #to be added
 
     #erase old game files
-    erase_game(full_game_id)
+    erase_game(game_id)
     
     #update active_games
-    active_games_dict[full_game_id]["Game Name"] = form_data_dict["Game Name"]
-    active_games_dict[full_game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
-    active_games_dict[full_game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
-    active_games_dict[full_game_id]["Information"]["Map"] = form_data_dict["Map"]
-    active_games_dict[full_game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
-    active_games_dict[full_game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
-    active_games_dict[full_game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
-    active_games_dict[full_game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
-    active_games_dict[full_game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
-    active_games_dict[full_game_id]["Game #"] = len(game_records_dict) + 1
-    active_games_dict[full_game_id]["Information"]["Version"] = game_version
-    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = 0
-    active_games_dict[full_game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[full_game_id]["Statistics"]["Region Disputes"] = 0
-    active_games_dict[full_game_id]["Inactive Events"] = []
-    active_games_dict[full_game_id]["Active Events"] = []
-    active_games_dict[full_game_id]["Current Event"] = {}
-    active_games_dict[full_game_id]["Game Active"] = True
+    active_games_dict[game_id]["Game Name"] = form_data_dict["Game Name"]
+    active_games_dict[game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
+    active_games_dict[game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
+    active_games_dict[game_id]["Information"]["Map"] = form_data_dict["Map"]
+    active_games_dict[game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
+    active_games_dict[game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
+    active_games_dict[game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
+    active_games_dict[game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
+    active_games_dict[game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
+    active_games_dict[game_id]["Game #"] = len(game_records_dict) + 1
+    active_games_dict[game_id]["Information"]["Version"] = game_version
+    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
+    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
+    active_games_dict[game_id]["Statistics"]["Region Disputes"] = 0
+    active_games_dict[game_id]["Inactive Events"] = []
+    active_games_dict[game_id]["Active Events"] = {}
+    active_games_dict[game_id]["Current Event"] = {}
+    active_games_dict[game_id]["Game Active"] = True
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
@@ -613,18 +570,31 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
-    #copy map data
+    #get scenario data
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+
+    #copy starting map images
+    files_destination = f'gamedata/{game_id}'
     match form_data_dict["Map"]:
         case "United States 2.0":
             map = 'united_states'
         case _:
             map = 'united_states'
     starting_map_images = ['resourcemap', 'controlmap']
-    files_destination = f'gamedata/{full_game_id}'
-    shutil.copy(f"maps/{map}/regdata.csv", files_destination)
     for map_filename in starting_map_images:
         shutil.copy(f"maps/{map}/default.png", f"{files_destination}/images")
-        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{full_game_id}/images/{map_filename}.png")
+        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{game_id}/images/{map_filename}.png")
+    
+    #create regdata.json
+    shutil.copy(f"maps/{map}/regdata.json", files_destination)
+    if form_data_dict["Scenario"] == 'Standard':
+        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        for region_id in regdata_dict:
+            regdata_dict[region_id]["regionData"]["infection"] = 0
+            regdata_dict[region_id]["regionData"]["quarantine"] = False
+        with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
+            json.dump(regdata_dict, json_file, indent=4)
 
     #create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
@@ -632,14 +602,13 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
         writer = csv.writer(file)
         writer.writerow(rm_header)
     
-    #create wardata.csv file
-    wardata_filepath = f'{files_destination}/wardata.csv'
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(wardata_header_a)
-        writer.writerow(wardata_header_b)
+    # create wardata.json
+    wardata_dict = {}
+    with open(f'gamedata/{game_id}/wardata.json', 'w') as json_file:
+        json.dump(wardata_dict, json_file, indent=4)
 
     #create vc_overrides.json
+    # TO DO: replace this with length 3 lists for each nation in active_games
     vc_overrides_dict = {
         "Dual Loyalty": [False, False, False, False, False, False, False, False, False, False],
         "Tight Leash": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -654,7 +623,7 @@ def create_new_game(full_game_id, form_data_dict, profile_ids_list):
     player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count","Status","Global ID"]
     player_data_temp_a = ["TBD","#ffffff","TBD","TBD","0/0","1:1","TBD"]
     victory_conditions_list = []
-    player_data_temp_b = [['0.00',100,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],[False, False, False, False],[0,0],['Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral'],['0.00','0.00','0.00','0.00'],['Capital Resource: None.','Owned Regions: 0','Occupied Regions: 0','Undeveloped Regions: 0','You cannot issue Economic Sanctions.','You cannot issue Military Sanctions.'],"None","[]",[0] * len(improvement_data_dict), 'Independent Nation']
+    player_data_temp_b = [['0.00',100,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],[False, False, False, False],[0,0],['Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral'],['0.00','0.00','0.00','0.00'],['Capital Resource: None.','Owned Regions: 0','Occupied Regions: 0','Undeveloped Regions: 0','You cannot issue Economic Sanctions.','You cannot issue Military Sanctions.'],"[]","[]",[0] * len(improvement_data_dict), 'Independent Nation']
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
@@ -712,7 +681,7 @@ def erase_game(full_game_id):
 
 def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     '''
-    Gathers all the needed data for a player's nation sheet data and spits it out as massive unorganized list that only nation_sheet.html can make sense of.
+    Gathers all the needed data for a player's nation sheet data and spits it as a dict.
 
     Parameters:
     - game_id: The full game_id of the active game.
@@ -722,14 +691,11 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     RELATIONS_NAME_LIST = ['Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', ]
     playerdata = playerdata_list[player_id - 1]
     player_research_list = ast.literal_eval(playerdata[26])
     player_information_dict = {
-        'Stability': {},
         'Victory Conditions Data': {},
         'Resource Data': {},
         'Alliance Data': {},
@@ -747,12 +713,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Military Capacity'] = playerdata[5]
     player_information_dict['Trade Fee'] = playerdata[6]
     player_information_dict['Status'] = playerdata[28]
-
-    #get stability data
-    stability_raw_list = ast.literal_eval(playerdata[7])
-    player_information_dict['Stability']['Header'] = stability_raw_list.pop(0)
-    stability_data = "<br>".join(stability_raw_list)
-    player_information_dict['Stability']['Data'] = stability_data
     
     #get victory condition data
     victory_conditions_list = ast.literal_eval(playerdata[8])
@@ -782,12 +742,7 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Resource Data']['Rate List'] = rate_list
 
     #alliance data
-    alliance_count, alliance_capacity = get_alliance_count(playerdata)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
-        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
-            alliance_capacity += 1
+    alliance_count, alliance_capacity = get_alliance_count(game_id, playerdata)
     player_information_dict['Alliance Data']['Name List'] = ALLIANCE_LIST
     alliance_colors = []
     alliance_data_list = update_alliance_data(player_research_list)
@@ -844,14 +799,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Misc Info']['Owned Regions'] = misc_info[1]
     player_information_dict['Misc Info']['Occupied Regions'] = misc_info[2]
     player_information_dict['Misc Info']['Undeveloped Regions'] = misc_info[3]
-    if 'Sanctioning' not in misc_info[4]:
-        player_information_dict['Misc Info']['Economic Sanctions'] = misc_info[4]
-    else:
-        player_information_dict['Misc Info']['Economic Sanctions'] = misc_info[4][:-5]
-    if 'Sanctioning' not in misc_info[5]:
-        player_information_dict['Misc Info']['Military Sanctions'] = misc_info[5]
-    else:
-        player_information_dict['Misc Info']['Military Sanctions'] = misc_info[5][:-5]
 
     #income details
     income_details = ast.literal_eval(playerdata[25])
@@ -967,7 +914,7 @@ def update_turn_num(game_id):
         json.dump(active_games_dict, json_file, indent=4)
 
 def identify(action):
-    ACTIONS_LIST = ['Surrender', 'White Peace', 'Sanction', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
+    ACTIONS_LIST = ['Surrender', 'White Peace', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
     for action_type in ACTIONS_LIST:
         if action_type.lower() == action[:len(action_type)].lower():
             return action_type
@@ -998,9 +945,7 @@ def get_library(game_id):
     
     #get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
-    regdata_list = read_file(regdata_filepath, 2)
 
     #get scenario files
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
@@ -1011,8 +956,6 @@ def get_library(game_id):
     #create library of game terms
     library = {
         'Nation Name List': [playerdata[1] for playerdata in playerdata_list],
-        'Region IDs': [region[0] for region in regdata_list],
-        'Sanction Type List': ['Economic Sanctions', 'Military Sanctions'],
         'Research Name List': list(agenda_data_dict.keys()) + list(research_data_dict.keys()),
         'Improvement List': list(improvement_data_dict.keys()),
         'Alliance Type List': ALLIANCE_LIST,
@@ -1130,7 +1073,7 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
 #SHEETS API BULLSHIT
 ################################################################################
 
-def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, reminders_list):
+def update_announcements_sheet(full_game_id, event_pending, diplomacy_log: list, reminders_list: list):
     '''
     Updates the Announcements Google Sheet.
 
@@ -1142,10 +1085,8 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
     '''
 
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
-    wardata_list = read_file(wardata_filepath, 2)
     trucedata_list = read_file(trucedata_filepath, 1)
 
     #get needed data from playerdata.csv
@@ -1175,11 +1116,12 @@ def update_announcements_sheet(full_game_id, event_pending, diplomacy_log, remin
         game_name_output = f'''"{game_name}"'''
         date_output = f'{season} {year} - Turn {current_turn_num} Bonus Phase'
 
-    #get needed data from wardata.csv
-    for war in wardata_list:
-        if war[13] == 'Ongoing':
-            war_name = war[11]
-            diplomacy_log.insert(0, f'{war_name} is ongoing.')
+    #get needed data from wardata
+    from app.wardata import WarData
+    wardata = WarData(full_game_id)
+    for war in wardata.wardata_dict:
+        if wardata.wardata_dict[war]["outcome"] == "TBD":
+            diplomacy_log.insert(0, f'{war} is ongoing.')
 
     #get needed data from trucedata.csv
     for truce in trucedata_list:
@@ -1338,15 +1280,19 @@ def update_text_color_new(wks, cell_range, color):
 #DIPLOMACY SUB-FUNCTIONS
 ################################################################################
 
-def get_alliance_count(playerdata):
+def get_alliance_count(game_id, playerdata):
     '''
     Gets a count of a player's active alliances and their total alliance capacity.
 
     Parameters:
     - playerdata: A single playerdata list from playerdata.csv.
     '''
-    alliance_count = 0
     relations_data = ast.literal_eval(playerdata[22])
+    player_research_list = ast.literal_eval(playerdata[26])
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    
+    alliance_count = 0
     for index, relation in enumerate(relations_data):
         if index == 0:
             continue
@@ -1355,9 +1301,18 @@ def get_alliance_count(playerdata):
             alliance_type = f'{entry_data[0]} {entry_data[1]}'
             if alliance_type in ALLIANCE_LIST and alliance_type != 'Non-Aggression Pact':
                 alliance_count += 1
+    
     alliance_limit = 2
     if 'International Cooperation' in ast.literal_eval(playerdata[26]):
         alliance_limit += 1
+    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
+        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
+            alliance_limit += 1
+    if playerdata[3] == 'Republic':
+        alliance_limit += 1
+    if 'Power Broker' in player_research_list:
+        alliance_limit += 1
+
     return alliance_count, alliance_limit
 
 def get_alliances(relations_data_list, requested_alliance_type):
@@ -1488,6 +1443,10 @@ def get_upkeep_dictionary(game_id, upkeep_type, playerdata, unit_count_list):
                     improvement_dollars_upkeep = 1
                 elif improvement_name == 'Research Laboratory' and 'Upgraded Facilities' in completed_research_list:
                     improvement_dollars_upkeep = 2
+                elif improvement_name == 'Wind Farm' and 'Green Energy Subsidies' in completed_research_list:
+                    improvement_dollars_upkeep = 1
+                elif improvement_name == 'Solar Farm' and 'Green Energy Subsidies' in completed_research_list:
+                    improvement_dollars_upkeep = 1
                 #check for efficient bureaucracy
                 if 'Efficient Bureaucracy' in completed_research_list:
                     improvement_dollars_upkeep *= 0.5
@@ -1563,21 +1522,18 @@ def get_upkeep_sum(upkeep_dict):
 
 def get_unit_count_list(player_id, game_id):
     
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    regdata_list = read_file(regdata_filepath, 2)
     unit_data_dict = get_scenario_dict(game_id, "Units")
     unit_name_list = sorted(unit_data_dict.keys())
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     count_list = []
     for unit_name in unit_name_list:
-        unit_abbr = unit_data_dict[unit_name]['Abbreviation']
         count = 0
-        for region in regdata_list:
-            unit_data = ast.literal_eval(region[5])
-            unit_name_in_region = unit_data[0]
-            if unit_name_in_region != None:
-                if unit_data[2] == player_id and unit_abbr == unit_name_in_region:
-                    count += 1
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.owner_id == player_id and region_unit.name == unit_name:
+                count += 1
         count_list.append(count)
 
     return count_list
@@ -1641,239 +1597,6 @@ def join_ongoing_war(wardata_list, war_id, player_id, war_side):
             war[player_id] = player_entry_data
     return wardata_list
 
-def calculate_unit_damage_modifier(game_id, friendly_unit_id, friendly_player_id, regdata_list, target_type, target_region_id):
-    damage_modifier = 0
-
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    unit_ids = [unit['Abbreviation'] for unit in unit_data_dict.values()]
-    tank_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Tank']
-
-    #damage bonus from nearby artillery
-    target_adjacency_list = get_adjacency_list(regdata_list, target_region_id)
-    for select_region_id in target_adjacency_list:
-        select_region_data = get_region_data(regdata_list, select_region_id)
-        select_unit_data = ast.literal_eval(select_region_data[5])
-        select_unit_id = select_unit_data[0]
-        if select_unit_id != None:
-            select_unit_owner_id = select_unit_data[2]
-            if select_unit_id == 'AR' and select_unit_owner_id == friendly_player_id:
-                damage_modifier += 1
-                break
-
-    #damage bonus from heavy tank abilities
-    if friendly_unit_id == 'HT' and target_type == 'LT':
-        damage_modifier += 1
-    elif friendly_unit_id == 'HT' and target_type not in unit_ids:
-        damage_modifier += 1
-
-    #damage bonus from main battle tank abilities
-    if friendly_unit_id == 'BT' and target_type in tank_type_units:
-        damage_modifier += 1
-    elif friendly_unit_id == 'BT' and target_type not in unit_ids:
-        damage_modifier += 1
-
-    return damage_modifier
-
-def calculate_unit_roll_modifier(game_id, friendly_unit_id, friendly_research_list, friendly_player_id, friendly_war_role, regdata_list, target_type, target_region_id):
-    roll_modifier = 0
-
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    infantry_type_units = [unit for unit, data in unit_data_dict.items() if data.get('Unit Type') == 'Infantry']
-    attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == friendly_unit_id), None)
-
-    #roll bonus from research
-    if 'Attacker' in friendly_war_role and 'Superior Training' in friendly_research_list:
-        roll_modifier += 1
-    elif 'Defender' in friendly_war_role and 'Defensive Tactics' in friendly_research_list and attacker_name not in infantry_type_units:
-        roll_modifier += 1
-
-    #roll bonus from special forces ability
-    if friendly_unit_id == 'SF' and target_type in infantry_type_units:
-        roll_modifier += 1
-
-    #roll bonus from nearby light tank
-    target_adjacency_list = get_adjacency_list(regdata_list, target_region_id)
-    for select_region_id in target_adjacency_list:
-        select_region_data = get_region_data(regdata_list, select_region_id)
-        select_unit_data = ast.literal_eval(select_region_data[5])
-        select_unit_id = select_unit_data[0]
-        if select_unit_id != None:
-            select_unit_owner_id = select_unit_data[2]
-            if friendly_unit_id in infantry_type_units and select_unit_id == 'LT' and select_unit_owner_id == friendly_player_id:
-                roll_modifier += 1
-                break
-    
-    return roll_modifier
-
-def conduct_combat(game_id, attacker_data_list, defender_data_list, war_statistics_list, playerdata_list, regdata_list, war_log):
-    '''
-    Conducts combat between two units or a unit and a defensive improvement.
-    '''
-
-    #get scenario data
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    
-    #get information
-    attacker_unit_id, attacker_unit_health, attacker_player_id, attacker_war_role, attacker_region_id = attacker_data_list
-    defender_name, defender_health, defender_player_id, defender_war_role, defender_region_id = defender_data_list
-    attacker_battles_won, attacker_battles_lost, defender_battles_won, defender_battles_lost, = war_statistics_list
-    attacker_nation_name = playerdata_list[attacker_player_id - 1][1]
-    defender_nation_name = playerdata_list[defender_player_id - 1][1]
-    attacker_research_list = ast.literal_eval(playerdata_list[attacker_player_id - 1][26])
-    defender_research_list = ast.literal_eval(playerdata_list[defender_player_id - 1][26])
-
-    #get modifiers
-    attacker_roll_modifier = calculate_unit_roll_modifier(game_id, attacker_unit_id, attacker_research_list, attacker_player_id, attacker_war_role, regdata_list, defender_name, defender_region_id)
-    defender_roll_modifier = calculate_unit_roll_modifier(game_id, defender_name, defender_research_list, defender_player_id, defender_war_role, regdata_list, attacker_unit_id, defender_region_id)
-    attacker_damage_modifier = calculate_unit_damage_modifier(game_id, attacker_unit_id, attacker_player_id, regdata_list, defender_name, defender_region_id)
-    defender_damage_modifier = 0
-
-    #get damage values and hit values
-    attacker_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == attacker_unit_id), None)
-    attacker_combat_value = unit_data_dict[attacker_name]['Combat Value']
-    attacker_victory_damage = unit_data_dict[attacker_name]['Victory Damage'] + attacker_damage_modifier
-    attacker_draw_damage = unit_data_dict[attacker_name]['Draw Damage']
-    if defender_name in [unit['Abbreviation'] for unit in unit_data_dict.values()]:
-        defender_damage_modifier = calculate_unit_damage_modifier(game_id, defender_name, defender_player_id, regdata_list, attacker_unit_id, defender_region_id)
-        defender_name = next((unit for unit, data in unit_data_dict.items() if data.get('Abbreviation') == defender_name), None)
-        defender_combat_value = unit_data_dict[defender_name]['Combat Value']
-        defender_victory_damage = unit_data_dict[defender_name]['Victory Damage'] + defender_damage_modifier
-        defender_draw_damage = unit_data_dict[defender_name]['Draw Damage']
-    else:
-        defender_combat_value = improvement_data_dict[defender_name]['Combat Value']
-        defender_victory_damage = improvement_data_dict[defender_name]['Victory Damage']
-        defender_draw_damage = improvement_data_dict[defender_name]['Draw Damage']
-    
-    #execute combat
-    attacker_roll = random.randint(1, 10) + attacker_roll_modifier
-    defender_roll = random.randint(1, 10) + defender_roll_modifier
-    attacker_hit = False
-    defender_hit = False
-    if attacker_roll >= attacker_combat_value:
-        attacker_hit = True
-    if defender_roll >= defender_combat_value:
-        defender_hit = True
-    war_log.append(f'{attacker_nation_name} {attacker_name} {attacker_region_id} vs {defender_nation_name} {defender_name} {defender_region_id}')
-    #attacker victory
-    if attacker_hit and not defender_hit:
-        defender_health -= attacker_victory_damage
-        attacker_battles_won += 1
-        defender_battles_lost += 1
-        if attacker_roll_modifier > 0 and defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Attacker victory!')
-        elif attacker_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll}. Attacker victory!')
-        elif defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Attacker victory!')
-        else:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Attacker victory!')
-        if attacker_damage_modifier > 0:
-            war_log.append(f'        {attacker_nation_name} {attacker_name} dealt an additional {attacker_damage_modifier} damage.')
-    #defender victory
-    elif not attacker_hit and defender_hit or (attacker_hit == defender_hit and 'Counter Offensive' in defender_research_list):
-        attacker_unit_health -= defender_victory_damage
-        defender_battles_won += 1
-        attacker_battles_lost += 1
-        if attacker_roll_modifier > 0 and defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Defender victory!')
-        elif attacker_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll}. Defender victory!')
-        elif defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Defender victory!')
-        else:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Defender victory!')
-        if defender_damage_modifier > 0:
-            war_log.append(f'        {defender_nation_name} {defender_name} dealt an additional {defender_damage_modifier} damage.')
-    #draw
-    else:
-        attacker_unit_health -= defender_draw_damage
-        defender_health -= attacker_draw_damage
-        if attacker_roll_modifier > 0 and defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Draw!')
-        elif attacker_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll} (+{attacker_roll_modifier}). {defender_nation_name} rolled {defender_roll}. Draw!')
-        elif defender_roll_modifier > 0:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll} (+{defender_roll_modifier}). Draw!')
-        else:
-            war_log.append(f'    {attacker_nation_name} rolled {attacker_roll}. {defender_nation_name} rolled {defender_roll}. Draw!')
-    return attacker_unit_health, attacker_battles_won, attacker_battles_lost, defender_health, defender_battles_won, defender_battles_lost, war_log
-
-def war_resolution(player_id_1, war_justifications_list, signatories_list, current_turn_num, playerdata_list, regdata_list):
-    '''Resolves a war that ends in an attacker or defender victory.'''
-    
-    looser_playerdata = playerdata_list[player_id_1 - 1]
-    duration = current_turn_num + 11
-
-    #resolve each winning war justification
-    for war_justification in war_justifications_list:
-        victor_player_id = war_justification[0]
-        victor_war_justification = war_justification[1]
-        victor_war_claims_list = war_justification[2]
-        victor_playerdata = playerdata_list[victor_player_id - 1]
-        victor_nation_name = victor_playerdata[1]
-        defeat_penalty = 1
-        #resolve war justification
-        match victor_war_justification:
-            case 'Border Skirmish' | 'Conquest' | 'Annexation':
-                for region in regdata_list:
-                    region_id = region[0]
-                    if region_id in victor_war_claims_list:
-                        control_data = ast.literal_eval(region[2])
-                        if control_data[0] == player_id_1:
-                            new_data = [victor_player_id, 0]
-                            region[2] = str(new_data)
-            case 'Animosity':
-                pp_resource_data_winner = ast.literal_eval(victor_playerdata[10])
-                pp_stockpile_winner = float(pp_resource_data_winner[0])
-                pp_stockpile_winner += 10
-                pp_resource_data_winner[0] = round_total_income(pp_stockpile_winner)
-                victor_playerdata[10] = pp_resource_data_winner
-                pp_resource_data_looser = ast.literal_eval(looser_playerdata[10])
-                pp_resource_data_looser[0] = '0.00'
-                looser_playerdata[10] = pp_resource_data_looser
-                defeat_penalty = 2
-            case 'Subjugation':
-                looser_stability_data = ast.literal_eval(looser_playerdata[7])
-                subject_type = 'Puppet State'
-                looser_stability_data.append('-1 from Puppet State status')
-                looser_playerdata[7] = str(looser_stability_data)
-                looser_status = f'{subject_type} of {victor_nation_name}'
-                looser_playerdata[28] = looser_status
-            case 'Independence':
-                winner_stability_data = ast.literal_eval(victor_playerdata[7])
-                winner_stability_data_filtered = []
-                for entry in winner_stability_data:
-                    if entry != '-1 from Puppet State status':
-                        winner_stability_data_filtered.append(entry)
-                victor_playerdata[7] = str(winner_stability_data_filtered)
-                looser_playerdata[28] = 'Independent Nation'
-        #resolve stability bonus
-        winner_stability_data = ast.literal_eval(victor_playerdata[7])
-        winner_stability_data.append(f'1 from Victory through turn {duration}')
-        victor_playerdata[7] = str(winner_stability_data)
-        playerdata_list[victor_player_id - 1] = victor_playerdata
-    
-    
-    #Resolve Stability Penalty
-    looser_stability_data = ast.literal_eval(looser_playerdata[7])
-    looser_stability_data.append(f'-{defeat_penalty} from Defeat through turn {duration}')
-    looser_playerdata[7] = str(looser_stability_data)
-    playerdata_list[player_id_1 - 1] = looser_playerdata
-
-
-    #End Remaining Occupations
-    for region in regdata_list:
-        if len(region[0]) == 5:
-            control_data = ast.literal_eval(region[2])
-            owner_id = control_data[0]
-            occupier_id = control_data[1]
-            if signatories_list[owner_id - 1] and signatories_list[occupier_id - 1]:
-                new_data = [owner_id, 0]
-                region[2] = str(new_data)
-
-    return playerdata_list, regdata_list
-
 def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_num):
     '''Creates a truce period between the players marked in the signatories list. Length depends on war outcome.'''
 
@@ -1890,7 +1613,7 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
     #generate output
     truce_id = len(trucedata_list)
     signatories_list.insert(0, truce_id)
-    signatories_list.append(current_turn_num + truce_length - 1)
+    signatories_list.append(current_turn_num + truce_length)
     trucedata_list.append(signatories_list)
 
     #update trucedata.csv
@@ -1898,28 +1621,28 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
         writer = csv.writer(file)
         writer.writerows(trucedata_list)
 
-def repair_relations(diplomatic_relations_masterlist, wardata_list):
-    '''
+def repair_relations(diplomatic_relations_masterlist, game_id):
+    """
     Restores diplomatic relations to neutral if there is no longer a war between two players.
-    '''
+    The hope is to eventually replace this cringe with a player relations graph.
 
+    Params:
+        diplomatic_relations_masterlist (list of lists): hellish list of lists from playerdata.csv
+        game_id (str): game id
+
+    Returns:
+        diplomatic_relations_masterlist (list of lists): hellish list of lists from playerdata.csv
+    """
+
+    wardata = WarData(game_id)
     for i, diplomatic_relations_list in enumerate(diplomatic_relations_masterlist):
         player_id_1 = i + 1
         for player_id_2, relation in enumerate(diplomatic_relations_list):
-            if relation == 'At War':
-                war_found = False
-                for war in wardata_list:
-                    if war[player_id_1] != '-' and war[player_id_2] != '-' and war[13] == 'Ongoing':
-                        wardata_1 = ast.literal_eval(war[player_id_1])
-                        war_role_1 = wardata_1[0]
-                        wardata_2 = ast.literal_eval(war[player_id_2])
-                        war_role_2 = wardata_2[0]
-                        if ('Attacker' in war_role_1 and 'Defender' in war_role_2) or ('Attacker' in war_role_2 and 'Defender' in war_role_1):
-                            war_found = True
-                            break
-                if war_found == False:
-                    diplomatic_relations_masterlist[i][player_id_2] = 'Neutral'
-    
+            if player_id_2 == 0:
+                continue
+            if relation == 'At War' and not wardata.are_at_war(player_id_1, player_id_2):
+                diplomatic_relations_masterlist[i][player_id_2] = 'Neutral'
+
     return diplomatic_relations_masterlist
 
 def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
@@ -1930,36 +1653,6 @@ def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
         if attacker_truce and defender_truce and int(truce[11]) >= current_turn_num:
             return True
     return False
-
-def attempt_missile_defense(game_id, missile_type, improvement_data, target_nation_name, target_player_research, war_log):
-    
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-
-    improvement_name = improvement_data[0]
-    improvement_health = improvement_data[1]
-    missile_defense_roll = random.randint(1, 10)
-    defense_hit_value = 9999999
-    
-    match missile_type:
-        case 'Standard Missile':
-            if improvement_name == 'Missile Defense System':
-                defense_hit_value = 6
-            elif improvement_name == 'Missile Defense Network':
-                defense_hit_value = 3
-            elif 'Localized Missile Defense' in target_player_research and improvement_health != 99 and improvement_health != 0:
-                defense_hit_value = improvement_data_dict[improvement_name]['Combat Value']
-        case 'Nuclear Missile':
-            if improvement_name == 'Missile Defense Network':
-                defense_hit_value = 6
-    
-    if defense_hit_value != 9999999:
-        war_log.append(f'    {target_nation_name} {improvement_name} rolled a {missile_defense_roll}.')
-        if missile_defense_roll >= defense_hit_value:
-            war_log.append(f'    Hit! Incoming {missile_type} was shot down!')
-            return False
-        else:
-            war_log.append(f'    Miss! {improvement_name} defenses failed!')
-    return True
 
 
 #MISC SUB-FUNCTIONS
@@ -2027,55 +1720,56 @@ def get_nation_info(playerdata_list):
         nation_info_masterlist.append(nation_info_list)
     return nation_info_masterlist
 
-def search_and_destroy(player_id, desired_improvement, regdata_list):
+def search_and_destroy(game_id, player_id, target_improvement):
+    '''
+    Searches for a specific improvement and removes it.
+    '''
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+    
+    # find all regions belonging to a player with target improvement
     candidate_region_ids = []
-    for region in regdata_list:
-        region_id = region[0]
-        control_data = ast.literal_eval(region[2])
-        owner_id = control_data[0]
-        improvement_data = ast.literal_eval(region[4])
-        improvement_name = improvement_data[0]
-        if improvement_name == desired_improvement and player_id == owner_id:
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        if region_improvement.name == target_improvement and player_id == region.owner_id:
             candidate_region_ids.append(region_id)
 
-    #randomly select one of the candidate regions
+    # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    for region in regdata_list:
-        if region[0] == chosen_region_id:
-            region[4] = '[None, 99]'
-            break
-    return chosen_region_id, regdata_list
+    target_region_improvement = Improvement(chosen_region_id, game_id)
+    target_region_improvement.clear()
+    
+    return chosen_region_id
 
-def search_and_destroy_unit(player_id, desired_unit_id, regdata_list):
-    '''Randomly destroys one unit of a given type belonging to a specific player.'''
+def search_and_destroy_unit(game_id, player_id, desired_unit_name):
+    '''
+    Randomly destroys one unit of a given type belonging to a specific player.
+    '''
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
-    #get list of regions with desired_unit_id owned by player_id
+    # get list of regions with desired_unit_id owned by player_id
     candidate_region_ids = []
-    if desired_unit_id in unit_ids:
-        for region in regdata_list:
-            region_id = region[0]
-            unit_data = ast.literal_eval(region[5])
-            if unit_data[0] == desired_unit_id:
-                if unit_data[2] == player_id:
-                    candidate_region_ids.append(region_id)
-    elif desired_unit_id == 'ANY':
-        for region in regdata_list:
-            region_id = region[0]
-            unit_data = ast.literal_eval(region[5])
-            if unit_data[0] in unit_ids:
-                if unit_data[2] == player_id:
-                    candidate_region_ids.append(region_id)
+    if desired_unit_name in unit_ids:
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.name == desired_unit_name and region_unit.owner_id == player_id:
+                candidate_region_ids.append(region_id)
+    elif desired_unit_name == 'ANY':
+        for region_id in regdata_dict:
+            region_unit = Unit(region_id, game_id)
+            if region_unit.owner_id == player_id:
+                candidate_region_ids.append(region_id)
 
-    #randomly select one of the candidate regions
+    # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    for region in regdata_list:
-        if region[0] == chosen_region_id:
-            region[5] = '[None, 99]'
-            break
+    target_region_unit = Unit(chosen_region_id, game_id)
+    target_region_unit.clear()
 
-    return chosen_region_id, regdata_list
+    return chosen_region_id
 
 def update_improvement_data(regdata_list, region_id, improvement_data):
     '''Replaces the unit data of a region with the inputed list.'''
@@ -2134,7 +1828,6 @@ def verify_ratio(game_id, improvement_count_list, improvement_name):
             return False
     return True
 
-#THE EXEMPT LIST NEEDS TO GET GENERATED FROM THE IMPROVEMENT DICT
 def verify_region_resource(game_id, regdata_list, region_id, improvement_name):
     '''Verifies a region has the resource needed for the desired improvement. Sub-function for resolve_improvement_builds().'''
     
@@ -2162,12 +1855,29 @@ def verify_required_research(required_research, player_research):
             return False
     return True
 
+def has_capital(player_id, game_id):
+    '''
+    Checks if a player has a capital in their territory.
+    '''
+    regdata_filepath = f'gamedata/{game_id}/regdata.json'
+    with open(regdata_filepath, 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        if region.owner_id == player_id and region_improvement.name == 'Capital':
+            return True
+        
+    return False
+
 def get_scenario_dict(game_id, dictionary_name):
-    '''Gets a dictionary from the chosen scenario.'''
+    '''
+    Gets a dictionary from the chosen scenario.
+    '''
 
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-
 
     if game_id != "TBD":
         scenario_name = active_games_dict[game_id]["Information"]["Scenario"]
@@ -2183,6 +1893,34 @@ def get_scenario_dict(game_id, dictionary_name):
 
     return chosen_dictionary
 
+def get_lowest_in_record(game_id, record_name):
+    # get core lists
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = read_file(playerdata_filepath, 1)
+
+    # get nation names
+    nation_name_list = []
+    for playerdata in playerdata_list:
+        nation_name_list.append(playerdata[1])
+    
+    #get lowest
+    if record_name != "most_transactions":
+        record_filepath = f'gamedata/{game_id}/{record_name}.csv'
+        record_list = read_file(record_filepath, 0)
+        candidates = []
+        for index, record in enumerate(record_list):
+            if index == 0:
+                continue
+            if record_name == 'strongest_economy':
+                value = float(record[-1])
+            else:
+                value = int(record[-1])
+            nation_name = nation_name_list[index - 1]
+            candidates.append([nation_name, value])
+        sorted_candidates = sorted(candidates, key = lambda x: x[-1], reverse = False)
+        return sorted_candidates[0][0]
+    else:
+        pass
 
 #GLOBAL DICTIONARIES AND LISTS
 ################################################################################
@@ -2213,7 +1951,7 @@ crime_syndicate_rates = [80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 #war and unit/improvement list data
 ALLIANCE_LIST = ['Non-Aggression Pact', 'Defense Pact', 'Trade Agreement', 'Research Agreement']
 RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-war_justifications_list = ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
+WAR_JUSTIFICATIONS_LIST = ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
 unit_names = ['Infantry', 'Artillery', 'Mechanized Infantry', 'Special Forces', 'Motorized Infantry', 'Light Tank', 'Heavy Tank', 'Main Battle Tank']
 unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
 ten_health_improvements_list = ['military outpost', 'military base', 'Military Outpost', 'Military Base']

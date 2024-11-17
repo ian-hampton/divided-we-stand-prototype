@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+
+<style>
+:root {
+    --box-offset: 60px
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reference.css') }}">
+
+
+<title>{{ page_title }}</title>
+
+
+<header>
+    <div class="left-header">
+        <p id="title">{{ page_title }}</p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+    </div>
+</header>
+
+
+<body>
+<div class="flex-container">
+
+{% for unit_name, unit_data in dict.items() %}
+
+    <div class = "unit">
+    
+    <div class = "title"> {{ unit_name }} </div>
+
+    <div class="top-break"> <b>Abbreviation:</b> {{ unit_data["Abbreviation"] }} </div>
+
+    <div class="top-break"> <b>Unit Type:</b> {{ unit_data["Unit Type"] }}</div>
+
+    <div class="top-break"> <b>Required Technology:</b> {{ unit_data["Required Research"] }} </div>
+
+    {% for ability in unit_data["Abilities"] %}
+        <div class="top-break"> {{ability}} </div>
+    {% endfor %}
+
+    {% set ns = namespace(foo=True) %}
+    {% for resource, cost in unit_data["Build Costs"].items() %}
+        {% if cost != 0 and ns.foo %} 
+            <div class="top-break"> <b>Cost:</b> {{cost}} {{resource|lower}}</div>
+            {% set ns.foo = False %}
+        {% elif cost != 0 %}
+            <div> <b style="visibility:hidden">Cost:</b> {{cost}} {{resource|lower}}</div>
+        {% endif %}
+    {% endfor %}
+    
+    {% if unit_data["Dollars Upkeep"] != 0 %}
+        <div class="top-break"> <b>Upkeep:</b> -{{unit_data["Dollars Upkeep"]}} dollars per turn </div>
+    {% else %}
+        <div class="top-break"> <b>Upkeep:</b> -{{unit_data["Oil Upkeep"]}} oil per turn </div>
+    {% endif %}
+
+    <div class="stats-bar">
+
+        <div class="{{ unit_data["stat_color"] }}">
+            {{ unit_data["Victory Damage"] }}
+            <br> <div class="small"> Victory Damage </div>
+        </div>
+        <div class="{{ unit_data["stat_color"] }}">
+            {{ unit_data["Draw Damage"] }}
+            <br> <div class="small"> Draw Damage </div>
+        </div>
+        <div class="{{ unit_data["stat_color"] }}">
+            {{ unit_data["Combat Value"] }}+
+            <br> <div class="small"> Hit Value </div>
+        </div>
+        <div class="{{ unit_data["stat_color"] }}">
+            {{ unit_data["Health"] }}
+            <br> <div class="small"> Health </div>
+        </div>
+        <div class="{{ unit_data["stat_color"] }}">
+            {{ unit_data["Movement"] }}
+            <br> <div class="small"> Movement </div>
+        </div>
+
+    </div>
+
+    </div>
+
+{% endfor %}
+
+</div>
+</body>
+
+
+</html>

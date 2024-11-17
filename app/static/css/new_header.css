@@ -1,0 +1,26 @@
+header {
+    background-color: #0f4660;
+    margin: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+}
+.left-header {
+    display: flex;
+    align-items: center;
+}
+.right-header {
+    display: flex;
+    align-items: center;
+}
+#title {
+    font-size: 24px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

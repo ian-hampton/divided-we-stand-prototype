@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>{{ game1_title }}</title>
+
+<style>
+
+/* BASIC FORMATTING */
+a {
+    color: white;
+    text-decoration: none;
+}
+header {
+    background-color: #0f4660;
+    margin: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    
+}
+body {
+    background-color: #464646;
+    margin: 0;
+    padding: 0;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: white;
+}
+.left-header {
+    display: flex;
+    align-items: center;
+}
+.right-header {
+    display: flex;
+    align-items: center;
+}
+#title {
+    font-size: 24px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.container {
+    display: flex;
+}
+
+/* MAP DISPLAY */
+.parent-map-frame {
+    height: calc(100vh - 194px);
+}
+.map-frame {
+    width: 100%; 
+    height: 100%;
+    overflow: auto;
+}
+#panning-map {
+    width: auto; 
+}
+
+/* MAP PANEL */
+.map-panel {
+    width: 70%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 10px;
+}
+.map-tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.map-tab-button {
+    background-color: #636363;
+    width: 125px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+}
+.map-tab-button.active {
+    background-color: #555555;
+}
+.map-tab-content {
+    background-color: #707070;
+    display: none;
+    padding: 20px;
+    margin: 0;
+}
+.map-tab-content.active {
+    display: block;
+}
+
+/* ORDERS PANEL */
+.orders-panel {
+    background-color: #707070;
+    width: 30%;
+    margin-top: 20px !important; 
+    margin-bottom: 20px !important;
+    margin-left: 10px !important;
+    margin-right: 20px !important;
+
+}
+h1, .orders-panel {
+    font-size: 24px;
+    padding: 0px;
+    padding-top: 10px;
+    margin: 0px;
+    color: white;
+    text-align: center;
+    font-weight: normal;
+}
+h2, .orders-panel {
+    font-size: 18px;
+    padding: 0px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    margin: 0px;
+    color: white;
+    text-align: center;
+    font-weight: normal;
+}
+.player-table {
+    width: 100%;
+    margin: 0px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #707070;
+    border-collapse: collapse;
+    border-width: 0px;
+    opacity: 1;
+    height: min-content;
+    text-align: left;
+}
+.player-table th {
+    font-weight: normal;
+    text-decoration: underline;
+    text-align: left;
+    border: none;
+    font-size: 14px;
+    margin: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.player-table td {
+    border: none;
+    font-size: 12px;
+    margin: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.nation_top {
+    font-style: bold;
+    padding-top: 5px;
+}
+.nation_sub {
+    font-style: italic;
+    padding-bottom: 5px;
+}
+.record-table {
+    width: 100%;
+    margin: 0px;
+    margin-top: 5px;
+    padding-top: 5px;
+    background-color: #707070;
+    border-collapse: collapse;
+    border-width: 0px;
+    opacity: 1;
+    height: min-content;
+    text-align: left;
+}
+.record-table th {
+    font-weight: normal;
+    text-decoration: underline;
+    text-align: left;
+    border: none;
+    font-size: 14px;
+    margin: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.record-table td {
+    border: none;
+    font-size: 12px;
+    margin: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+</style>
+
+<body>
+    <header>
+        <div class="left-header">
+            <p id="title">{{ game1_extendedtitle }}</p>
+        </div>
+        <div class="right-header">
+            <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="map-panel">
+            <div id="tab1" class="map-tab-content active"> <!-- Main Map -->
+                <div class="parent-map-frame">
+                    <div class="map-frame">
+                        <img src={{ main_url }} id="panning-map">
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="map-tab-content"> <!-- Resource Map -->
+                <div class="parent-map-frame">
+                    <div class="map-frame">
+                        <img src={{ resource_url }} id="panning-map">
+                    </div>
+                </div>
+            </div>
+            <div id="tab3" class="map-tab-content"> <!-- Control Map -->
+                <div class="parent-map-frame">
+                    <div class="map-frame">
+                        <img src={{ control_url }} id="panning-map">
+                    </div>
+                </div>
+            </div>
+            <div class="map-tabs">
+                <button class="map-tab-button active" onclick="openTab(event, 'tab1')" type="button">Main Map</button>
+                <button class="map-tab-button" onclick="openTab(event, 'tab2')" type="button">Resource Map</button>
+                <button class="map-tab-button" onclick="openTab(event, 'tab3')" type="button">Control Map</button>
+            </div>
+        </div>
+        <div class="orders-panel">
+            <h1>Game Over!</h1>
+            <h2>{% autoescape false %} {{ victory_string }} {% endautoescape %}</h2>
+            <table class="player-table">
+                <tr>
+                    <th colspan=2>Player Scores</th>
+                </tr>
+                {% for entry in archived_player_data_list %}
+                <tr>
+                    <td width="50%" style="color: {{ entry[5]}}" class="nation-top">{{ entry[0] }}</td>
+                    <td width="50%" style="color: {{ entry[5]}}" class="nation-top" align="right">{{ entry[1] }}</td>
+                </tr>
+                <tr>
+                    <td width="50%" style="color: white" class="nation_sub">{{ entry[2] }}</td>
+                    <td width="50%" style="color: white" class="nation_sub" align="right">{% autoescape false %} {{ entry[3] }} {% endautoescape %}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% autoescape false %}
+            <table class="record-table">
+                <tr>
+                    <th width="50%">Nation Size</th>
+                    <th width="50%">Economic Power</th>
+                </tr>
+                <tr>
+                    <td width="50%">&#129351; {{ largest_nation_list[0][3:] }}</td>
+                    <td width="50%">&#129351; {{ strongest_economy_list[0][3:] }}</td>
+                </tr>
+                <tr>
+                    <td width="50%">&#129352; {{ largest_nation_list[1][3:] }}</td>
+                    <td width="50%">&#129352; {{ strongest_economy_list[1][3:] }}</td>
+                </tr>
+                <tr>
+                    <td width="50%">&#129353; {{ largest_nation_list[2][3:] }}</td>
+                    <td width="50%">&#129353; {{ strongest_economy_list[2][3:] }}</td>
+                </tr>
+            </table>
+            <table class="record-table">
+                <tr>
+                    <th width="50%">Military Size</th>
+                    <th width="50%">Completed Research</th>
+                </tr>
+                <tr>
+                    <td width="50%">&#129351; {{ largest_military_list[0][3:] }}</td>
+                    <td width="50%">&#129351; {{ most_research_list[0][3:] }}</td>
+                </tr>
+                <tr>
+                    <td width="50%">&#129352; {{ largest_military_list[1][3:] }}</td>
+                    <td width="50%">&#129352; {{ most_research_list[1][3:] }}</td>
+                </tr>
+                <tr>
+                    <td width="50%">&#129353; {{ largest_military_list[2][3:] }}</td>
+                    <td width="50%">&#129353; {{ most_research_list[2][3:] }}</td>
+                </tr>
+            </table>
+            {% endautoescape %}
+        </div>
+    </div>
+</body>
+
+<!-- Map Panel Script -->
+<script>
+    function openTab(event, tabName) {
+        const tabContents = document.getElementsByClassName('map-tab-content');
+        for (const tabContent of tabContents) {
+            tabContent.style.display = 'none';
+        }
+        const tabButtons = document.getElementsByClassName('map-tab-button');
+        for (const tabButton of tabButtons) {
+            tabButton.classList.remove('active');
+        }
+        const selectedTab = document.getElementById(tabName);
+        selectedTab.style.display = 'block';
+        event.currentTarget.classList.add('active');
+    }
+</script>
+
+</html>

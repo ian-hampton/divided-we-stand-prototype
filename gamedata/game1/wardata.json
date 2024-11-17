@@ -1,0 +1,72 @@
+{
+    "Filthy Imperialist Conquest of Techbro": {
+        "startTurn": 22,
+        "endTurn": 0,
+        "outcome": "TBD",
+        "combatants": {
+            "Filthy Imperialist": {
+                "role": "Main Attacker",
+                "warJustification": "Conquest",
+                "warClaims": [
+                    "PENNY",
+                    "WESKY",
+                    "NASHV",
+                    "NTWTN",
+                    "STWTN"
+                ],
+                "warClaimsOriginalOwners": [
+                    2,
+                    2,
+                    2,
+                    2,
+                    2
+                ],
+                "statistics": {
+                    "battlesWon": 7,
+                    "battlesLost": 5,
+                    "enemyUnitsDestroyed": 0,
+                    "enemyImprovementsDestroyed": 0,
+                    "friendlyUnitsDestroyed": 1,
+                    "friendlyImprovementsDestroyed": 0,
+                    "missilesLaunched": 0,
+                    "nukesLaunched": 0
+                }
+            },
+            "Techbro": {
+                "role": "Main Defender",
+                "warJustification": "Animosity",
+                "warClaims": [],
+                "warClaimsOriginalOwners": [],
+                "statistics": {
+                    "battlesWon": 5,
+                    "battlesLost": 7,
+                    "enemyUnitsDestroyed": 1,
+                    "enemyImprovementsDestroyed": 0,
+                    "friendlyUnitsDestroyed": 0,
+                    "friendlyImprovementsDestroyed": 0,
+                    "missilesLaunched": 0,
+                    "nukesLaunched": 0
+                }
+            }
+        },
+        "attackerWarScore": {
+            "total": 17,
+            "occupation": 8,
+            "combatVictories": 7,
+            "enemyUnitsDestroyed": 0,
+            "enemyImprovementsDestroyed": 2,
+            "capitalCaptures": 0,
+            "nukedEnemyRegions": 0
+        },
+        "defenderWarScore": {
+            "total": 8,
+            "occupation": 0,
+            "combatVictories": 5,
+            "enemyUnitsDestroyed": 3,
+            "enemyImprovementsDestroyed": 0,
+            "capitalCaptures": 0,
+            "nukedEnemyRegions": 0
+        },
+        "warLog": []
+    }
+}

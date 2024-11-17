@@ -7,29 +7,39 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 9,
+        "Movement": 1,
+        "Abilities": [],
         "Dollars Upkeep": 0.25,
         "Oil Upkeep": 0,
-        "Dollars Cost": 5,
-        "Basic Materials Cost": 5,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 5,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Artillery": {
         "Required Research": "Artillery",
-        "Unit Type": "Infantry",
+        "Unit Type": "Artillery",
         "Abbreviation": "AR",
         "Health": 6,
-        "Victory Damage": 2,
+        "Victory Damage": 3,
         "Draw Damage": 1,
-        "Combat Value": 9,
+        "Combat Value": 7,
+        "Movement": 1,
+        "Abilities": [
+            "All of your units that are adjacent to one of your Artillery units gain +1 victory damage and +1 draw damage. If multiple Artillery are adjacent, this bonus does not stack."
+        ],
         "Dollars Upkeep": 0.5,
         "Oil Upkeep": 0,
-        "Dollars Cost": 10,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 10,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Mechanized Infantry": {
         "Required Research": "Mechanized Infantry",
@@ -39,29 +49,42 @@
         "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 7,
+        "Movement": 2,
+        "Abilities": [
+            "All of your Tank-type units that are adjacent to one of your Mechanized Infantry units gain +1 to all combat rolls. If multiple Mechanized Infantry are adjacent, this bonus does not stack."
+        ],
         "Dollars Upkeep": 0.5,
         "Oil Upkeep": 0,
-        "Dollars Cost": 10,
-        "Basic Materials Cost": 10,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 10,
+            "Basic Materials": 10,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Special Forces": {
         "Required Research": "Special Operations",
-        "Unit Type": "Infantry",
+        "Unit Type": "Special Forces",
         "Abbreviation": "SF",
         "Health": 10,
-        "Victory Damage": 4,
+        "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 5,
+        "Movement": 2,
+        "Abilities": [
+            "Automatically defeats improvements that are not defended by an enemy unit.",
+            "Always heals during the bonus phase regardless of its positioning."
+        ],
         "Dollars Upkeep": 1,
         "Oil Upkeep": 0,
-        "Dollars Cost": 15,
-        "Basic Materials Cost": 15,
-        "Common Metals Cost": 0,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 15,
+            "Basic Materials": 15,
+            "Common Metals": 0,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Motorized Infantry": {
         "Required Research": "Motorized Infantry",
@@ -71,13 +94,17 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 8,
+        "Movement": 2,
+        "Abilities": [],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.25,
-        "Dollars Cost": 5,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 5,
-        "Advanced Metals Cost": 0,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 5,
+            "Basic Materials": 0,
+            "Common Metals": 5,
+            "Advanced Metals": 0,
+            "Rare Earth Elements": 0
+        }
     },
     "Light Tank": {
         "Required Research": "Light Tanks",
@@ -87,13 +114,19 @@
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 6,
+        "Movement": 2,
+        "Abilities": [
+            "All of your Infantry-type units that are adjacent to one of your Light Tank units gain +1 to all combat rolls. If multiple Light Tank are adjacent, this bonus does not stack."
+        ],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.5,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 10,
-        "Advanced Metals Cost": 1,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 10,
+            "Advanced Metals": 1,
+            "Rare Earth Elements": 0
+        }
     },
     "Heavy Tank": {
         "Required Research": "Heavy Tanks",
@@ -103,13 +136,19 @@
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 6,
+        "Movement": 1,
+        "Abilities": [
+            "+1 to combat rolls against enemy improvements."
+        ],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 0.5,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 12,
-        "Advanced Metals Cost": 3,
-        "Rare Earth Elements Cost": 0
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 12,
+            "Advanced Metals": 3,
+            "Rare Earth Elements": 0
+        }
     },
     "Main Battle Tank": {
         "Required Research": "Main Battle Tanks",
@@ -119,12 +158,19 @@
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 4,
+        "Movement": 2,
+        "Abilities": [
+            "+1 to combat rolls against enemy Infantry-type units.",
+            "+1 to combat rolls against enemy improvements."
+        ],
         "Dollars Upkeep": 0,
         "Oil Upkeep": 1,
-        "Dollars Cost": 0,
-        "Basic Materials Cost": 0,
-        "Common Metals Cost": 15,
-        "Advanced Metals Cost": 5,
-        "Rare Earth Elements Cost": 1
+        "Build Costs": {
+            "Dollars": 0,
+            "Basic Materials": 0,
+            "Common Metals": 15,
+            "Advanced Metals": 5,
+            "Rare Earth Elements": 1
+        }
     }
 }

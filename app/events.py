@@ -6,32 +6,34 @@ import random
 from app import core
 from app import private_actions
 from app import checks
+from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
+from app.wardata import WarData
 
 #EVENT INITIATION CODE
 ################################################################################
 
-def trigger_event(full_game_id, current_turn_num, diplomacy_log):
-    '''
+def trigger_event(full_game_id: str, current_turn_num: int, diplomacy_log: list) -> list:
+    """
     Activates and resolves a random event. Returns an updated diplomacy_log.
 
-    Parameters:
-    - full_game_id: The full game_id of the active game.
-    - current_turn_num: An integer representing the current turn number.
-    - diplomacy_log: A list of pre-generated diplomatic interaction logs.
-    '''
+    Params:
+        full_game_id (str): The full game_id of the active game.
+        current_turn_num (int): An integer representing the current turn number.
+        diplomacy_log (list): A list of pre-generated diplomatic interaction logs.
 
+    Returns:
+        diplomacy_log (list): A list of pre-generated diplomatic interaction logs.
+    """
+
+    # get game data
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    regdata_list = core.read_file(regdata_filepath, 2)
-
-    wardata_filepath = f'gamedata/{full_game_id}/wardata.csv'
-    wardata_list = core.read_file(wardata_filepath, 2)
-
+    # get list of events already used and build event conditions dict
     events_list = list(EVENT_DICT.keys())
     random.shuffle(events_list)
     event_conditions_dict = build_event_conditions_dict(full_game_id, current_turn_num, playerdata_list, active_games_dict)
@@ -42,62 +44,51 @@ def trigger_event(full_game_id, current_turn_num, diplomacy_log):
 
     chosen_event = None
     while True:
+        # randomly draw an event or use preselected one
         chosen_event = events_list.pop()
         if event_override is not None:
             chosen_event = event_override
+        # check if event conditions have been met
         if event_conditions_met(chosen_event, event_conditions_dict, full_game_id, active_games_dict) and chosen_event not in already_chosen_events_list:
             print(chosen_event)
-            active_games_dict, playerdata_list, regdata_list, wardata_list, diplomacy_log = initiate_event(chosen_event, event_conditions_dict, full_game_id, current_turn_num, active_games_dict, playerdata_list, regdata_list, wardata_list, diplomacy_log)
+            active_games_dict, playerdata_list, diplomacy_log = initiate_event(chosen_event, event_conditions_dict, full_game_id, current_turn_num, active_games_dict, playerdata_list, diplomacy_log)
             break
 
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
+    # save changes to playerdata
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
-    with open(wardata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.wardata_header_a)
-        writer.writerow(core.wardata_header_b)
-        writer.writerows(wardata_list)
+    # save changes to active_games.json
+    with open('active_games.json', 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
 
     return diplomacy_log
 
-def build_event_conditions_dict(game_id, current_turn_num, playerdata_list, active_games_dict):
-    '''
+def build_event_conditions_dict(game_id: str, current_turn_num: int, playerdata_list, active_games_dict: dict) -> dict:
+    """
     Returns a dictionary of event condition data generated from game data.
 
-    Parameters:
-    - game_id: The full game_id of the active game.
-    - current_turn_num: An integer representing the current turn number.
-    - playerdata_list: A list of lists containing all playerdata derived from playerdata.csv
-    - active_games_dict: A dictionary derived from the active_games.json file.
-    '''
+    Params:
+        game_id (str): The full game_id of the active game.
+        current_turn_num (int): An integer representing the current turn number.
+        playerdata_list (list of lists): A list of lists containing all playerdata derived from playerdata.csv
+        active_games_dict (dict): A dictionary derived from the active_games.json file.
+    
+    Returns:
+        event_conditions_dict (dict): A dictionary containing all event condition data.
+    """
 
-    wardata_filepath = f'gamedata/{game_id}/wardata.csv'
-    wardata_list = core.read_file(wardata_filepath, 2)
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
 
     event_conditions_dict = {
         "At Peace For At Least 8 Turns": [],
         "Event Count": len(active_games_dict[game_id]["Active Events"]) + len(active_games_dict[game_id]["Inactive Events"]),
-        "Global Improvement Count List": [0 * len(improvement_data_dict)],
-        "Greater Than 5 Stability": [],
-        "Less Than 8 Stability": [],
-        "Lass Than 4 Stability": [],
+        "Global Improvement Count List": [0] * len(improvement_data_dict.keys()),
         "Most Research": "N/A",
         "Ongoing Wars": [],
         "Players at War": [],
-        "Defeat Penalty": [],
     }
 
     nation_name_list = []
@@ -105,21 +96,6 @@ def build_event_conditions_dict(game_id, current_turn_num, playerdata_list, acti
         player_id = index + 1
         player_improvement_count_list = ast.literal_eval(playerdata[27])
         event_conditions_dict["Global Improvement Count List"] = [x + y for x, y in zip(player_improvement_count_list, event_conditions_dict["Global Improvement Count List"])]
-        stability_data = ast.literal_eval(playerdata[7])
-        stability_header_list = stability_data[0].split(" ")
-        stability_header_list = stability_header_list[1].split("/")
-        stability_value = int(stability_header_list[0])
-        if stability_value < 8 and stability_value > 5:
-            event_conditions_dict["Less Than 8 Stability"].append(player_id)
-            event_conditions_dict["Greater Than 5 Stability"].append(player_id)
-        elif stability_value > 5:
-            event_conditions_dict["Greater Than 5 Stability"].append(player_id)
-        elif stability_value < 4:
-            event_conditions_dict["Lass Than 4 Stability"].append(player_id)
-        for stability_data_entry in stability_data:
-            if "from Defeat" in stability_data_entry:
-                event_conditions_dict["Defeat Penalty"].append(player_id)
-                break
         nation_name_list.append(playerdata[1])
     
     research_1st, research_2nd, research_3rd = checks.get_top_three(game_id, 'most_research', True)
@@ -131,72 +107,59 @@ def build_event_conditions_dict(game_id, current_turn_num, playerdata_list, acti
                 event_conditions_dict["Most Research"] = nation_name
                 break
     
-    wardata_list = wardata_list.reverse()
-    try:
-        for war in wardata_list:
-            event_conditions_dict["Ongoing Wars"].append(war[11])
-            war_start = int(war[12])
-            players_at_war = []
-            for player_id in range(1, len(playerdata_list) + 1):
-                if war[player_id] != '-' and current_turn_num - war_start <= 8:
-                    players_at_war.append(players_at_war)
-            players_at_war = set(players_at_war)
-            for player_id in range(1, len(playerdata_list) + 1):
-                if player_id not in players_at_war:
-                    event_conditions_dict["At Peace For At Least 8 Turns"].append(player_id)
-            for player_id in players_at_war:
-                if players_at_war not in event_conditions_dict["Players at War"]:
-                    event_conditions_dict["Players at War"].append(player_id)
-    except(TypeError):
-        for player_id in range(1, len(playerdata_list) + 1):
+    wardata = WarData(game_id)
+    for index, playerdata in enumerate(playerdata_list):
+        player_id = index + 1
+        at_peace_since = wardata.is_at_peace(player_id, True)
+        if at_peace_since and current_turn_num - at_peace_since >= 8:
             event_conditions_dict["At Peace For At Least 8 Turns"].append(player_id)
+        if not at_peace_since:
+            event_conditions_dict["Players at War"].append(player_id)
+    for war, war_data in wardata.wardata_dict.items():
+        if war_data["outcome"] == "TBD":
+            event_conditions_dict["Ongoing Wars"].append(war)
 
     return event_conditions_dict
 
-def event_conditions_met(chosen_event, event_conditions_dict, game_id, active_games_dict):
-    '''
+def event_conditions_met(chosen_event: str, event_conditions_dict: dict, game_id: str, active_games_dict: dict) -> bool:
+    """
     Returns True if the conditions of an event are met, otherwise returns False.
+    Note - it is probably possible to merge build_event_conditions_dict and this function together.
 
-    Parameters:
-    - chosen_event: A string that is the name of an event.
-    - event_conditions_dict: A dictionary of event conditions data generated from build_event_conditions_dict().
-    - active_games_dict: A dictionary derived from the active_games.json file.
-    '''
+    Params:
+        chosen_event (str): A string that is the name of an event.
+        event_conditions_dict (dict): A dictionary of event conditions data generated from build_event_conditions_dict().
+        full_game_id (str): The full game_id of the active game.
+        active_games_dict (str): A dictionary derived from the active_games.json file.
+    """
 
+    # get data from game
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-
-    if chosen_event in active_games_dict[game_id]["Inactive Events"]:
-        return False
     
+    # check all conditions
     for condition in EVENT_DICT[chosen_event]["Conditions List"]:
         match condition:
+            
             case "Cannot be First Event":
                 if event_conditions_dict["Event Count"] == 0:
                     return False
+            
             case "At Peace For At Least 8 Turns >= 1":
                 if len(event_conditions_dict["At Peace For At Least 8 Turns"]) == 0:
                     return False
-            case "Greater Than 5 Stability":
-                if len(event_conditions_dict["Greater Than 5 Stability"]) == 0:
-                    return False
-            case "Less Than 8 Stability >= 1":
-                if len(event_conditions_dict["Less Than 8 Stability >= 1"]) == 0:
-                    return False
-            case "Less Than 4 Stability >= 1":
-                if len(event_conditions_dict["Less Than 4 Stability >= 1"]) == 0:
-                    return False
+            
             case "Ongoing Wars >= 3":
                 if len(event_conditions_dict["Ongoing Wars"]) < 3:
                     return False
+            
             case "Ongoing Wars >= 1":
                 if len(event_conditions_dict["Ongoing Wars"]) == 0:
                     return False
-            case "Defeat Penalty >= 1":
-                if len(event_conditions_dict["Defeat Penalty"]) == 0:
-                    return False
+            
             case "No Most Research Tie":
                 if event_conditions_dict["Most Research"] == "N/A":
                     return False
+            
             case "No Major Event":
                 major_event_list = [event_name for event_name, data in EVENT_DICT.items() if data.get('Type') == 'Major Event']
                 for event in active_games_dict[game_id]["Active Events"]:
@@ -205,28 +168,33 @@ def event_conditions_met(chosen_event, event_conditions_dict, game_id, active_ga
                 for event in active_games_dict[game_id]["Inactive Events"]:
                     if event in major_event_list:
                         return False
+            
             case _:
+                # default case - global improvement count of some improvement is >= 1
+                print(condition)
                 improvement_name_list = sorted(improvement_data_dict.keys())
+                print(f"{len(event_conditions_dict["Global Improvement Count List"])} vs {len(improvement_name_list)}")
                 for improvement in improvement_name_list:
                     if improvement in condition:
                         improvement_index = improvement_name_list.index(improvement)
                         improvement_count = event_conditions_dict["Global Improvement Count List"][improvement_index]
                         if improvement_count == 0:
                             return False
+        
+        # if condition not recognized return false
         return False
     
     return True
 
-def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_num, active_games_dict, playerdata_list, regdata_list, wardata_list, diplomacy_log):
-    '''
+def initiate_event(chosen_event: str, event_conditions_dict: dict, game_id: str, current_turn_num: int, active_games_dict: dict, playerdata_list, diplomacy_log: list):
+    """
     Initiates the chosen event. If it is an instant resolution event, it will be resolved.
-
-    Parameters:
-    - Too many to count, this function is insane.
-    '''
+    This function is a fucking mess and should probably be burned down and totally replaced at some point.
+    """
 
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     nation_name_list = []
     for playerdata in playerdata_list:
         nation_name_list.append(playerdata[1])
@@ -234,19 +202,15 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
     match chosen_event:
 
         case "Assassination":
-            less_then_8_stability_list = event_conditions_dict["Less Than 8 Stability"]
-            random.shuffle(less_then_8_stability_list)
-            victim_player_id = less_then_8_stability_list.pop()
+            victim_player_id = random.randint(1, len(playerdata_list)) 
             victim_nation_name = playerdata_list[victim_player_id - 1][1]
             diplomacy_log.append(f'{victim_nation_name} has been randomly selected for the {chosen_event} event!')
             #save to Current Event key to be activated later
             active_games_dict[game_id]["Current Event"][chosen_event] = [victim_player_id]
         
         case "Coup D'état":
-            less_then_4_stability_list = event_conditions_dict["Less Than 4 Stability"]
-            random.shuffle(less_then_4_stability_list)
-            victim_player_id = less_then_4_stability_list.pop()
-            victim_nation_name = playerdata_list[victim_player_id - 1][1]
+            victim_nation_name = core.get_lowest_in_record(game_id, "strongest_economy")
+            victim_player_id = nation_name_list.index(victim_nation_name) + 1
             #resolve event now
             old_government = playerdata_list[victim_player_id - 1][3]
             gov_list = ['Republic', 'Technocracy', 'Oligarchy', 'Totalitarian', 'Remnant', 'Protectorate', 'Military Junta', 'Crime Syndicate']
@@ -259,83 +223,66 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             active_games_dict[game_id]["Inactive Events"].append(chosen_event)
         
         case "Decaying Infrastructure":
-            less_then_6_stability_list = []
-            for player_id in range(len(playerdata_list)):
-                if player_id not in event_conditions_dict["Greater Than 5 Stability"]:
-                    less_then_6_stability_list.append(player_id)
+            top_three_economy = checks.get_top_three(game_id, "strongest_economy", False)
             #resolve event now
-            for region in regdata_list:
-                region_id = region[0]
-                ownership_data = ast.literal_eval(region[2])
-                improvement_data = ast.literal_eval(region[4])
-                victim_player_id = ownership_data[0]
-                improvement_name = improvement_data[0]
-                if victim_player_id in less_then_6_stability_list and improvement_name in ['Coal Mine', 'Strip Mine', 'Oil Well', 'Oil Refinery', 'Solar Farm', 'Wind Farm']:
+            for region_id in regdata_dict:
+                region = Region(region_id, game_id)
+                region_improvement = Improvement(region_id, game_id)
+                victim_player_id = region.owner_id
+                improvement_name = region_improvement.name
+                victim_nation_name = nation_name_list[victim_player_id - 1]
+                if victim_nation_name not in top_three_economy and improvement_name in ['Coal Mine', 'Strip Mine', 'Oil Well', 'Oil Refinery', 'Solar Farm', 'Wind Farm']:
                     decay_roll = random.randint(1, 10)
                     if decay_roll >= 6:
-                        victim_nation_name = playerdata_list[victim_player_id - 1][1]
-                        region[4] = str([None, 99])
+                        region_improvement.clear()
                         diplomacy_log.append(f'{victim_nation_name} {improvement_name} in {region_id} has decayed.')
             #save to inactive events list
             active_games_dict[game_id]["Inactive Events"].append(chosen_event)
 
         case "Defection":
+            wardata = WarData(game_id)
             defection_victims_dict = {}
-            lowest_stability_value = 10
             for player_id in event_conditions_dict["Players at War"]:
-                playerdata = playerdata_list[player_id - 1]
-                stability_data = ast.literal_eval(playerdata[7])
-                stability_header_list = stability_data[0].split(" ")
-                stability_header_list = stability_header_list[1].split("/")
-                stability_value = int(stability_header_list[0])
-                if stability_value < lowest_stability_value:
-                    nation_name = playerdata_list[player_id - 1][1]
-                    defection_victims_dict = {}
-                    victim_data = {}
-                    victim_data["Victim Player ID"] = player_id
-                    victim_data["Main Opponent Player ID"] = 0
-                    defection_victims_dict[nation_name] = victim_data
-                    lowest_stability_value = stability_value
-                elif stability_value == lowest_stability_value:
-                    victim_data = {}
-                    victim_data["Victim Player ID"] = player_id
-                    victim_data["Main Opponent Player ID"] = 0
-                    defection_victims_dict[nation_name] = victim_data
-            for nation_name in defection_victims_dict:
-                victim_player_id = defection_victims_dict[nation_name]["Victim Player ID"]
-                for war in wardata_list:
-                    if war[victim_player_id] != '-' and war[13] == 'Ongoing':
-                        for index, player_war_data in enumerate(war):
-                            if player_war_data != '-' and index != victim_player_id:
-                                player_war_data = ast.literal_eval(player_war_data)
-                                if 'Main' in player_war_data[0]:
-                                    opponent_player_id = index
-                                    break
-                        defection_victims_dict[nation_name]["Main Opponent Player ID"] = opponent_player_id
-                        break
-            #resolve event now
-            for region in regdata_list:
-                region_id = region[0]
-                unit_data = ast.literal_eval(region[5])
-                player_id = ownership_data[0]
                 nation_name = playerdata_list[player_id - 1][1]
-                unit_name = unit_data[0]
-                unit_health = unit_data[1]
-                unit_owner_id = None
-                if unit_name != None:
-                    unit_owner_id = unit_data[2]
-                if nation_name in defection_victims_dict and unit_owner_id != None:
-                    if unit_owner_id == defection_victims_dict[nation_name]["Victim Player ID"]:
-                        victim_nation_name = nation_name
-                        defection_roll = random.randint(1, 10)
-                        if defection_roll == 10:
-                            opponent_player_id = defection_victims_dict[nation_name]["Main Opponent Player ID"]
-                            unit_data = str([unit_name, unit_health, opponent_player_id])
-                            opponent_nation_name = playerdata_list[opponent_player_id - 1][1]
-                            diplomacy_log.append(f'{victim_nation_name} {unit_name} {region_id} has defected to {opponent_nation_name}.')
-                        elif defection_roll >= 8:
-                            unit_data = str([None, 99])
-                            diplomacy_log.append(f'{victim_nation_name} {unit_name} {region_id} has disbanded.')
+                defection_victims_entry = {}
+                defection_victims_entry["lowestScore"] = None
+                defection_victims_entry["enemyIDs"] = []
+                for war, war_data in wardata.wardata_dict.items():
+                    if nation_name in war_data["combatants"] and war_data["outcome"] == "TBD":
+                        war_role = war_data["combatants"][nation_name]["role"]
+                        if 'Attacker' in war_role:
+                            score = war_data["attackerWarScore"]["total"]
+                        else:
+                            score = war_data["defenderWarScore"]["total"]
+                        if score < defection_victims_entry["lowestScore"]:
+                            defection_victims_entry["lowestScore"] = score
+                for i in range(len(playerdata_list)):
+                    if player_id == i + 1:
+                        continue
+                    if wardata.are_at_war(player_id, i + 1):
+                        defection_victims_entry["enemyIDs"].append(i + 1)
+                defection_victims_dict[nation_name] = defection_victims_entry
+            min_value = min(entry["lowestScore"] for entry in defection_victims_dict.values() if "lowestScore" in entry)
+            filtered_dict = {}
+            for nation_name, defection_data in defection_victims_dict.items():
+                if defection_data["lowestScore"] == min_value:
+                    filtered_dict[nation_name] = defection_data
+            defection_victims_dict = filtered_dict
+            #resolve event now
+            for region_id in regdata_dict:
+                region = Region(region_id, game_id)
+                region_unit = Unit(region_id, game_id)
+                victim_nation_name = nation_name_list[region_unit.owner_id - 1]
+                if victim_nation_name in defection_victims_dict and region.owner_id in defection_victims_dict["enemyIDs"]:
+                    defection_roll = random.randint(1, 10)
+                    if defection_roll == 10:
+                        opponent_player_id = region.owner_id
+                        region_unit.set_owner_id(opponent_player_id)
+                        opponent_nation_name = playerdata_list[opponent_player_id - 1][1]
+                        diplomacy_log.append(f'{victim_nation_name} {unit_name} {region_id} has defected to {opponent_nation_name}.')
+                    elif defection_roll >= 8:
+                        region_unit.clear()
+                        diplomacy_log.append(f'{victim_nation_name} {unit_name} {region_id} has disbanded.')
             #save to inactive events list
             active_games_dict[game_id]["Inactive Events"].append(chosen_event)
 
@@ -343,23 +290,9 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             diplomacy_log.append(f'New Event: {chosen_event}!')
             active_games_dict = save_as_standard_delayed_event(chosen_event, active_games_dict, game_id, playerdata_list)
 
-        case "Downward Spiral":
-            effected_player_ids = event_conditions_dict["Defeat Penalty"]
-            #resolve event now
-            for victim_player_id in effected_player_ids:
-                victim_nation_name = playerdata_list[victim_player_id - 1][1]
-                victim_stability_data = ast.literal_eval(playerdata_list[victim_player_id - 1][7])
-                for entry in victim_stability_data:
-                    if "from Defeat" in entry:
-                        entry = entry.replace('-2 from Defeat', '-3 from Defeat')
-                        entry = entry.replace('-1 from Defeat', '-2 from Defeat')
-                        diplomacy_log.append(f'{victim_nation_name} was effected by the Downward Spiral event.')
-                playerdata_list[victim_player_id - 1][7] = str(victim_stability_data)
-            #save to inactive events list
-            active_games_dict[game_id]["Inactive Events"].append(chosen_event)
-
         case "Foreign Aid":
-            effected_player_ids = event_conditions_dict["Greater Than 5 Stability"]
+            #tba: add calculation for All nations who are in the top three of at least one category
+            effected_player_ids = []
             #resolve event now
             for victim_player_id in effected_player_ids:
                 victim_nation_name = playerdata_list[victim_player_id - 1][1]
@@ -384,48 +317,6 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             diplomacy_log.append(f'New Event: {chosen_event}!')
             active_games_dict = save_as_standard_delayed_event(chosen_event, active_games_dict, game_id, playerdata_list)
 
-        case "Influence Through Trade":
-            with open(f'gamedata/{game_id}/statistics.json', 'r') as json_file:
-                statistics_dict = json.load(json_file)
-            trade_count_dict = statistics_dict['Trade Count']
-            sorted_trade_count_dict = dict(sorted(trade_count_dict.items(), key=lambda item: item[1], reverse=True))
-            top_four = sorted_trade_count_dict[:4]
-            (nation_name_1, count_1), (nation_name_2, count_2), (nation_name_3, count_3), (nation_name_4, count_4) = top_four
-            #resolve event now
-            if count_1 != count_2:
-                index = nation_name_list.index(nation_name_1)
-                player_id = index + 1
-                political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
-                political_power_count = float(political_power_economy_data[0])
-                political_power_count += 15
-                political_power_economy_data[0] = core.round_total_income(political_power_count)
-                playerdata_list[victim_player_id - 1][10] = str(political_power_economy_data)
-            if count_2 != count_3:
-                index = nation_name_list.index(nation_name_2)
-                player_id = index + 1
-                political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
-                political_power_count = float(political_power_economy_data[0])
-                political_power_count += 10
-                political_power_economy_data[0] = core.round_total_income(political_power_count)
-                playerdata_list[victim_player_id - 1][10] = str(political_power_economy_data)
-            if count_3 != count_4:
-                index = nation_name_list.index(nation_name_3)
-                player_id = index + 1
-                political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
-                political_power_count = float(political_power_economy_data[0])
-                political_power_count += 5
-                political_power_economy_data[0] = core.round_total_income(political_power_count)
-                playerdata_list[victim_player_id - 1][10] = str(political_power_economy_data)
-            with open(f'gamedata/{game_id}/statistics.json', 'w') as json_file:
-                json.dump(statistics_dict, json_file, indent=4)
-            #if a reward for first place was given save to active otherwise can
-            if count_1 != count_2:
-                active_event_dict = {}
-                active_event_dict['Income Bonus Winner'] = nation_name_1
-                active_games_dict[game_id]["Active Events"][chosen_event] = active_event_dict
-            else:
-                #save to inactive events list
-                active_games_dict[game_id]["Inactive Events"].append(chosen_event)
         case "Lost Nuclear Weapons":
             chosen_player_id = random.randint(1, len(playerdata_list))
             chosen_nation_name = playerdata_list[chosen_player_id - 1][1]
@@ -438,6 +329,26 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             diplomacy_log.append(f'New Event: {chosen_event}!')
             #save to Current Event key to be activated later
             active_games_dict[game_id]["Current Event"][chosen_event] = [victim_player_id]
+
+        case "Market Inflation":
+            #resolve event now
+            market_resource_list = ['Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
+            affected_resources_list = random.sample(market_resource_list, 3)
+            #save as an active event
+            active_event_dict = {}
+            active_event_dict["Affected Resources"] = affected_resources_list
+            active_event_dict["Expiration"] = current_turn_num + 8
+            active_games_dict[game_id]["Active Events"][chosen_event] = active_event_dict
+        
+        case "Market Recession":
+            #resolve event now
+            market_resource_list = ['Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
+            affected_resources_list = random.sample(market_resource_list, 3)
+            #save as an active event
+            active_event_dict = {}
+            active_event_dict["Affected Resources"] = affected_resources_list
+            active_event_dict["Expiration"] = current_turn_num + 8
+            active_games_dict[game_id]["Active Events"][chosen_event] = active_event_dict
 
         case "Observer Status Invitation":
             diplomacy_log.append(f'New Event: {chosen_event}!')
@@ -456,28 +367,24 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
 
         case "Power Plant Meltdown":
             meltdown_candidates = []
-            for region in regdata_list:
-                region_id = region[0]
-                ownership_data = ast.literal_eval(region[2])
-                improvement_data = ast.literal_eval(region[4])
-                if improvement_data[0] == "Nuclear Power Plant":
+            for region_id in regdata_dict:
+                region_improvement = Improvement(region_id, game_id)
+                if region_improvement.name == "Nuclear Power Plant":
                     meltdown_candidates.append(region_id)
             random.shuffle(meltdown_candidates)
             meltdown_region_id = meltdown_candidates.pop()
             #resolve event now
-            meltdown_region_data = core.get_region_data(regdata_list, meltdown_region_id)
-            control_data = ast.literal_eval(meltdown_region_data[2])
-            victim_player_id = control_data[2]
+            region = Region(meltdown_region_id, game_id)
+            region_improvement = Improvement(meltdown_region_id, game_id)
+            region_unit = Unit(meltdown_region_id, game_id)
+            victim_player_id = region.owner_id
             victim_nation_name = playerdata_list[victim_player_id - 1][1]
-            meltdown_region_data[4] = str([None, 99])
-            meltdown_region_data[5] = str([None, 99])
-            meltdown_region_data[6] = str([True, 99])
+            region_improvement.clear()
+            region_unit.clear()
+            region.set_fallout(1000)
             political_power_economy_data = ast.literal_eval(playerdata_list[victim_player_id - 1][10])
             political_power_economy_data[0] = '0.00'
             playerdata_list[victim_player_id - 1][10] = str(political_power_economy_data)
-            victim_stability_data = ast.literal_eval(playerdata_list[victim_player_id - 1][7])
-            victim_stability_data.append('-1 from Events')
-            playerdata_list[victim_player_id - 1][7] = str(victim_stability_data)
             diplomacy_log.append(f'The {victim_nation_name} Nuclear Power Plant in {meltdown_region_id} has melted down!')
             #save to inactive events list
             active_games_dict[game_id]["Inactive Events"].append(chosen_event)
@@ -488,75 +395,24 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
 
         case "United Nations Peacekeeping Mandate":
             #resolve event now
-            for war in wardata_list:
-                if war[13] == 'Ongoing':
-                    signatories_list = [False, False, False, False, False, False, False, False, False, False]
-                    for i in range(1, 11):
-                        if war[i] != '-':
-                            signatories_list[i - 1] = True
-                    for region in regdata_list:
-                        if len(region[0]) == 5:
-                            control_data = ast.literal_eval(region[2])
-                            owner_id = control_data[0]
-                            occupier_id = control_data[1]
-                            if signatories_list[owner_id - 1] and signatories_list[occupier_id - 1]:
-                                new_data = [owner_id, 0]
-                                region[2] = str(new_data)
-                    core.add_truce_period(game_id, signatories_list, 'White Peace', current_turn_num)
-                    war_name = war[11]
-                    war[13] = 'White Peace'
-                    war[15] = current_turn_num
-                    diplomacy_log.append(f'{war_name} has ended with a white peace.')
-                    break
+            wardata = WarData(game_id)
+            for war_name, war_data in wardata.wardata_dict.items():
+                if war_data["outcome"] == "TBD":
+                    wardata.end_war(war_name, "White Peace")
+                    diplomacy_log.append(f'{war_name} has ended with a white peace due to United Nations Peacekeeping Mandate.')
             #update playerdata
             diplomatic_relations_masterlist = []
             for playerdata in playerdata_list:
                 diplomatic_relations_masterlist.append(ast.literal_eval(playerdata[22]))
-            diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, wardata_list)
+            diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
             for index, playerdata in enumerate(playerdata_list):
-                victim_stability_data = ast.literal_eval(playerdata[7])
-                victim_stability_data.append('1 from Events')
-                playerdata[7] = str(victim_stability_data)
                 playerdata[22] = str(diplomatic_relations_masterlist[index])
             #save to inactive events list
             active_games_dict[game_id]["Inactive Events"].append(chosen_event)
         
         case "Widespread Civil Disorder":
-            record_filepath = f'gamedata/{game_id}/largest_nation.csv'
-            record_list = core.read_file(record_filepath, 0)
-            candidates = []
-            for index, record in enumerate(record_list):
-                if index == 0:
-                    continue
-                value = int(record[-1])
-                nation_name = nation_name_list[index - 1]
-                candidates.append([nation_name, value])
-            sorted_candidates = sorted(candidates, key = lambda x: x[-1], reverse = True)
-            first_place = [sorted_candidates[0][0], sorted_candidates[0][1]]
-            second_place = [sorted_candidates[1][0], sorted_candidates[1][1]]
-            second_to_last_place = [sorted_candidates[-2][0], sorted_candidates[-2][1]]
-            last_place = [sorted_candidates[-1][0], sorted_candidates[-1][1]]
             #resolve event now
-            first_player_id = None
-            last_player_id = None
-            if first_place[1] != second_place[1]:
-                first_nation_name = first_place[0]
-                first_player_id = nation_name_list.index(first_nation_name) + 1
-            if last_place[1] != second_to_last_place[1]:
-                last_nation_name = last_place[0]
-                last_player_id = nation_name_list.index(last_nation_name) + 1
-            for index, playerdata in enumerate(playerdata_list):
-                player_id = index + 1
-                if player_id == first_player_id:
-                    first_stability_data = ast.literal_eval(playerdata[7])
-                    first_stability_data.append('-1 from Events')
-                    playerdata[7] = str(first_stability_data)
-                    diplomacy_log.append(f'{first_nation_name} lost -1 stability due to Widespread Civil Disorder.')
-                elif player_id == last_player_id:
-                    last_stability_data = ast.literal_eval(playerdata[7])
-                    last_stability_data.append('1 from Events')
-                    playerdata[7] = str(last_stability_data)
-                    diplomacy_log.append(f'{last_nation_name} gained 1 stability due to Widespread Civil Disorder.')
+            diplomacy_log.append(f'New Event: {chosen_event}!')
             #save as an active event
             active_event_dict = {}
             active_event_dict["Expiration"] = current_turn_num + 8
@@ -587,16 +443,19 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             active_games_dict = save_as_standard_delayed_event(chosen_event, active_games_dict, game_id, playerdata_list)
 
         case "Foreign Invasion":
-            invasion_candidates_list = []
-            for region in regdata_list:
-                if ast.literal_eval(region[9]):
-                    invasion_candidates_list.append(region[0])
-            random.shuffle(invasion_candidates_list)
-            invasion_point = invasion_candidates_list.pop()
+            with open(f'gamedata/game{game_id}/regdata.json', 'r') as json_file:
+                regdata_dict = json.load(json_file)
+            region_id_list = list(regdata_dict.keys())
+            while True:
+                invasion_candidate_id = random.choice(region_id_list)
+                invasion_candidate = Region(invasion_candidate_id, game_id)
+                if invasion_candidate.is_edge():
+                    invasion_point_id = invasion_candidate
+                    break
             reinforcements_regions_list = []
-            reinforcements_regions_list.append(invasion_point)
-            invasion_point_region_data = core.get_region_data(regdata_list, invasion_point)
-            reinforcements_regions_list = reinforcements_regions_list + ast.literal_eval(invasion_point_region_data[8])
+            reinforcements_regions_list.append(invasion_point_id)
+            invasion_point = Region(invasion_point_id, game_id)
+            reinforcements_regions_list += invasion_point.adjacent_regions()
             hex_colors_list = list(core.player_colors_conversions.keys())
             for playerdata in playerdata_list:
                 if playerdata[2] in hex_colors_list:
@@ -605,19 +464,17 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             invasion_color = hex_colors_list.pop()
             #resolve event now
             if current_turn_num >= 24:
-                unit_abbrev = 'HT'
-                unit_health = 10
+                unit_name = 'Heavy Tank'
             elif current_turn_num >= 16:
-                unit_abbrev = 'ME'
-                unit_health = 8
+                unit_name = 'Mechanized Infantry'
             else:
-                unit_abbrev = 'IN'
-                unit_health = 6
+                unit_name = 'Infantry'
             for region_id in reinforcements_regions_list:
-                for region in regdata_list:
-                    if region[0] == region_id:
-                        region[2] = str([99, 0])
-                        region[5] = str([unit_abbrev, unit_health])
+                region = Region(region_id, game_id)
+                region_unit = Unit(region_id, game_id)
+                region.set_owner_id(99)
+                region.set_occupier_id(0)
+                region_unit.set_unit(unit_name, 0)
             #save as an active event
             active_event_dict = {}
             active_event_dict["Reinforcements Regions"] = reinforcements_regions_list
@@ -629,15 +486,13 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             diplomacy_log.append(f'New Event: {chosen_event}!')
             intensify_roll = random.randint(3, 9)
             spread_roll = random.randint(3, 9)
-            region_list = []
-            for region in regdata_list:
-                region_list.append(region[0])
-            random.shuffle(region_list)
-            origin_region_id = region_list.pop()
+            with open(f'gamedata/game{game_id}/regdata.json', 'r') as json_file:
+                regdata_dict = json.load(json_file)
+            region_id_list = list(regdata_dict.keys())
+            origin_region_id = random.choice(region_id_list)
             #resolve event now
-            for region in regdata_list:
-                if region[0] == origin_region_id:
-                    region[12] = 1
+            region = Region(origin_region_id, game_id)
+            region.add_infection()
             #save as an active event
             active_event_dict = {}
             active_event_dict["Intensify Value"] = intensify_roll
@@ -668,19 +523,22 @@ def initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_nu
             political_power_economy_data[0] = '0.00'
             playerdata[10] = str(political_power_economy_data)
     
-    return active_games_dict, playerdata_list, regdata_list, wardata_list, diplomacy_log
+    return active_games_dict, playerdata_list, diplomacy_log
 
-def save_as_standard_delayed_event(chosen_event, active_games_dict, full_game_id, playerdata_list):
-    '''
+def save_as_standard_delayed_event(chosen_event: str, active_games_dict: dict, full_game_id: str, playerdata_list) -> dict:
+    """
     Updates active_games_dict with a new current event.
     Used for all events in which there is a pending option / vote effecting all players.
 
-    Parameters:
-    - chosen_event: A string that is the name of an event.
-    - active_games_dict: A dictionary derived from the active_games.json file.
-    - full_game_id: The full game_id of the active game.
-    - playerdata_list: A list of lists containing all playerdata derived from playerdata.csv
-    '''
+    Params:
+        chosen_event (str): A string that is the name of an event.
+        active_games_dict (dict): A dictionary derived from the active_games.json file.
+        full_game_id (str): The full game_id of the active game.
+        playerdata_list (list of lists): A list of lists containing all playerdata derived from playerdata.csv
+
+    Returns:
+        active_games_dict (dict): A dictionary derived from the active_games.json file.
+    """
 
     effected_player_ids = []
     for i in range(len(playerdata_list)):
@@ -695,27 +553,27 @@ def save_as_standard_delayed_event(chosen_event, active_games_dict, full_game_id
 #HANDLE CURRENT EVENTS
 ################################################################################
 
-def handle_current_event(active_games_dict, game_id, diplomacy_log):
-    '''
+def handle_current_event(active_games_dict: dict, game_id: str, diplomacy_log: list) -> list:
+    """
     Handles a current event when called by site code. Returns updated diplomacy_log.
 
-    Parameters:
-    - active_games_dict: A dictionary derived from the active_games.json file.
-    - game_id: The full game_id of the active game.
-    - diplomacy_log: A list of pre-generated diplomatic interaction logs.
-    '''
+    Params:
+        active_games_dict (dict): A dictionary derived from the active_games.json file.
+        game_id (str): The full game_id of the active game.
+        diplomacy_log (list): A list of pre-generated diplomatic interaction logs.
+
+    Returns:
+        active_games_dict (dict): A dictionary derived from the active_games.json file.
+    """
     
     #get game information
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_filepath = f'gamedata/{game_id}/regdata.csv'
-    regdata_list = core.read_file(regdata_filepath, 2)
     nation_name_list = []
     for playerdata in playerdata_list:
         nation_name_list.append(playerdata[1])
-    region_list = []
-    for region in regdata_list:
-        region_list.append(region[0])
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     player_action_logs = list([]*len(playerdata_list))
     current_turn_num = core.get_current_turn_num(int(game_id[-1]))
 
@@ -749,18 +607,17 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                     political_power_stored -= 5
                     political_power_economy_data[0] = core.round_total_income(political_power_stored)
                     playerdata_list[player_id - 1][10] = str(political_power_economy_data)
-                    stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                    stability_data.append('-1 from Events')
-                    playerdata_list[player_id - 1][7] = str(stability_data)
                 elif decision == "Find a Scapegoat":
                     political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
                     political_power_stored = float(political_power_economy_data[0])
-                    political_power_stored += 10
+                    political_power_stored -= 10
                     political_power_economy_data[0] = core.round_total_income(political_power_stored)
                     playerdata_list[player_id - 1][10] = str(political_power_economy_data)
-                    stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                    stability_data.append('-2 from Events')
-                    playerdata_list[player_id - 1][7] = str(stability_data)
+                    scapegoat_nation_name = input("Enter the nation name to scapegoat: ")
+            active_event_dict = {}
+            active_event_dict["Expiration"] = current_turn_num + 8
+            active_event_dict["Scapegoat"] = scapegoat_nation_name
+            active_games_dict[game_id]["Active Events"][event_name] = active_event_dict
 
         case "Diplomatic Summit":
             print("""Available Options: "Attend" or "Decline" """)
@@ -770,16 +627,18 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                 while True:
                     decision = input(f"Enter {nation_name} decision: ")
                     if decision == "Attend":
-                        stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                        stability_data.append('1 from Events')
-                        playerdata_list[player_id - 1][7] = str(stability_data)
                         summit_attendance_list.append(nation_name)
+                        political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
+                        political_power_stored = float(political_power_economy_data[0])
+                        political_power_stored += 10
+                        political_power_economy_data[0] = core.round_total_income(political_power_stored)
                         break
                     elif decision == "Decline":
                         valid_research = False
                         while not valid_research:
                             research_name = input(f"Enter military research: ")
                             playerdata_list, valid_research = gain_free_research(game_id, research_name, player_id, playerdata_list)
+                        break
             active_event_dict = {}
             active_event_dict["Expiration"] = current_turn_num + 8
             active_event_dict["Attendance"] = summit_attendance_list
@@ -801,9 +660,10 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         bribe_takers_list.append(nation_name)
                         break
                     elif decision == "Decline":
-                        stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                        stability_data.append('1 from Events')
-                        playerdata_list[player_id - 1][7] = str(stability_data)
+                        political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
+                        political_power_stored = float(political_power_economy_data[0])
+                        political_power_stored += 5
+                        political_power_economy_data[0] = core.round_total_income(political_power_stored)
                         break
             diplomacy_log, player_action_logs = private_actions.resolve_war_declarations(war_declaration_list, game_id, current_turn_num, diplomacy_log, player_action_logs)
             if bribe_takers_list != []:
@@ -824,10 +684,10 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         while not valid_region_id:
                             silo_location_id = input("Enter region id for Missile Silo: ")
                             silo_location_id = silo_location_id.upper()
-                            if silo_location_id in region_list:
+                            if silo_location_id in regdata_dict:
                                 valid_region_id = True
-                        improvement_data = ['Missile Silo', 5]
-                        regdata_list = core.update_improvement_data(regdata_list, silo_location_id, improvement_data)
+                        region_improvement = Improvement(valid_region_id, game_id)
+                        region_improvement.set_improvement('Missile Silo')
                         missile_data = ast.literal_eval(playerdata_list[player_id - 1][21])
                         missile_data[1] += 3
                         playerdata_list[player_id - 1][21] = str(missile_data)
@@ -848,9 +708,6 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
         case "Major Security Breach":
             for player_id in effected_player_ids_list:
                 breach_research_list = ast.literal_eval(playerdata_list[player_id - 1][26])
-                stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                stability_data.append('-1 from Events')
-                playerdata_list[player_id - 1][7] = str(stability_data)
             for index, playerdata in enumerate(playerdata_list):
                 player_id = index + 1
                 nation_name = nation_name_list[player_id - 1]
@@ -863,9 +720,6 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
             
         case "Peacetime Rewards":
             for player_id in effected_player_ids_list:
-                stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                stability_data.append('1 from Events')
-                playerdata_list[player_id - 1][7] = str(stability_data)
                 valid_research = False
                 while not valid_research:
                     research_name = input(f"Enter energy or infrastructure research: ")
@@ -878,14 +732,11 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                 nation_name = nation_name_list[player_id - 1]
                 while True:
                     decision = input(f"Enter {nation_name} decision: ")
-                    if decision == "Keep":
+                    if decision == "Change":
                         new_foreign_policy = input(f"Enter new foreign policy: ")
                         playerdata_list[player_id - 1][7][4] = new_foreign_policy
-                        stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                        stability_data.append('1 from Events')
-                        playerdata_list[player_id - 1][7] = str(stability_data)
                         break
-                    elif decision == "Change":
+                    elif decision == "Keep":
                         political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
                         political_power_stored = float(political_power_economy_data[0])
                         political_power_stored += 10
@@ -916,7 +767,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} has been embargoed.')
@@ -950,7 +801,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} has been humiliated.')
@@ -984,7 +835,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} will receive the foreign investment.')
@@ -1018,7 +869,8 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = sorted_vote_tally_dict[:2]
+            print(sorted_vote_tally_dict)
+            top_two = list(sorted_vote_tally_dict.items())[:2]
             (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             if count_1 != count_2:
                 diplomacy_log.append(f'With {count_1} votes, {nation_name_1} has been elected Mediator.')
@@ -1098,7 +950,7 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                         break
             if vote_tally_dict != {}:
                 sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-                top_two = sorted_vote_tally_dict[:2]
+                top_two = list(sorted_vote_tally_dict.items())[:2]
                 (nation_name_1, count_1), (nation_name_2, count_2) = top_two
             else:
                 count_1 = 0
@@ -1124,11 +976,14 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
                 while True:
                     decision = input(f"Enter {nation_name} decision: ")
                     if decision == "Accept":
-                        candidates_list.append(nation_name)
+                        if core.has_capital(player_id, game_id):
+                            candidates_list.append(nation_name)
+                            break
                     elif decision == "Decline":
-                        stability_data = ast.literal_eval(playerdata_list[player_id - 1][7])
-                        stability_data.append('1 from Events')
-                        playerdata_list[player_id - 1][7] = str(stability_data)
+                        political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
+                        political_power_stored = float(political_power_economy_data[0])
+                        political_power_stored += 5
+                        political_power_economy_data[0] = core.round_total_income(political_power_stored)
                         break
             if candidates_list != []:
                 random.shuffle(candidates_list)
@@ -1164,18 +1019,12 @@ def handle_current_event(active_games_dict, game_id, diplomacy_log):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
-
     return diplomacy_log
 
 def gain_free_research(game_id, research_name, player_id, playerdata_list):
-    '''
+    """
     Returns updated playerdata_List and a bool that is True if the research was valid, False otherwise.
-    '''
+    """
 
     player_government = playerdata_list[player_id - 1][3]
     player_political_power_data = ast.literal_eval(playerdata_list[player_id - 1][10])
@@ -1187,7 +1036,7 @@ def gain_free_research(game_id, research_name, player_id, playerdata_list):
     valid_research = True
     if research_name in player_research_list:
         valid_research = False
-    if research_prereq not in player_research_list and research_prereq != None:
+    if research_prereq != None and research_prereq not in player_research_list:
         valid_research = False
     if valid_research:
         player_research_list.append(research_name)
@@ -1197,7 +1046,7 @@ def gain_free_research(game_id, research_name, player_id, playerdata_list):
                 if value.get("Research Type") in ['Energy', 'Infrastructure']:
                     totalitarian_bonus_list.append(key)
             if research_name in totalitarian_bonus_list:
-                player_stored_political_power += 1
+                player_stored_political_power += 2
 
     player_political_power_data[0] = core.round_total_income(player_stored_political_power)
     playerdata_list[player_id - 1][10] = str(player_political_power_data)
@@ -1210,19 +1059,20 @@ def gain_free_research(game_id, research_name, player_id, playerdata_list):
 ################################################################################
 
 def resolve_active_events(turn_status, public_actions_dict, private_actions_dict, full_game_id, diplomacy_log):
-    '''
+    """
     Function that handles active events depending on turn status. Returns updated diplomacy_log.
 
     Paramteters:
     - turn_status: A string that is either "Before Actions" or "After Actions".
     - full_game_id: The full game_id of the active game.
     - diplomacy_log: A list of pre-generated diplomatic interaction logs.
-    '''
+    """
 
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    for event_name in active_games_dict[full_game_id]["Active Events"]:
+    active_events_list = list(active_games_dict[full_game_id]["Active Events"].keys())
+    for event_name in active_events_list:
         public_actions_dict, private_actions_dict, active_games_dict, diplomacy_log = handle_active_event(event_name, public_actions_dict, private_actions_dict, active_games_dict, full_game_id, turn_status, diplomacy_log)
     
     with open('active_games.json', 'w') as json_file:
@@ -1230,18 +1080,18 @@ def resolve_active_events(turn_status, public_actions_dict, private_actions_dict
 
     return public_actions_dict, private_actions_dict, diplomacy_log 
 
-def handle_active_event(event_name, public_actions_dict, private_actions_dict, active_games_dict, full_game_id, turn_status, diplomacy_log):
-    '''
+def handle_active_event(event_name, public_actions_dict, private_actions_dict, active_games_dict, game_id, turn_status, diplomacy_log):
+    """
     For active events that require special handling which cannot be integrated cleanly in other game code.
-    '''
+    Also retires any active events that expire at end of turn
+    """
 
     #get game information
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    regdata_filepath = f'gamedata/{full_game_id}/regdata.csv'
-    regdata_list = core.read_file(regdata_filepath, 2)
-    game_id = int(full_game_id[-1])
-    current_turn_num = core.get_current_turn_num(game_id)
+    current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     
     #resolve active event
     match event_name:
@@ -1251,26 +1101,18 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
             
             if turn_status == "Before Actions":
                 #add move orders to action dictionary
-                for region in regdata_list:
-                    starting_region_id = region[0]
-                    control_data = ast.literal_eval(region[2])
-                    unit_data = ast.literal_eval(region[5])
-                    adjacency_list = ast.literal_eval(region[8])
-                    if unit_data[0] != None:
-                        if unit_data[2] == 99:
-                            ending_region_id = determine_target_region(regdata_list, adjacency_list)
-                            if ending_region_id is not None:
-                                movement_action_str = f'Move {starting_region_id}-{ending_region_id}'
-                                private_actions_dict['Move'].append([99, movement_action_str])
+                for region_id in regdata_dict:
+                    region = Region(region_id, game_id)
+                    region_unit = Unit(region_id, game_id)
+                    if region_unit.name != None and region_unit.owner_id == 0:
+                        ending_region_id = determine_target_region(region.adjacent_regions(), game_id)
+                        if ending_region_id is not None:
+                            movement_action_str = f'Move {region_id}-{ending_region_id}'
+                            private_actions_dict['Move'].append([99, movement_action_str])
                 #add deploy orders to action dictionary
-                for region in regdata_list:
-                    region_id = region[0]
-                    control_data = ast.literal_eval(region[2])
-                    unit_data = ast.literal_eval(region[5])
-                    if control_data[0] == 99 and control_data[1] == 0:
-                        if unit_data[0] != None:
-                            if unit_data[2] != 99:
-                                continue
+                for region_id in regdata_dict:
+                    region = Region(region_id, game_id)
+                    if region.owner_id == 99 and region.occupier_id == 0:
                         if current_turn_num >= 24:
                             unit_abbrev = 'HT'
                         elif current_turn_num >= 16:
@@ -1283,68 +1125,62 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
             if turn_status == "After Actions":
                 #check if Foreign Invasion has no remaining units
                 invasion_unit_count = 0
-                for region in regdata_list:
-                    unit_data = ast.literal_eval(region[5])
-                    if unit_data[0] != None:
-                        if unit_data[2] == 99:
-                            invasion_unit_count += 1
+                for region_id in regdata_dict:
+                    region_unit = Unit(region_id, game_id)
+                    if region_unit.name != None and region_unit.owner_id == 0:
+                        invasion_unit_count += 1
                 if invasion_unit_count == 0:
-                    regdata_list = end_foreign_invasion(regdata_list)
+                    end_foreign_invasion(game_id)
                 #check if Foreign Invasion has no unoccupied reinforcement regions
                 invasion_unoccupied_count = 0
-                for region_id in active_games_dict[full_game_id]['Active Events'][event_name]["Reinforcements Regions"]:
-                    region_data = core.get_region_data(regdata_list, region_id)
-                    control_data = ast.literal_eval(region_data[2])
-                    if control_data[1] == 0:
+                for region_id in active_games_dict[game_id]['Active Events'][event_name]["Reinforcements Regions"]:
+                    region = Region(region_id, game_id)
+                    if region.occupier_id == 0:
                         invasion_unoccupied_count += 1
                 if invasion_unoccupied_count == 0:
-                    regdata_list = end_foreign_invasion(regdata_list)
+                    end_foreign_invasion(game_id)
 
 
         case "Pandemic":
             
             if turn_status == "After Actions":
-                intensify_value = active_games_dict[full_game_id]['Active Events'][event_name]["Intensify Value"]
-                spread_value = active_games_dict[full_game_id]['Active Events'][event_name]["Spread Value"]
-                completed_cure_research = active_games_dict[full_game_id]['Active Events'][event_name]["Completed Cure Research"]
-                needed_cure_research = active_games_dict[full_game_id]['Active Events'][event_name]["Needed Cure Research"]
-                closed_borders_player_ids_list = active_games_dict[full_game_id]['Active Events'][event_name]["Closed Borders List"]
+                intensify_value = active_games_dict[game_id]['Active Events'][event_name]["Intensify Value"]
+                spread_value = active_games_dict[game_id]['Active Events'][event_name]["Spread Value"]
+                completed_cure_research = active_games_dict[game_id]['Active Events'][event_name]["Completed Cure Research"]
+                needed_cure_research = active_games_dict[game_id]['Active Events'][event_name]["Needed Cure Research"]
+                closed_borders_player_ids_list = active_games_dict[game_id]['Active Events'][event_name]["Closed Borders List"]
                 cure_percentage = float(completed_cure_research) / float(needed_cure_research)
                 cure_percentage = round(cure_percentage, 2)
                 if completed_cure_research >= needed_cure_research:
                     #run pandemic decline procedure
-                    for region in regdata_list:
-                        infection_score = region[12]
-                        if infection_score > 0:
-                            infection_score -= 2
-                        if infection_score < 0:
-                            infection_score = 0
-                        region[12] = infection_score
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        region.add_infection(-2)
                 else:
                     #conduct intensify rolls
-                    for region in regdata_list:
-                        infection_score = region[12]
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        infection_score = region.infection()
                         if infection_score > 0 and infection_score < 10:
-                            control_data = ast.literal_eval(region[2])
                             intensify_roll = random.randint(1, 10)
                             if intensify_roll >= intensify_value:
-                                if core.check_for_adjacent_improvement(control_data[0], region[0], ['Capital', 'City'], regdata_list):
-                                    infection_score += 2
+                                if region.check_for_adjacent_improvement(improvement_names = {'Capital', 'City'}):
+                                    region.add_infection(2)
                                 else:
-                                    infection_score += 1
+                                    region.add_infection(1)
                     #conduct spread roles
-                    for region in regdata_list:
-                        control_data = ast.literal_eval(region[2])
-                        adjacency_list = ast.literal_eval(region[8])
-                        quarantined = region[11]
-                        infection_score = region[12]
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        quarantined = region.is_quarantined()
+                        infection_score = region.infection()
                         if infection_score > 0:
-                            for region_id in adjacency_list:
-                                adjacent_region_data = core.get_region_data(regdata_list, region_id)
-                                adjacent_control_data = ast.literal_eval(adjacent_region_data[2])
-                                adjacent_infection_score = adjacent_region_data[12]
+                            for adjacent_region_id in region.adjacent_regions():
+                                adjacent_region = Region(adjacent_region_id, game_id)
+                                adjacent_owner_id = adjacent_region.owner_id
+                                adjacent_infection_score = adjacent_region.infection()
                                 if adjacent_infection_score == 0:
-                                    if not quarantined and (control_data[0] != adjacent_control_data[0] and adjacent_control_data[0] not in closed_borders_player_ids_list):
+                                    # to do - make closed_borders_player_ids_list a dictionary instead of a list to improve runtime
+                                    if not quarantined and (region.owner_id != adjacent_owner_id and adjacent_owner_id not in closed_borders_player_ids_list):
                                         spread_roll = random.randint(1, 10)
                                         if spread_roll < spread_value:
                                             continue
@@ -1352,24 +1188,25 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                                         spread_roll = random.randint(1, 20)
                                         if spread_roll > 1:
                                             continue
-                                adjacent_region_data[12] = 1
+                                adjacent_region.add_infection(1)
                 #get total infection scores
                 infection_scores = [0 * len(playerdata_list)]
-                for region in regdata_list:
-                    control_data = ast.literal_eval(region[2])
-                    owner_id = control_data[0]
-                    infection_score = region[12]
+                for region_id in regdata_dict:
+                    region = Region(region_id, game_id)
+                    owner_id = region.owner_id
+                    infection_score = region.infection()
                     if owner_id in range(1, len(infection_scores) + 1):
                         infection_scores[owner_id - 1] += infection_score
                 #check if pandemic has been eradicated
                 infection_total = sum(infection_scores)
                 if infection_total == 0:
-                    for region in regdata_list:
-                        quarantined = region[11]
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        quarantined = region.is_quarantined()
                         if quarantined:
-                            region[11] = False
-                    del active_games_dict[full_game_id]['Active Events'][event_name]
-                    active_games_dict[full_game_id]["Inactive Events"].append(event_name)
+                            region.set_quarantine(False)
+                    del active_games_dict[game_id]['Active Events'][event_name]
+                    active_games_dict[game_id]["Inactive Events"].append(event_name)
                     diplomacy_log.append("The pandemic has been eradicated!")
                 #print diplomacy log messages
                 if infection_total != 0:
@@ -1389,41 +1226,33 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
 
             if turn_status == "After Actions":
                 #check if leased regions have changed hands
-                for region_id in active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
-                    region_data = core.get_region_data(regdata_list, region_id)
-                    control_data = ast.literal_eval(region_data[2])
-                    if control_data[0] != player_id:
-                        active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"].remove(region_id)
+                for region_id in active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
+                    region = Region(region_id, game_id)
+                    if region.owner_id != player_id:
+                        active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"].remove(region_id)
                         diplomacy_log.append(f"{region_id} is no longer being leased to the foreign nation.")
-                #check if chosen nation has hit zero stability
+                #check if event has ended
                 nation_name_list = []
                 for playerdata in playerdata_list:
                     nation_name_list.append(playerdata[1])
-                chosen_nation_name = active_games_dict[full_game_id]["Active Events"][event_name]["Chosen Nation Name"]
+                chosen_nation_name = active_games_dict[game_id]["Active Events"][event_name]["Chosen Nation Name"]
                 player_id = nation_name_list.index(chosen_nation_name)
-                player_stability_list = ast.literal_eval(playerdata_list[player_id - 1][7])
-                zero_stability_consequences_list = ['Compromised Military Secrets', 'Material Shortage', 'Embezzlement', 'Secession', 'Low Morale', 'Widespread Instability']
-                chosen_nation_hit_zero = False
-                for entry in player_stability_list:
-                    if entry in zero_stability_consequences_list:
-                        chosen_nation_hit_zero = True
-                if chosen_nation_hit_zero:
-                    del active_games_dict[full_game_id]['Active Events'][event_name]
-                    active_games_dict[full_game_id]["Inactive Events"].append(event_name)
+                #check if bargain has been defeated (no capital)
+                if not core.has_capital(player_id, game_id):
+                    del active_games_dict[game_id]['Active Events'][event_name]
+                    active_games_dict[game_id]["Inactive Events"].append(event_name)
                     diplomacy_log.append(f"{event_name} event has ended.")
 
-
     #retire active events if expired at end of turn
-    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+    current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
     if turn_status == "After Actions":
-        if "Expiration" in active_games_dict[full_game_id]['Active Events'][event_name]:
-            if active_games_dict[full_game_id]['Active Events'][event_name]["Expiration"] == current_turn_num:
+        if "Expiration" in active_games_dict[game_id]['Active Events'][event_name]:
+            if active_games_dict[game_id]['Active Events'][event_name]["Expiration"] == current_turn_num:
                 #handle special cases
-                print("YOU SHOULD NOT BE READING THIS")
                 if event_name == "Foreign Invasion":
-                    regdata_list = end_foreign_invasion(regdata_list)
-                del active_games_dict[full_game_id]['Active Events'][event_name]
-                active_games_dict[full_game_id]["Inactive Events"].append(event_name)
+                    end_foreign_invasion(game_id)
+                del active_games_dict[game_id]['Active Events'][event_name]
+                active_games_dict[game_id]["Inactive Events"].append(event_name)
                 diplomacy_log.append(f"{event_name} event has ended.")
             else:
                 #add active event to diplomacy log
@@ -1434,19 +1263,14 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-    with open(regdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.regdata_header_a)
-        writer.writerow(core.regdata_header_b)
-        writer.writerows(regdata_list)
 
     return public_actions_dict, private_actions_dict, active_games_dict, diplomacy_log
     
-def determine_target_region(regdata_list, adjacency_list):
-    '''
+def determine_target_region(adjacency_list, game_id):
+    """
     Function that contains Foreign Invasion attack logic.
     Designed to find path of least resistance but has no care for the health of its own units.
-    '''
+    """
     
     random.shuffle(adjacency_list)
     target_region_id = None
@@ -1454,64 +1278,59 @@ def determine_target_region(regdata_list, adjacency_list):
     target_region_priority = 0
 
     for adjacent_region_id in adjacency_list:
-        candidate_region_data = core.get_region_data(regdata_list, adjacent_region_id)
-        candidate_region_id = candidate_region_data[0]
-        control_data = ast.literal_eval(candidate_region_data[2])
-        improvement_data = ast.literal_eval(candidate_region_data[4])
-        unit_data = ast.literal_eval(candidate_region_data[5])
+        region = Region(game_id, adjacent_region_id)
+        region_improvement = Improvement(game_id, adjacent_region_id)
+        region_unit = Unit(game_id, adjacent_region_id)
+        region_owner_id = region.owner_id
+        region_occupier_id = region.occupier_id
+        improvement_name = region_improvement.name
+        improvement_health = region_improvement.health
+        unit_name = region_unit.name
         candidate_region_priority = 0
         candidate_region_health = 0
         #evaluate candidate region priority
-        if control_data[0] == 99 and control_data[1] != 0:
+        if region_owner_id == 99 and region_occupier_id != 0:
             candidate_region_priority += 6
-        if control_data[0] != 99 and control_data[1] != 99:
+        if region_owner_id != 99 and region_occupier_id != 99:
             candidate_region_priority += 4
-        elif control_data[0] != 99:
+        elif region_owner_id != 99:
             candidate_region_priority += 2
-        elif control_data[0] == 0:
+        elif region_owner_id == 0:
             continue
-        if unit_data[0] != None:
-            if unit_data[2] != 99:
-                candidate_region_priority += 1
+        if unit_name != None and region_unit.owner_id != 0:
+            candidate_region_priority += 1
         #evaluate candidate region health
-        if improvement_data[0] != None and improvement_data[1] != 99 and control_data[0] != 99:
-            candidate_region_health += improvement_data[1]
-        if unit_data[0] != None:
-            if unit_data[2] != 99:
-                candidate_region_health += unit_data[1]
+        if improvement_name != None and improvement_health != 99 and region_owner_id != 99:
+            candidate_region_health += improvement_health
+        if unit_name != None and region_unit.owner_id != 0:
+            candidate_region_health += region_unit.health
         #check if candidate region is an easier or higher priority target
         if candidate_region_priority > target_region_priority:
-            target_region_id = candidate_region_id
+            target_region_id = adjacent_region_id
             target_region_health = candidate_region_health
             target_region_priority = candidate_region_priority
         elif candidate_region_priority == target_region_priority and candidate_region_health < target_region_health:
-            target_region_id = candidate_region_id
+            target_region_id = adjacent_region_id
             target_region_health = candidate_region_health
             target_region_priority = candidate_region_priority
     
     return target_region_id
 
-def end_foreign_invasion(regdata_list):
+def end_foreign_invasion(game_id):
     
-    for region in regdata_list:
-        control_data = ast.literal_eval(region[2])
-        unit_data = ast.literal_eval(region[5])
-        change_made = False
-        if control_data[0] == 99:
-            control_data[0] = 0
-            change_made = True
-        if control_data[1] == 99:
-            control_data[1] = 0
-            change_made = True
-        if unit_data[0] != None:
-            if unit_data[2] == 99:
-                unit_data = [None, 99]
-                change_made = True
-        if change_made:
-            region[2] = str(control_data)
-            region[5] = str(unit_data)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     
-    return regdata_list
+    for region_id in regdata_dict:
+        region = Region(game_id, region_id)
+        region_unit = Unit(game_id, region_id)
+        if region.owner_id == 99:
+            region.set_owner_id(0)
+            region.set_occupier_id(0)
+        if region.occupier_id == 99:
+            region.set_occupier_id(0)
+        if region_unit.name != None and region_unit.owner_id != 0:
+            region_unit.clear()
 
 
 #EVENT DICTIONARY
@@ -1521,12 +1340,12 @@ EVENT_DICT = {
     "Assassination": {
         "Type": "Standard Event",
         "Resolution": "Delayed Option",
-        "Conditions List": ["Less Than 8 Stability >= 1"]
+        "Conditions List": []
     },
     "Coup D'état": {
         "Type": "Standard Event",
         "Resolution": "Instant",
-        "Conditions List": ["Cannot be First Event", "Less Than 4 Stability >= 1"]
+        "Conditions List": ["Cannot be First Event"]
     },
     "Decaying Infrastructure": {
         "Type": "Standard Event",
@@ -1543,24 +1362,14 @@ EVENT_DICT = {
         "Resolution": "Delayed Option",
         "Conditions List": []
     },
-    "Downward Spiral": {
-        "Type": "Standard Event",
-        "Resolution": "Instant",
-        "Conditions List": ["Defeat Penalty >= 1"]
-    },
     "Foreign Aid": {
         "Type": "Standard Event",
         "Resolution": "Instant",
-        "Conditions List": ["Greater Than 5 Stability >= 1"]
+        "Conditions List": []
     },
     "Foreign Interference": {
         "Type": "Standard Event",
         "Resolution": "Delayed Option",
-        "Conditions List": ["Cannot be First Event"]
-    },
-    "Influence Through Trade": {
-        "Type": "Standard Event",
-        "Resolution": "Instant",
         "Conditions List": ["Cannot be First Event"]
     },
     "Lost Nuclear Weapons": {
@@ -1572,6 +1381,16 @@ EVENT_DICT = {
         "Type": "Standard Event",
         "Resolution": "Delayed Option",
         "Conditions List": ["No Most Research Tie"]
+    },
+    "Market Inflation": {
+        "Type": "Standard Event",
+        "Resolution": "Instant",
+        "Conditions List": []
+    },
+    "Market Recession": {
+        "Type": "Standard Event",
+        "Resolution": "Instant",
+        "Conditions List": []
     },
     "Observer Status Invitation": {
         "Type": "Standard Event",

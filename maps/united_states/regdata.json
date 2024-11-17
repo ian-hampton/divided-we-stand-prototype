@@ -1,0 +1,6081 @@
+{
+    "OLYMP": {
+        "regionData": {
+            "fullName": "Olympic Peninsula",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PACCA",
+                "PUGET"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PACCA": {
+        "regionData": {
+            "fullName": "Pacific Cascades",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OLYMP",
+                "PUGET",
+                "COLBA",
+                "NTHOR",
+                "WILVA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PUGET": {
+        "regionData": {
+            "fullName": "Puget Sound",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegional": true,
+            "adjacencyList": [
+                "NTCAS",
+                "COLBA",
+                "PACCA",
+                "OLYMP"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTCAS": {
+        "regionData": {
+            "fullName": "Northern Cascades",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OKANO",
+                "COLBA",
+                "PUGET"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "OKANO": {
+        "regionData": {
+            "fullName": "Okanagan",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "IDPAN",
+                "COLBA",
+                "NTCAS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "COLBA": {
+        "regionData": {
+            "fullName": "Columbia Basin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTCAS",
+                "OKANO",
+                "IDPAN",
+                "EASOR",
+                "NTHOR",
+                "PACCA",
+                "PUGET"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WILVA": {
+        "regionData": {
+            "fullName": "Willamette Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "PACCA",
+                "NTHOR",
+                "STHOR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHOR": {
+        "regionData": {
+            "fullName": "Northern Oregon",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PACCA",
+                "COLBA",
+                "EASOR",
+                "STHOR",
+                "WILVA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHOR": {
+        "regionData": {
+            "fullName": "Southern Oregon",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WILVA",
+                "NTHOR",
+                "EASOR",
+                "WESNV",
+                "SHAST",
+                "NTHCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASOR": {
+        "regionData": {
+            "fullName": "Eastern Oregon",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "COLBA",
+                "IDPAN",
+                "MAGVA",
+                "WESNV",
+                "STHOR",
+                "NTHOR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "IDPAN": {
+        "regionData": {
+            "fullName": "Idaho Panhandle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OKANO",
+                "WESMT",
+                "STEID",
+                "MAGVA",
+                "EASOR",
+                "COLBA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MAGVA": {
+        "regionData": {
+            "fullName": "Magic Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "IDPAN",
+                "STEID",
+                "CACHE",
+                "EASNV",
+                "WESNV",
+                "EASOR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEID": {
+        "regionData": {
+            "fullName": "Southeastern Idaho",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMT",
+                "NTHWY",
+                "STHWY",
+                "CACHE",
+                "MAGVA",
+                "IDPAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMT": {
+        "regionData": {
+            "fullName": "Western Montana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASMT",
+                "NTHWY",
+                "STEID",
+                "IDPAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASMT": {
+        "regionData": {
+            "fullName": "Eastern Montana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESND",
+                "WESSD",
+                "NTHWY",
+                "WESMT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHWY": {
+        "regionData": {
+            "fullName": "Nothern Wyoming",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMT",
+                "EASMT",
+                "WESSD",
+                "WESNE",
+                "STHWY",
+                "STEID"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHWY": {
+        "regionData": {
+            "fullName": "Southern Wyoming",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHWY",
+                "WESNE",
+                "NTECO",
+                "NTWCO",
+                "UINTA",
+                "SLTLK",
+                "CACHE",
+                "STEID"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHCT": {
+        "regionData": {
+            "fullName": "North Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHOR",
+                "SHAST",
+                "SACRA",
+                "BAYAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SHAST": {
+        "regionData": {
+            "fullName": "Shasta Cascade",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHOR",
+                "WESNV",
+                "SACRA",
+                "NTHCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SACRA": {
+        "regionData": {
+            "fullName": "Sacramento",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHCT",
+                "SHAST",
+                "WESNV",
+                "SINEV",
+                "SJOVA",
+                "CENCT",
+                "BAYAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "BAYAR": {
+        "regionData": {
+            "fullName": "Bay Area",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHCT",
+                "SACRA",
+                "CENCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SINEV": {
+        "regionData": {
+            "fullName": "Sierra Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNV",
+                "STHNV",
+                "LASVE",
+                "INEMP",
+                "KERNC",
+                "SJOVA",
+                "SACRA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SJOVA": {
+        "regionData": {
+            "fullName": "San Joaquin Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SACRA",
+                "SINEV",
+                "KERNC",
+                "CENCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENCT": {
+        "regionData": {
+            "fullName": "Central Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "BAYAR",
+                "SACRA",
+                "SJOVA",
+                "KERNC",
+                "LOSAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "KERNC": {
+        "regionData": {
+            "fullName": "Kern County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SJOVA",
+                "SINEV",
+                "INEMP",
+                "LOSAN",
+                "CENCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "LOSAN": {
+        "regionData": {
+            "fullName": "Los Angeles",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENCT",
+                "KERNC",
+                "INEMP",
+                "STHBR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "INEMP": {
+        "regionData": {
+            "fullName": "Inland Empire",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "KERNC",
+                "SINEV",
+                "LASVE",
+                "MOHAV",
+                "YUMAC",
+                "STHBR",
+                "LOSAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHBR": {
+        "regionData": {
+            "fullName": "Southern Border Region",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "LOSAN",
+                "INEMP",
+                "YUMAC"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESNV": {
+        "regionData": {
+            "fullName": "Western Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "SHAST",
+                "STHOR",
+                "EASOR",
+                "MAGVA",
+                "EASNV",
+                "STHNV",
+                "SINEV",
+                "SACRA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASNV": {
+        "regionData": {
+            "fullName": "Eastern Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNV",
+                "MAGVA",
+                "CACHE",
+                "SLTLK",
+                "STWUT",
+                "STHNV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNV": {
+        "regionData": {
+            "fullName": "Southern Nevada",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNV",
+                "EASNV",
+                "STWUT",
+                "MOHAV",
+                "LASVE",
+                "SINEV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "LASVE": {
+        "regionData": {
+            "fullName": "Las Vegas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHNV",
+                "MOHAV",
+                "INEMP",
+                "SINEV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CACHE": {
+        "regionData": {
+            "fullName": "Cache County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MAGVA",
+                "STEID",
+                "STHWY",
+                "SLTLK",
+                "EASNV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SLTLK": {
+        "regionData": {
+            "fullName": "Salt Lake",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CACHE",
+                "STHWY",
+                "UINTA",
+                "STWUT",
+                "EASNV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "UINTA": {
+        "regionData": {
+            "fullName": "Unitah County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SLTLK",
+                "STHWY",
+                "NTWCO",
+                "SANJU",
+                "STWUT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWUT": {
+        "regionData": {
+            "fullName": "Southwest Utah",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SLTLK",
+                "UINTA",
+                "SANJU",
+                "EASAZ",
+                "MOHAV",
+                "STHNV",
+                "EASNV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SANJU": {
+        "regionData": {
+            "fullName": "San Juan County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWUT",
+                "UINTA",
+                "NTWCO",
+                "STWCO",
+                "EASAZ"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWCO": {
+        "regionData": {
+            "fullName": "Northwest Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHWY",
+                "NTECO",
+                "STECO",
+                "STWCO",
+                "SANJU",
+                "UINTA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTECO": {
+        "regionData": {
+            "fullName": "Northeast Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHWY",
+                "WESNE",
+                "CENNE",
+                "NTHKS",
+                "STHKS",
+                "STECO",
+                "NTWCO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWCO": {
+        "regionData": {
+            "fullName": "Southwest Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SANJU",
+                "NTWCO",
+                "STECO",
+                "NTENM",
+                "NTWNM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STECO": {
+        "regionData": {
+            "fullName": "Southeast Colorado",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWCO",
+                "NTWCO",
+                "NTECO",
+                "STHKS",
+                "REDCA",
+                "NTENM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MOHAV": {
+        "regionData": {
+            "fullName": "Mohave County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "LASVE",
+                "STHNV",
+                "STWUT",
+                "EASAZ",
+                "YAVAP",
+                "YUMAC",
+                "INEMP"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "YUMAC": {
+        "regionData": {
+            "fullName": "Yuma County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHBR",
+                "INEMP",
+                "MOHAV",
+                "YAVAP",
+                "PHOEN",
+                "STHAZ"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "YAVAP": {
+        "regionData": {
+            "fullName": "Yavapai County",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MOHAV",
+                "EASAZ",
+                "PHOEN",
+                "YUMAC"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PHOEN": {
+        "regionData": {
+            "fullName": "Phoenix",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "YUMAC",
+                "YAVAP",
+                "EASAZ",
+                "STHAZ"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHAZ": {
+        "regionData": {
+            "fullName": "Southern Arizona",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "YUMAC",
+                "PHOEN",
+                "EASAZ",
+                "STWNM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASAZ": {
+        "regionData": {
+            "fullName": "Eastern Arizona",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHAZ",
+                "PHOEN",
+                "YAVAP",
+                "MOHAV",
+                "STWUT",
+                "SANJU",
+                "NTWNM",
+                "STWNM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWNM": {
+        "regionData": {
+            "fullName": "Northwest New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASAZ",
+                "STWCO",
+                "NTENM",
+                "STENM",
+                "STWNM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTENM": {
+        "regionData": {
+            "fullName": "Northeast New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWNM",
+                "STWCO",
+                "STECO",
+                "REDCA",
+                "TXPAN",
+                "STENM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWNM": {
+        "regionData": {
+            "fullName": "Southwest New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASAZ",
+                "NTWNM",
+                "STENM",
+                "WESTX",
+                "STHAZ"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STENM": {
+        "regionData": {
+            "fullName": "Southeast New Mexico",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWNM",
+                "NTWNM",
+                "NTENM",
+                "TXPAN",
+                "WESTX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESND": {
+        "regionData": {
+            "fullName": "Western North Dakota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASND",
+                "WESSD",
+                "EASMT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASND": {
+        "regionData": {
+            "fullName": "Eastern North Dakota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWMN",
+                "EASSD",
+                "WESSD",
+                "WESND"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESSD": {
+        "regionData": {
+            "fullName": "Western North Dakota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "WESND",
+                "EASND",
+                "EASSD",
+                "CENNE",
+                "WESNE",
+                "NTHWY",
+                "EASMT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASSD": {
+        "regionData": {
+            "fullName": "Eastern North Dakota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASND",
+                "NTWMN",
+                "STWMN",
+                "NTWIA",
+                "EASNE",
+                "CENNE",
+                "WESSD"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESNE": {
+        "regionData": {
+            "fullName": "Western Nebraska",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHWY",
+                "WESSD",
+                "CENNE",
+                "NTECO",
+                "STHWY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENNE": {
+        "regionData": {
+            "fullName": "Central Nebraska",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNE",
+                "WESSD",
+                "EASSD",
+                "EASNE",
+                "NTHKS",
+                "NTECO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASNE": {
+        "regionData": {
+            "fullName": "Eastern Nebraska",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENNE",
+                "EASSD",
+                "NTWIA",
+                "STWIA",
+                "NTHMO",
+                "EASKS",
+                "NTHKS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHKS": {
+        "regionData": {
+            "fullName": "Northern Kansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENNE",
+                "EASNE",
+                "EASKS",
+                "STHKS",
+                "NTECO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHKS": {
+        "regionData": {
+            "fullName": "Southern Kansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHKS",
+                "EASKS",
+                "GREEN",
+                "REDCA",
+                "STECO",
+                "NTECO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASKS": {
+        "regionData": {
+            "fullName": "Eastern Kansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASNE",
+                "NTHMO",
+                "WESMO",
+                "GREEN",
+                "STHKS",
+                "NTHKS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "REDCA": {
+        "regionData": {
+            "fullName": "Red Carpet Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHKS",
+                "GREEN",
+                "GRTPL",
+                "TXPAN",
+                "NTENM",
+                "STECO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GREEN": {
+        "regionData": {
+            "fullName": "Green Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHKS",
+                "EASKS",
+                "WESMO",
+                "NTWAR",
+                "CHOCT",
+                "GRTPL",
+                "REDCA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GRTPL": {
+        "regionData": {
+            "fullName": "Great Plains Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "REDCA",
+                "GREEN",
+                "CHOCT",
+                "METRO",
+                "TXPAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHOCT": {
+        "regionData": {
+            "fullName": "Choctaw Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GREEN",
+                "NTWAR",
+                "STWAR",
+                "NTETX",
+                "METRO",
+                "GRTPL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "TXPAN": {
+        "regionData": {
+            "fullName": "Texas Panhandle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "REDCA",
+                "GRTPL",
+                "METRO",
+                "HILLC",
+                "WESTX",
+                "STENM",
+                "NTENM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "METRO": {
+        "regionData": {
+            "fullName": "Metroplex",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GRTPL",
+                "CHOCT",
+                "NTETX",
+                "CENTX",
+                "HILLC",
+                "TXPAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTETX": {
+        "regionData": {
+            "fullName": "Northeast Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHOCT",
+                "STWAR",
+                "SPORT",
+                "STETX",
+                "GULCT",
+                "CENTX",
+                "METRO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESTX": {
+        "regionData": {
+            "fullName": "Western Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWNM",
+                "STENM",
+                "TXPAN",
+                "HILLC",
+                "STHTX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "HILLC": {
+        "regionData": {
+            "fullName": "Hill Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "TXPAN",
+                "METRO",
+                "CENTX",
+                "STHTX",
+                "WESTX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENTX": {
+        "regionData": {
+            "fullName": "Central Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "METRO",
+                "NTETX",
+                "GULCT",
+                "CBEND",
+                "STHTX",
+                "HILLC"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHTX": {
+        "regionData": {
+            "fullName": "Southern Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESTX",
+                "HILLC",
+                "CENTX",
+                "CBEND"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CBEND": {
+        "regionData": {
+            "fullName": "Coastal Bend",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHTX",
+                "CENTX",
+                "GULCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GULCT": {
+        "regionData": {
+            "fullName": "Gulf Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CBEND",
+                "CENTX",
+                "NTETX",
+                "STETX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STETX": {
+        "regionData": {
+            "fullName": "Southeast Texas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GULCT",
+                "NTETX",
+                "SPORT",
+                "CROSS",
+                "ACADI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWMN": {
+        "regionData": {
+            "fullName": "Northwest Minnesota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTENM",
+                "CENMN",
+                "STWMN",
+                "EASSD",
+                "EASND"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEMN": {
+        "regionData": {
+            "fullName": "Northeast Minnesota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWWI",
+                "CENMN",
+                "NTWMN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENMN": {
+        "regionData": {
+            "fullName": "Central Minnesota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWMN",
+                "NTEMN",
+                "NTWWI",
+                "STEMN",
+                "STWMN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWMN": {
+        "regionData": {
+            "fullName": "Southwest Minnesota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWMN",
+                "CENMN",
+                "STEMN",
+                "NTWIA",
+                "EASSD"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEMN": {
+        "regionData": {
+            "fullName": "Southeast Minnesota",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENMN",
+                "NTWWI",
+                "STWWI",
+                "NTEIA",
+                "NTWIA",
+                "STWMN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWIA": {
+        "regionData": {
+            "fullName": "Northwest Iowa",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWMN",
+                "STEMN",
+                "NTEIA",
+                "STWIA",
+                "EASNE",
+                "EASSD"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEIA": {
+        "regionData": {
+            "fullName": "Northeast Iowa",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STEMN",
+                "STWWI",
+                "NTWIL",
+                "STEIA",
+                "STWIA",
+                "NTWIA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWIA": {
+        "regionData": {
+            "fullName": "Southwest Iowa",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWIA",
+                "NTEIA",
+                "STEIA",
+                "NTHMO",
+                "EASNE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEIA": {
+        "regionData": {
+            "fullName": "Southeast Iowa",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTEIA",
+                "NTWIL",
+                "FORGO",
+                "NTHMO",
+                "STWIA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMO": {
+        "regionData": {
+            "fullName": "Northern Missouri",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWIA",
+                "STEIA",
+                "FORGO",
+                "STWIL",
+                "STLOU",
+                "WESMO",
+                "EASKS",
+                "EASNE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMO": {
+        "regionData": {
+            "fullName": "Western Missouri",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHMO",
+                "STLOU",
+                "OZARK",
+                "NTWAR",
+                "GREEN",
+                "EASKS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STLOU": {
+        "regionData": {
+            "fullName": "St. Louis",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMO",
+                "STWIL",
+                "STEMO",
+                "OZARK",
+                "WESMO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "OZARK": {
+        "regionData": {
+            "fullName": "Ozark Highlands",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMO",
+                "STLOU",
+                "STEMO",
+                "NTEAR",
+                "NTWAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEMO": {
+        "regionData": {
+            "fullName": "Southeast Missouri",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STLOU",
+                "STWIL",
+                "LILEG",
+                "WESKY",
+                "NTWTN",
+                "NTEAR",
+                "OZARK"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWAR": {
+        "regionData": {
+            "fullName": "Northwest Arkansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMO",
+                "OZARK",
+                "NTEAR",
+                "STEAR",
+                "STWAR",
+                "CHOCT",
+                "GREEN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEAR": {
+        "regionData": {
+            "fullName": "Northeast Arkansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "OZARK",
+                "STEMO",
+                "NTWTN",
+                "STWTN",
+                "NTHMS",
+                "STEAR",
+                "NTWAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWAR": {
+        "regionData": {
+            "fullName": "Southwest Arkansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWAR",
+                "STEAR",
+                "SPORT",
+                "NTETX",
+                "CHOCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEAR": {
+        "regionData": {
+            "fullName": "Southeast Arkansas",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWAR",
+                "NTEAR",
+                "NTHMS",
+                "SPORT",
+                "STWAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SPORT": {
+        "regionData": {
+            "fullName": "Sportsman's Paradise",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWAR",
+                "STEAR",
+                "NTHMS",
+                "CENMS",
+                "CROSS",
+                "STETX",
+                "NTETX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CROSS": {
+        "regionData": {
+            "fullName": "Crossroads",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SPORT",
+                "CENMS",
+                "NEWOR",
+                "ACADI",
+                "STETX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ACADI": {
+        "regionData": {
+            "fullName": "Acadiana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CROSS",
+                "NEWOR",
+                "STETX"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NEWOR": {
+        "regionData": {
+            "fullName": "Greater New Orleans",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "ACADI",
+                "CROSS",
+                "CENMS",
+                "MSGUL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWWI": {
+        "regionData": {
+            "fullName": "Northwest Wisconsin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENWI",
+                "STWWI",
+                "STEMN",
+                "CENMN",
+                "NTEMN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENWI": {
+        "regionData": {
+            "fullName": "North Central Wisconsin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "UPPER",
+                "NTEWI",
+                "STEWI",
+                "STWWI",
+                "NTWWI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEWI": {
+        "regionData": {
+            "fullName": "Northeast Wisconsin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENWI",
+                "UPPER",
+                "STEWI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWWI": {
+        "regionData": {
+            "fullName": "Southwest Wisconsin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWWI",
+                "CENWI",
+                "STEWI",
+                "NTWIL",
+                "NTEIA",
+                "STEMN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEWI": {
+        "regionData": {
+            "fullName": "Southeast Wisconsin",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENWI",
+                "NTEWI",
+                "CHICA",
+                "NTWIL",
+                "STWWI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "UPPER": {
+        "regionData": {
+            "fullName": "Upper Peninsula",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENWI",
+                "NTEWI",
+                "NTHMI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMI": {
+        "regionData": {
+            "fullName": "Northern Michigan",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "UPPER",
+                "WESMI",
+                "MIDMI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMI": {
+        "regionData": {
+            "fullName": "West Michigan",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHMI",
+                "MIDMI",
+                "STEMI",
+                "NTWOH",
+                "NTHIN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIDMI": {
+        "regionData": {
+            "fullName": "Mid Michigan",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMI",
+                "THUMB",
+                "STEMI",
+                "WESMI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "THUMB": {
+        "regionData": {
+            "fullName": "The Thumb",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MIDMI",
+                "STEMI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEMI": {
+        "regionData": {
+            "fullName": "Southeastern Michigan",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMI",
+                "MIDMI",
+                "THUMB",
+                "NTWOH"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWIL": {
+        "regionData": {
+            "fullName": "Northwest Illinois",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWWI",
+                "STEWI",
+                "CHICA",
+                "CENIL",
+                "FORGO",
+                "STEIA",
+                "NTEIA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHICA": {
+        "regionData": {
+            "fullName": "Greater Chicago",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHIN",
+                "EASIL",
+                "CENIL",
+                "NTWIL",
+                "STEWI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FORGO": {
+        "regionData": {
+            "fullName": "Forgottonia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWIL",
+                "CENIL",
+                "STWIL",
+                "NTHMO",
+                "STEIA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENIL": {
+        "regionData": {
+            "fullName": "Central Illinois",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWIL",
+                "CHICA",
+                "EASIL",
+                "STWIL",
+                "FORGO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWIL": {
+        "regionData": {
+            "fullName": "Southwest Illinois",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENIL",
+                "EASIL",
+                "LILEG",
+                "STEMO",
+                "STLOU",
+                "NTHMO",
+                "FORGO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASIL": {
+        "regionData": {
+            "fullName": "Eastern Illinois",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHICA",
+                "NTHIN",
+                "CENIN",
+                "WABAS",
+                "LILEG",
+                "STWIL",
+                "CENIL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "LILEG": {
+        "regionData": {
+            "fullName": "Little Egypt",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASIL",
+                "WABAS",
+                "STHIN",
+                "WESKY",
+                "STEMO",
+                "STLOU",
+                "STWIL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHIN": {
+        "regionData": {
+            "fullName": "Northern Indiana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMI",
+                "NTWOH",
+                "CENIN",
+                "EASIL",
+                "CHICA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENIN": {
+        "regionData": {
+            "fullName": "Central Indiana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHIN",
+                "NTWOH",
+                "MIAVA",
+                "STHIN",
+                "INDIA",
+                "WABAS",
+                "EASIL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "INDIA": {
+        "regionData": {
+            "fullName": "Greater Indiana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CENIN",
+                "STHIN",
+                "WABAS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WABAS": {
+        "regionData": {
+            "fullName": "Wabash Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENIN",
+                "INDIA",
+                "STHIN",
+                "LILEG",
+                "EASIL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHIN": {
+        "regionData": {
+            "fullName": "Southern Indiana",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WABAS",
+                "INDIA",
+                "CENIN",
+                "MIAVA",
+                "CINCI",
+                "BLUEG",
+                "PENNY",
+                "WESKY",
+                "LILEG"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWOH": {
+        "regionData": {
+            "fullName": "Northwest Ohio",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMI",
+                "STEMI",
+                "CLEVE",
+                "CENOH",
+                "MIAVA",
+                "CENIN",
+                "NTHIN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CLEVE": {
+        "regionData": {
+            "fullName": "Greater Cleveland",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWPA",
+                "VALLE",
+                "STEOH",
+                "CENOH",
+                "NTWOH"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIAVA": {
+        "regionData": {
+            "fullName": "Miami Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWOH",
+                "CENOH",
+                "CINCI",
+                "STHIN",
+                "CENIN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENOH": {
+        "regionData": {
+            "fullName": "Central Ohio",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWOH",
+                "CLEVE",
+                "STEOH",
+                "STHOH",
+                "CINCI",
+                "MIAVA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CINCI": {
+        "regionData": {
+            "fullName": "Cincinnati",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MIAVA",
+                "CENOH",
+                "STHOH",
+                "CUMBE",
+                "BLUEG",
+                "STHIN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHOH": {
+        "regionData": {
+            "fullName": "Southern Ohio",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENOH",
+                "STEOH",
+                "VALLE",
+                "CUMBE",
+                "CINCI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEOH": {
+        "regionData": {
+            "fullName": "Southeastern Ohio",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENOH",
+                "CLEVE",
+                "VALLE",
+                "STHOH"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "BLUEG": {
+        "regionData": {
+            "fullName": "Bluegrass",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHIN",
+                "CINCI",
+                "CUMBE",
+                "PENNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESKY": {
+        "regionData": {
+            "fullName": "Western Kentucky",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "LILEG",
+                "STHIN",
+                "PENNY",
+                "NASHV",
+                "NTWTN",
+                "STEMO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PENNY": {
+        "regionData": {
+            "fullName": "Pennyroyal Region",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHIN",
+                "BLUEG",
+                "CUMBE",
+                "EASTN",
+                "MIDTN",
+                "NASHV",
+                "WESKY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CUMBE": {
+        "regionData": {
+            "fullName": "Cumberland Plateau",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "BLUEG",
+                "CINCI",
+                "STHOH",
+                "VALLE",
+                "CHARL",
+                "STWVA",
+                "EASTN",
+                "PENNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWTN": {
+        "regionData": {
+            "fullName": "Northwest Tennessee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STEMO",
+                "WESKY",
+                "NASHV",
+                "CHATT",
+                "STWTN",
+                "NTEAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NASHV": {
+        "regionData": {
+            "fullName": "Nashville",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "WESKY",
+                "PENNY",
+                "MIDTN",
+                "CHATT",
+                "NTWTN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIDTN": {
+        "regionData": {
+            "fullName": "Middle Tennessee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PENNY",
+                "EASTN",
+                "CHATT",
+                "NASHV"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASTN": {
+        "regionData": {
+            "fullName": "Eastern Tennessee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CUMBE",
+                "STWVA",
+                "MOUNT",
+                "CHATT",
+                "MIDTN",
+                "PENNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWTN": {
+        "regionData": {
+            "fullName": "Southwest Tennessee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWTN",
+                "CHATT",
+                "NTHAL",
+                "NTHMS",
+                "NTEAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHATT": {
+        "regionData": {
+            "fullName": "Chattanooga",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NASHV",
+                "MIDTN",
+                "EASTN",
+                "MOUNT",
+                "NTWGA",
+                "NTHAL",
+                "STWTN",
+                "NTWTN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMS": {
+        "regionData": {
+            "fullName": "Northern Mississippi",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWTN",
+                "NTHAL",
+                "WESAL",
+                "CENMS",
+                "SPORT",
+                "STEAR",
+                "NTEAR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENMS": {
+        "regionData": {
+            "fullName": "Central Mississippi",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMS",
+                "WESAL",
+                "STWAL",
+                "MSGUL",
+                "NEWOR",
+                "CROSS",
+                "SPORT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MSGUL": {
+        "regionData": {
+            "fullName": "Mississippi Gulf Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENMS",
+                "STWAL",
+                "NEWOR"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHAL": {
+        "regionData": {
+            "fullName": "Northern Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHATT",
+                "NTWGA",
+                "EASAL",
+                "WESAL",
+                "NTHMS",
+                "STWTN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESAL": {
+        "regionData": {
+            "fullName": "Western Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHAL",
+                "EASAL",
+                "STEAL",
+                "STWAL",
+                "CENMS",
+                "NTHMS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASAL": {
+        "regionData": {
+            "fullName": "Eastern Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHAL",
+                "NTWGA",
+                "STEAL",
+                "WESAL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWAL": {
+        "regionData": {
+            "fullName": "Southwest Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESAL",
+                "STEAL",
+                "FLPAN",
+                "CENMS",
+                "MSGUL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEAL": {
+        "regionData": {
+            "fullName": "Southeast Alabama",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "EASAL",
+                "STWGA",
+                "FLPAN",
+                "NTWGA",
+                "WESAL",
+                "STWAL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FLPAN": {
+        "regionData": {
+            "fullName": "Florida Panhandle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STWAL",
+                "STEAL",
+                "STWGA",
+                "STEGA",
+                "GAINE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GAINE": {
+        "regionData": {
+            "fullName": "Greater Gainesville",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "FLPAN",
+                "STEGA",
+                "FIRCT",
+                "HALIF",
+                "TAMPA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FIRCT": {
+        "regionData": {
+            "fullName": "First Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GACST",
+                "STEGA",
+                "GAINE",
+                "HALIF"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "HALIF": {
+        "regionData": {
+            "fullName": "Halifax Area",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "FIRCT",
+                "GAINE",
+                "TAMPA",
+                "STWFL",
+                "MIAMI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "TAMPA": {
+        "regionData": {
+            "fullName": "Tampa Bay Area",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "GAINE",
+                "HALIF",
+                "STWFL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWFL": {
+        "regionData": {
+            "fullName": "Southwest Florida",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "TAMPA",
+                "HALIF",
+                "MIAMI"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MIAMI": {
+        "regionData": {
+            "fullName": "Greater Miami",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWFL",
+                "HALIF"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWGA": {
+        "regionData": {
+            "fullName": "Northwest Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHATT",
+                "MOUNT",
+                "ATHEN",
+                "ATLAN",
+                "STWGA",
+                "STEAL",
+                "EASAL",
+                "NTHAL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ATHEN": {
+        "regionData": {
+            "fullName": "Athens\u00e2\u20ac\u201cClarke",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MOUNT",
+                "PIEDM",
+                "MDLND",
+                "EASGA",
+                "ATLAN",
+                "NTWGA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ATLAN": {
+        "regionData": {
+            "fullName": "Atlanta",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTWGA",
+                "ATHEN",
+                "EASGA",
+                "STWGA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASGA": {
+        "regionData": {
+            "fullName": "Eastern Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "ATHEN",
+                "MDLND",
+                "SCLOW",
+                "GACST",
+                "STEGA",
+                "STWGA",
+                "ATLAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWGA": {
+        "regionData": {
+            "fullName": "Southwest Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWGA",
+                "ATLAN",
+                "EASGA",
+                "STEGA",
+                "FLPAN",
+                "STEAL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STEGA": {
+        "regionData": {
+            "fullName": "Southeast Georgia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASGA",
+                "GACST",
+                "FIRCT",
+                "GAINE",
+                "FLPAN",
+                "STWGA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "GACST": {
+        "regionData": {
+            "fullName": "Georgia Coast",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "SCLOW",
+                "EASGA",
+                "STEGA",
+                "FIRCT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PIEDM": {
+        "regionData": {
+            "fullName": "Piedmont",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MOUNT",
+                "MDLND",
+                "ATHEN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MDLND": {
+        "regionData": {
+            "fullName": "Midland",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PIEDM",
+                "MOUNT",
+                "MTRLA",
+                "PEEDE",
+                "SCLOW",
+                "EASGA",
+                "ATHEN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PEEDE": {
+        "regionData": {
+            "fullName": "PeeDee",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "MTRLA",
+                "SANDH",
+                "STENC",
+                "MDLND",
+                "SCLOW"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SCLOW": {
+        "regionData": {
+            "fullName": "Lowcountry",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "GACST",
+                "EASGA",
+                "MDLND",
+                "PEEDE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MOUNT": {
+        "regionData": {
+            "fullName": "Mountain",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWVA",
+                "MTRLA",
+                "MDLND",
+                "PIEDM",
+                "ATHEN",
+                "NTWGA",
+                "CHATT",
+                "EASTN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MTRLA": {
+        "regionData": {
+            "fullName": "Metrolina",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STWVA",
+                "STHVA",
+                "TRIAN",
+                "SANDH",
+                "PEEDE",
+                "MDLND",
+                "MOUNT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "TRIAN": {
+        "regionData": {
+            "fullName": "Triangle",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHVA",
+                "BANKS",
+                "STENC",
+                "SANDH",
+                "MTRLA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "BANKS": {
+        "regionData": {
+            "fullName": "Banks",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "HAMPT",
+                "STHVA",
+                "TRIAN",
+                "STENC"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "SANDH": {
+        "regionData": {
+            "fullName": "Sandhills",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STENC",
+                "TRIAN",
+                "MTRLA",
+                "PEEDE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STENC": {
+        "regionData": {
+            "fullName": "Southeast North Carolina",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "BANKS",
+                "TRIAN",
+                "SANDH",
+                "PEEDE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ROANO": {
+        "regionData": {
+            "fullName": "Roanoke Region",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHVA",
+                "RICHM",
+                "STHVA",
+                "STWVA",
+                "CHARL",
+                "POTOM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHVA": {
+        "regionData": {
+            "fullName": "Northern Virginia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESMD",
+                "HAMPT",
+                "RICHM",
+                "ROANO",
+                "POTOM"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "RICHM": {
+        "regionData": {
+            "fullName": "Richmond",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHVA",
+                "HAMPT",
+                "STHVA",
+                "ROANO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STWVA": {
+        "regionData": {
+            "fullName": "Southwest Virginia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CHARL",
+                "ROANO",
+                "STHVA",
+                "MTRLA",
+                "MOUNT",
+                "EASTN",
+                "CUMBE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHVA": {
+        "regionData": {
+            "fullName": "Southside Virginia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "ROANO",
+                "RICHM",
+                "HAMPT",
+                "BANKS",
+                "TRIAN",
+                "MTRLA",
+                "STWVA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "HAMPT": {
+        "regionData": {
+            "fullName": "Hampton Roads",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "EASMD",
+                "WESMD",
+                "NTHVA",
+                "RICHM",
+                "STHVA",
+                "BANKS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "VALLE": {
+        "regionData": {
+            "fullName": "Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PITTS",
+                "POTOM",
+                "CHARL",
+                "CUMBE",
+                "STHOH",
+                "STEOH",
+                "CLEVE",
+                "NTWPA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "POTOM": {
+        "regionData": {
+            "fullName": "Potomac Highlands",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "PITTS",
+                "WESMD",
+                "NTHVA",
+                "ROANO",
+                "CHARL",
+                "VALLE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CHARL": {
+        "regionData": {
+            "fullName": "Charleston",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "VALLE",
+                "POTOM",
+                "ROANO",
+                "STWVA",
+                "CUMBE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMD": {
+        "regionData": {
+            "fullName": "Western Maryland",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "PITTS",
+                "PAHLR",
+                "EASMD",
+                "POTOM",
+                "NTHVA",
+                "HAMPT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "EASMD": {
+        "regionData": {
+            "fullName": "Eastern Maryland",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "DELEW",
+                "PHILL",
+                "PAHLR",
+                "WESMD",
+                "HAMPT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "DELEW": {
+        "regionData": {
+            "fullName": "State of Deleware",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "PHILL",
+                "EASMD"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTWPA": {
+        "regionData": {
+            "fullName": "Northwest Pennsylvania",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNY",
+                "NTHPA",
+                "PITTS",
+                "VALLE",
+                "CLEVE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHPA": {
+        "regionData": {
+            "fullName": "Northern Pennsylvania",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNY",
+                "NTEPA",
+                "CENPA",
+                "PITTS",
+                "NTWPA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTEPA": {
+        "regionData": {
+            "fullName": "Northeast Pennsylvania",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHNY",
+                "NEWYO",
+                "NTHNJ",
+                "PHILL",
+                "CENPA",
+                "NTHPA",
+                "WESNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PITTS": {
+        "regionData": {
+            "fullName": "Greater Pittsburg",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTWPA",
+                "NTHPA",
+                "CENPA",
+                "PAHLR",
+                "WESMD",
+                "POTOM",
+                "VALLE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CENPA": {
+        "regionData": {
+            "fullName": "Central Pennsylvania",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHPA",
+                "NTEPA",
+                "PHILL",
+                "PAHLR",
+                "PITTS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PAHLR": {
+        "regionData": {
+            "fullName": "Pennsylvania Highlands Region",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CENPA",
+                "PHILL",
+                "EASMD",
+                "WESMD",
+                "PITTS"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "PHILL": {
+        "regionData": {
+            "fullName": "Greater Philadelphia",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTEPA",
+                "NTHNJ",
+                "STHNJ",
+                "DELEW",
+                "EASMD",
+                "PAHLR",
+                "CENPA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHNJ": {
+        "regionData": {
+            "fullName": "North Jersey",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NEWYO",
+                "NTEPA",
+                "PHILL",
+                "STHNJ"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNJ": {
+        "regionData": {
+            "fullName": "South Jersey",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNJ",
+                "PHILL"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHNY": {
+        "regionData": {
+            "fullName": "North Country",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHVT",
+                "ALBAN",
+                "MOHAW",
+                "FINLA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESNY": {
+        "regionData": {
+            "fullName": "Western New York",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "FINLA",
+                "STHNY",
+                "NTEPA",
+                "NTHPA",
+                "NTWPA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "FINLA": {
+        "regionData": {
+            "fullName": "Finger Lakes",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNY",
+                "MOHAW",
+                "STHNY",
+                "WESNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "MOHAW": {
+        "regionData": {
+            "fullName": "Mohawk Valley",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNY",
+                "ALBAN",
+                "STHNY",
+                "FINLA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "ALBAN": {
+        "regionData": {
+            "fullName": "Albany",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHVT",
+                "STHVT",
+                "WESMA",
+                "NEWYO",
+                "STHNY",
+                "MOHAW",
+                "NTHNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNY": {
+        "regionData": {
+            "fullName": "Southern Tier",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "WESNY",
+                "FINLA",
+                "MOHAW",
+                "ALBAN",
+                "NEWYO",
+                "NTEPA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NEWYO": {
+        "regionData": {
+            "fullName": "New York City",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CONNE",
+                "WESMA",
+                "ALBAN",
+                "STHNY",
+                "NTEPA",
+                "NTHNJ"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "CONNE": {
+        "regionData": {
+            "fullName": "Connecticut",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NEWYO",
+                "WESMA",
+                "NTHMA",
+                "RHODE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "RHODE": {
+        "regionData": {
+            "fullName": "Rhode Island",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "CONNE",
+                "NTHMA",
+                "STHMA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "WESMA": {
+        "regionData": {
+            "fullName": "Western Massachusetts",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "CONNE",
+                "NTHMA",
+                "STHNH",
+                "STHVT",
+                "ALBAN",
+                "NEWYO"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHMA": {
+        "regionData": {
+            "fullName": "Northern Massachusetts",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHMA",
+                "RHODE",
+                "CONNE",
+                "WESMA",
+                "STHNH"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHMA": {
+        "regionData": {
+            "fullName": "Southern Massachusetts",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHMA",
+                "RHODE"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHVT": {
+        "regionData": {
+            "fullName": "Northern Vermont",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "NTHNH",
+                "STHVT",
+                "ALBAN",
+                "NTHNY"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHVT": {
+        "regionData": {
+            "fullName": "Southern Vermont",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": false,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHVT",
+                "NTHNH",
+                "STHNH",
+                "WESMA",
+                "ALBAN"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHNH": {
+        "regionData": {
+            "fullName": "Northern New Hampshire",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHME",
+                "STHNH",
+                "STHVT",
+                "NTHVT"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHNH": {
+        "regionData": {
+            "fullName": "Southern New Hampshire",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "STHME",
+                "NTHNH",
+                "STHVT",
+                "WESMA",
+                "NTHMA"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "NTHME": {
+        "regionData": {
+            "fullName": "Northern Maine",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": false,
+            "adjacencyList": [
+                "STHME"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    },
+    "STHME": {
+        "regionData": {
+            "fullName": "Southern Maine",
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "edgeOfMap": true,
+            "containsRegionalCapital": true,
+            "adjacencyList": [
+                "NTHME",
+                "NTHNH",
+                "STHNH"
+            ]
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "health": 99,
+            "ownerID": 99
+        }
+    }
+}

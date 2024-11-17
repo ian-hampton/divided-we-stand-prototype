@@ -1,0 +1,12 @@
+Researched Special Operations for 20 technology.
+Successfully purchased region SPORT for 5 dollars.
+Successfully purchased region SPORT for 5 dollars.
+Built Research Laboratory in region NTHMS for 5 basic materials.
+Built Research Laboratory in region SPORT for 5 basic materials.
+Disbanded Infantry in STHIN.
+Deployed Mechanized Infantry in region NTEWI for 10 dollars and 10 basic materials.
+Deployed Special Forces in region STHIN for 15 dollars and 15 basic materials.
+Failed to complete move Infantry CHICA - NTHIN. Check combat log for details.
+Failed to complete move Infantry EASIL - CENIN. Check combat log for details.
+Failed to move Mechanized Infantry CENIL - EASIL. A friendly unit is present in the target region.
+Failed to complete move Mechanized Infantry UPPER - NTHMI. Check combat log for details.

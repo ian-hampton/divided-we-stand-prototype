@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<title>{{ game1_title }}</title>
+
+<style>
+/* BASIC FORMATTING */
+body {
+    background-color: #464646;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #0f4660;
+    margin: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    
+}
+.left-header {
+    flex: 1;
+}
+.right-header {
+    display: flex;
+    align-items: center;
+}
+#title {
+    font-size: 24px;
+}
+.container {
+    display: flex;
+}
+
+/* MAP DISPLAY */
+.parent-map-frame {
+    height: calc(100vh - 194px);
+}
+.map-frame {
+    width: 100%; 
+    height: 100%;
+    overflow: auto;
+}
+#panning-map {
+    width: auto; 
+}
+
+/* MAP PANEL */
+.map-panel {
+    width: 70%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 10px;
+}
+.map-tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.map-tab-button {
+    background-color: #636363;
+    width: 125px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+}
+.map-tab-button.active {
+    background-color: #555555;
+}
+.map-tab-content {
+    background-color: #707070;
+    display: none;
+    padding: 20px;
+    margin: 0;
+}
+.map-tab-content.active {
+    display: block;
+}
+
+/* ORDERS PANEL */
+.orders-panel {
+    width: 30%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+.orders-tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.orders-tab-button {
+    background-color: #636363;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    flex: 1 0 20%;
+}
+.orders-tab-button.active {
+    background-color: #555555;
+}
+.orders-tab-content {
+    display: none;
+    background-color: #707070;
+    height: calc(100vh - 194px);
+    padding: 20px;
+    margin: 0;
+}
+.orders-tab-content.active {
+    display: block;
+}
+/* NATION NAME DISPLAY */
+h1 {
+    font-size: 24px;
+    text-decoration: bold;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 0;
+    text-align: center;
+}
+/* REGION INPUT BOX */
+.ri-table {
+    background-color: #0f4660;
+    width: 75%;
+    border-collapse: separate;
+    border-radius: 5px;
+    border: none;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.ri-table-data {
+    padding: 5px;
+    font-size: 14px;
+    text-align: left;
+    color: white;
+}
+.ri-table-input {
+    text-align: right;
+}
+input {
+    font-size: 14px;
+    width: 50px;
+    text-align: right;
+}
+/* COLOR DROPDOWN */
+.cd-table {
+    background-color: #8eb43d;
+    width: 75%;
+    border-collapse: separate;
+    border-radius: 5px;
+    border: none;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+select {
+    font-size: 14px;
+}
+/* VICTORY CONDITIONS BOX */
+.vc-table {
+    background-color: #a67c52;
+    width: 100%;
+    border-collapse: separate;
+    border-radius: 15px;
+    border: none;
+    margin: 0;
+    padding: 5px;
+    padding-bottom: 15px;
+}
+.vc-table-title {
+    padding-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+.vc-table-bold {
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+.vc-table-data {
+    font-size: 14px;
+    text-align: center;
+    color: white;
+    margin: 0;
+}
+/* SUBMIT BUTTON */
+.submit-button {
+    background: none;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+}
+/* GAME KEY */
+.game-key {
+    display: none;
+}
+</style>
+
+<form action="{{ url_for(form_key) }}" method="POST">
+<input type="hidden" name="full_game_id" value="{{ full_game_id }}">
+
+<body>
+    <header>
+        <div class="left-header">
+            <p id="title">{{ game1_extendedtitle }}</p>
+        </div>
+        <div class="right-header">
+            <button type="submit" class="submit-button"><img src="{{ url_for('static', filename='resolve.png') }}" style="width:36px;"></button>
+            <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="map-panel">
+            <div id="tab1" class="map-tab-content active"> <!-- Main Map -->
+                <div class="parent-map-frame">
+                    <div class="map-frame">
+                        <img src={{ main_url }} id="panning-map">
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="map-tab-content"> <!-- Resource Map -->
+                <div class="parent-map-frame">
+                    <div class="map-frame">
+                        <img src={{ resource_url }} id="panning-map">
+                    </div>
+                </div>
+            </div>
+            <div id="tab3" class="map-tab-content"> <!-- Control Map -->
+                <div class="parent-map-frame">
+                    <div class="map-frame">
+                        <img src={{ control_url }} id="panning-map">
+                    </div>
+                </div>
+            </div>
+            <div class="map-tabs">
+                <button class="map-tab-button active" onclick="openTab(event, 'tab1')" type="button">Main Map</button>
+                <button class="map-tab-button" onclick="openTab(event, 'tab2')" type="button">Resource Map</button>
+                <button class="map-tab-button" onclick="openTab(event, 'tab3')" type="button">Control Map</button>
+            </div>
+        </div>
+        <div class="orders-panel">
+            <div class="orders-tabs">
+                <button class="orders-tab-button active" onclick="openOrdersTab(event, '{{ active_player_data[1] }}')" type="button">Player #1</button>
+                {% for row in player_data %}
+                <button class="orders-tab-button" onclick="openOrdersTab(event, '{{ row[1] }}')" type="button">{{ row[0] }}</button>
+                {% endfor %}
+            </div>
+            <div id="{{ active_player_data[1] }}" class="orders-tab-content active">
+                <h1 style="color: {{ active_player_data[2] }}">{{ active_player_data[0] }}</h1>
+                <table class="ri-table">
+                    <td class="ri-table-data">Enter Starting Region: </td>
+                    <td class="ri-table-input"><input type="text" name="{{ active_player_data[9] }}" placeholder="*****"></input></td>
+                </table>
+                <table class="cd-table">
+                    <td class="ri-table-data">Choose Nation Color: </td>
+                    <td class="ri-table-input"><select name="{{ active_player_data[10] }}">
+                        <option value="Brown">Brown</option>
+                        <option value="Coral">Coral</option>
+                        <option value="Dark Blue">Dark Blue</option>
+                        <option value="Dark Green">Dark Green</option>
+                        <option value="Dark Purple">Dark Purple</option>
+                        <option value="Dark Red">Dark Red</option>
+                        <option value="Light Blue">Light Blue</option>
+                        <option value="Light Green">Light Green</option>
+                        <option value="Light Purple">Light Purple</option>
+                        <option value="Light Red">Light Red</option>
+                        <option value="Maroon">Maroon</option>
+                        <option value="Metallic Gold">Metallic Gold</option>
+                        <option value="Orange">Orange</option>
+                        <option value="Pink">Pink</option>
+                        <option value="Terracotta">Terracotta</option>
+                        <option value="Yellow">Yellow</option>
+                    </select></td>
+                </table>
+                <table class="vc-table">
+                    <tr>
+                        <td class="vc-table-title">Victory Condition Sets</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-bold">Set A</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ active_player_data[3] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ active_player_data[4] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ active_player_data[5] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-bold">Set B</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ active_player_data[6] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ active_player_data[7] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ active_player_data[8] }}</td>
+                    </tr>
+                </table>
+            </div>
+            {% for row in player_data %}
+            <div id='{{ row[1] }}' class="orders-tab-content">
+                <h1 style="color: {{ row[2] }}">{{ row[0] }}</h1>
+                <table class="ri-table">
+                    <td class="ri-table-data">Enter Starting Region: </td>
+                    <td class="ri-table-input"><input type="text" name="{{ row[9] }}" placeholder="*****"></input></td>
+                </table>
+                <table class="cd-table">
+                    <td class="ri-table-data">Choose Nation Color: </td>
+                    <td class="ri-table-input"><select name="{{ row[10] }}">
+                        <option value="Brown">Brown</option>
+                        <option value="Coral">Coral</option>
+                        <option value="Dark Blue">Dark Blue</option>
+                        <option value="Dark Green">Dark Green</option>
+                        <option value="Dark Purple">Dark Purple</option>
+                        <option value="Dark Red">Dark Red</option>
+                        <option value="Light Blue">Light Blue</option>
+                        <option value="Light Green">Light Green</option>
+                        <option value="Light Purple">Light Purple</option>
+                        <option value="Light Red">Light Red</option>
+                        <option value="Maroon">Maroon</option>
+                        <option value="Metallic Gold">Metallic Gold</option>
+                        <option value="Orange">Orange</option>
+                        <option value="Pink">Pink</option>
+                        <option value="Terracotta">Terracotta</option>
+                        <option value="Yellow">Yellow</option>
+                    </select></td>
+                </table>
+                <table class="vc-table">
+                    <tr>
+                        <td class="vc-table-title">Victory Condition Sets</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-bold">Set A</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ row[3] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ row[4] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ row[5] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-bold">Set B</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ row[6] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ row[7] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="vc-table-data">{{ row[8] }}</td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</form>
+
+<!-- Orders Tab Sizing -->
+<script>
+    function adjustFlexBasis() {
+        const tabButtons = document.getElementsByClassName('orders-tab-button');
+        const totalTabs = tabButtons.length;
+        const maxTabsPerRow = 5;
+        let flexBasisPercentage = 100 / maxTabsPerRow;
+
+        if (totalTabs <= maxTabsPerRow) {
+            flexBasisPercentage = 100 / totalTabs;
+            document.querySelectorAll('.orders-tab-content').forEach(content => {
+                content.style.height = 'calc(100vh - 194px)';
+            });
+        } else {
+            document.querySelectorAll('.orders-tab-content').forEach(content => {
+                content.style.height = 'calc(100vh - 234px)';
+            });
+        }
+
+        for (const tabButton of tabButtons) {
+            tabButton.style.flexBasis = `calc(${flexBasisPercentage}%)`;
+        }
+    }
+    /* Initial and Listening Calls */
+    adjustFlexBasis();
+    window.addEventListener('resize', adjustFlexBasis); 
+</script>
+
+<!-- Map Panel Script -->
+<script>
+    function openTab(event, tabName) {
+        const tabContents = document.getElementsByClassName('map-tab-content');
+        for (const tabContent of tabContents) {
+            tabContent.style.display = 'none';
+        }
+        const tabButtons = document.getElementsByClassName('map-tab-button');
+        for (const tabButton of tabButtons) {
+            tabButton.classList.remove('active');
+        }
+        const selectedTab = document.getElementById(tabName);
+        selectedTab.style.display = 'block';
+        event.currentTarget.classList.add('active');
+    }
+</script>
+
+<!-- Orders Panel Script -->
+<script>
+    function openOrdersTab(event, tabName) {
+        const tabContents = document.getElementsByClassName('orders-tab-content');
+        for (const tabContent of tabContents) {
+            tabContent.style.display = 'none';
+        }
+        const tabButtons = document.getElementsByClassName('orders-tab-button');
+        for (const tabButton of tabButtons) {
+            tabButton.classList.remove('active');
+        }
+        const selectedTab = document.getElementById(tabName);
+        selectedTab.style.display = 'block';
+        event.currentTarget.classList.add('active');
+    }
+</script>
+
+</html>
