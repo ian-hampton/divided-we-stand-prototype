@@ -920,24 +920,6 @@ def identify(action):
             return action_type
     return None
 
-def get_regions_in_radius(random_region_id, radius, regdata_list):
-    '''
-    Returns a list of all regions within x regions of a provided region id.
-
-    Parameters:
-    - random_region_id: A valid five character id of a region.
-    - radius: A positive integer value.
-    - regdata_list: The regdata_list derived from the game's regdata.csv file.
-    '''
-    regions_in_radius = set([random_region_id])
-    for i in range(0, radius):
-        new_regions_in_radius = set()
-        for select_region_id in regions_in_radius:
-            select_region_adjacency_list = get_adjacency_list(regdata_list, select_region_id)
-            new_regions_in_radius.update(select_region_adjacency_list)
-        regions_in_radius.update(new_regions_in_radius)
-    return regions_in_radius
-
 def get_library(game_id):
     '''
     Returns a dictionary containing all game terms. Use this to check validity of actions.
@@ -1339,14 +1321,6 @@ def get_subjects(playerdata_list, overlord_nation_name, subject_type):
             player_id_list.append(selected_nation_id)
     return player_id_list
 
-def get_truces(trucedata_list, player_id_1, player_id_2, current_turn_num, player_count):
-    overlord_truce_list = []
-    for select_player_id in range(1, player_count + 1):
-        truce_found = check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num)
-        if truce_found:
-            overlord_truce_list.append(select_player_id)
-    return overlord_truce_list
-
 def update_alliance_data(player_research_list):
     alliance_data = [False, False, False, False]
     if 'Peace Accords' in player_research_list:
@@ -1538,24 +1512,6 @@ def get_unit_count_list(player_id, game_id):
 
     return count_list
 
-def check_for_adjacent_improvement(player_id, region_id, improvement_list, regdata_list):
-    '''
-    Returns True if an improvement in the improvement list is found in the adjacency list.
-    '''
-
-    for region in regdata_list:
-        if region_id == region[0]:
-            adjacency_list = ast.literal_eval(region[8])
-    
-    for region in regdata_list:
-        if region[0] in adjacency_list:
-            control_data = ast.literal_eval(region[2])
-            improvement_data = ast.literal_eval(region[4])
-            if control_data[0] == player_id and improvement_data[0] in improvement_list:
-                return True
-
-    return False
-
 
 #WAR SUB-FUNCTIONS
 ################################################################################
@@ -1574,28 +1530,6 @@ def check_military_capacity(player_military_capacity_data, amount):
     if used_mc + amount > total_mc:
         return False
     return True
-
-def get_wars(relations_data_list):
-    '''Takes a player's relations data. Returns all player ids who are at war with that player.'''
-    player_id_list = []
-    for index, relation in enumerate(relations_data_list):
-        if relation not in ignore_list:
-            relation_data_list = relation.split()
-            if relation_data_list[0] == 'At':
-                selected_nation_id = index
-                player_id_list.append(selected_nation_id)
-    return player_id_list
-
-def join_ongoing_war(wardata_list, war_id, player_id, war_side):
-    '''Given a information, add a player to a war.'''
-    if war_side == 'Attacker':
-        player_entry_data = ['Secondary Attacker', 'TBD', 0, 0, 0, 0]
-    elif war_side == 'Defender':
-        player_entry_data = ['Secondary Defender', 'TBD', 0, 0, 0, 0]
-    for war in wardata_list:
-        if war[0] == war_id:
-            war[player_id] = player_entry_data
-    return wardata_list
 
 def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_num):
     '''Creates a truce period between the players marked in the signatories list. Length depends on war outcome.'''
@@ -1674,27 +1608,6 @@ def date_from_turn_num(current_turn_num):
         year -= 1
     return season, year
 
-def filter_region_names(regdata_list, action_list):
-    '''Removes player actions with bad region names. Sub-function for action functions.'''
-    region_id_list = []
-    for region in regdata_list:
-        region_id_list.append(region[0])
-    action_list_filtered = []
-    for action in action_list:
-        region_id = action[1][-5:]
-        if region_id in region_id_list:
-            action_list_filtered.append(action)
-        else:
-            error_str = 'The action: ' + str(action) + ' failed due to an invalid region name.'
-            print(error_str)
-    return action_list_filtered
-
-def get_region_data(regdata_list, region_id):
-    for region in regdata_list:
-        if region[0] == region_id:
-            region_data = region
-            return region_data
-
 def get_adjacency_list(regdata_list, region_id):
     for region in regdata_list:
          if region[0] == region_id:
@@ -1771,39 +1684,6 @@ def search_and_destroy_unit(game_id, player_id, desired_unit_name):
 
     return chosen_region_id
 
-def update_improvement_data(regdata_list, region_id, improvement_data):
-    '''Replaces the unit data of a region with the inputed list.'''
-    for region in regdata_list:
-        if region[0] == region_id:
-            region[4] = str(improvement_data)
-            break
-    return regdata_list
-
-def update_unit_data(regdata_list, region_id, unit_data):
-    '''Replaces the unit data of a region with the inputed list.'''
-    for region in regdata_list:
-        if region[0] == region_id:
-            region[5] = str(unit_data)
-            break
-    return regdata_list
-
-def update_nuke_data(regdata_list, region_id, nuke_data):
-    for region in regdata_list:
-        if region[0] == region_id:
-            region[6] = str(nuke_data)
-            break
-    return regdata_list
-
-def verify_ownership(regdata_list, region_id, player_id):
-    '''Verifies a region is controlled by a specific player and that it is unoccupied. Sub-function for action functions.'''
-    for region in regdata_list:
-        if region[0] == region_id:
-            control_data = ast.literal_eval(region[2])
-            if control_data[0] == player_id and control_data[1] == 0:
-                return True
-            else:
-                return False
-
 def verify_ratio(game_id, improvement_count_list, improvement_name):
 
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
@@ -1826,20 +1706,6 @@ def verify_ratio(game_id, improvement_count_list, improvement_name):
             return False
         if (ref_count + 1) / sub_count > 0.5:
             return False
-    return True
-
-def verify_region_resource(game_id, regdata_list, region_id, improvement_name):
-    '''Verifies a region has the resource needed for the desired improvement. Sub-function for resolve_improvement_builds().'''
-    
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    
-    for region in regdata_list:
-        if region[0] == region_id:
-            region_resource = region[3]
-            break
-    if region_resource != improvement_data_dict[improvement_name]['Required Resource'] and region_resource is not None:
-        return False
-    
     return True
 
 def verify_required_research(required_research, player_research):
@@ -1922,21 +1788,18 @@ def get_lowest_in_record(game_id, record_name):
     else:
         pass
 
-#GLOBAL DICTIONARIES AND LISTS
+
+# DISGUSTING GLOBAL VARIABLES
 ################################################################################
+
+# unfortunately like pulling teeth significant refactoring is required to remove some of these - I'm workin' on it!
 
 #file headers
 player_data_header = ["Player", "Nation Name", "Color", "Government", "Foreign Policy", "Military Capacity", "Trade Fee", "Stability Data", "Victory Conditions", "Dollars", "Political Power", "Technology", "Coal", "Oil", "Green Energy", "Basic Materials", "Common Metals", "Advanced Metals", "Uranium", "Rare Earth Elements", "Alliance Data", "Missile Data", "Diplomatic Relations", "Upkeep Manager", "Miscellaneous Information", "Income Details", "Completed Research", "Improvement Count", "Status", "Global ID"]
-regdata_header_a = ['Region ID','Region Name','Control Data','Resource Data','Improvement Data','Unit Data','Nuke Data','Purchase Cost','Adjacency Data', 'Edge of Map', 'Contains Regional Capital', 'Quarantine', 'Infection']
-regdata_header_b = ["5 Letter ID","Full Name","[Owner #, Occupier #]","Resource Name","[Type Name, Health #]","[Type Name, Health #, Owner #]","[True/False, Duration #]","Cost","[List of Region IDs]", "True/False", "True/False", "True/False", "Infection #"]
 rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
 rm_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
-wardata_header_a = ['War ID','Player #1 Info','Player #2 Info','Player #3 Info','Player #4 Info','Player #5 Info','Player #6 Info','Player #7 Info','Player #8 Info','Player #9 Info','Player #10 Info','War Name','War Start','War Status','War Log','War End']
-wardata_header_b = ['ID #',"['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']","['War Role', 'War Justification, 'Battles Won', 'Battles Lost', 'Unit Casualties', 'Improvements Lost', 'Justification Details']",'Name','Turn #','Ongoing/Attacker Victory/Defender Victory/White Peace',"[]",'Turn #']
 trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']
 vc_extra_header = ['Nation Name', 'Government Projects', 'Opportunist', 'Reliable Ally', 'Road to Recovery', 'Tight Leash']
-game_settings_header = ["Game Name", "Current Turn", "URL", "Image", "Players", "Victory Conditions", "Map", "Accelerated Schedule", "Turn Duration", "Fog of War", "Game Active"]
-settings_template = ["Open Game Slot", "Turn N/A", 'settings', "UWS-2.png", "Players: N/A", "Victory Conditions: N/A", "Map: N/A", "Accelerated Schedule: N/A", "Turn Duration: N/A", "Fog of War: N/A", "True"]
 
 #government and fp list data
 republic_rates = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
@@ -1962,8 +1825,6 @@ normal_list = ["Establish Sovereignty", "Diversified Army", "Diversified Economy
 hard_list = ["Economic Domination", "Empire Building", "Military Superpower", "Nuclear Deterrent", "Scientific Leader", "Sphere of Influence"]
 
 #other
-empty_improvement_data = [None, 99]
-empty_unit_data = [None, 99]
 ignore_list = ['Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Neutral', '-']
 score_to_col = {
     1: 'G',
