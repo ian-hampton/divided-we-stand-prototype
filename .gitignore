@@ -2868,3 +2868,5 @@ gamedata/game1/images/28.png
 gamedata/game1/images/29.png
 gamedata/game1/images/30.png
 /gamedata/game1/images
+/app/testing/__pycache__
+app/testing/__pycache__/map_tests.cpython-312.pyc
