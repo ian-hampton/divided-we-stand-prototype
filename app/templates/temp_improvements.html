@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reference.css') }}">
+
+
+<title>{{ page_title }}</title>
+
+
+<header>
+    <div class="left-header">
+        <p id="title">{{ page_title }}</p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+    </div>
+</header>
+
+
+<body>
+<div class="flex-container">
+
+{% for improvement_name, improvement_data in dict.items() %}
+
+    <div class = "unit">
+    
+        <div class = "title"> {{ improvement_name }} </div>
+
+        <img src="{{ url_for('static', filename='improvements/' + improvement_name|lower + '.png') }}" class="improv-image">
+
+        <!-- Income -->
+        {% set ns = namespace(foo=True) %}
+        {% for resource, amount in improvement_data["Income"].items() %}
+            {% if amount != 0 and ns.foo %} 
+                <div class="top-break"> <b>Income:</b> +{{amount}} {{resource|lower}} per turn.</div>
+                {% set ns.foo = False %}
+            {% elif amount != 0 %}
+                <div> <b style="visibility:hidden">Income:</b> +{{amount}} {{resource|lower}} per turn.</div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Abilities -->
+        {% for ability in improvement_data["Abilities"] %}
+            <div class="top-break"> {{ability}} </div>
+        {% endfor %}
+
+        <!-- Missile Interception -->
+        <!-- This is hard coded for now, too bad. -->
+        {% if improvement_name == 'Missile Defense System' %}
+            <div class="top-break"> <b>Standard Missile Defense:</b> {{ improvement_data["Standard Missile Defense"] }}+ </div>
+        {% elif improvement_name == 'Missile Defense Network' %}
+            <div class="top-break"> <b>Standard Missile Defense:</b> {{ improvement_data["Standard Missile Defense"] }}+ </div>
+            <div class="top-break"> <b>Nuclear Missile Defense:</b> {{ improvement_data["Nuclear Missile Defense"] }}+ </div>
+        {% endif %}
+
+        <!-- Build Costs -->
+        {% set ns = namespace(foo=True) %}
+        {% for resource, cost in improvement_data["Build Costs"].items() %}
+            {% if cost != 0 and ns.foo %} 
+                <div class="top-break"> <b>Cost:</b> {{cost}} {{resource|lower}}</div>
+                {% set ns.foo = False %}
+            {% elif cost != 0 %}
+                <div> <b style="visibility:hidden">Cost:</b> {{cost}} {{resource|lower}}</div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Upkeep -->
+        {% set ns = namespace(foo=True) %}
+        {% for resource, amount in improvement_data["Upkeep"].items() %}
+            {% if amount != 0 and ns.foo %} 
+                <div class="top-break"> <b>Upkeep:</b> -{{amount}} {{resource|lower}} per turn.</div>
+                {% set ns.foo = False %}
+            {% elif amount != 0 %}
+                <div> <b style="visibility:hidden">Upkeep:</b> -{{amount}} {{resource|lower}} per turn.</div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Info -->
+        <div class="top-break"> <b>Required Technology:</b> {{ improvement_data["Required Research"] }} </div>
+        <div class="top-break"> <b>Required Resource:</b> {{ improvement_data["Required Resource"] }} </div>
+
+        <!-- Combat Stats -->
+        <div class="stats-bar">
+
+            <div class="{{ improvement_data["stat_color"] }}">
+                {% if improvement_data["Victory Damage"] != 99 %}
+                    {{ improvement_data["Victory Damage"] }}
+                {% else %}
+                    -
+                {% endif%}
+                <br> <div class="small"> Victory Damage </div>
+            </div>
+            <div class="{{ improvement_data["stat_color"] }}">
+                {% if improvement_data["Draw Damage"] != 99 %}
+                    {{ improvement_data["Draw Damage"] }}
+                {% else %}
+                    -
+                {% endif%}
+                <br> <div class="small"> Draw Damage </div>
+            </div>
+            
+            <div class="{{ improvement_data["stat_color"] }}">
+                {% if improvement_data["Combat Value"] != 99 %}
+                    {{ improvement_data["Combat Value"] }}+
+                {% else %}
+                    -
+                {% endif%}
+                <br> <div class="small"> Hit Value </div>
+            </div>
+            
+            <div class="{{ improvement_data["stat_color"] }}">
+                {% if improvement_data["Health"] != 99 %}
+                    {{ improvement_data["Health"] }}
+                {% else %}
+                    -
+                {% endif%}
+                <br> <div class="small"> Health </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endfor %}
+
+</div>
+</body>
+
+
+</html>

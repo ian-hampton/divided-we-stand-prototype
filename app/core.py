@@ -1409,7 +1409,7 @@ def get_upkeep_dictionary(game_id, upkeep_type, playerdata, unit_count_list):
             for index, improvement_count in enumerate(improvement_count_list):
                 inner_dict = {}
                 improvement_name = improvement_name_list[index]
-                improvement_dollars_upkeep = improvement_data_dict[improvement_name]['Dollars Upkeep']
+                improvement_dollars_upkeep = improvement_data_dict[improvement_name]['Upkeep']['Dollars']
                 #handle edge cases
                 if improvement_name == 'Coal Mine' and 'Coal Subsidies' in completed_research_list:
                     improvement_dollars_upkeep = 1
@@ -1434,7 +1434,7 @@ def get_upkeep_dictionary(game_id, upkeep_type, playerdata, unit_count_list):
             for index, improvement_count in enumerate(improvement_count_list):
                 inner_dict = {}
                 improvement_name = improvement_name_list[index]
-                improvement_energy_upkeep = improvement_data_dict[improvement_name]['Energy Upkeep']
+                improvement_energy_upkeep = improvement_data_dict[improvement_name]['Upkeep']['Energy']
                 #handle edge cases
                 if improvement_name == 'City' and 'Power Grid Restoration' in completed_research_list:
                     improvement_energy_upkeep = 1

@@ -919,9 +919,9 @@ def agendas(full_game_id):
     
     return render_template('temp_agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
 
-#UNITS PAGE
+# UNITS REF PAGE
 @main.route('/<full_game_id>/units')
-def units(full_game_id):
+def units_ref(full_game_id):
     
     # read the contents of active_games.json
     with open('active_games.json', 'r') as json_file:
@@ -943,6 +943,45 @@ def units(full_game_id):
             unit_dict[unit_name]["stat_color"] = "stat-purple"
 
     return render_template('temp_units.html', page_title = page_title, dict = unit_dict)
+
+# IMPROVEMENTS REF PAGE
+@main.route('/<full_game_id>/improvements')
+def improvements_ref(full_game_id):
+    
+    # read the contents of active_games.json
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Improvement Reference'
+    
+    # get unit dict
+    improvement_dict: dict = core.get_scenario_dict(full_game_id, "Improvements")
+
+    # filter improvements
+    improvement_dict_filtered = {}
+    for improvement_name, improvement_data in improvement_dict.items():
+
+        # assign color
+        # to do - make a function that assigns color based on improvement's required tech
+        match improvement_name:
+            case 'Boot Camp' | 'Crude Barrier' | 'Military Base' | 'Military Outpost' | 'Missile Defense Network' | 'Missile Defense System' | 'Missile Silo':
+                improvement_data["stat_color"] = "stat-red"
+            case 'Coal Mine' | 'Nuclear Power Plant' | 'Oil Refinery' | 'Oil Well' | 'Solar Farm' | 'Wind Farm' | 'Strip Mine':
+                improvement_data["stat_color"] = "stat-yellow"
+            case 'Advanced Metals Mine' | 'Common Metals Mine' | 'Industrial Zone' | 'Uranium Mine' | 'Rare Earth Elements Mine':
+                improvement_data["stat_color"] = "stat-grey"
+            case 'Capital' | 'Central Bank' | 'City' | 'Research Institute' | 'Research Laboratory':
+                improvement_data["stat_color"] = "stat-blue"
+            case _:
+                improvement_data["stat_color"] = "stat-grey"
+
+        # hide fog of war techs
+        if active_games_dict[full_game_id]["Information"]["Fog of War"] != "Enabled" and improvement_data.get("Fog of War Improvement", None):
+            continue
+        improvement_dict_filtered[improvement_name] = improvement_data
+
+    improvement_dict_filtered = {key: improvement_dict_filtered[key] for key in sorted(improvement_dict_filtered)}
+    return render_template('temp_improvements.html', page_title = page_title, dict = improvement_dict_filtered)
 
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
