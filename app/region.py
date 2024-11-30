@@ -176,16 +176,21 @@ class Region:
             set: region_ids within a set radius of this region, including original region.
         """
         
-        regions_in_radius = set([self.region_id])
+        visited = set([self.region_id])
+        queue = deque([(self.region_id, 0)])
         
-        for i in range(radius):
-            new_regions_in_radius = set()
-            for region_id in regions_in_radius:
-                region = Region(region_id, self.game_id)
-                new_regions_in_radius.update(region.adjacent_regions())
-            regions_in_radius.update(new_regions_in_radius)
+        while queue:
+
+            current_region_id, depth = queue.popleft()
+            
+            if depth < radius:
+                current_region = Region(current_region_id, self.game_id)
+                for adjacent_id in current_region.adjacent_regions():
+                    if adjacent_id not in visited:
+                        visited.add(adjacent_id)
+                        queue.append((adjacent_id, depth + 1))
         
-        return regions_in_radius
+        return visited
     
     def check_for_adjacent_improvement(self, improvement_names: set) -> bool:
         """
