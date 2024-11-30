@@ -58,7 +58,7 @@ class MainMap:
                 # check conditions
                 if random_region.owner_id != 0 and random_region_improvement.name is not None:
                     continue
-                adjacent_region_list = random_region.adjacent_regions()
+                adjacent_region_list = random_region.adjacent_regions
                 adjacent_improvement_found = False
                 for region_id in adjacent_region_list:
                     region_improvement = Improvement(region_id, f"game{self.game_id}")
@@ -70,7 +70,7 @@ class MainMap:
                 
                 # place improvement
                 count += 1
-                match random_region.resource():
+                match random_region.resource:
                     case 'Coal':
                         random_region_improvement.set_improvement('Coal Mine')
                     case 'Oil':
@@ -87,7 +87,7 @@ class MainMap:
                         random_region_improvement.set_improvement('Rare Earth Elements Mine')
                     case _:
                         capital_roll = 0
-                        if random_region.is_significant():
+                        if random_region.is_significant:
                             capital_roll = random.randint(1, 6)
                         if capital_roll <= 2:
                             improvement_name = random.sample(improvement_candidates_list, 1)[0]
@@ -183,7 +183,7 @@ class MainMap:
             region_improvement = Improvement(region_id, full_game_id)
             improvement_name = region_improvement.name
             improvement_health = region_improvement.health
-            nuke = region.fallout()
+            nuke = region.fallout
             improvement_start_cords = improvement_cords_dict[region_id]
             #place nuclear explosion
             if nuke:
@@ -320,7 +320,7 @@ class ResourceMap:
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
             region = Region(region_id, full_game_id)
-            resource_type = region.resource()
+            resource_type = region.resource
             start_cords = improvement_cords_dict[region_id]
             if start_cords != () and resource_type != 'Empty':
                 cord_x = (start_cords[0] + 25)

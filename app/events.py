@@ -449,13 +449,13 @@ def initiate_event(chosen_event: str, event_conditions_dict: dict, game_id: str,
             while True:
                 invasion_candidate_id = random.choice(region_id_list)
                 invasion_candidate = Region(invasion_candidate_id, game_id)
-                if invasion_candidate.is_edge():
+                if invasion_candidate.is_edge:
                     invasion_point_id = invasion_candidate
                     break
             reinforcements_regions_list = []
             reinforcements_regions_list.append(invasion_point_id)
             invasion_point = Region(invasion_point_id, game_id)
-            reinforcements_regions_list += invasion_point.adjacent_regions()
+            reinforcements_regions_list += invasion_point.adjacent_regions
             hex_colors_list = list(core.player_colors_conversions.keys())
             for playerdata in playerdata_list:
                 if playerdata[2] in hex_colors_list:
@@ -1105,7 +1105,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                     region = Region(region_id, game_id)
                     region_unit = Unit(region_id, game_id)
                     if region_unit.name != None and region_unit.owner_id == 0:
-                        ending_region_id = determine_target_region(region.adjacent_regions(), game_id)
+                        ending_region_id = determine_target_region(region.adjacent_regions, game_id)
                         if ending_region_id is not None:
                             movement_action_str = f'Move {region_id}-{ending_region_id}'
                             private_actions_dict['Move'].append([99, movement_action_str])
@@ -1174,7 +1174,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                         quarantined = region.is_quarantined()
                         infection_score = region.infection()
                         if infection_score > 0:
-                            for adjacent_region_id in region.adjacent_regions():
+                            for adjacent_region_id in region.adjacent_regions:
                                 adjacent_region = Region(adjacent_region_id, game_id)
                                 adjacent_owner_id = adjacent_region.owner_id
                                 adjacent_infection_score = adjacent_region.infection()

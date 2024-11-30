@@ -27,6 +27,12 @@ class Region:
         self.data = region_data
         self.owner_id: int = self.data["ownerID"]
         self.occupier_id: int = self.data["occupierID"]
+        self.purchase_cost: int = self.data["purchaseCost"]
+        self.resource: str = self.data["regionResource"]
+        self.fallout = self.data["nukeTurns"]
+        self.is_edge: bool = self.data["edgeOfMap"]
+        self.is_significant: bool = self.data["containsRegionalCapital"]
+        self.adjacent_regions: list = self.data["adjacencyList"]
         self.game_id: str = game_id
         self.regdata_filepath: str = regdata_filepath
         self.claim_list = []
@@ -45,6 +51,11 @@ class Region:
         """
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+        self.data["ownerID"] = self.owner_id
+        self.data["occupierID"] = self.occupier_id
+        self.data["purchaseCost"] = self.purchase_cost
+        self.data["regionResource"] = self.resource
+        self.data["nukeTurns"] = self.fallout
         regdata_dict[self.region_id]["regionData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
@@ -54,7 +65,6 @@ class Region:
         Changes the owner of a region.
         """
         self.owner_id = new_owner_id
-        self.data["ownerID"] = new_owner_id
         self._save_changes()
     
     def set_occupier_id(self, new_owner_id: int) -> None:
@@ -62,14 +72,7 @@ class Region:
         Changes the occupier of a region.
         """
         self.occupier_id = new_owner_id
-        self.data["occupierID"] = new_owner_id
         self._save_changes()
-
-    def purchase_cost(self) -> int:
-        """
-        Returns purchase cost of region.
-        """
-        return self.data["purchaseCost"]
     
     def increase_purchase_cost(self, amount=5) -> None:
         """
@@ -78,28 +81,16 @@ class Region:
         Params:
             amount (int): Amount of dollars to increase cost by. Default value is 5 dollars.
         """
-        self.data["purchaseCost"] += amount
+        self.purchase_cost += amount
         self._save_changes()
-    
-    def resource(self) -> str:
-        """
-        Returns resource present in region.
-        """
-        return self.data["regionResource"]
-    
+ 
     def set_resource(self, new_resource: str) -> None:
         """
         Changes the resource in a region.
         """
-        self.data["regionResource"] = new_resource
+        self.resource = new_resource
         self._save_changes()
 
-    def fallout(self) -> int:
-        """
-        Returns the amount of remaining turns that a region is under the effects of a nuke.
-        """
-        return self.data["nukeTurns"]
-    
     def set_fallout(self, amount=4) -> None:
         """
         Sets fallout amount.
@@ -107,7 +98,7 @@ class Region:
         Params:
             amount (int): Amount of fallout. Default value is 4 turns.
         """
-        self.data["nukeTurns"] = amount
+        self.fallout = amount
         self._save_changes()
     
     def decrease_fallout(self) -> None:
@@ -116,36 +107,13 @@ class Region:
         """
         self.data["nukeTurns"] -= 1
         self._save_changes()
-    
-    def is_edge(self) -> bool:
-        """
-        Returns True if region is on the edge of the map.
-        """
-        return self.data["edgeOfMap"]
-    
-    def is_significant(self) -> bool:
-        """
-        Returns True if region contains a regional capital city.
-        """
-        return self.data["containsRegionalCapital"]
 
-    def adjacent_regions(self) -> list:
-        """
-        Returns the region_ids of adjacent regions.
-        """
-        return self.data["adjacencyList"]
-    
     def add_claim(self, player_id: int) -> None:
         """
         Adds player id to claim list. Used for region purchase action.
         """
         self.claim_list.append(player_id)
 
-    def get_claim_list(self) -> list:
-        """
-        Returns list of player_ids claiming this region. Used for region purchase action.
-        """
-        return self.claim_list
 
     # basic methods
     ################################################################################
@@ -157,7 +125,7 @@ class Region:
         Returns:
             list: region_ids of adjacent region owned by the player.
         """
-        adjacent_list = self.adjacent_regions()
+        adjacent_list = self.adjacent_regions
         owned_adjacent_list = []
         for region_id in adjacent_list:
             temp = Region(region_id, self.game_id)
@@ -185,7 +153,7 @@ class Region:
             
             if depth < radius:
                 current_region = Region(current_region_id, self.game_id)
-                for adjacent_id in current_region.adjacent_regions():
+                for adjacent_id in current_region.adjacent_regions:
                     if adjacent_id not in visited:
                         visited.add(adjacent_id)
                         queue.append((adjacent_id, depth + 1))
@@ -203,7 +171,7 @@ class Region:
             bool: True if improvement found. False otherwise.
         """
         from app.improvement import Improvement
-        owned_adjacent_list = self.owned_adjacent_regions()
+        owned_adjacent_list = self.owned_adjacent_regions
         
         for region_id in owned_adjacent_list:
             region_improvement = Improvement(region_id, self.game_id)
@@ -223,7 +191,7 @@ class Region:
             bool: True if unit found. False otherwise.
         """
         from app.unit import Unit
-        owned_adjacent_list = self.owned_adjacent_regions()
+        owned_adjacent_list = self.owned_adjacent_regions
         
         for region_id in owned_adjacent_list:
             region_unit = Unit(region_id, self.game_id)
@@ -268,7 +236,7 @@ class Region:
                 return current_region_id
             
             # if not add adjacent regions to queue
-            for adjacent_id in current_region.adjacent_regions():
+            for adjacent_id in current_region.adjacent_regions:
                 if adjacent_id not in visited:
                     queue.append(adjacent_id)
 

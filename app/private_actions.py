@@ -678,7 +678,7 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
                     player_action_log.append(f'Failed to perform a move action from {current_region_id}. You do not control a unit there.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
                 continue
-            if target_region_id not in current_region.adjacent_regions():
+            if target_region_id not in current_region.adjacent_regions:
                 if attacker_player_id != 99:
                     player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. Target region not adjacent to current region.')
                     player_action_logs[attacker_player_id - 1] = player_action_log

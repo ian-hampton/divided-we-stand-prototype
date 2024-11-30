@@ -268,7 +268,7 @@ def update_misc_info(game_id, player_id):
             region = Region(region_id, game_id)
             region_improvement = Improvement(region_id, game_id)
             if region.owner_id == player_id and region.occupier_id == 0 and region_improvement.name == 'Capital':
-                match region.resource():
+                match region.resource:
                     case 'Coal':
                         if 'Coal Mining' in completed_research_list:
                             misc_info[0] = 'Capital Resource: Coal.'
@@ -517,7 +517,7 @@ def update_income(game_id, current_turn_num):
         for region_id in regdata_dict:
             region = Region(region_id, game_id)
             region_improvement = Improvement(region_id, game_id)
-            region_resource = region.resource()
+            region_resource = region.resource
             improvement_name = region_improvement.name
             #skip if no improvement
             if improvement_name == None:
@@ -949,7 +949,7 @@ def countdown(game_id, map_name):
     # Resolve Nuked Regions
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
-        if region.fallout() != 0:
+        if region.fallout != 0:
             region.decrease_fallout()
 
     # Update Resource Map if Needed
@@ -1544,7 +1544,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             for region_id in regdata_dict:
                 region = Region(region_id, game_id)
                 owner_id = region.owner_id
-                region_resource = region.resource()
+                region_resource = region.resource
                 if owner_id == player_id and region_resource == 'Advanced Metals':
                     player_has_advanced = True
                 elif owner_id == player_id and region_resource == 'Uranium':
@@ -1715,7 +1715,7 @@ def bonus_phase_heals(player_id, game_id):
         elif region.owner_id == region_unit.owner_id:
             heal_allowed = True
         else:
-            for adjacent_region_id in region.adjacent_regions():
+            for adjacent_region_id in region.adjacent_regions:
                 adjacent_region_unit = Unit(adjacent_region_id, game_id)
                 if adjacent_region_unit.owner_id == region_unit.owner_id:
                     heal_allowed = True
