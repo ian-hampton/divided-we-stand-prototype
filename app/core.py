@@ -382,7 +382,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     player_action_logs, player_resource_market_incomes = public_actions.resolve_market_actions(public_actions_dict['Buy'], public_actions_dict['Sell'], private_actions_dict['Steal'], full_game_id, current_turn_num, player_count, player_action_logs)    
     print("Resolving private actions...")
     if private_actions_list != []:
-        player_action_logs = private_actions.resolve_unit_withdraws(private_actions_dict['Withdraw'], full_game_id, player_action_logs, current_turn_num)
         if len(private_actions_dict['Disband']) > 0:
             player_action_logs = private_actions.resolve_unit_disbands(private_actions_dict['Disband'], full_game_id, player_action_logs)
         if len(private_actions_dict['Deploy']) > 0:

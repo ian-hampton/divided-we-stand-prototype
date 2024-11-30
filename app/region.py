@@ -1,5 +1,7 @@
 import json
 import random
+
+from collections import deque
 from typing import Union, Tuple
 
 class Region:
@@ -224,6 +226,50 @@ class Region:
                 return True
 
         return False
+    
+    def find_suitable_region(self) -> str:
+        """
+        Finds a region to move the unit in this region to.
+        Called only for withdraws at the moment, but this function could be generalized in the future.
+
+        Returns:
+            str: Suitable region_id if found, otherwise None.
+        """
+
+        from app.unit import Unit
+
+        withdrawing_unit = Unit(self.region_id, self.game_id)
+        queue = deque([self.region_id])
+        visited = set()
+
+        while queue:
+            
+            current_region_id = queue.popleft()
+
+            # skip if we have already checked this region
+            if current_region_id in visited:
+                continue
+            visited.add(current_region_id)
+
+            current_region = Region(current_region_id, self.game_id)
+            current_region_unit = Unit(current_region_id, self.game_id)
+
+            # check if region is suitable
+            if (
+                current_region.owner_id == withdrawing_unit.owner_id # region must be owned by the unit owner
+                and current_region_unit.name is None # region must not have another unit in it
+                and current_region.occupier_id == 0 # region must not be occupied by another nation
+            ):
+                return current_region_id
+            
+            # if not add adjacent regions to queue
+            for adjacent_id in current_region.adjacent_regions():
+                if adjacent_id not in visited:
+                    queue.append(adjacent_id)
+
+        # return None if we failed to find a region
+        # ( you better hope that doesn't happen because there are 200+ regions to check )
+        return None
     
     # combat methods
     ################################################################################

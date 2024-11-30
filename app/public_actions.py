@@ -897,15 +897,17 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
         player_id_1 = peace_action[0]
         action_str = peace_action[1]
         nation_name_1 = nation_name_list[player_id_1 - 1]
-        nation_name_2 = action_str[10:]
-        player_id_2 = nation_name_list.index(nation_name_2) + 1
         player_action_log = player_action_logs[player_id_1 - 1]
 
         # process for surrender action
         if 'Surrender' in action_str:
 
+            # get player 2 info
+            nation_name_2 = action_str[10:]
+            player_id_2 = nation_name_list.index(nation_name_2) + 1
+
             # check if player 1 has the authority to surrender
-            war_name = wardata.are_at_war(player_id_1, player_id_2)
+            war_name = wardata.are_at_war(player_id_1, player_id_2, True)
             if not war_name:
                 player_action_log.append(f'Failed to surrender to {nation_name_2}. You are not at war with that nation.')
                 player_action_logs[player_id_1 - 1] = player_action_log
@@ -918,18 +920,22 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
 
             # resolve war
             if 'Attacker' in war_role_1:
-                outcome = 'Attacker Victory'
-            else:
                 outcome = 'Defender Victory'
+            else:
+                outcome = 'Attacker Victory'
             wardata.end_war(war_name, outcome)
             diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
             diplomacy_log.append(f'{war_name} has ended.')
             
         # process for white peace action
         elif 'White Peace' in action_str:
+
+            # get player 2 info
+            nation_name_2 = action_str[12:]
+            player_id_2 = nation_name_list.index(nation_name_2) + 1
             
             # check if player 1 has the authority to white peace
-            war_name = wardata.are_at_war(player_id_1, player_id_2)
+            war_name = wardata.are_at_war(player_id_1, player_id_2, True)
             if not war_name:
                 player_action_log.append(f'Failed to white peace with {nation_name_2}. You are not at war with that nation.')
                 player_action_logs[player_id_1 - 1] = player_action_log
@@ -945,7 +951,6 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
                 white_peace_dict[war_name] += 1
             else:
                 white_peace_dict[war_name] = 1
-            break
     
     # process white peace if both sides agreed
     for war_name in white_peace_dict:

@@ -5,9 +5,11 @@ import json
 from json.decoder import JSONDecodeError
 import os
 import random
+
 from typing import Union, Tuple, List
 
 from app import core
+
 
 class WarData:
 
@@ -162,16 +164,16 @@ class WarData:
             nation_name_list.append(playerdata[1])
 
         # get information for winner
-        war_justification = war_dict[nation_name]["warJustification"]
-        war_claims = war_dict[nation_name]["warClaims"]
-        war_claims_original_ids = war_dict[nation_name]["warClaimsOriginalOwners"]
-        winner_role = war_dict[nation_name]["role"]
+        war_justification = war_dict["combatants"][nation_name]["warJustification"]
+        war_claims = war_dict["combatants"][nation_name]["warClaims"]
+        war_claims_original_ids = war_dict["combatants"][nation_name]["warClaimsOriginalOwners"]
+        winner_role = war_dict["combatants"][nation_name]["role"]
         winner_player_id = nation_name_list.index(nation_name) + 1
 
         # get information for main looser if no war claims
         if war_claims == []:
-            for temp_nation_name in war_dict:
-                war_role = war_dict[temp_nation_name]["role"]
+            for temp_nation_name in war_dict["combatants"]:
+                war_role = war_dict["combatants"][temp_nation_name]["role"]
                 if 'Main' in war_role and winner_role != war_role:
                     looser_player_id = nation_name_list.index(temp_nation_name) + 1
                     break
@@ -216,6 +218,39 @@ class WarData:
             writer.writerow(core.player_data_header)
             writer.writerows(playerdata_list)
 
+    def _withdraw_units(self) -> None:
+        """
+        Withdraws all units out of enemy territory upon the conclusion of a war.
+        """
+
+        from app import checks
+        from app.region import Region
+        from app.unit import Unit
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+
+        # look for units that need to withdraw
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            region_unit = Unit(region_id, self.game_id)
+            # a unit can only be present in another nation without occupation if a war just ended 
+            if (
+                region_unit.name is not None
+                and region_unit.owner_id != region.owner_id
+                and region.occupier_id == 0 
+            ):
+                target_id = region.find_suitable_region()
+                if target_id is not None:
+                    region_unit.move(Region(target_id, self.game_id), withdraw=True)
+                else:
+                    region_unit.clear()
+        
+        # to be added - player log message
+        # ( once i get around to creating the action logging classes )
+        # player_action_log.append(f'Withdrew {current_region_unit.name} {current_region_id} - {target_region_id}.')
+
+        checks.update_military_capacity(self.game_id)
+                
 
     # data methods
     ################################################################################
@@ -553,17 +588,17 @@ class WarData:
         match outcome:
             
             case 'Attacker Victory':
-                for nation_name, nation_war_data in war_dict.items():
+                for nation_name, nation_war_data in war_dict["combatants"].items():
                     if 'Attacker' in nation_war_data["role"]:
                         self._resolve_war_justification(nation_name, war_dict)
                     if 'Main Attacker' == nation_war_data["role"]:
                         main_war_justification = nation_war_data["warJustification"]
 
             case 'Defender Victory':
-                for nation_name, nation_war_data in war_dict.items():
-                    if 'Attacker' in nation_war_data["role"]:
+                for nation_name, nation_war_data in war_dict["combatants"].items():
+                    if 'Defender' in nation_war_data["role"]:
                         self._resolve_war_justification(nation_name, war_dict)
-                    if 'Main Attacker' == nation_war_data["role"]:
+                    if 'Main Defender' == nation_war_data["role"]:
                         main_war_justification = nation_war_data["warJustification"]
             
             case 'White Peace':
@@ -578,7 +613,7 @@ class WarData:
         for playerdata in playerdata_list:
             nation_name_list.append(playerdata[1])
         signatories_list = [False, False, False, False, False, False, False, False, False, False]
-        for nation_name in war_dict:
+        for nation_name in war_dict["combatants"]:
             index = nation_name_list.index(nation_name)
             signatories_list[index] = True
         core.add_truce_period(self.game_id, signatories_list, main_war_justification, current_turn_num)
@@ -595,6 +630,12 @@ class WarData:
             region = Region(region_id, self.game_id)
             if not self.are_at_war(region.owner_id, region.occupier_id):
                 region.set_occupier_id(0)
+
+        # withdraw units
+        self._withdraw_units()
+
+        # save changes
+        self._save_changes()
 
 
     # log methods

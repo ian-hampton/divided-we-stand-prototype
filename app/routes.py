@@ -744,12 +744,12 @@ def wars(full_game_id):
             
             case "Attacker Victory":
 
-                war_end_str = """This war concluded with an <span class="color-red"> attacker victory </span>."""
+                war_end_str = """This war concluded with an <span class="color-red">attacker victory</span>."""
                 wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
             
             case "Defender Victory":
                 
-                war_end_str = """This war concluded with a <span class="color-blue"> defender victory </span>."""
+                war_end_str = """This war concluded with a <span class="color-blue">defender victory</span>."""
                 wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
             
             case "White Peace":
