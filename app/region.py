@@ -29,7 +29,7 @@ class Region:
         self.occupier_id: int = self.data["occupierID"]
         self.purchase_cost: int = self.data["purchaseCost"]
         self.resource: str = self.data["regionResource"]
-        self.fallout = self.data["nukeTurns"]
+        self.fallout: int = self.data["nukeTurns"]
         self.is_edge: bool = self.data["edgeOfMap"]
         self.is_significant: bool = self.data["containsRegionalCapital"]
         self.adjacent_regions: list = self.data["adjacencyList"]
@@ -171,7 +171,7 @@ class Region:
             bool: True if improvement found. False otherwise.
         """
         from app.improvement import Improvement
-        owned_adjacent_list = self.owned_adjacent_regions
+        owned_adjacent_list = self.owned_adjacent_regions()
         
         for region_id in owned_adjacent_list:
             region_improvement = Improvement(region_id, self.game_id)
@@ -191,7 +191,7 @@ class Region:
             bool: True if unit found. False otherwise.
         """
         from app.unit import Unit
-        owned_adjacent_list = self.owned_adjacent_regions
+        owned_adjacent_list = self.owned_adjacent_regions()
         
         for region_id in owned_adjacent_list:
             region_unit = Unit(region_id, self.game_id)

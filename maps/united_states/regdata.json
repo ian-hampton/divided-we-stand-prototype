@@ -63,7 +63,7 @@
             "regionResource": "Empty",
             "nukeTurns": 0,
             "edgeOfMap": true,
-            "containsRegional": true,
+            "containsRegionalCapital": true,
             "adjacencyList": [
                 "NTCAS",
                 "COLBA",
