@@ -363,15 +363,18 @@ def archived_games():
 #LEADERBOARD PAGE
 @main.route('/leaderboard')
 def leaderboard():
+    
     leaderboard_data = []
     with open('leaderboard.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if row != []:
                 leaderboard_data.append(row)
+    
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
+    
     profile_ids = []
     for entry in leaderboard_data:
         username = entry[0]
@@ -381,10 +384,11 @@ def leaderboard():
             profile_id = f'0{profile_id}'
         profile_ids.append(profile_id)
         entry[0] = f"""<a href="profile/{profile_id}">{entry[0]}</a>"""
-    leaderboard_height = f'{(len(leaderboard_data) * 15) + 50}px'
+    
     with open('leaderboard_records.json', 'r') as json_file:
         leaderboard_records_dict = json.load(json_file)
-    return render_template('temp_leaderboard.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_height = leaderboard_height, leaderboard_records_dict = leaderboard_records_dict)
+    
+    return render_template('temp_leaderboard_new.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_records_dict = leaderboard_records_dict)
 
 #GENRATE PROFILE PAGES
 def generate_profile_route(profile_id):

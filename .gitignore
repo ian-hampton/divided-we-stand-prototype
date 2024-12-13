@@ -6,6 +6,7 @@ app/static/improvements/
 app/static/stars/
 app/static/units/
 app/testing/
+app/testing/__pycache__/
 maps/united_states/image_resources/
 app/static/back.png
 app/static/background_default.png
@@ -41,3 +42,4 @@ maps/united_states/blank.png
 maps/united_states/reference.png
 gamedata/game1/images/
 gamedata/game2/images/
+app/static/background-blank.png

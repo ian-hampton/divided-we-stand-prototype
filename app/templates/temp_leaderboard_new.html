@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/default-blank.css') }}">
+<style>
+a {
+    color: white;
+    text-decoration: none;
+}
+.flex-container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 10%;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+.left-container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.right-container {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.leaderboard {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    color: white;
+    background-color: rgba(67, 67, 67, 0.7);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.75);
+}
+.leaderboard .top {
+    padding: 8px;
+    text-align: left;
+    background-color: rgba(42, 42, 42, 0.7);
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+    font-size: 28px;
+    font-weight: bold;
+}
+.leaderboard .row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.leaderboard .cell-bold {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+    font-size: 18px;
+    font-weight: bold;
+}
+.leaderboard .cell {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+    font-size: 18px;
+}
+.leaderboard .section {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+}
+.leaderboard .row-spaced {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.leaderboard .cell-left {
+    text-align: left;
+    font-size: 18px;
+    padding-left: 8px;
+}
+.leaderboard .cell-right {
+    text-align: right;
+    font-size: 18px;
+    padding-right: 8px;
+}
+</style>
+
+
+<title>Rankings</title>
+
+
+<header>
+    <div class="left-header">
+        <p id="title">Rankings</p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+    </div>
+</header>
+
+
+<body>
+<div class="flex-container">
+
+
+    <div class="left-container">
+
+    
+        <div class="leaderboard">
+
+            <div class="top">Leaderboard</div>
+            
+            <div class="row">
+                <div class="cell-bold" style="width: 30%">Player</div>
+                <div class="cell-bold" style="width: 17.5%">Games Won</div>
+                <div class="cell-bold" style="width: 17.5%">Total Score</div>
+                <div class="cell-bold" style="width: 17.5%">Average Score</div>
+                <div class="cell-bold" style="width: 17.5%">Games Played</div>
+            </div>
+            
+            {% for row in leaderboard_data %}
+                <div class="row">
+                    <div class="cell" style="width: 30%"> {% autoescape false %} {{ row[0] }} {% endautoescape %} </div>
+                    <div class="cell" style="width: 17.5%"> {{ row[1] }} </div>
+                    <div class="cell" style="width: 17.5%"> {{ row[2] }} </div>
+                    <div class="cell" style="width: 17.5%"> {{ row[3] }} </div>
+                    <div class="cell" style="width: 17.5%"> {{ row[4] }} </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+
+
+    <div class="right-container">
+
+
+        <div class="leaderboard">
+
+            <div class="top">Player Records</div>
+
+            {% for key, value in leaderboard_records_dict.items() %}
+                {% if loop.index <= 7 %}
+                    <div class="section">
+                        <div class="row-spaced">
+                            <div class="cell-left"> <b>{{ key }}</b> </div>
+                            <div class="cell-right"> {{ leaderboard_records_dict[key]["Value"] }} </div>
+                        </div>
+                        <div class="row-spaced">
+                            <div class="cell-left"> {{ value["Player Name"] }} as {{ value["Nation Name"] }} </div>
+                            <div class="cell-right"> {{ value["Game Name"] }} </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="section">
+                <div class="row-spaced">
+                    <div class="cell-left"> <b>Longest War</b> </div>
+                    <div class="cell-right"> {{ leaderboard_records_dict["Longest War"]["Value"] }} </div>
+                </div>
+                <div class="row-spaced">
+                    <div class="cell-left"> {{ leaderboard_records_dict["Longest War"]["Player Name"] }} </div>
+                    <div class="cell-right"> {{ leaderboard_records_dict["Longest War"]["Game Name"] }} </div>
+                </div>
+                <div class="row-spaced">
+                    <div class="cell-left"> {{ leaderboard_records_dict["Longest War"]["War Name"] }} </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="leaderboard">
+
+            <div class="top">Game Records</div>
+            {% for key, value in leaderboard_records_dict["Game Records"].items() %}
+                <div class="section">
+                    <div class="row-spaced">
+                        <div class="cell-left"> <b>{{ key }}</b> </div>
+                        <div class="cell-right"> {{ value["Value"] }} - {{ value["Game Name"] }} </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+
+    </div>
+
+
+</div>
+</body>
+
+
+</html>

@@ -4,14 +4,14 @@
         "Player Name": "Eyiri",
         "Nation Name": "Amikabuu",
         "Game Name": "Hotel",
-        "Value": "53 regions"
+        "Value": "53 regions owned"
     },
     "Largest Economy": {
         "Description": "Highest net income at the end of a game.",
         "Player Name": "Xsotan",
         "Nation Name": "Allied States Of America",
         "Game Name": "Genisys",
-        "Value": "152.5 income"
+        "Value": "152.5 total income"
     },
     "Most Transactions": {
         "Description": "Highest combined total of resources bought & sold to the resource market, and resources traded to and from a nation in a single game.",
@@ -39,7 +39,7 @@
         "Player Name": "Eyiri",
         "Nation Name": "Guandi Empire",
         "Game Name": "India",
-        "Value": "6 wars"
+        "Value": "6 war declarations"
     },
     "Most Battles Won": {
         "Description": "Highest number of combats won during a single game.",
