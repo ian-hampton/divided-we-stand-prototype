@@ -42,5 +42,5 @@ app/static/background-blank.png
 app/static/line-chart.png
 maps/united_states/blank.png
 maps/united_states/reference.png
-gamedata/game1/images/
-gamedata/game2/images/
+gamedata/
+/active_games.json

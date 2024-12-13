@@ -1,44 +1,28 @@
 {
-    "game1": {
-        "Game Name": "Code Test",
-        "Game #": 12,
-        "Game Active": true,
+    "game2": {
+        "Game Name": "Open Game Slot",
+        "Game #": 0,
+        "Game Active": false,
         "Information": {
-            "Version": "Development",
-            "Scenario": "Standard",
-            "Map": "United States 2.0",
-            "Victory Conditions": "Randomized Sets",
-            "Fog of War": "Disabled",
-            "Turn Length": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Version": "TBD",
+            "Scenario": "TBD",
+            "Map": "TBD",
+            "Victory Conditions": "TBD",
+            "Fog of War": "TBD",
+            "Turn Length": "TBD",
+            "Accelerated Schedule": "TBD",
+            "Deadlines on Weekends": "Disabled"
         },
         "Statistics": {
-            "Player Count": "4",
+            "Player Count": "0",
             "Region Disputes": 0,
-            "Current Turn": "30",
-            "Days Ellapsed": 38,
-            "Game Started": "10/10/2024"
+            "Current Turn": "Turn N/A",
+            "Days Ellapsed": 0,
+            "Game Started": "TBD"
         },
-        "Inactive Events": [
-            "Nominate Mediator",
-            "Lost Nuclear Weapons",
-            "Diplomatic Summit"
-        ],
+        "Inactive Events": [],
         "Active Events": {},
-        "Current Event": {},
-        "Steal Action Record": {
-            "Filthy Imperialist": {
-                "Nation Name": null,
-                "Streak": 0
-            }
-        },
-        "Transactions Record": {
-            "Filthy Imperialist": 26,
-            "Techbro": 25,
-            "Peak Cringeoid": 0,
-            "Bruh": 0
-        }
+        "Current Event": {}
     },
     "game2": {
         "Game Name": "Open Game Slot",
