@@ -716,33 +716,8 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
         writer.writerows(playerdata_list)
 
 
-    #Update Resource Market Google Sheet
+    #Update Announcement Google Sheet
     sa = gspread.service_account()
-    sh = sa.open("United We Stood - Resource Market")
-    resource_market_name_str = "Resource Market"
-    market_history_name_str = "Market History"
-    market_wks = sh.worksheet(resource_market_name_str)
-    history_wks = sh.worksheet(market_history_name_str)
-    history_entries_list = rmdata_recent_transaction_list + rmdata_update_list
-    
-    #update market history
-    history_wks.batch_clear(['A2:E500'])
-    lower_bound = len(history_entries_list) + 1
-    update_range = f'A2:E{lower_bound}'
-    history_wks.update(update_range, history_entries_list)
-
-    #update market prices
-    market_wks.update('D3:D4', [[total_exchanged[0][0]], [total_exchanged[0][1]]])
-    market_wks.update('D6:D7', [[total_exchanged[1][0]], [total_exchanged[1][1]]])
-    market_wks.update('D9:D10', [[total_exchanged[2][0]], [total_exchanged[2][1]]])
-    market_wks.update('D12:D13', [[total_exchanged[3][0]], [total_exchanged[3][1]]])
-    market_wks.update('D15:D16', [[total_exchanged[4][0]], [total_exchanged[4][1]]])
-    market_wks.update('D18:D19', [[total_exchanged[5][0]], [total_exchanged[5][1]]])
-    market_wks.update('D21:D22', [[total_exchanged[6][0]], [total_exchanged[6][1]]])
-    market_wks.update('D24:D25', [[total_exchanged[7][0]], [total_exchanged[7][1]]])
-
-
-    #Update Announcement Sheet
     sh_name = "United We Stood - Announcement Sheet"
     wks_name = "Sheet1"
     sh = sa.open(sh_name)

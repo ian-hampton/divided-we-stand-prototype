@@ -1029,15 +1029,8 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
                         rmdata_list.append(row)
     #Refine list as needed
     rmdata_refined_list = []
-    if refine == 12:
-        limit = current_turn_num - 12
-        for transaction in rmdata_list:
-            transaction[0] = int(transaction[0])
-            transaction[3] = int(transaction[3])
-            if transaction[0] >= limit:
-                rmdata_refined_list.append(transaction)
-    elif refine == 11:
-        limit = current_turn_num - 11
+    if refine:
+        limit = current_turn_num - refine
         for transaction in rmdata_list:
             transaction[0] = int(transaction[0])
             transaction[3] = int(transaction[3])
