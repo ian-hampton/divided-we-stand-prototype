@@ -47,19 +47,19 @@
 
             <div class="row">
                 <div class="cell-bold" style="width: 30%">Resource</div>
+                <div class="cell-bold" style="width: 17.5%">Base Price</div>
                 <div class="cell-bold" style="width: 17.5%">Current Price</div>
                 <div class="cell-bold" style="width: 17.5%">Bought</div>
                 <div class="cell-bold" style="width: 17.5%">Sold</div>
-                <div class="cell-bold" style="width: 17.5%">Base Price</div>
             </div>
 
             {% for resource_name, resource_data in prices_dict.items() %}
                 <div class="row">
                     <div class="cell" style="width: 30%">{{ resource_name }}</div>
+                    <div class="cell" style="width: 17.5%">{{ resource_data["Base"] }}</div>
                     <div class="cell" style="width: 17.5%">{{ resource_data["Current"] }}</div>
                     <div class="cell" style="width: 17.5%">{{ resource_data["Bought"] }}</div>
                     <div class="cell" style="width: 17.5%">{{ resource_data["Sold"] }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Base"] }}</div>
                 </div>
             {% endfor %}
 

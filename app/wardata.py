@@ -637,6 +637,74 @@ class WarData:
         # save changes
         self._save_changes()
 
+    def war_count(self) -> int:
+        return len(self.wardata_dict)
+    
+    def unit_casualties(self) -> int:
+        """
+        Returns a combined total of all unit casualties across all wars.
+        """
+
+        casualties = 0
+        for war_name, war_data in self.wardata_dict.items():
+            for combatant_name, combatant_data in war_data["combatants"].items():
+                casualties += combatant_data["statistics"]["friendlyUnitsDestroyed"]
+        
+        return casualties
+    
+    def improvement_casualties(self) -> int:
+        """
+        Returns a combined total of all improvement casualties across all wars.
+        """
+
+        casualties = 0
+        for war_name, war_data in self.wardata_dict.items():
+            for combatant_name, combatant_data in war_data["combatants"].items():
+                casualties += combatant_data["statistics"]["friendlyImprovementsDestroyed"]
+        
+        return casualties
+    
+    def missiles_launched_count(self) -> int:
+        """
+        Returns a combined total of all missile launches across all wars.
+        """
+
+        count = 0
+        for war_name, war_data in self.wardata_dict.items():
+            for combatant_name, combatant_data in war_data["combatants"].items():
+                count += combatant_data["statistics"]["missilesLaunched"]
+                count += combatant_data["statistics"]["nukesLaunched"]
+        
+        return count
+    
+    def get_longest_war(self) -> Tuple[str, int]:
+        """
+        Identifies the longest war that has occured (finished or not).
+
+        Returns:
+            tuple: A tuple containing:
+                - str: Name of the war or None if no war found.
+                - int: Duration of war in turns.
+        """
+
+        longest_name = None
+        longest_time = 0
+        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+
+        for war_name, war_data in self.wardata_dict.items():
+            start_turn = war_data["startTurn"]
+            end_turn = war_data["endTurn"]
+            war_status = war_data["outcome"]
+            if war_status == "TBD":
+                war_duration = current_turn_num - start_turn
+            else:
+                war_duration = end_turn - start_turn
+            if war_duration > longest_time:
+                longest_name = war_name
+                longest_time = war_duration
+        
+        return longest_name, longest_time
+
 
     # log methods
     ################################################################################

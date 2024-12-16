@@ -10,6 +10,7 @@ from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
+from app.notifications import Notifications
 
 #PRIVATE ACTION FUNCTIONS
 def resolve_unit_disbands(unit_disband_list, game_id, player_action_logs):
@@ -216,7 +217,7 @@ def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
 
     return player_action_logs
 
-def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, diplomacy_log, player_action_logs):  
+def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, player_action_logs):  
     '''Resolves all war declarations.'''
 
     #define core lists
@@ -225,6 +226,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
     playerdata_list = core.read_file(playerdata_filepath, 1)
     trucedata_list = core.read_file(trucedata_filepath, 1)
     wardata = WarData(game_id)
+    notifications = Notifications(game_id)
 
     #get needed player info
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -331,7 +333,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
         
         #resolve war declaration
         war_name = wardata.create_war(attacker_player_id, defender_player_id, war_justification, current_turn_num, region_claims_list)
-        diplomacy_log.append(f'{attacker_nation_name} declared war on {defender_nation_name}.')
+        notifications.append(f'{attacker_nation_name} declared war on {defender_nation_name}.', 3)
         player_action_log.append(f'Declared war on {defender_nation_name}.')
         player_action_logs[attacker_player_id - 1] = player_action_log
 
@@ -370,7 +372,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, di
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-    return diplomacy_log, player_action_logs
+    return player_action_logs
 
 def resolve_missile_launches(missile_launch_list, game_id, player_action_logs):
     '''Resolves all missile launch actions and missile defense abilities.'''

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/default-blank.css') }}">
+<style>
+.left-container {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.center-container {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.right-container {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+</style>
+
+
+<title> {{ page_title }} </title>
+
+
+<header>
+    <div class="left-header">
+        <p id="title"> {{ page_title }} </p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+    </div>
+</header>
+
+
+<body>
+<div class="flex-container">
+
+
+    <div class="left-container">
+
+
+        <div class="box" id="left-1">
+
+            <div class="row">
+                <div class="cell-centered" style="width: 100%; padding-top:25px; padding-bottom:25px">
+                    <b style="font-size: 36px">Divided We Stand</b>
+                    <br><b style="font-size: 24px">"{{ game_name }}"</b>
+                    <br>{{ date_output }}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="box" id="left-2">
+
+            <div class="top">Victory Progress</div>
+
+            {% for nation_name, nation_data in scoreboard_dict.items() %}
+                {% set color = nation_data["color"] + '7F' %}
+                {% set score = nation_data["score"] %}
+                <div class="row">
+                    {% if score >= 1 %}
+                        <div class="cell-short" style="width:34%; background-color:{{color}}">{{ nation_name }}</div>
+                    {% else %}
+                        <div class="cell-short" style="width: 34%">{{ nation_name }}</div>
+                    {% endif %}
+                    {% if score >= 2 %}
+                        <div class="cell-short" style="width: 33%; background-color:{{color}}"></div>
+                    {% else %}
+                        <div class="cell-short" style="width: 33%"></div>
+                    {% endif %}
+                    {% if score >= 3 %}
+                        <div class="cell-short-right" style="width: 33%; background-color:{{color}}">{{ nation_data["score"] }}</div>
+                    {% else %}
+                        <div class="cell-short-right" style="width: 33%">{{ nation_data["score"] }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {% set total_rows = 10 %}
+            {% set current_rows = scoreboard_dict | length %}
+            {% for i in range(current_rows, total_rows) %}
+                <div class="row">
+                    <div class="cell-short" style="width: 100%; visibility: hidden"> Blank </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+
+        {% autoescape false %}
+        <div class="box" id="left-3">
+
+            <div class="top">Statistics</div>
+
+            <div class="row" style=" height: calc(100% - 49px)">
+                <div class="cell" style="width: 100%;">{{ statistics_string }}</div>
+            </div>
+
+        </div>
+        {% endautoescape %}
+
+
+    </div>
+
+
+    <div class="center-container">
+
+
+        {% autoescape false %}
+        <div class="box" id="center-1">
+
+            <div class="top">Diplomacy</div>
+
+            <div class="row" style="height: calc(100% - 49px)">
+                <div class="cell" style="width: 100%">{{ diplomacy_string }}</div>
+            </div>
+
+        </div>
+
+
+        <div class="box" id="center-2">
+
+            <div class="top">Notifications</div>
+
+            <div class="row" style="height: calc(100% - 49px)">
+                <div class="cell" style="width: 100%">{{ notifications_string }}</div>
+            </div>
+
+        </div>
+        {% endautoescape %}
+        
+    </div>
+
+
+    <div class="right-container">
+
+
+        {% autoescape false %}
+        <div class="box">
+
+            <div class="top">Largest Nation</div>
+
+            <div class="row" style="height:max-content">
+                <div class="cell" style="width: 100%">
+                    {{ standings_dict['largest_nation'][0] }}
+                    <br>{{ standings_dict['largest_nation'][1] }}
+                    <br>{{ standings_dict['largest_nation'][2] }}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="box">
+
+            <div class="top">Most Income</div>
+
+            <div class="row">
+                <div class="cell" style="width: 100%">
+                    {{ standings_dict['strongest_economy'][0] }}
+                    <br>{{ standings_dict['strongest_economy'][1] }}
+                    <br>{{ standings_dict['strongest_economy'][2] }}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="box">
+
+            <div class="top">Most Transactions</div>
+
+            <div class="row">
+                <div class="cell" style="width: 100%">
+                    {{ standings_dict["most_transactions"][0] }}
+                    <br>{{ standings_dict["most_transactions"][1] }}
+                    <br>{{ standings_dict["most_transactions"][2] }}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="box">
+
+            <div class="top">Largest Military</div>
+
+            <div class="row">
+                <div class="cell" style="width: 100%">
+                    {{ standings_dict['largest_military'][0] }}
+                    <br>{{ standings_dict['largest_military'][1] }}
+                    <br>{{ standings_dict['largest_military'][2] }}
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="box">
+
+            <div class="top">Most Technology</div>
+
+            <div class="row">
+                <div class="cell" style="width: 100%">
+                    {{ standings_dict['most_research'][0] }}
+                    <br>{{ standings_dict['most_research'][1] }}
+                    <br>{{ standings_dict['most_research'][2] }}
+                </div>
+            </div>
+
+        </div>
+        {% endautoescape %}
+
+        
+    </div>
+
+
+</div>
+</body>
+
+
+</html>
+
+
+<script>
+// get sizes of boxes
+const doc_left_1 = document.getElementById("left-1");
+const doc_left_2 = document.getElementById("left-2");
+const doc_left_3 = document.getElementById("left-3");
+const doc_center_1 = document.getElementById("center-1");
+const doc_center_2 = document.getElementById("center-2");
+const doc_right_container = document.querySelector(".right-container");
+
+// calculate heights for Diplomacy and Notifications box
+var doc_right_height = doc_right_container.offsetHeight;
+var center_box_height = (doc_right_height - 40) / 2;
+doc_center_1.style.height = `${center_box_height}px`;
+doc_center_2.style.height = `${center_box_height}px`;
+
+// calculate height for Statistics box
+var stat_box_height = doc_right_height - doc_left_1.offsetHeight - doc_left_2.offsetHeight - (40 * 2);
+doc_left_3.style.height = `${stat_box_height}px`;
+
+</script>

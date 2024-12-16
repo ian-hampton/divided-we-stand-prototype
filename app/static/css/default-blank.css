@@ -77,6 +77,12 @@ body {
     border-bottom: 1px solid rgba(42, 42, 42, 0.7);
     font-size: 18px;
 }
+.box .cell-centered {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+    font-size: 18px;
+}
 .box .section {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -97,4 +103,20 @@ body {
     text-align: right;
     font-size: 18px;
     padding-right: 8px;
+}
+.box .cell-short {
+    padding: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: left;
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+    font-size: 18px;
+}
+.box .cell-short-right {
+    padding: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: right;
+    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
+    font-size: 18px;
 }

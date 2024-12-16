@@ -18,6 +18,7 @@ from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
+from app.notifications import Notifications
 
 #UWS ENVIROMENT IMPORTS
 import gspread
@@ -254,7 +255,6 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     
     #update visuals
     current_turn_num = 1
-    update_announcements_sheet(game_id, False, [], [])
     map_name = active_games_dict[game_id]["Information"]["Map"]
     main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
     main_map.update()
@@ -275,11 +275,11 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     map_name = get_map_name(int(full_game_id[-1]))
     
     #create logs
-    diplomacy_log = []
-    reminders_list = []
     player_action_logs = []
     for i in range(player_count):
         player_action_logs.append([])
+    notifications = Notifications(full_game_id)
+    notifications.clear()
 
     #filter
     library = get_library(full_game_id)
@@ -318,7 +318,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Oppertunity to Resolve Active Events
-    public_actions_dict, private_actions_dict, diplomacy_log = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id, diplomacy_log)
+    public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
 
     
     #Sort Player Entered Public Actions
@@ -330,18 +330,18 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
                 if action_type in public_actions_dict:
                     public_actions_dict[action_type].append(action)
     #process actions
-    public_actions.resolve_trades(full_game_id, diplomacy_log)
+    public_actions.resolve_trades(full_game_id)
     print("Resolving public actions...")
     if public_actions_list != []:
         update_control_map = False
         if len(public_actions_dict['Surrender'] + public_actions_dict['White Peace']) > 0:
             peace_action_list = public_actions_dict['Surrender'] + public_actions_dict['White Peace']
-            diplomacy_log, player_action_logs = public_actions.resolve_peace_actions(peace_action_list, full_game_id, current_turn_num, diplomacy_log, player_action_logs)
+            player_action_logs = public_actions.resolve_peace_actions(peace_action_list, full_game_id, current_turn_num, player_action_logs)
             update_control_map = True
         if len(public_actions_dict['Research']) > 0:
             player_action_logs = public_actions.resolve_research_actions(public_actions_dict['Research'], full_game_id, player_action_logs)
         if len(public_actions_dict['Alliance']) > 0:
-            diplomacy_log, player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance'], current_turn_num, full_game_id, diplomacy_log, player_action_logs)
+            player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance'], current_turn_num, full_game_id, player_action_logs)
         if len(public_actions_dict['Purchase']) > 0:
             player_action_logs = public_actions.resolve_region_purchases(public_actions_dict['Purchase'], full_game_id, player_action_logs)
             update_control_map = True
@@ -351,7 +351,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             player_action_logs = public_actions.resolve_improvement_builds(public_actions_dict['Build'], full_game_id, player_action_logs)
         if len(public_actions_dict['Republic']) > 0:
             government_actions_list = public_actions_dict['Republic']
-            diplomacy_log, player_action_logs = public_actions.resolve_government_abilities(government_actions_list, full_game_id, diplomacy_log, player_action_logs)
+            player_action_logs = public_actions.resolve_government_abilities(government_actions_list, full_game_id, player_action_logs)
         if len(public_actions_dict['Make']) > 0:
             player_action_logs = public_actions.resolve_missile_builds(public_actions_dict['Make'], full_game_id, player_action_logs)
         if len(public_actions_dict['Event']) > 0:
@@ -387,7 +387,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         if len(private_actions_dict['Deploy']) > 0:
             player_action_logs = private_actions.resolve_unit_deployments(private_actions_dict['Deploy'], full_game_id, player_action_logs)
         if len(private_actions_dict['War']) > 0:
-            diplomacy_log, player_action_logs = private_actions.resolve_war_declarations(private_actions_dict['War'], full_game_id, current_turn_num, diplomacy_log, player_action_logs)
+            player_action_logs = private_actions.resolve_war_declarations(private_actions_dict['War'], full_game_id, current_turn_num, player_action_logs)
         if len(private_actions_dict['Launch']) > 0:
             player_action_logs = private_actions.resolve_missile_launches(private_actions_dict['Launch'], full_game_id, player_action_logs)
         if len(private_actions_dict['Move']) > 0:
@@ -413,8 +413,9 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
     #End of Turn Checks and Updates
     print("Resolving end of turn updates...")
-    diplomacy_log = checks.total_occupation_forced_surrender(full_game_id, current_turn_num, diplomacy_log)
-    diplomacy_log = run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diplomacy_log)
+    checks.total_occupation_forced_surrender(full_game_id)
+    checks.war_score_forced_surrender(full_game_id)
+    run_end_of_turn_checks(full_game_id, current_turn_num, player_count)
     wardata.add_warscore_from_occupations()
     wardata.update_totals()
     for i in range(player_count):
@@ -423,7 +424,7 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         
     
     #Oppertunity to Resolve Active Events
-    public_actions_dict, private_actions_dict, diplomacy_log = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id, diplomacy_log)
+    public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
 
 
     #Prepwork for the Next Turn
@@ -432,13 +433,13 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     for i in range(player_count):
         player_id = i + 1
         #resolve upkeep shortages
-        diplomacy_log = checks.resolve_shortages(full_game_id, player_id, diplomacy_log)
+        checks.resolve_shortages(full_game_id, player_id)
         #update improvement count in playerdata
         checks.update_improvement_count(full_game_id, player_id)
     #update income in playerdata
     checks.update_income(full_game_id, current_turn_num)
     #update alliances
-    diplomacy_log, reminders_list = checks.update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_list)
+    checks.update_alliances(full_game_id, current_turn_num)
     for i in range(player_count):
         player_id = i + 1
         #collect resource market income
@@ -452,20 +453,14 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
 
     #Resolve Bonus Phase
-    event_pending = False
     if not player_has_won:
         if current_turn_num % 4 == 0:
             checks.bonus_phase_heals(player_id, full_game_id)
-            diplomacy_log.append('All units and defensive improvements have regained 2 health.')
+            notifications.append('All units and defensive improvements have regained 2 health.', 1)
         #event procedure
         if current_turn_num % 8 == 0:
             print("Triggering an event...")
-            diplomacy_log = events.trigger_event(full_game_id, current_turn_num, diplomacy_log)
-        with open(f'active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-        current_event_dict = active_games_dict[full_game_id]["Current Event"]
-        if current_event_dict != {}:
-            event_pending = True
+            events.trigger_event(full_game_id, current_turn_num)
 
 
     #Update Game_Settings
@@ -485,7 +480,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
     #Update Visuals
     current_turn_num = get_current_turn_num(int(full_game_id[-1]))
-    update_announcements_sheet(full_game_id, event_pending, diplomacy_log, reminders_list)
     #resgraphs.update_all(full_game_id)
     main_map = map.MainMap(int(full_game_id[-1]), map_name, current_turn_num)
     main_map.update()
@@ -594,6 +588,15 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
             regdata_dict[region_id]["regionData"]["quarantine"] = False
         with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
+
+    # create gamedata.json
+    gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
+    gamedata_dict = {}
+    gamedata_dict["alliances"] = {}
+    gamedata_dict["notifications"] = {}
+    gamedata_dict["victoryConditionCompleted"] = {}
+    with open(gamedata_filepath, 'w') as json_file:
+        json.dump(gamedata_dict, json_file, indent=4)
 
     #create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
@@ -949,7 +952,7 @@ def get_library(game_id):
 
     return library
 
-def run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diplomacy_log):
+def run_end_of_turn_checks(full_game_id, current_turn_num, player_count):
     
     checks.update_military_capacity(full_game_id)
     for i in range(player_count):
@@ -959,7 +962,7 @@ def run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diploma
         #check refinery ratios
         checks.ratio_check(full_game_id, player_id)
         #check military capacity
-        diplomacy_log = checks.remove_excess_units(full_game_id, player_id, diplomacy_log)
+        checks.remove_excess_units(full_game_id, player_id)
         #refresh improvement count
         checks.update_improvement_count(full_game_id, player_id)
         #update stockpile limits in playerdata
@@ -975,8 +978,6 @@ def run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diploma
     checks.update_records(full_game_id, current_turn_num)
     #update income in playerdata now that records have been updated (important for political power bonuses)
     checks.update_income(full_game_id, current_turn_num)
-
-    return diplomacy_log
 
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS
@@ -1042,213 +1043,6 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
             transaction[3] = int(transaction[3])
             rmdata_refined_list.append(transaction)
     return rmdata_refined_list
-
-
-#SHEETS API BULLSHIT
-################################################################################
-
-def update_announcements_sheet(full_game_id, event_pending, diplomacy_log: list, reminders_list: list):
-    '''
-    Updates the Announcements Google Sheet.
-
-    Parameters:
-    - full_game_id: The full game_id of the active game.
-    - event_pending: A bool that will be true if there is a current event that needs to be handled.
-    - diplomacy_log: A list of pre-generated diplomatic interaction logs.
-    - reminders_list: A list of pre-generated reminders.
-    '''
-
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
-    trucedata_list = read_file(trucedata_filepath, 1)
-
-    #get needed data from playerdata.csv
-    nation_name_list = []
-    for player in playerdata_list:
-        nation_name = [player[1]]
-        nation_name_list.append(nation_name)
-    while len(nation_name_list) < 10:
-        nation_name_list.append(['N/A'])
-
-
-    #get needed data from active_games.json
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
-    accelerated_schedule_str = active_games_dict[full_game_id]["Information"]["Accelerated Schedule"]
-    
-    #calculate date information
-    if not event_pending:
-        season, year = date_from_turn_num(current_turn_num)
-        game_name_output = f'''"{game_name}"'''
-        date_output = f'{season} {year} - Turn {current_turn_num}'
-    else:
-        current_turn_num -= 1
-        season, year = date_from_turn_num(current_turn_num)
-        game_name_output = f'''"{game_name}"'''
-        date_output = f'{season} {year} - Turn {current_turn_num} Bonus Phase'
-
-    #get needed data from wardata
-    from app.wardata import WarData
-    wardata = WarData(full_game_id)
-    for war in wardata.wardata_dict:
-        if wardata.wardata_dict[war]["outcome"] == "TBD":
-            diplomacy_log.insert(0, f'{war} is ongoing.')
-
-    #get needed data from trucedata.csv
-    for truce in trucedata_list:
-        truce_participants_list = []
-        for i in range(1, 11):
-            truce_status = ast.literal_eval(truce[i])
-            if truce_status:
-                select_nation_name = nation_name_list[i - 1][0]
-                truce_participants_list.append(select_nation_name)
-        truce_name = ' - '.join(truce_participants_list)
-        truce_end_turn = int(truce[11])
-        if truce_end_turn >= current_turn_num:
-            diplomacy_log.append(f"{truce_name} truce through turn {truce_end_turn + 1}.")
-        if truce_end_turn < current_turn_num:
-            diplomacy_log.append(f'{truce_name} truce has expired.')
-
-
-    #API Bullshit
-    #define access
-    sa = gspread.service_account()
-    sh_name = "United We Stood - Announcement Sheet"
-    wks_name = "Sheet1"
-    sh = sa.open(sh_name)
-    wks = sh.worksheet(wks_name)
-
-    #update header
-    wks.update_cell(4, 2, game_name_output)
-    wks.update_cell(5, 2, date_output)
-
-    #update record displays
-    ln_1st, ln_2nd, ln_3rd = checks.get_top_three(full_game_id, 'largest_nation', True)
-    lm_1st, lm_2nd, lm_3rd = checks.get_top_three(full_game_id, 'largest_military', True)
-    mr_1st, mr_2nd, mr_3rd = checks.get_top_three(full_game_id, 'most_research', True)
-    se_1st, se_2nd, se_3rd = checks.get_top_three(full_game_id, 'strongest_economy', True)
-    wks.update('B9:B11', [[ln_1st], [ln_2nd], [ln_3rd]])
-    wks.update('B14:B16', [[lm_1st], [lm_2nd], [lm_3rd]])
-    wks.update('B19:B21', [[mr_1st], [mr_2nd], [mr_3rd]])
-    wks.update('D9:E11', [[se_1st], [se_2nd], [se_3rd]])
-
-    #update reminders
-    if current_turn_num <= 4:
-        reminders_list.append('First year expansion rules are in effect.')
-    elif current_turn_num == 5:
-        reminders_list.append('Normal expansion rules are now in effect.')
-    if accelerated_schedule_str == 'Enabled' and current_turn_num <= 10:
-        reminders_list.append('Accelerated schedule is in effect through turn 10.')
-    elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
-        reminders_list.append('Normal turn schedule is now in effect.')
-    reminders_str = "\n".join(reminders_list)
-    wks.update_cell(3, 7, reminders_str)
-
-    #update leaderboard
-    red_rgb = float(67/255)
-    green_rgb = float(67/255)
-    blue_rgb = float(67/255)
-    wks.format("G12:I21", { 'backgroundColor': {'red':red_rgb,'green':green_rgb,'blue':blue_rgb}})
-    for index, playerdata in enumerate(playerdata_list):
-        player_id = index + 1
-        player_color_hex = playerdata[2]
-        player_color_rgb_list = player_colors_conversions[player_color_hex]
-        red_rgb = float(player_color_rgb_list[0]/255)
-        green_rgb = float(player_color_rgb_list[1]/255)
-        blue_rgb = float(player_color_rgb_list[2]/255)
-        vc_results = checks.check_victory_conditions(full_game_id, player_id, current_turn_num)
-        player_vc_score = 0
-        for result in vc_results:
-            if result == True:
-                player_vc_score += 1
-        if player_vc_score != 0:
-            bar_range = f'G{11+player_id}:{score_to_col[player_vc_score]}{11+player_id}'
-            wks.format(bar_range, { 'backgroundColor': {'red':red_rgb,'green':green_rgb,'blue':blue_rgb}})
-    wks.update('G12:G21', nation_name_list)
-
-    #update diplomacy
-    if diplomacy_log != []:
-        diplomacy_log_str = "\n".join(diplomacy_log)
-    else:
-        diplomacy_log_str = ''
-    wks.update_cell(3, 11, diplomacy_log_str)
-
-def update_text_color(sheet_name, worksheet_name, cell_range, color):
-    #Get API info again
-    sa = gspread.service_account()
-    sh = sa.open(sheet_name)
-    wks = sh.worksheet(worksheet_name)
-    #Determine color
-    if color == 'green':
-        red_rgb = 0/255
-        green_rgb = 255/255
-        blue_rgb = 0/255
-    elif color == 'red':
-        red_rgb = 255/255
-        green_rgb = 0/255
-        blue_rgb = 0/255
-    elif color == 'yellow':
-        red_rgb = 241/255
-        green_rgb = 194/255
-        blue_rgb = 50/255
-    elif color == 'blue':
-        red_rgb = 60/255
-        green_rgb = 120/255
-        blue_rgb = 216/255
-    elif color == 'white':
-        red_rgb = 255/255
-        green_rgb = 255/255
-        blue_rgb = 255/255
-    else:
-        red_rgb = 0/255
-        green_rgb = 0/255
-        blue_rgb = 0/255
-    color_formatted = {'red':red_rgb, 'green':green_rgb, 'blue':blue_rgb}
-    #Change text color
-    wks.format(cell_range, { 
-            'textFormat': {
-                'foregroundColor': color_formatted,
-                'fontFamily': 'Droid Serif'
-            }
-        })
-    
-def update_text_color_new(wks, cell_range, color):
-    #determine color
-    if color == 'green':
-        red_rgb = 0/255
-        green_rgb = 255/255
-        blue_rgb = 0/255
-    elif color == 'red':
-        red_rgb = 255/255
-        green_rgb = 0/255
-        blue_rgb = 0/255
-    elif color == 'yellow':
-        red_rgb = 241/255
-        green_rgb = 194/255
-        blue_rgb = 50/255
-    elif color == 'blue':
-        red_rgb = 60/255
-        green_rgb = 120/255
-        blue_rgb = 216/255
-    elif color == 'white':
-        red_rgb = 255/255
-        green_rgb = 255/255
-        blue_rgb = 255/255
-    else:
-        red_rgb = 0/255
-        green_rgb = 0/255
-        blue_rgb = 0/255
-    color_formatted = {'red':red_rgb, 'green':green_rgb, 'blue':blue_rgb}
-    #Change text color
-    wks.format(cell_range, { 
-            'textFormat': {
-                'foregroundColor': color_formatted,
-                'fontFamily': 'Droid Serif'
-            }
-        })
 
 
 #DIPLOMACY SUB-FUNCTIONS
@@ -1779,6 +1573,28 @@ def get_lowest_in_record(game_id, record_name):
         return sorted_candidates[0][0]
     else:
         pass
+
+def get_top_three_transactions(game_id):
+    """
+    Temporary cringe function to read transactions.
+    """
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    
+    transactions_dict = active_games_dict[game_id]["Transactions Record"]
+    sorted_dict = dict(
+        sorted(
+            transactions_dict.items(),
+            key = lambda item: (-item[1], item[0])
+        )
+    )
+
+    top_three = tuple(sorted_dict.keys())[:3]
+    top_three_list = []
+    for index, key in enumerate(top_three):
+        top_three_list.append(f"{index+1}. {key} ({sorted_dict[key]})")
+
+    return tuple(top_three_list)
 
 
 # DISGUSTING GLOBAL VARIABLES

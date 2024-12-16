@@ -12,6 +12,7 @@ from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
+from app.notifications import Notifications
 
 #END OF TURN CHECKS
 def update_improvement_count(game_id, player_id):
@@ -204,7 +205,7 @@ def update_military_capacity(game_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def remove_excess_units(game_id, player_id, diplomacy_log):
+def remove_excess_units(game_id, player_id):
     '''
     Removes excess units if a players military capacity has been exceeded.
     '''
@@ -212,6 +213,7 @@ def remove_excess_units(game_id, player_id, diplomacy_log):
     # define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    notifications = Notifications(game_id)
 
     # Process
     playerdata = playerdata_list[player_id - 1]
@@ -224,7 +226,7 @@ def remove_excess_units(game_id, player_id, diplomacy_log):
         used_mc -= 1
         units_lost += 1
     if units_lost > 0:
-        diplomacy_log.append(f'{player_nation_name} lost {units_lost} units due to insufficient military capacity.')
+        notifications.append(f'{player_nation_name} lost {units_lost} units due to insufficient military capacity.', 5)
 
     # Update playerdata.csv
     output_str = f'{used_mc}/{total_mc}'
@@ -234,8 +236,6 @@ def remove_excess_units(game_id, player_id, diplomacy_log):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    return diplomacy_log
 
 def update_misc_info(game_id, player_id):
     '''
@@ -439,10 +439,12 @@ def update_income(game_id, current_turn_num):
         top_economy_list = get_top_three(game_id, 'strongest_economy', True)
         top_military_list = get_top_three(game_id, 'largest_military', True)
         top_research_list = get_top_three(game_id, 'most_research', True)
+        top_transactions_list = core.get_top_three_transactions(game_id)
         largest_score_not_tied = check_top_three(top_largest_list)
         economy_score_not_tied = check_top_three(top_economy_list)
         military_score_not_tied = check_top_three(top_military_list)
         research_score_not_tied = check_top_three(top_research_list)
+        transactions_score_not_tied = check_top_three(top_transactions_list)
 
     #create income lists
     income_strings_masterlist = []
@@ -645,6 +647,9 @@ def update_income(game_id, current_turn_num):
                 if research_score_not_tied[i] and nation_name in top_research_list[i]:
                     gross_income_masterlist[player_id - 1][pp_index] += bonus
                     income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from relative research progress.']
+                if transactions_score_not_tied[i] and nation_name in top_transactions_list[i]:
+                    gross_income_masterlist[player_id - 1][pp_index] += bonus
+                    income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from trade.']
 
         #political power income from alliances
         alliance_count, alliance_capacity = core.get_alliance_count(game_id, playerdata)
@@ -957,7 +962,7 @@ def countdown(game_id, map_name):
         resource_map = map.ResourceMap(int(game_id[-1]), map_name)
         resource_map.update()
 
-def resolve_shortages(game_id, player_id, diplomacy_log): 
+def resolve_shortages(game_id, player_id): 
     '''
     Resolves negative resource values after income is processed.
     '''
@@ -965,6 +970,7 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
     # define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    notifications = Notifications(game_id)
 
     # get needed information from player
     playerdata = playerdata_list[player_id - 1]
@@ -997,7 +1003,7 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
                 # destroy random improvement of that type
                 region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to oil shortages.')
+                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to oil shortages.', 6)
                 oil_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
                 # adjust upkeep manager
@@ -1012,7 +1018,7 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
             while oil_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
                 # destroy random unit of that type
                 region_id = core.search_and_destroy_unit(game_id, player_id, unit_name)
-                diplomacy_log.append(f'{nation_name} lost a {unit_name} in {region_id} due to oil shortages.')
+                notifications.append(f'{nation_name} lost a {unit_name} in {region_id} due to oil shortages.', 6)
                 oil_stockpile += unit_upkeep
                 oil_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
                 # adjust upkeep manager
@@ -1028,7 +1034,7 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
                 # destroy random improvement of that type
                 region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to coal shortages.')
+                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to coal shortages.', 6)
                 coal_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
                 # adjust upkeep manager
@@ -1044,7 +1050,7 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
             while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
                 # destroy random improvement of that type
                 region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to green energy shortages.')
+                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to green energy shortages.', 6)
                 green_stockpile += improvement_upkeep
                 energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
                 # adjust upkeep manager
@@ -1062,14 +1068,14 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
             improvement_upkeep = dollars_upkeep_dict[improvement_name]['Improvement Upkeep']
             while dollars_upkeep_dict[improvement_name]['Improvement Count'] > 0:
                 region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                diplomacy_log.append(f'{nation_name} lost a {improvement_name} in {region_id} due to dollars shortages.')
+                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to dollars shortages.', 6)
                 dollars_stockpile += improvement_upkeep
                 dollars_upkeep_dict[improvement_name]['Improvement Count'] -= 1
         for unit_name in dollars_unit_upkeep_dict:
             unit_upkeep = dollars_unit_upkeep_dict[unit_name]['Improvement Upkeep']
             while dollars_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
                 region_id = core.search_and_destroy_unit(game_id, player_id, unit_name)
-                diplomacy_log.append(f'{nation_name} lost a {unit_name} in {region_id} due to dollars shortages.')
+                notifications.append(f'{nation_name} lost a {unit_name} in {region_id} due to dollars shortages.', 6)
                 dollars_stockpile += unit_upkeep
                 dollars_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
         # escape hatch because dollars income is allowed to be negative
@@ -1095,9 +1101,7 @@ def resolve_shortages(game_id, player_id, diplomacy_log):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-    return diplomacy_log
-
-def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_list):
+def update_alliances(full_game_id, current_turn_num):
     '''Renews alliances and sends out logs/reminders. Resolves political power debt.'''
 
     #define core lists
@@ -1148,12 +1152,10 @@ def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_li
                     #otherwise add alliance to diplomacy log and/or reminder log
                     else:
                         diplomacy_log_str = f'{nation_name_1} - {nation_name_2} {alliance_type} through turn {next_renewal}.'
+                        '''
                         if diplomacy_log_str not in diplomacy_log:
                             diplomacy_log.insert(0, diplomacy_log_str)
-                        if (current_turn_num + 1) == next_renewal:
-                            reminder_str = f'{nation_name_1} - {nation_name_2} {alliance_type} is up for renewal this turn.'
-                            if reminder_str not in reminders_list:
-                                reminders_list.append(reminder_str)
+                        '''
 
 
     #Resolve Renewals
@@ -1183,8 +1185,10 @@ def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_li
                 diplomatic_relations_masterlist[player_id_1 - 1][player_id_2] = output_str
                 diplomatic_relations_masterlist[player_id_2 - 1][player_id_1] = output_str
                 diplomacy_log_str = f'{nation_name_1} - {nation_name_2} {alliance_type} through turn {next_renewal}.'
+                '''
                 if diplomacy_log_str not in diplomacy_log:
                     diplomacy_log.insert(0, diplomacy_log_str)
+                '''
             
             #add alliance to disband set if not renewed
             else:
@@ -1211,8 +1215,10 @@ def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_li
         diplomatic_relations_masterlist[player_id_1 - 1][player_id_2] = output_str
         diplomatic_relations_masterlist[player_id_2 - 1][player_id_1] = output_str
         diplomacy_log_str = f'{nation_name_1} - {nation_name_2} {alliance_type} has disbanded.'
+        '''
         if diplomacy_log_str not in diplomacy_log:
             diplomacy_log.append(diplomacy_log_str)
+        '''
 
 
     #Update playerdata.csv
@@ -1228,8 +1234,6 @@ def update_alliances(full_game_id, current_turn_num, diplomacy_log, reminders_li
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    return diplomacy_log, reminders_list
 
 def gain_resource_market_income(game_id, player_id, player_resource_market_incomes):
     '''Applies the resources gained/lost from resource market activities to player stockpiles.'''
@@ -1743,13 +1747,14 @@ def prompt_for_missing_war_justifications(game_id):
         if war_data["outcome"] == "TBD":
             wardata.add_missing_war_justifications(war_name)
 
-def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
+def total_occupation_forced_surrender(game_id):
     '''
     Forces a player to surrender if they are totally occupied.
     '''
     
     # get core lists
     wardata = WarData(game_id)
+    notifications = Notifications(game_id)
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     nation_name_list = []
@@ -1790,8 +1795,8 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
                     else:
                         outcome = 'Defender Victory'
                     wardata.end_war(war_name, outcome)
-                    diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
-                    diplomacy_log.append(f'{war_name} has ended due to total occupation.')
+                    notifications.append(f'{nation_name_1} surrendered to {nation_name_2}.', 4)
+                    notifications.append(f'{war_name} has ended due to total occupation.', 4)
 
     
     # Repair Diplomatic Relations
@@ -1806,15 +1811,14 @@ def total_occupation_forced_surrender(game_id, current_turn_num, diplomacy_log):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-    return diplomacy_log
-
-def war_score_forced_surrender(game_id, diplomacy_log):
+def war_score_forced_surrender(game_id):
     '''
     Forces a side to surrender if critical war score difference reached.
     '''
 
     # get core lists
     wardata = WarData(game_id)
+    notifications = Notifications(game_id)
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     nation_name_list = []
@@ -1825,22 +1829,23 @@ def war_score_forced_surrender(game_id, diplomacy_log):
         diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
 
     for war_name, war_data in wardata.wardata_dict.items():
+        if war_data["outcome"] == "TBD":
         
-        # get war score information
-        attacker_war_score = war_data["attackerWarScore"]["total"]
-        defender_war_score = war_data["defenderWarScore"]["total"]
-        attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
-        ma_name, md_name = wardata.get_main_combatants(war_name)
+            # get war score information
+            attacker_war_score = war_data["attackerWarScore"]["total"]
+            defender_war_score = war_data["defenderWarScore"]["total"]
+            attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
+            ma_name, md_name = wardata.get_main_combatants(war_name)
 
-        # end war if a threshold was met
-        if attacker_war_score >= attacker_threshold:
-            wardata.end_war(war_name, "Attacker Victory")
-            diplomacy_log.append(f'{md_name} surrendered to {ma_name}.')
-            diplomacy_log.append(f'{war_name} has ended due to war score.')
-        elif defender_war_score >= defender_threshold:
-            wardata.end_war(war_name, "Defender Victory")
-            diplomacy_log.append(f'{ma_name} surrendered to {md_name}.')
-            diplomacy_log.append(f'{war_name} has ended due to war score.')
+            # end war if a threshold was met
+            if attacker_threshold and attacker_war_score >= attacker_threshold:
+                wardata.end_war(war_name, "Attacker Victory")
+                notifications.append(f'{md_name} surrendered to {ma_name}.', 4)
+                notifications.append(f'{war_name} has ended due to war score.', 4)
+            elif defender_threshold and defender_war_score >= defender_threshold:
+                wardata.end_war(war_name, "Defender Victory")
+                notifications.append(f'{ma_name} surrendered to {md_name}.', 4)
+                notifications.append(f'{war_name} has ended due to war score.', 4)
 
     # repair relations
     diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
@@ -1852,8 +1857,6 @@ def war_score_forced_surrender(game_id, diplomacy_log):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    return diplomacy_log
 
 #UPDATE INCOME HELPER FUNCTIONS
 def update_gross_income_masterlist(gross_income_masterlist, player_id, index, income, remnant_multiplier):

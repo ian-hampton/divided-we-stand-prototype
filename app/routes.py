@@ -1,20 +1,22 @@
 #STANDARD IMPORTS
 import ast
+from queue import PriorityQueue 
 import csv
 from datetime import datetime
 import json
 from operator import itemgetter
 import os
-import random
 import re
-import shutil
 import uuid
 
 #UWS SOURCE IMPORTS
 from app import core
 from app import checks
 from app import events
+from app import palette
+from app.wardata import WarData
 from app.testing import map_tests
+from app.notifications import Notifications
 
 #ENVIROMENT IMPORTS
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
@@ -1058,6 +1060,150 @@ def resource_market(full_game_id):
 
     return render_template('temp_resource_market.html', page_title = page_title, records_list = rmdata_recent_transaction_list, records_flag = records_flag, prices_dict = market_prices_dict)
 
+# ANNOUNCEMENT PAGE
+@main.route('/<full_game_id>/announcements')
+def announcements(full_game_id):
+
+    # get game data
+    wardata = WarData(full_game_id)
+    notifications = Notifications(full_game_id)
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    trucedata_list = core.read_file(trucedata_filepath, 1)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+    # read the contents of active_games.json
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Announcements Page'
+    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+    accelerated_schedule_str = active_games_dict[full_game_id]["Information"]["Accelerated Schedule"]
+    current_event_dict = active_games_dict[full_game_id]["Current Event"]
+    if current_event_dict != {}:
+        event_pending = True
+    else:
+        event_pending = False
+
+    # get needed data from playerdata.csv
+    nation_name_list = []
+    for player in playerdata_list:
+        nation_name = [player[1]]
+        nation_name_list.append(nation_name)
+    while len(nation_name_list) < 10:
+        nation_name_list.append(['N/A'])
+
+    # calculate date information
+    if not event_pending:
+        season, year = core.date_from_turn_num(current_turn_num)
+        date_output = f'{season} {year} - Turn {current_turn_num}'
+    else:
+        current_turn_num -= 1
+        season, year = core.date_from_turn_num(current_turn_num)
+        date_output = f'{season} {year} - Turn {current_turn_num} Bonus Phase'
+
+
+    # Build Diplomacy String
+    diplomacy_list = []
+    # expansion rules reminder
+    if current_turn_num <= 4:
+        diplomacy_list.append('First year expansion rules are in effect.')
+    elif current_turn_num == 5:
+        diplomacy_list.append('Normal expansion rules are now in effect.')
+    # accelerate schedule reminder
+    if accelerated_schedule_str == 'Enabled' and current_turn_num <= 10:
+        diplomacy_list.append('Accelerated schedule is in effect through turn 10.')
+    elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
+        diplomacy_list.append('Normal turn schedule is now in effect.')
+    # get all ongoing wars
+    for war in wardata.wardata_dict:
+        if wardata.wardata_dict[war]["outcome"] == "TBD":
+            diplomacy_list.append(f'{war} is ongoing.')
+    # get all ongoing truces
+    for truce in trucedata_list:
+        truce_participants_list = []
+        for i in range(1, 11):
+            truce_status = ast.literal_eval(truce[i])
+            if truce_status:
+                select_nation_name = nation_name_list[i - 1][0]
+                truce_participants_list.append(select_nation_name)
+        truce_name = ' - '.join(truce_participants_list)
+        truce_end_turn = int(truce[11])
+        if truce_end_turn >= current_turn_num:
+            diplomacy_list.append(f"{truce_name} truce through turn {truce_end_turn + 1}.")
+        if truce_end_turn < current_turn_num:
+            diplomacy_list.append(f'{truce_name} truce has expired.')
+    diplomacy_string = "<br>".join(diplomacy_list)
+    diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
+
+    
+    # Build Notifications String
+    notifications_list = []
+    q = PriorityQueue()
+    for key, value in notifications:
+        q.put(key, value)
+    while not q.empty():
+        ntf = q.get()
+        notifications_list.append(ntf)
+    notifications_string = "<br>".join(notifications_list)
+    notifications_string = palette.color_nation_names(notifications_string, full_game_id)
+
+
+    # Build Statistics String
+    statistics_list = []
+    statistics_list.append(f"Total alliances: ")
+    statistics_list.append(f"Longest alliance: ")
+    statistics_list.append(f"Total wars: {wardata.war_count()}")
+    statistics_list.append(f"Units lost in war: {wardata.unit_casualties()}")
+    statistics_list.append(f"Improvements destroyed in war: {wardata.improvement_casualties()}")
+    statistics_list.append(f"Missiles launched: {wardata.missiles_launched_count()}")
+    war_name, war_duration = wardata.get_longest_war()
+    if war_name is not None:
+        statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
+    else:
+        statistics_list.append("Longest war: N/A")
+    dispute_count = active_games_dict[full_game_id]["Statistics"]["Region Disputes"]
+    statistics_list.append(f"Region disputes: {dispute_count}")
+    statistics_string = "<br>".join(statistics_list)
+    statistics_string = palette.color_nation_names(statistics_string, full_game_id)
+
+
+    # get top three standings
+    standings_dict = {}
+    records = ['largest_nation', 'largest_military', 'most_research', 'strongest_economy']
+    for record in records:
+        standings_dict[record] = list(checks.get_top_three(full_game_id, record, True))
+    standings_dict["most_transactions"] = list(core.get_top_three_transactions(full_game_id))
+    for record, record_data in standings_dict.items():
+        for i in range(len(record_data)):
+            standings_dict[record][i] = palette.color_nation_names(record_data[i], full_game_id)
+    
+    # update scoreboard
+    scoreboard_dict = {}
+    for index, playerdata in enumerate(playerdata_list):
+        player_id = index + 1
+        nation_name = playerdata[1]
+        player_color_hex = playerdata[2]
+        vc_results = checks.check_victory_conditions(full_game_id, player_id, current_turn_num)
+        player_vc_score = 0
+        for result in vc_results:
+            if result == True:
+                player_vc_score += 1
+        inner_dict = {}
+        inner_dict["color"] = player_color_hex
+        inner_dict["score"] = player_vc_score
+        scoreboard_dict[nation_name] = inner_dict
+    
+    # sort scoreboard
+    scoreboard_dict = dict(
+        sorted(
+            scoreboard_dict.items(),
+            key = lambda item: (-item[1]["score"], item[0])
+        )
+    )
+
+    return render_template('temp_announcements.html', game_name = game_name, page_title = page_title, date_output = date_output, scoreboard_dict = scoreboard_dict, standings_dict = standings_dict, statistics_string = statistics_string, diplomacy_string = diplomacy_string, notifications_string = notifications_string)
+
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):
@@ -1163,13 +1309,11 @@ def event_resolution():
     with open(f'active_games.json', 'r') as json_file:  
         active_games_dict = json.load(json_file)
     
-    diplomacy_log = []
     current_turn_num = core.get_current_turn_num(game_id)
     player_count = len(playerdata_list)
     
-    diplomacy_log = events.handle_current_event(active_games_dict, full_game_id, diplomacy_log)
-    diplomacy_log = core.run_end_of_turn_checks(full_game_id, current_turn_num, player_count, diplomacy_log)
-    core.update_announcements_sheet(full_game_id, False, diplomacy_log, [])
+    events.handle_current_event(active_games_dict, full_game_id)
+    core.run_end_of_turn_checks(full_game_id, current_turn_num, player_count)
 
     return redirect(f'/{full_game_id}')
 

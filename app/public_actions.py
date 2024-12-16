@@ -1,28 +1,26 @@
-#STANDARD IMPORTS
+# STANDARD IMPORTS
 import ast
 import csv
 import random
 import json
 
-#UWS SOURCE IMPORTS
+# MY IMPORTS
 from app import core
 from app import events
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
+from app.notifications import Notifications
 
-#UWS ENVIROMENT IMPORTS
-import gspread
-
-#PUBLIC ACTION FUNCTIONS
-def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game_id, diplomacy_log, player_action_logs):
+def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game_id, player_action_logs):
     '''Resolves all alliance creation actions.'''
 
     #define core lists
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     alliance_creation_dict = {}
+    notifications = Notifications(full_game_id)
 
     #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -131,7 +129,7 @@ def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game
                     player[22] = str(diplomatic_relations_list_1)
                 elif player[1] == nation_name_2:
                     player[22] = str(diplomatic_relations_list_2)
-            diplomacy_log.append(f'{alliance} has formed.')
+            notifications.append(f'{alliance} has formed.', 7)
             log_str = f'Formed {alliance}.'
         else:
             log_str = f'Failed to form {alliance}. Both players did not agree to establish it.'
@@ -151,22 +149,22 @@ def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game
 
 
     #Update player_action_logs
-    return diplomacy_log, player_action_logs
+    return player_action_logs
 
-def resolve_government_abilities(government_actions_list, full_game_id, diplomacy_log, player_action_logs):
+def resolve_government_abilities(government_actions_list, full_game_id, player_action_logs):
     '''
     Resolves government-specific actions. Currently, this is only the Republic government action.
 
     Parameters:
     - government_actions_list: A list of player government action data stored as an integer-string lists.
     - full_game_id: The full game id of the current game.
-    - diplomacy_log: The list of all diplomacy events to be displayed in the announcements sheet.
     - player_action_logs: A list of lists that contains player action logs as strings.
     '''
 
     #define core lists
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    notifications = Notifications(full_game_id)
 
     #get nation information
     request_list = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
@@ -199,7 +197,7 @@ def resolve_government_abilities(government_actions_list, full_game_id, diplomac
                 rate_list[resource_type_index] = 120
                 for index, value in enumerate(rate_list):
                     economy_masterlist[player_id - 1][index][3] = value
-                diplomacy_log.append(f'{nation_name} used Republic government action to boost {resource_type} income.')
+                notifications.append(f'{nation_name} used Republic government action to boost {resource_type} income.', 8)
                 player_action_log.append(f"Used Republic government action to boost {resource_type} income. ")
             else:
                 player_action_log.append(f"Failed to preform the Republic government action. Insufficient political power.")
@@ -230,7 +228,7 @@ def resolve_government_abilities(government_actions_list, full_game_id, diplomac
             writer.writerows(playerdata_list)
     
     #Update player_action_logs
-    return diplomacy_log, player_action_logs
+    return player_action_logs
 
 def resolve_improvement_removals(improvement_remove_list, game_id, player_action_logs):
     '''Resolves all improvement removal actions'''
@@ -716,25 +714,10 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
         writer.writerows(playerdata_list)
 
 
-    #Update Announcement Google Sheet
-    sa = gspread.service_account()
-    sh_name = "United We Stood - Announcement Sheet"
-    wks_name = "Sheet1"
-    sh = sa.open(sh_name)
-    wks = sh.worksheet(wks_name)
-    cell_list = ['E14', 'E15', 'E16', 'E17', 'E18', 'E19', 'E20', 'E21']
-    for index, cell in enumerate(cell_list):
-        wks.update_cell(index+14, 5, str(next_prices[index]))
-        if current_prices[index] < next_prices[index]:
-            core.update_text_color_new(wks, cell, "green")
-        elif current_prices[index] > next_prices[index]:
-            core.update_text_color_new(wks, cell, "red")
-        else:
-            core.update_text_color_new(wks, cell, "white")
-
     # Update active_games.json
     with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
+
 
     # Update rmdata.csv
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
@@ -846,12 +829,13 @@ def resolve_missile_builds(missile_build_list, game_id, player_action_logs):
 
     return player_action_logs
 
-def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomacy_log, player_action_logs):
+def resolve_peace_actions(peace_action_list, game_id, current_turn_num, player_action_logs):
     '''Process all surrender and white peace actions.'''
 
     # get core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    notifications = Notifications(game_id)
 
     # get needed information from players
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -899,8 +883,8 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
             else:
                 outcome = 'Attacker Victory'
             wardata.end_war(war_name, outcome)
-            diplomacy_log.append(f'{nation_name_1} surrendered to {nation_name_2}.')
-            diplomacy_log.append(f'{war_name} has ended.')
+            notifications.append(f'{nation_name_1} surrendered to {nation_name_2}.', 4)
+            notifications.append(f'{war_name} has ended.', 4)
             
         # process for white peace action
         elif 'White Peace' in action_str:
@@ -932,7 +916,7 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
         if white_peace_dict[war_name] == 2:
             outcome = 'White Peace'
             wardata.end_war(war_name, outcome)
-            diplomacy_log.append(f'{war_name} has ended with a white peace.')
+            notifications.append(f'{war_name} has ended with a white peace.', 4)
 
 
     # Repair Diplomatic Relations
@@ -947,7 +931,7 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, diplomac
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
     
-    return diplomacy_log, player_action_logs
+    return player_action_logs
 
 def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
     '''Resolves all region purchase actions and region disputes.'''
@@ -1247,9 +1231,10 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
     
     return player_action_logs
 
-def resolve_trades(game_id, diplomacy_log):
+def resolve_trades(game_id):
     '''Resolves trade actions between players through the terminial.'''
 
+    notifications = Notifications(game_id)
     trade_action = input("Are there any trade actions this turn? (Y/N) ")
     
     #Action Loop
@@ -1427,7 +1412,7 @@ def resolve_trades(game_id, diplomacy_log):
         with open('active_games.json', 'w') as json_file:
             json.dump(active_games_dict, json_file, indent=4)
         
-        diplomacy_log.append(f'{nation1_name} traded with {nation2_name}.')
+        notifications.append(f'{nation1_name} traded with {nation2_name}.', 9)
         trade_action = input("Are there any additional trade actions this turn? (Y/N) ")
         print('==================================================')
 
