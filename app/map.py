@@ -1,51 +1,49 @@
 # STANDARD IMPORTS
-import ast
 import csv
 from datetime import datetime
 import json
-import os
 import random
-import shutil
 
 # ENVIROMENT IMPORTS
 from PIL import Image, ImageDraw
 
-# UWS IMPORTS
+# GAME IMPORTS
 from app import core
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
 
-class MainMap:
-    
-    '''Creates and updates the main map for United We Stood games.'''
 
-    # INITIALIZE
+class MainMap:
+
+    """Creates and updates the main map for Divided We Stand games."""
+
     def __init__(self, game_id, map_name, current_turn_num):
         self.game_id = game_id
         self.map_name = map_name
         self.turn_num = current_turn_num
 
-
-    # PLACE RANDOM IMPROVEMENTS
-    def place_random(self):
+    def place_random(self) -> None:
+        """
+        This function populates the map with random improvements.
+        """
         
         # get filepaths and lists
         EXCLUSION_SET = {'Capital', 'Central Bank', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery', 'Research Institute', 'Surveillance Center'}
         improvement_candidates_list = []
-        improvement_data_dict = core.get_scenario_dict(f"game{self.game_id}", "Improvements")
+        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         for improvement_name in improvement_data_dict:
             if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in EXCLUSION_SET:
                 improvement_candidates_list.append(improvement_name)
-        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
         region_id_list = list(regdata_dict.keys())
         
         # determine placement odds and placement quota
         PLACEMENT_ODDS = 5
         placement_quota = 15
-        standard_deviation = random.randint(-5, 5)
-        placement_quota += standard_deviation
+        deviation = random.randint(-5, 5)
+        placement_quota += deviation
         
         # place improvements randomly
         count = 0
@@ -53,15 +51,15 @@ class MainMap:
             placement_roll = random.randint(1, 100)
             if placement_roll <= PLACEMENT_ODDS:
                 random_region_id = random.choice(region_id_list)
-                random_region = Region(random_region_id, f"game{self.game_id}")
-                random_region_improvement = Improvement(random_region_id, f"game{self.game_id}")
+                random_region = Region(random_region_id, self.game_id)
+                random_region_improvement = Improvement(random_region_id, self.game_id)
                 # check conditions
                 if random_region.owner_id != 0 and random_region_improvement.name is not None:
                     continue
                 adjacent_region_list = random_region.adjacent_regions
                 adjacent_improvement_found = False
                 for region_id in adjacent_region_list:
-                    region_improvement = Improvement(region_id, f"game{self.game_id}")
+                    region_improvement = Improvement(region_id, self.game_id)
                     if region_improvement.name is not None:
                         adjacent_improvement_found = True
                         break
@@ -99,31 +97,41 @@ class MainMap:
                         else:
                             random_region_improvement.set_improvement('Capital', 1)
     
-    # UPDATE
-    def update(self):
+    def update(self) -> None:
+        """
+        Updates the main map.
+        """
+
         print("Updating main map...")
         
-        #Get Filepaths
-        full_game_id = f'game{self.game_id}'
+        # get filepaths
+        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
         match self.turn_num:
             case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-                main_map_save_location = f'gamedata/{full_game_id}/images/0.png'
+                main_map_save_location = f'gamedata/{self.game_id}/images/0.png'
             case _:
-                main_map_save_location = f'gamedata/{full_game_id}/images/{self.turn_num - 1}.png'
-        playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
-        background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
-        unit_data_dict = core.get_scenario_dict(f'game{self.game_id}', "Units")
+                main_map_save_location = f'gamedata/{self.game_id}/images/{self.turn_num - 1}.png'
+        if self.map_name == "United States 2.0":
+            map_name_str = "united_states"
+        image_resources_filepath = f"maps/{map_name_str}/image_resources"
+        background_filepath = f"{image_resources_filepath}/background.png"
+        magnified_filepath = f"{image_resources_filepath}/magnified.png"
+        main_filepath = f"{image_resources_filepath}/main.png"
+        text_filepath = f"{image_resources_filepath}/text.png"
+        texture_filepath = f"{image_resources_filepath}/texture.png"
         
-        #Build Needed Lists
+        
+        # get game data
         playerdata_list = core.read_file(playerdata_location, 1)
         nation_info_masterlist = core.get_nation_info(playerdata_list)
         player_color_list = generate_player_color_list(playerdata_location)
+        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
-        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
 
-        #Get Cordinate Dictionaries
+        # get cord dictionaries
         match self.map_name:
             case "United States 2.0":
                 cords_filepath = "maps/united_states"
@@ -134,34 +142,36 @@ class MainMap:
         with open(f'{cords_filepath}/unit_cords.json', 'r') as json_file:
             unit_cords_dict = json.load(json_file)
         
-        #Color Regions in Map Image
+
+        # Color Regions in Map Image
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
-            region = Region(region_id, full_game_id)
-            owner_id = region.owner_id
-            occupier_id = region.occupier_id
+            region = Region(region_id, self.game_id)
             start_cords = improvement_cords_dict[region_id]
-            if owner_id != 0 or occupier_id != 0:
+            # only color a region if it is owned or occupied
+            if region.owner_id  != 0 or region.occupier_id != 0:
                 cord_x = (start_cords[0] + 25)
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
-                map_color_fill(owner_id, occupier_id, player_color_list, region_id, start_cords_finalized, main_image, full_game_id, active_games_dict)
-        #add texture and background to temp image
+                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_finalized, main_image, self.game_id, active_games_dict)
+        
+        # add texture and background to temp image
         main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
-        #add magnified regions
+       
+        # add magnified regions
         magnified_image = Image.open(magnified_filepath)
         main_image = Image.alpha_composite(main_image, magnified_image)
-        #color magnified regions
+       
+        # color magnified regions
         for region_id in regdata_dict:
-            region = Region(region_id, full_game_id)
-            owner_id = region.owner_id
-            occupier_id = region.occupier_id
+            region = Region(region_id, self.game_id)
             improvement_start_cords = improvement_cords_dict[region_id]
+            # to do - move this list into the game files somewhere
             if self.map_name == "United States 2.0":
                 magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELEW", "RHODE", "NTHMA", "STHMA"]
-            if region_id in magnified_regions_list and (owner_id != 0 or occupier_id != 0):
-                fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
+            if region_id in magnified_regions_list and (region.owner_id != 0 or region.occupier_id != 0):
+                fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id, active_games_dict)
                 cord_x = (improvement_start_cords[0] + 25)
                 cord_y = (improvement_start_cords[1] + 25)
                 improvement_box_start_cords = (cord_x, cord_y)
@@ -175,100 +185,102 @@ class MainMap:
                 ImageDraw.floodfill(main_image, main_box_start_cords, fill_color, border=(0, 0, 0, 255))
                 ImageDraw.floodfill(main_image, unit_box_start_cords, fill_color, border=(0, 0, 0, 255))
         
-        #Place Improvements
+
+        # Place Improvements
         main_image = main_image.convert("RGBA")
         nuke_image = Image.open('app/static/nuke.png')
         for region_id in regdata_dict:
-            region = Region(region_id, full_game_id)
-            region_improvement = Improvement(region_id, full_game_id)
-            improvement_name = region_improvement.name
-            improvement_health = region_improvement.health
+            region = Region(region_id, self.game_id)
+            region_improvement = Improvement(region_id, self.game_id)
             nuke = region.fallout
             improvement_start_cords = improvement_cords_dict[region_id]
-            #place nuclear explosion
+            # place nuclear explosion
             if nuke:
                 mask = nuke_image.split()[3]
                 main_image.paste(nuke_image, improvement_start_cords, mask)
                 continue
-            #check for fautasian bargan case lease
-            if "Faustian Bargain" in active_games_dict[full_game_id]["Active Events"]:
-                if region_id in active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
+            # check for fautasian bargan case lease
+            if "Faustian Bargain" in active_games_dict[self.game_id]["Active Events"]:
+                if region_id in active_games_dict[self.game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
                     print(region_id)
                     lease_filepath = 'app/static/lease.png'
                     lease_image = Image.open(lease_filepath)
                     mask = lease_image.split()[3]
                     main_image.paste(lease_image, improvement_start_cords, mask)
                     continue
-            #place improvement if present
-            if improvement_start_cords != () and improvement_name is not None:
-                #place improvement image
-                improvement_filepath = f'app/static/improvements/{improvement_name}.png'
+            # place improvement if present
+            if region_improvement.name is not None:
+                # place improvement image
+                improvement_filepath = f'app/static/improvements/{region_improvement.name}.png'
                 improvement_image = Image.open(improvement_filepath)
                 main_image.paste(improvement_image, improvement_start_cords)
-                #place improvement health
-                if improvement_health != 99:
+                # place improvement health
+                if region_improvement.health != 99:
                     cord_x = (improvement_start_cords[0] - 13)
                     cord_y = (improvement_start_cords[1] + 54)
                     health_start_cords = (cord_x, cord_y)
-                    if improvement_name in core.ten_health_improvements_list:
-                        health_filepath = f'app/static/health/{improvement_health}-10.png'
+                    # to do - phase out this cringe list and query improvements.json instead
+                    if region_improvement.name in core.ten_health_improvements_list:
+                        health_filepath = f'app/static/health/{region_improvement.health}-10.png'
                     else:
-                        health_filepath = f'app/static/health/{improvement_health}-5.png'
+                        health_filepath = f'app/static/health/{region_improvement.health}-5.png'
                     health_image = Image.open(health_filepath)
                     main_image.paste(health_image, health_start_cords)
         
-        #Place Units
+
+        # Place Units
         for region_id in regdata_dict:
-            region_unit = Unit(region_id, full_game_id)
-            unit_name = region_unit.name
-            unit_health = region_unit.health
-            unit_owner_id = region_unit.owner_id
-            if unit_name is not None:
-                #get cords
+            region_unit = Unit(region_id, self.game_id)
+            # get cords of unit if present
+            if region_unit.name is not None:
                 if region_id not in unit_cords_dict:
-                    #unit placement is the standard 15 pixels to the right of improvement
+                    # unit placement is the standard 15 pixels to the right of improvement
                     improvement_cords = improvement_cords_dict[region_id]
                     cord_x = (improvement_cords[0] + 65)
                     cord_y = (improvement_cords[1])
                     unit_cords = (cord_x, cord_y)
                 else:
-                    #unit placement is custom
+                    # unit placement is custom
                     unit_cords = unit_cords_dict[region_id]
                     cord_x = (unit_cords[0])
                     cord_y = (unit_cords[1] - 20)
                     unit_cords = (cord_x, cord_y)
-                #get unit color
-                if unit_owner_id != 0 and unit_owner_id != 99:
-                    player_color_str = nation_info_masterlist[unit_owner_id - 1][1]
-                elif unit_owner_id == 0 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
-                    player_color_str = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
+                # get unit color
+                if region_unit.owner_id != 0 and region_unit.owner_id != 99:
+                    player_color_str = nation_info_masterlist[region_unit.owner_id - 1][1]
+                elif region_unit.owner_id == 0 and "Foreign Invasion" in active_games_dict[self.game_id]["Active Events"]:
+                    player_color_str = active_games_dict[self.game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
                 unit_filepath = f'app/static/units/{region_unit.abbrev()}{player_color_str}.png'
-                #place unit
+                # place unit
                 unit_image = Image.open(unit_filepath)
                 mask = unit_image.split()[3]
                 main_image.paste(unit_image, unit_cords, mask)
-                #place unit health
-                health_filepath = f"app/static/health/U{unit_health}-{unit_data_dict[unit_name]['Health']}.png"
+                # place unit health
+                health_filepath = f"app/static/health/U{region_unit.health}-{unit_data_dict[region_unit.name]['Health']}.png"
                 health_image = Image.open(health_filepath)
                 health_temp = Image.new("RGBA", main_image.size)
                 mask = health_image.split()[3]
                 health_temp.paste(health_image, unit_cords, mask)
                 main_image = Image.alpha_composite(main_image, health_temp)
+        
         main_image.save(main_map_save_location)
+
 
 class ResourceMap:
     
-    '''Creates and updates the resource map for United We Stood games.'''
+    """Creates and updates the resource map for Divided We Stand games."""
 
-    # INITIALIZE
     def __init__(self, game_id, map_name):
         self.game_id = game_id
         self.map_name = map_name
 
-    # CREATE RESOURCE MAP DATA
-    def create(self):
+    def create(self) -> None:
+        """
+        Populates regdata.json with resource map data.
+        """
         
         # Create Resource List
+        # to do - move this list to the game files somewhere
         resource_list = []
         if self.map_name == "United States 2.0":
             coal_count = 15
@@ -290,26 +302,35 @@ class ResourceMap:
         resource_list = random.sample(resource_list, len(resource_list))
         
         # Update regdata.json
-        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
-        i = 0
-        for region_id in regdata_dict:
-            region = Region(region_id, f'game{self.game_id}')
+        for i, region_id in enumerate(regdata_dict):
+            region = Region(region_id, self.game_id)
             region.set_resource(resource_list[i])
-            i += 1
 
-    #UPDATE
-    def update(self):
+    def update(self) -> None:
+        """
+        Updates the resource map.
+        """
+
         print("Updating resource map...")
 
-        #Get Filepaths
-        full_game_id = f'game{self.game_id}'
-        resource_map_save_location = f'gamedata/{full_game_id}/images/resourcemap.png'
-        background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
-        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
+        # get filepaths
+        resource_map_save_location = f'gamedata/{self.game_id}/images/resourcemap.png'
+        if self.map_name == "United States 2.0":
+            map_name_str = "united_states"
+        image_resources_filepath = f"maps/{map_name_str}/image_resources"
+        background_filepath = f"{image_resources_filepath}/background.png"
+        magnified_filepath = f"{image_resources_filepath}/magnified.png"
+        main_filepath = f"{image_resources_filepath}/main.png"
+        text_filepath = f"{image_resources_filepath}/text.png"
+        texture_filepath = f"{image_resources_filepath}/texture.png"
         
-        #Get Cordinate Dictionaries
+        # get game data
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+
+        # get cord dictionaries
         match self.map_name:
             case "United States 2.0":
                 cords_filepath = "maps/united_states"
@@ -318,57 +339,67 @@ class ResourceMap:
         with open(f'{cords_filepath}/improvement_cords.json', 'r') as json_file:
             improvement_cords_dict = json.load(json_file)
         
-        #Color Regions in Map Image
+        # color regions
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
-            region = Region(region_id, full_game_id)
-            resource_type = region.resource
+            region = Region(region_id, self.game_id)
             start_cords = improvement_cords_dict[region_id]
-            if start_cords != () and resource_type != 'Empty':
+            # if region has a resource color it
+            if region.resource != 'Empty':
                 cord_x = (start_cords[0] + 25)
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
                 if region_id == "HAMPT" and self.map_name == "United States 2.0":
-                    ImageDraw.floodfill(main_image, (4430, 1520), core.resource_colors[resource_type], border=(0, 0, 0, 255))
-                ImageDraw.floodfill(main_image, start_cords_finalized, core.resource_colors[resource_type], border=(0, 0, 0, 255))
+                    # second floodfill required for HAMPT because it is split in two pieces
+                    ImageDraw.floodfill(main_image, (4430, 1520), core.resource_colors[region.resource], border=(0, 0, 0, 255))
+                ImageDraw.floodfill(main_image, start_cords_finalized, core.resource_colors[region.resource], border=(0, 0, 0, 255))
         
-        #Add Textures and Text
+        # add background textures and text
         background_image = Image.open(background_filepath)
         background_image = background_image.convert("RGBA")
         mask = main_image.split()[3]
         background_image.paste(main_image, (0,0), mask)
         main_image = background_image
         main_image = text_over_map_new(main_image, text_filepath)
+        
         main_image.save(resource_map_save_location)
 
 class ControlMap:
 
-    '''Creates and updates the control map for United We Stood games.'''
+    """Creates and updates the control map for Divided We Stand games."""
 
-    #INITIALIZE
     def __init__(self, game_id, map_name):
         self.game_id = game_id
         self.map_name = map_name
 
-    #GENERATE CONTROL MAP IMAGE
-    def update(self):
+    def update(self) -> None:
+        """
+        Updates the control map.
+        """
+
         print("Updating control map...")
         
-        #Get Filepaths
-        full_game_id = f'game{self.game_id}'
-        control_map_save_location = f'gamedata/{full_game_id}/images/controlmap.png'
-        playerdata_location = f'gamedata/{full_game_id}/playerdata.csv'
-        background_filepath, magnified_filepath, main_filepath, text_filepath, texture_filepath = get_map_filepaths(self.map_name)
+        # get filepaths
+        control_map_save_location = f'gamedata/{self.game_id}/images/controlmap.png'
+        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
+        if self.map_name == "United States 2.0":
+            map_name_str = "united_states"
+        image_resources_filepath = f"maps/{map_name_str}/image_resources"
+        background_filepath = f"{image_resources_filepath}/background.png"
+        magnified_filepath = f"{image_resources_filepath}/magnified.png"
+        main_filepath = f"{image_resources_filepath}/main.png"
+        text_filepath = f"{image_resources_filepath}/text.png"
+        texture_filepath = f"{image_resources_filepath}/texture.png"
        
-        #Get Needed Lists
+        # get game data
         player_color_list = generate_player_color_list(playerdata_location)
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
-        with open(f'gamedata/game{self.game_id}/regdata.json', 'r') as json_file:
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
 
-        #Get Cordinate Dictionaries
+        # get cord dictionaries
         match self.map_name:
             case "United States 2.0":
                 cords_filepath = "maps/united_states"
@@ -377,39 +408,39 @@ class ControlMap:
         with open(f'{cords_filepath}/improvement_cords.json', 'r') as json_file:
             improvement_cords_dict = json.load(json_file)
 
-        #Color Regions in Map Image
+        # color regions
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
-            region = Region(region_id, full_game_id)
-            owner_id = region.owner_id
-            occupier_id = region.occupier_id
+            region = Region(region_id, self.game_id)
             start_cords = improvement_cords_dict[region_id]
-            if owner_id != 0 or occupier_id != 0:
+            # only color region if it is owned or occupied
+            if region.owner_id != 0 or region.occupier_id != 0:
                 cord_x = (start_cords[0] + 25)
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
-                map_color_fill(owner_id, occupier_id, player_color_list, region_id, start_cords_finalized, main_image, full_game_id, active_games_dict)
+                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_finalized, main_image, self.game_id, active_games_dict)
         
-        #Add Textures and Text
+        # add background textures and text
         main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
         main_image = text_over_map_new(main_image, text_filepath)
+        
         main_image.save(control_map_save_location)
 
-#MAP GENERATION HELPER FUNCTIONS
-def get_map_filepaths(map_name):
-    '''Returns a series of variables representing the filepaths of the map generation image based on the map type.'''
-    if map_name == "United States 2.0":
-        map_name = "united_states"
-    background_file = f'maps/{map_name}/image_resources/background.png'
-    magnified_file = f'maps/{map_name}/image_resources/magnified.png'
-    main_file = f'maps/{map_name}/image_resources/main.png'
-    text_file = f'maps/{map_name}/image_resources/text.png'
-    texture_file = f'maps/{map_name}/image_resources/texture.png'
-    return background_file, magnified_file, main_file, text_file, texture_file
 
-def generate_player_color_list(playerdata_location):
+# MAP GENERATION HELPER FUNCTIONS
+################################################################################
+
+def generate_player_color_list(playerdata_location: str) -> list:
+    """
+    Gets a list of all player colors in RGB form.
+
+    Params:
+        playerdata_location (str): Filepath to playerdata.csv.
+    """
+
     player_color_list = []
+
     with open(playerdata_location, 'r') as file:
         reader = csv.reader(file)
         next(reader,None)
@@ -418,10 +449,18 @@ def generate_player_color_list(playerdata_location):
                 player_color_hex = row[2]
                 player_color_rgb = core.player_colors_conversions[player_color_hex]
                 player_color_list.append(player_color_rgb)
+
     return player_color_list
 
-def check_region_fill_exceptions(region_id, map_name, start_cords_updated):
-    '''Changes start_cords_updated for maginified regions.'''
+def check_region_fill_exceptions(region_id: str, map_name: str, start_cords_updated: tuple) -> tuple:
+    """
+    Changes start_cords_updated for maginified regions.
+
+    Params:
+        region_id (str): Five character ID.
+        map_name (str): String representing map name.
+        start_cords_updates (tuple): x,y cords for a region.
+    """
     if map_name == "United States 2.0":
         if region_id == "LOSAN":
             start_cords_updated = (563, 1866)
@@ -445,20 +484,21 @@ def check_region_fill_exceptions(region_id, map_name, start_cords_updated):
             start_cords_updated = (4700, 960)
     return start_cords_updated
 
-def map_color_fill(owner_id, occupier_id, player_color_list, region_id, start_cords_updated, main_image, full_game_id, active_games_dict):
-    '''
+def map_color_fill(owner_id: int, occupier_id: int, player_color_list: list, region_id: str, start_cords_updated: tuple, main_image: Image, full_game_id: str, active_games_dict: dict) -> None:
+    """
     Determines what fill color to use for main map and control map generation, depending on region ownership and occupation.
-    '''
+    """
 
     fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
     if region_id == "HAMPT":
         ImageDraw.floodfill(main_image, (4430, 1520), fill_color, border=(0, 0, 0, 255))
     ImageDraw.floodfill(main_image, start_cords_updated, fill_color, border=(0, 0, 0, 255))
 
-def determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict):
-    '''
-    Cheap solution for determing region color. Future Ian if you allow this code to survive the next refactoring I will strangle you.
-    '''
+def determine_region_color(owner_id: int, occupier_id: int, player_color_list: list, full_game_id: str, active_games_dict: dict) -> tuple:
+    """
+    Cheap solution for determing region color.
+    Future Ian if you allow this code to survive the next refactoring I will strangle you.
+    """
     
     if owner_id != 99:
         fill_color = player_color_list[owner_id - 1]
@@ -475,9 +515,18 @@ def determine_region_color(owner_id, occupier_id, player_color_list, full_game_i
         
     return fill_color
 
-def apply_textures_new(main_image, texture_filepath, background_filepath):
-    '''
-    '''
+def apply_textures_new(main_image: Image, texture_filepath: str, background_filepath: str) -> Image:
+    """
+    Overlays the map image onto the textured background.
+
+    Params:
+        main_image (Image): Map image.
+        texture_filepath (str): Filepath to land texture image.
+        background_filepath (str): Filepath to background image (texture + water).
+
+    Returns:
+        Image: Map image.
+    """
     
     texture_image = Image.open(texture_filepath)
     temp_image = Image.blend(texture_image, main_image, 0.75)
@@ -491,9 +540,18 @@ def apply_textures_new(main_image, texture_filepath, background_filepath):
 
     return main_image
 
-def text_over_map_new(main_image, text_filepath):
-    '''
-    '''
+def text_over_map_new(main_image: Image, text_filepath: str) -> Image:
+    """
+    Overlays text layer onto the map image.
+
+    Params:
+        main_image (Image): Map image.
+        texture_filepath (str): Filepath to text image.
+
+    Returns:
+        Image: Map image.
+    """
+
     text_image = Image.open(text_filepath)
     main_image = Image.alpha_composite(main_image, text_image)
 

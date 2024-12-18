@@ -107,9 +107,9 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
     # generate and update maps
     current_turn_num = get_current_turn_num(int(game_id[-1]))
     map_name = get_map_name(int(game_id[-1]))
-    main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
-    resource_map = map.ResourceMap(int(game_id[-1]), map_name)
-    control_map = map.ControlMap(int(game_id[-1]), map_name)
+    main_map = map.MainMap(game_id, map_name, current_turn_num)
+    resource_map = map.ResourceMap(game_id, map_name)
+    control_map = map.ControlMap(game_id, map_name)
     resource_map.create()
     main_map.place_random()
     main_map.update()
@@ -253,7 +253,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     #update visuals
     current_turn_num = 1
     map_name = active_games_dict[game_id]["Information"]["Map"]
-    main_map = map.MainMap(int(game_id[-1]), map_name, current_turn_num)
+    main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
 
 def resolve_turn_processing(full_game_id, public_actions_list, private_actions_list):
@@ -478,10 +478,10 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #Update Visuals
     current_turn_num = get_current_turn_num(int(full_game_id[-1]))
     #resgraphs.update_all(full_game_id)
-    main_map = map.MainMap(int(full_game_id[-1]), map_name, current_turn_num)
+    main_map = map.MainMap(full_game_id, map_name, current_turn_num)
     main_map.update()
     if update_control_map:
-        control_map = map.ControlMap(int(full_game_id[-1]), map_name)
+        control_map = map.ControlMap(full_game_id, map_name)
         control_map.update()
 
 
