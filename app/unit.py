@@ -173,10 +173,7 @@ class Unit:
 
             # if target improvement hostile conduct combat
             if target_region_improvement.is_hostile(self.owner_id):
-                if self.name == 'Special Forces' and not target_region_unit.is_hostile(self.owner_id):
-                    combat.special_forces_improvement_takedown(self, target_region_improvement)
-                else:
-                    combat.unit_vs_improvement(self, target_region_improvement)
+                combat.unit_vs_improvement(self, target_region_improvement)
                 # reload objects
                 self.load_attributes()
                 target_region_improvement.load_attributes()
@@ -192,20 +189,23 @@ class Unit:
                 self.clear()
                 # destroy improvement if needed
                 if target_region_improvement.name is not None and target_region_improvement.name != 'Capital' and target_region.owner_id != original_player_id:
-                    playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-                    playerdata_list = core.read_file(playerdata_filepath, 1)
-                    attacker_nation_name = playerdata_list[original_player_id - 1][1]
-                    defender_nation_name = playerdata_list[target_region_improvement.owner_id - 1][1]
-                    war_name = wardata.are_at_war(original_player_id, target_region_improvement.owner_id, True)
-                    attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
-                    # award points
-                    wardata.statistic_add(war_name, attacker_nation_name, "enemyImprovementsDestroyed")
-                    wardata.statistic_add(war_name, defender_nation_name, "friendlyImprovementsDestroyed")
-                    wardata.warscore_add(war_name, attacker_war_role, "enemyImprovementsDestroyed", 2)
-                    # log and destroy
-                    wardata.append_war_log(war_name, f"    {defender_nation_name} {target_region_improvement.name} has been destroyed!")
+                    if original_player_id != 0:
+                        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+                        playerdata_list = core.read_file(playerdata_filepath, 1)
+                        attacker_nation_name = playerdata_list[original_player_id - 1][1]
+                        defender_nation_name = playerdata_list[target_region_improvement.owner_id - 1][1]
+                        war_name = wardata.are_at_war(original_player_id, target_region_improvement.owner_id, True)
+                        attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
+                        # award points
+                        wardata.statistic_add(war_name, attacker_nation_name, "enemyImprovementsDestroyed")
+                        wardata.statistic_add(war_name, defender_nation_name, "friendlyImprovementsDestroyed")
+                        wardata.warscore_add(war_name, attacker_war_role, "enemyImprovementsDestroyed", 2)
+                        # log and destroy
+                        wardata.append_war_log(war_name, f"    {defender_nation_name} {target_region_improvement.name} has been destroyed!")
                     target_region_improvement.clear()
-                # region occupation step
+                if original_player_id == 0:
+                    original_player_id = 99
+                # occupation step
                 if target_region.owner_id != original_player_id:
                     target_region.set_occupier_id(original_player_id)
                 else:
@@ -239,6 +239,10 @@ class Unit:
         # if player_ids are the same than return False
         if self.owner_id == other_player_id:
             return False
+        
+        # if attacking unit id = 0 return True
+        if other_player_id == 0:
+            return True
         
         # check if at war
         if wardata.are_at_war(self.owner_id, other_player_id):

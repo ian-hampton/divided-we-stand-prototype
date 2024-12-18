@@ -141,7 +141,7 @@ class MainMap:
             owner_id = region.owner_id
             occupier_id = region.occupier_id
             start_cords = improvement_cords_dict[region_id]
-            if start_cords != () and owner_id != 0:
+            if owner_id != 0 or occupier_id != 0:
                 cord_x = (start_cords[0] + 25)
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
@@ -160,7 +160,7 @@ class MainMap:
             improvement_start_cords = improvement_cords_dict[region_id]
             if self.map_name == "United States 2.0":
                 magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELEW", "RHODE", "NTHMA", "STHMA"]
-            if improvement_start_cords != () and owner_id != 0 and region_id in magnified_regions_list:
+            if region_id in magnified_regions_list and (owner_id != 0 or occupier_id != 0):
                 fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
                 cord_x = (improvement_start_cords[0] + 25)
                 cord_y = (improvement_start_cords[1] + 25)
@@ -193,9 +193,11 @@ class MainMap:
             #check for fautasian bargan case lease
             if "Faustian Bargain" in active_games_dict[full_game_id]["Active Events"]:
                 if region_id in active_games_dict[full_game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
+                    print(region_id)
                     lease_filepath = 'app/static/lease.png'
                     lease_image = Image.open(lease_filepath)
-                    main_image.paste(lease_image, improvement_start_cords)
+                    mask = lease_image.split()[3]
+                    main_image.paste(lease_image, improvement_start_cords, mask)
                     continue
             #place improvement if present
             if improvement_start_cords != () and improvement_name is not None:
@@ -236,9 +238,9 @@ class MainMap:
                     cord_y = (unit_cords[1] - 20)
                     unit_cords = (cord_x, cord_y)
                 #get unit color
-                if unit_owner_id != 99:
+                if unit_owner_id != 0 and unit_owner_id != 99:
                     player_color_str = nation_info_masterlist[unit_owner_id - 1][1]
-                elif unit_owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
+                elif unit_owner_id == 0 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
                     player_color_str = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
                 unit_filepath = f'app/static/units/{region_unit.abbrev()}{player_color_str}.png'
                 #place unit
@@ -382,7 +384,7 @@ class ControlMap:
             owner_id = region.owner_id
             occupier_id = region.occupier_id
             start_cords = improvement_cords_dict[region_id]
-            if start_cords != () and owner_id != 0:
+            if owner_id != 0 or occupier_id != 0:
                 cord_x = (start_cords[0] + 25)
                 cord_y = (start_cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
@@ -462,11 +464,14 @@ def determine_region_color(owner_id, occupier_id, player_color_list, full_game_i
         fill_color = player_color_list[owner_id - 1]
     elif owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
         fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
+        fill_color = core.player_colors_conversions[fill_color]
     if occupier_id != 0 and occupier_id != 99:
         fill_color = player_color_list[occupier_id -1]
         fill_color = core.player_colors_normal_to_occupied[fill_color]
     elif occupier_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
-        fill_color = core.player_colors_normal_to_occupied[active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]]
+        fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
+        fill_color = core.player_colors_conversions[fill_color]
+        fill_color = core.player_colors_normal_to_occupied[fill_color]
         
     return fill_color
 

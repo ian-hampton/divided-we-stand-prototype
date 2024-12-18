@@ -1698,19 +1698,18 @@ def resolve_event_actions(event_action_list, game_id, current_turn_num, player_a
                 player_action_log.append(f'Failed to do Outsource Technology action. Insufficient resources.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
-            desired_research_name = None
-            for research_name in research_data_dict:
-                if research_name in event_action_str:
-                    desired_research_name = research_name
-                    playerdata_list, valid_research = events.gain_free_research(game_id, research_name, player_id, playerdata_list)
-                    political_power_stored -= 10
-                    political_power_economy_data[0] = core.round_total_income(political_power_stored)
-                    player_action_log.append(f'Used Outsource Technology to research {research_name}.')
-                    player_action_logs[player_id - 1] = player_action_log
-            if desired_research_name == None:
+            event_action_list = event_action_str.split(" ")
+            research_name = event_action_list[3:]
+            research_name = " ".join(research_name)
+            if research_name not in research_data_dict:
                 player_action_log.append(f'Failed to do Outsource Technology action. Research name not recognized.')
                 player_action_logs[player_id - 1] = player_action_log
                 continue
+            playerdata_list, valid_research = events.gain_free_research(game_id, research_name, player_id, playerdata_list)
+            political_power_stored -= 10
+            political_power_economy_data[0] = core.round_total_income(political_power_stored)
+            player_action_log.append(f'Used Outsource Technology to research {research_name}.')
+            player_action_logs[player_id - 1] = player_action_log
 
         #Format: Event Military Reinforcements [Unit Type] [Region ID #1],[Region ID #2]
         elif "Military Reinforcements" in event_action_str:
@@ -1730,7 +1729,8 @@ def resolve_event_actions(event_action_list, game_id, current_turn_num, player_a
                 continue
             event_action_data = event_action_str.split(" ")
             region_id_str = event_action_data[-1]
-            unit_type = event_action_data[-2]
+            unit_type = event_action_data[3:-1]
+            unit_type = " ".join(unit_type)
             region_id_list = region_id_str.split(",")
             for region_id in region_id_list:
                 region = Region(region_id, game_id)

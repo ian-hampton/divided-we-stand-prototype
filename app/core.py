@@ -1,4 +1,4 @@
-#STANDARD IMPORTS
+# STANDARD IMPORTS
 import ast
 import csv
 from datetime import datetime
@@ -7,7 +7,7 @@ import os
 import random
 import shutil
 
-#UWS SOURCE IMPORTS
+# MY IMPORTS
 from app import map
 from app import interpreter
 from app import public_actions
@@ -19,9 +19,6 @@ from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
 from app.notifications import Notifications
-
-#UWS ENVIROMENT IMPORTS
-import gspread
 
 
 #TURN PROCESSING PROCEDURE

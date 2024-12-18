@@ -835,7 +835,7 @@ class WarData:
         # for every region that is occupied
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
-            if region.occupier_id != 0:
+            if region.occupier_id != 0 and region.occupier_id != 99:
                 # get occupier information
                 war_name = self.are_at_war(region.owner_id, region.occupier_id, True)
                 occupier_nation_name = playerdata_list[region.occupier_id - 1][1]

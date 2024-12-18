@@ -161,7 +161,7 @@ class Improvement:
             return False
         
         # improvements with no health can never be hostile
-        if self.health == 99 or self.health == 0 or other_player_id == 99:
+        if self.health == 99 or self.health == 0:
             return False
 
         # defensive improvements in a region that is owned by you and is unoccupied is never hostile
@@ -170,7 +170,7 @@ class Improvement:
         # defensive improvements in a region you don't own are not hostile under the following conditions
         elif self.owner_id != other_player_id:
             # you already occupy the region
-            if self.occupier_id == other_player_id:
+            if other_player_id != 0 and self.occupier_id == other_player_id:
                 return False
         
         return True

@@ -112,7 +112,7 @@ def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
         # foreign invasion case
         if "Foreign Invasion" in active_games_dict[game_id]["Active Events"] and player_id == 99:
             region_unit = Unit(region_id, game_id)
-            region_unit.set_unit(unit_name, player_id)
+            region_unit.set_unit(unit_name, 0)
             continue
 
         #get resource stockpiles of player
@@ -652,8 +652,11 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
                 ordered_unit_movement_list.append(unit_movement)
     print(f"Movement Order - Turn {current_turn_num}")
     for index, player_id in enumerate(players_moving_units):
-        position = index + 1
-        nation_name = nation_name_list[player_id - 1]
+        position = index + 1    
+        if player_id != 99:
+            nation_name = nation_name_list[player_id - 1]
+        else:
+            nation_name = "Foreign Invasion"
         print(f'{position}. {nation_name}')
 
 
@@ -669,13 +672,12 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
         # Move Unit One Region at a Time
         current_region_id = origin_region_id
         for target_region_id in move_list:
-            
             # get current region classes
             current_region = Region(current_region_id, game_id)
             current_region_unit = Unit(current_region_id, game_id)
 
             # current region checks
-            if current_region_unit.name == None or attacker_player_id != current_region_unit.owner_id:
+            if attacker_player_id != 99 and (current_region_unit.name == None or attacker_player_id != current_region_unit.owner_id):
                 if attacker_player_id != 99:
                     player_action_log.append(f'Failed to perform a move action from {current_region_id}. You do not control a unit there.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
@@ -693,31 +695,30 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
             target_region_unit = Unit(target_region_id, game_id)
 
             #target region checks
-            if target_region.owner_id == 0:
-                if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {target_region_unit.name} {current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.')
-                    player_action_logs[attacker_player_id - 1] = player_action_log
+            if target_region.owner_id == 0 and attacker_player_id != 99:
+                player_action_log.append(f'Failed to move {target_region_unit.name} {current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.')
+                player_action_logs[attacker_player_id - 1] = player_action_log
+                continue
             #illegal move check
             if target_region_unit.name != None and not target_region_unit.is_hostile(current_region_unit.owner_id):
                 if attacker_player_id != 99:
                     player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. A friendly unit is present in the target region.')
                     player_action_logs[attacker_player_id - 1] = player_action_log
-                    continue
-            if not target_region.is_valid_move(current_region_unit.owner_id):
-                if attacker_player_id != 99:
-                    player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.')
-                    player_action_logs[attacker_player_id - 1] = player_action_log
-                    continue
+                continue
+            if attacker_player_id != 99 and not target_region.is_valid_move(current_region_unit.owner_id):
+                player_action_log.append(f'Failed to move {current_region_unit.name} {current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.')
+                player_action_logs[attacker_player_id - 1] = player_action_log
+                continue
             
             # Execute Movement Order
             unit_name = current_region_unit.name
             movement_status = current_region_unit.move(target_region)
             # update player log
-            if movement_status == True:
-                player_action_log.append(f'Successfully moved {unit_name} {current_region_id} - {target_region_id}.')
-            else:
-                player_action_log.append(f'Failed to complete move {unit_name} {current_region_id} - {target_region_id}. Check combat log for details.')
-            player_action_logs[attacker_player_id - 1] = player_action_log
-            continue
+            if attacker_player_id != 99:
+                if movement_status == True:
+                    player_action_log.append(f'Successfully moved {unit_name} {current_region_id} - {target_region_id}.')
+                else:
+                    player_action_log.append(f'Failed to complete move {unit_name} {current_region_id} - {target_region_id}. Check combat log for details.')
+                player_action_logs[attacker_player_id - 1] = player_action_log
 
     return player_action_logs
