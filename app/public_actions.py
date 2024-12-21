@@ -12,143 +12,120 @@ from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
 from app.notifications import Notifications
+from app.alliance import Alliance
+from app.alliance import AllianceTable
 
-def resolve_alliance_creations(alliance_create_list, current_turn_num, full_game_id, player_action_logs):
-    '''Resolves all alliance creation actions.'''
+def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_action_logs: list) -> list:
+    """
+    Resolves all Alliance Create actions.
 
-    #define core lists
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    Params:
+        alliance_create_list (list): List of alliance creation actions.
+        game_id (str): Game ID.
+        player_action_logs (list): Action logs.
+    """
+
+    # get game info
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    alliance_creation_dict = {}
-    notifications = Notifications(full_game_id)
-
-    #get needed economy information from each player
     nation_info_masterlist = core.get_nation_info(playerdata_list)
     nation_name_list = []
     research_masterlist = []
     for player in playerdata_list:
         nation_name_list.append(player[1])
         research_masterlist.append(ast.literal_eval(player[26]))
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    alliance_table = AllianceTable(game_id)
 
-
-    #Execute Actions
+    # process actions
+    alliance_creation_dict = {}
     for action in alliance_create_list:
-        player_id_1 = action[0]
-        nation_name_1 = nation_info_masterlist[player_id_1 - 1][0]
-        action_data_str = action[1]
-        action_data_str = action_data_str[9:]
-        action_data_list = action_data_str.split()
-        alliance_type = f'{action_data_list[-2]} {action_data_list[-1]}'
-        action_data_list = action_data_list[:-2]
-        nation_name_2 = " ".join(action_data_list)
-        player_id_2 = nation_name_list.index(nation_name_2) + 1
-        player_research_list_1 = research_masterlist[player_id_1 - 1]
-        player_research_list_2 = research_masterlist[player_id_2 - 1]
-        player_action_log = player_action_logs[player_id_1 - 1]
-
-        #come up with alliance name
-        if player_id_1 < player_id_2:
-            alliance_name_str = f'{nation_name_1} - {nation_name_2} {alliance_type}'
-        elif player_id_2 < player_id_1:
-            alliance_name_str = f'{nation_name_2} - {nation_name_1} {alliance_type}'
         
+        # decode action
+        player_id = action[0]
+        nation_name = nation_info_masterlist[player_id - 1][0]
+        action_data_str = action[1]
+        action_data_list = action_data_str.split(" ")
+        alliance_type = " ".join(action_data_list[2:4])
+        alliance_name = " ".join(action_data_list[4:])
+
+        # get playerdata
+        player_research_list = research_masterlist[player_id - 1]
+        player_action_log = player_action_logs[player_id - 1]
+
         #required research check
         research_check_success = True
         match alliance_type:
             case 'Non-Aggression Pact':
-                if 'Peace Accords' not in player_research_list_1 or 'Peace Accords' not in player_research_list_2:
+                if 'Peace Accords' not in player_research_list:
                    research_check_success = False 
             case 'Defense Pact':
-                if 'Defensive Agreements' not in player_research_list_1 or 'Defensive Agreements' not in player_research_list_2:
+                if 'Defensive Agreements' not in player_research_list:
                    research_check_success = False 
             case 'Trade Agreement':
-                if 'Trade Routes' not in player_research_list_1 or 'Trade Routes' not in player_research_list_2:
+                if 'Trade Routes' not in player_research_list:
                    research_check_success = False 
             case 'Research Agreement':
-                if 'Research Exchange' not in player_research_list_1 or 'Research Exchange' not in player_research_list_2:
+                if 'Research Exchange' not in player_research_list:
                    research_check_success = False 
         if not research_check_success:
-            player_action_log.append(f'Failed to form {alliance_name_str}. One or both nations do not have the required foreign policy agenda.')
-            player_action_logs[player_id_1 - 1] = player_action_log
+            player_action_log.append(f'Failed to form {alliance_name} alliance. You do not have the required foreign policy agenda.')
+            player_action_logs[player_id - 1] = player_action_log
             continue
 
-        #alliance capacity check
+        # check alliance capacity
         if alliance_type != 'Non-Aggression Pact':
-            alliance_count_1, alliance_capacity_1 = core.get_alliance_count(full_game_id, playerdata_list[player_id_1 - 1])
-            alliance_count_2, alliance_capacity_2 = core.get_alliance_count(full_game_id, playerdata_list[player_id_2 - 1])
-            with open('active_games.json', 'r') as json_file:
-                active_games_dict = json.load(json_file)
-            if "Shared Fate" in active_games_dict[full_game_id]["Active Events"]:
-                if active_games_dict[full_game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
-                    alliance_capacity_1 += 1
-                    alliance_capacity_2 += 1
-            if (alliance_count_1 + 1) > alliance_capacity_1 or (alliance_count_2 + 1) > alliance_capacity_2:
-                player_action_log.append(f'Failed to form {alliance_name_str}. One or both nations do not have enough alliance capacity.')
-                player_action_logs[player_id_1 - 1] = player_action_log
+            alliance_count, alliance_capacity = core.get_alliance_count(game_id, playerdata_list[player_id - 1])
+            if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
+                if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
+                    alliance_capacity += 1
+            if (alliance_count + 1) > alliance_capacity:
+                player_action_log.append(f'Failed to form {alliance_name}. You do not have enough alliance capacity.')
+                player_action_logs[player_id - 1] = player_action_log
                 continue
-        
-        #add new alliance to dictionary
-        if alliance_name_str in alliance_creation_dict:
-            alliance_creation_dict[alliance_name_str] += 1
+
+        # check that an alliance with this name does not already exist
+        if alliance_name in alliance_table.data:
+            player_action_log.append(f'Failed to form {alliance_name} alliance. An alliance with that name has already been created.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # update alliance_creation_dict
+        if alliance_name in alliance_creation_dict:
+            alliance_creation_dict[alliance_name]["members"].append(nation_name)
         else:
-            alliance_creation_dict[alliance_name_str] = 1
+            entry = {}
+            entry["type"] = alliance_type
+            entry["members"] = [nation_name]
+            alliance_creation_dict[alliance_name] = entry
 
-
-    #Process Alliance Creation Dictionary
-    for alliance in alliance_creation_dict:
-        alliance_name_list = alliance.split(' - ')
-        nation_name_1 = alliance_name_list[0]
-        excess_list = alliance_name_list[1].split()
-        alliance_type = f'{excess_list[-2]} {excess_list[-1]}'
-        excess_list = excess_list[:-2]
-        nation_name_2 = " ".join(excess_list)
-        player_id_1 = nation_name_list.index(nation_name_1) + 1
-        player_id_2 = nation_name_list.index(nation_name_2) + 1
-        player_action_log_1 = player_action_logs[player_id_1 - 1]
-        player_action_log_2 = player_action_logs[player_id_2 - 1]
-        
-        #if both players agreed to form the alliance then create it
-        if alliance_creation_dict[alliance] == 2:
-            
-            #get diplomatic relations data
-            for player in playerdata_list:
-                diplomatic_relations_list = ast.literal_eval(player[22])
-                if player[1] == nation_name_1:
-                  diplomatic_relations_list_1 = diplomatic_relations_list
-                if player[1] == nation_name_2:
-                  diplomatic_relations_list_2 = diplomatic_relations_list
-            
-            #create alliance strings
-            expire_turn_num = current_turn_num + 4
-            diplomatic_relations_list_1[player_id_2] = f'{alliance_type} {current_turn_num} {expire_turn_num}'
-            diplomatic_relations_list_2[player_id_1] = f'{alliance_type} {current_turn_num} {expire_turn_num}'
-            
-            #update diplomatic relations data
-            for player in playerdata_list:
-                if player[1] == nation_name_1:
-                    player[22] = str(diplomatic_relations_list_1)
-                elif player[1] == nation_name_2:
-                    player[22] = str(diplomatic_relations_list_2)
-            notifications.append(f'{alliance} has formed.', 7)
-            log_str = f'Formed {alliance}.'
+    # create the alliance if more than two founders
+    for alliance_name, alliance_data in alliance_creation_dict.items():
+        if len(alliance_data["members"]) > 1:
+            # alliance creation success
+            alliance_table.create(alliance_name, alliance_data["type"], alliance_data["members"])
+            for nation_name in alliance_data["members"]:
+                # update log
+                player_id = nation_name_list.index(nation_name) + 1
+                player_action_log = player_action_logs[player_id - 1]
+                player_action_log.append(f'Successfully formed {alliance_name}.')
+                player_action_logs[player_id - 1] = player_action_log
         else:
-            log_str = f'Failed to form {alliance}. Both players did not agree to establish it.'
-        
-        #update log
-        player_action_log_1.append(log_str)
-        player_action_log_2.append(log_str)
-        player_action_logs[player_id_1 - 1] = player_action_log_1
-        player_action_logs[player_id_2 - 1] = player_action_log_2
+            # alliance creation failed
+            nation_name = alliance_data["members"][0]
+            player_id = nation_name_list.index(nation_name)
+            player_action_log = player_action_logs[player_id - 1]
+            player_action_log.append(f'Failed to form {alliance_name} alliance. Not enough players agreed to establish it.')
+            player_action_logs[player_id - 1] = player_action_log
 
 
-    #Update playerdata.csv
+    # update playerdata.csv
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-
-    #Update player_action_logs
     return player_action_logs
 
 def resolve_government_abilities(government_actions_list, full_game_id, player_action_logs):

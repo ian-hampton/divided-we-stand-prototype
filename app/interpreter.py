@@ -29,7 +29,8 @@ def check_action(action, library, game_id):
     action = action.title()
 
     #make all region ids all caps
-    if action_type not in ['Surrender', 'White Peace', 'Research', 'Alliance', 'Republic', 'Steal', 'Make', 'Buy', 'Sell', 'War']:
+    no_region_ids_in_action_set = {'Surrender', 'White Peace', 'Research', 'Republic', 'Steal', 'Make', 'Buy', 'Sell', 'War', 'Alliance Create', 'Alliance Join', 'Alliance Leave'}
+    if action_type not in no_region_ids_in_action_set:
         for region_id in regdata_dict:
             if region_id.title() in action:
                 action = replace_target(action, region_id.title(), region_id.upper())
@@ -120,8 +121,6 @@ def validate(action, action_type, library, regdata_dict):
             test_list = [check_research_name(action, library)]
         case 'Build':
             test_list = [check_improvement_name(action, library), check_region_ids(region_id_list, regdata_dict)]
-        case 'Alliance':
-            test_list = [check_alliance_name(action, library), check_nation_name(action, library)]
         case 'Republic' | 'Buy' | 'Sell' :
             test_list = [check_resource_name(action, library)]
         case 'Make':
@@ -133,6 +132,12 @@ def validate(action, action_type, library, regdata_dict):
         case 'Launch':
             test_list = [check_missile_name(action, library), check_region_ids(region_id_list, regdata_dict)]
         case 'Event':
+            test_list = []
+        case 'Alliance Create':
+            test_list = []
+        case 'Alliance Join':
+            test_list = []
+        case 'Alliance Leave':
             test_list = []
         case _:
             return False

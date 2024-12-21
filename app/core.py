@@ -19,6 +19,8 @@ from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
 from app.notifications import Notifications
+from app.alliance import Alliance
+from app.alliance import AllianceTable
 
 
 #TURN PROCESSING PROCEDURE
@@ -296,11 +298,13 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         'Research': [],
         'Remove': [],
         'Build': [],
-        'Alliance': [],
-        'Republic': [],
         'Make': [],
         'Buy': [],
         'Sell': [],
+        'Alliance Create': [],
+        'Alliance Join': [],
+        'Alliance Leave': [],
+        'Republic': [],
         'Event': []
     }
     private_actions_dict = {
@@ -337,8 +341,12 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
             update_control_map = True
         if len(public_actions_dict['Research']) > 0:
             player_action_logs = public_actions.resolve_research_actions(public_actions_dict['Research'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Alliance']) > 0:
-            player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance'], current_turn_num, full_game_id, player_action_logs)
+        if len(public_actions_dict['Alliance Leave']) > 0:
+            pass
+        if len(public_actions_dict['Alliance Create']) > 0:
+            player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance Create'], full_game_id, player_action_logs)
+        if len(public_actions_dict['Alliance Join']) > 0:
+            pass
         if len(public_actions_dict['Purchase']) > 0:
             player_action_logs = public_actions.resolve_region_purchases(public_actions_dict['Purchase'], full_game_id, player_action_logs)
             update_control_map = True
@@ -435,8 +443,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         checks.update_improvement_count(full_game_id, player_id)
     #update income in playerdata
     checks.update_income(full_game_id, current_turn_num)
-    #update alliances
-    checks.update_alliances(full_game_id, current_turn_num)
     for i in range(player_count):
         player_id = i + 1
         #collect resource market income
@@ -759,28 +765,24 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Missile Data']['Nuclear'] = f'{missile_data[1]}x Nuclear Missiles'
 
     #relations data
+    # to do - stop using relations data, just call is_at_war and is_allied instead
+    relations_data = {}
     relation_colors = []
     relations_status_list = []
     relations_data = ast.literal_eval(playerdata[22])
     for index, relation in enumerate(relations_data):
         if index == 0:
             continue
-        entry_data = relation.split()
-        if len(entry_data) > 1:
-            entry_formatted = f'{entry_data[0]} {entry_data[1]}'
-        else:
-            entry_formatted = entry_data[0]
-        if entry_formatted == "Defense Pact" or entry_formatted == "Trade Agreement" or entry_formatted == "Research Agreement":
-            relation_colors.append('#3c78d8')
-        elif entry_formatted == "Non-Aggression Pact":
-            relation_colors.append('#00ff00')
-        elif entry_formatted == "Neutral":
-            relation_colors.append('#f1c232')
-        elif entry_formatted == "At War":
-            relation_colors.append('#ff0000')
-        elif entry_formatted == "-":
-            relation_colors.append('#000000')
-        relations_status_list.append(entry_formatted)
+        match relation:
+            case "Allied":
+                relation_colors.append('#3c78d8')
+            case "Neutral":
+                relation_colors.append('#00ff00')
+            case "At War":
+                relation_colors.append('#ff0000')
+            case "-":
+                relation_colors.append('#000000')
+        relations_status_list.append(relation)
     player_information_dict['Relations Data']['Name List'] = RELATIONS_NAME_LIST
     player_information_dict['Relations Data']['Color List'] = relation_colors
     player_information_dict['Relations Data']['Status List'] = relations_status_list
@@ -913,7 +915,7 @@ def update_turn_num(game_id):
         json.dump(active_games_dict, json_file, indent=4)
 
 def identify(action):
-    ACTIONS_LIST = ['Surrender', 'White Peace', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
+    ACTIONS_LIST = ['Surrender', 'White Peace', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance Create', 'Alliance Join', 'Alliance Leave', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
     for action_type in ACTIONS_LIST:
         if action_type.lower() == action[:len(action_type)].lower():
             return action_type
@@ -1052,23 +1054,19 @@ def get_alliance_count(game_id, playerdata):
     Parameters:
     - playerdata: A single playerdata list from playerdata.csv.
     '''
-    relations_data = ast.literal_eval(playerdata[22])
+    nation_name = playerdata[1]
     player_research_list = ast.literal_eval(playerdata[26])
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     
     alliance_count = 0
-    for index, relation in enumerate(relations_data):
-        if index == 0:
-            continue
-        entry_data = relation.split()
-        if len(entry_data) > 1:
-            alliance_type = f'{entry_data[0]} {entry_data[1]}'
-            if alliance_type in ALLIANCE_LIST and alliance_type != 'Non-Aggression Pact':
-                alliance_count += 1
+    alliance_table = AllianceTable(game_id)
+    for alliance in alliance_table:
+        if nation_name in alliance.current_members and alliance.type != "Non-Aggression Pact":
+            alliance_count += 1
     
     alliance_limit = 2
-    if 'International Cooperation' in ast.literal_eval(playerdata[26]):
+    if 'International Cooperation' in player_research_list:
         alliance_limit += 1
     if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
         if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
