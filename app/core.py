@@ -6,6 +6,7 @@ import json
 import os
 import random
 import shutil
+from typing import Union, Tuple, List
 
 # MY IMPORTS
 from app import map
@@ -342,11 +343,11 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
         if len(public_actions_dict['Research']) > 0:
             player_action_logs = public_actions.resolve_research_actions(public_actions_dict['Research'], full_game_id, player_action_logs)
         if len(public_actions_dict['Alliance Leave']) > 0:
-            pass
+            player_action_logs = public_actions.resolve_alliance_leaves(public_actions_dict['Alliance Leave'], full_game_id, player_action_logs)
         if len(public_actions_dict['Alliance Create']) > 0:
             player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance Create'], full_game_id, player_action_logs)
         if len(public_actions_dict['Alliance Join']) > 0:
-            pass
+            player_action_logs = public_actions.resolve_alliance_joins(public_actions_dict['Alliance Join'], full_game_id, player_action_logs)
         if len(public_actions_dict['Purchase']) > 0:
             player_action_logs = public_actions.resolve_region_purchases(public_actions_dict['Purchase'], full_game_id, player_action_logs)
             update_control_map = True
@@ -1056,13 +1057,20 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
 #DIPLOMACY SUB-FUNCTIONS
 ################################################################################
 
-def get_alliance_count(game_id, playerdata):
-    '''
+def get_alliance_count(game_id: str, playerdata: list[list]) -> Tuple[int, int]:
+    """
     Gets a count of a player's active alliances and their total alliance capacity.
 
-    Parameters:
-    - playerdata: A single playerdata list from playerdata.csv.
-    '''
+    Params:
+        game_id (str): Game ID string.
+        playerdata (list): A single playerdata list from playerdata.csv.
+
+    Returns:
+        Tuple:
+            int: Alliance count.
+            int: Alliance limit.
+    """
+
     nation_name = playerdata[1]
     player_research_list = ast.literal_eval(playerdata[26])
     with open('active_games.json', 'r') as json_file:

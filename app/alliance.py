@@ -26,6 +26,8 @@ class Alliance:
             self.age: int = current_turn_num - self.turn_created
         else:
             self.age: int = self.turn_ended - self.turn_created
+
+        self.game_id = game_id
     
     def build(alliance_name: str, alliance_type: str, founding_members: list[str], game_id: str) -> "Alliance":
         """
@@ -60,13 +62,34 @@ class Alliance:
 
     def add_member(self, nation_name: str) -> None:
         """
-        """
-        pass
+        Adds a nation to the alliance.
+        Input validation is done by the public action function that calls this method.
 
+        Params:
+            nation_name (str): Nation to add to the alliance.
+        """
+
+        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+
+        if nation_name in self.former_members:
+            del self.former_members[nation_name]
+
+        self.current_members[nation_name] = current_turn_num
+        
     def remove_member(self, nation_name: str) -> None:
         """
+        Removes a nation from the alliance.
+        Input validation is done by the public action function that calls this method.
+
+        Params:
+            nation_name (str): Nation to remove from the alliance.
         """
-        pass
+
+        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+
+        del self.current_members[nation_name]
+
+        self.former_members[nation_name] = current_turn_num
 
     def end(self) -> None:
         """

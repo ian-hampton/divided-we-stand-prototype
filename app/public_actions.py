@@ -23,6 +23,9 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
         alliance_create_list (list): List of alliance creation actions.
         game_id (str): Game ID.
         player_action_logs (list): Action logs.
+
+    Returns:
+        list: List of player action logs.
     """
 
     # get game info
@@ -34,8 +37,6 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
     for player in playerdata_list:
         nation_name_list.append(player[1])
         research_masterlist.append(ast.literal_eval(player[26]))
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
     alliance_table = AllianceTable(game_id)
 
     # process actions
@@ -54,7 +55,7 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
         player_research_list = research_masterlist[player_id - 1]
         player_action_log = player_action_logs[player_id - 1]
 
-        #required research check
+        # required research check
         research_check_success = True
         match alliance_type:
             case 'Non-Aggression Pact':
@@ -77,9 +78,6 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
         # check alliance capacity
         if alliance_type != 'Non-Aggression Pact':
             alliance_count, alliance_capacity = core.get_alliance_count(game_id, playerdata_list[player_id - 1])
-            if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
-                if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
-                    alliance_capacity += 1
             if (alliance_count + 1) > alliance_capacity:
                 player_action_log.append(f'Failed to form {alliance_name}. You do not have enough alliance capacity.')
                 player_action_logs[player_id - 1] = player_action_log
@@ -126,6 +124,140 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
+    return player_action_logs
+
+def resolve_alliance_joins(alliance_join_list: list, game_id: str, player_action_logs: list) -> list:
+    """
+    Resolves all Alliance Join actions.
+
+    Params:
+        alliance_join_list (list): List of alliance join actions.
+        game_id (str): Game ID.
+        player_action_logs (list): Action logs.
+    
+    Returns:
+        list: List of player action logs.
+    """
+    
+    # get game info
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_info_masterlist = core.get_nation_info(playerdata_list)
+    nation_name_list = []
+    research_masterlist = []
+    for player in playerdata_list:
+        nation_name_list.append(player[1])
+        research_masterlist.append(ast.literal_eval(player[26]))
+    alliance_table = AllianceTable(game_id)
+
+    # process actions
+    for action in alliance_join_list:
+        
+        # decode action
+        player_id = action[0]
+        nation_name = nation_info_masterlist[player_id - 1][0]
+        action_data_str = action[1]
+        action_data_list = action_data_str.split(" ")
+        alliance_name = " ".join(action_data_list[2:])
+
+        # get playerdata
+        player_research_list = research_masterlist[player_id - 1]
+        player_action_log = player_action_logs[player_id - 1]
+
+        # get alliance
+        alliance = alliance_table.get(alliance_name)
+        if alliance is None:
+            player_action_log.append(f'Failed to join {alliance_name}. Alliance not found.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # required research check
+        research_check_success = True
+        match alliance.type:
+            case 'Non-Aggression Pact':
+                if 'Peace Accords' not in player_research_list:
+                   research_check_success = False 
+            case 'Defense Pact':
+                if 'Defensive Agreements' not in player_research_list:
+                   research_check_success = False 
+            case 'Trade Agreement':
+                if 'Trade Routes' not in player_research_list:
+                   research_check_success = False 
+            case 'Research Agreement':
+                if 'Research Exchange' not in player_research_list:
+                   research_check_success = False 
+        if not research_check_success:
+            player_action_log.append(f'Failed to join {alliance_name}. You do not have the required foreign policy agenda.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # check alliance capacity
+        if alliance.type != 'Non-Aggression Pact':
+            alliance_count, alliance_capacity = core.get_alliance_count(game_id, playerdata_list[player_id - 1])
+            if (alliance_count + 1) > alliance_capacity:
+                player_action_log.append(f'Failed to form {alliance_name}. You do not have enough alliance capacity.')
+                player_action_logs[player_id - 1] = player_action_log
+                continue
+
+        # add player to the alliance
+        alliance.add_member(nation_name)
+        alliance_table.save(alliance)
+        player_action_log.append(f'Joined {alliance_name}.')
+        player_action_logs[player_id - 1] = player_action_log
+    
+    return player_action_logs
+
+def resolve_alliance_leaves(alliance_leave_list: list, game_id: str, player_action_logs: list) -> list:
+    """
+    Resolves all Alliance Leave actions.
+
+    Params:
+        alliance_leave_list (list): List of alliance join actions.
+        game_id (str): Game ID.
+        player_action_logs (list): Action logs.
+    
+    Returns:
+        list: List of player action logs.
+    """
+    
+    # get game info
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_info_masterlist = core.get_nation_info(playerdata_list)
+    nation_name_list = []
+    research_masterlist = []
+    for player in playerdata_list:
+        nation_name_list.append(player[1])
+        research_masterlist.append(ast.literal_eval(player[26]))
+    alliance_table = AllianceTable(game_id)
+
+    # process actions
+    for action in alliance_leave_list:
+        
+        # decode action
+        player_id = action[0]
+        nation_name = nation_info_masterlist[player_id - 1][0]
+        action_data_str = action[1]
+        action_data_list = action_data_str.split(" ")
+        alliance_name = " ".join(action_data_list[2:])
+
+        # get playerdata
+        player_research_list = research_masterlist[player_id - 1]
+        player_action_log = player_action_logs[player_id - 1]
+
+        # get alliance
+        alliance = alliance_table.get(alliance_name)
+        if alliance is None:
+            player_action_log.append(f'Failed to join {alliance_name}. Alliance not found.')
+            player_action_logs[player_id - 1] = player_action_log
+            continue
+
+        # remove player from alliance
+        alliance.remove_member(nation_name)
+        alliance_table.save(alliance)
+        player_action_log.append(f'Left {alliance_name}.')
+        player_action_logs[player_id - 1] = player_action_log
+    
     return player_action_logs
 
 def resolve_government_abilities(government_actions_list, full_game_id, player_action_logs):
