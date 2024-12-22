@@ -1139,14 +1139,7 @@ def announcements(full_game_id):
     # get all ongoing alliances
     for alliance in alliance_table:
         if alliance.is_active:
-            if alliance.turn_created == current_turn_num - 1:
-                diplomacy_list.append(f"{alliance.name} has formed.")
-            for alliance_member_name, turn_joined in alliance.current_members.items():
-                if turn_joined == current_turn_num - 1:
-                    diplomacy_list.append(f"{alliance_member_name} has joined the {alliance.name}.")
-            for alliance_member_name, turn_left in alliance.former_members.items():
-                if turn_left == current_turn_num - 1:
-                    diplomacy_list.append(f"{alliance_member_name} has left the {alliance.name}.")
+            diplomacy_list.append(f"{alliance.name} is active.")
     # format diplomacy string
     diplomacy_string = "<br>".join(diplomacy_list)
     diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)

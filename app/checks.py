@@ -1670,6 +1670,13 @@ def war_score_forced_surrender(game_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
+def prune_alliances(game_id):
+    """
+    """
+    notifications = Notifications(game_id)
+    notifications.append(f"{alliance.name} has dissolved.", 7)
+    
+
 #UPDATE INCOME HELPER FUNCTIONS
 def update_gross_income_masterlist(gross_income_masterlist, player_id, index, income, remnant_multiplier):
     gross_income_masterlist[player_id - 1][index] += income * remnant_multiplier

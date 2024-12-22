@@ -38,6 +38,7 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
         nation_name_list.append(player[1])
         research_masterlist.append(ast.literal_eval(player[26]))
     alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
 
     # process actions
     alliance_creation_dict = {}
@@ -102,9 +103,10 @@ def resolve_alliance_creations(alliance_create_list: list, game_id: str, player_
     for alliance_name, alliance_data in alliance_creation_dict.items():
         if len(alliance_data["members"]) > 1:
             # alliance creation success
-            alliance_table.create(alliance_name, alliance_data["type"], alliance_data["members"])
+            alliance = alliance_table.create(alliance_name, alliance_data["type"], alliance_data["members"])
             for nation_name in alliance_data["members"]:
                 # update log
+                notifications.append(f"{alliance.name} has formed.", 7)
                 player_id = nation_name_list.index(nation_name) + 1
                 player_action_log = player_action_logs[player_id - 1]
                 player_action_log.append(f'Successfully formed {alliance_name}.')
@@ -149,6 +151,7 @@ def resolve_alliance_joins(alliance_join_list: list, game_id: str, player_action
         nation_name_list.append(player[1])
         research_masterlist.append(ast.literal_eval(player[26]))
     alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
 
     # process actions
     for action in alliance_join_list:
@@ -202,6 +205,7 @@ def resolve_alliance_joins(alliance_join_list: list, game_id: str, player_action
         # add player to the alliance
         alliance.add_member(nation_name)
         alliance_table.save(alliance)
+        notifications.append(f"{nation_name} has joined the {alliance.name}.", 7)
         player_action_log.append(f'Joined {alliance_name}.')
         player_action_logs[player_id - 1] = player_action_log
     
@@ -230,6 +234,7 @@ def resolve_alliance_leaves(alliance_leave_list: list, game_id: str, player_acti
         nation_name_list.append(player[1])
         research_masterlist.append(ast.literal_eval(player[26]))
     alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
 
     # process actions
     for action in alliance_leave_list:
@@ -255,6 +260,7 @@ def resolve_alliance_leaves(alliance_leave_list: list, game_id: str, player_acti
         # remove player from alliance
         alliance.remove_member(nation_name)
         alliance_table.save(alliance)
+        notifications.append(f"{nation_name} has left the {alliance.name}.", 7)
         player_action_log.append(f'Left {alliance_name}.')
         player_action_logs[player_id - 1] = player_action_log
     

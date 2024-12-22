@@ -93,8 +93,17 @@ class Alliance:
 
     def end(self) -> None:
         """
+        Retires an alliance.
         """
-        pass
+        
+        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+
+        for nation_name in self.current_members:
+            self.former_members[nation_name] = current_turn_num
+        
+        self.current_members = {}
+        self.turn_ended = current_turn_num
+
 
 
 class AllianceTable:    
