@@ -1282,11 +1282,15 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
         elif tech_type == "Technology":
             # research agreement deductions
             sale_price = 1.0
-            research_agreement_allies = alliance_table.get_allies(nation_name, "Research Agreement")
-            for ally_name in research_agreement_allies:
-                ally_player_id = nation_name_list.index(ally_name) + 1
-                if research_name in research_masterlist[ally_player_id - 1]:
-                    sale_price -= 0.2
+            for alliance in alliance_table:
+                if alliance.is_active and nation_name in alliance.current_members and alliance.type == "Research Agreement":
+                    for ally_name in alliance.current_members:
+                        if ally_name == nation_name:
+                            continue
+                        ally_player_id = nation_name_list.index(ally_name) + 1
+                        if research_name in research_masterlist[ally_player_id - 1]:
+                            sale_price -= 0.2
+                            break
             if sale_price < 0:
                 sale_price = 0.2
             if sale_price != 1.0:
