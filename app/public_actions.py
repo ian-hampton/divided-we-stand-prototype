@@ -1029,11 +1029,7 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, player_a
             wardata.end_war(war_name, outcome)
             notifications.append(f'{war_name} has ended with a white peace.', 4)
 
-
-    # Repair Diplomatic Relations
-    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
-
-    # Update playerdata.csv
+    # update playerdata.csv
     playerdata_list = core.read_file(playerdata_filepath, 1)
     for index, player in enumerate(playerdata_list):
         player[22] = str(diplomatic_relations_masterlist[index])

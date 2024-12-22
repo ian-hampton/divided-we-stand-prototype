@@ -961,32 +961,33 @@ def get_library(game_id):
 
     return library
 
-def run_end_of_turn_checks(full_game_id, current_turn_num, player_count):
+def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     
-    checks.update_military_capacity(full_game_id)
+    checks.prune_alliances(game_id)
+    checks.update_military_capacity(game_id)
     for i in range(player_count):
         player_id = i + 1
         #update playerdata improvement counts
-        checks.update_improvement_count(full_game_id, player_id)
+        checks.update_improvement_count(game_id, player_id)
         #check refinery ratios
-        checks.ratio_check(full_game_id, player_id)
+        checks.ratio_check(game_id, player_id)
         #check military capacity
-        checks.remove_excess_units(full_game_id, player_id)
+        checks.remove_excess_units(game_id, player_id)
         #refresh improvement count
-        checks.update_improvement_count(full_game_id, player_id)
+        checks.update_improvement_count(game_id, player_id)
         #update stockpile limits in playerdata
-        checks.update_stockpile_limits(full_game_id, player_id)
+        checks.update_stockpile_limits(game_id, player_id)
     #update income in playerdata
-    checks.update_income(full_game_id, current_turn_num)
+    checks.update_income(game_id, current_turn_num)
     #update misc info and trade tax in playerdata
     for i in range(player_count):
         player_id = i + 1
-        checks.update_misc_info(full_game_id, player_id)
-        checks.update_trade_tax(full_game_id, player_id)
+        checks.update_misc_info(game_id, player_id)
+        checks.update_trade_tax(game_id, player_id)
     #update records
-    checks.update_records(full_game_id, current_turn_num)
+    checks.update_records(game_id, current_turn_num)
     #update income in playerdata now that records have been updated (important for political power bonuses)
-    checks.update_income(full_game_id, current_turn_num)
+    checks.update_income(game_id, current_turn_num)
 
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS
@@ -1337,30 +1338,6 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
     with open(trucedata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(trucedata_list)
-
-def repair_relations(diplomatic_relations_masterlist, game_id):
-    """
-    Restores diplomatic relations to neutral if there is no longer a war between two players.
-    The hope is to eventually replace this cringe with a player relations graph.
-
-    Params:
-        diplomatic_relations_masterlist (list of lists): hellish list of lists from playerdata.csv
-        game_id (str): game id
-
-    Returns:
-        diplomatic_relations_masterlist (list of lists): hellish list of lists from playerdata.csv
-    """
-
-    wardata = WarData(game_id)
-    for i, diplomatic_relations_list in enumerate(diplomatic_relations_masterlist):
-        player_id_1 = i + 1
-        for player_id_2, relation in enumerate(diplomatic_relations_list):
-            if player_id_2 == 0:
-                continue
-            if relation == 'At War' and not wardata.are_at_war(player_id_1, player_id_2):
-                diplomatic_relations_masterlist[i][player_id_2] = 'Neutral'
-
-    return diplomatic_relations_masterlist
 
 def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
     '''Checks for a truce between two players. Returns True if one is found, otherwise returns False.'''

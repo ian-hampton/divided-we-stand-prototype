@@ -269,7 +269,7 @@ class AllianceTable:
         Identifies the longest alliance of the game.
 
         Returns:
-            tuple:
+            Tuple:
                 str: Name of longest alliance or None if no alliances found.
                 int: Length of the longest alliance.
 

@@ -13,6 +13,8 @@ from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
 from app.notifications import Notifications
+from app.alliance import AllianceTable
+from app.alliance import Alliance
 
 #END OF TURN CHECKS
 def update_improvement_count(game_id, player_id):
@@ -1559,10 +1561,13 @@ def prompt_for_missing_war_justifications(game_id):
         if war_data["outcome"] == "TBD":
             wardata.add_missing_war_justifications(war_name)
 
-def total_occupation_forced_surrender(game_id):
-    '''
+def total_occupation_forced_surrender(game_id: str) -> None:
+    """
     Forces a player to surrender if they are totally occupied.
-    '''
+
+    Params:
+        game_id (str): Game ID string.
+    """
     
     # get core lists
     wardata = WarData(game_id)
@@ -1610,12 +1615,7 @@ def total_occupation_forced_surrender(game_id):
                     notifications.append(f'{nation_name_1} surrendered to {nation_name_2}.', 4)
                     notifications.append(f'{war_name} has ended due to total occupation.', 4)
 
-    
-    # Repair Diplomatic Relations
-    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
-
-
-    # Update playerdata.csv
+    # update playerdata.csv
     for index, player in enumerate(playerdata_list):
         player[22] = str(diplomatic_relations_masterlist[index])
     with open(playerdata_filepath, 'w', newline='') as file:
@@ -1623,10 +1623,13 @@ def total_occupation_forced_surrender(game_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def war_score_forced_surrender(game_id):
-    '''
+def war_score_forced_surrender(game_id: str) -> None:
+    """
     Forces a side to surrender if critical war score difference reached.
-    '''
+
+    Params:
+        game_id (str): Game ID string.
+    """
 
     # get core lists
     wardata = WarData(game_id)
@@ -1659,9 +1662,6 @@ def war_score_forced_surrender(game_id):
                 notifications.append(f'{ma_name} surrendered to {md_name}.', 4)
                 notifications.append(f'{war_name} has ended due to war score.', 4)
 
-    # repair relations
-    diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
-
     # update playerdata.csv
     for index, player in enumerate(playerdata_list):
         player[22] = str(diplomatic_relations_masterlist[index])
@@ -1670,11 +1670,22 @@ def war_score_forced_surrender(game_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def prune_alliances(game_id):
+def prune_alliances(game_id: str) -> None:
     """
+    Ends all alliances that have less than 2 members.
+
+    Params:
+        game_id (str): Game ID string.
     """
+
+    alliance_table = AllianceTable(game_id)
     notifications = Notifications(game_id)
-    notifications.append(f"{alliance.name} has dissolved.", 7)
+
+    for alliance in alliance_table:
+        if len(alliance.current_members) < 2:
+            alliance.end()
+            alliance_table.save(alliance)
+            notifications.append(f"{alliance.name} has dissolved.", 7)
     
 
 #UPDATE INCOME HELPER FUNCTIONS
