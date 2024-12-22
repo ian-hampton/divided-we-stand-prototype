@@ -391,13 +391,6 @@ def initiate_event(chosen_event: str, event_conditions_dict: dict, game_id: str,
                 if war_data["outcome"] == "TBD":
                     wardata.end_war(war_name, "White Peace")
                     notifications.append(f'{war_name} has ended with a white peace due to United Nations Peacekeeping Mandate.', 2)
-            #update playerdata
-            diplomatic_relations_masterlist = []
-            for playerdata in playerdata_list:
-                diplomatic_relations_masterlist.append(ast.literal_eval(playerdata[22]))
-            diplomatic_relations_masterlist = core.repair_relations(diplomatic_relations_masterlist, game_id)
-            for index, playerdata in enumerate(playerdata_list):
-                playerdata[22] = str(diplomatic_relations_masterlist[index])
             #save to inactive events list
             active_games_dict[game_id]["Inactive Events"].append(chosen_event)
         

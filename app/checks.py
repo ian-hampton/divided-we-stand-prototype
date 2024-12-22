@@ -1306,27 +1306,24 @@ def check_top_three(top_three_list):
 def check_victory_conditions(game_id, player_id, current_turn_num):
     '''Checks victory conditions of a player.'''
     
-    #define core lists
+    # get game data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    wardata = WarData(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+    wardata = WarData(game_id)
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
     with open(f'gamedata/{game_id}/vc_overrides.json', 'r') as json_file:
         vc_overrides_dict = json.load(json_file)
 
-    #get needed masterlists from playerdata
     nation_name_masterlist = []
-    diplomatic_relations_masterlist = []
     for playerdata in playerdata_list:
         nation_name_masterlist.append(playerdata[1])
-        diplomatic_relations_masterlist.append(ast.literal_eval(playerdata[22]))
 
-    #get needed information from player
+    # get needed information from player
     playerdata = playerdata_list[player_id - 1]
     victory_conditions_list = ast.literal_eval(playerdata[8])
     nation_name = playerdata[1]
@@ -1336,7 +1333,6 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
         resource_data = ast.literal_eval(playerdata[j])
         economy_data_list.append(resource_data)
         j += 1
-    diplomatic_relations = ast.literal_eval(playerdata[22])
     completed_research_list = ast.literal_eval(playerdata[26])
     improvement_count_list = ast.literal_eval(playerdata[27])
 
@@ -1369,20 +1365,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             if len(greatest_count_player_id) == 1 and player_id in greatest_count_player_id:
                 vc_1_completed = True
         case 'Dual Loyalty':
-            player_dual_loyalty_bool = vc_overrides_dict['Dual Loyalty'][player_id - 1]
-            if player_dual_loyalty_bool:
-                vc_1_completed = True
-            else:
-                player_alliances_list = []
-                for relation in diplomatic_relations:
-                    if relation not in core.ignore_list:
-                        relation_data_list = relation.split()
-                        if relation_data_list[0] != 'At':
-                            alliance_type = f'{relation_data_list[0]} {relation_data_list[1]}'
-                            player_alliances_list.append(alliance_type)
-                if (player_alliances_list.count("Defensive Pact") >= 2) or (player_alliances_list.count("Trade Agreement") >= 2) or (player_alliances_list.count("Research Agreement") >= 2):
-                    vc_1_completed = True
-                    vc_overrides_dict['Dual Loyalty'][player_id - 1] = True
+            pass
         case 'Major Exporter':
             export_count = 0
             for transaction in rmdata_all_transaction_list:
@@ -1464,44 +1447,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                     vc_2_completed = True
                     break
         case 'Reliable Ally':
-            #load current longest alliance
-            longest_alliance_str = vc_overrides_dict["Reliable Ally"]
-            longest_alliance_str_list = longest_alliance_str.split(" ")
-            longest_alliance_duration = int(longest_alliance_str_list.pop())
-            #check if there is a new longest alliance
-            current_alliances_list = []
-            for select_diplomatic_relations_list in diplomatic_relations_masterlist:
-                player_id_1 = int(select_diplomatic_relations_list[0][-1])
-                for player_id_2, relation in enumerate(select_diplomatic_relations_list):
-                    if relation not in core.ignore_list:
-                        relation_data_list = relation.split()
-                        if relation_data_list[0] != 'At':
-                            alliance_type = f'{relation_data_list[0]} {relation_data_list[1]}'
-                            turn_founded = int(relation_data_list[2])
-                            nation_name_1 = nation_name_masterlist[player_id_1 - 1]
-                            nation_name_2 = nation_name_masterlist[player_id_2 - 1]
-                            alliance_name = f"{nation_name_1}-{nation_name_2} {alliance_type}"
-                            alliance_duration = current_turn_num - turn_founded
-                            current_alliances_list.append([alliance_name, alliance_duration])
-            for active_alliance in current_alliances_list:
-                alliance_name = active_alliance[0]
-                alliance_duration = active_alliance[1]
-                if alliance_duration > longest_alliance_duration:
-                    longest_alliance_str = f'{alliance_name} {alliance_duration}'
-                    longest_alliance_duration = alliance_duration
-                    vc_overrides_dict["Reliable Ally"] = longest_alliance_str
-                elif alliance_duration == longest_alliance_duration:
-                    longest_alliance_str = f'None {alliance_duration}'
-                    longest_alliance_duration = alliance_duration
-                    vc_overrides_dict["Reliable Ally"] = longest_alliance_str
-            #longest alliance check
-            if nation_name in longest_alliance_str:
-                vc_2_completed = True
-            #won war as secondary attacker/defender check
-            if wardata.query(nation_name, 'Secondary', 'Attacker', 'Attacker Victory'):
-                vc_2_completed = True
-            elif wardata.query(nation_name, 'Secondary', 'Defender', 'Defender Victory'):
-                vc_2_completed = True
+            pass
         case 'Road to Recovery':
             player_road_to_recovery_bool = vc_overrides_dict['Road to Recovery'][player_id - 1]
             if player_road_to_recovery_bool:

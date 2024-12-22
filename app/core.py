@@ -684,22 +684,33 @@ def erase_game(full_game_id):
     os.makedirs(f'gamedata/{full_game_id}/images')
     os.makedirs(f'gamedata/{full_game_id}/logs')
 
-def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
+def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: int) -> dict:
     '''
     Gathers all the needed data for a player's nation sheet data and spits it as a dict.
 
-    Parameters:
-    - game_id: The full game_id of the active game.
-    - player_id: The integer id of the active player.
-    - current_turn_num: An integer number representing the game's current turn number.
+    Params:
+        game_id: The full game_id of the active game.
+        player_id: The integer id of the active player.
+        current_turn_num: An integer number representing the game's current turn number.
+
+    Returns:
+        dict: player_information_dict.
     '''
     
-    #get core lists
+    # get game data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
-    RELATIONS_NAME_LIST = ['Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', ]
+    nation_name_list = []
+    for player in playerdata_list:
+        nation_name_list.append(player[1])
+    wardata = WarData(game_id)
+    alliance_table = AllianceTable(game_id)
+
+    # get information on player
     playerdata = playerdata_list[player_id - 1]
     player_research_list = ast.literal_eval(playerdata[26])
+
+    # build player info dict
     player_information_dict = {
         'Victory Conditions Data': {},
         'Resource Data': {},
@@ -709,8 +720,6 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
         'Upkeep Manager': {},
         'Misc Info': {},
     }
-
-    #get general nation info
     player_information_dict['Nation Name'] = playerdata[1]
     player_information_dict['Color'] = playerdata[2]
     player_information_dict['Government'] = playerdata[3]
@@ -719,7 +728,7 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Trade Fee'] = playerdata[6]
     player_information_dict['Status'] = playerdata[28]
     
-    #get victory condition data
+    # get victory condition data
     victory_conditions_list = ast.literal_eval(playerdata[8])
     player_information_dict['Victory Conditions Data']['Conditions List'] = victory_conditions_list
     vc_results = checks.check_victory_conditions(game_id, player_id, current_turn_num)
@@ -731,7 +740,7 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
             vc_colors.append('#ff0000')
     player_information_dict['Victory Conditions Data']['Color List'] = vc_colors
 
-    #resource data
+    # resource data
     player_information_dict['Resource Data']['Class List'] = ['dollars', 'political', 'technology', 'coal', 'oil', 'green', 'basic', 'common', 'advanced', 'uranium', 'rare']
     player_information_dict['Resource Data']['Name List'] = RESOURCE_LIST
     stored_list = []
@@ -746,7 +755,7 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Resource Data']['Income List'] = income_list
     player_information_dict['Resource Data']['Rate List'] = rate_list
 
-    #alliance data
+    # alliance data
     alliance_count, alliance_capacity = get_alliance_count(game_id, playerdata)
     player_information_dict['Alliance Data']['Name List'] = ALLIANCE_LIST
     alliance_colors = []
@@ -759,56 +768,56 @@ def get_data_for_nation_sheet(game_id, player_id, current_turn_num):
     player_information_dict['Alliance Data']['Header'] = f'Alliances ({alliance_count}/{alliance_capacity})'
     player_information_dict['Alliance Data']['Color List'] = alliance_colors
 
-    #missile data
+    # missile data
     missile_data = ast.literal_eval(playerdata[21])
     player_information_dict['Missile Data']['Standard'] = f'{missile_data[0]}x Standard Missiles'
     player_information_dict['Missile Data']['Nuclear'] = f'{missile_data[1]}x Nuclear Missiles'
 
-    #relations data
+    # relations data
     # to do - stop using relations data, just call is_at_war and is_allied instead
-    relations_data = {}
-    relation_colors = []
-    relations_status_list = []
-    relations_data = ast.literal_eval(playerdata[22])
-    for index, relation in enumerate(relations_data):
-        if index == 0:
+    relation_colors = ['#000000'] * 10
+    relations_status_list = ['-'] * 10
+    for index, nation_name in enumerate(nation_name_list):
+        player_id_2 = nation_name_list.index(nation_name)
+        if nation_name == player_information_dict['Nation Name']:
             continue
-        match relation:
-            case "Allied":
-                relation_colors.append('#3c78d8')
-            case "Neutral":
-                relation_colors.append('#00ff00')
-            case "At War":
-                relation_colors.append('#ff0000')
-            case "-":
-                relation_colors.append('#000000')
-        relations_status_list.append(relation)
-    player_information_dict['Relations Data']['Name List'] = RELATIONS_NAME_LIST
+        elif wardata.are_at_war(player_id, player_id_2):
+            relation_colors[index] = '#ff0000'
+            relations_status_list[index] = "At War"
+        elif alliance_table.are_allied(player_information_dict['Nation Name'], nation_name):
+            relation_colors[index] = '#3c78d8'
+            relations_status_list[index] = "Allied"
+        else:
+            relation_colors[index] = '#00ff00'
+            relations_status_list[index] = 'Neutral'
+    while len(nation_name_list) < 10:
+        nation_name_list.append('-')
+    player_information_dict['Relations Data']['Name List'] = nation_name_list
     player_information_dict['Relations Data']['Color List'] = relation_colors
     player_information_dict['Relations Data']['Status List'] = relations_status_list
 
-    #upkeep manager data
+    # upkeep manager data
     upkeep_data = ast.literal_eval(playerdata[23])
     player_information_dict['Upkeep Manager']['Coal'] = upkeep_data[0]
     player_information_dict['Upkeep Manager']['Oil'] = upkeep_data[1]
     player_information_dict['Upkeep Manager']['Green Energy'] = upkeep_data[2]
     player_information_dict['Upkeep Manager']['Total'] = upkeep_data[3]
 
-    #misc info data
+    # misc info data
     misc_info = ast.literal_eval(playerdata[24])
     player_information_dict['Misc Info']['Capital Resource'] = misc_info[0]
     player_information_dict['Misc Info']['Owned Regions'] = misc_info[1]
     player_information_dict['Misc Info']['Occupied Regions'] = misc_info[2]
     player_information_dict['Misc Info']['Undeveloped Regions'] = misc_info[3]
 
-    #income details
+    # income details
     income_details = ast.literal_eval(playerdata[25])
     for i in range(len(income_details)):
         income_details[i] = income_details[i].replace('&Tab;', '&nbsp;&nbsp;&nbsp;&nbsp;')
     income_str = "<br>".join(income_details)
     player_information_dict['Income Details'] = income_str
 
-    #research details
+    # research details
     research_details = player_research_list
     research_str = "<br>".join(research_details)
     player_information_dict['Research Details'] = research_str
@@ -1061,9 +1070,8 @@ def get_alliance_count(game_id, playerdata):
     
     alliance_count = 0
     alliance_table = AllianceTable(game_id)
-    for alliance in alliance_table:
-        if nation_name in alliance.current_members and alliance.type != "Non-Aggression Pact":
-            alliance_count += 1
+    alliance_report_dict = alliance_table.report(nation_name)
+    alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
     
     alliance_limit = 2
     if 'International Cooperation' in player_research_list:
@@ -1077,20 +1085,6 @@ def get_alliance_count(game_id, playerdata):
         alliance_limit += 1
 
     return alliance_count, alliance_limit
-
-def get_alliances(relations_data_list, requested_alliance_type):
-
-    '''Takes a player's relations data. Returns all player ids with the specified alliance with that player.'''
-    player_id_list = []
-    for index, relation in enumerate(relations_data_list):
-        if relation not in ignore_list:
-            relation_data_list = relation.split()
-            if relation_data_list[0] != 'At':
-                alliance_type = f'{relation_data_list[0]} {relation_data_list[1]}'
-                if alliance_type == requested_alliance_type:
-                    selected_nation_id = index
-                    player_id_list.append(selected_nation_id)
-    return player_id_list
 
 def get_subjects(playerdata_list, overlord_nation_name, subject_type):
     '''Returns a list of all player ids that are subjects of the given nation name.'''

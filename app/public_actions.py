@@ -392,10 +392,6 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
     request_list = ['Dollars', 'Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
     nation_info_masterlist = core.get_nation_info(playerdata_list)
-    relations_data_masterlist = []
-    for player in playerdata_list:
-        relations_data = ast.literal_eval(player[22])
-        relations_data_masterlist.append(relations_data)
 
     #define important lists
     base_prices = [5, 3, 3, 5, 5, 10, 10, 20]
@@ -1040,23 +1036,24 @@ def pay_for_region(region:Region, economy_masterlist, nation_info_masterlist, pl
 def resolve_research_actions(research_action_list, game_id, player_action_logs):
     '''Resolves all research actions.'''
     
-    # get needed data
+    # get game data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     regdata_filepath = f'gamedata/{game_id}/regdata.json'
-    with open(regdata_filepath, 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-    # get scenario data
+    alliance_table = AllianceTable(game_id)
     agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    with open(regdata_filepath, 'r') as json_file:
+        regdata_dict = json.load(json_file)
 
     # get needed economy information from each player
     request_list = ['Political Power', 'Technology']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
     nation_info_masterlist = core.get_nation_info(playerdata_list)
+    nation_name_list = []
     research_masterlist = []
     for player in playerdata_list:
+        nation_name_list.append(player[1])
         player_research_list = ast.literal_eval(player[26])
         research_masterlist.append(player_research_list)
 
@@ -1150,15 +1147,17 @@ def resolve_research_actions(research_action_list, game_id, player_action_logs):
             cost += agenda_cost_adjustment[agenda_type][player_fp]
         elif tech_type == "Technology":
             # research agreement deductions
-            research_agreement_player_ids = core.get_alliances(ast.literal_eval(playerdata_list[player_id - 1][22]), 'Research Agreement')
-            if research_agreement_player_ids != []:
-                discount = 1
-                for select_player_id in research_agreement_player_ids:
-                    if research_name in research_masterlist[select_player_id - 1]:
-                        discount -= 0.2
-                if discount != 1:
-                    cost *= discount
-                    cost = int(cost)
+            sale_price = 1.0
+            research_agreement_allies = alliance_table.get_allies(nation_name, "Research Agreement")
+            for ally_name in research_agreement_allies:
+                ally_player_id = nation_name_list.index(ally_name) + 1
+                if research_name in research_masterlist[ally_player_id - 1]:
+                    sale_price -= 0.2
+            if sale_price < 0:
+                sale_price = 0.2
+            if sale_price != 1.0:
+                cost *= sale_price
+                cost = int(cost)
         if (stockpile - cost) < 0:
             player_action_log.append(f'Failed to research {research_name}. Not enough {resource}.')
             player_action_logs[player_id - 1] = player_action_log

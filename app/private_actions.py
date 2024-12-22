@@ -234,13 +234,10 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
     for nation_info in nation_info_masterlist:
         nation_name_list.append(nation_info[0])
     military_capacity_masterlist = []
-    relations_data_masterlist = []
     research_masterlist = []
     for player in playerdata_list:
         player_military_capacity = player[5]
         military_capacity_masterlist.append(player_military_capacity)
-        relations_data = ast.literal_eval(player[22])
-        relations_data_masterlist.append(relations_data)
         player_research_list = ast.literal_eval(player[26])
         research_masterlist.append(player_research_list)
 
@@ -336,37 +333,9 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
         notifications.append(f'{attacker_nation_name} declared war on {defender_nation_name}.', 3)
         player_action_log.append(f'Declared war on {defender_nation_name}.')
         player_action_logs[attacker_player_id - 1] = player_action_log
-
-        #update relations
-        combatant_list = wardata.get_combatant_names(war_name)
-        attacker_ids = []
-        defender_ids = []
-        for nation_name in combatant_list:
-            player_id = nation_name_list.index(nation_name) + 1
-            war_role = wardata.get_war_role(nation_name, war_name)
-            if 'Attacker' in war_role:
-                attacker_ids.append(player_id)
-            elif 'Defender' in war_role:
-                defender_ids.append(player_id)
-        for nation_name in combatant_list:
-            player_id = nation_name_list.index(nation_name) + 1
-            war_role = wardata.get_war_role(nation_name, war_name)
-            match war_role:
-                case 'Main Attacker' | 'Secondary Attacker':
-                    relations_data = relations_data_masterlist[player_id - 1]
-                    for enemy_id in defender_ids:
-                        relations_data[enemy_id] = 'At War'
-                    relations_data_masterlist[player_id - 1] = relations_data
-                case 'Main Defender' | 'Secondary Defender':
-                    relations_data = relations_data_masterlist[player_id - 1]
-                    for enemy_id in attacker_ids:
-                        relations_data[enemy_id] = 'At War'
-                    relations_data_masterlist[player_id - 1] = relations_data
         
 
     #Update playerdata.csv
-    for index, player in enumerate(playerdata_list):
-        player[22] = str(relations_data_masterlist[index])
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
@@ -631,11 +600,9 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
 
     # get needed player info
     nation_name_list = []
-    relations_data_masterlist = []
     research_masterlist = []
     for playerdata in playerdata_list:
         nation_name_list.append(playerdata[1])
-        relations_data_masterlist.append(ast.literal_eval(playerdata[22]))
         research_masterlist.append(ast.literal_eval(playerdata[26]))
 
     # determine movement order

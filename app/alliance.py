@@ -1,4 +1,5 @@
 import json
+from typing import Union, Tuple, List
 
 from app import core
 
@@ -12,7 +13,7 @@ class Alliance:
         self.turn_ended: int = alliance_data["turnEnded"]
         self.current_members: dict = alliance_data["currentMembers"]
         self.founding_members: dict = alliance_data["foundingMembers"]
-        self.truces: dict = alliance_data["allianceTruces"]
+        self.former_members: dict = alliance_data["formerMembers"]
 
         if self.turn_ended == 0:
             self.is_active: bool = True
@@ -37,7 +38,7 @@ class Alliance:
             "turnEnded": 0,
             "currentMembers": {},
             "foundingMembers": {},
-            "allianceTruces": {}
+            "formerMembers": {}
         }
 
         for nation_name in founding_members:
@@ -82,6 +83,32 @@ class AllianceTable:
         for alliance_name, alliance_data in self.data.items():
             yield Alliance(alliance_name, alliance_data, self.game_id)
 
+    def __len__(self):
+        return len(self.data)
+
+    def save(self, alliance: Alliance) -> None:
+        """
+        """
+
+        alliance_data = {
+            "allianceType": alliance.type,
+            "turnCreated": alliance.turn_created,
+            "turnEnded": alliance.turn_ended,
+            "currentMembers": alliance.current_members,
+            "foundingMembers": alliance.founding_members,
+            "formerMembers": alliance.former_members
+        }
+
+        self.data[alliance.name] = alliance_data
+
+        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
+        with open(gamedata_filepath, 'r') as json_file:
+            gamedata_dict = json.load(json_file)
+        
+        gamedata_dict["alliances"] = self.data
+        with open(gamedata_filepath, 'w') as json_file:
+            json.dump(gamedata_dict, json_file, indent=4)
+
     def get(self, alliance_name: str) -> Alliance:
         """
         Retrieves an Alliance from the AllianceTable.
@@ -106,26 +133,68 @@ class AllianceTable:
         self.save(new_alliance)
 
         return new_alliance
-
-    def save(self, alliance: Alliance) -> None:
+    
+    def are_allied(self, nation_name_1: str, nation_name_2: str) -> bool:
         """
         """
 
-        alliance_data = {
-            "allianceType": alliance.type,
-            "turnCreated": alliance.turn_created,
-            "turnEnded": alliance.turn_ended,
-            "currentMembers": alliance.current_members,
-            "foundingMembers": alliance.founding_members,
-            "allianceTruces": alliance.truces
-        }
+        for alliance in self:
+            if (
+                alliance.is_active
+                and nation_name_1 in alliance.current_members
+                and nation_name_2 in alliance.current_members
+            ):
+                return True
 
-        self.data[alliance.name] = alliance_data
+        return False
+    
+    def report(self, nation_name: str) -> dict:
+        """
+        """
 
-        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
-        with open(gamedata_filepath, 'r') as json_file:
-            gamedata_dict = json.load(json_file)
+        alliance_type_dict = {}
+        alliance_type_dict["Total"] = 0
+        alliance_type_dict["Non-Aggression Pact"] = 0
+        alliance_type_dict["Defense Pact"] = 0
+        alliance_type_dict["Trade Agreement"] = 0
+        alliance_type_dict["Research Agreement"] = 0
+
+        for alliance in self:
+            if alliance.is_active and nation_name in alliance.current_members:
+                alliance_type_dict["Total"] += 1
+                alliance_type_dict[alliance.type] += 1
         
-        gamedata_dict["alliances"] = self.data
-        with open(gamedata_filepath, 'w') as json_file:
-            json.dump(gamedata_dict, json_file, indent=4)
+        return alliance_type_dict
+    
+    def get_allies(self, nation_name: str, type_to_search = 'ALL') -> list:
+        """
+        """
+
+        allies_set = set()
+
+        for alliance in self:
+            if alliance.is_active and nation_name in alliance.current_members:
+                if type_to_search != 'ALL' and type_to_search != alliance.type:
+                    continue
+                for alliance_member_name in alliance.current_members:
+                    if alliance_member_name != nation_name:
+                        allies_set.add(alliance_member_name)
+
+        allies_list = list(allies_set)
+        return allies_list
+    
+    def get_longest_alliance(self) -> Tuple[str, int]:
+        """
+        """
+
+        longest_alliance_name = None
+        longest_alliance_duration = 0
+
+        for alliance in self:
+            if alliance.age > longest_alliance_duration:
+                longest_alliance_name = alliance.name
+                longest_alliance_duration = alliance.age
+
+        return longest_alliance_name, longest_alliance_duration
+
+

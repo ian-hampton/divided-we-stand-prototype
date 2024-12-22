@@ -9,6 +9,8 @@ import random
 from typing import Union, Tuple, List
 
 from app import core
+from app.alliance import AllianceTable
+from app.alliance import Alliance
 
 
 class WarData:
@@ -274,6 +276,7 @@ class WarData:
         playerdata_list = core.read_file(playerdata_filepath, 1)
         trucedata_filepath = f'gamedata/{self.game_id}/trucedata.csv'
         trucedata_list = core.read_file(trucedata_filepath, 1)
+        alliance_table = AllianceTable(self.game_id)
 
         # get information from playerdata
         main_attacker_name = playerdata_list[main_attacker_id - 1][1]
@@ -307,10 +310,9 @@ class WarData:
         self.wardata_dict[war_name]["combatants"][main_defender_name] = combatant_dict
 
         # call in main attacker allies
-        # possible allies: defensive pacts, puppet states
+        # possible allies: puppet states
         puppet_state_id_list = core.get_subjects(playerdata_list, main_attacker_name, "Puppet State")
-        defense_pact_id_list = core.get_alliances(attacker_relations_data, "Defense Pact")
-        ally_player_ids = set(puppet_state_id_list) | set(defense_pact_id_list)
+        ally_player_ids = set(puppet_state_id_list)
         for player_id in ally_player_ids:
             nation_name = playerdata_list[player_id - 1][1]
             allied_with_md = False # to be added
@@ -324,7 +326,10 @@ class WarData:
         # call in main defender allies
         # possible allies: defensive pacts, puppet states, overlord
         puppet_state_id_list = core.get_subjects(playerdata_list, main_defender_name, "Puppet State")
-        defense_pact_id_list = core.get_alliances(defender_relations_data, "Defense Pact")
+        defense_allies = alliance_table.get_allies(nation_name, "Defense Pact")
+        defense_pact_id_list = []
+        for ally_name in defense_allies:
+            defense_pact_id_list.append(nation_name_list.index(nation_name) + 1)
         ally_player_ids = set(puppet_state_id_list) | set(defense_pact_id_list)
         for player_id in ally_player_ids:
             allied_with_ma = False # to be added
