@@ -17,6 +17,8 @@ from app import palette
 from app.wardata import WarData
 from app.testing import map_tests
 from app.notifications import Notifications
+from app.alliance import AllianceTable
+from app.alliance import Alliance
 
 #ENVIROMENT IMPORTS
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
@@ -1065,12 +1067,13 @@ def resource_market(full_game_id):
 def announcements(full_game_id):
 
     # get game data
-    wardata = WarData(full_game_id)
-    notifications = Notifications(full_game_id)
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     trucedata_list = core.read_file(trucedata_filepath, 1)
+    alliance_table = AllianceTable(full_game_id)
+    wardata = WarData(full_game_id)
+    notifications = Notifications(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -1133,6 +1136,18 @@ def announcements(full_game_id):
             diplomacy_list.append(f"{truce_name} truce through turn {truce_end_turn + 1}.")
         if truce_end_turn < current_turn_num:
             diplomacy_list.append(f'{truce_name} truce has expired.')
+    # get all ongoing alliances
+    for alliance in alliance_table:
+        if alliance.is_active:
+            if alliance.turn_created == current_turn_num - 1:
+                diplomacy_list.append(f"{alliance.name} has formed.")
+            for alliance_member_name, turn_joined in alliance.current_members.items():
+                if turn_joined == current_turn_num - 1:
+                    diplomacy_list.append(f"{alliance_member_name} has joined the {alliance.name}.")
+            for alliance_member_name, turn_left in alliance.former_members.items():
+                if turn_left == current_turn_num - 1:
+                    diplomacy_list.append(f"{alliance_member_name} has left the {alliance.name}.")
+    # format diplomacy string
     diplomacy_string = "<br>".join(diplomacy_list)
     diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
 
@@ -1151,8 +1166,12 @@ def announcements(full_game_id):
 
     # Build Statistics String
     statistics_list = []
-    statistics_list.append(f"Total alliances: ")
-    statistics_list.append(f"Longest alliance: ")
+    statistics_list.append(f"Total alliances: {len(alliance_table)}")
+    longest_alliance_name, longest_alliance_duration = alliance_table.get_longest_alliance()
+    if longest_alliance_name is not None:
+        statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
+    else:
+        statistics_list.append(f"Longest alliance: N/A")
     statistics_list.append(f"Total wars: {wardata.war_count()}")
     statistics_list.append(f"Units lost in war: {wardata.unit_casualties()}")
     statistics_list.append(f"Improvements destroyed in war: {wardata.improvement_casualties()}")
