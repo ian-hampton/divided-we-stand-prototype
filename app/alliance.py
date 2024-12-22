@@ -3,6 +3,7 @@ from typing import Union, Tuple, List
 
 from app import core
 
+
 class Alliance:
     
     def __init__(self, alliance_name: str, alliance_data: dict, game_id: str):
@@ -26,8 +27,18 @@ class Alliance:
         else:
             self.age: int = self.turn_ended - self.turn_created
     
-    def build(alliance_name: str, alliance_type: str, founding_members: list, game_id: str):
+    def build(alliance_name: str, alliance_type: str, founding_members: list[str], game_id: str) -> "Alliance":
         """
+        Creates a new Alliance instance from scratch when called by AllianceTable factory method.
+
+        Params:
+            alliance_name (str): Name of alliance to create.
+            alliance_type (str): Type of alliance.
+            founding_members (list): List of nations who are founding the alliance.
+            game_id (str): Game ID string.
+
+        Returns:
+            Alliance: A created alliance.
         """
 
         current_turn_num = core.get_current_turn_num(int(game_id[-1]))
@@ -62,6 +73,7 @@ class Alliance:
         """
         pass
 
+
 class AllianceTable:    
     
     def __init__(self, game_id):
@@ -88,6 +100,10 @@ class AllianceTable:
 
     def save(self, alliance: Alliance) -> None:
         """
+        Saves an alliance to the AllianceTable and gamedata.json.
+
+        Params:
+            alliance (Alliance): Alliance to save/update.
         """
 
         alliance_data = {
@@ -108,7 +124,26 @@ class AllianceTable:
         gamedata_dict["alliances"] = self.data
         with open(gamedata_filepath, 'w') as json_file:
             json.dump(gamedata_dict, json_file, indent=4)
+    
+    def create(self, alliance_name: str, alliance_type: str, founding_members: list[str]) -> Alliance:
+        """
+        Factory method to create new Alliance instance.
+        Input validation is done by the public action function that calls this method.
 
+        Params:
+            alliance_name (str): Name of alliance to create.
+            alliance_type (str): Type of alliance to create.
+            founding_members (list): List of nation names that are founders 
+
+        Returns:
+            Alliance: Newly created alliance.
+        """
+
+        new_alliance = Alliance.build(alliance_name, alliance_type, founding_members, self.game_id)
+        self.save(new_alliance)
+
+        return new_alliance
+    
     def get(self, alliance_name: str) -> Alliance:
         """
         Retrieves an Alliance from the AllianceTable.
@@ -125,17 +160,16 @@ class AllianceTable:
 
         return None
     
-    def create(self, alliance_name: str, alliance_type: str, founding_members: list) -> Alliance:
-        """
-        """
-
-        new_alliance = Alliance.build(alliance_name, alliance_type, founding_members, self.game_id)
-        self.save(new_alliance)
-
-        return new_alliance
-    
     def are_allied(self, nation_name_1: str, nation_name_2: str) -> bool:
         """
+        Checks if two players are a part of at least one active alliance together.
+
+        Params:
+            nation_name_1 (str): First nation name string.
+            nation_name_2 (str): Second nation name string.
+
+        Returns:
+            bool: True if an alliance found, False otherwise.
         """
 
         for alliance in self:
@@ -150,6 +184,13 @@ class AllianceTable:
     
     def report(self, nation_name: str) -> dict:
         """
+        Creates a dictionary containting counts of a specific player's alliances.
+
+        Params:
+            nation_name (str): Nation name string.
+        
+        Returns:
+            dict: Dictionary of alliance counts.
         """
 
         alliance_type_dict = {}
@@ -168,6 +209,14 @@ class AllianceTable:
     
     def get_allies(self, nation_name: str, type_to_search = 'ALL') -> list:
         """
+        Creates a list of all nations a player is allied with, no duplicates.
+
+        Params:
+            nation_name (str): Nation name string.
+            type_to_search (str): Type of alliance to check or 'ALL' to check all aliances.
+        
+        Returns:
+            list: List of allies found.
         """
 
         allies_set = set()
@@ -185,10 +234,17 @@ class AllianceTable:
     
     def get_longest_alliance(self) -> Tuple[str, int]:
         """
+        Identifies the longest alliance of the game.
+
+        Returns:
+            tuple:
+                str: Name of longest alliance or None if no alliances found.
+                int: Length of the longest alliance.
+
         """
 
         longest_alliance_name = None
-        longest_alliance_duration = 0
+        longest_alliance_duration = -1
 
         for alliance in self:
             if alliance.age > longest_alliance_duration:
