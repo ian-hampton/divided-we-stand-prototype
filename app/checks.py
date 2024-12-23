@@ -97,32 +97,35 @@ def ratio_check(game_id, player_id):
             else:
                 break
 
-def update_military_capacity(game_id):
-    '''Updates a player's military capacity.'''
+def update_military_capacity(game_id: str) -> None:
+    """
+    Updates a player's military capacity
+    """
 
-    #define core lists
+    # get game data
+    alliance_table = AllianceTable(game_id)
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    #get needed info from players
+    # get player info
     misc_info_masterlist = []
     status_masterlist = []
     for playerdata in playerdata_list:
         misc_info_list = ast.literal_eval(playerdata[24])
         misc_info_masterlist.append(misc_info_list)
         status_masterlist.append(playerdata[28])
-    
 
-    #Procedure
-    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-    improvement_name_list = sorted(improvement_data_dict.keys())
+    # procedure
     military_capacity_gross = []
     military_capacity_output = []
     for index, playerdata in enumerate(playerdata_list):
+        # get player info
         player_id = index + 1
         nation_info_masterlist = core.get_nation_info(playerdata_list)
         player_name = nation_info_masterlist[player_id - 1][0]
@@ -130,21 +133,44 @@ def update_military_capacity(game_id):
         player_research_list = ast.literal_eval(playerdata[26])
         player_improvement_count_list = ast.literal_eval(playerdata[27])
         nation_status = status_masterlist[player_id - 1]
+        # create military capacity dictionary
+        capacity_dict = {
+            "Boot Camps": {
+                "Count": 0,
+                "Value": 2
+            },
+            "Capitals": {
+                "Count": 0,
+                "Value": 0
+            },
+            "Defensive Improvements": {
+                "Count": 0,
+                "Value": 0
+            },
+            "Defense Agreements": {
+                "Count": 0,
+                "Value": 2
+            }
+        }
+        # count contributors to military capacity
         defensive_improvements_list = []
         for key, value in improvement_data_dict.items():
             if value.get("Health") != 99:
                 defensive_improvements_list.append(key)
-        di_count = 0
         for defensive_improvement_name in defensive_improvements_list:
-            if defensive_improvement_name == "Boot Camp":
-                bc_index = improvement_name_list.index(defensive_improvement_name)
-                bc_count = player_improvement_count_list[bc_index]
-            elif defensive_improvement_name == 'Capital':
-                cap_index = improvement_name_list.index(defensive_improvement_name)
-                cap_count = player_improvement_count_list[cap_index]
-            else:
-                di_index = improvement_name_list.index(defensive_improvement_name)
-                di_count += player_improvement_count_list[di_index]
+            match defensive_improvement_name:
+                case "Boot Camp":
+                    bc_index = improvement_name_list.index(defensive_improvement_name)
+                    capacity_dict["Boot Camps"]["Count"] = player_improvement_count_list[bc_index]
+                case "Capital":
+                    cap_index = improvement_name_list.index(defensive_improvement_name)
+                    capacity_dict["Capitals"]["Count"] = player_improvement_count_list[cap_index]
+                case _:
+                    di_index = improvement_name_list.index(defensive_improvement_name)
+                    capacity_dict["Defensive Improvements"]["Count"] += player_improvement_count_list[di_index]
+        for alliance in alliance_table:
+            if alliance.is_active and player_name in alliance.current_members and alliance.type == "Defense Agreement":
+                capacity_dict["Defensive Improvements"]["Count"] += len(alliance.current_members)
         
         #Calculate Military Capacity
         used_military_capacity = 0
@@ -154,26 +180,25 @@ def update_military_capacity(game_id):
                 used_military_capacity += 1
         
         if 'Draft' in player_research_list:
-            bc_capacity_value = 3
-        else:
-            bc_capacity_value = 2
-        
-        if 'Mandatory Service' in player_research_list:
-            di_capacity_value = 0.5
-        else:
-            di_capacity_value = 0
+            capacity_dict["Boot Camps"]["Value"] += 1
 
         if 'Defensive Tactics' in player_research_list:
-            cap_capacity_value = 2
-        else:
-            cap_capacity_value = 0
+            capacity_dict["Capitals"]["Value"] += 2
         
+        if 'Mandatory Service' in player_research_list:
+            capacity_dict["Defensive Improvements"]["Value"] += 0.5
+
         if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
             if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Conflict":
-                bc_capacity_value += 1
+                capacity_dict["Boot Camps"]["Value"] += 1
         
         # calculate final military capacity
-        military_capacity_total = (bc_count * bc_capacity_value) + (di_count * di_capacity_value) + (cap_count * cap_capacity_value)
+        military_capacity_total = (
+            (capacity_dict["Boot Camps"]["Count"] * capacity_dict["Boot Camps"]["Value"])
+            + (capacity_dict["Capitals"]["Count"] * capacity_dict["Capitals"]["Value"])
+            + (capacity_dict["Defensive Improvements"]["Count"] * capacity_dict["Defensive Improvements"]["Value"])
+            + (capacity_dict["Defense Agreements"]["Count"] * capacity_dict["Defense Agreements"]["Value"])
+        )
         military_capacity_gross.append(military_capacity_total)
         #gain military capacity bonus from your puppet states
         for j, nation_status in enumerate(status_masterlist):
@@ -194,8 +219,6 @@ def update_military_capacity(game_id):
         #apply military capacity modifiers
         if mct_modifier != 1.0:
             military_capacity_total *= mct_modifier
-        elif mct_modifier < 0:
-            military_capacity_total *= 0
         military_capacity_total = round(military_capacity_total, 2)
         military_capacity_output.append(f'{used_military_capacity}/{military_capacity_total}')
 
@@ -325,33 +348,37 @@ def update_misc_info(game_id, player_id):
     with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
         json.dump(vc_overrides_dict, json_file, indent=4)
 
-def update_trade_tax(game_id, player_id):
-    '''
+def update_trade_tax(game_id: str, player_id: int) -> None:
+    """
     Calculate's a player's trade tax.
-    '''
+    """
     
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    change = 0
+    trade_index = 3
+    trade_fee_list = ["1:5","1:4", "1:3", "1:2", "1:1", "2:1", "3:1"]
+    # dollars : resources
     player_name = playerdata_list[player_id - 1][1]
     player_research = ast.literal_eval(playerdata_list[player_id - 1][26])
 
     # check if Improved Logistics in player research
     if 'Improved Logistics' in player_research:
-        change -= 1
+        trade_index -= 1
     # if threat containment applies to target nation count it
     if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
         if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
-            change += 1
+            trade_index += 1
 
-    if change >= 0:
-        trade_tax_str = f"{change + 1}:1"
-    elif change < 0:
-        trade_tax_str = f"1:{abs(change) + 1}"
+    trade_tax_str = trade_fee_list[trade_index]
     playerdata_list[player_id - 1][6] = trade_tax_str
+    
+    with open(playerdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.player_data_header)
+        writer.writerows(playerdata_list)
 
 def update_stockpile_limits(game_id, player_id):
     '''

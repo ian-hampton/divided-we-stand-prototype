@@ -1083,15 +1083,15 @@ def get_alliance_count(game_id: str, playerdata: list[list]) -> Tuple[int, int]:
     alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
     
     alliance_limit = 2
-    if 'International Cooperation' in player_research_list:
-        alliance_limit += 1
-    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
-        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
-            alliance_limit += 1
     if playerdata[3] == 'Republic':
         alliance_limit += 1
     if 'Power Broker' in player_research_list:
         alliance_limit += 1
+    if 'Improved Logistics' in player_research_list:
+        alliance_limit += 1
+    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
+        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
+            alliance_limit += 1
 
     return alliance_count, alliance_limit
 
@@ -1385,8 +1385,9 @@ def get_nation_info(playerdata_list):
         player_military_capacity = player[5]
         player_trade_fee = player[6]
         if player_trade_fee != 'No Trade Fee':
-            player_trade_fee = player_trade_fee[0]
-            player_trade_fee = int(player_trade_fee)
+            n = int(player_trade_fee[0])
+            d = int(player_trade_fee[2])
+            player_trade_fee = float(n / d)
         else:
             player_trade_fee = 0
         nation_info_list = [player_nation_name, player_color, player_government, player_fp, player_military_capacity, player_trade_fee]

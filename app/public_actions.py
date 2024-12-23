@@ -169,26 +169,34 @@ def resolve_alliance_joins(alliance_join_list: list, game_id: str, player_action
 
         # get alliance
         alliance = alliance_table.get(alliance_name)
-        if alliance is None:
+        if alliance is None or not alliance.is_active:
             player_action_log.append(f'Failed to join {alliance_name}. Alliance not found.')
             player_action_logs[player_id - 1] = player_action_log
             continue
 
         # required research check
-        research_check_success = True
-        match alliance.type:
-            case 'Non-Aggression Pact':
-                if 'Peace Accords' not in player_research_list:
-                   research_check_success = False 
-            case 'Defense Pact':
-                if 'Defensive Agreements' not in player_research_list:
-                   research_check_success = False 
-            case 'Trade Agreement':
-                if 'Trade Routes' not in player_research_list:
-                   research_check_success = False 
-            case 'Research Agreement':
-                if 'Research Exchange' not in player_research_list:
-                   research_check_success = False 
+        research_check_success = False
+        for ally_name in alliance.founding_members:
+            if ally_name in alliance.current_members:
+                ally_id = nation_name_list.index(ally_name) + 1
+                ally_research_list = research_masterlist[ally_id - 1]
+                if "Open Arms" in ally_research_list:
+                    research_check_success = True
+                    break
+        if not research_check_success:
+            match alliance.type:
+                case 'Non-Aggression Pact':
+                    if 'Peace Accords' in player_research_list:
+                        research_check_success = True
+                case 'Defense Pact':
+                    if 'Defensive Agreements' in player_research_list:
+                        research_check_success = True
+                case 'Trade Agreement':
+                    if 'Trade Routes' in player_research_list:
+                        research_check_success = True
+                case 'Research Agreement':
+                    if 'Research Exchange' in player_research_list:
+                        research_check_success = True
         if not research_check_success:
             player_action_log.append(f'Failed to join {alliance_name}. You do not have the required foreign policy agenda.')
             player_action_logs[player_id - 1] = player_action_log
