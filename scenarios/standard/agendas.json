@@ -24,7 +24,7 @@
         "Agenda Type": "Diplomacy",
         "Prerequisite": "Power Broker",
         "Cost": 15,
-        "Description": "Other nations no longer need the required agenda to join alliances that you have already founded.",
+        "Description": "Other nations no longer need the required agenda to join alliances that you have founded.",
         "Location": "A3"
     },
     "Trade Routes": {
@@ -45,7 +45,7 @@
         "Agenda Type": "Economy",
         "Prerequisite": "Research Exchange",
         "Cost": 15,
-        "Description": "Trade fee lowered to 1 dollar for every two resources.",
+        "Description": "Your nation's trade fee is lowered to 1:3. +1 alliance capacity.",
         "Location": "B2"
     },
     "Efficient Bureaucracy": {
