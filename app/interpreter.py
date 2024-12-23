@@ -131,13 +131,13 @@ def validate(action, action_type, library, regdata_dict):
             test_list = [check_justification_name(action, library), check_nation_name(action, library)]
         case 'Launch':
             test_list = [check_missile_name(action, library), check_region_ids(region_id_list, regdata_dict)]
-        case 'Event':
-            test_list = []
         case 'Alliance Create':
-            test_list = []
+            test_list = [check_alliance_type(action, library)]
         case 'Alliance Join':
-            test_list = []
+            test_list = [check_alliance_name(action, library)]
         case 'Alliance Leave':
+            test_list = [check_alliance_name(action, library)]
+        case 'Event':
             test_list = []
         case _:
             return False
@@ -258,6 +258,12 @@ def check_improvement_name(action, library):
     return False
 
 def check_alliance_name(action, library):
+    for alliance_name in library['Alliance name List']:
+        if alliance_name in action:
+            return True
+    return False
+
+def check_alliance_type(action, library):
     for alliance_type in library['Alliance Type List']:
         if alliance_type in action:
             return True

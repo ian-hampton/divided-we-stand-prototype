@@ -284,5 +284,3 @@ class AllianceTable:
                 longest_alliance_duration = alliance.age
 
         return longest_alliance_name, longest_alliance_duration
-
-

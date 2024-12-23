@@ -435,6 +435,9 @@ def update_income(game_id, current_turn_num):
     #define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    alliance_table = AllianceTable(game_id)
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
@@ -712,7 +715,35 @@ def update_income(game_id, current_turn_num):
                 if pp_from_lease > 0:
                     gross_income_masterlist[player_id - 1][pp_index] += pp_from_lease
                     income_strings_masterlist[player_id - 1][pp_index] += [f'+{pp_from_lease} from events.']
+
+        # dollars from trade agreements
+        for alliance in alliance_table:
+            if alliance.is_active and nation_name in alliance.current_members and alliance.type == "Trade Agreement":
+                total = 0.0
+                for ally_name in alliance.current_members:
+                    ally_id = nation_name_list.index(ally_name) + 1
+                    ally_improvement_count_list = ast.literal_eval(playerdata_list[ally_id - 1][27])
+                    total += ally_improvement_count_list[improvement_name_list.index("City")]
+                    total += ally_improvement_count_list[improvement_name_list.index("Central Bank")]
+                    total += ally_improvement_count_list[improvement_name_list.index("Capital")]
+                if total > 0.0:
+                    gross_income_masterlist[player_id - 1][dollars_index] += total * 0.5
+                    income_strings_masterlist[player_id - 1][dollars_index] += [f'&Tab;+{total * 0.5} from {alliance.name}.']
+
+        # tech from research agreements
+        for alliance in alliance_table:
+            if alliance.is_active and nation_name in alliance.current_members and alliance.type == "Research Agreement":
+                tech_set = set()
+                for ally_name in alliance.current_members:
+                    ally_id = nation_name_list.index(ally_name) + 1
+                    ally_research_list = ast.literal_eval(playerdata_list[ally_id - 1][26])
+                    tech_set.update(ally_research_list)
+                if len(tech_set) > 0:
+                    print(tech_set)
+                    gross_income_masterlist[player_id - 1][tech_index] += len(tech_set) * 0.2
+                    income_strings_masterlist[player_id - 1][tech_index] += [f'&Tab;+{len(tech_set) * 0.2} from {alliance.name}.']
     
+
     #Apply Rate to Gross Income
     for index, player in enumerate(playerdata_list):
         player_id = index + 1
@@ -875,7 +906,9 @@ def update_income(game_id, current_turn_num):
         for category, inner_dict in income_string_dic.items():
             j = request_list.index(category)
             for string, value in inner_dict.items():
-                exclude_substrings = ['upkeep', 'income rate', 'Puppet State', 'Puppet States', 'from relative']
+                exclude_substrings = ['upkeep', 'income rate', 'Puppet State', 'Puppet States', 'from relative', 'trade']
+                for alliance in alliance_table:
+                    exclude_substrings.append(alliance.name)
                 if all(substring not in string for substring in exclude_substrings):
                     output_str = f'{string} [{value}x]'
                 else:

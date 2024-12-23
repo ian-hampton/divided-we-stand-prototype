@@ -180,7 +180,7 @@ def resolve_alliance_joins(alliance_join_list: list, game_id: str, player_action
             if ally_name in alliance.current_members:
                 ally_id = nation_name_list.index(ally_name) + 1
                 ally_research_list = research_masterlist[ally_id - 1]
-                if "Open Arms" in ally_research_list:
+                if "With Open Arms" in ally_research_list:
                     research_check_success = True
                     break
         if not research_check_success:

@@ -936,9 +936,13 @@ def get_library(game_id):
     Returns a dictionary containing all game terms. Use this to check validity of actions.
     '''
     
-    #get core lists
+    # get game data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
+    alliance_table = AllianceTable(game_id)
+    alliance_name_list = []
+    for alliance in alliance_table:
+        alliance_name_list.append(alliance.name)
 
     #get scenario files
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
@@ -952,6 +956,7 @@ def get_library(game_id):
         'Research Name List': list(agenda_data_dict.keys()) + list(research_data_dict.keys()),
         'Improvement List': list(improvement_data_dict.keys()),
         'Alliance Type List': ALLIANCE_LIST,
+        'Alliance Name List': alliance_name_list,
         'Resource Name List': RESOURCE_LIST,
         'Missile Type List': ['Standard Missile', 'Standard Missiles', 'Nuclear Missile', 'Nuclear Missiles'],
         'Unit Name List': list(unit_data_dict.keys()),
