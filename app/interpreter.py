@@ -16,6 +16,10 @@ def check_action(action, library, game_id):
     #get action type and strip action
     action_type = core.identify(action)
     action = action.lower().strip()
+    action_data = action.split(" ")
+    for word in action_data:
+        word = word.strip()
+    action = " ".join(action_data)
 
     #catch mistaken use of buy instead of purchase
     if "buy" in action and "oil" not in action:
