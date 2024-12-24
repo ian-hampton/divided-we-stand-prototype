@@ -22,6 +22,34 @@ def color_nation_names(string, game_id):
 
     return string
 
+def str_to_hex(color_str):
+    """
+    Retrives a hexadecimal color value that corresponds to a string name.
+    """
+
+    color_str = color_str.lower().strip()
+    
+    return player_colors_hex.get(color_str)
+
+player_colors_hex = {
+    "brown": "#603913",
+    "coral": "#ff974e",
+    "dark blue": "#003b84",
+    "dark green": "#105500",
+    "dark purple": "#5a009d",
+    "dark red": "#b30000",
+    "light blue": "#0096ff",
+    "light green": "#5bb000",
+    "light purple": "#b654ff",
+    "light red": "#ff3d3d",
+    "maroon": "#8b2a1a",
+    "metallic gold": "#9f8757",
+    "orange": "#ff9600",
+    "pink": "#f384ae",
+    "terracotta": "#b66317",
+    "yellow": "#ffd64b",
+}
+
 normal_to_occupied = {
     "#603913": "#905721",
     "#ff974e": "#ffaa6f",

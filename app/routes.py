@@ -1216,6 +1216,60 @@ def announcements(full_game_id):
 
     return render_template('temp_announcements.html', game_name = game_name, page_title = page_title, date_output = date_output, scoreboard_dict = scoreboard_dict, standings_dict = standings_dict, statistics_string = statistics_string, diplomacy_string = diplomacy_string, notifications_string = notifications_string)
 
+# ALLIANCE PAGE
+@main.route('/<full_game_id>/alliances')
+def alliances(full_game_id):
+
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    game_name = active_games_dict[full_game_id]["Game Name"]
+    page_title = f'{game_name} - Alliance Page'
+
+    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_name_list = []
+    nation_colors = []
+    for player in playerdata_list:
+        nation_name_list.append(player[1])
+        nation_colors.append(player[2])
+
+    alliance_table = AllianceTable(full_game_id)
+    alliance_dict = alliance_table.data
+    misc_data_dict = core.get_scenario_dict(full_game_id, "Misc")
+    alliance_type_dict = misc_data_dict["allianceTypes"]
+
+    alliance_dict_filtered = {}
+    for alliance_name, alliance_data in alliance_dict.items():
+        if alliance_data["turnEnded"] == 0:
+            
+            # adds alliance establishment string
+            turn_started = alliance_data["turnCreated"]
+            season, year = core.date_from_turn_num(turn_started)
+            date_str = f"{season} {year} (Turn {turn_started})"
+            alliance_data["turnCreated"] = date_str
+
+            # add color to nation names
+            alliance_data["currentMembersFormatted"] = {}
+            for nation_name, turn_joined in alliance_data["currentMembers"].items():
+                # can't wait to do the playerdata rework to get rid of this garbage color management code
+                index = nation_name_list.index(nation_name)
+                bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+                if nation_colors[index] in bad_primary_colors_set:
+                    color = palette.normal_to_occupied[nation_colors[index]]
+                else:
+                    color = nation_colors[index]
+                # add to new dict
+                alliance_data["currentMembersFormatted"][nation_name] = {}
+                alliance_data["currentMembersFormatted"][nation_name]["turnJoined"] = turn_joined
+                alliance_data["currentMembersFormatted"][nation_name]["nationColor"] = color
+            
+            # adds alliance color
+            alliance_data["color"] = palette.str_to_hex(alliance_type_dict[alliance_data["allianceType"]]["colorTheme"])
+
+            alliance_dict_filtered[alliance_name] = alliance_data
+
+    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_type_dict, page_title = page_title)
+
 #MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):

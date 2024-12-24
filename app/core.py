@@ -949,6 +949,7 @@ def get_library(game_id):
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     research_data_dict = get_scenario_dict(game_id, "Technologies")
     unit_data_dict = get_scenario_dict(game_id, "Units")
+    misc_data_dict = get_scenario_dict(game_id, "Misc")
 
     #create library of game terms
     library = {

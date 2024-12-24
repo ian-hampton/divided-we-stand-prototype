@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/default-strips.css') }}">
+<style>
+</style>
+
+<title> {{ page_title }} </title>
+
+
+<header>
+    <div class="left-header">
+        <p id="title"> {{ page_title }} </p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+    </div>
+</header>
+
+
+<body>
+<div class="flex-container">
+
+
+    {% for alliance_name, alliance_data in alliance_dict.items() %}
+        
+        <div class="box">
+
+            <div class="top" style="color:{{alliance_data["color"]}}">{{ alliance_name }}</div>
+
+            <div class="row">
+
+                <div class="column" style="width:60%">
+
+                    <div class="row">
+                        <div class="cell-header" style="width:50%">Alliance Type</div>
+                        <div class="cell-header" style="width:50%">Established</div>
+                    </div>
+                    <div class="row">
+                        <div class="cell-left" style="width:50%; color:{{alliance_data["color"]}}">{{ alliance_data["allianceType"] }}</div>
+                        <div class="cell-left" style="width:50%">{{ alliance_data["turnCreated"] }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell-header">Abilities</div>
+                    </div>
+                    {% for ability_str in abilities_dict[alliance_data["allianceType"]]["abilitiesDescriptionList"] %}
+                        <div class="row" style="padding-bottom: 8px; width:calc(100% - 16px)">
+                            <div class="cell-left">{{ ability_str }}</div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="column" style="width:40%">
+                    
+                    <div class="row">
+                        <div class="cell-header">Current Members</div>
+                    </div>
+                    {% for nation_name, nation_data in alliance_data["currentMembersFormatted"].items() %}
+                        
+                        <div class="row-spaced" style="color:{{ nation_data["nationColor"] }}">
+                            <div class="cell-left">{{ nation_name }}</div>
+                            <div class="cell-right">{{ nation_data["turnJoined"] }}</div>
+                        </div>
+                        
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="cell-header">Founding Members</div>
+                    </div>
+                    {% for nation_name in alliance_data["foundingMembers"] %}
+                        <div class="row-spaced" style="color:{{ alliance_data["currentMembersFormatted"][nation_name]["nationColor"] }}">
+                            <div class="cell-left">{{ nation_name }}</div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+
+</div>
+</body>
+
+
+</html>
