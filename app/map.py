@@ -125,6 +125,7 @@ class MainMap:
         playerdata_list = core.read_file(playerdata_location, 1)
         nation_info_masterlist = core.get_nation_info(playerdata_list)
         player_color_list = generate_player_color_list(playerdata_location)
+        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
@@ -219,8 +220,11 @@ class MainMap:
                     cord_x = (improvement_start_cords[0] - 13)
                     cord_y = (improvement_start_cords[1] + 54)
                     health_start_cords = (cord_x, cord_y)
-                    # to do - phase out this cringe list and query improvements.json instead
-                    if region_improvement.name in core.ten_health_improvements_list:
+                    ten_health_improvements = set()
+                    for improvement_name, improvement_dict in improvement_data_dict.items():
+                        if improvement_dict["Health"] == 10:
+                            ten_health_improvements.add(improvement_name)
+                    if region_improvement.name in ten_health_improvements:
                         health_filepath = f'app/static/health/{region_improvement.health}-10.png'
                     else:
                         health_filepath = f'app/static/health/{region_improvement.health}-5.png'

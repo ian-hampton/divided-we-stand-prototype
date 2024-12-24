@@ -887,10 +887,6 @@ def resolve_missile_builds(missile_build_list, game_id, player_action_logs):
         rare_stockpile = float(stockpile_list[3])
 
         #required research check
-        if missile_type == 'Standard Missiles':
-            missile_type = 'Standard Missile'
-        elif missile_type == 'Nuclear Missiles':
-            missile_type = 'Nuclear Missile'
         if missile_type == 'Standard Missile':
             research_check = core.verify_required_research('Missile Technology', player_research)
         else:

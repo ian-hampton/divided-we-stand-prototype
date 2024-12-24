@@ -706,6 +706,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
         nation_name_list.append(player[1])
     wardata = WarData(game_id)
     alliance_table = AllianceTable(game_id)
+    misc_data_dict = get_scenario_dict(game_id, "Misc")
 
     # get information on player
     playerdata = playerdata_list[player_id - 1]
@@ -758,10 +759,18 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
 
     # alliance data
     alliance_count, alliance_capacity = get_alliance_count(game_id, playerdata)
-    player_information_dict['Alliance Data']['Name List'] = ALLIANCE_LIST
+    player_information_dict['Alliance Data']['Name List'] = list(misc_data_dict["allianceTypes"].keys())
     alliance_colors = []
-    alliance_data_list = update_alliance_data(player_research_list)
-    for entry in alliance_data_list:
+    alliance_data = [False, False, False, False]
+    if 'Defensive Agreements' in player_research_list:
+        alliance_data[0] = True
+    if 'Peace Accords' in player_research_list:
+        alliance_data[1] = True
+    if 'Research Exchange' in player_research_list:
+        alliance_data[2] = True
+    if 'Trade Routes' in player_research_list:
+        alliance_data[3] = True
+    for entry in alliance_data:
         if entry:
             alliance_colors.append('#00ff00')
         else:
@@ -956,10 +965,10 @@ def get_library(game_id):
         'Nation Name List': [playerdata[1] for playerdata in playerdata_list],
         'Research Name List': list(agenda_data_dict.keys()) + list(research_data_dict.keys()),
         'Improvement List': list(improvement_data_dict.keys()),
-        'Alliance Type List': ALLIANCE_LIST,
+        'Alliance Type List': list(misc_data_dict["allianceTypes"].keys()),
         'Alliance Name List': alliance_name_list,
         'Resource Name List': RESOURCE_LIST,
-        'Missile Type List': ['Standard Missile', 'Standard Missiles', 'Nuclear Missile', 'Nuclear Missiles'],
+        'Missile Type List': list(misc_data_dict["missiles"].keys()),
         'Unit Name List': list(unit_data_dict.keys()),
         'Unit Abbreviation List': [unit['Abbreviation'] for unit in unit_data_dict.values()],
         'War Justification Name List': ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
@@ -1110,18 +1119,6 @@ def get_subjects(playerdata_list, overlord_nation_name, subject_type):
             selected_nation_id = index + 1
             player_id_list.append(selected_nation_id)
     return player_id_list
-
-def update_alliance_data(player_research_list):
-    alliance_data = [False, False, False, False]
-    if 'Peace Accords' in player_research_list:
-        alliance_data[0] = True
-    if 'Defensive Agreements' in player_research_list:
-        alliance_data[1] = True
-    if 'Trade Routes' in player_research_list:
-        alliance_data[2] = True
-    if 'Research Exchange' in player_research_list:
-        alliance_data[3] = True
-    return alliance_data
 
 
 #ECONOMIC SUB-FUNCTIONS
@@ -1588,7 +1585,6 @@ player_data_header = ["Player", "Nation Name", "Color", "Government", "Foreign P
 rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
 rm_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
 trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']
-vc_extra_header = ['Nation Name', 'Government Projects', 'Opportunist', 'Reliable Ally', 'Road to Recovery', 'Tight Leash']
 
 #government and fp list data
 republic_rates = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
@@ -1601,25 +1597,13 @@ military_junta_rates = [100, 100, 80, 100, 100, 100, 100, 100, 100, 100, 100]
 crime_syndicate_rates = [80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 
 #war and unit/improvement list data
-ALLIANCE_LIST = ['Non-Aggression Pact', 'Defense Pact', 'Trade Agreement', 'Research Agreement']
 RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-WAR_JUSTIFICATIONS_LIST = ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
-unit_names = ['Infantry', 'Artillery', 'Mechanized Infantry', 'Special Forces', 'Motorized Infantry', 'Light Tank', 'Heavy Tank', 'Main Battle Tank']
 unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
-ten_health_improvements_list = ['military outpost', 'military base', 'Military Outpost', 'Military Base']
 
 #victory conditions
 easy_list = ["Energy Economy", "Dual Loyalty", "Major Exporter", "Reconstruction Effort", "Secure Strategic Resources", "Tight Leash"]
 normal_list = ["Establish Sovereignty", "Diversified Army", "Diversified Economy", "Hegemony", "Reliable Ally", "Road to Recovery"]
 hard_list = ["Economic Domination", "Empire Building", "Military Superpower", "Nuclear Deterrent", "Scientific Leader", "Sphere of Influence"]
-
-#other
-ignore_list = ['Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Neutral', '-']
-score_to_col = {
-    1: 'G',
-    2: 'H',
-    3: 'I'
-}
 
 #color dictionaries
 player_colors_hex = {

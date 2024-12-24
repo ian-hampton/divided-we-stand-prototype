@@ -31,6 +31,16 @@
             ]
         }
     },
-    "warJustifications": {},
-    "missiles": {}
+    "warJustifications": {
+        "Animosity": true,
+        "Annexation": true,
+        "Border Skirmish": true,
+        "Conquest": true,
+        "Independence": true,
+        "Subjugation": true
+    },
+    "missiles": {
+        "Standard Missile": true,
+        "Nuclear Missile": true
+    }
 }

@@ -230,6 +230,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
     wardata = WarData(game_id)
     notifications = Notifications(game_id)
     alliance_table = AllianceTable(game_id)
+    misc_data_dict = core.get_scenario_dict(game_id, "Misc")
 
     # get needed player info
     nation_info_masterlist = core.get_nation_info(playerdata_list)
@@ -256,7 +257,8 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
                defender_nation_name = name
         defender_player_id = nation_name_list.index(defender_nation_name) + 1
         war_justification = None
-        for justification in core.WAR_JUSTIFICATIONS_LIST:
+        war_justification_list = list(misc_data_dict["warJustifications"].keys())
+        for justification in war_justification_list:
             if justification in war_declaration_str:
                 war_justification = justification
         attacker_mc_data = military_capacity_masterlist[attacker_player_id - 1]

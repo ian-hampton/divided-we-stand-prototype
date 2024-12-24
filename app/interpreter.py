@@ -275,9 +275,12 @@ def check_resource_name(action, library):
             return True
     return False
 
-def check_missile_name(action, library):
+def check_missile_name(action: str, library):
     for missile_type in library['Missile Type List']:
         if missile_type in action:
+            return True
+        if f"{missile_type}s" in action:
+            action = action.replace(f"{missile_type}s", missile_type)
             return True
     return False
 
