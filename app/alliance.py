@@ -214,6 +214,36 @@ class AllianceTable:
 
         return False
     
+    def former_ally_truce(self, nation_name_1: str, nation_name_2: str) -> bool:
+        """
+        Nations are not allowed to declare war on their former allies until 2 turns have passed.
+
+        Params:
+            nation_name_1 (str): First nation name string.
+            nation_name_2 (str): Second nation name string.
+
+        Returns:
+            bool: True if an grace period is still in effect, False otherwise.
+        """
+
+        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+
+        for alliance in self:
+            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.former_members:
+                if (
+                    current_turn_num - alliance.former_members[nation_name_1] < 2
+                    or current_turn_num - alliance.former_members[nation_name_2] < 2
+                ):
+                    return True
+            elif nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
+                if current_turn_num - alliance.former_members[nation_name_1] < 2:
+                    return True
+            elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
+                if current_turn_num - alliance.former_members[nation_name_2] < 2:
+                    return True
+
+        return False
+    
     def report(self, nation_name: str) -> dict:
         """
         Creates a dictionary containting counts of a specific player's alliances.

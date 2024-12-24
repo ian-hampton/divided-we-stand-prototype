@@ -11,6 +11,8 @@ from app.improvement import Improvement
 from app.unit import Unit
 from app.wardata import WarData
 from app.notifications import Notifications
+from app.alliance import AllianceTable
+from app.alliance import Alliance
 
 #PRIVATE ACTION FUNCTIONS
 def resolve_unit_disbands(unit_disband_list, game_id, player_action_logs):
@@ -220,15 +222,16 @@ def resolve_unit_deployments(unit_deploy_list, game_id, player_action_logs):
 def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, player_action_logs):  
     '''Resolves all war declarations.'''
 
-    #define core lists
+    # define core lists
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     trucedata_list = core.read_file(trucedata_filepath, 1)
     wardata = WarData(game_id)
     notifications = Notifications(game_id)
+    alliance_table = AllianceTable(game_id)
 
-    #get needed player info
+    # get needed player info
     nation_info_masterlist = core.get_nation_info(playerdata_list)
     nation_name_list = []
     for nation_info in nation_info_masterlist:
@@ -242,7 +245,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
         research_masterlist.append(player_research_list)
 
 
-    #Execute Actions
+    # execute actions
     for war_declaration in war_declaration_list:
         attacker_player_id = war_declaration[0]
         attacker_nation_name = nation_info_masterlist[attacker_player_id - 1][0]
@@ -261,13 +264,13 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
         attacker_status = playerdata_list[attacker_player_id - 1][28]
         player_action_log = player_action_logs[attacker_player_id - 1]
 
-        #valid order check
+        # valid order check
         if not defender_nation_name or not war_justification:
             player_action_log.append('Failed to declare war. Either the main defender or war justification was not recognized.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #research check
+        # research check
         valid_war_justification = False
         match war_justification:
             case 'Animosity':
@@ -291,27 +294,37 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #military capacity check
+        # military capacity check
         used_mc, total_mc = core.read_military_capacity(attacker_mc_data)
         if used_mc == 0:
             player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. You do not own at least one unit.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #truce check
+        # truce check
         truce_check = core.check_for_truce(trucedata_list, attacker_player_id, defender_player_id, current_turn_num)
         if truce_check:
             player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. You have an active truce with that player.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #already at war check
+        # alliance check
+        if alliance_table.are_allied(attacker_nation_name, defender_nation_name):
+            player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. You are allied with that player.')
+            player_action_logs[attacker_player_id - 1] = player_action_log
+            continue
+        if alliance_table.former_ally_truce(attacker_nation_name, defender_nation_name):
+            player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. You are under a truce with that alliance.')
+            player_action_logs[attacker_player_id - 1] = player_action_log
+            continue
+
+        # already at war check
         if wardata.are_at_war(attacker_player_id, defender_player_id):
             player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. You are already at war with this nation.')
             player_action_logs[attacker_player_id - 1] = player_action_log
             continue
 
-        #independence check
+        # independence check
         if attacker_status != "Independent Nation":
             if defender_nation_name not in attacker_status and "Puppet State" in attacker_status:
                 player_action_log.append(f'Failed to declare a {war_justification} war on {defender_nation_name}. As a puppet state, you cannot declare war.')
@@ -328,14 +341,13 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
                 region_claims_list = region_claims_str.split(',')
                 all_claims_valid, playerdata_list = wardata.validate_war_claims(war_justification, region_claims_list, attacker_player_id, playerdata_list)
         
-        #resolve war declaration
+        # resolve war declaration
         war_name = wardata.create_war(attacker_player_id, defender_player_id, war_justification, current_turn_num, region_claims_list)
         notifications.append(f'{attacker_nation_name} declared war on {defender_nation_name}.', 3)
         player_action_log.append(f'Declared war on {defender_nation_name}.')
         player_action_logs[attacker_player_id - 1] = player_action_log
         
-
-    #Update playerdata.csv
+    # update playerdata.csv
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)

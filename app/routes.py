@@ -1115,7 +1115,7 @@ def announcements(full_game_id):
         diplomacy_list.append('Normal expansion rules are now in effect.')
     # accelerate schedule reminder
     if accelerated_schedule_str == 'Enabled' and current_turn_num <= 10:
-        diplomacy_list.append('Accelerated schedule is in effect through turn 10.')
+        diplomacy_list.append('Accelerated schedule is in effect until turn 11.')
     elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
         diplomacy_list.append('Normal turn schedule is now in effect.')
     # get all ongoing wars
@@ -1133,7 +1133,7 @@ def announcements(full_game_id):
         truce_name = ' - '.join(truce_participants_list)
         truce_end_turn = int(truce[11])
         if truce_end_turn >= current_turn_num:
-            diplomacy_list.append(f"{truce_name} truce through turn {truce_end_turn + 1}.")
+            diplomacy_list.append(f"{truce_name} truce until turn {truce_end_turn}.")
         if truce_end_turn < current_turn_num:
             diplomacy_list.append(f'{truce_name} truce has expired.')
     # get all ongoing alliances

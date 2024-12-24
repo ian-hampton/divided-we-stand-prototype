@@ -315,10 +315,12 @@ class WarData:
         ally_player_ids = set(puppet_state_id_list)
         for player_id in ally_player_ids:
             nation_name = playerdata_list[player_id - 1][1]
-            allied_with_md = False # to be added
-            truce_with_md = core.check_for_truce(trucedata_list, player_id, main_defender_id, current_turn_num)
-            already_at_war_with_md = self.are_at_war(player_id, main_defender_id)
-            if not allied_with_md and not truce_with_md and not already_at_war_with_md:
+            if (
+                not self.are_at_war(player_id, main_defender_id)
+                and not core.check_for_truce(trucedata_list, player_id, main_defender_id, current_turn_num)
+                and not alliance_table.are_allied(main_attacker_name, main_defender_name)
+                and not alliance_table.former_ally_truce(main_attacker_name, main_defender_name)
+            ):
                 combatant_dict = copy.deepcopy(self.combatant_template)
                 combatant_dict["role"] = "Secondary Attacker"
                 self.wardata_dict[war_name]["combatants"][nation_name] = combatant_dict
@@ -332,10 +334,12 @@ class WarData:
             defense_pact_id_list.append(nation_name_list.index(nation_name) + 1)
         ally_player_ids = set(puppet_state_id_list) | set(defense_pact_id_list)
         for player_id in ally_player_ids:
-            allied_with_ma = False # to be added
-            truce_with_ma = core.check_for_truce(trucedata_list, player_id, main_attacker_id, current_turn_num)
-            already_at_war_with_ma = self.are_at_war(player_id, main_attacker_id)
-            if not allied_with_ma and not truce_with_ma and not already_at_war_with_ma:
+            if (
+                not self.are_at_war(player_id, main_attacker_id)
+                and not core.check_for_truce(trucedata_list, player_id, main_attacker_id, current_turn_num)
+                and not alliance_table.are_allied(main_attacker_name, main_defender_name)
+                and not alliance_table.former_ally_truce(main_attacker_name, main_defender_name)
+            ):
                 combatant_dict = copy.deepcopy(self.combatant_template)
                 combatant_dict["role"] = "Secondary Defender"
                 self.wardata_dict[war_name]["combatants"][nation_name] = combatant_dict

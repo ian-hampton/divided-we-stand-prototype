@@ -1350,7 +1350,7 @@ def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
     for truce in trucedata_list:
         attacker_truce = ast.literal_eval(truce[player_id_1])
         defender_truce = ast.literal_eval(truce[player_id_2])
-        if attacker_truce and defender_truce and int(truce[11]) >= current_turn_num:
+        if attacker_truce and defender_truce and int(truce[11]) > current_turn_num:
             return True
     return False
 
