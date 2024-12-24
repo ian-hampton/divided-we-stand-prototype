@@ -449,11 +449,11 @@ def initiate_event(chosen_event: str, event_conditions_dict: dict, game_id: str,
             invasion_color = hex_colors_list.pop()
             #resolve event now
             if current_turn_num >= 24:
-                unit_name = 'Heavy Tank'
+                unit_name = 'Main Battle Tank'
             elif current_turn_num >= 16:
-                unit_name = 'Mechanized Infantry'
+                unit_name = 'Special Forces'
             else:
-                unit_name = 'Infantry'
+                unit_name = 'Mechanized Infantry'
             for region_id in reinforcements_regions_list:
                 region = Region(region_id, game_id)
                 region_improvement = Improvement(region_id, game_id)
