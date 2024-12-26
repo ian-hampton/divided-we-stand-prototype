@@ -72,7 +72,7 @@
             "001": {
                 "Nation Name": "American Commonwealth",
                 "Color": "#ff3d3d",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Diplomatic",
                 "Score": 3,
                 "Victory": 1
@@ -80,7 +80,7 @@
             "002": {
                 "Nation Name": "poop clan",
                 "Color": "#603913",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Diplomatic",
                 "Score": 2,
                 "Victory": 0
@@ -88,7 +88,7 @@
             "005": {
                 "Nation Name": "Ionia",
                 "Color": "#003b84",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Commercial",
                 "Score": 1,
                 "Victory": 0
@@ -136,7 +136,7 @@
             "003": {
                 "Nation Name": "The Gentle Men",
                 "Color": "#105500",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Imperialist",
                 "Score": 3,
                 "Victory": 1
@@ -144,7 +144,7 @@
             "001": {
                 "Nation Name": "Midwest Political Sector",
                 "Color": "#5bb000",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Isolationist",
                 "Score": 2,
                 "Victory": 0
@@ -376,7 +376,7 @@
             "007": {
                 "Nation Name": "Azjol-Nerub",
                 "Color": "#003b84",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Commercial",
                 "Score": 2,
                 "Victory": 0
@@ -600,7 +600,7 @@
             "001": {
                 "Nation Name": "New Republic of Qinghai",
                 "Color": "#b654ff",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Diplomatic",
                 "Score": 1,
                 "Victory": 0
@@ -616,7 +616,7 @@
             "008": {
                 "Nation Name": "Fam Dynasty",
                 "Color": "#003b84",
-                "Government": "Democracy",
+                "Government": "Republic",
                 "Foreign Policy": "Diplomatic",
                 "Score": 0,
                 "Victory": 0

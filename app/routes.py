@@ -415,7 +415,7 @@ def generate_profile_route(profile_id):
         game_starts = []
         game_ends = []
         governments_played = {
-            'Democracy': 0,
+            'Republic': 0,
             'Technocracy': 0,
             'Oligarchy': 0,
             'Totalitarian': 0,
