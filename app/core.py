@@ -579,8 +579,8 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
             map = 'united_states'
     starting_map_images = ['resourcemap', 'controlmap']
     for map_filename in starting_map_images:
-        shutil.copy(f"maps/{map}/default.png", f"{files_destination}/images")
-        shutil.move(f"{files_destination}/images/default.png", f"gamedata/{game_id}/images/{map_filename}.png")
+        shutil.copy(f"maps/{map}/blank.png", f"{files_destination}/images")
+        shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
     
     #create regdata.json
     shutil.copy(f"maps/{map}/regdata.json", files_destination)

@@ -1399,7 +1399,7 @@ def resolve_trades(game_id):
             for resource in core.RESOURCE_LIST:
                 if resource == 'Political Power':
                     continue
-                resource_count = int(input(f'Enter {resource} amount: '))
+                resource_count = float(input(f'Enter {resource} amount: '))
                 trade_difference_list.append(resource_count)
         #get region trades
         region_trade = input("Will any regions be traded in this deal? (Y/N) ")
@@ -1434,7 +1434,7 @@ def resolve_trades(game_id):
         nation2_trade_fee_owed = 0
         if resource_trade == 'Y':
             for index, resource_difference in enumerate(trade_difference_list):
-                resource_difference = int(resource_difference)
+                resource_difference = float(resource_difference)
                 #resource is flowing from nation2 to nation 1
                 if resource_difference < 0:
                     nation1_resource_stockpile = economy_masterlist[nation1_id-1][index][0]
@@ -1464,8 +1464,8 @@ def resolve_trades(game_id):
                 nation1_dollars_stockpile = float(nation1_dollars_stockpile)
                 nation2_dollars_stockpile = float(nation2_dollars_stockpile)
                 dollars_traded = trade_difference_list[0]
-                nation1_dollars_stockpile -= int(dollars_traded)
-                nation2_dollars_stockpile += int(dollars_traded)
+                nation1_dollars_stockpile -= float(dollars_traded)
+                nation2_dollars_stockpile += float(dollars_traded)
                 if nation1_trade_fee_owed > nation1_dollars_stockpile or nation2_trade_fee_owed > nation2_dollars_stockpile:
                     trade_valid = False
                     print(f'Trade between {nation1_name} and {nation2_name} failed. One or both players could not afford the trade fee.')
