@@ -216,7 +216,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         checks.update_improvement_count(game_id, player_id)
     # update income in playerdata
     current_turn_num = 0
-    checks.update_income(game_id, current_turn_num)
+    checks.update_income(game_id)
     
     # gain starting resources
     for player in playerdata_list:
@@ -447,20 +447,14 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #Prepwork for the Next Turn
     #resolve improvements with countdowns
     checks.countdown(full_game_id, map_name)
+    checks.resolve_resource_shortages(full_game_id)
+
     for i in range(player_count):
         player_id = i + 1
-        #resolve upkeep shortages
-        # checks.resolve_shortages(full_game_id, player_id)
-        #update improvement count in playerdata
         checks.update_improvement_count(full_game_id, player_id)
-    #update income in playerdata
-    checks.update_income(full_game_id, current_turn_num)
-    for i in range(player_count):
-        player_id = i + 1
-        #collect resource market income
         checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
     #update income in playerdata
-    checks.update_income(full_game_id, current_turn_num)
+    checks.update_income(full_game_id)
     
 
     #Check If Someone Has Won the Game
@@ -993,7 +987,7 @@ def run_end_of_turn_checks(game_id, current_turn_num, player_count):
         #update stockpile limits in playerdata
         checks.update_stockpile_limits(game_id, player_id)
     #update income in playerdata
-    checks.update_income(game_id, current_turn_num)
+    checks.update_income(game_id)
     #update misc info and trade tax in playerdata
     for i in range(player_count):
         player_id = i + 1
@@ -1002,7 +996,7 @@ def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     #update records
     checks.update_records(game_id, current_turn_num)
     #update income in playerdata now that records have been updated (important for political power bonuses)
-    checks.update_income(game_id, current_turn_num)
+    checks.update_income(game_id)
 
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS
@@ -1321,7 +1315,6 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
             sum += name_upkeep * count
 
     return sum
-
 
 
 #WAR SUB-FUNCTIONS
