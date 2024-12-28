@@ -9,8 +9,10 @@
         "Combat Value": 9,
         "Movement": 1,
         "Abilities": [],
-        "Dollars Upkeep": 0.25,
-        "Oil Upkeep": 0,
+        "Upkeep": {
+            "Dollars": 0.25,
+            "Oil": 0
+        },
         "Build Costs": {
             "Dollars": 5,
             "Basic Materials": 5,
@@ -31,8 +33,10 @@
         "Abilities": [
             "All of your units that are adjacent to one of your Artillery units gain +1 victory damage and +1 draw damage. If multiple Artillery are adjacent, this bonus does not stack."
         ],
-        "Dollars Upkeep": 0.5,
-        "Oil Upkeep": 0,
+        "Upkeep": {
+            "Dollars": 0.5,
+            "Oil": 0
+        },
         "Build Costs": {
             "Dollars": 10,
             "Basic Materials": 10,
@@ -53,8 +57,10 @@
         "Abilities": [
             "All of your Tank-type units that are adjacent to one of your Mechanized Infantry units gain +1 to all combat rolls. If multiple Mechanized Infantry are adjacent, this bonus does not stack."
         ],
-        "Dollars Upkeep": 0.5,
-        "Oil Upkeep": 0,
+        "Upkeep": {
+            "Dollars": 0.5,
+            "Oil": 0
+        },
         "Build Costs": {
             "Dollars": 10,
             "Basic Materials": 10,
@@ -76,8 +82,10 @@
             "Automatically defeats improvements that are not defended by an enemy unit.",
             "Always heals during the bonus phase regardless of its positioning."
         ],
-        "Dollars Upkeep": 1,
-        "Oil Upkeep": 0,
+        "Upkeep": {
+            "Dollars": 1,
+            "Oil": 0
+        },
         "Build Costs": {
             "Dollars": 15,
             "Basic Materials": 15,
@@ -96,8 +104,10 @@
         "Combat Value": 8,
         "Movement": 2,
         "Abilities": [],
-        "Dollars Upkeep": 0,
-        "Oil Upkeep": 0.25,
+        "Upkeep": {
+            "Dollars": 0,
+            "Oil": 0.25
+        },
         "Build Costs": {
             "Dollars": 5,
             "Basic Materials": 0,
@@ -118,8 +128,10 @@
         "Abilities": [
             "All of your Infantry-type units that are adjacent to one of your Light Tank units gain +1 to all combat rolls. If multiple Light Tank are adjacent, this bonus does not stack."
         ],
-        "Dollars Upkeep": 0,
-        "Oil Upkeep": 0.5,
+        "Upkeep": {
+            "Dollars": 0,
+            "Oil": 0.5
+        },
         "Build Costs": {
             "Dollars": 0,
             "Basic Materials": 0,
@@ -140,8 +152,10 @@
         "Abilities": [
             "+1 to combat rolls against enemy improvements."
         ],
-        "Dollars Upkeep": 0,
-        "Oil Upkeep": 0.5,
+        "Upkeep": {
+            "Dollars": 0,
+            "Oil": 0.5
+        },
         "Build Costs": {
             "Dollars": 0,
             "Basic Materials": 0,
@@ -163,8 +177,10 @@
             "+1 to combat rolls against enemy Infantry-type units.",
             "+1 to combat rolls against enemy improvements."
         ],
-        "Dollars Upkeep": 0,
-        "Oil Upkeep": 1,
+        "Upkeep": {
+            "Dollars": 0,
+            "Oil": 1
+        },
         "Build Costs": {
             "Dollars": 0,
             "Basic Materials": 0,

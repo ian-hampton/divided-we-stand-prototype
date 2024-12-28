@@ -1,3 +1,4 @@
+import ast
 import json
 
 from app import core
@@ -66,32 +67,6 @@ class Improvement:
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
     
-    def set_turn_timer(self, amount=4) -> None:
-        """
-        Sets the improvement turn timer.
-
-        :param amount: Turns desired. Default is 4.
-        """
-        self.turn_timer = amount
-        self._save_changes()
-    
-    def decrease_timer(self) -> None:
-        """
-        Decreases improvement turn timer by one.
-        """
-        if self.turn_timer != 99:
-            self.turn_timer -= 1
-            self._save_changes()
-
-    def clear(self) -> None:
-        """
-        Removes the improvement in a region.
-        """
-        self.name = None
-        self.health = 99
-        self.turn_timer = 99
-        self._save_changes()
-
     # basic methods
     ################################################################################
 
@@ -141,6 +116,121 @@ class Improvement:
         self.health = current_health
 
         self._save_changes()
+
+    def set_turn_timer(self, amount=4) -> None:
+        """
+        Sets the improvement turn timer.
+
+        :param amount: Turns desired. Default is 4.
+        """
+        self.turn_timer = amount
+        self._save_changes()
+    
+    def decrease_timer(self) -> None:
+        """
+        Decreases improvement turn timer by one.
+        """
+        if self.turn_timer != 99:
+            self.turn_timer -= 1
+            self._save_changes()
+
+    def clear(self) -> None:
+        """
+        Removes the improvement in a region.
+        """
+        self.name = None
+        self.health = 99
+        self.turn_timer = 99
+        self._save_changes()
+
+    # income methods
+    ################################################################################
+
+    def calculate_yield(self, improvement_income_dict: dict) -> dict:
+        """
+        Calculates the final yield of this improvement.
+
+        Params:
+            improvement_income_dict (dict): Contains the income and multiplier of this improvement type. From yield_dict.
+
+        Returns:
+            dict: Contains all yields from this improvement.
+        """
+        
+        # load game info
+        from app.region import Region
+        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_filepath, 1)
+        region = Region(self.region_id, self.game_id)
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
+
+        # load player info
+        player_government = playerdata_list[self.owner_id - 1][3]
+        player_research_list = ast.literal_eval(playerdata_list[self.owner_id - 1][26])
+
+        # get modifer from central banks
+        if region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):
+            for resource_name in improvement_income_dict:
+                improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
+
+        # get modifer from remnant government
+        if player_government == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
+            for resource_name in improvement_income_dict:
+                if resource_name == "Political Power" or resource_name == "Military Capacity":
+                    # do not boost political power or military capacity gains
+                    continue
+                improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
+        
+        # get pandemic multiplier
+        if "Pandemic" in active_games_dict[self.game_id]["Active Events"]:
+            for resource_name in improvement_income_dict:
+                multiplier = improvement_income_dict[resource_name]["Income Multiplier"]
+                infection_penalty = 0
+                if region.infection() > 0:
+                    infection_penalty = region.infection() * 0.1
+                quarantine_penalty = 0
+                if region.is_quarantined():
+                    quarantine_penalty = 0.5
+                multiplier -= infection_penalty
+                multiplier -= quarantine_penalty
+                if multiplier < 0:
+                    multiplier = 0
+                improvement_income_dict[resource_name]["Income Multiplier"] = multiplier
+
+        # get capital resource if able
+        # to do - find a way to not hard code this check
+        if self.name == "Capital" and region.resource is not "Empty":
+            match region.resource:
+                case "Coal":
+                    if 'Coal Mining' in player_research_list:
+                        improvement_income_dict[region.resource]["Income"] += 1
+                case "Oil":
+                    if 'Oil Drilling' in player_research_list:
+                        improvement_income_dict[region.resource]["Income"] += 1
+                case "Basic Materials":
+                    improvement_income_dict[region.resource]["Income"] += 1
+                case "Common Metals":
+                    if 'Surface Mining' in player_research_list:
+                        improvement_income_dict[region.resource]["Income"] += 1
+                case "Advanced Metals":
+                    if 'Metallurgy' in player_research_list:
+                        improvement_income_dict[region.resource]["Income"] += 1
+                case "Uranium":
+                    if 'Uranium Extraction' in player_research_list:
+                        improvement_income_dict[region.resource]["Income"] += 1
+                case "Rare Earth Elements":
+                    if 'REE Mining' in player_research_list:
+                        improvement_income_dict[region.resource]["Income"] += 1
+        
+        # calculate final income
+        final_yield_dict = {}
+        for resource_name in improvement_income_dict:
+            final_yield = improvement_income_dict[resource_name]["Income"] * improvement_income_dict[resource_name]["Income Multiplier"]
+            final_yield_dict[resource_name] = final_yield
+
+        return final_yield_dict
+        
 
     # combat methods
     ################################################################################

@@ -4,335 +4,514 @@
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Coal Mine.",
-        "Location": "A0"
+        "Location": "A0",
+        "Modifiers": {}
     },
     "Coal Subsidies": {
         "Research Type": "Energy",
         "Prerequisite": "Coal Mining",
         "Cost": 10,
         "Description": "+1 coal from Coal Mine improvements, but each Coal Mine costs -1 dollars per turn in upkeep.",
-        "Location": "A1"
+        "Location": "A1",
+        "Modifiers": {
+            "Coal Mine": {
+                "Dollars": {
+                    "Upkeep": 1
+                },
+                "Coal": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Strip Mining": {
         "Research Type": "Energy",
         "Prerequisite": "Coal Subsidies",
         "Cost": 15,
         "Description": "New Improvement: Strip Mine.",
-        "Location": "A2"
+        "Location": "A2",
+        "Modifiers": {}
     },
     "Open Pit Mining": {
         "Research Type": "Energy",
         "Prerequisite": "Strip Mining",
         "Cost": 20,
         "Description": "+2 coal from Strip Mine improvements, but Strip Mine improvements last for only 4 turns.",
-        "Location": "A3"
+        "Location": "A3",
+        "Modifiers": {
+            "Strip Mine": {
+                "Coal": {
+                    "Income": 2
+                }
+            }
+        }
     },
     "Oil Drilling": {
         "Research Type": "Energy",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Oil Well.",
-        "Location": "B0"
+        "Location": "B0",
+        "Modifiers": {}
     },
     "Oil Subsidies": {
         "Research Type": "Energy",
         "Prerequisite": "Oil Drilling",
         "Cost": 10,
         "Description": "+1 oil from Oil Well improvements, but each Oil Well costs -1 dollars per turn in upkeep.",
-        "Location": "B1"
+        "Location": "B1",
+        "Modifiers": {
+            "Oil Well": {
+                "Dollars": {
+                    "Upkeep": 1
+                },
+                "Oil": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Oil Refinement": {
         "Research Type": "Energy",
         "Prerequisite": "Oil Subsidies",
         "Cost": 15,
         "Description": "New Improvement: Oil Refinery.",
-        "Location": "B2"
+        "Location": "B2",
+        "Modifiers": {}
     },
     "Fracking": {
         "Research Type": "Energy",
         "Prerequisite": "Oil Refinement",
         "Cost": 20,
         "Description": "+1 oil from Oil Well improvements.",
-        "Location": "B3"
+        "Location": "B3",
+        "Modifiers": {
+            "Oil Well": {
+                "Oil": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Wind Turbines": {
         "Research Type": "Energy",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Wind Farm.",
-        "Location": "C0"
+        "Location": "C0",
+        "Modifiers": {}
     },
     "Nuclear Power": {
         "Research Type": "Energy",
         "Prerequisite": "Wind Turbines",
         "Cost": 10,
         "Description": "New Improvement: Nuclear Power Plant.",
-        "Location": "C1"
+        "Location": "C1",
+        "Modifiers": {}
     },
     "Solar Panels": {
         "Research Type": "Energy",
         "Prerequisite": "Nuclear Power",
         "Cost": 15,
         "Description": "New Improvement: Solar Farm.",
-        "Location": "C2"
+        "Location": "C2",
+        "Modifiers": {}
     },
     "Green Energy Subsidies": {
         "Research Type": "Energy",
         "Prerequisite": "Solar Panels",
         "Cost": 20,
         "Description": "+1 green energy from Wind Farm and Solar Farm improvements, but each one costs -1 dollars per turn in upkeep.",
-        "Location": "C3"
+        "Location": "C3",
+        "Modifiers": {
+            "Wind Farm": {
+                "Dollars": {
+                    "Upkeep": 1
+                },
+                "Green Energy": {
+                    "Income": 1
+                }
+            },
+            "Solar Farm": {
+                "Dollars": {
+                    "Upkeep": 1
+                },
+                "Green Energy": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "City Resettlement": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: City",
-        "Location": "A0"
+        "Location": "A0",
+        "Modifiers": {}
     },
     "Power Grid Restoration": {
         "Research Type": "Infrastructure",
         "Prerequisite": "City Resettlement",
         "Cost": 10,
         "Description": "+2 dollars from City improvements, but each City costs -1 Coal/Oil/Green Energy per turn in upkeep.",
-        "Location": "A1"
+        "Location": "A1",
+        "Modifiers": {
+            "City": {
+                "Dollars": {
+                    "Income": 2
+                },
+                "Energy": {
+                    "Upkeep": 1
+                }
+            }
+        }
     },
     "Central Banking System": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Power Grid Restoration",
         "Cost": 15,
         "Description": "New Improvement: Central Bank. +2 dollars from City improvements.",
-        "Location": "A2"
+        "Location": "A2",
+        "Modifiers": {
+            "City": {
+                "Dollars": {
+                    "Income": 2
+                }
+            }
+        }
     },
     "Surface Mining": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Common Metals Mine.",
-        "Location": "B0"
+        "Location": "B0",
+        "Modifiers": {}
     },
     "Industrial Advancements": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Surface Mining",
         "Cost": 10,
         "Description": "+1 basic materials from Industrial Zone improvements.",
-        "Location": "B1"
+        "Location": "B1",
+        "Modifiers": {
+            "Industrial Zone": {
+                "Basic Materials": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Underground Mining": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Industrial Advancements",
         "Cost": 15,
         "Description": "+1 common metals from Common Metals Mine improvements.",
-        "Location": "B2"
+        "Location": "B2",
+        "Modifiers": {
+            "Common Metals Mine": {
+                "Common Metals": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Metallurgy": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Advanced Metals Mine.",
-        "Location": "C0"
+        "Location": "C0",
+        "Modifiers": {}
     },
     "Uranium Extraction": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Metallurgy",
         "Cost": 10,
         "Description": "New Improvement: Uranium Mine.",
-        "Location": "C1"
+        "Location": "C1",
+        "Modifiers": {}
     },
     "REE Mining": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Uranium Extraction",
         "Cost": 15,
         "Description": "New Improvement: Rare Earth Elements Mine.",
-        "Location": "C2"
+        "Location": "C2",
+        "Modifiers": {}
     },
     "Resource Enrichment": {
         "Research Type": "Infrastructure",
         "Prerequisite": "REE Mining",
         "Cost": 20,
         "Description": "+1 advanced metals from Advanced Metal Mine improvements. +1 uranium from Uranium Mine improvements.",
-        "Location": "C3"
+        "Location": "C3",
+        "Modifiers": {
+            "Advanced Metal Mine": {
+                "Advanced Metals": {
+                    "Income": 1
+                }
+            },
+            "Uranium Mine": {
+                "Uranium": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Laboratories": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 10,
         "Description": "New Improvement: Research Lab.",
-        "Location": "D0"
+        "Location": "D0",
+        "Modifiers": {}
     },
     "Upgraded Facilities": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Laboratories",
         "Cost": 20,
         "Description": "+1 technology from Research Lab improvements, but each Research Lab costs -2 dollars per turn in upkeep.",
-        "Location": "D1"
+        "Location": "D1",
+        "Modifiers": {
+            "Research Laboratory": {
+                "Dollars": {
+                    "Upkeep": 2
+                },
+                "Technology": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Research Institutes": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Upgraded Facilities",
         "Cost": 30,
         "Description": "New Improvement: Research Institute.",
-        "Location": "D2"
+        "Location": "D2",
+        "Modifiers": {}
     },
     "Infantry": {
         "Research Type": "Military",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Unit: Infantry.",
-        "Location": "A0"
+        "Location": "A0",
+        "Modifiers": {}
     },
     "Artillery": {
         "Research Type": "Military",
         "Prerequisite": "Infantry",
         "Cost": 10,
         "Description": "New Unit: Artillery.",
-        "Location": "A1"
+        "Location": "A1",
+        "Modifiers": {}
     },
     "Mechanized Infantry": {
         "Research Type": "Military",
         "Prerequisite": "Artillery",
         "Cost": 15,
         "Description": "New Unit: Mechanized Infantry.",
-        "Location": "A2"
+        "Location": "A2",
+        "Modifiers": {}
     },
     "Special Operations": {
         "Research Type": "Military",
         "Prerequisite": "Mechanized Infantry",
         "Cost": 20,
         "Description": "New Unit: Special Forces.",
-        "Location": "A3"
+        "Location": "A3",
+        "Modifiers": {}
     },
     "Motorized Infantry": {
         "Research Type": "Military",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Unit: Motorized Infantry.",
-        "Location": "B0"
+        "Location": "B0",
+        "Modifiers": {}
     },
     "Light Tanks": {
         "Research Type": "Military",
         "Prerequisite": "Motorized Infantry",
         "Cost": 10,
         "Description": "New Unit: Light Tank.",
-        "Location": "B1"
+        "Location": "B1",
+        "Modifiers": {}
     },
     "Heavy Tanks": {
         "Research Type": "Military",
         "Prerequisite": "Light Tanks",
         "Cost": 15,
         "Description": "New Unit: Heavy Tank.",
-        "Location": "B2"
+        "Location": "B2",
+        "Modifiers": {}
     },
     "Main Battle Tanks": {
         "Research Type": "Military",
         "Prerequisite": "Heavy Tanks",
         "Cost": 20,
         "Description": "New Unit: Main Battle Tank.",
-        "Location": "B3"
+        "Location": "B3",
+        "Modifiers": {}
     },
     "Launch Codes": {
         "Research Type": "Military",
         "Prerequisite": null,
         "Cost": 10,
         "Description": "New Improvement: Missile Silo",
-        "Location": "C0"
+        "Location": "C0",
+        "Modifiers": {}
     },
     "Missile Technology": {
         "Research Type": "Military",
         "Prerequisite": "Launch Codes",
         "Cost": 20,
         "Description": "New Missile: Standard Missile.",
-        "Location": "C1"
+        "Location": "C1",
+        "Modifiers": {}
     },
     "Nuclear Warhead": {
         "Research Type": "Military",
         "Prerequisite": "Missile Technology",
         "Cost": 30,
         "Description": "New Missile: Nuclear Missile.",
-        "Location": "C2"
+        "Location": "C2",
+        "Modifiers": {}
     },
     "Standing Army": {
         "Research Type": "Military",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Boot Camp.",
-        "Location": "D0"
+        "Location": "D0",
+        "Modifiers": {}
     },
     "Draft": {
         "Research Type": "Military",
         "Prerequisite": "Standing Army",
         "Cost": 10,
         "Description": "+1 military capacity from Boot Camp improvements.",
-        "Location": "D1"
+        "Location": "D1",
+        "Modifiers": {
+            "Boot Camp": {
+                "Military Capacity": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Mandatory Service": {
         "Research Type": "Military",
         "Prerequisite": "Draft",
         "Cost": 15,
         "Description": "+0.5 military capacity from all defensive improvements except Boot Camps and Capitals.",
-        "Location": "D2"
+        "Location": "D2",
+        "Modifiers": {
+            "Central Bank": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            },
+            "City": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            },
+            "Missile Silo": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            },
+            "Crude Barrier": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            },
+            "Military Outpost": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            },
+            "Military Base": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            }
+        }
     },
     "Basic Defenses": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Crude Barrier.",
-        "Location": "A0"
+        "Location": "A0",
+        "Modifiers": {}
     },
     "Military Outposts": {
         "Research Type": "Defense",
         "Prerequisite": "Basic Defenses",
         "Cost": 10,
         "Description": "New Improvement: Military Outpost.",
-        "Location": "A1"
+        "Location": "A1",
+        "Modifiers": {}
     },
     "Military Bases": {
         "Research Type": "Defense",
         "Prerequisite": "Military Outposts",
         "Cost": 15,
         "Description": "New Improvement: Military Base.",
-        "Location": "A2"
+        "Location": "A2",
+        "Modifiers": {}
     },
     "Missile Defense System": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Missile Defense System.",
-        "Location": "B0"
+        "Location": "B0",
+        "Modifiers": {}
     },
     "Local Missile Defense": {
         "Research Type": "Defense",
         "Prerequisite": "Missile Defense System",
         "Cost": 10,
         "Description": "Your defensive improvements will attempt to shoot down Standard Missiles aimed at the region they are located in. Uses that improvement's hit value (without modifiers).",
-        "Location": "B1"
+        "Location": "B1",
+        "Modifiers": {}
     },
     "Missile Defense Network": {
         "Research Type": "Defense",
         "Prerequisite": "Local Missile Defense",
         "Cost": 15,
         "Description": "New Improvement: Missile Defense Network.",
-        "Location": "B2"
+        "Location": "B2",
+        "Modifiers": {}
     },
     "Surveillance Operations": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
         "Description": "New Improvement: Surveillance Center.",
-        "Location": "C0"
+        "Location": "C0",
+        "Modifiers": {}
     },
     "Economic Reports": {
         "Research Type": "Defense",
         "Prerequisite": "Surveillance Operations",
         "Cost": 10,
         "Description": "TBD",
-        "Location": "C1"
+        "Location": "C1",
+        "Modifiers": {}
     },
     "Military Intelligence": {
         "Research Type": "Defense",
         "Prerequisite": "Economic Reports",
         "Cost": 15,
         "Description": "TBD",
-        "Location": "C2"
+        "Location": "C2",
+        "Modifiers": {}
     }
 }
