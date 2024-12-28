@@ -80,8 +80,8 @@
         "Combat Value": 9,
         "Income": {
             "Dollars": 5,
-            "Political Power": 2,
-            "Technology": 1,
+            "Political Power": 1,
+            "Technology": 2,
             "Coal": 0,
             "Oil": 0,
             "Green Energy": 0,

@@ -825,7 +825,7 @@ def update_income(game_id: str) -> None:
             for income_string, count in resource_strings_dict.items():
                 if count > 1:
                     income_string = f'{income_string} [{count}x]'
-            final_income_strings[nation_name][resource_name].append(income_string)
+                final_income_strings[nation_name][resource_name].append(income_string)
 
     # save list of income strings to playerdata
     for playerdata in playerdata_list:
