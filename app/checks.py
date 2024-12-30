@@ -272,8 +272,6 @@ def update_misc_info(game_id, player_id):
     playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
-    with open(f'gamedata/{game_id}/vc_overrides.json', 'r') as json_file:
-        vc_overrides_dict = json.load(json_file)
     
     #get needed information from player
     nation_name_list = []
@@ -343,10 +341,6 @@ def update_misc_info(game_id, player_id):
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
-
-    #Update vc_extra.csv
-    with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
-        json.dump(vc_overrides_dict, json_file, indent=4)
 
 def update_trade_tax(game_id: str, player_id: int) -> None:
     """
@@ -429,13 +423,17 @@ def update_stockpile_limits(game_id, player_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def update_income(game_id, current_turn_num):
-    '''Updates income by resource and updates the income list in playerdata.'''
+def update_income(game_id: str) -> None:
+    """
+    Updates the incomes of all players and saves results to playerdata.
+    """
     
-    #define core lists
+    # get game data
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    current_turn_num = core.get_current_turn_num(int(game_id[-1]))
     alliance_table = AllianceTable(game_id)
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
@@ -443,29 +441,14 @@ def update_income(game_id, current_turn_num):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    #get needed information from players
-    nation_info_masterlist = core.get_nation_info(playerdata_list)
+    # get needed information from players
     nation_name_list = []
-    for entry in nation_info_masterlist:
-        nation_name_list.append(entry[0])
+    for playerdata in playerdata_list:
+        nation_name_list.append(playerdata[1])
     request_list = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-    playercount = len(playerdata_list)
 
-    #indexes
-    dollars_index = request_list.index('Dollars')
-    pp_index = request_list.index('Political Power')
-    tech_index = request_list.index('Technology')
-    coal_index = request_list.index('Coal')
-    oil_index = request_list.index('Oil')
-    green_index = request_list.index('Green Energy')
-    basic_index = request_list.index('Basic Materials')
-    common_index = request_list.index('Common Metals')
-    advanced_index = request_list.index('Advanced Metals')
-    uranium_index = request_list.index('Uranium')
-    rare_index = request_list.index('Rare Earth Elements')
-
-    #get top three records
+    # get top three records
     if current_turn_num > 4:
         top_largest_list = get_top_three(game_id, 'largest_nation', True)
         top_economy_list = get_top_three(game_id, 'strongest_economy', True)
@@ -478,471 +461,387 @@ def update_income(game_id, current_turn_num):
         research_score_not_tied = check_top_three(top_research_list)
         transactions_score_not_tied = check_top_three(top_transactions_list)
 
-    #create income lists
-    income_strings_masterlist = []
-    rate_income_masterlist = []
-    gross_income_masterlist = []
-    for i in range(playercount):
-        income_strings_masterlist.append([[], [], [], [], [], [], [], [], [], [], []])
-        rate_income_masterlist.append([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00])
-        gross_income_masterlist.append([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00])
-    
+    # create dict for tracking gross income details
+    gross_income_dict = {}
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
+        player_id = nation_name_list.index(nation_name) + 1
+        inner_dict = {
+            "Total Income": {},
+            "Income Rate": {},
+            "Income Strings": {}
+        }
+        # add entries for resources
+        for resource_name in request_list:
+            inner_dict["Total Income"][resource_name] = 0
+            i = request_list.index(resource_name)
+            rate = economy_masterlist[player_id - 1][i][3]
+            inner_dict["Income Rate"][resource_name] = float(rate) / 100
+            inner_dict["Income Strings"][resource_name] = {}
+        # add entry for military capacity
+        inner_dict["Total Income"]["Military Capacity"] = 0
+        inner_dict["Income Rate"]["Military Capacity"] = 1
+        inner_dict["Income Strings"]["Military Capacity"] = {}
+        # save
+        gross_income_dict[nation_name] = inner_dict
 
-    #Calculate Gross Income
-    for index, playerdata in enumerate(playerdata_list):
-        player_id = index + 1
-        nation_name = nation_info_masterlist[player_id - 1][0]
-        player_government = nation_info_masterlist[player_id - 1][2]
-        military_capacity = playerdata[5]
-        player_research_list = ast.literal_eval(playerdata[26])
-        improvement_count_list = ast.literal_eval(playerdata[27])
+    # create dict for tracking improvement yields
+    yield_dict = {}
+    for playerdata in playerdata_list:
+        yield_dict[playerdata[1]] = core.create_player_yield_dict(player_id, game_id)
+
+    # create dict for tracking improvement upkeep costs
+    upkeep_dict = {}
+    for playerdata in playerdata_list:
+        upkeep_dict[playerdata[1]] = core.create_player_upkeep_dict(player_id, game_id)
+
+    # add income from regions
+    for region_id in regdata_dict:
+        # load region data
+        region = Region(region_id, game_id)
+        region_improvement = Improvement(region_id, game_id)
+        # region_unit = Unit(region_id, game_id)
+        player_id = region.owner_id
+        # skip if no improvement or region is unowned
+        if region_improvement.name == None:
+            continue
+        if region.owner_id == 0:
+            continue
+        # get plural improvement name for income strings
+        if region_improvement.name[-1] != 'y':
+            plural_improvement_name = f'{region_improvement.name}s'
+        else:
+            plural_improvement_name = f'{region_improvement.name[:-1]}ies'
+        # add improvement yields to total income
+        nation_name = nation_name_list[player_id - 1]
+        improvement_income_dict = yield_dict[nation_name][region_improvement.name]
+        improvement_yield_dict = region_improvement.calculate_yield(improvement_income_dict)
+        for resource_name, amount_gained in improvement_yield_dict.items():
+            if amount_gained != 0:
+                gross_income_dict[nation_name]["Total Income"][resource_name] += amount_gained
+                income_str = f'&Tab;+{amount_gained:.2f} from {plural_improvement_name}'
+                if income_str not in gross_income_dict[nation_name]["Income Strings"][resource_name]:
+                    gross_income_dict[nation_name]["Income Strings"][resource_name][income_str] = 1
+                else:
+                    gross_income_dict[nation_name]["Income Strings"][resource_name][income_str] += 1
         
-        #calculate improvement incomes based on research
-        if 'Power Grid Restoration' in player_research_list and 'Central Banking System' in player_research_list:
-            city_income = 7
-        elif 'Power Grid Restoration' in player_research_list:
-            city_income = 5
-        else:
-            city_income = 3
-        if 'Coal Subsidies' in player_research_list:
-            coal_mine_income = 2
-        else:
-            coal_mine_income = 1
-        if 'Underground Mining' in player_research_list:
-            common_metals_mine_income = 2
-        else:
-            common_metals_mine_income = 1
-        if 'Industrial Advancements' in player_research_list:
-            industrial_zone_income = 2
-        else:
-            industrial_zone_income = 1
-        if 'Oil Subsidies' in player_research_list and 'Fracking' in player_research_list:
-            oil_well_income = 3
-        elif 'Oil Subsidies' in player_research_list:
-            oil_well_income = 2
-        else:
-            oil_well_income = 1
-        if 'Upgraded Facilities' in player_research_list:
-            research_lab_income = 2
-        else:
-            research_lab_income = 1
-        if 'Green Energy Subsidies' in player_research_list:
-            solar_farm_income = 3
-        else:
-            solar_farm_income = 2
-        if 'Open Pit Mining' in player_research_list:
-            strip_mine_coal_income = 6
-        else:
-            strip_mine_coal_income = 4
-        if 'Green Energy Subsidies' in player_research_list:
-            wind_farm_income = 2
-        else:
-            wind_farm_income = 1
-        if 'Resource Enrichment'  in player_research_list:
-            amm_mine_income = 2
-        else:
-            amm_mine_income = 1
-        if 'Resource Enrichment'  in player_research_list:
-            uranium_mine_income = 2
-        else:
-            uranium_mine_income = 1
-        
-        #get income from improvements
-        for region_id in regdata_dict:
-            region = Region(region_id, game_id)
-            region_improvement = Improvement(region_id, game_id)
-            region_resource = region.resource
-            improvement_name = region_improvement.name
-            #skip if no improvement
-            if improvement_name == None:
-                continue
-            #get plural improvement name
-            if improvement_name[-1] != 'y':
-                plural_improvement_name = f'{improvement_name}s'
-            else:
-                plural_improvement_name = f'{improvement_name[:-1]}ies'
-            #get remnant multiplier
-            if player_government == 'Remnant' and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
-                multiplier = 2
-            else:
-                multiplier = 1
-            #get central bank multiplier
-            if region.check_for_adjacent_improvement(improvement_names = {'Central Bank'}):
-                multiplier *= 1.2
-            #get pandemic multiplier
-            if "Pandemic" in active_games_dict[game_id]["Active Events"]:
-                region_quarantine = region.is_quarantined()
-                infection_score = region.infection()
-                infection_penalty = 0
-                if infection_score > 0:
-                    infection_penalty = infection_score * (0.1 * multiplier)
-                quarantine_penalty = 0
-                if region_quarantine is True:
-                    quarantine_penalty = multiplier * 0.5
-                multiplier -= infection_penalty
-                multiplier -= quarantine_penalty
-                if multiplier < 0:
-                    multiplier = 0
-            #get income based on improvement type
-            if region.owner_id == player_id and region.occupier_id == 0:
-                match improvement_name:
-                    case 'Advanced Metals Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, advanced_index, amm_mine_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, advanced_index, amm_mine_income, multiplier, plural_improvement_name)
-                    case 'Capital':
-                        gross_income_masterlist[player_id - 1][dollars_index] += 5
-                        gross_income_masterlist[player_id - 1][tech_index] += 2
-                        gross_income_masterlist[player_id - 1][pp_index] += 1
-                        income_strings_masterlist[player_id - 1][dollars_index] += [f'&Tab;+5 from {plural_improvement_name}']
-                        income_strings_masterlist[player_id - 1][tech_index] += [f'&Tab;+2 from {plural_improvement_name}']
-                        income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+1 from {plural_improvement_name}']
-                        if region_resource == 'Coal' and 'Coal Mining' in player_research_list:
-                            gross_income_masterlist[player_id - 1][coal_index] += 1
-                            income_strings_masterlist[player_id - 1][coal_index] += [f'&Tab;+1 from capital location.']
-                        elif region_resource == 'Oil' and 'Oil Drilling' in player_research_list:
-                            gross_income_masterlist[player_id - 1][oil_index] += 1
-                            income_strings_masterlist[player_id - 1][oil_index] += [f'&Tab;+1 from capital location.']
-                        elif region_resource == 'Basic Materials':
-                            gross_income_masterlist[player_id - 1][basic_index] += 1
-                            income_strings_masterlist[player_id - 1][basic_index] += [f'&Tab;+1 from capital location.']
-                        elif region_resource == 'Common Metals' and 'Surface Mining' in player_research_list:
-                            gross_income_masterlist[player_id - 1][common_index] += 1
-                            income_strings_masterlist[player_id - 1][common_index] += [f'&Tab;+1 from capital location.']
-                        elif region_resource == 'Advanced Metals' and 'Metallurgy' in player_research_list:
-                            gross_income_masterlist[player_id - 1][advanced_index] += 1
-                            income_strings_masterlist[player_id - 1][advanced_index] += [f'&Tab;+1 from capital location.']
-                        elif region_resource == 'Uranium' and 'Uranium Extraction' in player_research_list:
-                            gross_income_masterlist[player_id - 1][uranium_index] += 1
-                            income_strings_masterlist[player_id - 1][uranium_index] += [f'&Tab;+1 from capital location.']
-                        elif region_resource == 'Rare Earth Elements' and 'REE Mining' in player_research_list:
-                            gross_income_masterlist[player_id - 1][rare_index] += 1
-                            income_strings_masterlist[player_id - 1][rare_index] += [f'&Tab;+1 from capital location.']
-                    case 'City':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, dollars_index, city_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, dollars_index, city_income, multiplier, plural_improvement_name)
-                    case 'Coal Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, coal_index, coal_mine_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, coal_index, coal_mine_income, multiplier, plural_improvement_name)
-                    case 'Common Metals Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, common_index, common_metals_mine_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, common_index, common_metals_mine_income, multiplier, plural_improvement_name)
-                    case 'Industrial Zone':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, basic_index, industrial_zone_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, basic_index, industrial_zone_income, multiplier, plural_improvement_name)
-                    case 'Nuclear Power Plant':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, 6, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, 6, multiplier, plural_improvement_name)
-                    case 'Oil Refinery':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, oil_index, 2, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, oil_index, 2, multiplier, plural_improvement_name)
-                    case 'Oil Well':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, oil_index, oil_well_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, oil_index, oil_well_income, multiplier, plural_improvement_name)
-                    case 'Rare Earth Elements Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, rare_index, 1, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, rare_index, 1, multiplier, plural_improvement_name)
-                    case 'Research Institute':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, tech_index, 5, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, tech_index, 5, multiplier, plural_improvement_name)
-                    case 'Research Laboratory':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, tech_index, research_lab_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, tech_index, research_lab_income, multiplier, plural_improvement_name)
-                    case 'Solar Farm':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, green_index, solar_farm_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, solar_farm_income, multiplier, plural_improvement_name)
-                    case 'Strip Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, coal_index, strip_mine_coal_income, multiplier)
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, common_index, 2, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, coal_index, strip_mine_coal_income, multiplier, plural_improvement_name)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, common_index, 2, multiplier, plural_improvement_name)
-                    case 'Uranium Mine':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, uranium_index, uranium_mine_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, uranium_index, uranium_mine_income, multiplier, plural_improvement_name)
-                    case 'Wind Farm':
-                        gross_income_masterlist = update_gross_income_masterlist(gross_income_masterlist, player_id, green_index, wind_farm_income, multiplier)
-                        income_strings_masterlist = update_income_strings_masterlist(income_strings_masterlist, player_id, green_index, wind_farm_income, multiplier, plural_improvement_name)
-        
-        #political power income from top three
-        if current_turn_num > 4:
-            bonus_from_top_three = [1, 0.5, 0.25]
+    # political power income from top three
+    if current_turn_num > 4:
+        bonus_from_top_three = [1, 0.5, 0.25]
+        for nation_name in nation_name_list:
             for i in range(0, 3):
                 bonus = bonus_from_top_three[i]
                 if largest_score_not_tied[i] and nation_name in top_largest_list[i]:
-                    gross_income_masterlist[player_id - 1][pp_index] += bonus
-                    income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from relative nation size.']
+                    gross_income_dict[nation_name]["Total Income"]["Political Power"] += bonus
+                    income_str = f'&Tab;+{bonus:.2f} from relative nation size.'
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
                 if economy_score_not_tied[i] and nation_name in top_economy_list[i]:
-                    gross_income_masterlist[player_id - 1][pp_index] += bonus
-                    income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from relative economic power.']
+                    gross_income_dict[nation_name]["Total Income"]["Political Power"] += bonus
+                    income_str = f'&Tab;+{bonus:.2f} from relative economic power.'
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
                 if military_score_not_tied[i] and nation_name in top_military_list[i]:
-                    gross_income_masterlist[player_id - 1][pp_index] += bonus
-                    income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from relative military size.']
+                    gross_income_dict[nation_name]["Total Income"]["Political Power"] += bonus
+                    income_str = f'&Tab;+{bonus:.2f} from relative military size.'
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
                 if research_score_not_tied[i] and nation_name in top_research_list[i]:
-                    gross_income_masterlist[player_id - 1][pp_index] += bonus
-                    income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from relative research progress.']
+                    gross_income_dict[nation_name]["Total Income"]["Political Power"] += bonus
+                    income_str = f'&Tab;+{bonus:.2f} from relative research progress.'
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
                 if transactions_score_not_tied[i] and nation_name in top_transactions_list[i]:
-                    gross_income_masterlist[player_id - 1][pp_index] += bonus
-                    income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{bonus} from trade.']
+                    gross_income_dict[nation_name]["Total Income"]["Political Power"] += bonus
+                    income_str = f'&Tab;+{bonus:.2f} from trade.'
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
 
-        #political power income from alliances
+    # political power income from alliances
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
+        player_research_list = ast.literal_eval(playerdata[26])
         alliance_count, alliance_capacity = core.get_alliance_count(game_id, playerdata)
         if 'Power Broker' in player_research_list:
             alliance_income = 0.75
         else:
             alliance_income = 0.5
         if alliance_income * alliance_count > 0:
-            gross_income_masterlist[player_id - 1][pp_index] += alliance_income * alliance_count
+            gross_income_dict[nation_name]["Total Income"]["Political Power"] += alliance_income * alliance_count
             for i in range(alliance_count):
-                income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+{alliance_income} from alliances']
+                income_str = f'&Tab;+{alliance_income:.2f} from alliances'
+                if income_str not in gross_income_dict[nation_name]["Income Strings"]["Political Power"]:
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
+                else:
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] += 1
 
-        #political power from military junta bonus
-        if player_government == 'Military Junta':
-            used_mc, total_mc = core.read_military_capacity(military_capacity)
-            gross_income_masterlist[player_id - 1][pp_index] += (used_mc * 0.1)
+    # political power from military junta bonus
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
+        if playerdata[3] == 'Military Junta':
+            used_mc, total_mc = core.read_military_capacity(playerdata[5])
+            gross_income_dict[nation_name]["Total Income"]["Political Power"] += (used_mc * 0.1)
             while used_mc > 0:
-                income_strings_masterlist[player_id - 1][pp_index] += [f'&Tab;+0.1 from Military Junta bonus.']
+                income_str = f'&Tab;+0.10 from Military Junta bonus.'
+                if income_str not in gross_income_dict[nation_name]["Income Strings"]["Political Power"]:
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
+                else:
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] += 1
                 used_mc -= 0.1
 
-        #political power from events
+    # political power from events
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
         if "Influence Through Trade" in active_games_dict[game_id]["Active Events"]:
             income_bonus_winner = active_games_dict[game_id]["Active Events"]["Influence Through Trade"]["Income Bonus Winner"]
             if nation_name == income_bonus_winner:
-                gross_income_masterlist[player_id - 1][pp_index] += 0.5
-                income_strings_masterlist[player_id - 1][pp_index] += [f'+0.5 from events.']
+                gross_income_dict[nation_name]["Total Income"]["Political Power"] += 0.5
+                income_str = f'+0.50 from events.'
+                if income_str not in gross_income_dict[nation_name]["Income Strings"]["Political Power"]:
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
+                else:
+                    gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] += 1
         if "Faustian Bargain" in active_games_dict[game_id]["Active Events"]:
             chosen_nation_name = active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"]
             if nation_name == chosen_nation_name:
                 pp_from_lease = 0.2 * len(active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"])
                 if pp_from_lease > 0:
-                    gross_income_masterlist[player_id - 1][pp_index] += pp_from_lease
-                    income_strings_masterlist[player_id - 1][pp_index] += [f'+{pp_from_lease} from events.']
+                    gross_income_dict[nation_name]["Total Income"]["Political Power"] += pp_from_lease
+                    income_str = f'+{pp_from_lease:.2f} from events.'
+                    if income_str not in gross_income_dict[nation_name]["Income Strings"]["Political Power"]:
+                        gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] = 1
+                    else:
+                        gross_income_dict[nation_name]["Income Strings"]["Political Power"][income_str] += 1
 
-        # dollars from trade agreements
-        for alliance in alliance_table:
-            if alliance.is_active and nation_name in alliance.current_members and alliance.type == "Trade Agreement":
-                total = 0.0
+    # dollars from trade agreements
+    for alliance in alliance_table:
+        if alliance.is_active and alliance.type == "Trade Agreement":
+            total = 0.0
+            for ally_name in alliance.current_members:
+                ally_id = nation_name_list.index(ally_name) + 1
+                ally_improvement_count_list = ast.literal_eval(playerdata_list[ally_id - 1][27])
+                total += ally_improvement_count_list[improvement_name_list.index("City")]
+                total += ally_improvement_count_list[improvement_name_list.index("Central Bank")]
+                total += ally_improvement_count_list[improvement_name_list.index("Capital")]
+            if total > 0.0:
                 for ally_name in alliance.current_members:
-                    ally_id = nation_name_list.index(ally_name) + 1
-                    ally_improvement_count_list = ast.literal_eval(playerdata_list[ally_id - 1][27])
-                    total += ally_improvement_count_list[improvement_name_list.index("City")]
-                    total += ally_improvement_count_list[improvement_name_list.index("Central Bank")]
-                    total += ally_improvement_count_list[improvement_name_list.index("Capital")]
-                if total > 0.0:
-                    gross_income_masterlist[player_id - 1][dollars_index] += total * 0.5
-                    income_strings_masterlist[player_id - 1][dollars_index] += [f'&Tab;+{total * 0.5} from {alliance.name}.']
+                    trade_agreement_yield = total * 0.5
+                    gross_income_dict[nation_name]["Total Income"]["Dollars"] += trade_agreement_yield
+                    income_str = f'&Tab;+{trade_agreement_yield:.2f} from {alliance.name}.'
+                    if income_str not in gross_income_dict[nation_name]["Income Strings"]["Dollars"]:
+                        gross_income_dict[nation_name]["Income Strings"]["Dollars"][income_str] = 1
+                    else:
+                        gross_income_dict[nation_name]["Income Strings"]["Dollars"][income_str] += 1
 
-        # tech from research agreements
-        for alliance in alliance_table:
-            if alliance.is_active and nation_name in alliance.current_members and alliance.type == "Research Agreement":
-                tech_set = set()
+    # tech from research agreements
+    for alliance in alliance_table:
+        if alliance.is_active and alliance.type == "Research Agreement":
+            tech_set = set()
+            for ally_name in alliance.current_members:
+                ally_id = nation_name_list.index(ally_name) + 1
+                ally_research_list = ast.literal_eval(playerdata_list[ally_id - 1][26])
+                tech_set.update(ally_research_list)
+            if len(tech_set) > 0:
                 for ally_name in alliance.current_members:
-                    ally_id = nation_name_list.index(ally_name) + 1
-                    ally_research_list = ast.literal_eval(playerdata_list[ally_id - 1][26])
-                    tech_set.update(ally_research_list)
-                if len(tech_set) > 0:
-                    print(tech_set)
-                    gross_income_masterlist[player_id - 1][tech_index] += len(tech_set) * 0.2
-                    income_strings_masterlist[player_id - 1][tech_index] += [f'&Tab;+{len(tech_set) * 0.2} from {alliance.name}.']
+                    research_agreement_yield = len(tech_set) * 0.2
+                    gross_income_dict[nation_name]["Total Income"]["Technology"] += research_agreement_yield
+                    income_str = f'&Tab;+{research_agreement_yield:.2f} from {alliance.name}.'
+                    if income_str not in gross_income_dict[nation_name]["Income Strings"]["Dollars"]:
+                        gross_income_dict[nation_name]["Income Strings"]["Dollars"][income_str] = 1
+                    else:
+                        gross_income_dict[nation_name]["Income Strings"]["Dollars"][income_str] += 1
     
+    # apply income rate to gross income
+    for nation_name, income_data in gross_income_dict.items():
+        for resource_name, total_income in income_data["Total Income"].items():
+            rate = income_data["Income Rate"][resource_name]
+            final_gross_income = total_income * rate
+            rate_diff = final_gross_income - total_income
+            rate_diff = round(rate_diff, 2)
+            if rate_diff > 0:
+                income_str = f'&Tab;+{rate_diff:.2f} from income rate.'
+                gross_income_dict[nation_name]["Income Strings"][resource_name][income_str] = 1
+            elif rate_diff < 0:
+                income_str = f'&Tab;-{rate_diff:.2f} from income rate.'
+                gross_income_dict[nation_name]["Income Strings"][resource_name][income_str] = 1
+            gross_income_dict[nation_name]["Total Income"][resource_name] = final_gross_income
 
-    #Apply Rate to Gross Income
-    for index, player in enumerate(playerdata_list):
-        player_id = index + 1
-        rate_list = []
-        for i in range(len(request_list)):
-            rate_list.append(economy_masterlist[player_id - 1][i][3])
-        for index, rate in enumerate(rate_list):
-            gross_income = gross_income_masterlist[player_id - 1][index]
-            rate = float(rate) / 100
-            final_gross_income = gross_income * rate
-            rate_diff = final_gross_income - gross_income
-            rate_diff = core.round_total_income(rate_diff)
-            if float(rate_diff) > 0:
-                string_list = income_strings_masterlist[player_id - 1][index]
-                string_list.insert(0, f'&Tab;+{rate_diff} from income rate.')
-                income_strings_masterlist[player_id - 1][index] == string_list
-            elif float(rate_diff) < 0:
-                string_list = income_strings_masterlist[player_id - 1][index]
-                string_list.insert(0, f'&Tab;{rate_diff} from income rate.')
-                income_strings_masterlist[player_id - 1][index] == string_list
-            rate_income_masterlist[player_id - 1][index] = rate_diff
-            final_gross_income = round(final_gross_income, 2)
-            gross_income_masterlist[player_id - 1][index] = final_gross_income
+    # save gross income results
+    with open(f'gamedata/{game_id}/gross_income_results.json', 'w') as json_file:
+        json.dump(gross_income_dict, json_file, indent=4)
     
-
-    #Calculate Net Income
-    net_income_masterlist = gross_income_masterlist
-    for index, playerdata in enumerate(playerdata_list):
-        player_id = index + 1
-        nation_name = nation_info_masterlist[player_id - 1][0]
-        player_government = nation_info_masterlist[player_id - 1][2]
-        misc_info_list = ast.literal_eval(playerdata[24])
-        player_research_list = ast.literal_eval(playerdata[26])
+    # Calculate Net Income
+    net_income_dict = gross_income_dict
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
+        player_id = nation_name_list.index(nation_name) + 1
+        unit_count_list = core.get_unit_count_list(player_id, game_id)
         improvement_count_list = ast.literal_eval(playerdata[27])
+        player_research_list = ast.literal_eval(playerdata[26])
         nation_status = playerdata[28]
         
-        #account for subject dues
+        # account for subject dues
         if 'Puppet State' in nation_status:
-            for nation_name in nation_name_list:
-                if nation_name in nation_status:
-                    overlord_name = nation_name
+            for temp in nation_name_list:
+                if temp in nation_status:
+                    overlord_name = temp
                     break
-            overlord_id = nation_name_list.index(overlord_name) + 1
-            for i in range(0, 11):
-                if i == 1:
-                    continue
-                selected_income = net_income_masterlist[player_id - 1][i]
-                tax_amount = selected_income * 0.2
-                net_income_masterlist[player_id - 1][i] -= round(tax_amount, 2)
-                net_income_masterlist[overlord_id - 1][i] += round(tax_amount, 2)
-                income_strings_masterlist[player_id - 1][i] += [f'&Tab;-{tax_amount} from puppet state status.']
-                income_strings_masterlist[overlord_id - 1][i] += [f'&Tab;+{tax_amount} from puppet states.']
+            for resource_name in request_list:
+                puppet_state_resource_income = net_income_dict[nation_name]["Total Income"][resource_name]
+                tax_amount = puppet_state_resource_income * 0.2
+                tax_amount = round(tax_amount, 2)
+                net_income_dict[nation_name]["Total Income"][resource_name] -= tax_amount
+                income_str = f'&Tab;-{tax_amount:.2f} from puppet state tribute.'
+                if income_str not in net_income_dict[nation_name]["Income Strings"][resource_name]:
+                    net_income_dict[nation_name]["Income Strings"][resource_name][income_str] = 1
+                else:
+                    net_income_dict[nation_name]["Income Strings"][resource_name][income_str] += 1
+                net_income_dict[overlord_name]["Total Income"][resource_name] += tax_amount
+                income_str = f'&Tab;+{tax_amount:.2f} from {nation_name} tribute.'
+                if income_str not in net_income_dict[overlord_name]["Income Strings"][resource_name]:
+                    net_income_dict[overlord_name]["Income Strings"][resource_name][income_str] = 1
+                else:
+                    net_income_dict[overlord_name]["Income Strings"][resource_name][income_str] += 1
         
-        
-        #Pay Upkeep Costs
-        unit_count_list = core.get_unit_count_list(player_id, game_id)
-        improvement_dollar_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Dollars Upkeep', playerdata, unit_count_list)
-        improvement_energy_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Energy Upkeep', playerdata, unit_count_list)
-        unit_dollar_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Unit Dollars Upkeep', playerdata, unit_count_list)
-        unit_energy_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Unit Oil Upkeep', playerdata, unit_count_list)
-        improvement_dollar_upkeep_count = core.get_upkeep_sum(improvement_dollar_upkeep_dict)
-        improvement_energy_upkeep_count = core.get_upkeep_sum(improvement_energy_upkeep_dict)
-        unit_dollar_upkeep_count = core.get_upkeep_sum(unit_dollar_upkeep_dict)
-        unit_energy_upkeep_count = core.get_upkeep_sum(unit_energy_upkeep_dict)
-        total_upkeep_costs = improvement_energy_upkeep_count + unit_energy_upkeep_count
-        unit_oil_upkeep_costs = unit_energy_upkeep_count
-        dollars_upkeep_costs = improvement_dollar_upkeep_count + unit_dollar_upkeep_count
-        
-        #upkeep manager bullshit
-        coal_income = net_income_masterlist[player_id - 1][coal_index]
-        oil_income = net_income_masterlist[player_id - 1][oil_index]
-        green_energy = net_income_masterlist[player_id - 1][green_index]
-        if total_upkeep_costs > 0:
+        # temporary stopgap that turns the count lists into dicts
+        player_unit_count_dict = {}
+        unit_name_list = sorted(unit_data_dict.keys())
+        for index, count in enumerate(unit_count_list):
+            player_unit_count_dict[unit_name_list[index]] = count
+        player_improvement_count_dict = {}
+        for index, count in enumerate(improvement_count_list):
+            player_improvement_count_dict[improvement_name_list[index]] = count
+
+        # calculate player upkeep costs
+        player_upkeep_costs_dict = {
+            "Dollars": {
+                "From Units": core.calculate_upkeep("Dollars", upkeep_dict[nation_name], player_unit_count_dict),
+                "From Improvements": core.calculate_upkeep("Dollars", upkeep_dict[nation_name], player_improvement_count_dict)
+            },
+            "Oil": {
+                "From Units": core.calculate_upkeep("Oil", upkeep_dict[nation_name], player_unit_count_dict),
+                "From Improvements": core.calculate_upkeep("Oil", upkeep_dict[nation_name], player_improvement_count_dict)
+            },
+            "Uranium": {
+                "From Units": core.calculate_upkeep("Uranium", upkeep_dict[nation_name], player_unit_count_dict),
+                "From Improvements": core.calculate_upkeep("Uranium", upkeep_dict[nation_name], player_improvement_count_dict)
+            },
+            "Energy": {
+                "From Units": core.calculate_upkeep("Energy", upkeep_dict[nation_name], player_unit_count_dict),
+                "From Improvements": core.calculate_upkeep("Energy", upkeep_dict[nation_name], player_improvement_count_dict)
+            }
+        }
+        dollars_upkeep_sum = sum(player_upkeep_costs_dict["Dollars"][key] for key in player_upkeep_costs_dict["Dollars"])
+        oil_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"])
+        uranium_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"])
+        main_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"]) + sum(player_upkeep_costs_dict["Energy"][key] for key in player_upkeep_costs_dict["Energy"])
+        dollars_upkeep_sum = round(dollars_upkeep_sum, 2)
+        oil_upkeep_sum = round(oil_upkeep_sum, 2)
+        uranium_upkeep_sum = round(uranium_upkeep_sum, 2)
+        main_upkeep_sum = round(main_upkeep_sum, 2)
+
+        if main_upkeep_sum > 0:
             upkeep_manager_list = ast.literal_eval(playerdata[23])
-            allocated_coal = upkeep_manager_list[0]
-            allocated_oil = upkeep_manager_list[1]
-            allocated_green = upkeep_manager_list[2]
-            upkeep_manager_total = float(allocated_coal) + float(allocated_oil) + float(allocated_green)
-            #prompt for allocation if total upkeep costs have changed since last turn
-            if upkeep_manager_total != total_upkeep_costs:
-                total_upkeep_costs = core.round_total_income(total_upkeep_costs)
-                #run upkeep manager
-                upkeep_manager_header = f'Upkeep Manager for {nation_name}'
-                upkeep_manager_total_str = f'Total upkeep costs: -{total_upkeep_costs}. From units: -{unit_oil_upkeep_costs}.'
-                print(upkeep_manager_header)
-                print(upkeep_manager_total_str)
-                print("{:<20s}{:<20s}{:<20s}".format('Resource', 'Gross Income', 'Currently Allocated'))
-                print("{:<20s}{:<20s}{:<20s}".format('Coal', str(coal_income), allocated_coal))
-                print("{:<20s}{:<20s}{:<20s}".format('Oil', str(oil_income), allocated_oil))
-                print("{:<20s}{:<20s}{:<20s}".format('Green Energy', str(green_energy), allocated_green))
+            allocated_coal = float(upkeep_manager_list[0])
+            allocated_oil = float(upkeep_manager_list[1])
+            allocated_green = float(upkeep_manager_list[2])
+            upkeep_manager_total = round(allocated_coal + allocated_oil + allocated_green, 2)
+            # summon upkeep manager if total upkeep costs have changed since last turn
+            if upkeep_manager_total != main_upkeep_sum:
+                coal_income = net_income_dict[nation_name]["Total Income"]["Coal"]
+                oil_income = net_income_dict[nation_name]["Total Income"]["Oil"]
+                green_income = net_income_dict[nation_name]["Total Income"]["Green Energy"]
+                # run upkeep manager
+                print(f"Upkeep Manager for {nation_name}")
+                print(f"Total energy upkeep due: {main_upkeep_sum}. From oil: {oil_upkeep_sum}.")
+                print("{:<20s}{:<20s}{:<20s}".format("Resource", "Net Income", "Currently Allocated"))
+                print("{:<20s}{:<20s}{:<20s}".format("Coal", f"{coal_income:.2f}", f"{allocated_coal:.2f}"))
+                print("{:<20s}{:<20s}{:<20s}".format("Oil", f"{oil_income:.2f}", f"{allocated_oil:.2f}"))
+                print("{:<20s}{:<20s}{:<20s}".format("Green Energy", f"{green_income:.2f}", f"{allocated_green:.2f}"))
                 while True:
-                    upkeep_manager_input = input('Please enter new upkeep allocations as a three-item list: ')
+                    upkeep_manager_input = input("Please enter new upkeep allocations as a three-item list of positive integers: ")
                     upkeep_manager_input_list = upkeep_manager_input.split(',')
                     if len(upkeep_manager_input_list) == 3:
                         allocated_coal = float(upkeep_manager_input_list[0])
                         allocated_oil = float(upkeep_manager_input_list[1])
                         allocated_green = float(upkeep_manager_input_list[2])
-                        allocated_coal = core.round_total_income(allocated_coal)
-                        allocated_oil = core.round_total_income(allocated_oil)
-                        allocated_green = core.round_total_income(allocated_green)
+                        allocated_coal_str = core.round_total_income(allocated_coal)
+                        allocated_oil_str = core.round_total_income(allocated_oil)
+                        allocated_green_str = core.round_total_income(allocated_green)
+                        main_upkeep_sum_str = core.round_total_income(main_upkeep_sum)
                         break
                 print('==================================================')
-                #update playerdata
-                upkeep_manager_list = [allocated_coal, allocated_oil, allocated_green, total_upkeep_costs]
+                # update playerdata
+                upkeep_manager_list = [allocated_coal_str, allocated_oil_str, allocated_green_str, main_upkeep_sum_str]
                 playerdata[23] = str(upkeep_manager_list)
-            #make payments
-            if float(allocated_coal) > 0:
-                net_income_masterlist[player_id - 1][coal_index] -= float(allocated_coal)
-                income_strings_masterlist[player_id - 1][coal_index] += [f'&Tab;-{allocated_coal} from upkeep allocations.']
+            # pay main upkeep
+            if allocated_coal > 0:
+                net_income_dict[nation_name]["Total Income"]["Coal"] -= allocated_coal
+                income_str = f'&Tab;-{allocated_coal:.2f} from upkeep allocations.'
+                net_income_dict[nation_name]["Income Strings"]["Coal"][income_str] = 1
             #pay oil upkeep
-            if float(allocated_oil) > 0:
-                net_income_masterlist[player_id - 1][oil_index] -= float(allocated_oil)
-                income_strings_masterlist[player_id - 1][oil_index] += [f'&Tab;-{allocated_oil} from upkeep allocations.']
+            if allocated_oil > 0:
+                net_income_dict[nation_name]["Total Income"]["Oil"] -= allocated_oil
+                income_str = f'&Tab;-{allocated_oil:.2f} from upkeep allocations.'
+                net_income_dict[nation_name]["Income Strings"]["Oil"][income_str] = 1
             #pay green energy upkeep
-            if float(allocated_green) > 0:
-                net_income_masterlist[player_id - 1][green_index] -= float(allocated_green)
-                income_strings_masterlist[player_id - 1][green_index] += [f'&Tab;-{allocated_green} from upkeep allocations.']
-        #pay uranium upkeep
-        nuclear_power_plant_count = improvement_count_list[15]
-        if nuclear_power_plant_count > 0:
-            net_income_masterlist[player_id - 1][uranium_index] -= (nuclear_power_plant_count * 0.5)
-            income_strings_masterlist[player_id - 1][uranium_index] += [f'&Tab;-0.5 from Nuclear Power Plant upkeep [{nuclear_power_plant_count}x]']
-        #pay dollars upkeep
-        if dollars_upkeep_costs > 0:
-            net_income_masterlist[player_id - 1][dollars_index] -= dollars_upkeep_costs
-            income_strings_masterlist[player_id - 1][dollars_index] += [f'&Tab;-{dollars_upkeep_costs} from upkeep allocations.']
-    
-    #update economy masterlist
-    for i in range(len(economy_masterlist)):
-        for j in range(0, 11):
-            economy_masterlist[i][j][2] = core.round_total_income(net_income_masterlist[i][j])
-    
+            if allocated_green > 0:
+                net_income_dict[nation_name]["Total Income"]["Green Energy"] -= allocated_green
+                income_str = f'&Tab;-{allocated_green:.2f} from upkeep allocations.'
+                net_income_dict[nation_name]["Income Strings"]["Green Energy"][income_str] = 1
+        
+        # pay dollars upkeep
+        if dollars_upkeep_sum > 0:
+            net_income_dict[nation_name]["Total Income"]["Dollars"] -= dollars_upkeep_sum
+            income_str = f'&Tab;-{dollars_upkeep_sum:.2f} from upkeep allocations.'
+            net_income_dict[nation_name]["Income Strings"]["Dollars"][income_str] = 1
 
-    #Filter Income Strings
-    filtered_income_string_masterlist = []
-    for i in range(playercount):
-        filtered_income_string_masterlist.append([[], [], [], [], [], [], [], [], [], [], []])
-    for i in range(len(income_strings_masterlist)):
-        income_string_dic = {
-            'Dollars': {},
-            'Political Power': {},
-            'Technology': {},
-            'Coal': {},
-            'Oil': {},
-            'Green Energy': {},
-            'Basic Materials': {},
-            'Common Metals': {},
-            'Advanced Metals': {},
-            'Uranium': {},
-            'Rare Earth Elements': {},
-        }
-        for j in range(0, 11):
-            resource_type = request_list[j]
-            string_list = income_strings_masterlist[i][j]
-            for string in string_list:
-                if string in income_string_dic[resource_type]:
-                    income_string_dic[resource_type][string] += 1
-                else:
-                    income_string_dic[resource_type][string] = 1
-        for category, inner_dict in income_string_dic.items():
-            j = request_list.index(category)
-            for string, value in inner_dict.items():
-                exclude_substrings = ['upkeep', 'income rate', 'Puppet State', 'Puppet States', 'from relative', 'trade']
-                for alliance in alliance_table:
-                    exclude_substrings.append(alliance.name)
-                if all(substring not in string for substring in exclude_substrings):
-                    output_str = f'{string} [{value}x]'
-                else:
-                    output_str = string
-                filtered_income_string_masterlist[i][j] += [output_str]
+        # pay uranium upkeep
+        if uranium_upkeep_sum > 0:
+            net_income_dict[nation_name]["Total Income"]["Uranium"] -= uranium_upkeep_sum
+            income_str = f'&Tab;-{uranium_upkeep_sum:.2f} from upkeep allocations.'
+            net_income_dict[nation_name]["Income Strings"]["Uranium"][income_str] = 1
     
-    #add calculated totals to income strings
-    for i in range(len(filtered_income_string_masterlist)):
-        for j in range(0, 11):
-            net_income = economy_masterlist[i][j][2]
-            resource_type = request_list[j]
-            income_list = filtered_income_string_masterlist[i][j]
-            if float(net_income) > 0:
-                income_list.insert(0, f'+{net_income} {resource_type}')
-            elif float(net_income) < 0:
-                income_list.insert(0, f'{net_income} {resource_type}')
-            elif float(net_income) == 0:
-                income_list.insert(0, f'REMOVE ME')
-            filtered_income_string_masterlist[i][j] == income_list
+    # update economy masterlist
+    for i, playerdata in enumerate(playerdata_list):
+        nation_name = playerdata[1]
+        for j, resource_name in enumerate(request_list):
+            economy_masterlist[i][j][2] = core.round_total_income(net_income_dict[nation_name]["Total Income"][resource_name])
     
-    #package income strings
-    joined_income_strings_masterlist = []
-    for player_income_string_list in filtered_income_string_masterlist:
-        merged_contents = []
-        for inner_list in player_income_string_list:
-            if inner_list[0] != 'REMOVE ME':
-                merged_contents += inner_list
-        joined_income_strings_masterlist.append(merged_contents)
+    # create strings for net incomes
+    final_income_strings = {}
+    for nation_name, net_income_data in net_income_dict.items():
+        final_income_strings[nation_name] = {}
+        for resource_name, resource_total in net_income_data["Total Income"].items():
+            str_list = []
+            resource_total = round(float(resource_total), 2)
+            if resource_total > 0:
+                str_list.append(f'+{resource_total:.2f} {resource_name}')
+            elif resource_total < 0:
+                str_list.append(f'{resource_total:.2f} {resource_name}')
+            elif resource_total == 0:
+                # we will avoid displaying resource incomes that balance out to zero to save space
+                str_list.append(False)
+            final_income_strings[nation_name][resource_name] = str_list
 
+    # group income strings and add them to the final_income_strings dict
+    for nation_name, net_income_data in net_income_dict.items():
+        for resource_name, resource_strings_dict in net_income_data["Income Strings"].items():
+            for income_string, count in resource_strings_dict.items():
+                if count > 1:
+                    income_string = f'{income_string} [{count}x]'
+                final_income_strings[nation_name][resource_name].append(income_string)
 
-    #Update playerdata.csv
+    # save list of income strings to playerdata
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
+        resource_string_lists = final_income_strings[nation_name]
+        temp = []
+        for resource_name, string_list in resource_string_lists.items():
+            if string_list[0] is False:
+                # skip over resources that have net incomes of zero
+                continue
+            temp += string_list
+        playerdata[25] = temp
+
+    # update playerdata.csv
     for index, playerdata in enumerate(playerdata_list):
         playerdata[9:20] = economy_masterlist[index][:11]
-        playerdata[25] = joined_income_strings_masterlist[index]
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
@@ -1024,140 +923,212 @@ def countdown(game_id, map_name):
         resource_map = map.ResourceMap(int(game_id[-1]), map_name)
         resource_map.update()
 
-def resolve_shortages(game_id, player_id): 
-    '''
-    Resolves negative resource values after income is processed.
-    '''
+def resolve_resource_shortages(game_id: str) -> None:
+    """
+    Resolves resource shortages by pruning units and improvements that cost upkeep.
+    """
 
-    # define core lists
+    # get game info
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     notifications = Notifications(game_id)
+    unit_data_dict = core.get_scenario_dict(game_id, "Units")
+    unit_name_list = sorted(unit_data_dict.keys())
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_name_list = sorted(improvement_data_dict.keys())
+    nation_name_list = []
+    for playerdata in playerdata_list:
+        nation_name_list.append(playerdata[1])
+    request_list = ['Dollars', 'Coal', 'Oil', 'Green Energy', 'Uranium']
 
-    # get needed information from player
-    playerdata = playerdata_list[player_id - 1]
-    nation_name = playerdata[1]
-    request_list = ['Dollars', 'Coal', 'Oil', 'Green Energy']
-    economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-    unit_count_list = core.get_unit_count_list(player_id, game_id)
-    upkeep_manager_list = ast.literal_eval(playerdata[23])
+    # create dict for tracking improvement upkeep costs
+    upkeep_dict = {}
+    for playerdata in playerdata_list:
+        nation_name = playerdata[1]
+        player_id = nation_name_list.index(nation_name) + 1
+        upkeep_dict[playerdata[1]] = core.create_player_upkeep_dict(player_id, game_id)
 
-    # get resource stockpiles
-    stockpile_list = []
-    for i in range(len(request_list)):
-        stockpile_list.append(economy_masterlist[player_id - 1][i][0])
-    dollars_stockpile = float(stockpile_list[0])
-    coal_stockpile = float(stockpile_list[1])
-    oil_stockpile = float(stockpile_list[2])
-    green_stockpile = float(stockpile_list[3])
+    for playerdata in playerdata_list:
 
-    # get upkeep costs
-    dollars_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Dollars Upkeep', playerdata, unit_count_list)
-    energy_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Energy Upkeep', playerdata, unit_count_list)
-    dollars_unit_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Dollars Unit Upkeep', playerdata, unit_count_list)
-    oil_unit_upkeep_dict = core.get_upkeep_dictionary(game_id, 'Oil Unit Upkeep', playerdata, unit_count_list)
+        # get player information
+        nation_name = playerdata[1]
+        player_id = nation_name_list.index(nation_name) + 1
+        economy_masterlist = core.get_economy_info(playerdata_list, request_list)
+        improvement_count_list = ast.literal_eval(playerdata[27])
+        unit_count_list = core.get_unit_count_list(player_id, game_id)
+        upkeep_manager_list = ast.literal_eval(playerdata[23])  # 0-coal    #1-oil  #2-green    #3-total
 
+        # temporary stopgap that turns the count lists into dicts
+        player_unit_count_dict = {}
+        for index, count in enumerate(unit_count_list):
+            player_unit_count_dict[unit_name_list[index]] = count
+        player_improvement_count_dict = {}
+        for index, count in enumerate(improvement_count_list):
+            player_improvement_count_dict[improvement_name_list[index]] = count
 
-    # Resolve Energy Shortages
-    while oil_stockpile < 0:
-        for improvement_name in energy_upkeep_dict:
-            improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
-            while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                # destroy random improvement of that type
-                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to oil shortages.', 6)
-                oil_stockpile += improvement_upkeep
-                energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
+        # ignore upkeep data for improvements and units the player does not have
+        player_upkeep_dict = upkeep_dict[nation_name]
+        player_count_dict = player_unit_count_dict | player_improvement_count_dict
+        del player_unit_count_dict
+        del player_improvement_count_dict
+        keys_to_remove = [name for name, count in player_count_dict.items() if count == 0]
+        for name in keys_to_remove:
+            if name in player_upkeep_dict:
+                del player_upkeep_dict[name]
+
+        # get resource stockpiles
+        stockpile_list = []
+        for i in range(len(request_list)):
+            stockpile_list.append(economy_masterlist[player_id - 1][i][0])
+        dollars_stockpile = float(stockpile_list[0])
+        coal_stockpile = float(stockpile_list[1])
+        oil_stockpile = float(stockpile_list[2])
+        green_stockpile = float(stockpile_list[3])
+        uranium_stockpile = float(stockpile_list[4])
+
+        # get pool of oil consumers
+        oil_consumers = []
+        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
+            if "Oil" in resource_upkeep_dict and resource_upkeep_dict["Oil"]["Upkeep"] > 0 and resource_upkeep_dict["Oil"]["Upkeep Multiplier"] > 0:
+                oil_consumers.append(target_name)
+        # prune until oil shortage eliminated
+        while oil_stockpile < 0 and oil_consumers != []:
+            oil_consumer = random.choice(oil_consumers)
+            if player_count_dict.get(oil_consumer, 0) > 0:
+                consumer_upkeep = player_upkeep_dict[oil_consumer]["Oil"]["Upkeep"] * player_upkeep_dict[oil_consumer]["Oil"]["Upkeep Multiplier"]
+                # destroy random consumer
+                region_id = core.search_and_destroy(game_id, player_id, oil_consumer)
+                notifications.append(f'{nation_name} lost a {oil_consumer} in {region_id} due to oil shortages.', 6)
+                oil_stockpile += consumer_upkeep
+                player_count_dict[oil_consumer] -= 1
                 # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= improvement_upkeep
+                total_dedicated_upkeep -= consumer_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
                 dedicated_oil_upkeep = float(upkeep_manager_list[1])
-                dedicated_oil_upkeep -= improvement_upkeep
+                dedicated_oil_upkeep -= consumer_upkeep
                 upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
-        for unit_name in oil_unit_upkeep_dict:
-            unit_upkeep = oil_unit_upkeep_dict[unit_name]['Improvement Upkeep']
-            while oil_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
-                # destroy random unit of that type
-                region_id = core.search_and_destroy_unit(game_id, player_id, unit_name)
-                notifications.append(f'{nation_name} lost a {unit_name} in {region_id} due to oil shortages.', 6)
-                oil_stockpile += unit_upkeep
-                oil_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
+            else:
+                # no more of that consumer remaining
+                oil_consumers.remove(oil_consumer)
+                del player_upkeep_dict[oil_consumer]
+
+        # get pool of energy consumers
+        # energy upkeep can be covered by either coal, oil, or green energy
+        energy_consumers = []
+        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
+            if "Energy" in resource_upkeep_dict and resource_upkeep_dict["Energy"]["Upkeep"] > 0 and resource_upkeep_dict["Energy"]["Upkeep Multiplier"] > 0:
+                energy_consumers.append(target_name)
+        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
+            if "Oil" in resource_upkeep_dict and resource_upkeep_dict["Oil"]["Upkeep"] > 0 and resource_upkeep_dict["Oil"]["Upkeep Multiplier"] > 0:
+                energy_consumers.append(target_name)
+        # prune until energy shortage eliminated
+        while coal_stockpile < 0 and energy_consumers != []:
+            energy_consumer = random.choice(energy_consumers)
+            if player_count_dict.get(energy_consumer, 0) > 0:
+                consumer_upkeep = player_upkeep_dict[energy_consumer]["Energy"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Energy"]["Upkeep Multiplier"]
+                # destroy random consumer
+                region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
+                notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
+                coal_stockpile += consumer_upkeep
+                player_count_dict[energy_consumer] -= 1
                 # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= unit_upkeep
-                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
-                dedicated_oil_upkeep = float(upkeep_manager_list[1])
-                dedicated_oil_upkeep -= unit_upkeep
-                upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
-    while coal_stockpile < 0:
-        for improvement_name in energy_upkeep_dict:
-            improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
-            while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                # destroy random improvement of that type
-                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to coal shortages.', 6)
-                coal_stockpile += improvement_upkeep
-                energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
-                # adjust upkeep manager
-                total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= improvement_upkeep
+                total_dedicated_upkeep -= consumer_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
                 dedicated_coal_upkeep = float(upkeep_manager_list[0])
-                dedicated_coal_upkeep -= improvement_upkeep
+                dedicated_coal_upkeep -= consumer_upkeep
                 upkeep_manager_list[0] = core.round_total_income(dedicated_coal_upkeep)
-    while green_stockpile < 0:
-        for improvement_name in energy_upkeep_dict:
-            improvement_upkeep = energy_upkeep_dict[improvement_name]['Improvement Upkeep']
-            while energy_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                # destroy random improvement of that type
-                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to green energy shortages.', 6)
-                green_stockpile += improvement_upkeep
-                energy_upkeep_dict[improvement_name]['Improvement Count'] -= 1
+        while oil_stockpile < 0 and energy_consumers != []:
+            # if there is still oil debt, we know it is because of energy since we already pruned all exclusively oil dependent upkeep
+            energy_consumer = random.choice(energy_consumers)
+            if player_count_dict.get(energy_consumer, 0) > 0:
+                consumer_upkeep = player_upkeep_dict[energy_consumer]["Oil"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Oil"]["Upkeep Multiplier"]
+                # destroy random consumer
+                region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
+                notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
+                oil_stockpile += consumer_upkeep
+                player_count_dict[energy_consumer] -= 1
                 # adjust upkeep manager
                 total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= improvement_upkeep
+                total_dedicated_upkeep -= consumer_upkeep
+                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
+                dedicated_oil_upkeep = float(upkeep_manager_list[1])
+                dedicated_oil_upkeep -= consumer_upkeep
+                upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
+        while green_stockpile < 0 and energy_consumers != []:
+            energy_consumer = random.choice(energy_consumers)
+            if player_count_dict.get(energy_consumer, 0) > 0:
+                consumer_upkeep = player_upkeep_dict[energy_consumer]["Energy"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Energy"]["Upkeep Multiplier"]
+                # destroy random consumer
+                region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
+                notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
+                green_stockpile += consumer_upkeep
+                player_count_dict[energy_consumer] -= 1
+                # adjust upkeep manager
+                total_dedicated_upkeep = float(upkeep_manager_list[3])
+                total_dedicated_upkeep -= consumer_upkeep
                 upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
                 dedicated_green_upkeep = float(upkeep_manager_list[2])
-                dedicated_green_upkeep -= improvement_upkeep
+                dedicated_green_upkeep -= consumer_upkeep
                 upkeep_manager_list[2] = core.round_total_income(dedicated_green_upkeep)
+        
+        # get pool of uranium consumers
+        uranium_consumers = []
+        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
+            if "Uranium" in resource_upkeep_dict and resource_upkeep_dict["Uranium"]["Upkeep"] > 0 and resource_upkeep_dict["Uranium"]["Upkeep Multiplier"] > 0:
+                uranium_consumers.append(target_name)
+        # prune until uranium shortage eliminated
+        while uranium_stockpile < 0 and uranium_consumers != []:
+            uranium_consumer = random.choice(uranium_consumers)
+            if player_count_dict.get(uranium_consumer, 0) > 0:
+                consumer_upkeep = player_upkeep_dict[uranium_consumer]["Uranium"]["Upkeep"] * player_upkeep_dict[uranium_consumer]["Uranium"]["Upkeep Multiplier"]
+                # destroy random consumer
+                region_id = core.search_and_destroy(game_id, player_id, uranium_consumer)
+                notifications.append(f'{nation_name} lost a {uranium_consumer} in {region_id} due to uranium shortages.', 6)
+                uranium_stockpile += consumer_upkeep
+                player_count_dict[uranium_consumer] -= 1
+            else:
+                # no more of that consumer remaining
+                uranium_consumers.remove(uranium_consumer)
+                del player_upkeep_dict[uranium_consumer]
+        
+        # get pool of dollars consumers
+        dollars_consumers = []
+        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
+            if "Dollars" in resource_upkeep_dict and resource_upkeep_dict["Dollars"]["Upkeep"] > 0 and resource_upkeep_dict["Dollars"]["Upkeep Multiplier"] > 0:
+                dollars_consumers.append(target_name)
+        # prune until dollars shortage eliminated
+        while dollars_stockpile < 0 and dollars_consumers != []:
+            dollars_consumer = random.choice(dollars_consumers)
+            if player_count_dict.get(dollars_consumer, 0) > 0:
+                consumer_upkeep = player_upkeep_dict[dollars_consumer]["Dollars"]["Upkeep"] * player_upkeep_dict[dollars_consumer]["Dollars"]["Upkeep Multiplier"]
+                # destroy random consumer
+                region_id = core.search_and_destroy(game_id, player_id, dollars_consumer)
+                notifications.append(f'{nation_name} lost a {dollars_consumer} in {region_id} due to dollars shortages.', 6)
+                dollars_stockpile += consumer_upkeep
+                player_count_dict[dollars_consumer] -= 1
+            else:
+                # no more of that consumer remaining
+                dollars_consumers.remove(dollars_consumer)
+                del player_upkeep_dict[dollars_consumer]
 
+        # save changes to economy data
+        stockpile_list = [dollars_stockpile, coal_stockpile, oil_stockpile, green_stockpile, uranium_stockpile]
+        for i, stockpile in enumerate(stockpile_list):
+            stockpile = core.round_total_income(stockpile)
+            economy_masterlist[player_id - 1][i][0] = stockpile
+        for economy_list in economy_masterlist:
+            for resource_data_list in economy_list:
+                resource_data_list = str(resource_data_list)
 
-    # Resolve Dollars Shortages
-    while dollars_stockpile < 0:
-        for improvement_name in dollars_upkeep_dict:
-            improvement_upkeep = dollars_upkeep_dict[improvement_name]['Improvement Upkeep']
-            while dollars_upkeep_dict[improvement_name]['Improvement Count'] > 0:
-                region_id = core.search_and_destroy(game_id, player_id, improvement_name)
-                notifications.append(f'{nation_name} lost a {improvement_name} in {region_id} due to dollars shortages.', 6)
-                dollars_stockpile += improvement_upkeep
-                dollars_upkeep_dict[improvement_name]['Improvement Count'] -= 1
-        for unit_name in dollars_unit_upkeep_dict:
-            unit_upkeep = dollars_unit_upkeep_dict[unit_name]['Improvement Upkeep']
-            while dollars_unit_upkeep_dict[unit_name]['Improvement Count'] > 0:
-                region_id = core.search_and_destroy_unit(game_id, player_id, unit_name)
-                notifications.append(f'{nation_name} lost a {unit_name} in {region_id} due to dollars shortages.', 6)
-                dollars_stockpile += unit_upkeep
-                dollars_unit_upkeep_dict[unit_name]['Improvement Count'] -= 1
-        # escape hatch because dollars income is allowed to be negative
-        if dollars_stockpile < 0:
-            break
-    
-    
-    # Update playerdata.csv
-    stockpile_list = [dollars_stockpile, coal_stockpile, oil_stockpile, green_stockpile]
-    for i, stockpile in enumerate(stockpile_list):
-        stockpile = core.round_total_income(stockpile)
-        economy_masterlist[player_id - 1][i][0] = stockpile
-    for economy_list in economy_masterlist:
-        for resource_data_list in economy_list:
-            resource_data_list = str(resource_data_list)
+    # update playerdata.csv
     for i, playerdata in enumerate(playerdata_list):
         playerdata[9] = economy_masterlist[i][0]
         playerdata[12] = economy_masterlist[i][1]
         playerdata[13] = economy_masterlist[i][2]
         playerdata[14] = economy_masterlist[i][3]
+        playerdata[18] = economy_masterlist[i][4]
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
@@ -1368,18 +1339,22 @@ def check_top_three(top_three_list):
 def check_victory_conditions(game_id, player_id, current_turn_num):
     '''Checks victory conditions of a player.'''
     
-    # get game data
+    # get game info
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+    alliance_table = AllianceTable(game_id)
     wardata = WarData(game_id)
+    tech_data_dict = core.get_scenario_dict(game_id, "Technologies")
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
     improvement_name_list = sorted(improvement_data_dict.keys())
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
-    with open(f'gamedata/{game_id}/vc_overrides.json', 'r') as json_file:
-        vc_overrides_dict = json.load(json_file)
+    with open(f'gamedata/{game_id}/gamedata.json', 'r') as json_file:
+        gamedata_dict = json.load(json_file)
+    with open(f'gamedata/{game_id}/gross_income_results.json', 'r') as json_file:
+        gross_income_dict = json.load(json_file)
 
     nation_name_masterlist = []
     for playerdata in playerdata_list:
@@ -1400,170 +1375,311 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
 
     
     #Check Easy Victory Condition
-    vc_1_completed = False
+    vc_1_completed = gamedata_dict["victoryConditions"][nation_name][0]
     victory_condition_1 = victory_conditions_list[0]
-    match victory_condition_1:
-        case 'Energy Economy':
-            coal_mine_index = improvement_name_list.index('Coal Mine')
-            strip_mine_index = improvement_name_list.index('Strip Mine')
-            oil_well_index = improvement_name_list.index('Oil Well')
-            oil_refinery_index = improvement_name_list.index('Oil Refinery')
-            energy_economy_count_list = []
-            for player in playerdata_list:
-                temp_improvement_count_list = ast.literal_eval(player[27])
-                score = 0
-                for improvement_index in range(len(temp_improvement_count_list)):
-                    if improvement_index in [coal_mine_index, strip_mine_index, oil_well_index, oil_refinery_index]: 
-                        score += temp_improvement_count_list[improvement_index]
-                energy_economy_count_list.append(score)
-            greatest_count = 0
-            greatest_count_player_id = []
-            for j, count in enumerate(energy_economy_count_list):
-                if count > greatest_count:
-                    greatest_count = count
-                    greatest_count_player_id = [j + 1]
-                elif count == greatest_count:
-                    greatest_count_player_id.append(j + 1)
-            if len(greatest_count_player_id) == 1 and player_id in greatest_count_player_id:
-                vc_1_completed = True
-        case 'Dual Loyalty':
-            pass
-        case 'Major Exporter':
-            export_count = 0
-            for transaction in rmdata_all_transaction_list:
-                if transaction[1] == nation_name and transaction[2] == "Sold":
-                    export_count += int(transaction[3])
-            if export_count >= 100:
-                vc_1_completed = True
-        case 'Reconstruction Effort':
-            improvement_index = improvement_name_list.index('City')
-            city_count_list = []
-            for player in playerdata_list:
-                temp_improvement_count_list = ast.literal_eval(player[27])
-                city_count = temp_improvement_count_list[improvement_index]
-                city_count_list.append(city_count)
-            greatest_count = 0
-            greatest_count_player_id = []
-            for j, count in enumerate(city_count_list):
-                if count > greatest_count:
-                    greatest_count = count
-                    greatest_count_player_id = [j + 1]
-                elif count == greatest_count:
-                    greatest_count_player_id.append(j + 1)
-            if len(greatest_count_player_id) == 1 and player_id in greatest_count_player_id:
-                vc_1_completed = True
-        case 'Secure Strategic Resources':
-            player_has_advanced = False
-            player_has_uranium = False
-            player_has_rare = False
-            for region_id in regdata_dict:
-                region = Region(region_id, game_id)
-                owner_id = region.owner_id
-                region_resource = region.resource
-                if owner_id == player_id and region_resource == 'Advanced Metals':
-                    player_has_advanced = True
-                elif owner_id == player_id and region_resource == 'Uranium':
-                    player_has_uranium = True
-                elif owner_id == player_id and region_resource == 'Rare Earth Elements':
-                    player_has_rare = True
-            if player_has_advanced and player_has_uranium and player_has_rare:
-                vc_1_completed = True
-        case 'Tight Leash':
-            player_tight_leash_score = vc_overrides_dict['Tight Leash'][player_id - 1]
-            if player_tight_leash_score >= 1:
-                vc_1_completed = True
+    if not vc_1_completed:
+        match victory_condition_1:
+            
+            case 'Breakthrough':
+                # build set of all techs other players have researched so we can compare
+                completed_research_all = set()
+                for player in playerdata_list:
+                    if player[1] != nation_name:
+                        temp = ast.literal_eval(player[26])
+                        completed_research_all.update(temp)
+                # find 15 point or greater tech that is not in completed_research_all
+                for tech_name in completed_research_list:
+                    if (
+                        tech_name in tech_data_dict
+                        and tech_name not in completed_research_all
+                        and tech_data_dict[tech_name]["Cost"] >= 15
+                    ):
+                        vc_1_completed = True
+                        gamedata_dict["victoryConditions"][nation_name][0] = True    # vc is permanently fulfilled
+            
+            case 'Diversified Economy':
+                non_zero_count = 0
+                for improvement_count in improvement_count_list:
+                    if improvement_count > 0:
+                        non_zero_count += 1
+                if non_zero_count >= 12:
+                    vc_1_completed = True
+            
+            case 'Energy Economy':
+                # get gross income sums for each nation using gross income data
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for temp_nation_name, gross_data in gross_income_dict.items():
+                    for resource_name, gross_income in gross_data["Total Income"].items():
+                        match resource_name:
+                            case "Coal" | "Oil" | "Green Energy":
+                                sum_dict[temp_nation_name] += gross_income
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
+                    vc_1_completed = True
+
+            case 'Industrial Focus':
+                # get gross income sums for each nation using gross income data
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for temp_nation_name, gross_data in gross_income_dict.items():
+                    for resource_name, gross_income in gross_data["Total Income"].items():
+                        match resource_name:
+                            case "Basic Materials" | "Common Metals":
+                                sum_dict[temp_nation_name] += gross_income
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
+                    vc_1_completed = True
+            
+            case 'Leading Defense':
+                # get gross improvement counts using improvement count list
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for player in playerdata_list:
+                    temp_improvement_count_list = ast.literal_eval(player[27])
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Military Outpost')]
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Military Base')]
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Missile Defense System')]
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Missile Defense Network')]
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
+                    vc_1_completed = True
+
+            case 'Major Exporter':
+                export_count = 0
+                for transaction in rmdata_all_transaction_list:
+                    if transaction[1] == nation_name and transaction[2] == "Sold":
+                        export_count += int(transaction[3])
+                if export_count >= 150:
+                    vc_1_completed = True
+                    gamedata_dict["victoryConditions"][nation_name][0] = True    # vc is permanently fulfilled
+            
+            case 'Reconstruction Effort':
+                # get gross improvement counts using improvement count list
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for player in playerdata_list:
+                    temp_improvement_count_list = ast.literal_eval(player[27])
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('City')]
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
+                    vc_1_completed = True
+            
+            case 'Secure Strategic Resources':
+                if (
+                    improvement_count_list[improvement_name_list.index('Advanced Metals Mine')] > 0
+                    and improvement_count_list[improvement_name_list.index('Uranium Mine')] > 0
+                    and improvement_count_list[improvement_name_list.index('Rare Earth Elements Mine')] > 0
+                ):
+                    vc_1_completed = True
 
 
     #Check Normal Victory Condition
-    vc_2_completed = False
+    vc_2_completed = gamedata_dict["victoryConditions"][nation_name][1]
     victory_condition_2 = victory_conditions_list[1]
-    match victory_condition_2:
-        case 'Establish Sovereignty':
-            improvement_index = improvement_name_list.index('Capital')
-            improvement_count = improvement_count_list[improvement_index]
-            if improvement_count >= 2:
-                vc_2_completed = True
-            if wardata.query(nation_name, 'Main', 'Defender', 'Defender Victory'):
-                vc_2_completed = True
-        case 'Diversified Army':
-            unit_types_found = []
-            for region_id in regdata_dict:
-                region_unit = Unit(region_id, game_id)
-                if region_unit.name != None and region_unit.owner_id == player_id:
-                    if region_unit.name not in unit_types_found:
-                        unit_types_found.append(region_unit.name)
-            if len(unit_types_found) >= 5:
-                vc_2_completed = True
-        case 'Diversified Economy':
-            non_zero_count = 0
-            for improvement_count in improvement_count_list:
-                if improvement_count > 0:
-                    non_zero_count += 1
-            if non_zero_count >= 12:
-                vc_2_completed = True
-        case 'Hegemony':
-            puppet_str = f'{nation_name} Puppet State'
-            for player in playerdata_list:
-                status_str = player[28]
-                if puppet_str == status_str:
+    if not vc_2_completed:
+        match victory_condition_2:
+
+            case 'Backstab':
+                # get set of all nations defeated in war
+                nations_defeated = set()
+                for war_name, war_dict in wardata.wardata_dict.items():
+                    if nation_name not in war_dict["combatants"] and war_dict["outcome"] != "TBD":
+                        # we do not care about wars player was not involved in
+                        continue
+                    nation_role = war_dict["combatants"][nation_name]["role"]
+                    if "Attacker" in nation_role:
+                        nation_side = "Attacker"
+                    else:
+                        nation_side = "Defender"
+                    if nation_side not in war_dict["outcome"]:
+                        # we do not care about wars the player lost or white peaced
+                        continue
+                    for combatant_name, combatant_data in war_dict["combatants"].items():
+                        if nation_side not in combatant_data["role"]:
+                            nations_defeated.add(combatant_name)
+                # get set of all nations you lost a war to
+                nations_lost_to = set()
+                for war_name, war_dict in wardata.wardata_dict.items():
+                    if nation_name not in war_dict["combatants"] and war_dict["outcome"] != "TBD":
+                        # we do not care about wars player was not involved in
+                        continue
+                    nation_role = war_dict["combatants"][nation_name]["role"]
+                    if "Attacker" in nation_role:
+                        nation_side = "Attacker"
+                    else:
+                        nation_side = "Defender"
+                    if nation_side in war_dict["outcome"] or "White Peace" == war_dict["outcome"]:
+                        # we do not care about wars the player won or white peaced
+                        continue
+                    for combatant_name, combatant_data in war_dict["combatants"].items():
+                        if nation_side not in combatant_data["role"]:
+                            nations_lost_to.add(combatant_name)
+                # get set of all former allies
+                current_allies = set()
+                former_allies = set()
+                for alliance in alliance_table:
+                    if alliance.is_active and nation_name in alliance.current_members:
+                        for ally_name in alliance.current_members:
+                            current_allies.add(ally_name)
+                        for ally_name in alliance.former_members:
+                            former_allies.add(ally_name)
+                    elif not alliance.is_active and nation_name in alliance.former_members:
+                        for ally_name in alliance.former_members:
+                            former_allies.add(ally_name)
+                if nation_name in current_allies:
+                    current_allies.remove(nation_name)
+                if nation_name in former_allies:
+                    former_allies.remove(nation_name)
+                former_allies_filtered = set()
+                for ally_name in former_allies:
+                    if ally_name not in current_allies:
+                        former_allies_filtered.add(ally_name)
+                former_allies = former_allies_filtered
+                # win a war against a former ally
+                for former_ally in former_allies:
+                    if former_ally in nations_defeated:
+                        vc_2_completed = True
+                        gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+                # win a war against someone you lost to
+                for enemy_nation in nations_lost_to:
+                    if enemy_nation in nations_defeated:
+                        vc_2_completed = True
+                        gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+
+            case 'Diversified Army':
+                unit_types_found = []
+                for region_id in regdata_dict:
+                    region_unit = Unit(region_id, game_id)
+                    if region_unit.name != None and region_unit.owner_id == player_id:
+                        if region_unit.name not in unit_types_found:
+                            unit_types_found.append(region_unit.name)
+                if len(unit_types_found) >= 5:
                     vc_2_completed = True
-                    break
-        case 'Reliable Ally':
-            pass
-        case 'Road to Recovery':
-            player_road_to_recovery_bool = vc_overrides_dict['Road to Recovery'][player_id - 1]
-            if player_road_to_recovery_bool:
-                vc_2_completed = True
-    
-    
+
+            case 'Hegemony':
+                puppet_str = f'{nation_name} Puppet State'
+                for player in playerdata_list:
+                    status_str = player[28]
+                    if puppet_str == status_str:
+                        vc_2_completed = True
+                        break
+
+            case 'New Empire':
+                # if two capitals
+                improvement_index = improvement_name_list.index('Capital')
+                improvement_count = improvement_count_list[improvement_index]
+                if improvement_count >= 2:
+                    vc_2_completed = True
+                # or most edges
+                # to do - income calc should update edge counts so we dont have to do a bunch of work here
+                edge_counts = [0] * len(playerdata_list)
+                for i in range(len(playerdata_list)):
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        if region.owner_id == i + 1 and region.is_edge:
+                            edge_counts[i] += 1
+                nation_edge_count = edge_counts[player_id - 1]
+                for edge_count in edge_counts:
+                    if edge_count > nation_edge_count:
+                        nation_edge_count = False
+                if nation_edge_count:
+                     vc_2_completed = True
+
+            case 'Nuclear Deterrent':
+                most_nukes_value = 0
+                most_nukes_player_ids = []
+                for index, player in enumerate(playerdata_list):
+                    temp_missile_data = ast.literal_eval(player[21])
+                    temp_nuke_storage = temp_missile_data[1]
+                    if temp_nuke_storage > most_nukes_value:
+                        most_nukes_value = temp_nuke_storage
+                        most_nukes_player_ids = [index + 1]
+                    elif temp_nuke_storage == most_nukes_value:
+                        most_nukes_player_ids.append(index + 1)
+                if len(most_nukes_player_ids) == 1 and player_id in most_nukes_player_ids:
+                    vc_2_completed = True
+
+            case 'Reliable Ally':
+                longest_alliance_name, duration = alliance_table.get_longest_alliance()
+                if longest_alliance_name is not None:
+                    longest_alliance = alliance_table.get(longest_alliance_name)
+                    if longest_alliance.is_active and nation_name in longest_alliance.current_members:
+                        vc_2_completed = True
+                    elif not longest_alliance.is_active and nation_name in longest_alliance.former_members:
+                        vc_2_completed = True
+
+            case 'Sphere of Influence':
+                agenda_count = 0
+                agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
+                for research_name in completed_research_list:
+                    if research_name in agenda_data_dict:
+                        agenda_count += 1
+                if agenda_count >= 8:
+                    vc_2_completed = True
+                    gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+                    
+            case 'Warmonger':
+                count = 0
+                for war_name, war_dict in wardata.wardata_dict.items():
+                    if war_dict["outcome"] == "Attacker Victory" and war_dict["combatants"][nation_name]["role"] == "Main Attacker":
+                        count += 1
+                if count >= 3:
+                    vc_2_completed = True
+                    gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+
     #Check Hard Victory Condition
-    vc_3_completed = False
+    vc_3_completed = gamedata_dict["victoryConditions"][nation_name][2]
     victory_condition_3 = victory_conditions_list[2]
-    match victory_condition_3:
-        case 'Economic Domination':
-            economy_1st, economy_2nd, economy_3rd =  get_top_three(game_id, 'strongest_economy', True)
-            if nation_name in economy_1st and (economy_1st[-6:] != economy_2nd[-6:]):
-                vc_3_completed = True
-        case 'Empire Building':
-            size_1st, size_2nd, size_3rd =  get_top_three(game_id, 'largest_nation', True)
-            if nation_name in size_1st and (size_1st[-4:] != size_2nd[-4:]):
-                vc_3_completed = True
-        case 'Military Superpower':
-            military_1st, military_2nd, military_3rd =  get_top_three(game_id, 'largest_military', True)
-            if nation_name in military_1st and (military_1st[-4:] != military_2nd[-4:]):
-                vc_3_completed = True
-        case 'Nuclear Deterrent':
-            most_nukes_value = 0
-            most_nukes_player_ids = []
-            for index, player in enumerate(playerdata_list):
-                temp_missile_data = ast.literal_eval(player[21])
-                temp_nuke_storage = temp_missile_data[1]
-                if temp_nuke_storage > most_nukes_value:
-                    most_nukes_value = temp_nuke_storage
-                    most_nukes_player_ids = [index + 1]
-                elif temp_nuke_storage == most_nukes_value:
-                    most_nukes_player_ids.append(index + 1)
-            if len(most_nukes_player_ids) == 1 and player_id in most_nukes_player_ids:
-                vc_3_completed = True
-        case 'Scientific Leader':
-            research_1st, research_2nd, research_3rd =  get_top_three(game_id, 'most_research', True)
-            if nation_name in research_1st and (research_1st[-4:] != research_2nd[-4:]):
-                vc_3_completed = True
-        case 'Sphere of Influence':
-            agenda_count = 0
-            agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
-            for research_name in completed_research_list:
-                if research_name in agenda_data_dict:
-                    agenda_count += 1
-            if agenda_count >= 8:
-                vc_3_completed = True
+    if not vc_3_completed:
+        match victory_condition_3:
+            case 'Economic Domination':
+                economy_1st, economy_2nd, economy_3rd = get_top_three(game_id, 'strongest_economy', True)
+                if nation_name in economy_1st and (economy_1st[-6:] != economy_2nd[-6:]):
+                    vc_3_completed = True
+            case 'Influence Through Trade':
+                trade_1st, trade_2nd, trade_3rd = core.get_top_three_transactions(game_id)
+                if nation_name in trade_1st and (trade_1st[-4:] != trade_2nd[-4:]):
+                    vc_3_completed = True
+            case 'Military Superpower':
+                military_1st, military_2nd, military_3rd = get_top_three(game_id, 'largest_military', True)
+                if nation_name in military_1st and (military_1st[-4:] != military_2nd[-4:]):
+                    vc_3_completed = True
+            case 'Scientific Leader':
+                research_1st, research_2nd, research_3rd = get_top_three(game_id, 'most_research', True)
+                if nation_name in research_1st and (research_1st[-4:] != research_2nd[-4:]):
+                    vc_3_completed = True
+            case 'Territorial Control':
+                size_1st, size_2nd, size_3rd = get_top_three(game_id, 'largest_nation', True)
+                if nation_name in size_1st and (size_1st[-4:] != size_2nd[-4:]):
+                    vc_3_completed = True
+        
 
+    # save gamedata
+    with open(f'gamedata/{game_id}/gamedata.json', 'w') as json_file:
+        json.dump(gamedata_dict, json_file, indent=4)
 
-    #Update vc_extra.csv and return vc score
-    with open(f'gamedata/{game_id}/vc_overrides.json', 'w') as json_file:
-        json.dump(vc_overrides_dict, json_file, indent=4)
     result = [vc_1_completed, vc_2_completed, vc_3_completed]
-
     return result
 
 def bonus_phase_heals(player_id, game_id):
@@ -1746,13 +1862,3 @@ def prune_alliances(game_id: str) -> None:
             alliance.end()
             alliance_table.save(alliance)
             notifications.append(f"{alliance.name} has dissolved.", 7)
-    
-
-#UPDATE INCOME HELPER FUNCTIONS
-def update_gross_income_masterlist(gross_income_masterlist, player_id, index, income, remnant_multiplier):
-    gross_income_masterlist[player_id - 1][index] += income * remnant_multiplier
-    return gross_income_masterlist
-
-def update_income_strings_masterlist(income_strings_masterlist, player_id, index, income, remnant_multiplier, plural_improvement_name):
-    income_strings_masterlist[player_id - 1][index] += [f'&Tab;+{income * remnant_multiplier} from {plural_improvement_name}']
-    return income_strings_masterlist

@@ -33,11 +33,13 @@
         <!-- Income -->
         {% set ns = namespace(foo=True) %}
         {% for resource, amount in improvement_data["Income"].items() %}
-            {% if amount != 0 and ns.foo %} 
-                <div class="top-break"> <b>Income:</b> +{{amount}} {{resource|lower}} per turn.</div>
-                {% set ns.foo = False %}
-            {% elif amount != 0 %}
-                <div> <b style="visibility:hidden">Income:</b> +{{amount}} {{resource|lower}} per turn.</div>
+            {% if resource != "Military Capacity" %} 
+                {% if amount != 0 and ns.foo %} 
+                    <div class="top-break"> <b>Income:</b> +{{amount}} {{resource|lower}} per turn.</div>
+                    {% set ns.foo = False %}
+                {% elif amount != 0 %}
+                    <div> <b style="visibility:hidden">Income:</b> +{{amount}} {{resource|lower}} per turn.</div>
+                {% endif %}
             {% endif %}
         {% endfor %}
 

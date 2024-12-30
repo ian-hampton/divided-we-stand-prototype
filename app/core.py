@@ -139,6 +139,8 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         tech = research_data_dict[key]
         if tech["Cost"] == 5:
             five_point_research_list.append(key)
+    with open(f'gamedata/{game_id}/gamedata.json', 'r') as json_file:
+        gamedata_dict = json.load(json_file)
     
     # read and update playerdata
     for index, player in enumerate(playerdata_list):
@@ -183,6 +185,11 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         writer = csv.writer(file)
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
+
+    # add vc playerdata
+    # to do - move this into regular playerdata once playerdata rework happens
+    for playerdata in playerdata_list:
+        gamedata_dict["victoryConditions"][playerdata[1]] = [False, False, False]
     
     # create records
     file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
@@ -209,7 +216,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         checks.update_improvement_count(game_id, player_id)
     # update income in playerdata
     current_turn_num = 0
-    checks.update_income(game_id, current_turn_num)
+    checks.update_income(game_id)
     
     # gain starting resources
     for player in playerdata_list:
@@ -217,8 +224,8 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         political_power_data = ast.literal_eval(player[10])
         technology_data = ast.literal_eval(player[11])
         dollars_data[0] = '15.00'
-        political_power_data[0] = '1.00'
-        technology_data[0] = '2.00'
+        political_power_data[0] = '0.00'
+        technology_data[0] = '0.00'
         player[9] = str(dollars_data)
         player[10] = str(political_power_data)
         player[11] = str(technology_data)
@@ -253,7 +260,11 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    #update visuals
+    # save gamedata
+    with open(f'gamedata/{game_id}/gamedata.json', 'w') as json_file:
+        json.dump(gamedata_dict, json_file, indent=4)
+
+    # update visuals
     current_turn_num = 1
     map_name = active_games_dict[game_id]["Information"]["Map"]
     main_map = map.MainMap(game_id, map_name, current_turn_num)
@@ -436,20 +447,14 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #Prepwork for the Next Turn
     #resolve improvements with countdowns
     checks.countdown(full_game_id, map_name)
+    checks.resolve_resource_shortages(full_game_id)
+
     for i in range(player_count):
         player_id = i + 1
-        #resolve upkeep shortages
-        checks.resolve_shortages(full_game_id, player_id)
-        #update improvement count in playerdata
         checks.update_improvement_count(full_game_id, player_id)
-    #update income in playerdata
-    checks.update_income(full_game_id, current_turn_num)
-    for i in range(player_count):
-        player_id = i + 1
-        #collect resource market income
         checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
     #update income in playerdata
-    checks.update_income(full_game_id, current_turn_num)
+    checks.update_income(full_game_id)
     
 
     #Check If Someone Has Won the Game
@@ -505,24 +510,24 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     - profile_ids_list: A list of all the profile ids of players participating in the game.
     '''
 
-    #open game record files
+    # open game record files
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
 
-    #datetime stuff
+    # datetime stuff
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
     game_version = "Development"
 
-    #generate game id
-    #to be added
+    # generate game id
+    # to be added
 
-    #erase old game files
+    # erase old game files
     erase_game(game_id)
     
-    #update active_games
+    # update active_games
     active_games_dict[game_id]["Game Name"] = form_data_dict["Game Name"]
     active_games_dict[game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
     active_games_dict[game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
@@ -545,7 +550,7 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    #update game_records
+    # update game_records
     new_game_entry = {}
     new_game_entry["Game ID"] = "temp"
     new_game_entry["Game #"] = len(game_records_dict) + 1
@@ -567,10 +572,10 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
-    #get scenario data
+    # get scenario data
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
-    #copy starting map images
+    # copy starting map images
     files_destination = f'gamedata/{game_id}'
     match form_data_dict["Map"]:
         case "United States 2.0":
@@ -582,7 +587,7 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
         shutil.copy(f"maps/{map}/blank.png", f"{files_destination}/images")
         shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
     
-    #create regdata.json
+    # create regdata.json
     shutil.copy(f"maps/{map}/regdata.json", files_destination)
     if form_data_dict["Scenario"] == 'Standard':
         with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
@@ -598,11 +603,11 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     gamedata_dict = {}
     gamedata_dict["alliances"] = {}
     gamedata_dict["notifications"] = {}
-    gamedata_dict["victoryConditionCompleted"] = {}
+    gamedata_dict["victoryConditions"] = {}
     with open(gamedata_filepath, 'w') as json_file:
         json.dump(gamedata_dict, json_file, indent=4)
 
-    #create rmdata file
+    # create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
     with open(rmdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
@@ -613,18 +618,7 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     with open(f'gamedata/{game_id}/wardata.json', 'w') as json_file:
         json.dump(wardata_dict, json_file, indent=4)
 
-    #create vc_overrides.json
-    # TO DO: replace this with length 3 lists for each nation in active_games
-    vc_overrides_dict = {
-        "Dual Loyalty": [False, False, False, False, False, False, False, False, False, False],
-        "Tight Leash": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "Reliable Ally": "None 0",
-        "Road to Recovery": [False, False, False, False, False, False, False, False, False, False],
-    }
-    with open(f'{files_destination}/vc_overrides.json', 'w') as json_file:
-        json.dump(vc_overrides_dict, json_file, indent=4)
-
-    #create playerdata file
+    # create playerdata file
     playerdata_filepath = f"{files_destination}/playerdata.csv"
     player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count","Status","Global ID"]
     player_data_temp_a = ["TBD","#ffffff","TBD","TBD","0/0","1:1","TBD"]
@@ -993,7 +987,7 @@ def run_end_of_turn_checks(game_id, current_turn_num, player_count):
         #update stockpile limits in playerdata
         checks.update_stockpile_limits(game_id, player_id)
     #update income in playerdata
-    checks.update_income(game_id, current_turn_num)
+    checks.update_income(game_id)
     #update misc info and trade tax in playerdata
     for i in range(player_count):
         player_id = i + 1
@@ -1002,7 +996,7 @@ def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     #update records
     checks.update_records(game_id, current_turn_num)
     #update income in playerdata now that records have been updated (important for political power bonuses)
-    checks.update_income(game_id, current_turn_num)
+    checks.update_income(game_id)
 
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS
@@ -1171,116 +1165,6 @@ def update_stockpile(stockpile, cost):
     stockpile = round_total_income(stockpile)
     return stockpile
 
-def get_upkeep_dictionary(game_id, upkeep_type, playerdata, unit_count_list):
-    '''
-    Returns a dictionary that represents upkeep cost drain on a specific nation.
-    
-    Parameters:
-    - upkeep_type: String representing upkeep type. Either 'Dollars Upkeep' or 'Energy Upkeep'.
-    - playerdata: A playerdata list for a player from playerdata.csv.
-    '''
-
-    #take needed info from playerdata and core
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    improvement_name_list = sorted(improvement_data_dict.keys())
-    improvement_count_list = ast.literal_eval(playerdata[27])
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    unit_name_list = sorted(unit_data_dict.keys())
-    completed_research_list = ast.literal_eval(playerdata[26])
-
-    upkeep_dict = {}
-
-    #calculate dollars upkeep dict
-    match upkeep_type:
-        case 'Dollars Upkeep':
-            for index, improvement_count in enumerate(improvement_count_list):
-                inner_dict = {}
-                improvement_name = improvement_name_list[index]
-                improvement_dollars_upkeep = improvement_data_dict[improvement_name]['Upkeep']['Dollars']
-                #handle edge cases
-                if improvement_name == 'Coal Mine' and 'Coal Subsidies' in completed_research_list:
-                    improvement_dollars_upkeep = 1
-                elif improvement_name == 'Oil Well' and 'Oil Subsidies' in completed_research_list:
-                    improvement_dollars_upkeep = 1
-                elif improvement_name == 'Research Laboratory' and 'Upgraded Facilities' in completed_research_list:
-                    improvement_dollars_upkeep = 2
-                elif improvement_name == 'Wind Farm' and 'Green Energy Subsidies' in completed_research_list:
-                    improvement_dollars_upkeep = 1
-                elif improvement_name == 'Solar Farm' and 'Green Energy Subsidies' in completed_research_list:
-                    improvement_dollars_upkeep = 1
-                #check for efficient bureaucracy
-                if 'Efficient Bureaucracy' in completed_research_list:
-                    improvement_dollars_upkeep *= 0.5
-                #add improvement data to upkeep_dict
-                if improvement_count > 0 and improvement_dollars_upkeep > 0:
-                    inner_dict['Improvement Upkeep'] = improvement_dollars_upkeep
-                    inner_dict['Improvement Count'] = improvement_count
-                    upkeep_dict[improvement_name] = inner_dict
-        #calculate energy upkeep dict
-        case 'Energy Upkeep':
-            for index, improvement_count in enumerate(improvement_count_list):
-                inner_dict = {}
-                improvement_name = improvement_name_list[index]
-                improvement_energy_upkeep = improvement_data_dict[improvement_name]['Upkeep']['Energy']
-                #handle edge cases
-                if improvement_name == 'City' and 'Power Grid Restoration' in completed_research_list:
-                    improvement_energy_upkeep = 1
-                #add improvement data to upkeep_dict
-                if improvement_count > 0 and improvement_energy_upkeep > 0:
-                    inner_dict['Improvement Upkeep'] = improvement_energy_upkeep
-                    inner_dict['Improvement Count'] = improvement_count
-                    upkeep_dict[improvement_name] = inner_dict
-        #calculate unit dollars upkeep dict
-        case 'Unit Dollars Upkeep':
-            for index, unit_count in enumerate(unit_count_list):
-                inner_dict = {}
-                unit_name = unit_name_list[index]
-                unit_dollars_upkeep = unit_data_dict[unit_name]['Dollars Upkeep']
-                #add improvement data to upkeep_dict
-                if unit_count > 0:
-                    inner_dict['Improvement Upkeep'] = unit_dollars_upkeep
-                    inner_dict['Improvement Count'] = unit_count
-                    upkeep_dict[unit_name] = inner_dict
-        #calculate unit oil upkeep dict
-        case 'Unit Oil Upkeep':
-            for index, unit_count in enumerate(unit_count_list):
-                inner_dict = {}
-                unit_name = unit_name_list[index]
-                unit_oil_upkeep = unit_data_dict[unit_name]['Oil Upkeep']
-                #add improvement data to upkeep_dict
-                if unit_count > 0:
-                    inner_dict['Improvement Upkeep'] = unit_oil_upkeep
-                    inner_dict['Improvement Count'] = unit_count
-                    upkeep_dict[unit_name] = inner_dict
-
-
-    #Sort Dictionary
-    sorted_items = sorted(upkeep_dict.items(), key=upkeep_dict_custom_key)
-    sorted_upkeep_dict = dict(sorted_items)
-    upkeep_dict = sorted_upkeep_dict
-
-    return upkeep_dict
-
-def upkeep_dict_custom_key(item):
-    return item[1]['Improvement Upkeep'], item[1]['Improvement Count']
-
-def get_upkeep_sum(upkeep_dict):
-    '''
-    Calculates a total upkeep sum based on the provided upkeep dictionary.
-    
-    Parameters:
-    - upkeep_dict: A dictionary that represents upkeep cost drain on a specific nation. Generated from get_upkeep_dictionary().
-    '''
-
-    upkeep_sum = 0
-    for improvement_name, details in upkeep_dict.items():
-        improvement_upkeep = details.get('Improvement Upkeep', 0)
-        improvement_count = details.get('Improvement Count', 0)
-        upkeep_total = improvement_upkeep * improvement_count
-        upkeep_sum += upkeep_total
-
-    return upkeep_sum
-
 def get_unit_count_list(player_id, game_id):
     
     unit_data_dict = get_scenario_dict(game_id, "Units")
@@ -1298,6 +1182,139 @@ def get_unit_count_list(player_id, game_id):
         count_list.append(count)
 
     return count_list
+
+def create_player_yield_dict(player_id: int, game_id: str) -> dict:
+    """
+    Given a player, this function creates the initial dictionary with the yields of all improvements.
+
+    Params:
+        player_id (int): Player ID.
+        game_id (str): Game ID.
+
+    Returns:
+        dict: Yield dictionary detailing income and multiplier for every improvement.
+    """
+    
+    # load game info
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+    technology_data_dict = get_scenario_dict(game_id, "Technologies")
+    agenda_data_dict = get_scenario_dict(game_id, "Agendas")
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = read_file(playerdata_filepath, 1)
+
+    # load player info
+    playerdata = playerdata_list[player_id - 1]
+    player_research_list = ast.literal_eval(playerdata[26])
+
+    yield_dict = {}
+    for improvement_name, improvement_data in improvement_data_dict.items():
+        yield_dict[improvement_name] = {}
+        for resource_name in improvement_data["Income"]:
+            inner_dict = {
+                "Income": improvement_data["Income"][resource_name],
+                "Income Multiplier": 1
+            }
+            yield_dict[improvement_name][resource_name] = inner_dict
+    
+    # get modifiers from each technology and agenda
+    for tech_name in player_research_list:
+        if tech_name in technology_data_dict:
+            tech_dict = technology_data_dict[tech_name]
+        elif tech_name in agenda_data_dict:
+            tech_dict = technology_data_dict[agenda_data_dict]
+        for target in tech_dict["Modifiers"]: 
+            if target not in improvement_data_dict:
+                # skip over effects that are not affecting improvements
+                continue
+            improvement_name = target
+            for resource_name, modifier_dict in tech_dict["Modifiers"][improvement_name].items():
+                if "Income" in modifier_dict:
+                    yield_dict[improvement_name][resource_name]["Income"] += modifier_dict["Income"]
+                elif "Income Multiplier" in modifier_dict:
+                    yield_dict[improvement_name][resource_name]["Income Multiplier"] += modifier_dict["Income Multiplier"]
+
+    return yield_dict
+
+def create_player_upkeep_dict(player_id: int, game_id: str) -> dict:
+    """
+    Given a player, this function creates the initial dictionary with the upkeep of all improvements and units.
+
+    Params:
+        player_id (int): Player ID.
+        game_id (str): Game ID.
+
+    Returns:
+        dict: Upkeep dictionary detailing upkeep and upkeep multiplier for every improvement.
+    """
+    
+    # load game info
+    unit_data_dict = get_scenario_dict(game_id, "Units")
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+    technology_data_dict = get_scenario_dict(game_id, "Technologies")
+    agenda_data_dict = get_scenario_dict(game_id, "Agendas")
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    playerdata_list = read_file(playerdata_filepath, 1)
+
+    # load player info
+    playerdata = playerdata_list[player_id - 1]
+    player_research_list = ast.literal_eval(playerdata[26])
+
+    upkeep_dict = {}
+    for improvement_name, improvement_data in improvement_data_dict.items():
+        upkeep_dict[improvement_name] = {}
+        for resource_name in improvement_data["Upkeep"]:
+            inner_dict = {
+                "Upkeep": improvement_data["Upkeep"][resource_name],
+                "Upkeep Multiplier": 1
+            }
+            upkeep_dict[improvement_name][resource_name] = inner_dict
+    for unit_name, unit_data in unit_data_dict.items():
+        upkeep_dict[unit_name] = {}
+        for resource_name in unit_data["Upkeep"]:
+            inner_dict = {
+                "Upkeep": unit_data["Upkeep"][resource_name],
+                "Upkeep Multiplier": 1
+            }
+            upkeep_dict[unit_name][resource_name] = inner_dict
+    
+    # get modifiers from each technology and agenda
+    for tech_name in player_research_list:
+        if tech_name in technology_data_dict:
+            tech_dict = technology_data_dict[tech_name]
+        elif tech_name in agenda_data_dict:
+            tech_dict = technology_data_dict[agenda_data_dict]
+        for target in tech_dict["Modifiers"]: 
+            if target not in improvement_data_dict and target not in unit_data_dict:
+                # skip over effects that are not improvements or units
+                continue
+            for resource_name, modifier_dict in tech_dict["Modifiers"][target].items():
+                if "Upkeep" in modifier_dict:
+                    upkeep_dict[target][resource_name]["Upkeep"] += modifier_dict["Upkeep"]
+                elif "Upkeep Multiplier" in modifier_dict:
+                    upkeep_dict[target][resource_name]["Upkeep Multiplier"] += modifier_dict["Upkeep Multiplier"]
+
+    return upkeep_dict
+
+def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_dict: dict) -> float:
+    """
+    Calculates the total upkeep sum for a player given a specific upkeep type.
+
+    Params:
+        upkeep_type (str): Either Dollars, Oil, Uranium, or Energy.
+        player_upkeep_dict (dict): Taken from create_player_upkeep_dict().
+        player_count_dict (dict): A count of a player's units or improvements.
+
+    Returns:
+        float: Upkeep sum.
+    """
+    sum = 0.0
+    for name, count in player_count_dict.items():
+        if upkeep_type in player_upkeep_dict[name]:
+            resource_upkeep_dict = player_upkeep_dict[name][upkeep_type]
+            name_upkeep = resource_upkeep_dict["Upkeep"] * resource_upkeep_dict["Upkeep Multiplier"]
+            sum += name_upkeep * count
+
+    return sum
 
 
 #WAR SUB-FUNCTIONS
@@ -1601,9 +1618,33 @@ RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Gre
 unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
 
 #victory conditions
-easy_list = ["Energy Economy", "Dual Loyalty", "Major Exporter", "Reconstruction Effort", "Secure Strategic Resources", "Tight Leash"]
-normal_list = ["Establish Sovereignty", "Diversified Army", "Diversified Economy", "Hegemony", "Reliable Ally", "Road to Recovery"]
-hard_list = ["Economic Domination", "Empire Building", "Military Superpower", "Nuclear Deterrent", "Scientific Leader", "Sphere of Influence"]
+easy_list = [
+    "Breakthrough",
+    "Diversified Economy",
+    "Energy Economy",
+    "Industrial Focus",
+    "Leading Defense",
+    "Major Exporter",
+    "Reconstruction Effort",
+    "Reliable Ally"
+]
+normal_list = [
+    "Backstab",
+    "Diversified Army",
+    "Hegemony",
+    "New Empire",
+    "Nuclear Deterrent",
+    "Secure Strategic Resources",
+    "Sphere of Influence",
+    "Warmonger"
+]
+hard_list = [
+    "Economic Domination",
+    "Influence Through Trade",
+    "Military Superpower",
+    "Scientific Leader",
+    "Territorial Control"
+]
 
 #color dictionaries
 player_colors_hex = {

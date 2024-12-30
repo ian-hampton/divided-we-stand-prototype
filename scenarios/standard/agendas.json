@@ -4,111 +4,169 @@
         "Prerequisite": null,
         "Cost": 15,
         "Description": "New Alliance: Non-Aggression Pact.",
-        "Location": "A0"
+        "Location": "A0",
+        "Modifiers": {}
     },
     "Defensive Agreements": {
         "Agenda Type": "Diplomacy",
         "Prerequisite": "Peace Accords",
         "Cost": 15,
         "Description": "New Alliance: Defense Pact.",
-        "Location": "A1"
+        "Location": "A1",
+        "Modifiers": {}
     },
     "Power Broker": {
         "Agenda Type": "Diplomacy",
         "Prerequisite": "Defensive Agreements",
         "Cost": 15,
         "Description": "+1 alliance capacity. Gain an additional +0.25 political power per turn from alliances.",
-        "Location": "A2"
+        "Location": "A2",
+        "Modifiers": {}
     },
     "With Open Arms": {
         "Agenda Type": "Diplomacy",
         "Prerequisite": "Power Broker",
         "Cost": 15,
         "Description": "Other nations no longer need the required agenda to join alliances that you have founded.",
-        "Location": "A3"
+        "Location": "A3",
+        "Modifiers": {}
     },
     "Trade Routes": {
         "Agenda Type": "Economy",
         "Prerequisite": null,
         "Cost": 15,
         "Description": "New Alliance: Trade Agreement.",
-        "Location": "B0"
+        "Location": "B0",
+        "Modifiers": {}
     },
     "Research Exchange": {
         "Agenda Type": "Economy",
         "Prerequisite": "Trade Routes",
         "Cost": 15,
         "Description": "New Alliance: Research Agreement.",
-        "Location": "B1"
+        "Location": "B1",
+        "Modifiers": {}
     },
     "Improved Logistics": {
         "Agenda Type": "Economy",
         "Prerequisite": "Research Exchange",
         "Cost": 15,
         "Description": "Your nation's trade fee is lowered to 1:3. +1 alliance capacity.",
-        "Location": "B2"
+        "Location": "B2",
+        "Modifiers": {}
     },
     "Efficient Bureaucracy": {
         "Agenda Type": "Economy",
         "Prerequisite": "Improved Logistics",
         "Cost": 15,
         "Description": "All dollars upkeep costs for improvements in your nation are reduced by 50%.",
-        "Location": "B3"
+        "Location": "B3",
+        "Modifiers": {
+            "Coal Mine": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            },
+            "Oil Well": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            },
+            "Oil Refinery": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            },
+            "Wind Farm": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            },
+            "Solar Farm": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            },
+            "Research Laboratory": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            },
+            "Research Institute": {
+                "Dollars": {
+                    "Upkeep Multiplier": -0.5
+                }
+            }
+        }
     },
     "Defensive Tactics": {
         "Agenda Type": "Security",
         "Prerequisite": null,
         "Cost": 15,
         "Description": "+2 military capacity from Capital improvements. +1 to all combat rolls for all defensive improvements.",
-        "Location": "C0"
+        "Location": "C0",
+        "Modifiers": {
+            "Capital": {
+                "Military Capacity": {
+                    "Income": 2
+                }
+            }
+        }
     },
     "Mobilization": {
         "Agenda Type": "Security",
         "Prerequisite": "Defensive Tactics",
         "Cost": 15,
         "Description": "Your units gain +1 movement when they move strictly within your own territory.",
-        "Location": "C1"
+        "Location": "C1",
+        "Modifiers": {}
     },
     "Peacetime Recovery": {
         "Agenda Type": "Security",
         "Prerequisite": "Mobilization",
         "Cost": 15,
         "Description": "All of your units and improvements will heal to full health during the bonus phase if you are not at war.",
-        "Location": "C2"
+        "Location": "C2",
+        "Modifiers": {}
     },
     "Unyielding": {
         "Agenda Type": "Security",
         "Prerequisite": "Peacetime Recovery",
         "Cost": 15,
         "Description": "Your nation will surrender at -150 war score instead of -100 war score. +1 to combat rolls for all units during a defensive war.",
-        "Location": "C3"
+        "Location": "C3",
+        "Modifiers": {}
     },
     "Superior Training": {
         "Agenda Type": "Warfare",
         "Prerequisite": null,
         "Cost": 15,
         "Description": "+1 to combat rolls for all units during an offensive war.",
-        "Location": "D0"
+        "Location": "D0",
+        "Modifiers": {}
     },
     "Early Expansion": {
         "Agenda Type": "Warfare",
         "Prerequisite": "Superior Training",
         "Cost": 15,
         "Description": "New War Justification: Conquest.",
-        "Location": "D1"
+        "Location": "D1",
+        "Modifiers": {}
     },
     "Dominion": {
         "Agenda Type": "Warfare",
         "Prerequisite": "Early Expansion",
         "Cost": 15,
         "Description": "New War Justification: Subjugation.",
-        "Location": "D2"
+        "Location": "D2",
+        "Modifiers": {}
     },
     "Scorched Earth": {
         "Agenda Type": "Warfare",
         "Prerequisite": "Dominion",
         "Cost": 15,
         "Description": "Gain an additional +1 war score per turn for each enemy region your nation occupies. Your units will always heal regardless of positioning.",
-        "Location": "D3"
+        "Location": "D3",
+        "Modifiers": {}
     }
 }

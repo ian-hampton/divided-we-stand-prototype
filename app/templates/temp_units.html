@@ -48,11 +48,16 @@
         {% endif %}
     {% endfor %}
     
-    {% if unit_data["Dollars Upkeep"] != 0 %}
-        <div class="top-break"> <b>Upkeep:</b> -{{unit_data["Dollars Upkeep"]}} dollars per turn </div>
-    {% else %}
-        <div class="top-break"> <b>Upkeep:</b> -{{unit_data["Oil Upkeep"]}} oil per turn </div>
-    {% endif %}
+    <!-- Upkeep -->
+    {% set ns = namespace(foo=True) %}
+    {% for resource, amount in unit_data["Upkeep"].items() %}
+        {% if amount != 0 and ns.foo %} 
+            <div class="top-break"> <b>Upkeep:</b> -{{amount}} {{resource|lower}} per turn.</div>
+            {% set ns.foo = False %}
+        {% elif amount != 0 %}
+            <div> <b style="visibility:hidden">Upkeep:</b> -{{amount}} {{resource|lower}} per turn.</div>
+        {% endif %}
+    {% endfor %}
 
     <div class="stats-bar">
 
