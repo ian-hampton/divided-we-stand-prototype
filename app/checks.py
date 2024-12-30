@@ -1336,8 +1336,10 @@ def check_top_three(top_three_list):
 
     return bool_list
 
-def check_victory_conditions(game_id, player_id, current_turn_num):
-    '''Checks victory conditions of a player.'''
+def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int) -> list:
+    """
+    Checks victory conditions of a player.
+    """
     
     # get game info
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
@@ -1648,27 +1650,33 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                     vc_2_completed = True
                     gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
 
+
     #Check Hard Victory Condition
     vc_3_completed = gamedata_dict["victoryConditions"][nation_name][2]
     victory_condition_3 = victory_conditions_list[2]
     if not vc_3_completed:
         match victory_condition_3:
+
             case 'Economic Domination':
                 economy_1st, economy_2nd, economy_3rd = get_top_three(game_id, 'strongest_economy', True)
                 if nation_name in economy_1st and (economy_1st[-6:] != economy_2nd[-6:]):
                     vc_3_completed = True
+
             case 'Influence Through Trade':
                 trade_1st, trade_2nd, trade_3rd = core.get_top_three_transactions(game_id)
                 if nation_name in trade_1st and (trade_1st[-4:] != trade_2nd[-4:]):
                     vc_3_completed = True
+
             case 'Military Superpower':
                 military_1st, military_2nd, military_3rd = get_top_three(game_id, 'largest_military', True)
                 if nation_name in military_1st and (military_1st[-4:] != military_2nd[-4:]):
                     vc_3_completed = True
+
             case 'Scientific Leader':
                 research_1st, research_2nd, research_3rd = get_top_three(game_id, 'most_research', True)
                 if nation_name in research_1st and (research_1st[-4:] != research_2nd[-4:]):
                     vc_3_completed = True
+
             case 'Territorial Control':
                 size_1st, size_2nd, size_3rd = get_top_three(game_id, 'largest_nation', True)
                 if nation_name in size_1st and (size_1st[-4:] != size_2nd[-4:]):
