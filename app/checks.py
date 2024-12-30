@@ -1344,6 +1344,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+    alliance_table = AllianceTable(game_id)
     wardata = WarData(game_id)
     tech_data_dict = core.get_scenario_dict(game_id, "Technologies")
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
@@ -1352,6 +1353,8 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
         regdata_dict = json.load(json_file)
     with open(f'gamedata/{game_id}/gamedata.json', 'r') as json_file:
         gamedata_dict = json.load(json_file)
+    with open(f'gamedata/{game_id}/gross_income_results.json', 'r') as json_file:
+        gross_income_dict = json.load(json_file)
 
     nation_name_masterlist = []
     for playerdata in playerdata_list:
@@ -1380,16 +1383,19 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
             case 'Breakthrough':
                 # build set of all techs other players have researched so we can compare
                 completed_research_all = set()
-                for playerdata in playerdata_list:
-                    if playerdata[1] != nation_name:
-                        temp = ast.literal_eval(playerdata[26])
+                for player in playerdata_list:
+                    if player[1] != nation_name:
+                        temp = ast.literal_eval(player[26])
                         completed_research_all.update(temp)
                 # find 15 point or greater tech that is not in completed_research_all
                 for tech_name in completed_research_list:
-                    if tech_name in tech_data_dict and tech_name not in completed_research_all:
-                        if tech_data_dict[tech_name]["Cost"] >= 15:
-                            vc_1_completed = True
-                            gamedata_dict["victoryConditions"][nation_name][0] = True    # vc is permanently fulfilled
+                    if (
+                        tech_name in tech_data_dict
+                        and tech_name not in completed_research_all
+                        and tech_data_dict[tech_name]["Cost"] >= 15
+                    ):
+                        vc_1_completed = True
+                        gamedata_dict["victoryConditions"][nation_name][0] = True    # vc is permanently fulfilled
             
             case 'Diversified Economy':
                 non_zero_count = 0
@@ -1400,76 +1406,91 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                     vc_1_completed = True
             
             case 'Energy Economy':
-                # improvement count list and its consequences
-                coal_mine_index = improvement_name_list.index('Coal Mine')
-                strip_mine_index = improvement_name_list.index('Strip Mine')
-                oil_well_index = improvement_name_list.index('Oil Well')
-                oil_refinery_index = improvement_name_list.index('Oil Refinery')
-                energy_economy_count_list = []
-                for player in playerdata_list:
-                    temp_improvement_count_list = ast.literal_eval(player[27])
-                    score = 0
-                    for improvement_index in range(len(temp_improvement_count_list)):
-                        if improvement_index in [coal_mine_index, strip_mine_index, oil_well_index, oil_refinery_index]: 
-                            score += temp_improvement_count_list[improvement_index]
-                    energy_economy_count_list.append(score)
-                greatest_count = 0
-                greatest_count_player_id = []
-                for j, count in enumerate(energy_economy_count_list):
-                    if count > greatest_count:
-                        greatest_count = count
-                        greatest_count_player_id = [j + 1]
-                    elif count == greatest_count:
-                        greatest_count_player_id.append(j + 1)
-                if len(greatest_count_player_id) == 1 and player_id in greatest_count_player_id:
+                # get gross income sums for each nation using gross income data
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for temp_nation_name, gross_data in gross_income_dict.items():
+                    for resource_name, gross_income in gross_data["Total Income"].items():
+                        match resource_name:
+                            case "Coal" | "Oil" | "Green Energy":
+                                sum_dict[temp_nation_name] += gross_income
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
+                    vc_1_completed = True
+
+            case 'Industrial Focus':
+                # get gross income sums for each nation using gross income data
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for temp_nation_name, gross_data in gross_income_dict.items():
+                    for resource_name, gross_income in gross_data["Total Income"].items():
+                        match resource_name:
+                            case "Basic Materials" | "Common Metals":
+                                sum_dict[temp_nation_name] += gross_income
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
                     vc_1_completed = True
             
-            case 'Industrial Focus':
-                pass
-            
             case 'Leading Defense':
-                pass
+                # get gross improvement counts using improvement count list
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
+                for player in playerdata_list:
+                    temp_improvement_count_list = ast.literal_eval(player[27])
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Military Outpost')]
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Military Base')]
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Missile Defense System')]
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Missile Defense Network')]
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
+                    vc_1_completed = True
+
             case 'Major Exporter':
                 export_count = 0
                 for transaction in rmdata_all_transaction_list:
                     if transaction[1] == nation_name and transaction[2] == "Sold":
                         export_count += int(transaction[3])
-                if export_count >= 100:
+                if export_count >= 150:
                     vc_1_completed = True
+                    gamedata_dict["victoryConditions"][nation_name][0] = True    # vc is permanently fulfilled
             
             case 'Reconstruction Effort':
-                improvement_index = improvement_name_list.index('City')
-                city_count_list = []
+                # get gross improvement counts using improvement count list
+                sum_dict = {}
+                for temp_nation_name in nation_name_masterlist:
+                    sum_dict[temp_nation_name] = 0
                 for player in playerdata_list:
                     temp_improvement_count_list = ast.literal_eval(player[27])
-                    city_count = temp_improvement_count_list[improvement_index]
-                    city_count_list.append(city_count)
-                greatest_count = 0
-                greatest_count_player_id = []
-                for j, count in enumerate(city_count_list):
-                    if count > greatest_count:
-                        greatest_count = count
-                        greatest_count_player_id = [j + 1]
-                    elif count == greatest_count:
-                        greatest_count_player_id.append(j + 1)
-                if len(greatest_count_player_id) == 1 and player_id in greatest_count_player_id:
+                    sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('City')]
+                # check if nation has the greatest sum
+                nation_name_sum = sum_dict[temp_nation_name]
+                for temp_nation_name, sum in sum_dict.items():
+                    if sum >= nation_name_sum:
+                        nation_name_sum = False
+                if nation_name_sum:
                     vc_1_completed = True
             
             case 'Secure Strategic Resources':
-                player_has_advanced = False
-                player_has_uranium = False
-                player_has_rare = False
-                for region_id in regdata_dict:
-                    region = Region(region_id, game_id)
-                    owner_id = region.owner_id
-                    region_resource = region.resource
-                    if owner_id == player_id and region_resource == 'Advanced Metals':
-                        player_has_advanced = True
-                    elif owner_id == player_id and region_resource == 'Uranium':
-                        player_has_uranium = True
-                    elif owner_id == player_id and region_resource == 'Rare Earth Elements':
-                        player_has_rare = True
-                if player_has_advanced and player_has_uranium and player_has_rare:
+                if (
+                    improvement_count_list[improvement_name_list.index('Advanced Metals Mine')] > 0
+                    and improvement_count_list[improvement_name_list.index('Uranium Mine')] > 0
+                    and improvement_count_list[improvement_name_list.index('Rare Earth Elements Mine')] > 0
+                ):
                     vc_1_completed = True
 
 
@@ -1478,8 +1499,74 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     victory_condition_2 = victory_conditions_list[1]
     if not vc_2_completed:
         match victory_condition_2:
+
             case 'Backstab':
-                pass
+                # get set of all nations defeated in war
+                nations_defeated = set()
+                for war_name, war_dict in wardata.wardata_dict.items():
+                    if nation_name not in war_dict["combatants"] and war_dict["outcome"] != "TBD":
+                        # we do not care about wars player was not involved in
+                        continue
+                    nation_role = war_dict["combatants"][nation_name]["role"]
+                    if "Attacker" in nation_role:
+                        nation_side = "Attacker"
+                    else:
+                        nation_side = "Defender"
+                    if nation_side not in war_dict["outcome"]:
+                        # we do not care about wars the player lost or white peaced
+                        continue
+                    for combatant_name, combatant_data in war_dict["combatants"].items():
+                        if nation_side not in combatant_data["role"]:
+                            nations_defeated.add(combatant_name)
+                # get set of all nations you lost a war to
+                nations_lost_to = set()
+                for war_name, war_dict in wardata.wardata_dict.items():
+                    if nation_name not in war_dict["combatants"] and war_dict["outcome"] != "TBD":
+                        # we do not care about wars player was not involved in
+                        continue
+                    nation_role = war_dict["combatants"][nation_name]["role"]
+                    if "Attacker" in nation_role:
+                        nation_side = "Attacker"
+                    else:
+                        nation_side = "Defender"
+                    if nation_side in war_dict["outcome"] or "White Peace" == war_dict["outcome"]:
+                        # we do not care about wars the player won or white peaced
+                        continue
+                    for combatant_name, combatant_data in war_dict["combatants"].items():
+                        if nation_side not in combatant_data["role"]:
+                            nations_lost_to.add(combatant_name)
+                # get set of all former allies
+                current_allies = set()
+                former_allies = set()
+                for alliance in alliance_table:
+                    if alliance.is_active and nation_name in alliance.current_members:
+                        for ally_name in alliance.current_members:
+                            current_allies.add(ally_name)
+                        for ally_name in alliance.former_members:
+                            former_allies.add(ally_name)
+                    elif not alliance.is_active and nation_name in alliance.former_members:
+                        for ally_name in alliance.former_members:
+                            former_allies.add(ally_name)
+                if nation_name in current_allies:
+                    current_allies.remove(nation_name)
+                if nation_name in former_allies:
+                    former_allies.remove(nation_name)
+                former_allies_filtered = set()
+                for ally_name in former_allies:
+                    if ally_name not in current_allies:
+                        former_allies_filtered.add(ally_name)
+                former_allies = former_allies_filtered
+                # win a war against a former ally
+                for former_ally in former_allies:
+                    if former_ally in nations_defeated:
+                        vc_2_completed = True
+                        gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+                # win a war against someone you lost to
+                for enemy_nation in nations_lost_to:
+                    if enemy_nation in nations_defeated:
+                        vc_2_completed = True
+                        gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+
             case 'Diversified Army':
                 unit_types_found = []
                 for region_id in regdata_dict:
@@ -1489,6 +1576,7 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                             unit_types_found.append(region_unit.name)
                 if len(unit_types_found) >= 5:
                     vc_2_completed = True
+
             case 'Hegemony':
                 puppet_str = f'{nation_name} Puppet State'
                 for player in playerdata_list:
@@ -1496,13 +1584,28 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                     if puppet_str == status_str:
                         vc_2_completed = True
                         break
+
             case 'New Empire':
+                # if two capitals
                 improvement_index = improvement_name_list.index('Capital')
                 improvement_count = improvement_count_list[improvement_index]
                 if improvement_count >= 2:
                     vc_2_completed = True
-                if wardata.query(nation_name, 'Main', 'Defender', 'Defender Victory'):
-                    vc_2_completed = True
+                # or most edges
+                # to do - income calc should update edge counts so we dont have to do a bunch of work here
+                edge_counts = [0] * len(playerdata_list)
+                for i in range(len(playerdata_list)):
+                    for region_id in regdata_dict:
+                        region = Region(region_id, game_id)
+                        if region.owner_id == i + 1 and region.is_edge:
+                            edge_counts[i] += 1
+                nation_edge_count = edge_counts[player_id - 1]
+                for edge_count in edge_counts:
+                    if edge_count > nation_edge_count:
+                        nation_edge_count = False
+                if nation_edge_count:
+                     vc_2_completed = True
+
             case 'Nuclear Deterrent':
                 most_nukes_value = 0
                 most_nukes_player_ids = []
@@ -1515,9 +1618,17 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                     elif temp_nuke_storage == most_nukes_value:
                         most_nukes_player_ids.append(index + 1)
                 if len(most_nukes_player_ids) == 1 and player_id in most_nukes_player_ids:
-                    vc_3_completed = True
+                    vc_2_completed = True
+
             case 'Reliable Ally':
-                pass
+                longest_alliance_name, duration = alliance_table.get_longest_alliance()
+                if longest_alliance_name is not None:
+                    longest_alliance = alliance_table.get(longest_alliance_name)
+                    if longest_alliance.is_active and nation_name in longest_alliance.current_members:
+                        vc_2_completed = True
+                    elif not longest_alliance.is_active and nation_name in longest_alliance.former_members:
+                        vc_2_completed = True
+
             case 'Sphere of Influence':
                 agenda_count = 0
                 agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
@@ -1525,10 +1636,17 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
                     if research_name in agenda_data_dict:
                         agenda_count += 1
                 if agenda_count >= 8:
-                    vc_3_completed = True
+                    vc_2_completed = True
+                    gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
+                    
             case 'Warmonger':
-                pass
-
+                count = 0
+                for war_name, war_dict in wardata.wardata_dict.items():
+                    if war_dict["outcome"] == "Attacker Victory" and war_dict["combatants"][nation_name]["role"] == "Main Attacker":
+                        count += 1
+                if count >= 3:
+                    vc_2_completed = True
+                    gamedata_dict["victoryConditions"][nation_name][1] = True    # vc is permanently fulfilled
 
     #Check Hard Victory Condition
     vc_3_completed = gamedata_dict["victoryConditions"][nation_name][2]
@@ -1536,24 +1654,27 @@ def check_victory_conditions(game_id, player_id, current_turn_num):
     if not vc_3_completed:
         match victory_condition_3:
             case 'Economic Domination':
-                economy_1st, economy_2nd, economy_3rd =  get_top_three(game_id, 'strongest_economy', True)
+                economy_1st, economy_2nd, economy_3rd = get_top_three(game_id, 'strongest_economy', True)
                 if nation_name in economy_1st and (economy_1st[-6:] != economy_2nd[-6:]):
                     vc_3_completed = True
             case 'Influence Through Trade':
-                pass
+                trade_1st, trade_2nd, trade_3rd = core.get_top_three_transactions(game_id)
+                if nation_name in trade_1st and (trade_1st[-4:] != trade_2nd[-4:]):
+                    vc_3_completed = True
             case 'Military Superpower':
-                military_1st, military_2nd, military_3rd =  get_top_three(game_id, 'largest_military', True)
+                military_1st, military_2nd, military_3rd = get_top_three(game_id, 'largest_military', True)
                 if nation_name in military_1st and (military_1st[-4:] != military_2nd[-4:]):
                     vc_3_completed = True
             case 'Scientific Leader':
-                research_1st, research_2nd, research_3rd =  get_top_three(game_id, 'most_research', True)
+                research_1st, research_2nd, research_3rd = get_top_three(game_id, 'most_research', True)
                 if nation_name in research_1st and (research_1st[-4:] != research_2nd[-4:]):
                     vc_3_completed = True
             case 'Territorial Control':
-                size_1st, size_2nd, size_3rd =  get_top_three(game_id, 'largest_nation', True)
+                size_1st, size_2nd, size_3rd = get_top_three(game_id, 'largest_nation', True)
                 if nation_name in size_1st and (size_1st[-4:] != size_2nd[-4:]):
                     vc_3_completed = True
         
+
     # save gamedata
     with open(f'gamedata/{game_id}/gamedata.json', 'w') as json_file:
         json.dump(gamedata_dict, json_file, indent=4)
