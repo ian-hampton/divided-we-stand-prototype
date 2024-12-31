@@ -5261,7 +5261,7 @@
             "edgeOfMap": true,
             "containsRegionalCapital": false,
             "adjacencyList": [
-                "DELEW",
+                "DELAW",
                 "PHILL",
                 "PAHLR",
                 "WESMD",
@@ -5279,9 +5279,9 @@
             "ownerID": 99
         }
     },
-    "DELEW": {
+    "DELAW": {
         "regionData": {
-            "fullName": "State of Deleware",
+            "fullName": "State of DELAWare",
             "ownerID": 0,
             "occupierID": 0,
             "purchaseCost": 5,
@@ -5497,7 +5497,7 @@
                 "NTEPA",
                 "NTHNJ",
                 "STHNJ",
-                "DELEW",
+                "DELAW",
                 "EASMD",
                 "PAHLR",
                 "CENPA"
