@@ -170,7 +170,7 @@ class MainMap:
             improvement_start_cords = improvement_cords_dict[region_id]
             # to do - move this list into the game files somewhere
             if self.map_name == "United States 2.0":
-                magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELEW", "RHODE", "NTHMA", "STHMA"]
+                magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELAW", "RHODE", "NTHMA", "STHMA"]
             if region_id in magnified_regions_list and (region.owner_id != 0 or region.occupier_id != 0):
                 fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id, active_games_dict)
                 cord_x = (improvement_start_cords[0] + 25)
@@ -369,6 +369,7 @@ class ResourceMap:
         
         main_image.save(resource_map_save_location)
 
+
 class ControlMap:
 
     """Creates and updates the control map for Divided We Stand games."""
@@ -432,9 +433,6 @@ class ControlMap:
         main_image.save(control_map_save_location)
 
 
-# MAP GENERATION HELPER FUNCTIONS
-################################################################################
-
 def generate_player_color_list(playerdata_location: str) -> list:
     """
     Gets a list of all player colors in RGB form.
@@ -478,7 +476,7 @@ def check_region_fill_exceptions(region_id: str, map_name: str, start_cords_upda
             start_cords_updated = (4358, 1590)
         elif region_id == "EASMD":
             start_cords_updated = (4413, 1447)
-        elif region_id == "DELEW":
+        elif region_id == "DELAW":
             start_cords_updated = (4410, 1379)
         elif region_id == "RHODE":
             start_cords_updated = (4676, 995)
