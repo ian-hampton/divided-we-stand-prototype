@@ -18,7 +18,7 @@ class MainMap:
 
     """Creates and updates the main map for Divided We Stand games."""
 
-    def __init__(self, game_id, map_name, current_turn_num):
+    def __init__(self, game_id: str, map_name: str, current_turn_num):
         self.game_id = game_id
         self.map_name = map_name
         self.turn_num = current_turn_num
@@ -143,8 +143,9 @@ class MainMap:
                 cord_x = (region_improvement.cords[0] + 25)
                 cord_y = (region_improvement.cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
-                start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
-                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_finalized, main_image, self.game_id, active_games_dict)
+                if region.cords is not None:
+                    start_cords_updated = region.cords
+                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id, active_games_dict)
         
         # add texture and background to temp image
         main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
@@ -157,7 +158,7 @@ class MainMap:
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
-            if region.is_magnified and (region.owner_id != 0 or region.occupier_id != 0):
+            if region.cords is not None and (region.owner_id != 0 or region.occupier_id != 0):
                 fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id, active_games_dict)
                 cord_x = (region_improvement.cords[0] + 25)
                 cord_y = (region_improvement.cords[1] + 25)
@@ -258,7 +259,7 @@ class ResourceMap:
     
     """Creates and updates the resource map for Divided We Stand games."""
 
-    def __init__(self, game_id, map_name):
+    def __init__(self, game_id: str, map_name: str):
         self.game_id = game_id
         self.map_name = map_name
 
@@ -328,11 +329,12 @@ class ResourceMap:
                 cord_x = (region_improvement.cords[0] + 25)
                 cord_y = (region_improvement.cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
-                start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
+                if region.cords is not None:
+                    start_cords_updated = region.cords
                 if region_id == "HAMPT" and self.map_name == "United States 2.0":
                     # second floodfill required for HAMPT because it is split in two pieces
                     ImageDraw.floodfill(main_image, (4430, 1520), core.resource_colors[region.resource], border=(0, 0, 0, 255))
-                ImageDraw.floodfill(main_image, start_cords_finalized, core.resource_colors[region.resource], border=(0, 0, 0, 255))
+                ImageDraw.floodfill(main_image, start_cords_updated, core.resource_colors[region.resource], border=(0, 0, 0, 255))
         
         # add background textures and text
         background_image = Image.open(background_filepath)
@@ -349,7 +351,7 @@ class ControlMap:
 
     """Creates and updates the control map for Divided We Stand games."""
 
-    def __init__(self, game_id, map_name):
+    def __init__(self, game_id: str, map_name: str):
         self.game_id = game_id
         self.map_name = map_name
 
@@ -389,8 +391,9 @@ class ControlMap:
                 cord_x = (region_improvement.cords[0] + 25)
                 cord_y = (region_improvement.cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
-                start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
-                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_finalized, main_image, self.game_id, active_games_dict)
+                if region.cords is not None:
+                    start_cords_updated = region.cords
+                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id, active_games_dict)
         
         # add background textures and text
         main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
@@ -419,38 +422,6 @@ def generate_player_color_list(playerdata_location: str) -> list:
                 player_color_list.append(player_color_rgb)
 
     return player_color_list
-
-def check_region_fill_exceptions(region_id: str, map_name: str, start_cords_updated: tuple) -> tuple:
-    """
-    Changes start_cords_updated for maginified regions.
-
-    Params:
-        region_id (str): Five character ID.
-        map_name (str): String representing map name.
-        start_cords_updates (tuple): x,y cords for a region.
-    """
-    if map_name == "United States 2.0":
-        if region_id == "LOSAN":
-            start_cords_updated = (563, 1866)
-        elif region_id == "FIRCT":
-            start_cords_updated = (4040, 2489)
-        elif region_id == "TAMPA":
-            start_cords_updated = (3997, 2697)
-        elif region_id == "GACST":
-            start_cords_updated = (4014, 2297)
-        elif region_id == "HAMPT":
-            start_cords_updated = (4358, 1590)
-        elif region_id == "EASMD":
-            start_cords_updated = (4413, 1447)
-        elif region_id == "DELAW":
-            start_cords_updated = (4410, 1379)
-        elif region_id == "RHODE":
-            start_cords_updated = (4676, 995)
-        elif region_id == "NTHMA":
-            start_cords_updated = (4660, 923)
-        elif region_id == "STHMA":
-            start_cords_updated = (4700, 960)
-    return start_cords_updated
 
 def map_color_fill(owner_id: int, occupier_id: int, player_color_list: list, region_id: str, start_cords_updated: tuple, main_image: Image, full_game_id: str, active_games_dict: dict) -> None:
     """

@@ -62,9 +62,6 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
             random_assignment_list.append(player_id)
     
     # place starting capitals for players who want random start
-    NO_RANDOM_PLACEMENT_SET = {'UPPER', 'NTHMI', 'WESMI', 'MIDMI', 'THUMB', 'STEMI',
-                                'FLPAN', 'GAINE', 'FIRCT', 'HALIF', 'TAMPA', 'STWFL', 'MIAMI',
-                                'WESNY', 'FINLA', 'STHNY', 'MOHAW', 'NTHNY', 'ALBAN', 'NEWYO', 'CONNE', 'RHODE', 'WESMA', 'NTHMA', 'STHMA', 'NTHVT', 'STHVT', 'NTHNH', 'STHNH', 'STHME', 'NTHME'}
     for random_assignment_player_id in random_assignment_list:
         while True:
             # randomly select a region
@@ -73,7 +70,7 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
             random_region_id = random.sample(region_id_list, 1)[0]
             random_region = Region(random_region_id, game_id)
             # if region not allowed restart loop
-            if random_region_id in NO_RANDOM_PLACEMENT_SET:
+            if random_region_id is not random_region.is_start:
                 continue
             # check if there is a player within three regions
             regions_in_radius = random_region.get_regions_in_radius(3)

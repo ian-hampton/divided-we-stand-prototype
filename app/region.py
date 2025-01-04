@@ -24,7 +24,7 @@ class Region:
 
         # set attributes now that all checks have passed
         self.region_id: str = region_id
-        self.data = region_data
+        self.data: dict = region_data
         self.owner_id: int = self.data["ownerID"]
         self.occupier_id: int = self.data["occupierID"]
         self.purchase_cost: int = self.data["purchaseCost"]
@@ -33,7 +33,8 @@ class Region:
         self.adjacent_regions: list = self.data["adjacencyList"]
         self.is_edge: bool = self.data["edgeOfMap"]
         self.is_significant: bool = self.data["containsRegionalCapital"]
-        self.is_magnified: bool = self.data["magnified"]
+        self.is_start: bool = self.data["randomStartAllowed"]
+        self.cords: list = self.data.get("coordinates", None)
         self.game_id: str = game_id
         self.regdata_filepath: str = regdata_filepath
         self.claim_list = []
