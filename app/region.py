@@ -30,9 +30,10 @@ class Region:
         self.purchase_cost: int = self.data["purchaseCost"]
         self.resource: str = self.data["regionResource"]
         self.fallout: int = self.data["nukeTurns"]
+        self.adjacent_regions: list = self.data["adjacencyList"]
         self.is_edge: bool = self.data["edgeOfMap"]
         self.is_significant: bool = self.data["containsRegionalCapital"]
-        self.adjacent_regions: list = self.data["adjacencyList"]
+        self.is_magnified: bool = self.data["magnified"]
         self.game_id: str = game_id
         self.regdata_filepath: str = regdata_filepath
         self.claim_list = []

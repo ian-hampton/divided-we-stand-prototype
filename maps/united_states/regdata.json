@@ -17,12 +17,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                470,
+                259
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                453,
+                255
+            ]
         }
     },
     "PACCA": {
@@ -46,12 +54,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                536,
+                421
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                467,
+                400
+            ]
         }
     },
     "PUGET": {
@@ -74,12 +90,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                604,
+                334
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                536,
+                360
+            ]
         }
     },
     "NTCAS": {
@@ -101,12 +125,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                646,
+                181
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                647,
+                268
+            ]
         }
     },
     "OKANO": {
@@ -128,12 +160,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                913,
+                281
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                824,
+                254
+            ]
         }
     },
     "COLBA": {
@@ -159,7 +199,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                765,
+                416
+            ]
         },
         "unitData": {
             "name": null,
@@ -186,12 +230,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                433,
+                608
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                417,
+                565
+            ]
         }
     },
     "NTHOR": {
@@ -215,7 +267,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                588,
+                624
+            ]
         },
         "unitData": {
             "name": null,
@@ -245,7 +301,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                430,
+                815
+            ]
         },
         "unitData": {
             "name": null,
@@ -275,7 +335,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                756,
+                752
+            ]
         },
         "unitData": {
             "name": null,
@@ -305,12 +369,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1050,
+                551
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                1027,
+                499
+            ]
         }
     },
     "MAGVA": {
@@ -335,7 +407,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                989,
+                891
+            ]
         },
         "unitData": {
             "name": null,
@@ -365,7 +441,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1249,
+                934
+            ]
         },
         "unitData": {
             "name": null,
@@ -393,7 +473,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1266,
+                587
+            ]
         },
         "unitData": {
             "name": null,
@@ -421,7 +505,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1667,
+                570
+            ]
         },
         "unitData": {
             "name": null,
@@ -451,7 +539,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1642,
+                941
+            ]
         },
         "unitData": {
             "name": null,
@@ -483,7 +575,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1604,
+                1174
+            ]
         },
         "unitData": {
             "name": null,
@@ -511,12 +607,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                252,
+                1030
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                252,
+                1152
+            ]
         }
     },
     "SHAST": {
@@ -539,7 +643,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                413,
+                1055
+            ]
         },
         "unitData": {
             "name": null,
@@ -570,12 +678,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                385,
+                1403
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                390,
+                1296
+            ]
         }
     },
     "BAYAR": {
@@ -597,12 +713,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                281,
+                1284
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                315,
+                1383
+            ]
         }
     },
     "SINEV": {
@@ -628,12 +752,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                496,
+                1378
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                642,
+                1573
+            ]
         }
     },
     "SJOVA": {
@@ -656,7 +788,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                466,
+                1557
+            ]
         },
         "unitData": {
             "name": null,
@@ -685,12 +821,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                387,
+                1718
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                325,
+                1558
+            ]
         }
     },
     "KERNC": {
@@ -714,7 +858,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                508,
+                1712
+            ]
         },
         "unitData": {
             "name": null,
@@ -742,7 +890,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                358,
+                1917
+            ]
         },
         "unitData": {
             "name": null,
@@ -773,7 +925,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                715,
+                1853
+            ]
         },
         "unitData": {
             "name": null,
@@ -800,12 +956,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                690,
+                2018
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                761,
+                2053
+            ]
         }
     },
     "WESNV": {
@@ -832,7 +996,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                638,
+                1149
+            ]
         },
         "unitData": {
             "name": null,
@@ -862,7 +1030,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                901,
+                1200
+            ]
         },
         "unitData": {
             "name": null,
@@ -892,7 +1064,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                804,
+                1483
+            ]
         },
         "unitData": {
             "name": null,
@@ -920,7 +1096,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                849,
+                1663
+            ]
         },
         "unitData": {
             "name": null,
@@ -949,12 +1129,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1275,
+                1140
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                1119,
+                1138
+            ]
         }
     },
     "SLTLK": {
@@ -978,12 +1166,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1126,
+                1243
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                1242,
+                1296
+            ]
         }
     },
     "UINTA": {
@@ -1007,7 +1203,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1350,
+                1351
+            ]
         },
         "unitData": {
             "name": null,
@@ -1038,7 +1238,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1108,
+                1502
+            ]
         },
         "unitData": {
             "name": null,
@@ -1067,12 +1271,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1371,
+                1605
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                1404,
+                1512
+            ]
         }
     },
     "NTWCO": {
@@ -1097,7 +1309,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1584,
+                1355
+            ]
         },
         "unitData": {
             "name": null,
@@ -1128,7 +1344,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1900,
+                1419
+            ]
         },
         "unitData": {
             "name": null,
@@ -1157,12 +1377,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1538,
+                1587
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                1592,
+                1539
+            ]
         }
     },
     "STECO": {
@@ -1187,7 +1415,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1793,
+                1647
+            ]
         },
         "unitData": {
             "name": null,
@@ -1218,12 +1450,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                956,
+                1765
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                946,
+                1876
+            ]
         }
     },
     "YUMAC": {
@@ -1248,12 +1488,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                907,
+                2029
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                893,
+                2122
+            ]
         }
     },
     "YAVAP": {
@@ -1276,12 +1524,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1039,
+                1901
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                1112,
+                1949
+            ]
         }
     },
     "PHOEN": {
@@ -1304,7 +1560,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1044,
+                2065
+            ]
         },
         "unitData": {
             "name": null,
@@ -1332,7 +1592,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1139,
+                2225
+            ]
         },
         "unitData": {
             "name": null,
@@ -1364,7 +1628,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1235,
+                1890
+            ]
         },
         "unitData": {
             "name": null,
@@ -1393,7 +1661,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1494,
+                1873
+            ]
         },
         "unitData": {
             "name": null,
@@ -1423,7 +1695,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1761,
+                1832
+            ]
         },
         "unitData": {
             "name": null,
@@ -1452,7 +1728,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1476,
+                2141
+            ]
         },
         "unitData": {
             "name": null,
@@ -1481,7 +1761,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1787,
+                2128
+            ]
         },
         "unitData": {
             "name": null,
@@ -1508,7 +1792,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2122,
+                573
+            ]
         },
         "unitData": {
             "name": null,
@@ -1536,7 +1824,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2410,
+                629
+            ]
         },
         "unitData": {
             "name": null,
@@ -1567,7 +1859,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2102,
+                906
+            ]
         },
         "unitData": {
             "name": null,
@@ -1598,7 +1894,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2419,
+                922
+            ]
         },
         "unitData": {
             "name": null,
@@ -1627,7 +1927,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1980,
+                1182
+            ]
         },
         "unitData": {
             "name": null,
@@ -1657,7 +1961,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2233,
+                1248
+            ]
         },
         "unitData": {
             "name": null,
@@ -1688,7 +1996,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2502,
+                1281
+            ]
         },
         "unitData": {
             "name": null,
@@ -1717,7 +2029,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2264,
+                1490
+            ]
         },
         "unitData": {
             "name": null,
@@ -1747,7 +2063,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2278,
+                1676
+            ]
         },
         "unitData": {
             "name": null,
@@ -1777,7 +2097,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2605,
+                1599
+            ]
         },
         "unitData": {
             "name": null,
@@ -1807,7 +2131,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2294,
+                1819
+            ]
         },
         "unitData": {
             "name": null,
@@ -1838,7 +2166,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2552,
+                1874
+            ]
         },
         "unitData": {
             "name": null,
@@ -1867,7 +2199,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2341,
+                1995
+            ]
         },
         "unitData": {
             "name": null,
@@ -1897,7 +2233,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2635,
+                2050
+            ]
         },
         "unitData": {
             "name": null,
@@ -1928,7 +2268,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2109,
+                2082
+            ]
         },
         "unitData": {
             "name": null,
@@ -1958,7 +2302,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2473,
+                2241
+            ]
         },
         "unitData": {
             "name": null,
@@ -1989,7 +2337,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2681,
+                2251
+            ]
         },
         "unitData": {
             "name": null,
@@ -2018,7 +2370,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                1903,
+                2420
+            ]
         },
         "unitData": {
             "name": null,
@@ -2047,7 +2403,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2198,
+                2360
+            ]
         },
         "unitData": {
             "name": null,
@@ -2077,7 +2437,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2432,
+                2446
+            ]
         },
         "unitData": {
             "name": null,
@@ -2105,7 +2469,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2241,
+                2654
+            ]
         },
         "unitData": {
             "name": null,
@@ -2132,12 +2500,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2406,
+                2759
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                2479,
+                2728
+            ]
         }
     },
     "GULCT": {
@@ -2160,12 +2536,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2625,
+                2578
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                2625,
+                2510
+            ]
         }
     },
     "STETX": {
@@ -2189,12 +2573,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2761,
+                2446
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                2761,
+                2544
+            ]
         }
     },
     "NTWMN": {
@@ -2218,7 +2610,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2595,
+                616
+            ]
         },
         "unitData": {
             "name": null,
@@ -2245,7 +2641,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2827,
+                581
+            ]
         },
         "unitData": {
             "name": null,
@@ -2274,7 +2674,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2737,
+                766
+            ]
         },
         "unitData": {
             "name": null,
@@ -2303,7 +2707,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2622,
+                918
+            ]
         },
         "unitData": {
             "name": null,
@@ -2333,7 +2741,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2792,
+                953
+            ]
         },
         "unitData": {
             "name": null,
@@ -2363,7 +2775,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2692,
+                1101
+            ]
         },
         "unitData": {
             "name": null,
@@ -2393,7 +2809,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2961,
+                1132
+            ]
         },
         "unitData": {
             "name": null,
@@ -2422,7 +2842,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2719,
+                1273
+            ]
         },
         "unitData": {
             "name": null,
@@ -2451,7 +2875,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2961,
+                1274
+            ]
         },
         "unitData": {
             "name": null,
@@ -2483,7 +2911,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2827,
+                1421
+            ]
         },
         "unitData": {
             "name": null,
@@ -2513,12 +2945,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2784,
+                1584
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                2766,
+                1717
+            ]
         }
     },
     "STLOU": {
@@ -2542,7 +2982,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2959,
+                1623
+            ]
         },
         "unitData": {
             "name": null,
@@ -2571,7 +3015,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2900,
+                1752
+            ]
         },
         "unitData": {
             "name": null,
@@ -2602,12 +3050,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3131,
+                1745
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3077,
+                1726
+            ]
         }
     },
     "NTWAR": {
@@ -2633,7 +3089,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2810,
+                1914
+            ]
         },
         "unitData": {
             "name": null,
@@ -2664,12 +3124,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3028,
+                1876
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3094,
+                1955
+            ]
         }
     },
     "STWAR": {
@@ -2693,7 +3161,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2819,
+                2115
+            ]
         },
         "unitData": {
             "name": null,
@@ -2722,12 +3194,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2997,
+                2054
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3003,
+                2167
+            ]
         }
     },
     "SPORT": {
@@ -2753,7 +3233,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2894,
+                2257
+            ]
         },
         "unitData": {
             "name": null,
@@ -2782,7 +3266,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2901,
+                2384
+            ]
         },
         "unitData": {
             "name": null,
@@ -2809,7 +3297,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2900,
+                2518
+            ]
         },
         "unitData": {
             "name": null,
@@ -2837,12 +3329,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3140,
+                2574
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3114,
+                2498
+            ]
         }
     },
     "NTWWI": {
@@ -2866,7 +3366,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                2943,
+                847
+            ]
         },
         "unitData": {
             "name": null,
@@ -2895,12 +3399,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3131,
+                857
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3131,
+                799
+            ]
         }
     },
     "NTEWI": {
@@ -2922,12 +3434,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3229,
+                922
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3234,
+                831
+            ]
         }
     },
     "STWWI": {
@@ -2952,12 +3472,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3055,
+                999
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3064,
+                1098
+            ]
         }
     },
     "STEWI": {
@@ -2981,7 +3509,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3167,
+                1054
+            ]
         },
         "unitData": {
             "name": null,
@@ -3008,12 +3540,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3232,
+                671
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3392,
+                690
+            ]
         }
     },
     "NTHMI": {
@@ -3035,12 +3575,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3527,
+                848
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3447,
+                917
+            ]
         }
     },
     "WESMI": {
@@ -3064,12 +3612,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3469,
+                1116
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3453,
+                1065
+            ]
         }
     },
     "MIDMI": {
@@ -3092,12 +3648,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3536,
+                985
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3561,
+                1076
+            ]
         }
     },
     "THUMB": {
@@ -3118,12 +3682,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3674,
+                992
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3666,
+                961
+            ]
         }
     },
     "STEMI": {
@@ -3146,12 +3718,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3640,
+                1078
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3590,
+                1161
+            ]
         }
     },
     "NTWIL": {
@@ -3177,12 +3757,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3158,
+                1169
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3159,
+                1259
+            ]
         }
     },
     "CHICA": {
@@ -3206,12 +3794,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3272,
+                1222
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3256,
+                1180
+            ]
         }
     },
     "FORGO": {
@@ -3235,12 +3831,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3034,
+                1415
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3039,
+                1378
+            ]
         }
     },
     "CENIL": {
@@ -3264,7 +3868,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3146,
+                1319
+            ]
         },
         "unitData": {
             "name": null,
@@ -3295,12 +3903,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3144,
+                1469
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3153,
+                1577
+            ]
         }
     },
     "EASIL": {
@@ -3326,12 +3942,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3283,
+                1409
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3295,
+                1533
+            ]
         }
     },
     "LILEG": {
@@ -3357,12 +3981,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3240,
+                1649
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3278,
+                1617
+            ]
         }
     },
     "NTHIN": {
@@ -3386,12 +4018,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3505,
+                1211
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3420,
+                1238
+            ]
         }
     },
     "CENIN": {
@@ -3417,12 +4057,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3448,
+                1309
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3526,
+                1371
+            ]
         }
     },
     "INDIA": {
@@ -3444,12 +4092,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3471,
+                1426
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3436,
+                1411
+            ]
         }
     },
     "WABAS": {
@@ -3473,12 +4129,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3377,
+                1442
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3385,
+                1535
+            ]
         }
     },
     "STHIN": {
@@ -3506,12 +4170,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3467,
+                1533
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3522,
+                1508
+            ]
         }
     },
     "NTWOH": {
@@ -3537,7 +4209,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3621,
+                1220
+            ]
         },
         "unitData": {
             "name": null,
@@ -3566,7 +4242,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3819,
+                1225
+            ]
         },
         "unitData": {
             "name": null,
@@ -3595,12 +4275,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3639,
+                1385
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3609,
+                1375
+            ]
         }
     },
     "CENOH": {
@@ -3625,12 +4313,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3706,
+                1298
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3734,
+                1392
+            ]
         }
     },
     "CINCI": {
@@ -3655,12 +4351,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3680,
+                1470
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3629,
+                1469
+            ]
         }
     },
     "STHOH": {
@@ -3684,12 +4388,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3760,
+                1452
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3812,
+                1449
+            ]
         }
     },
     "STEOH": {
@@ -3712,12 +4424,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3853,
+                1367
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3889,
+                1353
+            ]
         }
     },
     "BLUEG": {
@@ -3740,12 +4460,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3566,
+                1563
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3614,
+                1545
+            ]
         }
     },
     "WESKY": {
@@ -3770,12 +4498,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3375,
+                1707
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3254,
+                1786
+            ]
         }
     },
     "PENNY": {
@@ -3801,12 +4537,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3562,
+                1693
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3487,
+                1679
+            ]
         }
     },
     "CUMBE": {
@@ -3833,7 +4577,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3708,
+                1617
+            ]
         },
         "unitData": {
             "name": null,
@@ -3863,7 +4611,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3229,
+                1837
+            ]
         },
         "unitData": {
             "name": null,
@@ -3892,12 +4644,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3446,
+                1816
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3380,
+                1832
+            ]
         }
     },
     "MIDTN": {
@@ -3920,12 +4680,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3561,
+                1826
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3527,
+                1812
+            ]
         }
     },
     "EASTN": {
@@ -3950,12 +4718,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3700,
+                1802
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3769,
+                1798
+            ]
         }
     },
     "STWTN": {
@@ -3979,7 +4755,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3211,
+                1925
+            ]
         },
         "unitData": {
             "name": null,
@@ -4011,12 +4791,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3433,
+                1907
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3507,
+                1935
+            ]
         }
     },
     "NTHMS": {
@@ -4042,12 +4830,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3173,
+                2054
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3123,
+                2185
+            ]
         }
     },
     "CENMS": {
@@ -4073,12 +4869,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3202,
+                2277
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3259,
+                2220
+            ]
         }
     },
     "MSGUL": {
@@ -4100,12 +4904,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3284,
+                2432
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3232,
+                2404
+            ]
         }
     },
     "NTHAL": {
@@ -4130,12 +4942,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3461,
+                1988
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3534,
+                2022
+            ]
         }
     },
     "WESAL": {
@@ -4160,12 +4980,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3385,
+                2125
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3405,
+                2224
+            ]
         }
     },
     "EASAL": {
@@ -4188,12 +5016,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3502,
+                2120
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3572,
+                2150
+            ]
         }
     },
     "STWAL": {
@@ -4217,7 +5053,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3382,
+                2353
+            ]
         },
         "unitData": {
             "name": null,
@@ -4247,7 +5087,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3537,
+                2295
+            ]
         },
         "unitData": {
             "name": null,
@@ -4276,12 +5120,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3640,
+                2427
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3713,
+                2479
+            ]
         }
     },
     "GAINE": {
@@ -4305,12 +5157,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3911,
+                2502
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3864,
+                2475
+            ]
         }
     },
     "FIRCT": {
@@ -4333,7 +5193,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4140,
+                2464
+            ]
         },
         "unitData": {
             "name": null,
@@ -4362,12 +5226,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4048,
+                2587
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4103,
+                2672
+            ]
         }
     },
     "TAMPA": {
@@ -4389,7 +5261,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3770,
+                2683
+            ]
         },
         "unitData": {
             "name": null,
@@ -4416,12 +5292,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4080,
+                2790
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4100,
+                2888
+            ]
         }
     },
     "MIAMI": {
@@ -4442,12 +5326,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4190,
+                2853
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4185,
+                2954
+            ]
         }
     },
     "NTWGA": {
@@ -4474,12 +5366,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3636,
+                1978
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3636,
+                2071
+            ]
         }
     },
     "ATHEN": {
@@ -4504,12 +5404,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3801,
+                2012
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3752,
+                1992
+            ]
         }
     },
     "ATLAN": {
@@ -4532,12 +5440,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3716,
+                2069
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3732,
+                2156
+            ]
         }
     },
     "EASGA": {
@@ -4563,7 +5479,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3865,
+                2141
+            ]
         },
         "unitData": {
             "name": null,
@@ -4593,12 +5513,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3726,
+                2283
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3751,
+                2387
+            ]
         }
     },
     "STEGA": {
@@ -4623,12 +5551,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3881,
+                2312
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3837,
+                2284
+            ]
         }
     },
     "GACST": {
@@ -4651,7 +5587,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4118,
+                2287
+            ]
         },
         "unitData": {
             "name": null,
@@ -4678,12 +5618,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3873,
+                1938
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3820,
+                1960
+            ]
         }
     },
     "MDLND": {
@@ -4709,12 +5657,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3965,
+                1988
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4016,
+                1965
+            ]
         }
     },
     "PEEDE": {
@@ -4738,7 +5694,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4100,
+                1983
+            ]
         },
         "unitData": {
             "name": null,
@@ -4766,7 +5726,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4030,
+                2103
+            ]
         },
         "unitData": {
             "name": null,
@@ -4798,7 +5762,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3834,
+                1834
+            ]
         },
         "unitData": {
             "name": null,
@@ -4829,12 +5797,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4038,
+                1757
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4027,
+                1864
+            ]
         }
     },
     "TRIAN": {
@@ -4858,12 +5834,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4168,
+                1747
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4199,
+                1716
+            ]
         }
     },
     "BANKS": {
@@ -4886,12 +5870,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4336,
+                1710
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4270,
+                1730
+            ]
         }
     },
     "SANDH": {
@@ -4914,12 +5906,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4201,
+                1864
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4145,
+                1893
+            ]
         }
     },
     "STENC": {
@@ -4942,12 +5942,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4294,
+                1826
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4239,
+                1959
+            ]
         }
     },
     "ROANO": {
@@ -4972,12 +5980,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4068,
+                1521
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4065,
+                1607
+            ]
         }
     },
     "NTHVA": {
@@ -5001,12 +6017,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4194,
+                1439
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4228,
+                1425
+            ]
         }
     },
     "RICHM": {
@@ -5029,7 +6053,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4200,
+                1529
+            ]
         },
         "unitData": {
             "name": null,
@@ -5060,7 +6088,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3856,
+                1677
+            ]
         },
         "unitData": {
             "name": null,
@@ -5091,12 +6123,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4187,
+                1617
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4107,
+                1671
+            ]
         }
     },
     "HAMPT": {
@@ -5121,7 +6161,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4503,
+                1614
+            ]
         },
         "unitData": {
             "name": null,
@@ -5153,12 +6197,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3891,
+                1443
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3940,
+                1408
+            ]
         }
     },
     "POTOM": {
@@ -5183,12 +6235,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4031,
+                1420
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4094,
+                1406
+            ]
         }
     },
     "CHARL": {
@@ -5212,7 +6272,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3896,
+                1566
+            ]
         },
         "unitData": {
             "name": null,
@@ -5242,12 +6306,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4235,
+                1327
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4286,
+                1436
+            ]
         }
     },
     "EASMD": {
@@ -5271,7 +6343,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4539,
+                1464
+            ]
         },
         "unitData": {
             "name": null,
@@ -5297,7 +6373,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4539,
+                1344
+            ]
         },
         "unitData": {
             "name": null,
@@ -5326,12 +6406,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                3968,
+                1172
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4002,
+                1136
+            ]
         }
     },
     "NTHPA": {
@@ -5355,7 +6443,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4100,
+                1137
+            ]
         },
         "unitData": {
             "name": null,
@@ -5386,12 +6478,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4326,
+                1085
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4265,
+                1086
+            ]
         }
     },
     "PITTS": {
@@ -5417,12 +6517,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4080,
+                1258
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                3995,
+                1311
+            ]
         }
     },
     "CENPA": {
@@ -5446,12 +6554,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4256,
+                1158
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4196,
+                1228
+            ]
         }
     },
     "PAHLR": {
@@ -5475,12 +6591,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4269,
+                1238
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4204,
+                1291
+            ]
         }
     },
     "PHILL": {
@@ -5506,12 +6630,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4358,
+                1224
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4352,
+                1194
+            ]
         }
     },
     "NTHNJ": {
@@ -5534,12 +6666,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4419,
+                1151
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4435,
+                1132
+            ]
         }
     },
     "STHNJ": {
@@ -5560,12 +6700,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4430,
+                1273
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4459,
+                1240
+            ]
         }
     },
     "NTHNY": {
@@ -5588,12 +6736,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4313,
+                719
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4257,
+                811
+            ]
         }
     },
     "WESNY": {
@@ -5617,12 +6773,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4037,
+                1033
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4170,
+                1028
+            ]
         }
     },
     "FINLA": {
@@ -5645,12 +6809,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4220,
+                915
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4108,
+                971
+            ]
         }
     },
     "MOHAW": {
@@ -5673,12 +6845,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4347,
+                856
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4338,
+                822
+            ]
         }
     },
     "ALBAN": {
@@ -5704,12 +6884,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4442,
+                877
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4418,
+                831
+            ]
         }
     },
     "STHNY": {
@@ -5734,12 +6922,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4310,
+                969
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4365,
+                960
+            ]
         }
     },
     "NEWYO": {
@@ -5764,12 +6960,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4453,
+                1033
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4453,
+                1000
+            ]
         }
     },
     "CONNE": {
@@ -5792,7 +6996,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4538,
+                995
+            ]
         },
         "unitData": {
             "name": null,
@@ -5819,7 +7027,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4659,
+                1094
+            ]
         },
         "unitData": {
             "name": null,
@@ -5849,12 +7061,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4564,
+                915
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4512,
+                936
+            ]
         }
     },
     "NTHMA": {
@@ -5878,7 +7098,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4794,
+                831
+            ]
         },
         "unitData": {
             "name": null,
@@ -5904,7 +7128,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4855,
+                945
+            ]
         },
         "unitData": {
             "name": null,
@@ -5932,12 +7160,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4466,
+                674
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4524,
+                675
+            ]
         }
     },
     "STHVT": {
@@ -5961,12 +7197,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4499,
+                808
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4505,
+                774
+            ]
         }
     },
     "NTHNH": {
@@ -5989,12 +7233,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4602,
+                741
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4589,
+                707
+            ]
         }
     },
     "STHNH": {
@@ -6018,7 +7270,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4580,
+                818
+            ]
         },
         "unitData": {
             "name": null,
@@ -6043,12 +7299,20 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4756,
+                459
+            ]
         },
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 99,
+            "coordinates": [
+                4818,
+                549
+            ]
         }
     },
     "STHME": {
@@ -6070,7 +7334,11 @@
         "improvementData": {
             "name": null,
             "health": 99,
-            "turnTimer": 99
+            "turnTimer": 99,
+            "coordinates": [
+                4666,
+                624
+            ]
         },
         "unitData": {
             "name": null,

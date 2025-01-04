@@ -40,11 +40,12 @@ class Improvement:
             print(f"Error: {self.region_id} not recognized during Region class initialization.")
 
         # set attributes now that all checks have passed
-        self.data = improvement_data
-        self.regdata_filepath = regdata_filepath
-        self.name = self.data["name"]
-        self.health = self.data["health"]
-        self.turn_timer = self.data["turnTimer"]
+        self.data: dict = improvement_data
+        self.regdata_filepath: str = regdata_filepath
+        self.name: str = self.data["name"]
+        self.health: int = self.data["health"]
+        self.turn_timer: int = self.data["turnTimer"]
+        self.cords: list = self.data.get("coordinates", None)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         if self.name is not None:
             self.hit_value = improvement_data_dict[self.name]["Combat Value"]
@@ -200,7 +201,7 @@ class Improvement:
 
         # get capital resource if able
         # to do - find a way to not hard code this check
-        if self.name == "Capital" and region.resource is not "Empty":
+        if self.name == "Capital" and region.resource != "Empty":
             match region.resource:
                 case "Coal":
                     if 'Coal Mining' in player_research_list:

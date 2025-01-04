@@ -38,12 +38,13 @@ class Unit:
             unit_data = regdata_dict[self.region_id]["unitData"]
         except KeyError:
             print(f"Error: {self.region_id} not recognized during Unit class initialization.")
-        self.data = unit_data
+        self.data: dict = unit_data
         self.regdata_filepath = regdata_filepath
 
         self.name: str = self.data["name"]
         self.health: int = self.data["health"]
         self.owner_id: int = self.data["ownerID"]
+        self.cords: list = self.data.get("coordinates", None)
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         if self.name is not None:
             self.type = unit_data_dict[self.name]["Unit Type"]

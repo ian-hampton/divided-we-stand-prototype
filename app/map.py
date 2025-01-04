@@ -131,28 +131,17 @@ class MainMap:
             active_games_dict = json.load(json_file)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
-
-        # get cord dictionaries
-        match self.map_name:
-            case "United States 2.0":
-                cords_filepath = "maps/united_states"
-            case _ :
-                cords_filepath = "maps/united_states"
-        with open(f'{cords_filepath}/improvement_cords.json', 'r') as json_file:
-            improvement_cords_dict = json.load(json_file)
-        with open(f'{cords_filepath}/unit_cords.json', 'r') as json_file:
-            unit_cords_dict = json.load(json_file)
         
 
         # Color Regions in Map Image
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
-            start_cords = improvement_cords_dict[region_id]
+            region_improvement = Improvement(region_id, self.game_id)
             # only color a region if it is owned or occupied
             if region.owner_id  != 0 or region.occupier_id != 0:
-                cord_x = (start_cords[0] + 25)
-                cord_y = (start_cords[1] + 25)
+                cord_x = (region_improvement.cords[0] + 25)
+                cord_y = (region_improvement.cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
                 map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_finalized, main_image, self.game_id, active_games_dict)
@@ -167,20 +156,17 @@ class MainMap:
         # color magnified regions
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
-            improvement_start_cords = improvement_cords_dict[region_id]
-            # to do - move this list into the game files somewhere
-            if self.map_name == "United States 2.0":
-                magnified_regions_list = ["LOSAN", "FIRCT", "TAMPA", "GACST", "HAMPT", "EASMD", "DELAW", "RHODE", "NTHMA", "STHMA"]
-            if region_id in magnified_regions_list and (region.owner_id != 0 or region.occupier_id != 0):
+            region_improvement = Improvement(region_id, self.game_id)
+            if region.is_magnified and (region.owner_id != 0 or region.occupier_id != 0):
                 fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id, active_games_dict)
-                cord_x = (improvement_start_cords[0] + 25)
-                cord_y = (improvement_start_cords[1] + 25)
+                cord_x = (region_improvement.cords[0] + 25)
+                cord_y = (region_improvement.cords[1] + 25)
                 improvement_box_start_cords = (cord_x, cord_y)
-                cord_x = (improvement_start_cords[0] + 55)
-                cord_y = (improvement_start_cords[1] + 25)
+                cord_x = (region_improvement.cords[0] + 55)
+                cord_y = (region_improvement.cords[1] + 25)
                 main_box_start_cords = (cord_x, cord_y)
-                cord_x = (improvement_start_cords[0] + 70)
-                cord_y = (improvement_start_cords[1] + 25)
+                cord_x = (region_improvement.cords[0] + 70)
+                cord_y = (region_improvement.cords[1] + 25)
                 unit_box_start_cords = (cord_x, cord_y)
                 ImageDraw.floodfill(main_image, improvement_box_start_cords, fill_color, border=(0, 0, 0, 255))
                 ImageDraw.floodfill(main_image, main_box_start_cords, fill_color, border=(0, 0, 0, 255))
@@ -194,11 +180,10 @@ class MainMap:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
             nuke = region.fallout
-            improvement_start_cords = improvement_cords_dict[region_id]
             # place nuclear explosion
             if nuke:
                 mask = nuke_image.split()[3]
-                main_image.paste(nuke_image, improvement_start_cords, mask)
+                main_image.paste(nuke_image, region_improvement.cords, mask)
                 continue
             # check for fautasian bargan case lease
             if "Faustian Bargain" in active_games_dict[self.game_id]["Active Events"]:
@@ -207,18 +192,18 @@ class MainMap:
                     lease_filepath = 'app/static/lease.png'
                     lease_image = Image.open(lease_filepath)
                     mask = lease_image.split()[3]
-                    main_image.paste(lease_image, improvement_start_cords, mask)
+                    main_image.paste(lease_image, region_improvement.cords, mask)
                     continue
             # place improvement if present
             if region_improvement.name is not None:
                 # place improvement image
                 improvement_filepath = f'app/static/improvements/{region_improvement.name}.png'
                 improvement_image = Image.open(improvement_filepath)
-                main_image.paste(improvement_image, improvement_start_cords)
+                main_image.paste(improvement_image, region_improvement.cords)
                 # place improvement health
                 if region_improvement.health != 99:
-                    cord_x = (improvement_start_cords[0] - 13)
-                    cord_y = (improvement_start_cords[1] + 54)
+                    cord_x = (region_improvement.cords[0] - 13)
+                    cord_y = (region_improvement.cords[1] + 54)
                     health_start_cords = (cord_x, cord_y)
                     ten_health_improvements = set()
                     for improvement_name, improvement_dict in improvement_data_dict.items():
@@ -234,20 +219,19 @@ class MainMap:
 
         # Place Units
         for region_id in regdata_dict:
+            region_improvement = Improvement(region_id, self.game_id)
             region_unit = Unit(region_id, self.game_id)
             # get cords of unit if present
             if region_unit.name is not None:
-                if region_id not in unit_cords_dict:
+                if region_unit.cords is None:
                     # unit placement is the standard 15 pixels to the right of improvement
-                    improvement_cords = improvement_cords_dict[region_id]
-                    cord_x = (improvement_cords[0] + 65)
-                    cord_y = (improvement_cords[1])
+                    cord_x = (region_improvement.cords[0] + 65)
+                    cord_y = (region_improvement.cords[1])
                     unit_cords = (cord_x, cord_y)
                 else:
                     # unit placement is custom
-                    unit_cords = unit_cords_dict[region_id]
-                    cord_x = (unit_cords[0])
-                    cord_y = (unit_cords[1] - 20)
+                    cord_x = (region_unit.cords[0])
+                    cord_y = (region_unit.cords[1] - 20)
                     unit_cords = (cord_x, cord_y)
                 # get unit color
                 if region_unit.owner_id != 0 and region_unit.owner_id != 99:
@@ -333,25 +317,16 @@ class ResourceMap:
         # get game data
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
-
-        # get cord dictionaries
-        match self.map_name:
-            case "United States 2.0":
-                cords_filepath = "maps/united_states"
-            case _ :
-                cords_filepath = "maps/united_states"
-        with open(f'{cords_filepath}/improvement_cords.json', 'r') as json_file:
-            improvement_cords_dict = json.load(json_file)
         
         # color regions
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
-            start_cords = improvement_cords_dict[region_id]
+            region_improvement = Improvement(region_id, self.game_id)
             # if region has a resource color it
             if region.resource != 'Empty':
-                cord_x = (start_cords[0] + 25)
-                cord_y = (start_cords[1] + 25)
+                cord_x = (region_improvement.cords[0] + 25)
+                cord_y = (region_improvement.cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
                 if region_id == "HAMPT" and self.map_name == "United States 2.0":
@@ -404,24 +379,15 @@ class ControlMap:
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
 
-        # get cord dictionaries
-        match self.map_name:
-            case "United States 2.0":
-                cords_filepath = "maps/united_states"
-            case _ :
-                cords_filepath = "maps/united_states"
-        with open(f'{cords_filepath}/improvement_cords.json', 'r') as json_file:
-            improvement_cords_dict = json.load(json_file)
-
         # color regions
         main_image = Image.open(main_filepath)
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
-            start_cords = improvement_cords_dict[region_id]
+            region_improvement = Improvement(region_id, self.game_id)
             # only color region if it is owned or occupied
             if region.owner_id != 0 or region.occupier_id != 0:
-                cord_x = (start_cords[0] + 25)
-                cord_y = (start_cords[1] + 25)
+                cord_x = (region_improvement.cords[0] + 25)
+                cord_y = (region_improvement.cords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
                 start_cords_finalized = check_region_fill_exceptions(region_id, self.map_name, start_cords_updated)
                 map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_finalized, main_image, self.game_id, active_games_dict)
