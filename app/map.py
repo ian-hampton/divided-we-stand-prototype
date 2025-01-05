@@ -108,9 +108,8 @@ class MainMap:
                 main_map_save_location = f'gamedata/{self.game_id}/images/0.png'
             case _:
                 main_map_save_location = f'gamedata/{self.game_id}/images/{self.turn_num - 1}.png'
-        if self.map_name == "United States 2.0":
-            map_name_str = "united_states"
-        image_resources_filepath = f"maps/{map_name_str}/image_resources"
+        map_str = get_map_str(self.map_name)
+        image_resources_filepath = f"maps/{map_str}/image_resources"
         background_filepath = f"{image_resources_filepath}/background.png"
         magnified_filepath = f"{image_resources_filepath}/magnified.png"
         main_filepath = f"{image_resources_filepath}/main.png"
@@ -265,29 +264,19 @@ class ResourceMap:
         Populates regdata.json with resource map data.
         """
         
-        # Create Resource List
-        # to do - move this list to the game files somewhere
+        # get map info
+        map_str = get_map_str(self.map_name)
+        map_config_filepath = f"maps/{map_str}/map_config.json"
+        with open(map_config_filepath, 'r') as json_file:
+            map_config_dict = json.load(json_file)
+        
+        # create resource list
         resource_list = []
-        if self.map_name == "United States 2.0":
-            coal_count = 15
-            oil_count = 15
-            basic_count = 45
-            common_count = 30
-            advanced_count = 10
-            uranium_count = 10
-            rare_count = 5
-            empty_count = 78
-        resource_list += ["Coal"] * coal_count
-        resource_list += ["Oil"] * oil_count
-        resource_list += ["Basic Materials"] * basic_count
-        resource_list += ["Common Metals"] * common_count
-        resource_list += ["Advanced Metals"] * advanced_count
-        resource_list += ["Uranium"] * uranium_count
-        resource_list += ["Rare Earth Elements"] * rare_count
-        resource_list += ["Empty"] * empty_count
+        for resource, resource_count in map_config_dict["resourceCounts"].items():
+            resource_list += [resource] * resource_count
         resource_list = random.sample(resource_list, len(resource_list))
         
-        # Update regdata.json
+        # update regdata.json
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
         for i, region_id in enumerate(regdata_dict):
@@ -302,10 +291,9 @@ class ResourceMap:
         print("Updating resource map...")
 
         # get filepaths
+        map_str = get_map_str(self.map_name)
         resource_map_save_location = f'gamedata/{self.game_id}/images/resourcemap.png'
-        if self.map_name == "United States 2.0":
-            map_name_str = "united_states"
-        image_resources_filepath = f"maps/{map_name_str}/image_resources"
+        image_resources_filepath = f"maps/{map_str}/image_resources"
         background_filepath = f"{image_resources_filepath}/background.png"
         magnified_filepath = f"{image_resources_filepath}/magnified.png"
         main_filepath = f"{image_resources_filepath}/main.png"
@@ -359,12 +347,10 @@ class ControlMap:
 
         print("Updating control map...")
         
-        # get filepaths
+        # get map data
+        map_str = get_map_str(self.map_name)
         control_map_save_location = f'gamedata/{self.game_id}/images/controlmap.png'
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
-        if self.map_name == "United States 2.0":
-            map_name_str = "united_states"
-        image_resources_filepath = f"maps/{map_name_str}/image_resources"
+        image_resources_filepath = f"maps/{map_str}/image_resources"
         background_filepath = f"{image_resources_filepath}/background.png"
         magnified_filepath = f"{image_resources_filepath}/magnified.png"
         main_filepath = f"{image_resources_filepath}/main.png"
@@ -372,6 +358,7 @@ class ControlMap:
         texture_filepath = f"{image_resources_filepath}/texture.png"
        
         # get game data
+        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
         player_color_list = generate_player_color_list(playerdata_location)
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
@@ -492,3 +479,13 @@ def text_over_map_new(main_image: Image, text_filepath: str) -> Image:
     main_image = Image.alpha_composite(main_image, text_image)
 
     return main_image
+
+def get_map_str(proper_map_name: str) -> str:
+    
+    match proper_map_name:
+        case "United States 2.0":
+            map_name_str = "united_states"
+        case _:
+            map_name_str = 'united_states'
+
+    return map_name_str

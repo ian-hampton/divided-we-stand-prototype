@@ -574,18 +574,14 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
 
     # copy starting map images
     files_destination = f'gamedata/{game_id}'
-    match form_data_dict["Map"]:
-        case "United States 2.0":
-            map = 'united_states'
-        case _:
-            map = 'united_states'
+    map_str = map.get_map_str(new_game_entry["Information"]["Map"])
     starting_map_images = ['resourcemap', 'controlmap']
     for map_filename in starting_map_images:
-        shutil.copy(f"maps/{map}/blank.png", f"{files_destination}/images")
+        shutil.copy(f"maps/{map_str}/blank.png", f"{files_destination}/images")
         shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
     
     # create regdata.json
-    shutil.copy(f"maps/{map}/regdata.json", files_destination)
+    shutil.copy(f"maps/{map_str}/regdata.json", files_destination)
     if form_data_dict["Scenario"] == 'Standard':
         with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
