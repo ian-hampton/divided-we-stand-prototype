@@ -70,7 +70,7 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
             random_region_id = random.sample(region_id_list, 1)[0]
             random_region = Region(random_region_id, game_id)
             # if region not allowed restart loop
-            if random_region_id is not random_region.is_start:
+            if not random_region.is_start:
                 continue
             # check if there is a player within three regions
             regions_in_radius = random_region.get_regions_in_radius(3)
