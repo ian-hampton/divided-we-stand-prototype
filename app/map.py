@@ -29,73 +29,70 @@ class MainMap:
         """
         
         # get filepaths and lists
-        EXCLUSION_SET = {'Capital', 'Central Bank', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery', 'Research Institute', 'Surveillance Center'}
+        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
+        playerdata_list = core.read_file(playerdata_location, 1)
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        region_id_list = list(regdata_dict.keys())
+        EXCLUSION_SET = {'Capital', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery', 'Research Institute', 'Surveillance Center'}
         improvement_candidates_list = []
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         for improvement_name in improvement_data_dict:
             if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in EXCLUSION_SET:
                 improvement_candidates_list.append(improvement_name)
-        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
-        region_id_list = list(regdata_dict.keys())
-        
-        # determine placement odds and placement quota
-        PLACEMENT_ODDS = 5
-        placement_quota = 15
-        deviation = random.randint(-5, 5)
-        placement_quota += deviation
         
         # place improvements randomly
         count = 0
-        while count < placement_quota:
-            placement_roll = random.randint(1, 100)
-            if placement_roll <= PLACEMENT_ODDS:
-                random_region_id = random.choice(region_id_list)
-                random_region = Region(random_region_id, self.game_id)
-                random_region_improvement = Improvement(random_region_id, self.game_id)
-                # check conditions
-                if random_region.owner_id != 0 and random_region_improvement.name is not None:
-                    continue
-                adjacent_region_list = random_region.adjacent_regions
-                adjacent_improvement_found = False
-                for region_id in adjacent_region_list:
-                    region_improvement = Improvement(region_id, self.game_id)
-                    if region_improvement.name is not None:
-                        adjacent_improvement_found = True
-                        break
-                if adjacent_improvement_found:
-                    continue
-                
-                # place improvement
-                count += 1
-                match random_region.resource:
-                    case 'Coal':
-                        random_region_improvement.set_improvement('Coal Mine')
-                    case 'Oil':
-                        random_region_improvement.set_improvement('Oil Well')
-                    case 'Basic Materials':
-                        random_region_improvement.set_improvement('Industrial Zone')
-                    case 'Common Metals':
-                        random_region_improvement.set_improvement('Common Metals Mine')
-                    case 'Advanced Metals':
-                        random_region_improvement.set_improvement('Advanced Metals Mine')
-                    case 'Uranium':
-                        random_region_improvement.set_improvement('Uranium Mine')
-                    case 'Rare Earth Elements':
-                        random_region_improvement.set_improvement('Rare Earth Elements Mine')
-                    case _:
-                        capital_roll = 0
-                        if random_region.is_significant:
-                            capital_roll = random.randint(1, 6)
-                        if capital_roll <= 2:
-                            improvement_name = random.sample(improvement_candidates_list, 1)[0]
-                            improvement_health = improvement_data_dict[improvement_name]["Health"]
-                            if improvement_health == 99:
-                                random_region_improvement.set_improvement(improvement_name)
-                            else:
-                                random_region_improvement.set_improvement(improvement_name, 1)
+        placement_quota = 2 * len(playerdata_list)
+        while count < placement_quota and len(region_id_list) != 0:
+            random_region_id = random.choice(region_id_list)
+            region_id_list.remove(random_region_id)
+            random_region = Region(random_region_id, self.game_id)
+            random_region_improvement = Improvement(random_region_id, self.game_id)
+            # improvement cannot be spawned in a region already taken
+            if random_region_improvement.name != None:
+                continue
+            # no uranium mines and ree mines may spawn randomly at the start of the game
+            if random_region.resource == 'Rare Earth Elements':
+                continue
+            # there cannot be other improvements within a radius of two regions
+            nearby_improvement_found = False
+            for region_id in random_region.get_regions_in_radius(2):
+                region_improvement = Improvement(region_id, self.game_id)
+                if region_improvement.name != None:
+                    nearby_improvement_found = True
+                    break
+            if nearby_improvement_found:
+                continue
+            
+            # place improvement
+            count += 1
+            match random_region.resource:
+                case 'Coal':
+                    random_region_improvement.set_improvement('Coal Mine')
+                case 'Oil':
+                    random_region_improvement.set_improvement('Oil Well')
+                case 'Basic Materials':
+                    random_region_improvement.set_improvement('Industrial Zone')
+                case 'Common Metals':
+                    random_region_improvement.set_improvement('Common Metals Mine')
+                case 'Advanced Metals':
+                    random_region_improvement.set_improvement('Advanced Metals Mine')
+                case 'Uranium':
+                    random_region_improvement.set_improvement('Uranium Mine')
+                case _:
+                    capital_roll = 0
+                    if random_region.is_significant:
+                        capital_roll = random.randint(1, 6)
+                    if capital_roll <= 2:
+                        improvement_name = random.sample(improvement_candidates_list, 1)[0]
+                        improvement_health = improvement_data_dict[improvement_name]["Health"]
+                        if improvement_health == 99:
+                            random_region_improvement.set_improvement(improvement_name)
                         else:
-                            random_region_improvement.set_improvement('Capital', 1)
+                            random_region_improvement.set_improvement(improvement_name, 1)
+                    else:
+                        random_region_improvement.set_improvement('Capital', 1)
     
     def update(self) -> None:
         """
