@@ -1283,7 +1283,7 @@ def get_mainmap(full_game_id):
         if current_turn_num == "Nation Setup in Progress":
             filepath = f'..\\gamedata\\{full_game_id}\\images\\0.png'
         else:
-            filepath = f'..\\maps\\united_states\\blank.png'
+            filepath = f'..\\app\\static\\images\\map_images\\united_states\\blank.png'
     return send_file(filepath, mimetype='image/png')
 @main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):

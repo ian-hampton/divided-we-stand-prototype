@@ -109,7 +109,7 @@ class MainMap:
             case _:
                 main_map_save_location = f'gamedata/{self.game_id}/images/{self.turn_num - 1}.png'
         map_str = get_map_str(self.map_name)
-        image_resources_filepath = f"maps/{map_str}/image_resources"
+        image_resources_filepath = f"app/static/images/map_images/{map_str}/image_resources"
         background_filepath = f"{image_resources_filepath}/background.png"
         magnified_filepath = f"{image_resources_filepath}/magnified.png"
         main_filepath = f"{image_resources_filepath}/main.png"
@@ -293,7 +293,7 @@ class ResourceMap:
         # get filepaths
         map_str = get_map_str(self.map_name)
         resource_map_save_location = f'gamedata/{self.game_id}/images/resourcemap.png'
-        image_resources_filepath = f"maps/{map_str}/image_resources"
+        image_resources_filepath = f"app/static/images/map_images/{map_str}/image_resources"
         background_filepath = f"{image_resources_filepath}/background.png"
         magnified_filepath = f"{image_resources_filepath}/magnified.png"
         main_filepath = f"{image_resources_filepath}/main.png"
@@ -350,7 +350,7 @@ class ControlMap:
         # get map data
         map_str = get_map_str(self.map_name)
         control_map_save_location = f'gamedata/{self.game_id}/images/controlmap.png'
-        image_resources_filepath = f"maps/{map_str}/image_resources"
+        image_resources_filepath = f"app/static/images/map_images/{map_str}/image_resources"
         background_filepath = f"{image_resources_filepath}/background.png"
         magnified_filepath = f"{image_resources_filepath}/magnified.png"
         main_filepath = f"{image_resources_filepath}/main.png"

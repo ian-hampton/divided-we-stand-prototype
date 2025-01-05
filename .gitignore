@@ -7,11 +7,9 @@ app/static/stars/
 app/static/units/
 app/testing/
 app/testing/__pycache__/
-gamedata/
 flask_profile.prof
-maps/united_states/blank.png
-maps/united_states/reference.png
-maps/united_states/image_resources/
+gamedata/
+app/static/images/
 app/static/back.png
 app/static/background_default.png
 app/static/background-strips-alternate.png

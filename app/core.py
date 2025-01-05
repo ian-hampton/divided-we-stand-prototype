@@ -577,7 +577,7 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     map_str = map.get_map_str(new_game_entry["Information"]["Map"])
     starting_map_images = ['resourcemap', 'controlmap']
     for map_filename in starting_map_images:
-        shutil.copy(f"maps/{map_str}/blank.png", f"{files_destination}/images")
+        shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
         shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
     
     # create regdata.json
