@@ -1619,7 +1619,7 @@ easy_list = [
     "Leading Defense",
     "Major Exporter",
     "Reconstruction Effort",
-    "Reliable Ally"
+    "Secure Strategic Resources"
 ]
 normal_list = [
     "Backstab",
@@ -1627,7 +1627,7 @@ normal_list = [
     "Hegemony",
     "New Empire",
     "Nuclear Deterrent",
-    "Secure Strategic Resources",
+    "Reliable Ally",
     "Sphere of Influence",
     "Warmonger"
 ]

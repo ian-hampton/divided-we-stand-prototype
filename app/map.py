@@ -34,7 +34,7 @@ class MainMap:
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
         region_id_list = list(regdata_dict.keys())
-        EXCLUSION_SET = {'Capital', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery', 'Research Institute', 'Surveillance Center'}
+        EXCLUSION_SET = {'Capital', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery', 'Research Institute', 'Surveillance Center', 'Nuclear Power Plant'}
         improvement_candidates_list = []
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         for improvement_name in improvement_data_dict:
