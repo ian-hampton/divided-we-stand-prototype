@@ -1603,7 +1603,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                             edge_counts[i] += 1
                 nation_edge_count = edge_counts[player_id - 1]
                 for edge_count in edge_counts:
-                    if edge_count > nation_edge_count:
+                    if edge_count >= nation_edge_count:
                         nation_edge_count = False
                 if nation_edge_count:
                      vc_2_completed = True

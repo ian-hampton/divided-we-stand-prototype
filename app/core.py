@@ -178,10 +178,6 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
             if player[3] == "Technocracy":
                 starting_list = random.sample(five_point_research_list, 3)
                 player[26] = str(starting_list)
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(player_data_header)
-        writer.writerows(playerdata_list)
 
     # add vc playerdata
     # to do - move this into regular playerdata once playerdata rework happens
@@ -198,6 +194,12 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
             writer = csv.writer(file)
             writer.writerows(starting_records_data)
 
+    # update playerdata.csv
+    with open(playerdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(player_data_header)
+        writer.writerows(playerdata_list)
+
     # create trucedata.csv
     with open(f'gamedata/{game_id}/trucedata.csv', 'w', newline='') as file:
         writer = csv.writer(file)
@@ -212,10 +214,10 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         player_id = i + 1
         checks.update_improvement_count(game_id, player_id)
     # update income in playerdata
-    current_turn_num = 0
     checks.update_income(game_id)
     
     # gain starting resources
+    playerdata_list = read_file(playerdata_filepath, 1)
     for player in playerdata_list:
         dollars_data = ast.literal_eval(player[9])
         political_power_data = ast.literal_eval(player[10])
