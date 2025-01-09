@@ -1,6 +1,6 @@
 body {
     font-family: "Palatino", "Palatino Linotype", "Book Antiqua", serif;
-    background-image: url("/static/paper.jpg");
+    background-image: url("/static/images/paper.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;

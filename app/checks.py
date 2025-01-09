@@ -449,7 +449,7 @@ def update_income(game_id: str) -> None:
     economy_masterlist = core.get_economy_info(playerdata_list, request_list)
 
     # get top three records
-    if current_turn_num > 4:
+    if isinstance(current_turn_num, int) and current_turn_num > 4:
         top_largest_list = get_top_three(game_id, 'largest_nation', True)
         top_economy_list = get_top_three(game_id, 'strongest_economy', True)
         top_military_list = get_top_three(game_id, 'largest_military', True)
@@ -526,7 +526,7 @@ def update_income(game_id: str) -> None:
                     gross_income_dict[nation_name]["Income Strings"][resource_name][income_str] += 1
         
     # political power income from top three
-    if current_turn_num > 4:
+    if isinstance(current_turn_num, int) and current_turn_num > 4:
         bonus_from_top_three = [1, 0.5, 0.25]
         for nation_name in nation_name_list:
             for i in range(0, 3):
@@ -1603,7 +1603,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                             edge_counts[i] += 1
                 nation_edge_count = edge_counts[player_id - 1]
                 for edge_count in edge_counts:
-                    if edge_count > nation_edge_count:
+                    if edge_count >= nation_edge_count:
                         nation_edge_count = False
                 if nation_edge_count:
                      vc_2_completed = True
