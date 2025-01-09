@@ -5,7 +5,7 @@
 
 <style>
 body {
-    background-image: url("{{ url_for('static', filename='background_default.png') }}");
+    background-image: url("{{ url_for('static', filename='images/background_default.png') }}");
     background-size: 100%;
 }
 .top {
@@ -63,12 +63,12 @@ hr {
 <body>
 <div class="top">
     <p id="title">{{ username }}</p>
-    <a class="home" href="/"><img src="{{ url_for('static', filename='home.png') }}" align=right style="width:50px;"></a>
+    <a class="home" href="/"><img src="{{ url_for('static', filename='images/home.png') }}" align=right style="width:50px;"></a>
 </div>
 <div class="main">
     <table class = "profile-data">
         <tr>
-            <td width="20%" rowspan="12"><img src="{{ url_for('static', filename='blank.png') }}" style="width:100%;"></td>
+            <td width="20%" rowspan="12"><img src="{{ url_for('static', filename='images/blank.png') }}" style="width:100%;"></td>
             <th width="20%">Profile Information</th>
             <th width="60%">Game Statistics</th>
         </tr>

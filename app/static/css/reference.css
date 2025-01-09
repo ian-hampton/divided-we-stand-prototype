@@ -19,7 +19,7 @@
 }
 body {
     font-family: "Palatino", "Palatino Linotype", "Book Antiqua", serif;
-    background-image: url("/static/background-strips-alternate.png");
+    background-image: url("/static/images/background-strips-alternate.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;

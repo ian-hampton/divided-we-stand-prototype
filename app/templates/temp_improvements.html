@@ -14,7 +14,7 @@
         <p id="title">{{ page_title }}</p>
     </div>
     <div class="right-header">
-        <a href="/"><img src="{{ url_for('static', filename='home-white.png') }}" style="width:36px;"></a>
+        <a href="/"><img src="{{ url_for('static', filename='images/home-white.png') }}" style="width:36px;"></a>
     </div>
 </header>
 
@@ -28,7 +28,7 @@
     
         <div class = "title"> {{ improvement_name }} </div>
 
-        <img src="{{ url_for('static', filename='improvements/' + improvement_name|lower + '.png') }}" class="improv-image">
+        <img src="{{ url_for('static', filename='images/improvements/' + improvement_name|lower + '.png') }}" class="improv-image">
 
         <!-- Income -->
         {% set ns = namespace(foo=True) %}

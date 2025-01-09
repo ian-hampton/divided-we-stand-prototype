@@ -3,7 +3,7 @@
     {% if tup %}
         {% set color = tup[0] %}
         {% set nation_name = tup[1] %}
-        {% set star_url = 'stars/' + color + '.png' %}
+        {% set star_url = 'images/stars/' + color + '.png' %}
         {% set star_id = table_id + color %}
         <img src = "{{ url_for('static', filename=star_url) }}"
                 class = 'star'

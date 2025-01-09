@@ -27,7 +27,7 @@ header {
 }
 body {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-image: url("/static/background-blank.png");
+    background-image: url("/static/images/background-blank.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;

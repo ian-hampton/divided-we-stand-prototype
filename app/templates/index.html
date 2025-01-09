@@ -5,7 +5,7 @@
 
 <style>
 body {
-    background-image: url("{{ url_for('static', filename='new-background.png') }}");
+    background-image: url("{{ url_for('static', filename='images/new-background.png') }}");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -26,10 +26,10 @@ img {
 </style>
 
 <body>
-    <img src={{ url_for('static', filename='title.png') }} align="center" style="width:70%;margin-bottom:2%;">
-    <a href="games"><img class="button" src={{ url_for('static', filename='button-1.png') }}></a>
-    <a href="leaderboard"><img class="button" src={{ url_for('static', filename='button-2.png') }}></a>
-    <a href="archived_games"><img class="button" src={{ url_for('static', filename='button-3.png') }} ></a>
+    <img src={{ url_for('static', filename='images/title.png') }} align="center" style="width:70%;margin-bottom:2%;">
+    <a href="games"><img class="button" src={{ url_for('static', filename='images/button-1.png') }}></a>
+    <a href="leaderboard"><img class="button" src={{ url_for('static', filename='images/button-2.png') }}></a>
+    <a href="archived_games"><img class="button" src={{ url_for('static', filename='images/button-3.png') }} ></a>
 </body>
 
 </html>

@@ -172,7 +172,7 @@ class MainMap:
 
         # Place Improvements
         main_image = main_image.convert("RGBA")
-        nuke_image = Image.open('app/static/nuke.png')
+        nuke_image = Image.open('app/static/images/nuke.png')
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
@@ -186,7 +186,7 @@ class MainMap:
             if "Faustian Bargain" in active_games_dict[self.game_id]["Active Events"]:
                 if region_id in active_games_dict[self.game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
                     print(region_id)
-                    lease_filepath = 'app/static/lease.png'
+                    lease_filepath = 'app/static/images/lease.png'
                     lease_image = Image.open(lease_filepath)
                     mask = lease_image.split()[3]
                     main_image.paste(lease_image, region_improvement.cords, mask)
@@ -194,7 +194,7 @@ class MainMap:
             # place improvement if present
             if region_improvement.name is not None:
                 # place improvement image
-                improvement_filepath = f'app/static/improvements/{region_improvement.name}.png'
+                improvement_filepath = f'app/static/images/improvements/{region_improvement.name}.png'
                 improvement_image = Image.open(improvement_filepath)
                 main_image.paste(improvement_image, region_improvement.cords)
                 # place improvement health
@@ -207,9 +207,9 @@ class MainMap:
                         if improvement_dict["Health"] == 10:
                             ten_health_improvements.add(improvement_name)
                     if region_improvement.name in ten_health_improvements:
-                        health_filepath = f'app/static/health/{region_improvement.health}-10.png'
+                        health_filepath = f'app/static/images/health/{region_improvement.health}-10.png'
                     else:
-                        health_filepath = f'app/static/health/{region_improvement.health}-5.png'
+                        health_filepath = f'app/static/images/health/{region_improvement.health}-5.png'
                     health_image = Image.open(health_filepath)
                     main_image.paste(health_image, health_start_cords)
         
@@ -235,13 +235,13 @@ class MainMap:
                     player_color_str = nation_info_masterlist[region_unit.owner_id - 1][1]
                 elif region_unit.owner_id == 0 and "Foreign Invasion" in active_games_dict[self.game_id]["Active Events"]:
                     player_color_str = active_games_dict[self.game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-                unit_filepath = f'app/static/units/{region_unit.abbrev()}{player_color_str}.png'
+                unit_filepath = f'app/static/images/units/{region_unit.abbrev()}{player_color_str}.png'
                 # place unit
                 unit_image = Image.open(unit_filepath)
                 mask = unit_image.split()[3]
                 main_image.paste(unit_image, unit_cords, mask)
                 # place unit health
-                health_filepath = f"app/static/health/U{region_unit.health}-{unit_data_dict[region_unit.name]['Health']}.png"
+                health_filepath = f"app/static/images/health/U{region_unit.health}-{unit_data_dict[region_unit.name]['Health']}.png"
                 health_image = Image.open(health_filepath)
                 health_temp = Image.new("RGBA", main_image.size)
                 mask = health_image.split()[3]
