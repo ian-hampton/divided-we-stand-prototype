@@ -10,10 +10,6 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 
 <img src="app/static/preview.png" width="100%" alt="preview">
 
-### Built With
-* [Flask](https://flask.palletsprojects.com/en/stable/)
-* [Pillow (PIL Fork)](https://pypi.org/project/pillow/)
-
 <p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
 
 
