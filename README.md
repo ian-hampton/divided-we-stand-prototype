@@ -18,7 +18,14 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 
 
 
-## Roadmap
+## About this Project
+This repository is an experimental turn processor and game manager for Divided We Stand.
+
+### Built With
+* [Flask](https://flask.palletsprojects.com/en/stable/)
+* [Pillow (PIL Fork)](https://pypi.org/project/pillow/)
+
+### Roadmap
 
 - [x] Region code refactoring.
 - [ ] Player code refactoring.
