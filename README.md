@@ -2,6 +2,9 @@
 
 # Divided We Stand
 Divided We Stand is a turn-based strategy game set in the modern era.
+
+<img src="app/static/preview.png" width="100%" alt="preview">
+
 * Control your own unique nation with 8 governments and 4 foreign policies to pick from.
 * Secure and develop regions to expand your nation.
 * Negotiate and trade with other players.
@@ -10,11 +13,9 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 * Win the game by completing your unique victory conditions before all other players.
 * Supports up to 10 players.
 
-<img src="app/static/preview.png" width="100%" alt="preview">
-
 ### Built With
-* [Flask](https://flask.palletsprojects.com/en/stable/)
-* [Pillow (PIL Fork)](https://pypi.org/project/pillow/)
+* [![Flask][Flask-shield]][Flask-url]
+* [![Pillow][Pillow-shield]][Pillow-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -54,8 +55,7 @@ See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to
     ```sh
    git clone https://github.com/ian-hampton/Divided-We-Stand.git
    ```
-2. Download image assets and paste them into the 'static' folder.  
-    Note: Game archive images are currently unavailable.
+2. Download image assets and paste them into the 'static' folder. Note: Game archive images are currently unavailable.
     ```
     https://drive.google.com/drive/folders/1KX-A1SJXS72XJk-dEyoSqpg7B-2L_KMG?usp=sharing
     ```
@@ -64,11 +64,11 @@ See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to
         ```sh
         cd <repo>
         ```
-    2. Create the virtual enviroment.
+    2. Create your virtual enviroment.
         ```sh
-        python -m venv .venv
+        python -m venv <virtual-environment-name>
         ```
-    3. Activate the virtual enviroment.
+    3. Activate your virtual enviroment.
         ```sh
         source .venv\Scripts\activate
         ```
@@ -130,3 +130,12 @@ Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.c
   * Malcolm Hollingworth
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[Flask-shield]: https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=Flask&logoColor=white
+[Flask-url]: https://flask.palletsprojects.com/en/stable/
+[Pillow-shield]: https://img.shields.io/badge/Pillow-latest-orange
+[Pillow-url]: https://pypi.org/project/pillow/
