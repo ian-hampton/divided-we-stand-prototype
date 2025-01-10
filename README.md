@@ -1,3 +1,5 @@
+<a id="readme-top"></a>
+
 # Divided We Stand
 Divided We Stand is a turn-based strategy game set in the modern era.
 * Control your own unique nation with 8 governments and 4 foreign policies to pick from.
@@ -14,7 +16,7 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 * [Flask](https://flask.palletsprojects.com/en/stable/)
 * [Pillow (PIL Fork)](https://pypi.org/project/pillow/)
 
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -34,7 +36,7 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 
 See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to view proposed features and what is currently being worked on.
 
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -75,7 +77,7 @@ See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to
         pip install -r requirements.txt
         ```
 
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -85,7 +87,7 @@ Ian Hampton- ianhampton313@gmail.com
 
 Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.com/ian-hampton/Divided-We-Stand)
 
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -127,4 +129,4 @@ Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.c
   * Kendal Hampton
   * Malcolm Hollingworth
 
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
