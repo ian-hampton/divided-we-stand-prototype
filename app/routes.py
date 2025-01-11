@@ -520,7 +520,7 @@ def game_load(full_game_id):
     game1_title = active_games_dict[full_game_id]["Game Name"]
     game1_turn = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
     game1_active_bool = active_games_dict[full_game_id]["Game Active"]
-    game1_extendedtitle = f"United We Stood - {game1_title}" 
+    game1_extendedtitle = f"Divided We Stand - {game1_title}" 
     
     #load images
     main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
