@@ -222,7 +222,7 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         dollars_data = ast.literal_eval(player[9])
         political_power_data = ast.literal_eval(player[10])
         technology_data = ast.literal_eval(player[11])
-        dollars_data[0] = '15.00'
+        dollars_data[0] = '10.00'
         political_power_data[0] = '0.00'
         technology_data[0] = '0.00'
         player[9] = str(dollars_data)
