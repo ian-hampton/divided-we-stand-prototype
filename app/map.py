@@ -131,6 +131,7 @@ class MainMap:
 
         # Color Regions in Map Image
         main_image = Image.open(main_filepath)
+        main_image = main_image.convert("RGBA")
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
@@ -144,7 +145,10 @@ class MainMap:
                 map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id, active_games_dict)
         
         # add texture and background to temp image
-        main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
+        if map_str == "united_states":
+            main_image = apply_textures_old(main_image, texture_filepath, background_filepath)
+        else:
+            main_image = apply_textures(main_image, background_filepath)
        
         # add magnified regions
         magnified_image = Image.open(magnified_filepath)
@@ -306,6 +310,7 @@ class ResourceMap:
         
         # color regions
         main_image = Image.open(main_filepath)
+        main_image = main_image.convert("RGBA")
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
@@ -316,17 +321,14 @@ class ResourceMap:
                 start_cords_updated = (cord_x, cord_y)
                 if region.cords is not None:
                     start_cords_updated = region.cords
-                if region_id == "HAMPT" and self.map_name == "United States 2.0":
-                    # second floodfill required for HAMPT because it is split in two pieces
-                    ImageDraw.floodfill(main_image, (4430, 1520), core.resource_colors[region.resource], border=(0, 0, 0, 255))
+                main_image = silly_placeholder(main_image, region_id, core.resource_colors[region.resource])
                 ImageDraw.floodfill(main_image, start_cords_updated, core.resource_colors[region.resource], border=(0, 0, 0, 255))
         
         # add background textures and text
-        background_image = Image.open(background_filepath)
-        background_image = background_image.convert("RGBA")
-        mask = main_image.split()[3]
-        background_image.paste(main_image, (0,0), mask)
-        main_image = background_image
+        if map_str == "united_states":
+            main_image = apply_textures_old(main_image, texture_filepath, background_filepath)
+        else:
+            main_image = apply_textures(main_image, background_filepath)
         main_image = text_over_map_new(main_image, text_filepath)
         
         main_image.save(resource_map_save_location)
@@ -367,6 +369,7 @@ class ControlMap:
 
         # color regions
         main_image = Image.open(main_filepath)
+        main_image = main_image.convert("RGBA")
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
@@ -380,7 +383,10 @@ class ControlMap:
                 map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id, active_games_dict)
         
         # add background textures and text
-        main_image = apply_textures_new(main_image, texture_filepath, background_filepath)
+        if map_str == "united_states":
+            main_image = apply_textures_old(main_image, texture_filepath, background_filepath)
+        else:
+            main_image = apply_textures(main_image, background_filepath)
         main_image = text_over_map_new(main_image, text_filepath)
         
         main_image.save(control_map_save_location)
@@ -413,8 +419,7 @@ def map_color_fill(owner_id: int, occupier_id: int, player_color_list: list, reg
     """
 
     fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
-    if region_id == "HAMPT":
-        ImageDraw.floodfill(main_image, (4430, 1520), fill_color, border=(0, 0, 0, 255))
+    main_image = silly_placeholder(main_image, region_id, fill_color)
     ImageDraw.floodfill(main_image, start_cords_updated, fill_color, border=(0, 0, 0, 255))
 
 def determine_region_color(owner_id: int, occupier_id: int, player_color_list: list, full_game_id: str, active_games_dict: dict) -> tuple:
@@ -438,7 +443,7 @@ def determine_region_color(owner_id: int, occupier_id: int, player_color_list: l
         
     return fill_color
 
-def apply_textures_new(main_image: Image, texture_filepath: str, background_filepath: str) -> Image:
+def apply_textures_old(main_image: Image, texture_filepath: str, background_filepath: str) -> Image:
     """
     Overlays the map image onto the textured background.
 
@@ -485,7 +490,48 @@ def get_map_str(proper_map_name: str) -> str:
     match proper_map_name:
         case "United States 2.0":
             map_name_str = "united_states"
+        case "China 2.0":
+            map_name_str = "china"
         case _:
             map_name_str = 'united_states'
 
     return map_name_str
+
+def apply_textures(main_image: Image, background_filepath: str) -> Image:
+    """
+    """
+
+    background_image = Image.open(background_filepath)
+    background_image = background_image.convert("RGBA")
+    main_image = Image.blend(background_image, main_image, 0.75)
+
+    return main_image
+
+def silly_placeholder(main_image, region_id, fill_color):
+    # to do - move this hardcoded crap to the regdata.json file
+    match region_id:
+        case "HAMPT":
+            ImageDraw.floodfill(main_image, (4430, 1520), fill_color, border=(0, 0, 0, 255))
+        case "ZHANJ":
+            ImageDraw.floodfill(main_image, (4200, 4521), fill_color, border=(0, 0, 0, 255))
+        case "YANGJ":
+            ImageDraw.floodfill(main_image, (4369, 4432), fill_color, border=(0, 0, 0, 255))
+        case "GUANG":
+            ImageDraw.floodfill(main_image, (4548, 4255), fill_color, border=(0, 0, 0, 255))
+            ImageDraw.floodfill(main_image, (4559, 4274), fill_color, border=(0, 0, 0, 255))
+        case "NINGD":
+            ImageDraw.floodfill(main_image, (5270, 3659), fill_color, border=(0, 0, 0, 255))
+            ImageDraw.floodfill(main_image, (5254, 3675), fill_color, border=(0, 0, 0, 255))
+        case "NINGB":
+            ImageDraw.floodfill(main_image, (5441, 3178), fill_color, border=(0, 0, 0, 255))
+        case "YANGZ":
+            ImageDraw.floodfill(main_image, (5147, 2952), fill_color, border=(0, 0, 0, 255))
+        case "SHANG":
+            ImageDraw.floodfill(main_image, (5345, 2990), fill_color, border=(0, 0, 0, 255))
+        case "YONGJ":
+            ImageDraw.floodfill(main_image, (5375, 3450), fill_color, border=(0, 0, 0, 255))
+        case "HONGK":
+            ImageDraw.floodfill(main_image, (4659, 4302), fill_color, border=(0, 0, 0, 255))
+            ImageDraw.floodfill(main_image, (4609, 4327), fill_color, border=(0, 0, 0, 255))
+            ImageDraw.floodfill(main_image, (4643, 4322), fill_color, border=(0, 0, 0, 255))
+    return main_image

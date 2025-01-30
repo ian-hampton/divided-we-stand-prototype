@@ -19,6 +19,7 @@ from app.testing import map_tests
 from app.notifications import Notifications
 from app.alliance import AllianceTable
 from app.alliance import Alliance
+from app import map
 
 #ENVIROMENT IMPORTS
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
@@ -1276,6 +1277,7 @@ def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
+    map_str = map.get_map_str(active_games_dict[full_game_id]["Information"]["Map"])
     try:
         current_turn_num = int(current_turn_num)
         filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'
@@ -1283,7 +1285,7 @@ def get_mainmap(full_game_id):
         if current_turn_num == "Nation Setup in Progress":
             filepath = f'..\\gamedata\\{full_game_id}\\images\\0.png'
         else:
-            filepath = f'..\\app\\static\\images\\map_images\\united_states\\blank.png'
+            filepath = f'..\\app\\static\\images\\map_images\\{map_str}\\blank.png'
     return send_file(filepath, mimetype='image/png')
 @main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):
