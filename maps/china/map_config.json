@@ -1,0 +1,12 @@
+{
+    "resourceCounts": {
+        "Coal": 19,
+        "Oil": 19,
+        "Basic Materials": 57,
+        "Common Metals": 38,
+        "Advanced Metals": 12,
+        "Uranium": 12,
+        "Rare Earth Elements": 6,
+        "Empty": 100
+    }
+}
