@@ -1,10 +1,10 @@
 # Divided We Stand
 Divided We Stand is a turn-based strategy game set in the modern era.
-* Control your own unique nation with 8 governments and 4 foreign policies to pick from.
+* Control your own unique nation with 8 governments and 4 foreign policy options to choose from.
 * Secure and develop regions to expand your nation.
 * Negotiate and trade with other players.
 * Form alliances with your allies and declare war on your enemies.
-* Research new technologies and agendas to get an edge over your opponents.
+* Research new technologies and domestic agendas to get an edge over your opponents.
 * Win the game by completing your unique victory conditions before all other players.
 * Supports up to 10 players.
 
@@ -14,7 +14,7 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 
 
 
-## About this Project
+## About This Project
 This repository is an experimental turn processor and game manager for Divided We Stand.
 
 ### Built With
@@ -26,14 +26,8 @@ This repository is an experimental turn processor and game manager for Divided W
 - [x] Region code refactoring.
 - [ ] Player code refactoring.
 - [ ] Game management code refactoring.
-- [ ] New frontend.
-- [ ] Create a proper database to store all game data.
-- [ ] New game maps.
-    - [ ] British Isles?
-    - [ ] China
-    - [ ] Europe?
-    - [ ] Southeast Asia?
-- [ ] Public release? 👀
+- [ ] New frontend?
+- [ ] Move game data into a proper SQL database and create config files.
 
 See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to view proposed features and what is currently being worked on.
 
@@ -84,7 +78,7 @@ See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to
 
 ## Contact
 
-Ian Hampton- ianhampton313@gmail.com
+Ian Hampton - ianhampton313@gmail.com
 
 Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.com/ian-hampton/Divided-We-Stand)
 
@@ -94,10 +88,10 @@ Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.c
 
 ## Acknowledgments
 
-* Vector data provided by [Natural Earth](https://www.naturalearthdata.com/about/).
-* Raster data from NASA's [Blue Marble: Next Generation](https://earthobservatory.nasa.gov/features/BlueMarble).
+* Raster data for game maps provided by [Natural Earth](https://www.naturalearthdata.com/about/).
+* Vector data for game maps provided by [Natural Earth](https://www.naturalearthdata.com/about/) and [GADM](https://gadm.org/).
 * <details>
-    <summary>Attribution for icons used</summary>
+    <summary>Web icon attributions:</summary>
       <ul>
         <li><a href="https://www.flaticon.com/free-icons/missile" title="missile icons">Missile icons created by ranksol graphics - Flaticon</a></li>
         <li><a href="https://www.flaticon.com/free-icons/wind-energy" title="wind energy icons">Wind energy icons created by yoyonpujiono - Flaticon</a></li>
@@ -117,7 +111,8 @@ Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.c
         <li><a href="https://www.flaticon.com/free-icons/goverment" title="goverment icons">Goverment icons created by deemakdaksina - Flaticon</a></li>
       </ul>
   </details>
-* Special thanks to everyone who has playtested the many early versions of this game:
+
+Special thanks to everyone who has playtested the many early versions of this game:
   * Aidan Stubblebine
   * Alex Pham
   * Andrew Meyer
