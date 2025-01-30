@@ -5,7 +5,6 @@ app/static/health/
 app/static/improvements/
 app/static/stars/
 app/static/units/
-app/testing/
 app/testing/__pycache__/
 flask_profile.prof
 gamedata/
