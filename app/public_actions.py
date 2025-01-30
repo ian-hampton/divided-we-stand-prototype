@@ -1092,8 +1092,7 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
             pp_cost = 0
         else:
             pp_cost = 0.20
-        purchase_cost = region.purchase_cost
-        if (dollars_stockpile - purchase_cost) < 0 or (pp_stockpile - pp_cost) < 0:
+        if (dollars_stockpile - region.purchase_cost) < 0 or (pp_stockpile - pp_cost) < 0:
             player_action_log.append(f'Failed to purchase {region_id}. Insufficient resources.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -1111,25 +1110,23 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
 
     # Process Queue
     for region in region_queue:
-        region_claim_list = region.claim_list
 
         # region purchase successful
-        if len(region_claim_list) == 1:
-            player_id = region_claim_list[0]
+        if len(region.claim_list) == 1:
+            player_id = region.claim_list[0]
             player_action_log = player_action_logs[player_id - 1]
             pay_for_region(region, economy_masterlist, nation_info_masterlist, player_id)
             region.set_owner_id(player_id)
-            player_action_log.append(f'Successfully purchased region {region_id} for {purchase_cost} dollars.')
+            player_action_log.append(f'Successfully purchased region {region.region_id} for {region.purchase_cost} dollars.')
 
         # region dispute
         else:
             region.increase_purchase_cost()
             active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
-            for player_id in region_claim_list:
-                player_id = region_claim_list[0]
+            for player_id in region.claim_list:
                 player_action_log = player_action_logs[player_id - 1]
                 pay_for_region(region, economy_masterlist, nation_info_masterlist, player_id)
-                player_action_log.append(f'Failed to purchase {region_id} due to a region dispute.')
+                player_action_log.append(f'Failed to purchase {region.region_id} due to a region dispute.')
 
         player_action_logs[player_id - 1] = player_action_log
     
