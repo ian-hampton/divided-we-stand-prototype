@@ -13,7 +13,7 @@ FILL_COLOR = (179, 0, 0, 255)
 
 def color_test():
 
-    print("Updating main map...")
+    print("Running map color test...")
         
     # get filepaths
     image_resources_filepath = f"../../app/static/images/map_images/{MAP_STR}/image_resources"
@@ -65,5 +65,6 @@ def color_test():
             ImageDraw.floodfill(main_image, unit_box_start_cords, FILL_COLOR, border=(0, 0, 0, 255))
     
     main_image.save("../../map_color_test.png")
+    print(f"Done! Map size is {len(regdata_dict)} regions.")
 
 color_test()
