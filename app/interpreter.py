@@ -56,7 +56,10 @@ def check_action(action, library, game_id):
                     break
 
     #validate action
+    print(action)
+    print(action_type)
     action_valid = validate(action, action_type, library, regdata_dict)
+    print(action_valid)
     if not action_valid:
         print(f'The action: "{action}" of type {action_type} is not valid.')
         new_action = input("Please re-enter the action: ")
@@ -111,7 +114,6 @@ def validate(action, action_type, library, regdata_dict):
     '''
     Compares an action to the library of game terms. Gives oppertunity to correct an action if error found.
     '''
-    region_id_list = []
     if action_type in {'Build', 'Disband', 'Move', 'Purchase', 'Remove', 'Withdraw', 'Deploy', 'Launch'}:
         action_data_list = action.split(' ')
         move_regions_list = action_data_list[-1].split('-')
@@ -120,21 +122,21 @@ def validate(action, action_type, library, regdata_dict):
         case 'Surrender' | 'White Peace' | 'Steal':
             test_list = [check_nation_name(action, library)]
         case 'Purchase' | 'Remove' | 'Disband' | 'Withdraw' | 'Move':
-            test_list = [check_region_ids(region_id_list, regdata_dict)]
+            test_list = [check_region_ids(move_regions_list, regdata_dict)]
         case 'Research':
             test_list = [check_research_name(action, library)]
         case 'Build':
-            test_list = [check_improvement_name(action, library), check_region_ids(region_id_list, regdata_dict)]
+            test_list = [check_improvement_name(action, library), check_region_ids(move_regions_list, regdata_dict)]
         case 'Republic' | 'Buy' | 'Sell' :
             test_list = [check_resource_name(action, library)]
         case 'Make':
             test_list = [check_missile_name(action, library)]
         case 'Deploy':
-            test_list = [check_unit_name(action, library), check_region_ids(region_id_list, regdata_dict)]
+            test_list = [check_unit_name(action, library), check_region_ids(move_regions_list, regdata_dict)]
         case 'War':
             test_list = [check_justification_name(action, library), check_nation_name(action, library)]
         case 'Launch':
-            test_list = [check_missile_name(action, library), check_region_ids(region_id_list, regdata_dict)]
+            test_list = [check_missile_name(action, library), check_region_ids(move_regions_list, regdata_dict)]
         case 'Alliance Create':
             test_list = [check_alliance_type(action, library)]
         case 'Alliance Join':
