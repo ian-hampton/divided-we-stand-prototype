@@ -56,10 +56,7 @@ def check_action(action, library, game_id):
                     break
 
     #validate action
-    print(action)
-    print(action_type)
     action_valid = validate(action, action_type, library, regdata_dict)
-    print(action_valid)
     if not action_valid:
         print(f'The action: "{action}" of type {action_type} is not valid.')
         new_action = input("Please re-enter the action: ")

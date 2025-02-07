@@ -1082,7 +1082,7 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
             player_action_logs[player_id - 1] = player_action_log
             continue
 
-        # affordability check
+        # attempt to pay for region
         player_government = nation_info_masterlist[player_id - 1][2]
         dollars_stockpile = economy_masterlist[player_id - 1][0][0]
         dollars_stockpile = float(dollars_stockpile)
@@ -1092,7 +1092,10 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
             pp_cost = 0
         else:
             pp_cost = 0.20
-        if (dollars_stockpile - region.purchase_cost) < 0 or (pp_stockpile - pp_cost) < 0:
+        if (dollars_stockpile - region.purchase_cost) >= 0 and (pp_stockpile - pp_cost) >= 0:
+            economy_masterlist[player_id - 1][0][0] = core.update_stockpile(dollars_stockpile, region.purchase_cost)
+            economy_masterlist[player_id - 1][1][0] = core.update_stockpile(pp_stockpile, pp_cost)
+        else:
             player_action_log.append(f'Failed to purchase {region_id}. Insufficient resources.')
             player_action_logs[player_id - 1] = player_action_log
             continue
@@ -1115,7 +1118,6 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
         if len(region.claim_list) == 1:
             player_id = region.claim_list[0]
             player_action_log = player_action_logs[player_id - 1]
-            pay_for_region(region, economy_masterlist, nation_info_masterlist, player_id)
             region.set_owner_id(player_id)
             player_action_log.append(f'Successfully purchased region {region.region_id} for {region.purchase_cost} dollars.')
 
@@ -1125,7 +1127,6 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
             active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
             for player_id in region.claim_list:
                 player_action_log = player_action_logs[player_id - 1]
-                pay_for_region(region, economy_masterlist, nation_info_masterlist, player_id)
                 player_action_log.append(f'Failed to purchase {region.region_id} due to a region dispute.')
 
         player_action_logs[player_id - 1] = player_action_log
@@ -1148,25 +1149,6 @@ def resolve_region_purchases(region_purchase_list, game_id, player_action_logs):
         json.dump(active_games_dict, json_file, indent=4)
     
     return player_action_logs
-
-def pay_for_region(region:Region, economy_masterlist, nation_info_masterlist, player_id):
-    '''
-    Helper function for resolve_region_purchases()
-    I intend to remove this once the playerdata class is made.
-    '''
-    player_government = nation_info_masterlist[player_id - 1][2]
-    dollars_stockpile = economy_masterlist[player_id - 1][0][0]
-    dollars_stockpile = float(dollars_stockpile)
-    pp_stockpile = economy_masterlist[player_id - 1][1][0]
-    pp_stockpile = float(pp_stockpile)
-    if player_government != 'Remnant':
-        pp_cost = 0
-    else:
-        pp_cost = 0.20
-    purchase_cost = region.purchase_cost
-    economy_masterlist[player_id - 1][0][0] = core.update_stockpile(dollars_stockpile, purchase_cost)
-    economy_masterlist[player_id - 1][1][0] = core.update_stockpile(pp_stockpile, pp_cost)
-    return economy_masterlist
 
 def resolve_research_actions(research_action_list, game_id, player_action_logs):
     '''Resolves all research actions.'''
