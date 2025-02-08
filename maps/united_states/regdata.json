@@ -9,11 +9,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PACCA",
-                "PUGET"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PACCA": true,
+                "PUGET": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -44,14 +44,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "OLYMP",
-                "PUGET",
-                "COLBA",
-                "NTHOR",
-                "WILVA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "OLYMP": true,
+                "PUGET": true,
+                "COLBA": true,
+                "NTHOR": true,
+                "WILVA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -82,13 +82,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTCAS",
-                "COLBA",
-                "PACCA",
-                "OLYMP"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTCAS": true,
+                "COLBA": true,
+                "PACCA": true,
+                "OLYMP": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -119,12 +119,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "OKANO",
-                "COLBA",
-                "PUGET"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "OKANO": true,
+                "COLBA": true,
+                "PUGET": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -155,12 +155,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "IDPAN",
-                "COLBA",
-                "NTCAS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "IDPAN": true,
+                "COLBA": true,
+                "NTCAS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -191,16 +191,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTCAS",
-                "OKANO",
-                "IDPAN",
-                "EASOR",
-                "NTHOR",
-                "PACCA",
-                "PUGET"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTCAS": true,
+                "OKANO": true,
+                "IDPAN": true,
+                "EASOR": true,
+                "NTHOR": true,
+                "PACCA": true,
+                "PUGET": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -227,12 +227,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "PACCA",
-                "NTHOR",
-                "STHOR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PACCA": true,
+                "NTHOR": true,
+                "STHOR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -263,14 +263,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PACCA",
-                "COLBA",
-                "EASOR",
-                "STHOR",
-                "WILVA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PACCA": true,
+                "COLBA": true,
+                "EASOR": true,
+                "STHOR": true,
+                "WILVA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -297,15 +297,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WILVA",
-                "NTHOR",
-                "EASOR",
-                "WESNV",
-                "SHAST",
-                "NTHCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WILVA": true,
+                "NTHOR": true,
+                "EASOR": true,
+                "WESNV": true,
+                "SHAST": true,
+                "NTHCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -332,15 +332,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "COLBA",
-                "IDPAN",
-                "MAGVA",
-                "WESNV",
-                "STHOR",
-                "NTHOR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "COLBA": true,
+                "IDPAN": true,
+                "MAGVA": true,
+                "WESNV": true,
+                "STHOR": true,
+                "NTHOR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -367,15 +367,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "OKANO",
-                "WESMT",
-                "STEID",
-                "MAGVA",
-                "EASOR",
-                "COLBA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "OKANO": true,
+                "WESMT": true,
+                "STEID": true,
+                "MAGVA": true,
+                "EASOR": true,
+                "COLBA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -406,15 +406,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "IDPAN",
-                "STEID",
-                "CACHE",
-                "EASNV",
-                "WESNV",
-                "EASOR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "IDPAN": true,
+                "STEID": true,
+                "CACHE": true,
+                "EASNV": true,
+                "WESNV": true,
+                "EASOR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -441,15 +441,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMT",
-                "NTHWY",
-                "STHWY",
-                "CACHE",
-                "MAGVA",
-                "IDPAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMT": true,
+                "NTHWY": true,
+                "STHWY": true,
+                "CACHE": true,
+                "MAGVA": true,
+                "IDPAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -476,13 +476,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "EASMT",
-                "NTHWY",
-                "STEID",
-                "IDPAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASMT": true,
+                "NTHWY": true,
+                "STEID": true,
+                "IDPAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -509,13 +509,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESND",
-                "WESSD",
-                "NTHWY",
-                "WESMT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESND": true,
+                "WESSD": true,
+                "NTHWY": true,
+                "WESMT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -542,15 +542,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMT",
-                "EASMT",
-                "WESSD",
-                "WESNE",
-                "STHWY",
-                "STEID"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMT": true,
+                "EASMT": true,
+                "WESSD": true,
+                "WESNE": true,
+                "STHWY": true,
+                "STEID": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -577,17 +577,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHWY",
-                "WESNE",
-                "NTECO",
-                "NTWCO",
-                "UINTA",
-                "SLTLK",
-                "CACHE",
-                "STEID"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHWY": true,
+                "WESNE": true,
+                "NTECO": true,
+                "NTWCO": true,
+                "UINTA": true,
+                "SLTLK": true,
+                "CACHE": true,
+                "STEID": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -614,13 +614,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHOR",
-                "SHAST",
-                "SACRA",
-                "BAYAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHOR": true,
+                "SHAST": true,
+                "SACRA": true,
+                "BAYAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -651,13 +651,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHOR",
-                "WESNV",
-                "SACRA",
-                "NTHCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHOR": true,
+                "WESNV": true,
+                "SACRA": true,
+                "NTHCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -684,16 +684,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHCT",
-                "SHAST",
-                "WESNV",
-                "SINEV",
-                "SJOVA",
-                "CENCT",
-                "BAYAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHCT": true,
+                "SHAST": true,
+                "WESNV": true,
+                "SINEV": true,
+                "SJOVA": true,
+                "CENCT": true,
+                "BAYAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -724,12 +724,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHCT",
-                "SACRA",
-                "CENCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHCT": true,
+                "SACRA": true,
+                "CENCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -760,16 +760,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNV",
-                "STHNV",
-                "LASVE",
-                "INEMP",
-                "KERNC",
-                "SJOVA",
-                "SACRA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESNV": true,
+                "STHNV": true,
+                "LASVE": true,
+                "INEMP": true,
+                "KERNC": true,
+                "SJOVA": true,
+                "SACRA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -800,13 +800,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SACRA",
-                "SINEV",
-                "KERNC",
-                "CENCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SACRA": true,
+                "SINEV": true,
+                "KERNC": true,
+                "CENCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -833,14 +833,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAYAR",
-                "SACRA",
-                "SJOVA",
-                "KERNC",
-                "LOSAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAYAR": true,
+                "SACRA": true,
+                "SJOVA": true,
+                "KERNC": true,
+                "LOSAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -871,14 +871,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SJOVA",
-                "SINEV",
-                "INEMP",
-                "LOSAN",
-                "CENCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SJOVA": true,
+                "SINEV": true,
+                "INEMP": true,
+                "LOSAN": true,
+                "CENCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -909,13 +909,13 @@
                 563,
                 1866
             ],
-            "adjacencyList": [
-                "CENCT",
-                "KERNC",
-                "INEMP",
-                "STHBR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENCT": true,
+                "KERNC": true,
+                "INEMP": true,
+                "STHBR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -942,16 +942,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "KERNC",
-                "SINEV",
-                "LASVE",
-                "MOHAV",
-                "YUMAC",
-                "STHBR",
-                "LOSAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KERNC": true,
+                "SINEV": true,
+                "LASVE": true,
+                "MOHAV": true,
+                "YUMAC": true,
+                "STHBR": true,
+                "LOSAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -978,12 +978,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LOSAN",
-                "INEMP",
-                "YUMAC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LOSAN": true,
+                "INEMP": true,
+                "YUMAC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1014,17 +1014,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "SHAST",
-                "STHOR",
-                "EASOR",
-                "MAGVA",
-                "EASNV",
-                "STHNV",
-                "SINEV",
-                "SACRA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHAST": true,
+                "STHOR": true,
+                "EASOR": true,
+                "MAGVA": true,
+                "EASNV": true,
+                "STHNV": true,
+                "SINEV": true,
+                "SACRA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1051,15 +1051,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNV",
-                "MAGVA",
-                "CACHE",
-                "SLTLK",
-                "STWUT",
-                "STHNV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESNV": true,
+                "MAGVA": true,
+                "CACHE": true,
+                "SLTLK": true,
+                "STWUT": true,
+                "STHNV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1086,15 +1086,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNV",
-                "EASNV",
-                "STWUT",
-                "MOHAV",
-                "LASVE",
-                "SINEV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESNV": true,
+                "EASNV": true,
+                "STWUT": true,
+                "MOHAV": true,
+                "LASVE": true,
+                "SINEV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1121,13 +1121,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHNV",
-                "MOHAV",
-                "INEMP",
-                "SINEV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHNV": true,
+                "MOHAV": true,
+                "INEMP": true,
+                "SINEV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1154,14 +1154,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MAGVA",
-                "STEID",
-                "STHWY",
-                "SLTLK",
-                "EASNV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MAGVA": true,
+                "STEID": true,
+                "STHWY": true,
+                "SLTLK": true,
+                "EASNV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1192,14 +1192,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "CACHE",
-                "STHWY",
-                "UINTA",
-                "STWUT",
-                "EASNV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CACHE": true,
+                "STHWY": true,
+                "UINTA": true,
+                "STWUT": true,
+                "EASNV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1230,14 +1230,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SLTLK",
-                "STHWY",
-                "NTWCO",
-                "SANJU",
-                "STWUT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SLTLK": true,
+                "STHWY": true,
+                "NTWCO": true,
+                "SANJU": true,
+                "STWUT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1264,16 +1264,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SLTLK",
-                "UINTA",
-                "SANJU",
-                "EASAZ",
-                "MOHAV",
-                "STHNV",
-                "EASNV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SLTLK": true,
+                "UINTA": true,
+                "SANJU": true,
+                "EASAZ": true,
+                "MOHAV": true,
+                "STHNV": true,
+                "EASNV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1300,14 +1300,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWUT",
-                "UINTA",
-                "NTWCO",
-                "STWCO",
-                "EASAZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWUT": true,
+                "UINTA": true,
+                "NTWCO": true,
+                "STWCO": true,
+                "EASAZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1338,15 +1338,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHWY",
-                "NTECO",
-                "STECO",
-                "STWCO",
-                "SANJU",
-                "UINTA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHWY": true,
+                "NTECO": true,
+                "STECO": true,
+                "STWCO": true,
+                "SANJU": true,
+                "UINTA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1373,16 +1373,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "STHWY",
-                "WESNE",
-                "CENNE",
-                "NTHKS",
-                "STHKS",
-                "STECO",
-                "NTWCO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHWY": true,
+                "WESNE": true,
+                "CENNE": true,
+                "NTHKS": true,
+                "STHKS": true,
+                "STECO": true,
+                "NTWCO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1409,14 +1409,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SANJU",
-                "NTWCO",
-                "STECO",
-                "NTENM",
-                "NTWNM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SANJU": true,
+                "NTWCO": true,
+                "STECO": true,
+                "NTENM": true,
+                "NTWNM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1447,15 +1447,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWCO",
-                "NTWCO",
-                "NTECO",
-                "STHKS",
-                "REDCA",
-                "NTENM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWCO": true,
+                "NTWCO": true,
+                "NTECO": true,
+                "STHKS": true,
+                "REDCA": true,
+                "NTENM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1482,16 +1482,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LASVE",
-                "STHNV",
-                "STWUT",
-                "EASAZ",
-                "YAVAP",
-                "YUMAC",
-                "INEMP"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LASVE": true,
+                "STHNV": true,
+                "STWUT": true,
+                "EASAZ": true,
+                "YAVAP": true,
+                "YUMAC": true,
+                "INEMP": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1522,15 +1522,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHBR",
-                "INEMP",
-                "MOHAV",
-                "YAVAP",
-                "PHOEN",
-                "STHAZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHBR": true,
+                "INEMP": true,
+                "MOHAV": true,
+                "YAVAP": true,
+                "PHOEN": true,
+                "STHAZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1561,13 +1561,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MOHAV",
-                "EASAZ",
-                "PHOEN",
-                "YUMAC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MOHAV": true,
+                "EASAZ": true,
+                "PHOEN": true,
+                "YUMAC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1598,13 +1598,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "YUMAC",
-                "YAVAP",
-                "EASAZ",
-                "STHAZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUMAC": true,
+                "YAVAP": true,
+                "EASAZ": true,
+                "STHAZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1631,13 +1631,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUMAC",
-                "PHOEN",
-                "EASAZ",
-                "STWNM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUMAC": true,
+                "PHOEN": true,
+                "EASAZ": true,
+                "STWNM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1664,17 +1664,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHAZ",
-                "PHOEN",
-                "YAVAP",
-                "MOHAV",
-                "STWUT",
-                "SANJU",
-                "NTWNM",
-                "STWNM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHAZ": true,
+                "PHOEN": true,
+                "YAVAP": true,
+                "MOHAV": true,
+                "STWUT": true,
+                "SANJU": true,
+                "NTWNM": true,
+                "STWNM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1701,14 +1701,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "EASAZ",
-                "STWCO",
-                "NTENM",
-                "STENM",
-                "STWNM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASAZ": true,
+                "STWCO": true,
+                "NTENM": true,
+                "STENM": true,
+                "STWNM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1735,15 +1735,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTWNM",
-                "STWCO",
-                "STECO",
-                "REDCA",
-                "TXPAN",
-                "STENM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWNM": true,
+                "STWCO": true,
+                "STECO": true,
+                "REDCA": true,
+                "TXPAN": true,
+                "STENM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1770,14 +1770,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "EASAZ",
-                "NTWNM",
-                "STENM",
-                "WESTX",
-                "STHAZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASAZ": true,
+                "NTWNM": true,
+                "STENM": true,
+                "WESTX": true,
+                "STHAZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1804,14 +1804,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWNM",
-                "NTWNM",
-                "NTENM",
-                "TXPAN",
-                "WESTX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWNM": true,
+                "NTWNM": true,
+                "NTENM": true,
+                "TXPAN": true,
+                "WESTX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1838,12 +1838,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "EASND",
-                "WESSD",
-                "EASMT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASND": true,
+                "WESSD": true,
+                "EASMT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1870,13 +1870,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWMN",
-                "EASSD",
-                "WESSD",
-                "WESND"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWMN": true,
+                "EASSD": true,
+                "WESSD": true,
+                "WESND": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1903,16 +1903,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "WESND",
-                "EASND",
-                "EASSD",
-                "CENNE",
-                "WESNE",
-                "NTHWY",
-                "EASMT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESND": true,
+                "EASND": true,
+                "EASSD": true,
+                "CENNE": true,
+                "WESNE": true,
+                "NTHWY": true,
+                "EASMT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1939,16 +1939,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "EASND",
-                "NTWMN",
-                "STWMN",
-                "NTWIA",
-                "EASNE",
-                "CENNE",
-                "WESSD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASND": true,
+                "NTWMN": true,
+                "STWMN": true,
+                "NTWIA": true,
+                "EASNE": true,
+                "CENNE": true,
+                "WESSD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1975,14 +1975,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHWY",
-                "WESSD",
-                "CENNE",
-                "NTECO",
-                "STHWY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHWY": true,
+                "WESSD": true,
+                "CENNE": true,
+                "NTECO": true,
+                "STHWY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2009,15 +2009,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNE",
-                "WESSD",
-                "EASSD",
-                "EASNE",
-                "NTHKS",
-                "NTECO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESNE": true,
+                "WESSD": true,
+                "EASSD": true,
+                "EASNE": true,
+                "NTHKS": true,
+                "NTECO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2044,16 +2044,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "CENNE",
-                "EASSD",
-                "NTWIA",
-                "STWIA",
-                "NTHMO",
-                "EASKS",
-                "NTHKS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENNE": true,
+                "EASSD": true,
+                "NTWIA": true,
+                "STWIA": true,
+                "NTHMO": true,
+                "EASKS": true,
+                "NTHKS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2080,14 +2080,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENNE",
-                "EASNE",
-                "EASKS",
-                "STHKS",
-                "NTECO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENNE": true,
+                "EASNE": true,
+                "EASKS": true,
+                "STHKS": true,
+                "NTECO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2114,15 +2114,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHKS",
-                "EASKS",
-                "GREEN",
-                "REDCA",
-                "STECO",
-                "NTECO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHKS": true,
+                "EASKS": true,
+                "GREEN": true,
+                "REDCA": true,
+                "STECO": true,
+                "NTECO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2149,15 +2149,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "EASNE",
-                "NTHMO",
-                "WESMO",
-                "GREEN",
-                "STHKS",
-                "NTHKS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASNE": true,
+                "NTHMO": true,
+                "WESMO": true,
+                "GREEN": true,
+                "STHKS": true,
+                "NTHKS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2184,15 +2184,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHKS",
-                "GREEN",
-                "GRTPL",
-                "TXPAN",
-                "NTENM",
-                "STECO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHKS": true,
+                "GREEN": true,
+                "GRTPL": true,
+                "TXPAN": true,
+                "NTENM": true,
+                "STECO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2219,16 +2219,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "STHKS",
-                "EASKS",
-                "WESMO",
-                "NTWAR",
-                "CHOCT",
-                "GRTPL",
-                "REDCA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHKS": true,
+                "EASKS": true,
+                "WESMO": true,
+                "NTWAR": true,
+                "CHOCT": true,
+                "GRTPL": true,
+                "REDCA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2255,14 +2255,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "REDCA",
-                "GREEN",
-                "CHOCT",
-                "METRO",
-                "TXPAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "REDCA": true,
+                "GREEN": true,
+                "CHOCT": true,
+                "METRO": true,
+                "TXPAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2289,15 +2289,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GREEN",
-                "NTWAR",
-                "STWAR",
-                "NTETX",
-                "METRO",
-                "GRTPL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GREEN": true,
+                "NTWAR": true,
+                "STWAR": true,
+                "NTETX": true,
+                "METRO": true,
+                "GRTPL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2324,16 +2324,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "REDCA",
-                "GRTPL",
-                "METRO",
-                "HILLC",
-                "WESTX",
-                "STENM",
-                "NTENM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "REDCA": true,
+                "GRTPL": true,
+                "METRO": true,
+                "HILLC": true,
+                "WESTX": true,
+                "STENM": true,
+                "NTENM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2360,15 +2360,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GRTPL",
-                "CHOCT",
-                "NTETX",
-                "CENTX",
-                "HILLC",
-                "TXPAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GRTPL": true,
+                "CHOCT": true,
+                "NTETX": true,
+                "CENTX": true,
+                "HILLC": true,
+                "TXPAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2395,16 +2395,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHOCT",
-                "STWAR",
-                "SPORT",
-                "STETX",
-                "GULCT",
-                "CENTX",
-                "METRO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHOCT": true,
+                "STWAR": true,
+                "SPORT": true,
+                "STETX": true,
+                "GULCT": true,
+                "CENTX": true,
+                "METRO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2431,14 +2431,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWNM",
-                "STENM",
-                "TXPAN",
-                "HILLC",
-                "STHTX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWNM": true,
+                "STENM": true,
+                "TXPAN": true,
+                "HILLC": true,
+                "STHTX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2465,14 +2465,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TXPAN",
-                "METRO",
-                "CENTX",
-                "STHTX",
-                "WESTX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TXPAN": true,
+                "METRO": true,
+                "CENTX": true,
+                "STHTX": true,
+                "WESTX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2499,15 +2499,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "METRO",
-                "NTETX",
-                "GULCT",
-                "CBEND",
-                "STHTX",
-                "HILLC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "METRO": true,
+                "NTETX": true,
+                "GULCT": true,
+                "CBEND": true,
+                "STHTX": true,
+                "HILLC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2534,13 +2534,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESTX",
-                "HILLC",
-                "CENTX",
-                "CBEND"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESTX": true,
+                "HILLC": true,
+                "CENTX": true,
+                "CBEND": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2567,12 +2567,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHTX",
-                "CENTX",
-                "GULCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHTX": true,
+                "CENTX": true,
+                "GULCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2603,13 +2603,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CBEND",
-                "CENTX",
-                "NTETX",
-                "STETX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CBEND": true,
+                "CENTX": true,
+                "NTETX": true,
+                "STETX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2640,14 +2640,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GULCT",
-                "NTETX",
-                "SPORT",
-                "CROSS",
-                "ACADI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GULCT": true,
+                "NTETX": true,
+                "SPORT": true,
+                "CROSS": true,
+                "ACADI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2678,14 +2678,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTENM",
-                "CENMN",
-                "STWMN",
-                "EASSD",
-                "EASND"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTENM": true,
+                "CENMN": true,
+                "STWMN": true,
+                "EASSD": true,
+                "EASND": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2712,12 +2712,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWWI",
-                "CENMN",
-                "NTWMN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWWI": true,
+                "CENMN": true,
+                "NTWMN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2744,14 +2744,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWMN",
-                "NTEMN",
-                "NTWWI",
-                "STEMN",
-                "STWMN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWMN": true,
+                "NTEMN": true,
+                "NTWWI": true,
+                "STEMN": true,
+                "STWMN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2778,14 +2778,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWMN",
-                "CENMN",
-                "STEMN",
-                "NTWIA",
-                "EASSD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWMN": true,
+                "CENMN": true,
+                "STEMN": true,
+                "NTWIA": true,
+                "EASSD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2812,15 +2812,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "CENMN",
-                "NTWWI",
-                "STWWI",
-                "NTEIA",
-                "NTWIA",
-                "STWMN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENMN": true,
+                "NTWWI": true,
+                "STWWI": true,
+                "NTEIA": true,
+                "NTWIA": true,
+                "STWMN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2847,15 +2847,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWMN",
-                "STEMN",
-                "NTEIA",
-                "STWIA",
-                "EASNE",
-                "EASSD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWMN": true,
+                "STEMN": true,
+                "NTEIA": true,
+                "STWIA": true,
+                "EASNE": true,
+                "EASSD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2882,15 +2882,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STEMN",
-                "STWWI",
-                "NTWIL",
-                "STEIA",
-                "STWIA",
-                "NTWIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STEMN": true,
+                "STWWI": true,
+                "NTWIL": true,
+                "STEIA": true,
+                "STWIA": true,
+                "NTWIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2917,14 +2917,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTWIA",
-                "NTEIA",
-                "STEIA",
-                "NTHMO",
-                "EASNE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWIA": true,
+                "NTEIA": true,
+                "STEIA": true,
+                "NTHMO": true,
+                "EASNE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2951,14 +2951,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTEIA",
-                "NTWIL",
-                "FORGO",
-                "NTHMO",
-                "STWIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTEIA": true,
+                "NTWIL": true,
+                "FORGO": true,
+                "NTHMO": true,
+                "STWIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2985,17 +2985,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWIA",
-                "STEIA",
-                "FORGO",
-                "STWIL",
-                "STLOU",
-                "WESMO",
-                "EASKS",
-                "EASNE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWIA": true,
+                "STEIA": true,
+                "FORGO": true,
+                "STWIL": true,
+                "STLOU": true,
+                "WESMO": true,
+                "EASKS": true,
+                "EASNE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3022,15 +3022,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHMO",
-                "STLOU",
-                "OZARK",
-                "NTWAR",
-                "GREEN",
-                "EASKS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHMO": true,
+                "STLOU": true,
+                "OZARK": true,
+                "NTWAR": true,
+                "GREEN": true,
+                "EASKS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3061,14 +3061,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHMO",
-                "STWIL",
-                "STEMO",
-                "OZARK",
-                "WESMO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHMO": true,
+                "STWIL": true,
+                "STEMO": true,
+                "OZARK": true,
+                "WESMO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3095,14 +3095,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMO",
-                "STLOU",
-                "STEMO",
-                "NTEAR",
-                "NTWAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMO": true,
+                "STLOU": true,
+                "STEMO": true,
+                "NTEAR": true,
+                "NTWAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3129,16 +3129,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STLOU",
-                "STWIL",
-                "LILEG",
-                "WESKY",
-                "NTWTN",
-                "NTEAR",
-                "OZARK"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STLOU": true,
+                "STWIL": true,
+                "LILEG": true,
+                "WESKY": true,
+                "NTWTN": true,
+                "NTEAR": true,
+                "OZARK": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3169,16 +3169,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMO",
-                "OZARK",
-                "NTEAR",
-                "STEAR",
-                "STWAR",
-                "CHOCT",
-                "GREEN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMO": true,
+                "OZARK": true,
+                "NTEAR": true,
+                "STEAR": true,
+                "STWAR": true,
+                "CHOCT": true,
+                "GREEN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3205,16 +3205,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "OZARK",
-                "STEMO",
-                "NTWTN",
-                "STWTN",
-                "NTHMS",
-                "STEAR",
-                "NTWAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "OZARK": true,
+                "STEMO": true,
+                "NTWTN": true,
+                "STWTN": true,
+                "NTHMS": true,
+                "STEAR": true,
+                "NTWAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3245,14 +3245,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWAR",
-                "STEAR",
-                "SPORT",
-                "NTETX",
-                "CHOCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWAR": true,
+                "STEAR": true,
+                "SPORT": true,
+                "NTETX": true,
+                "CHOCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3279,14 +3279,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTWAR",
-                "NTEAR",
-                "NTHMS",
-                "SPORT",
-                "STWAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWAR": true,
+                "NTEAR": true,
+                "NTHMS": true,
+                "SPORT": true,
+                "STWAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3317,16 +3317,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWAR",
-                "STEAR",
-                "NTHMS",
-                "CENMS",
-                "CROSS",
-                "STETX",
-                "NTETX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWAR": true,
+                "STEAR": true,
+                "NTHMS": true,
+                "CENMS": true,
+                "CROSS": true,
+                "STETX": true,
+                "NTETX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3353,14 +3353,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SPORT",
-                "CENMS",
-                "NEWOR",
-                "ACADI",
-                "STETX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SPORT": true,
+                "CENMS": true,
+                "NEWOR": true,
+                "ACADI": true,
+                "STETX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3387,12 +3387,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CROSS",
-                "NEWOR",
-                "STETX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CROSS": true,
+                "NEWOR": true,
+                "STETX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3419,13 +3419,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "ACADI",
-                "CROSS",
-                "CENMS",
-                "MSGUL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ACADI": true,
+                "CROSS": true,
+                "CENMS": true,
+                "MSGUL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3456,14 +3456,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENWI",
-                "STWWI",
-                "STEMN",
-                "CENMN",
-                "NTEMN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENWI": true,
+                "STWWI": true,
+                "STEMN": true,
+                "CENMN": true,
+                "NTEMN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3490,14 +3490,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "UPPER",
-                "NTEWI",
-                "STEWI",
-                "STWWI",
-                "NTWWI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "UPPER": true,
+                "NTEWI": true,
+                "STEWI": true,
+                "STWWI": true,
+                "NTWWI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3528,12 +3528,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENWI",
-                "UPPER",
-                "STEWI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENWI": true,
+                "UPPER": true,
+                "STEWI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3564,15 +3564,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWWI",
-                "CENWI",
-                "STEWI",
-                "NTWIL",
-                "NTEIA",
-                "STEMN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWWI": true,
+                "CENWI": true,
+                "STEWI": true,
+                "NTWIL": true,
+                "NTEIA": true,
+                "STEMN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3603,14 +3603,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "CENWI",
-                "NTEWI",
-                "CHICA",
-                "NTWIL",
-                "STWWI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENWI": true,
+                "NTEWI": true,
+                "CHICA": true,
+                "NTWIL": true,
+                "STWWI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3637,12 +3637,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENWI",
-                "NTEWI",
-                "NTHMI"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "CENWI": true,
+                "NTEWI": true,
+                "NTHMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3673,12 +3673,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "UPPER",
-                "WESMI",
-                "MIDMI"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "UPPER": true,
+                "WESMI": true,
+                "MIDMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3709,14 +3709,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHMI",
-                "MIDMI",
-                "STEMI",
-                "NTWOH",
-                "NTHIN"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHMI": true,
+                "MIDMI": true,
+                "STEMI": true,
+                "NTWOH": true,
+                "NTHIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3747,13 +3747,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHMI",
-                "THUMB",
-                "STEMI",
-                "WESMI"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHMI": true,
+                "THUMB": true,
+                "STEMI": true,
+                "WESMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3784,11 +3784,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MIDMI",
-                "STEMI"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "MIDMI": true,
+                "STEMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3819,13 +3819,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMI",
-                "MIDMI",
-                "THUMB",
-                "NTWOH"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "WESMI": true,
+                "MIDMI": true,
+                "THUMB": true,
+                "NTWOH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3856,16 +3856,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWWI",
-                "STEWI",
-                "CHICA",
-                "CENIL",
-                "FORGO",
-                "STEIA",
-                "NTEIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWWI": true,
+                "STEWI": true,
+                "CHICA": true,
+                "CENIL": true,
+                "FORGO": true,
+                "STEIA": true,
+                "NTEIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3896,14 +3896,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHIN",
-                "EASIL",
-                "CENIL",
-                "NTWIL",
-                "STEWI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHIN": true,
+                "EASIL": true,
+                "CENIL": true,
+                "NTWIL": true,
+                "STEWI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3934,14 +3934,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWIL",
-                "CENIL",
-                "STWIL",
-                "NTHMO",
-                "STEIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWIL": true,
+                "CENIL": true,
+                "STWIL": true,
+                "NTHMO": true,
+                "STEIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3972,14 +3972,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWIL",
-                "CHICA",
-                "EASIL",
-                "STWIL",
-                "FORGO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWIL": true,
+                "CHICA": true,
+                "EASIL": true,
+                "STWIL": true,
+                "FORGO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4006,16 +4006,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "CENIL",
-                "EASIL",
-                "LILEG",
-                "STEMO",
-                "STLOU",
-                "NTHMO",
-                "FORGO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENIL": true,
+                "EASIL": true,
+                "LILEG": true,
+                "STEMO": true,
+                "STLOU": true,
+                "NTHMO": true,
+                "FORGO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4046,16 +4046,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHICA",
-                "NTHIN",
-                "CENIN",
-                "WABAS",
-                "LILEG",
-                "STWIL",
-                "CENIL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHICA": true,
+                "NTHIN": true,
+                "CENIN": true,
+                "WABAS": true,
+                "LILEG": true,
+                "STWIL": true,
+                "CENIL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4086,16 +4086,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "EASIL",
-                "WABAS",
-                "STHIN",
-                "WESKY",
-                "STEMO",
-                "STLOU",
-                "STWIL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASIL": true,
+                "WABAS": true,
+                "STHIN": true,
+                "WESKY": true,
+                "STEMO": true,
+                "STLOU": true,
+                "STWIL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4126,14 +4126,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMI",
-                "NTWOH",
-                "CENIN",
-                "EASIL",
-                "CHICA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMI": true,
+                "NTWOH": true,
+                "CENIN": true,
+                "EASIL": true,
+                "CHICA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4164,16 +4164,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHIN",
-                "NTWOH",
-                "MIAVA",
-                "STHIN",
-                "INDIA",
-                "WABAS",
-                "EASIL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHIN": true,
+                "NTWOH": true,
+                "MIAVA": true,
+                "STHIN": true,
+                "INDIA": true,
+                "WABAS": true,
+                "EASIL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4204,12 +4204,12 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "CENIN",
-                "STHIN",
-                "WABAS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENIN": true,
+                "STHIN": true,
+                "WABAS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4240,14 +4240,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENIN",
-                "INDIA",
-                "STHIN",
-                "LILEG",
-                "EASIL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENIN": true,
+                "INDIA": true,
+                "STHIN": true,
+                "LILEG": true,
+                "EASIL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4278,18 +4278,18 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WABAS",
-                "INDIA",
-                "CENIN",
-                "MIAVA",
-                "CINCI",
-                "BLUEG",
-                "PENNY",
-                "WESKY",
-                "LILEG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WABAS": true,
+                "INDIA": true,
+                "CENIN": true,
+                "MIAVA": true,
+                "CINCI": true,
+                "BLUEG": true,
+                "PENNY": true,
+                "WESKY": true,
+                "LILEG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4320,16 +4320,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMI",
-                "STEMI",
-                "CLEVE",
-                "CENOH",
-                "MIAVA",
-                "CENIN",
-                "NTHIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMI": true,
+                "STEMI": true,
+                "CLEVE": true,
+                "CENOH": true,
+                "MIAVA": true,
+                "CENIN": true,
+                "NTHIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4356,14 +4356,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWPA",
-                "VALLE",
-                "STEOH",
-                "CENOH",
-                "NTWOH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWPA": true,
+                "VALLE": true,
+                "STEOH": true,
+                "CENOH": true,
+                "NTWOH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4390,14 +4390,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWOH",
-                "CENOH",
-                "CINCI",
-                "STHIN",
-                "CENIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWOH": true,
+                "CENOH": true,
+                "CINCI": true,
+                "STHIN": true,
+                "CENIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4428,15 +4428,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTWOH",
-                "CLEVE",
-                "STEOH",
-                "STHOH",
-                "CINCI",
-                "MIAVA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWOH": true,
+                "CLEVE": true,
+                "STEOH": true,
+                "STHOH": true,
+                "CINCI": true,
+                "MIAVA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4467,15 +4467,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MIAVA",
-                "CENOH",
-                "STHOH",
-                "CUMBE",
-                "BLUEG",
-                "STHIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MIAVA": true,
+                "CENOH": true,
+                "STHOH": true,
+                "CUMBE": true,
+                "BLUEG": true,
+                "STHIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4506,14 +4506,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENOH",
-                "STEOH",
-                "VALLE",
-                "CUMBE",
-                "CINCI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENOH": true,
+                "STEOH": true,
+                "VALLE": true,
+                "CUMBE": true,
+                "CINCI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4544,13 +4544,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENOH",
-                "CLEVE",
-                "VALLE",
-                "STHOH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENOH": true,
+                "CLEVE": true,
+                "VALLE": true,
+                "STHOH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4581,13 +4581,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "STHIN",
-                "CINCI",
-                "CUMBE",
-                "PENNY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHIN": true,
+                "CINCI": true,
+                "CUMBE": true,
+                "PENNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4618,15 +4618,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LILEG",
-                "STHIN",
-                "PENNY",
-                "NASHV",
-                "NTWTN",
-                "STEMO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LILEG": true,
+                "STHIN": true,
+                "PENNY": true,
+                "NASHV": true,
+                "NTWTN": true,
+                "STEMO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4657,16 +4657,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHIN",
-                "BLUEG",
-                "CUMBE",
-                "EASTN",
-                "MIDTN",
-                "NASHV",
-                "WESKY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHIN": true,
+                "BLUEG": true,
+                "CUMBE": true,
+                "EASTN": true,
+                "MIDTN": true,
+                "NASHV": true,
+                "WESKY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4697,17 +4697,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BLUEG",
-                "CINCI",
-                "STHOH",
-                "VALLE",
-                "CHARL",
-                "STWVA",
-                "EASTN",
-                "PENNY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BLUEG": true,
+                "CINCI": true,
+                "STHOH": true,
+                "VALLE": true,
+                "CHARL": true,
+                "STWVA": true,
+                "EASTN": true,
+                "PENNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4734,15 +4734,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STEMO",
-                "WESKY",
-                "NASHV",
-                "CHATT",
-                "STWTN",
-                "NTEAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STEMO": true,
+                "WESKY": true,
+                "NASHV": true,
+                "CHATT": true,
+                "STWTN": true,
+                "NTEAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4769,14 +4769,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "WESKY",
-                "PENNY",
-                "MIDTN",
-                "CHATT",
-                "NTWTN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESKY": true,
+                "PENNY": true,
+                "MIDTN": true,
+                "CHATT": true,
+                "NTWTN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4807,13 +4807,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PENNY",
-                "EASTN",
-                "CHATT",
-                "NASHV"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PENNY": true,
+                "EASTN": true,
+                "CHATT": true,
+                "NASHV": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4844,15 +4844,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CUMBE",
-                "STWVA",
-                "MOUNT",
-                "CHATT",
-                "MIDTN",
-                "PENNY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CUMBE": true,
+                "STWVA": true,
+                "MOUNT": true,
+                "CHATT": true,
+                "MIDTN": true,
+                "PENNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4883,14 +4883,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWTN",
-                "CHATT",
-                "NTHAL",
-                "NTHMS",
-                "NTEAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWTN": true,
+                "CHATT": true,
+                "NTHAL": true,
+                "NTHMS": true,
+                "NTEAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4917,17 +4917,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NASHV",
-                "MIDTN",
-                "EASTN",
-                "MOUNT",
-                "NTWGA",
-                "NTHAL",
-                "STWTN",
-                "NTWTN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NASHV": true,
+                "MIDTN": true,
+                "EASTN": true,
+                "MOUNT": true,
+                "NTWGA": true,
+                "NTHAL": true,
+                "STWTN": true,
+                "NTWTN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4958,16 +4958,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWTN",
-                "NTHAL",
-                "WESAL",
-                "CENMS",
-                "SPORT",
-                "STEAR",
-                "NTEAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWTN": true,
+                "NTHAL": true,
+                "WESAL": true,
+                "CENMS": true,
+                "SPORT": true,
+                "STEAR": true,
+                "NTEAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4998,16 +4998,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHMS",
-                "WESAL",
-                "STWAL",
-                "MSGUL",
-                "NEWOR",
-                "CROSS",
-                "SPORT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHMS": true,
+                "WESAL": true,
+                "STWAL": true,
+                "MSGUL": true,
+                "NEWOR": true,
+                "CROSS": true,
+                "SPORT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5038,12 +5038,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENMS",
-                "STWAL",
-                "NEWOR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENMS": true,
+                "STWAL": true,
+                "NEWOR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5074,15 +5074,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHATT",
-                "NTWGA",
-                "EASAL",
-                "WESAL",
-                "NTHMS",
-                "STWTN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHATT": true,
+                "NTWGA": true,
+                "EASAL": true,
+                "WESAL": true,
+                "NTHMS": true,
+                "STWTN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5113,15 +5113,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHAL",
-                "EASAL",
-                "STEAL",
-                "STWAL",
-                "CENMS",
-                "NTHMS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHAL": true,
+                "EASAL": true,
+                "STEAL": true,
+                "STWAL": true,
+                "CENMS": true,
+                "NTHMS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5152,13 +5152,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHAL",
-                "NTWGA",
-                "STEAL",
-                "WESAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHAL": true,
+                "NTWGA": true,
+                "STEAL": true,
+                "WESAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5189,14 +5189,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESAL",
-                "STEAL",
-                "FLPAN",
-                "CENMS",
-                "MSGUL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESAL": true,
+                "STEAL": true,
+                "FLPAN": true,
+                "CENMS": true,
+                "MSGUL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5223,15 +5223,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "EASAL",
-                "STWGA",
-                "FLPAN",
-                "NTWGA",
-                "WESAL",
-                "STWAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASAL": true,
+                "STWGA": true,
+                "FLPAN": true,
+                "NTWGA": true,
+                "WESAL": true,
+                "STWAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5258,14 +5258,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "STWAL",
-                "STEAL",
-                "STWGA",
-                "STEGA",
-                "GAINE"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "STWAL": true,
+                "STEAL": true,
+                "STWGA": true,
+                "STEGA": true,
+                "GAINE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5296,14 +5296,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FLPAN",
-                "STEGA",
-                "FIRCT",
-                "HALIF",
-                "TAMPA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "FLPAN": true,
+                "STEGA": true,
+                "FIRCT": true,
+                "HALIF": true,
+                "TAMPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5338,13 +5338,13 @@
                 4040,
                 2489
             ],
-            "adjacencyList": [
-                "GACST",
-                "STEGA",
-                "GAINE",
-                "HALIF"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "GACST": true,
+                "STEGA": true,
+                "GAINE": true,
+                "HALIF": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5371,14 +5371,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FIRCT",
-                "GAINE",
-                "TAMPA",
-                "STWFL",
-                "MIAMI"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "FIRCT": true,
+                "GAINE": true,
+                "TAMPA": true,
+                "STWFL": true,
+                "MIAMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5413,12 +5413,12 @@
                 3997,
                 2697
             ],
-            "adjacencyList": [
-                "GAINE",
-                "HALIF",
-                "STWFL"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "GAINE": true,
+                "HALIF": true,
+                "STWFL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5445,12 +5445,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TAMPA",
-                "HALIF",
-                "MIAMI"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "TAMPA": true,
+                "HALIF": true,
+                "MIAMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5481,11 +5481,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWFL",
-                "HALIF"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "STWFL": true,
+                "HALIF": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5516,17 +5516,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHATT",
-                "MOUNT",
-                "ATHEN",
-                "ATLAN",
-                "STWGA",
-                "STEAL",
-                "EASAL",
-                "NTHAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHATT": true,
+                "MOUNT": true,
+                "ATHEN": true,
+                "ATLAN": true,
+                "STWGA": true,
+                "STEAL": true,
+                "EASAL": true,
+                "NTHAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5557,15 +5557,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MOUNT",
-                "PIEDM",
-                "MDLND",
-                "EASGA",
-                "ATLAN",
-                "NTWGA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MOUNT": true,
+                "PIEDM": true,
+                "MDLND": true,
+                "EASGA": true,
+                "ATLAN": true,
+                "NTWGA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5596,13 +5596,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTWGA",
-                "ATHEN",
-                "EASGA",
-                "STWGA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWGA": true,
+                "ATHEN": true,
+                "EASGA": true,
+                "STWGA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5633,16 +5633,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ATHEN",
-                "MDLND",
-                "SCLOW",
-                "GACST",
-                "STEGA",
-                "STWGA",
-                "ATLAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ATHEN": true,
+                "MDLND": true,
+                "SCLOW": true,
+                "GACST": true,
+                "STEGA": true,
+                "STWGA": true,
+                "ATLAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5669,15 +5669,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWGA",
-                "ATLAN",
-                "EASGA",
-                "STEGA",
-                "FLPAN",
-                "STEAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWGA": true,
+                "ATLAN": true,
+                "EASGA": true,
+                "STEGA": true,
+                "FLPAN": true,
+                "STEAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5708,15 +5708,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "EASGA",
-                "GACST",
-                "FIRCT",
-                "GAINE",
-                "FLPAN",
-                "STWGA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASGA": true,
+                "GACST": true,
+                "FIRCT": true,
+                "GAINE": true,
+                "FLPAN": true,
+                "STWGA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5751,13 +5751,13 @@
                 4014,
                 2297
             ],
-            "adjacencyList": [
-                "SCLOW",
-                "EASGA",
-                "STEGA",
-                "FIRCT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SCLOW": true,
+                "EASGA": true,
+                "STEGA": true,
+                "FIRCT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5784,12 +5784,12 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MOUNT",
-                "MDLND",
-                "ATHEN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MOUNT": true,
+                "MDLND": true,
+                "ATHEN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5820,16 +5820,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PIEDM",
-                "MOUNT",
-                "MTRLA",
-                "PEEDE",
-                "SCLOW",
-                "EASGA",
-                "ATHEN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PIEDM": true,
+                "MOUNT": true,
+                "MTRLA": true,
+                "PEEDE": true,
+                "SCLOW": true,
+                "EASGA": true,
+                "ATHEN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5860,14 +5860,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MTRLA",
-                "SANDH",
-                "STENC",
-                "MDLND",
-                "SCLOW"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MTRLA": true,
+                "SANDH": true,
+                "STENC": true,
+                "MDLND": true,
+                "SCLOW": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5894,13 +5894,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "GACST",
-                "EASGA",
-                "MDLND",
-                "PEEDE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GACST": true,
+                "EASGA": true,
+                "MDLND": true,
+                "PEEDE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5927,17 +5927,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWVA",
-                "MTRLA",
-                "MDLND",
-                "PIEDM",
-                "ATHEN",
-                "NTWGA",
-                "CHATT",
-                "EASTN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWVA": true,
+                "MTRLA": true,
+                "MDLND": true,
+                "PIEDM": true,
+                "ATHEN": true,
+                "NTWGA": true,
+                "CHATT": true,
+                "EASTN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5964,16 +5964,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STWVA",
-                "STHVA",
-                "TRIAN",
-                "SANDH",
-                "PEEDE",
-                "MDLND",
-                "MOUNT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STWVA": true,
+                "STHVA": true,
+                "TRIAN": true,
+                "SANDH": true,
+                "PEEDE": true,
+                "MDLND": true,
+                "MOUNT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6004,14 +6004,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "STHVA",
-                "BANKS",
-                "STENC",
-                "SANDH",
-                "MTRLA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHVA": true,
+                "BANKS": true,
+                "STENC": true,
+                "SANDH": true,
+                "MTRLA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6042,13 +6042,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HAMPT",
-                "STHVA",
-                "TRIAN",
-                "STENC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HAMPT": true,
+                "STHVA": true,
+                "TRIAN": true,
+                "STENC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6079,13 +6079,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STENC",
-                "TRIAN",
-                "MTRLA",
-                "PEEDE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STENC": true,
+                "TRIAN": true,
+                "MTRLA": true,
+                "PEEDE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6116,13 +6116,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BANKS",
-                "TRIAN",
-                "SANDH",
-                "PEEDE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BANKS": true,
+                "TRIAN": true,
+                "SANDH": true,
+                "PEEDE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6153,15 +6153,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHVA",
-                "RICHM",
-                "STHVA",
-                "STWVA",
-                "CHARL",
-                "POTOM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHVA": true,
+                "RICHM": true,
+                "STHVA": true,
+                "STWVA": true,
+                "CHARL": true,
+                "POTOM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6192,14 +6192,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESMD",
-                "HAMPT",
-                "RICHM",
-                "ROANO",
-                "POTOM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESMD": true,
+                "HAMPT": true,
+                "RICHM": true,
+                "ROANO": true,
+                "POTOM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6230,13 +6230,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHVA",
-                "HAMPT",
-                "STHVA",
-                "ROANO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHVA": true,
+                "HAMPT": true,
+                "STHVA": true,
+                "ROANO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6263,16 +6263,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHARL",
-                "ROANO",
-                "STHVA",
-                "MTRLA",
-                "MOUNT",
-                "EASTN",
-                "CUMBE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHARL": true,
+                "ROANO": true,
+                "STHVA": true,
+                "MTRLA": true,
+                "MOUNT": true,
+                "EASTN": true,
+                "CUMBE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6299,16 +6299,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ROANO",
-                "RICHM",
-                "HAMPT",
-                "BANKS",
-                "TRIAN",
-                "MTRLA",
-                "STWVA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ROANO": true,
+                "RICHM": true,
+                "HAMPT": true,
+                "BANKS": true,
+                "TRIAN": true,
+                "MTRLA": true,
+                "STWVA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6343,15 +6343,15 @@
                 4358,
                 1590
             ],
-            "adjacencyList": [
-                "EASMD",
-                "WESMD",
-                "NTHVA",
-                "RICHM",
-                "STHVA",
-                "BANKS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "EASMD": true,
+                "WESMD": true,
+                "NTHVA": true,
+                "RICHM": true,
+                "STHVA": true,
+                "BANKS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6378,17 +6378,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PITTS",
-                "POTOM",
-                "CHARL",
-                "CUMBE",
-                "STHOH",
-                "STEOH",
-                "CLEVE",
-                "NTWPA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PITTS": true,
+                "POTOM": true,
+                "CHARL": true,
+                "CUMBE": true,
+                "STHOH": true,
+                "STEOH": true,
+                "CLEVE": true,
+                "NTWPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6419,15 +6419,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PITTS",
-                "WESMD",
-                "NTHVA",
-                "ROANO",
-                "CHARL",
-                "VALLE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PITTS": true,
+                "WESMD": true,
+                "NTHVA": true,
+                "ROANO": true,
+                "CHARL": true,
+                "VALLE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6458,14 +6458,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "VALLE",
-                "POTOM",
-                "ROANO",
-                "STWVA",
-                "CUMBE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "VALLE": true,
+                "POTOM": true,
+                "ROANO": true,
+                "STWVA": true,
+                "CUMBE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6492,15 +6492,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "PITTS",
-                "PAHLR",
-                "EASMD",
-                "POTOM",
-                "NTHVA",
-                "HAMPT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PITTS": true,
+                "PAHLR": true,
+                "EASMD": true,
+                "POTOM": true,
+                "NTHVA": true,
+                "HAMPT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6535,14 +6535,14 @@
                 4413,
                 1447
             ],
-            "adjacencyList": [
-                "DELAW",
-                "PHILL",
-                "PAHLR",
-                "WESMD",
-                "HAMPT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DELAW": true,
+                "PHILL": true,
+                "PAHLR": true,
+                "WESMD": true,
+                "HAMPT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6573,11 +6573,11 @@
                 4410,
                 1379
             ],
-            "adjacencyList": [
-                "PHILL",
-                "EASMD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PHILL": true,
+                "EASMD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6604,14 +6604,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNY",
-                "NTHPA",
-                "PITTS",
-                "VALLE",
-                "CLEVE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESNY": true,
+                "NTHPA": true,
+                "PITTS": true,
+                "VALLE": true,
+                "CLEVE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6642,14 +6642,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNY",
-                "NTEPA",
-                "CENPA",
-                "PITTS",
-                "NTWPA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WESNY": true,
+                "NTEPA": true,
+                "CENPA": true,
+                "PITTS": true,
+                "NTWPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6676,16 +6676,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHNY",
-                "NEWYO",
-                "NTHNJ",
-                "PHILL",
-                "CENPA",
-                "NTHPA",
-                "WESNY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "STHNY": true,
+                "NEWYO": true,
+                "NTHNJ": true,
+                "PHILL": true,
+                "CENPA": true,
+                "NTHPA": true,
+                "WESNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6716,16 +6716,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTWPA",
-                "NTHPA",
-                "CENPA",
-                "PAHLR",
-                "WESMD",
-                "POTOM",
-                "VALLE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTWPA": true,
+                "NTHPA": true,
+                "CENPA": true,
+                "PAHLR": true,
+                "WESMD": true,
+                "POTOM": true,
+                "VALLE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6756,14 +6756,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHPA",
-                "NTEPA",
-                "PHILL",
-                "PAHLR",
-                "PITTS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHPA": true,
+                "NTEPA": true,
+                "PHILL": true,
+                "PAHLR": true,
+                "PITTS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6794,14 +6794,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CENPA",
-                "PHILL",
-                "EASMD",
-                "WESMD",
-                "PITTS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CENPA": true,
+                "PHILL": true,
+                "EASMD": true,
+                "WESMD": true,
+                "PITTS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6832,16 +6832,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTEPA",
-                "NTHNJ",
-                "STHNJ",
-                "DELAW",
-                "EASMD",
-                "PAHLR",
-                "CENPA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTEPA": true,
+                "NTHNJ": true,
+                "STHNJ": true,
+                "DELAW": true,
+                "EASMD": true,
+                "PAHLR": true,
+                "CENPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6872,13 +6872,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NEWYO",
-                "NTEPA",
-                "PHILL",
-                "STHNJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NEWYO": true,
+                "NTEPA": true,
+                "PHILL": true,
+                "STHNJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6909,11 +6909,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHNJ",
-                "PHILL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NTHNJ": true,
+                "PHILL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6944,13 +6944,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHVT",
-                "ALBAN",
-                "MOHAW",
-                "FINLA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHVT": true,
+                "ALBAN": true,
+                "MOHAW": true,
+                "FINLA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6981,14 +6981,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FINLA",
-                "STHNY",
-                "NTEPA",
-                "NTHPA",
-                "NTWPA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "FINLA": true,
+                "STHNY": true,
+                "NTEPA": true,
+                "NTHPA": true,
+                "NTWPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7019,13 +7019,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHNY",
-                "MOHAW",
-                "STHNY",
-                "WESNY"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHNY": true,
+                "MOHAW": true,
+                "STHNY": true,
+                "WESNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7056,13 +7056,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHNY",
-                "ALBAN",
-                "STHNY",
-                "FINLA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHNY": true,
+                "ALBAN": true,
+                "STHNY": true,
+                "FINLA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7093,16 +7093,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHVT",
-                "STHVT",
-                "WESMA",
-                "NEWYO",
-                "STHNY",
-                "MOHAW",
-                "NTHNY"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHVT": true,
+                "STHVT": true,
+                "WESMA": true,
+                "NEWYO": true,
+                "STHNY": true,
+                "MOHAW": true,
+                "NTHNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7133,15 +7133,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WESNY",
-                "FINLA",
-                "MOHAW",
-                "ALBAN",
-                "NEWYO",
-                "NTEPA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "WESNY": true,
+                "FINLA": true,
+                "MOHAW": true,
+                "ALBAN": true,
+                "NEWYO": true,
+                "NTEPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7172,15 +7172,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CONNE",
-                "WESMA",
-                "ALBAN",
-                "STHNY",
-                "NTEPA",
-                "NTHNJ"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "CONNE": true,
+                "WESMA": true,
+                "ALBAN": true,
+                "STHNY": true,
+                "NTEPA": true,
+                "NTHNJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7211,13 +7211,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NEWYO",
-                "WESMA",
-                "NTHMA",
-                "RHODE"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NEWYO": true,
+                "WESMA": true,
+                "NTHMA": true,
+                "RHODE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7248,12 +7248,12 @@
                 4676,
                 995
             ],
-            "adjacencyList": [
-                "CONNE",
-                "NTHMA",
-                "STHMA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "CONNE": true,
+                "NTHMA": true,
+                "STHMA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7280,15 +7280,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CONNE",
-                "NTHMA",
-                "STHNH",
-                "STHVT",
-                "ALBAN",
-                "NEWYO"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "CONNE": true,
+                "NTHMA": true,
+                "STHNH": true,
+                "STHVT": true,
+                "ALBAN": true,
+                "NEWYO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7323,14 +7323,14 @@
                 4660,
                 923
             ],
-            "adjacencyList": [
-                "STHMA",
-                "RHODE",
-                "CONNE",
-                "WESMA",
-                "STHNH"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "STHMA": true,
+                "RHODE": true,
+                "CONNE": true,
+                "WESMA": true,
+                "STHNH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7361,11 +7361,11 @@
                 4700,
                 960
             ],
-            "adjacencyList": [
-                "NTHMA",
-                "RHODE"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHMA": true,
+                "RHODE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7392,13 +7392,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NTHNH",
-                "STHVT",
-                "ALBAN",
-                "NTHNY"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHNH": true,
+                "STHVT": true,
+                "ALBAN": true,
+                "NTHNY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7429,14 +7429,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHVT",
-                "NTHNH",
-                "STHNH",
-                "WESMA",
-                "ALBAN"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHVT": true,
+                "NTHNH": true,
+                "STHNH": true,
+                "WESMA": true,
+                "ALBAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7467,13 +7467,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHME",
-                "STHNH",
-                "STHVT",
-                "NTHVT"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "STHME": true,
+                "STHNH": true,
+                "STHVT": true,
+                "NTHVT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7504,14 +7504,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "STHME",
-                "NTHNH",
-                "STHVT",
-                "WESMA",
-                "NTHMA"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "STHME": true,
+                "NTHNH": true,
+                "STHVT": true,
+                "WESMA": true,
+                "NTHMA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7538,10 +7538,10 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "STHME"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "STHME": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7572,12 +7572,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "NTHME",
-                "NTHNH",
-                "STHNH"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "NTHME": true,
+                "NTHNH": true,
+                "STHNH": true
+            }
         },
         "improvementData": {
             "name": null,
