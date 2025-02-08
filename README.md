@@ -45,9 +45,9 @@ See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to
 
 ### Installation
 
-1. Get into your directory of choice and clone the repo.
+1. Get into your directory of choice and clone the dev branch.
     ```sh
-   git clone https://github.com/ian-hampton/Divided-We-Stand.git
+   git clone -b dev --single-branch https://github.com/ian-hampton/Divided-We-Stand.git
    ```
 2. Download image assets and paste them into the 'static' folder.  
     Note: Game archive images are currently unavailable.
