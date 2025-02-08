@@ -9,12 +9,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HOTAN",
-                "NAGQU",
-                "XIGAZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HOTAN": true,
+                "NAGQU": true,
+                "XIGAZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -41,17 +41,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIGAZ",
-                "NGARI",
-                "HOTAN",
-                "BAYIN",
-                "YUSHU",
-                "QAMDO",
-                "NYING",
-                "LHASA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIGAZ": true,
+                "NGARI": true,
+                "HOTAN": true,
+                "BAYIN": true,
+                "YUSHU": true,
+                "QAMDO": true,
+                "NYING": true,
+                "LHASA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -78,13 +78,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NGARI",
-                "NAGQU",
-                "LHASA",
-                "SHANN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NGARI": true,
+                "NAGQU": true,
+                "LHASA": true,
+                "SHANN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -111,13 +111,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "XIGAZ",
-                "NAGQU",
-                "NYING",
-                "SHANN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIGAZ": true,
+                "NAGQU": true,
+                "NYING": true,
+                "SHANN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -144,12 +144,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIGAZ",
-                "LHASA",
-                "NYING"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIGAZ": true,
+                "LHASA": true,
+                "NYING": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -176,14 +176,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NYING",
-                "NAGQU",
-                "YUSHU",
-                "GARZE",
-                "LIJIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NYING": true,
+                "NAGQU": true,
+                "YUSHU": true,
+                "GARZE": true,
+                "LIJIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -210,14 +210,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHANN",
-                "LHASA",
-                "NAGQU",
-                "QAMDO",
-                "LIJIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHANN": true,
+                "LHASA": true,
+                "NAGQU": true,
+                "QAMDO": true,
+                "LIJIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -244,15 +244,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "KARGI",
-                "AKSUP",
-                "XAYAR",
-                "BAYIN",
-                "NAGQU",
-                "NGARI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KARGI": true,
+                "AKSUP": true,
+                "XAYAR": true,
+                "BAYIN": true,
+                "NAGQU": true,
+                "NGARI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -279,11 +279,11 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "KIZIL",
-                "KARGI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KIZIL": true,
+                "KARGI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -314,13 +314,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "KIZIL",
-                "KASHG",
-                "AKSUP",
-                "HOTAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KIZIL": true,
+                "KASHG": true,
+                "AKSUP": true,
+                "HOTAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -347,12 +347,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "AKSUP",
-                "KARGI",
-                "KASHG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "AKSUP": true,
+                "KARGI": true,
+                "KASHG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -379,13 +379,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "KIZIL",
-                "KARGI",
-                "HOTAN",
-                "XAYAR"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KIZIL": true,
+                "KARGI": true,
+                "HOTAN": true,
+                "XAYAR": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -412,13 +412,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "AKSUP",
-                "HOTAN",
-                "BAYIN",
-                "ILIKA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "AKSUP": true,
+                "HOTAN": true,
+                "BAYIN": true,
+                "ILIKA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -445,13 +445,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XAYAR",
-                "BAYIN",
-                "TACHE",
-                "BORTA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XAYAR": true,
+                "BAYIN": true,
+                "TACHE": true,
+                "BORTA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -478,11 +478,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TACHE",
-                "ILIKA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TACHE": true,
+                "ILIKA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -513,15 +513,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ALTAY",
-                "CHANG",
-                "BAYIN",
-                "ILIKA",
-                "BORTA",
-                "KARAM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ALTAY": true,
+                "CHANG": true,
+                "BAYIN": true,
+                "ILIKA": true,
+                "BORTA": true,
+                "KARAM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -548,10 +548,10 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TACHE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TACHE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -582,13 +582,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TACHE",
-                "ALTAY",
-                "URUMQ",
-                "BAYIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TACHE": true,
+                "ALTAY": true,
+                "URUMQ": true,
+                "BAYIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -615,13 +615,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ALTAY",
-                "URUMQ",
-                "TURPA",
-                "KUMUL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ALTAY": true,
+                "URUMQ": true,
+                "TURPA": true,
+                "KUMUL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -648,14 +648,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "BAYIN",
-                "CHANG",
-                "ALTAY",
-                "FUKAN",
-                "TURPA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAYIN": true,
+                "CHANG": true,
+                "ALTAY": true,
+                "FUKAN": true,
+                "TURPA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -686,13 +686,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TACHE",
-                "CHANG",
-                "URUMQ",
-                "FUKAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TACHE": true,
+                "CHANG": true,
+                "URUMQ": true,
+                "FUKAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -719,13 +719,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FUKAN",
-                "URUMQ",
-                "BAYIN",
-                "KUMUL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FUKAN": true,
+                "URUMQ": true,
+                "BAYIN": true,
+                "KUMUL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -752,13 +752,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FUKAN",
-                "TURPA",
-                "BAYIN",
-                "JIUQU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FUKAN": true,
+                "TURPA": true,
+                "BAYIN": true,
+                "JIUQU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -785,21 +785,21 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HOTAN",
-                "XAYAR",
-                "ILIKA",
-                "TACHE",
-                "CHANG",
-                "URUMQ",
-                "TURPA",
-                "KUMUL",
-                "JIUQU",
-                "HAIXI",
-                "YUSHU",
-                "NAGQU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HOTAN": true,
+                "XAYAR": true,
+                "ILIKA": true,
+                "TACHE": true,
+                "CHANG": true,
+                "URUMQ": true,
+                "TURPA": true,
+                "KUMUL": true,
+                "JIUQU": true,
+                "HAIXI": true,
+                "YUSHU": true,
+                "NAGQU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -826,15 +826,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NAGQU",
-                "BAYIN",
-                "HAIXI",
-                "GOLOG",
-                "GARZE",
-                "QAMDO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NAGQU": true,
+                "BAYIN": true,
+                "HAIXI": true,
+                "GOLOG": true,
+                "GARZE": true,
+                "QAMDO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -861,16 +861,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUSHU",
-                "BAYIN",
-                "JIUQU",
-                "ZHANG",
-                "HAIBE",
-                "HAINA",
-                "GOLOG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUSHU": true,
+                "BAYIN": true,
+                "JIUQU": true,
+                "ZHANG": true,
+                "HAIBE": true,
+                "HAINA": true,
+                "GOLOG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -897,14 +897,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ZHANG",
-                "HAIXI",
-                "HAINA",
-                "XININ",
-                "WUWEI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ZHANG": true,
+                "HAIXI": true,
+                "HAINA": true,
+                "XININ": true,
+                "WUWEI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -931,15 +931,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "WUWEI",
-                "HAIBE",
-                "HAINA",
-                "HUANG",
-                "GANNA",
-                "LANZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WUWEI": true,
+                "HAIBE": true,
+                "HAINA": true,
+                "HUANG": true,
+                "GANNA": true,
+                "LANZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -970,14 +970,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HAIXI",
-                "GOLOG",
-                "HUANG",
-                "XININ",
-                "HAIBE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HAIXI": true,
+                "GOLOG": true,
+                "HUANG": true,
+                "XININ": true,
+                "HAIBE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1004,13 +1004,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XININ",
-                "HAINA",
-                "GOLOG",
-                "GANNA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XININ": true,
+                "HAINA": true,
+                "GOLOG": true,
+                "GANNA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1041,16 +1041,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HAIXI",
-                "HAINA",
-                "HUANG",
-                "GANNA",
-                "NGAWA",
-                "GARZE",
-                "YUSHU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HAIXI": true,
+                "HAINA": true,
+                "HUANG": true,
+                "GANNA": true,
+                "NGAWA": true,
+                "GARZE": true,
+                "YUSHU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1077,14 +1077,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "KUMUL",
-                "BAYIN",
-                "HAIXI",
-                "ZHANG",
-                "ALXAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KUMUL": true,
+                "BAYIN": true,
+                "HAIXI": true,
+                "ZHANG": true,
+                "ALXAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1111,14 +1111,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ALXAL",
-                "JIUQU",
-                "HAIXI",
-                "HAIBE",
-                "WUWEI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ALXAL": true,
+                "JIUQU": true,
+                "HAIXI": true,
+                "HAIBE": true,
+                "WUWEI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1149,15 +1149,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ALXAL",
-                "ZHANG",
-                "HAIBE",
-                "XININ",
-                "LANZH",
-                "BAIYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ALXAL": true,
+                "ZHANG": true,
+                "HAIBE": true,
+                "XININ": true,
+                "LANZH": true,
+                "BAIYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1188,14 +1188,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "WUWEI",
-                "XININ",
-                "GANNA",
-                "DINGX",
-                "BAIYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WUWEI": true,
+                "XININ": true,
+                "GANNA": true,
+                "DINGX": true,
+                "BAIYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1226,16 +1226,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WUWEI",
-                "ALXAL",
-                "ZHONG",
-                "GUYUA",
-                "TIANS",
-                "DINGX",
-                "LANZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WUWEI": true,
+                "ALXAL": true,
+                "ZHONG": true,
+                "GUYUA": true,
+                "TIANS": true,
+                "DINGX": true,
+                "LANZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1262,16 +1262,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XININ",
-                "HUANG",
-                "GOLOG",
-                "NGAWA",
-                "LONGN",
-                "DINGX",
-                "LANZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XININ": true,
+                "HUANG": true,
+                "GOLOG": true,
+                "NGAWA": true,
+                "LONGN": true,
+                "DINGX": true,
+                "LANZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1298,14 +1298,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAIYI",
-                "LANZH",
-                "GANNA",
-                "LONGN",
-                "TIANS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAIYI": true,
+                "LANZH": true,
+                "GANNA": true,
+                "LONGN": true,
+                "TIANS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1332,17 +1332,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TIANS",
-                "BAOJI",
-                "HANZH",
-                "BAZHO",
-                "MIANY",
-                "NGAWA",
-                "GANNA",
-                "DINGX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TIANS": true,
+                "BAOJI": true,
+                "HANZH": true,
+                "BAZHO": true,
+                "MIANY": true,
+                "NGAWA": true,
+                "GANNA": true,
+                "DINGX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1369,16 +1369,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GUYUA",
-                "DINGX",
-                "LONGN",
-                "BAOJI",
-                "XIANY",
-                "QINGY",
-                "BAIYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GUYUA": true,
+                "DINGX": true,
+                "LONGN": true,
+                "BAOJI": true,
+                "XIANY": true,
+                "QINGY": true,
+                "BAIYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1405,15 +1405,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YULIN",
-                "YINCH",
-                "GUYUA",
-                "TIANS",
-                "XIANY",
-                "YANAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YULIN": true,
+                "YINCH": true,
+                "GUYUA": true,
+                "TIANS": true,
+                "XIANY": true,
+                "YANAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1440,17 +1440,17 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JIUQU",
-                "ZHANG",
-                "WUWEI",
-                "BAIYI",
-                "ZHONG",
-                "YINCH",
-                "ORDOS",
-                "BAYAN"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "JIUQU": true,
+                "ZHANG": true,
+                "WUWEI": true,
+                "BAIYI": true,
+                "ZHONG": true,
+                "YINCH": true,
+                "ORDOS": true,
+                "BAYAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1477,12 +1477,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAOTO",
-                "ORDOS",
-                "ALXAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAOTO": true,
+                "ORDOS": true,
+                "ALXAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1509,16 +1509,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAYAN",
-                "BAOTO",
-                "HOHHO",
-                "SHUOZ",
-                "YULIN",
-                "YINCH",
-                "ALXAL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAYAN": true,
+                "BAOTO": true,
+                "HOHHO": true,
+                "SHUOZ": true,
+                "YULIN": true,
+                "YINCH": true,
+                "ALXAL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1545,13 +1545,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAYAN",
-                "ORDOS",
-                "HOHHO",
-                "ULANQ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAYAN": true,
+                "ORDOS": true,
+                "HOHHO": true,
+                "ULANQ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1578,14 +1578,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "BAOTO",
-                "ORDOS",
-                "ULANQ",
-                "SHUOZ",
-                "DATON"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAOTO": true,
+                "ORDOS": true,
+                "ULANQ": true,
+                "SHUOZ": true,
+                "DATON": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1612,14 +1612,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAOTO",
-                "HOHHO",
-                "DATON",
-                "ZHKOU",
-                "XILIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAOTO": true,
+                "HOHHO": true,
+                "DATON": true,
+                "ZHKOU": true,
+                "XILIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1646,14 +1646,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HINGG",
-                "TONGL",
-                "CHIFE",
-                "CHNDE",
-                "ZHKOU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HINGG": true,
+                "TONGL": true,
+                "CHIFE": true,
+                "CHNDE": true,
+                "ZHKOU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1680,13 +1680,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TONGL",
-                "XILIN",
-                "CHNDE",
-                "AOHAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TONGL": true,
+                "XILIN": true,
+                "CHNDE": true,
+                "AOHAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1713,12 +1713,12 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "AOHAN",
-                "CHNDE",
-                "CHAOY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "AOHAN": true,
+                "CHNDE": true,
+                "CHAOY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1749,19 +1749,19 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HORQI",
-                "SIPIN",
-                "SONGY",
-                "BAICH",
-                "FUXIN",
-                "CHAOY",
-                "AOHAN",
-                "CHIFE",
-                "XILIN",
-                "HINGG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HORQI": true,
+                "SIPIN": true,
+                "SONGY": true,
+                "BAICH": true,
+                "FUXIN": true,
+                "CHAOY": true,
+                "AOHAN": true,
+                "CHIFE": true,
+                "XILIN": true,
+                "HINGG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1788,14 +1788,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TONGL",
-                "SIPIN",
-                "TIELI",
-                "SHENY",
-                "FUXIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TONGL": true,
+                "SIPIN": true,
+                "TIELI": true,
+                "SHENY": true,
+                "FUXIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1822,14 +1822,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HULUN",
-                "QIQIH",
-                "BAICH",
-                "TONGL",
-                "XILIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HULUN": true,
+                "QIQIH": true,
+                "BAICH": true,
+                "TONGL": true,
+                "XILIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1856,13 +1856,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DAXIN",
-                "HEIHE",
-                "QIQIH",
-                "HINGG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DAXIN": true,
+                "HEIHE": true,
+                "QIQIH": true,
+                "HINGG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1889,11 +1889,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HULUN",
-                "HEIHE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HULUN": true,
+                "HEIHE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1920,14 +1920,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DAXIN",
-                "HULUN",
-                "QIQIH",
-                "SUIHU",
-                "YICHU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DAXIN": true,
+                "HULUN": true,
+                "QIQIH": true,
+                "SUIHU": true,
+                "YICHU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1954,13 +1954,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HEIHE",
-                "SUIHU",
-                "HARBI",
-                "JIAMU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HEIHE": true,
+                "SUIHU": true,
+                "HARBI": true,
+                "JIAMU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -1987,12 +1987,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YICHU",
-                "HARBI",
-                "SHUAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YICHU": true,
+                "HARBI": true,
+                "SHUAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2019,13 +2019,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JIAMU",
-                "HARBI",
-                "MUDAN",
-                "JIXIH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JIAMU": true,
+                "HARBI": true,
+                "MUDAN": true,
+                "JIXIH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2052,11 +2052,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHUAN",
-                "MUDAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHUAN": true,
+                "MUDAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2083,15 +2083,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HEIHE",
-                "HULUN",
-                "HINGG",
-                "BAICH",
-                "DAQIN",
-                "SUIHU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HEIHE": true,
+                "HULUN": true,
+                "HINGG": true,
+                "BAICH": true,
+                "DAQIN": true,
+                "SUIHU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2118,14 +2118,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HARBI",
-                "SUIHU",
-                "QIQIH",
-                "BAICH",
-                "SONGY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HARBI": true,
+                "SUIHU": true,
+                "QIQIH": true,
+                "BAICH": true,
+                "SONGY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2156,14 +2156,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YICHU",
-                "HEIHE",
-                "QIQIH",
-                "DAQIN",
-                "HARBI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YICHU": true,
+                "HEIHE": true,
+                "QIQIH": true,
+                "DAQIN": true,
+                "HARBI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2190,19 +2190,19 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHUAN",
-                "JIAMU",
-                "YICHU",
-                "SUIHU",
-                "DAQIN",
-                "SONGY",
-                "CCHUN",
-                "JILIN",
-                "YANBI",
-                "MUDAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHUAN": true,
+                "JIAMU": true,
+                "YICHU": true,
+                "SUIHU": true,
+                "DAQIN": true,
+                "SONGY": true,
+                "CCHUN": true,
+                "JILIN": true,
+                "YANBI": true,
+                "MUDAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2229,13 +2229,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JIXIH",
-                "SHUAN",
-                "HARBI",
-                "YANBI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JIXIH": true,
+                "SHUAN": true,
+                "HARBI": true,
+                "YANBI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2262,13 +2262,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HINGG",
-                "DAQIN",
-                "SONGY",
-                "TONGL"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HINGG": true,
+                "DAQIN": true,
+                "SONGY": true,
+                "TONGL": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2295,15 +2295,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "HARBI",
-                "DAQIN",
-                "BAICH",
-                "TONGL",
-                "SIPIN",
-                "CCHUN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HARBI": true,
+                "DAQIN": true,
+                "BAICH": true,
+                "TONGL": true,
+                "SIPIN": true,
+                "CCHUN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2334,17 +2334,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JILIN",
-                "CCHUN",
-                "SONGY",
-                "TONGL",
-                "HORQI",
-                "TIELI",
-                "FUSHU",
-                "TONGH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JILIN": true,
+                "CCHUN": true,
+                "SONGY": true,
+                "TONGL": true,
+                "HORQI": true,
+                "TIELI": true,
+                "FUSHU": true,
+                "TONGH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2375,13 +2375,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "HARBI",
-                "SONGY",
-                "SIPIN",
-                "JILIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HARBI": true,
+                "SONGY": true,
+                "SIPIN": true,
+                "JILIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2408,15 +2408,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAISH",
-                "YANBI",
-                "HARBI",
-                "CCHUN",
-                "SIPIN",
-                "TONGH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAISH": true,
+                "YANBI": true,
+                "HARBI": true,
+                "CCHUN": true,
+                "SIPIN": true,
+                "TONGH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2443,14 +2443,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAISH",
-                "JILIN",
-                "SIPIN",
-                "FUSHU",
-                "DANDO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAISH": true,
+                "JILIN": true,
+                "SIPIN": true,
+                "FUSHU": true,
+                "DANDO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2477,12 +2477,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANBI",
-                "JILIN",
-                "TONGH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANBI": true,
+                "JILIN": true,
+                "TONGH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2509,13 +2509,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MUDAN",
-                "HARBI",
-                "JILIN",
-                "BAISH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MUDAN": true,
+                "HARBI": true,
+                "JILIN": true,
+                "BAISH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2542,14 +2542,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YINCH",
-                "ZHONG",
-                "QINGY",
-                "TIANS",
-                "BAIYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YINCH": true,
+                "ZHONG": true,
+                "QINGY": true,
+                "TIANS": true,
+                "BAIYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2580,15 +2580,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "ORDOS",
-                "ALXAL",
-                "ZHONG",
-                "GUYUA",
-                "QINGY",
-                "YULIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ORDOS": true,
+                "ALXAL": true,
+                "ZHONG": true,
+                "GUYUA": true,
+                "QINGY": true,
+                "YULIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2615,13 +2615,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YINCH",
-                "ALXAL",
-                "BAIYI",
-                "GUYUA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YINCH": true,
+                "ALXAL": true,
+                "BAIYI": true,
+                "GUYUA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2652,17 +2652,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHNDE",
-                "SONGS",
-                "AOHAN",
-                "TONGL",
-                "FUXIN",
-                "JINZH",
-                "HULUD",
-                "QINHU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHNDE": true,
+                "SONGS": true,
+                "AOHAN": true,
+                "TONGL": true,
+                "FUXIN": true,
+                "JINZH": true,
+                "HULUD": true,
+                "QINHU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2689,12 +2689,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINZH",
-                "CHAOY",
-                "QINHU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINZH": true,
+                "CHAOY": true,
+                "QINHU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2725,12 +2725,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANTA",
-                "ANSHA",
-                "DANDO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANTA": true,
+                "ANSHA": true,
+                "DANDO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2761,13 +2761,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DALIA",
-                "DANDO",
-                "SHENY",
-                "JINZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DALIA": true,
+                "DANDO": true,
+                "SHENY": true,
+                "JINZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2794,14 +2794,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TONGH",
-                "FUSHU",
-                "SHENY",
-                "ANSHA",
-                "DALIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TONGH": true,
+                "FUSHU": true,
+                "SHENY": true,
+                "ANSHA": true,
+                "DALIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2832,14 +2832,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TONGH",
-                "SIPIN",
-                "TIELI",
-                "SHENY",
-                "DANDO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TONGH": true,
+                "SIPIN": true,
+                "TIELI": true,
+                "SHENY": true,
+                "DANDO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2866,13 +2866,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FUSHU",
-                "SIPIN",
-                "HORQI",
-                "SHENY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FUSHU": true,
+                "SIPIN": true,
+                "HORQI": true,
+                "SHENY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2903,16 +2903,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "DANDO",
-                "FUSHU",
-                "TIELI",
-                "HORQI",
-                "FUXIN",
-                "JINZH",
-                "ANSHA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DANDO": true,
+                "FUSHU": true,
+                "TIELI": true,
+                "HORQI": true,
+                "FUXIN": true,
+                "JINZH": true,
+                "ANSHA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2943,14 +2943,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHENY",
-                "HORQI",
-                "TONGL",
-                "CHAOY",
-                "JINZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHENY": true,
+                "HORQI": true,
+                "TONGL": true,
+                "CHAOY": true,
+                "JINZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -2981,14 +2981,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ANSHA",
-                "SHENY",
-                "FUXIN",
-                "CHAOY",
-                "HULUD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ANSHA": true,
+                "SHENY": true,
+                "FUXIN": true,
+                "CHAOY": true,
+                "HULUD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3015,14 +3015,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YIBIN",
-                "LESHA",
-                "LIANG",
-                "QUJIN",
-                "BIJIE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YIBIN": true,
+                "LESHA": true,
+                "LIANG": true,
+                "QUJIN": true,
+                "BIJIE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3049,17 +3049,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIANG",
-                "ZHAOT",
-                "BIJIE",
-                "QIANX",
-                "BAISE",
-                "WENSH",
-                "HONGH",
-                "KUNMI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIANG": true,
+                "ZHAOT": true,
+                "BIJIE": true,
+                "QIANX": true,
+                "BAISE": true,
+                "WENSH": true,
+                "HONGH": true,
+                "KUNMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3090,12 +3090,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HONGH",
-                "QUJIN",
-                "BAISE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HONGH": true,
+                "QUJIN": true,
+                "BAISE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3122,15 +3122,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LINCA",
-                "LIJIA",
-                "LIANG",
-                "KUNMI",
-                "HONGH",
-                "PUERC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LINCA": true,
+                "LIJIA": true,
+                "LIANG": true,
+                "KUNMI": true,
+                "HONGH": true,
+                "PUERC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3157,13 +3157,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "LIANG",
-                "QUJIN",
-                "HONGH",
-                "CHUXI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIANG": true,
+                "QUJIN": true,
+                "HONGH": true,
+                "CHUXI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3194,14 +3194,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "PUERC",
-                "CHUXI",
-                "KUNMI",
-                "QUJIN",
-                "WENSH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "PUERC": true,
+                "CHUXI": true,
+                "KUNMI": true,
+                "QUJIN": true,
+                "WENSH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3228,12 +3228,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LINCA",
-                "CHUXI",
-                "HONGH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LINCA": true,
+                "CHUXI": true,
+                "HONGH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3260,15 +3260,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NYING",
-                "QAMDO",
-                "GARZE",
-                "LIANG",
-                "CHUXI",
-                "LINCA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NYING": true,
+                "QAMDO": true,
+                "GARZE": true,
+                "LIANG": true,
+                "CHUXI": true,
+                "LINCA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3295,12 +3295,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIJIA",
-                "CHUXI",
-                "PUERC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIJIA": true,
+                "CHUXI": true,
+                "PUERC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3327,15 +3327,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHONG",
-                "NEIJI",
-                "LESHA",
-                "ZHAOT",
-                "BIJIE",
-                "ZUNYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHONG": true,
+                "NEIJI": true,
+                "LESHA": true,
+                "ZHAOT": true,
+                "BIJIE": true,
+                "ZUNYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3362,15 +3362,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHONG",
-                "YIBIN",
-                "LESHA",
-                "CHENG",
-                "MIANY",
-                "SUINI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHONG": true,
+                "YIBIN": true,
+                "LESHA": true,
+                "CHENG": true,
+                "MIANY": true,
+                "SUINI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3401,15 +3401,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAZHO",
-                "MIANY",
-                "NEIJI",
-                "CHONG",
-                "FENGD",
-                "DAZHO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAZHO": true,
+                "MIANY": true,
+                "NEIJI": true,
+                "CHONG": true,
+                "FENGD": true,
+                "DAZHO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3440,13 +3440,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "SHARO",
-                "FUZHO",
-                "PINGX",
-                "JIUJI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHARO": true,
+                "FUZHO": true,
+                "PINGX": true,
+                "JIUJI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3477,15 +3477,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNYA",
-                "ANKAN",
-                "HANZH",
-                "BAZHO",
-                "SUINI",
-                "FENGD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNYA": true,
+                "ANKAN": true,
+                "HANZH": true,
+                "BAZHO": true,
+                "SUINI": true,
+                "FENGD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3500,9 +3500,7 @@
             "name": null,
             "health": 99,
             "ownerID": 99,
-            "coordinates": [
-                
-            ]
+            "coordinates": []
         }
     },
     "BAZHO": {
@@ -3515,14 +3513,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HANZH",
-                "LONGN",
-                "MIANY",
-                "SUINI",
-                "DAZHO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HANZH": true,
+                "LONGN": true,
+                "MIANY": true,
+                "SUINI": true,
+                "DAZHO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3549,15 +3547,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "BAZHO",
-                "LONGN",
-                "NGAWA",
-                "CHENG",
-                "NEIJI",
-                "SUINI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAZHO": true,
+                "LONGN": true,
+                "NGAWA": true,
+                "CHENG": true,
+                "NEIJI": true,
+                "SUINI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3584,16 +3582,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NGAWA",
-                "GARZE",
-                "LIANG",
-                "ZHAOT",
-                "YIBIN",
-                "NEIJI",
-                "CHENG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NGAWA": true,
+                "GARZE": true,
+                "LIANG": true,
+                "ZHAOT": true,
+                "YIBIN": true,
+                "NEIJI": true,
+                "CHENG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3624,13 +3622,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NGAWA",
-                "LESHA",
-                "NEIJI",
-                "MIANY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NGAWA": true,
+                "LESHA": true,
+                "NEIJI": true,
+                "MIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3661,16 +3659,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GOLOG",
-                "GARZE",
-                "LESHA",
-                "CHENG",
-                "MIANY",
-                "LONGN",
-                "GANNA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GOLOG": true,
+                "GARZE": true,
+                "LESHA": true,
+                "CHENG": true,
+                "MIANY": true,
+                "LONGN": true,
+                "GANNA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3697,16 +3695,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GOLOG",
-                "YUSHU",
-                "QAMDO",
-                "LIJIA",
-                "LIANG",
-                "LESHA",
-                "NGAWA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GOLOG": true,
+                "YUSHU": true,
+                "QAMDO": true,
+                "LIJIA": true,
+                "LIANG": true,
+                "LESHA": true,
+                "NGAWA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3733,16 +3731,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GARZE",
-                "LESHA",
-                "ZHAOT",
-                "QUJIN",
-                "KUNMI",
-                "CHUXI",
-                "LIJIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GARZE": true,
+                "LESHA": true,
+                "ZHAOT": true,
+                "QUJIN": true,
+                "KUNMI": true,
+                "CHUXI": true,
+                "LIJIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3769,14 +3767,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XINGT",
-                "YANGQ",
-                "JINCH",
-                "ANYAN",
-                "LIAOC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XINGT": true,
+                "YANGQ": true,
+                "JINCH": true,
+                "ANYAN": true,
+                "LIAOC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3803,15 +3801,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DEZHO",
-                "HENGS",
-                "SHIJI",
-                "YANGQ",
-                "HANDA",
-                "LIAOC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DEZHO": true,
+                "HENGS": true,
+                "SHIJI": true,
+                "YANGQ": true,
+                "HANDA": true,
+                "LIAOC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3838,14 +3836,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "BAODI",
-                "SHUOZ",
-                "YANGQ",
-                "XINGT",
-                "HENGS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAODI": true,
+                "SHUOZ": true,
+                "YANGQ": true,
+                "XINGT": true,
+                "HENGS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3872,14 +3870,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DEZHO",
-                "CANGZ",
-                "BAODI",
-                "SHIJI",
-                "XINGT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DEZHO": true,
+                "CANGZ": true,
+                "BAODI": true,
+                "SHIJI": true,
+                "XINGT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3910,16 +3908,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LANGF",
-                "BEIJI",
-                "BAODI",
-                "HENGS",
-                "DEZHO",
-                "BINZH",
-                "TIANJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LANGF": true,
+                "BEIJI": true,
+                "BAODI": true,
+                "HENGS": true,
+                "DEZHO": true,
+                "BINZH": true,
+                "TIANJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3946,16 +3944,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BEIJI",
-                "ZHKOU",
-                "DATON",
-                "SHUOZ",
-                "SHIJI",
-                "HENGS",
-                "CANGZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BEIJI": true,
+                "ZHKOU": true,
+                "DATON": true,
+                "SHUOZ": true,
+                "SHIJI": true,
+                "HENGS": true,
+                "CANGZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -3982,16 +3980,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DATON",
-                "ULANQ",
-                "XILIN",
-                "CHNDE",
-                "SHUNY",
-                "BEIJI",
-                "BAODI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DATON": true,
+                "ULANQ": true,
+                "XILIN": true,
+                "CHNDE": true,
+                "SHUNY": true,
+                "BEIJI": true,
+                "BAODI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4018,19 +4016,19 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "AOHAN",
-                "CHIFE",
-                "XILIN",
-                "ZHKOU",
-                "SHUNY",
-                "LANGF",
-                "TNGSN",
-                "QINHU",
-                "CHAOY",
-                "SONGS"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "AOHAN": true,
+                "CHIFE": true,
+                "XILIN": true,
+                "ZHKOU": true,
+                "SHUNY": true,
+                "LANGF": true,
+                "TNGSN": true,
+                "QINHU": true,
+                "CHAOY": true,
+                "SONGS": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4057,14 +4055,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "QINHU",
-                "CHNDE",
-                "LANGF",
-                "TIANJ",
-                "DONGY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "QINHU": true,
+                "CHNDE": true,
+                "LANGF": true,
+                "TIANJ": true,
+                "DONGY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4095,13 +4093,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HULUD",
-                "CHAOY",
-                "CHNDE",
-                "TNGSN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HULUD": true,
+                "CHAOY": true,
+                "CHNDE": true,
+                "TNGSN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4132,14 +4130,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "SHUNY",
-                "ZHKOU",
-                "BAODI",
-                "CANGZ",
-                "LANGF"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHUNY": true,
+                "ZHKOU": true,
+                "BAODI": true,
+                "CANGZ": true,
+                "LANGF": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4170,14 +4168,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TNGSN",
-                "CHNDE",
-                "ZHKOU",
-                "BEIJI",
-                "LANGF"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TNGSN": true,
+                "CHNDE": true,
+                "ZHKOU": true,
+                "BEIJI": true,
+                "LANGF": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4208,12 +4206,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "TNGSN",
-                "LANGF",
-                "CANGZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TNGSN": true,
+                "LANGF": true,
+                "CANGZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4244,15 +4242,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TNGSN",
-                "CHNDE",
-                "SHUNY",
-                "BEIJI",
-                "CANGZ",
-                "TIANJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TNGSN": true,
+                "CHNDE": true,
+                "SHUNY": true,
+                "BEIJI": true,
+                "CANGZ": true,
+                "TIANJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4283,14 +4281,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ZHKOU",
-                "BAODI",
-                "SHUOZ",
-                "HOHHO",
-                "ULANQ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ZHKOU": true,
+                "BAODI": true,
+                "SHUOZ": true,
+                "HOHHO": true,
+                "ULANQ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4317,17 +4315,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DATON",
-                "HOHHO",
-                "ORDOS",
-                "YULIN",
-                "TAIYU",
-                "YANGQ",
-                "SHIJI",
-                "BAODI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DATON": true,
+                "HOHHO": true,
+                "ORDOS": true,
+                "YULIN": true,
+                "TAIYU": true,
+                "YANGQ": true,
+                "SHIJI": true,
+                "BAODI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4354,14 +4352,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "SHUOZ",
-                "YULIN",
-                "YANAN",
-                "LINFE",
-                "YANGQ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHUOZ": true,
+                "YULIN": true,
+                "YANAN": true,
+                "LINFE": true,
+                "YANGQ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4388,16 +4386,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHIJI",
-                "SHUOZ",
-                "TAIYU",
-                "LINFE",
-                "JINCH",
-                "HANDA",
-                "XINGT"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHIJI": true,
+                "SHUOZ": true,
+                "TAIYU": true,
+                "LINFE": true,
+                "JINCH": true,
+                "HANDA": true,
+                "XINGT": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4424,15 +4422,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANGQ",
-                "TAIYU",
-                "YANAN",
-                "WEINA",
-                "YUNCH",
-                "JINCH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANGQ": true,
+                "TAIYU": true,
+                "YANAN": true,
+                "WEINA": true,
+                "YUNCH": true,
+                "JINCH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4459,15 +4457,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINCH",
-                "LINFE",
-                "WEINA",
-                "SANME",
-                "LUOYA",
-                "ZHENG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINCH": true,
+                "LINFE": true,
+                "WEINA": true,
+                "SANME": true,
+                "LUOYA": true,
+                "ZHENG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4498,16 +4496,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANGQ",
-                "LINFE",
-                "YUNCH",
-                "ZHENG",
-                "KAIFE",
-                "ANYAN",
-                "HANDA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANGQ": true,
+                "LINFE": true,
+                "YUNCH": true,
+                "ZHENG": true,
+                "KAIFE": true,
+                "ANYAN": true,
+                "HANDA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4538,15 +4536,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ORDOS",
-                "SHUOZ",
-                "TAIYU",
-                "YANAN",
-                "QINGY",
-                "YINCH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ORDOS": true,
+                "SHUOZ": true,
+                "TAIYU": true,
+                "YANAN": true,
+                "QINGY": true,
+                "YINCH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4573,15 +4571,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FANGC",
-                "NANNI",
-                "GUIGA",
-                "WUZHO",
-                "MAOMI",
-                "ZHANJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FANGC": true,
+                "NANNI": true,
+                "GUIGA": true,
+                "WUZHO": true,
+                "MAOMI": true,
+                "ZHANJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4608,15 +4606,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HANZH",
-                "DAZHO",
-                "YUNYA",
-                "SHIYA",
-                "SHANL",
-                "XIANY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HANZH": true,
+                "DAZHO": true,
+                "YUNYA": true,
+                "SHIYA": true,
+                "SHANL": true,
+                "XIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4643,15 +4641,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAOJI",
-                "LONGN",
-                "BAZHO",
-                "DAZHO",
-                "ANKAN",
-                "XIANY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAOJI": true,
+                "LONGN": true,
+                "BAZHO": true,
+                "DAZHO": true,
+                "ANKAN": true,
+                "XIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4678,13 +4676,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TIANS",
-                "LONGN",
-                "HANZH",
-                "XIANY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TIANS": true,
+                "LONGN": true,
+                "HANZH": true,
+                "XIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4711,15 +4709,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NANYA",
-                "SHIYA",
-                "ANKAN",
-                "XIANY",
-                "WEINA",
-                "SANME"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NANYA": true,
+                "SHIYA": true,
+                "ANKAN": true,
+                "XIANY": true,
+                "WEINA": true,
+                "SANME": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4746,17 +4744,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "YANAN",
-                "QINGY",
-                "TIANS",
-                "BAOJI",
-                "HANZH",
-                "ANKAN",
-                "SHANL",
-                "WEINA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANAN": true,
+                "QINGY": true,
+                "TIANS": true,
+                "BAOJI": true,
+                "HANZH": true,
+                "ANKAN": true,
+                "SHANL": true,
+                "WEINA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4783,15 +4781,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANAN",
-                "XIANY",
-                "SHANL",
-                "SANME",
-                "YUNCH",
-                "LINFE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANAN": true,
+                "XIANY": true,
+                "SHANL": true,
+                "SANME": true,
+                "YUNCH": true,
+                "LINFE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4822,15 +4820,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YULIN",
-                "QINGY",
-                "XIANY",
-                "WEINA",
-                "LINFE",
-                "TAIYU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YULIN": true,
+                "QINGY": true,
+                "XIANY": true,
+                "WEINA": true,
+                "LINFE": true,
+                "TAIYU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4857,15 +4855,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ANYAN",
-                "KAIFE",
-                "SHGQU",
-                "YONGQ",
-                "XUZHO",
-                "JININ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ANYAN": true,
+                "KAIFE": true,
+                "SHGQU": true,
+                "YONGQ": true,
+                "XUZHO": true,
+                "JININ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4896,14 +4894,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TAIAN",
-                "ANYAN",
-                "HEZES",
-                "XUZHO",
-                "LINYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TAIAN": true,
+                "ANYAN": true,
+                "HEZES": true,
+                "XUZHO": true,
+                "LINYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4930,16 +4928,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIANY",
-                "XUZHO",
-                "JININ",
-                "TAIAN",
-                "JINAN",
-                "WEIFA",
-                "RIZHA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIANY": true,
+                "XUZHO": true,
+                "JININ": true,
+                "TAIAN": true,
+                "JINAN": true,
+                "WEIFA": true,
+                "RIZHA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -4970,17 +4968,17 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "QINGD",
-                "WEIFA",
-                "LINYI",
-                "LIANY"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 5000,
                 2515
-            ]
+            ],
+            "adjacentRegions": {
+                "QINGD": true,
+                "WEIFA": true,
+                "LINYI": true,
+                "LIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5007,14 +5005,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINAN",
-                "LIAOC",
-                "ANYAN",
-                "JININ",
-                "LINYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINAN": true,
+                "LIAOC": true,
+                "ANYAN": true,
+                "JININ": true,
+                "LINYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5045,16 +5043,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "DONGY",
-                "BINZH",
-                "DEZHO",
-                "LIAOC",
-                "TAIAN",
-                "LINYI",
-                "WEIFA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DONGY": true,
+                "BINZH": true,
+                "DEZHO": true,
+                "LIAOC": true,
+                "TAIAN": true,
+                "LINYI": true,
+                "WEIFA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5081,15 +5079,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DEZHO",
-                "JINAN",
-                "XINGT",
-                "HANDA",
-                "ANYAN",
-                "TAIAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DEZHO": true,
+                "JINAN": true,
+                "XINGT": true,
+                "HANDA": true,
+                "ANYAN": true,
+                "TAIAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5120,15 +5118,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINAN",
-                "BINZH",
-                "CANGZ",
-                "HENGS",
-                "XINGT",
-                "LIAOC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINAN": true,
+                "BINZH": true,
+                "CANGZ": true,
+                "HENGS": true,
+                "XINGT": true,
+                "LIAOC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5159,13 +5157,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CANGZ",
-                "DEZHO",
-                "JINAN",
-                "DONGY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CANGZ": true,
+                "DEZHO": true,
+                "JINAN": true,
+                "DONGY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5196,13 +5194,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WEIFA",
-                "JINAN",
-                "BINZH",
-                "TNGSN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WEIFA": true,
+                "JINAN": true,
+                "BINZH": true,
+                "TNGSN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5233,13 +5231,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DONGY",
-                "JINAN",
-                "LINYI",
-                "RIZHA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DONGY": true,
+                "JINAN": true,
+                "LINYI": true,
+                "RIZHA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5266,12 +5264,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANTA",
-                "WEIFA",
-                "RIZHA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANTA": true,
+                "WEIFA": true,
+                "RIZHA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5302,11 +5300,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "QINGD",
-                "DALIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "QINGD": true,
+                "DALIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5333,11 +5331,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "SANYA",
-                "ZHANJ"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "SANYA": true,
+                "ZHANJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5368,10 +5366,10 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HAIKO"
-            ],
-            "randomStartAllowed": false
+            "randomStartAllowed": false,
+            "adjacentRegions": {
+                "HAIKO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5402,14 +5400,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNCH",
-                "WEINA",
-                "SHANL",
-                "NANYA",
-                "LUOYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNCH": true,
+                "WEINA": true,
+                "SHANL": true,
+                "NANYA": true,
+                "LUOYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5440,14 +5438,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNCH",
-                "SANME",
-                "NANYA",
-                "PINGD",
-                "ZHENG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNCH": true,
+                "SANME": true,
+                "NANYA": true,
+                "PINGD": true,
+                "ZHENG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5478,15 +5476,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ZHUMA",
-                "XINYA",
-                "SUIZH",
-                "XIAYG",
-                "NANYA",
-                "PINGD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ZHUMA": true,
+                "XINYA": true,
+                "SUIZH": true,
+                "XIAYG": true,
+                "NANYA": true,
+                "PINGD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5517,16 +5515,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIAYG",
-                "SHIYA",
-                "SHANL",
-                "SANME",
-                "LUOYA",
-                "PINGD",
-                "TANGH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIAYG": true,
+                "SHIYA": true,
+                "SHANL": true,
+                "SANME": true,
+                "LUOYA": true,
+                "PINGD": true,
+                "TANGH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5553,16 +5551,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SUIZH",
-                "XIAOG",
-                "HUAGG",
-                "LUANA",
-                "FUYAN",
-                "ZHUMA",
-                "TANGH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SUIZH": true,
+                "XIAOG": true,
+                "HUAGG": true,
+                "LUANA": true,
+                "FUYAN": true,
+                "ZHUMA": true,
+                "TANGH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5589,14 +5587,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ZHOUK",
-                "FUYAN",
-                "XINYA",
-                "TANGH",
-                "PINGD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ZHOUK": true,
+                "FUYAN": true,
+                "XINYA": true,
+                "TANGH": true,
+                "PINGD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5627,15 +5625,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHGQU",
-                "BOZHO",
-                "FUYAN",
-                "ZHUMA",
-                "PINGD",
-                "KAIFE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHGQU": true,
+                "BOZHO": true,
+                "FUYAN": true,
+                "ZHUMA": true,
+                "PINGD": true,
+                "KAIFE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5666,16 +5664,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LUOYA",
-                "NANYA",
-                "TANGH",
-                "ZHUMA",
-                "ZHOUK",
-                "KAIFE",
-                "ZHENG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LUOYA": true,
+                "NANYA": true,
+                "TANGH": true,
+                "ZHUMA": true,
+                "ZHOUK": true,
+                "KAIFE": true,
+                "ZHENG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5702,14 +5700,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YONGQ",
-                "BOZHO",
-                "ZHOUK",
-                "KAIFE",
-                "HEZES"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YONGQ": true,
+                "BOZHO": true,
+                "ZHOUK": true,
+                "KAIFE": true,
+                "HEZES": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5740,14 +5738,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "KAIFE",
-                "PINGD",
-                "LUOYA",
-                "YUNCH",
-                "JINCH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "KAIFE": true,
+                "PINGD": true,
+                "LUOYA": true,
+                "YUNCH": true,
+                "JINCH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5778,16 +5776,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ANYAN",
-                "JINCH",
-                "ZHENG",
-                "PINGD",
-                "ZHOUK",
-                "SHGQU",
-                "HEZES"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ANYAN": true,
+                "JINCH": true,
+                "ZHENG": true,
+                "PINGD": true,
+                "ZHOUK": true,
+                "SHGQU": true,
+                "HEZES": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5818,16 +5816,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIAOC",
-                "HANDA",
-                "JINCH",
-                "KAIFE",
-                "HEZES",
-                "JININ",
-                "TAIAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIAOC": true,
+                "HANDA": true,
+                "JINCH": true,
+                "KAIFE": true,
+                "HEZES": true,
+                "JININ": true,
+                "TAIAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5854,15 +5852,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YIBIN",
-                "ZHAOT",
-                "QUJIN",
-                "QIANX",
-                "QIANN",
-                "ZUNYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YIBIN": true,
+                "ZHAOT": true,
+                "QUJIN": true,
+                "QIANX": true,
+                "QIANN": true,
+                "ZUNYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5889,17 +5887,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FENGD",
-                "CHONG",
-                "YIBIN",
-                "BIJIE",
-                "QIANN",
-                "QIAND",
-                "TONGR",
-                "YOUYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FENGD": true,
+                "CHONG": true,
+                "YIBIN": true,
+                "BIJIE": true,
+                "QIANN": true,
+                "QIAND": true,
+                "TONGR": true,
+                "YOUYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5926,14 +5924,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YOUYA",
-                "TUJIA",
-                "HUAIH",
-                "QIAND",
-                "ZUNYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YOUYA": true,
+                "TUJIA": true,
+                "HUAIH": true,
+                "QIAND": true,
+                "ZUNYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5960,13 +5958,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BIJIE",
-                "QUJIN",
-                "BAISE",
-                "QIANN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BIJIE": true,
+                "QUJIN": true,
+                "BAISE": true,
+                "QIANN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -5993,15 +5991,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "ZUNYI",
-                "BIJIE",
-                "QIANX",
-                "BAISE",
-                "HECHI",
-                "QIAND"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ZUNYI": true,
+                "BIJIE": true,
+                "QIANX": true,
+                "BAISE": true,
+                "HECHI": true,
+                "QIAND": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6028,15 +6026,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIUZH",
-                "HUAIH",
-                "TONGR",
-                "ZUNYI",
-                "QIANN",
-                "HECHI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIUZH": true,
+                "HUAIH": true,
+                "TONGR": true,
+                "ZUNYI": true,
+                "QIANN": true,
+                "HECHI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6063,16 +6061,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WENSH",
-                "QUJIN",
-                "QIANX",
-                "QIANN",
-                "HECHI",
-                "NANNI",
-                "FANGC"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WENSH": true,
+                "QUJIN": true,
+                "QIANX": true,
+                "QIANN": true,
+                "HECHI": true,
+                "NANNI": true,
+                "FANGC": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6099,16 +6097,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "QIANX",
-                "QIANN",
-                "QIAND",
-                "LIUZH",
-                "GUIGA",
-                "NANNI",
-                "BAISE"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "QIANX": true,
+                "QIANN": true,
+                "QIAND": true,
+                "LIUZH": true,
+                "GUIGA": true,
+                "NANNI": true,
+                "BAISE": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6135,14 +6133,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GUIGA",
-                "HECHI",
-                "QIAND",
-                "HUAIH",
-                "GUILI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GUIGA": true,
+                "HECHI": true,
+                "QIAND": true,
+                "HUAIH": true,
+                "GUILI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6173,15 +6171,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHAOY",
-                "YONGZ",
-                "WUZHO",
-                "GUIGA",
-                "LIUZH",
-                "HUAIH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHAOY": true,
+                "YONGZ": true,
+                "WUZHO": true,
+                "GUIGA": true,
+                "LIUZH": true,
+                "HUAIH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6208,17 +6206,17 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "GUIGA",
-                "GUILI",
-                "YONGZ",
-                "QINYN",
-                "ZHAOQ",
-                "YUNFU",
-                "MAOMI",
-                "QINZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "GUIGA": true,
+                "GUILI": true,
+                "YONGZ": true,
+                "QINYN": true,
+                "ZHAOQ": true,
+                "YUNFU": true,
+                "MAOMI": true,
+                "QINZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6245,15 +6243,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "QINZH",
-                "NANNI",
-                "HECHI",
-                "LIUZH",
-                "GUILI",
-                "WUZHO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "QINZH": true,
+                "NANNI": true,
+                "HECHI": true,
+                "LIUZH": true,
+                "GUILI": true,
+                "WUZHO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6280,15 +6278,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "QINZH",
-                "FANGC",
-                "BAISE",
-                "HECHI",
-                "LIUZH",
-                "GUIGA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "QINZH": true,
+                "FANGC": true,
+                "BAISE": true,
+                "HECHI": true,
+                "LIUZH": true,
+                "GUIGA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6315,12 +6313,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BAISE",
-                "NANNI",
-                "QINZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BAISE": true,
+                "NANNI": true,
+                "QINZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6347,14 +6345,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "FENGD",
-                "SUINI",
-                "NEIJI",
-                "YIBIN",
-                "ZUNYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FENGD": true,
+                "SUINI": true,
+                "NEIJI": true,
+                "YIBIN": true,
+                "ZUNYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6381,14 +6379,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ENSHI",
-                "FENGD",
-                "ZUNYI",
-                "TONGR",
-                "TUJIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ENSHI": true,
+                "FENGD": true,
+                "ZUNYI": true,
+                "TONGR": true,
+                "TUJIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6419,16 +6417,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNYA",
-                "ENSHI",
-                "YOUYA",
-                "DAZHO",
-                "SUINI",
-                "CHONG",
-                "ZUNYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNYA": true,
+                "ENSHI": true,
+                "YOUYA": true,
+                "DAZHO": true,
+                "SUINI": true,
+                "CHONG": true,
+                "ZUNYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6455,14 +6453,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHIYA",
-                "ANKAN",
-                "DAZHO",
-                "FENGD",
-                "ENSHI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHIYA": true,
+                "ANKAN": true,
+                "DAZHO": true,
+                "FENGD": true,
+                "ENSHI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6489,12 +6487,12 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "QINZH",
-                "MAOMI",
-                "HAIKO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "QINZH": true,
+                "MAOMI": true,
+                "HAIKO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6525,14 +6523,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNFU",
-                "WUZHO",
-                "QINZH",
-                "ZHANJ",
-                "YANGJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNFU": true,
+                "WUZHO": true,
+                "QINZH": true,
+                "ZHANJ": true,
+                "YANGJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6563,12 +6561,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNFU",
-                "MAOMI",
-                "JIANG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNFU": true,
+                "MAOMI": true,
+                "JIANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6599,15 +6597,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ZHAOQ",
-                "WUZHO",
-                "MAOMI",
-                "YANGJ",
-                "JIANG",
-                "GUANG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ZHAOQ": true,
+                "WUZHO": true,
+                "MAOMI": true,
+                "YANGJ": true,
+                "JIANG": true,
+                "GUANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6634,12 +6632,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YUNFU",
-                "YANGJ",
-                "GUANG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YUNFU": true,
+                "YANGJ": true,
+                "GUANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6670,13 +6668,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WUZHO",
-                "QINYN",
-                "GUANG",
-                "YUNFU"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WUZHO": true,
+                "QINYN": true,
+                "GUANG": true,
+                "YUNFU": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6703,15 +6701,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHENZ",
-                "YONGZ",
-                "WUZHO",
-                "ZHAOQ",
-                "GUANG",
-                "SHAOQ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHENZ": true,
+                "YONGZ": true,
+                "WUZHO": true,
+                "ZHAOQ": true,
+                "GUANG": true,
+                "SHAOQ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6742,16 +6740,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHENZ",
-                "QINYN",
-                "GUANG",
-                "HUIZH",
-                "HEYUA",
-                "ANYUA",
-                "CHGYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHENZ": true,
+                "QINYN": true,
+                "GUANG": true,
+                "HUIZH": true,
+                "HEYUA": true,
+                "ANYUA": true,
+                "CHGYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6778,14 +6776,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "MEIZH",
-                "ANYUA",
-                "SHAOQ",
-                "HUIZH",
-                "SHANW"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "MEIZH": true,
+                "ANYUA": true,
+                "SHAOQ": true,
+                "HUIZH": true,
+                "SHANW": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6816,16 +6814,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ANYUA",
-                "HEYUA",
-                "SHANW",
-                "JIEYA",
-                "CHAOZ",
-                "XIAME",
-                "LONGY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ANYUA": true,
+                "HEYUA": true,
+                "SHANW": true,
+                "JIEYA": true,
+                "CHAOZ": true,
+                "XIAME": true,
+                "LONGY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6852,13 +6850,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HEYUA",
-                "SHANW",
-                "GUANG",
-                "SHAOQ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HEYUA": true,
+                "SHANW": true,
+                "GUANG": true,
+                "SHAOQ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6889,17 +6887,17 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HUIZH",
-                "HEYUA",
-                "MEIZH",
-                "JIEYA"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 4790,
                 4200
-            ]
+            ],
+            "adjacentRegions": {
+                "HUIZH": true,
+                "HEYUA": true,
+                "MEIZH": true,
+                "JIEYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6926,16 +6924,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHAOZ",
-                "MEIZH",
-                "SHANW"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 4872,
                 4161
-            ]
+            ],
+            "adjacentRegions": {
+                "CHAOZ": true,
+                "MEIZH": true,
+                "SHANW": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6962,16 +6960,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIAME",
-                "MEIZH",
-                "JIEYA"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 4933,
                 4083
-            ]
+            ],
+            "adjacentRegions": {
+                "XIAME": true,
+                "MEIZH": true,
+                "JIEYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -6998,16 +6996,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "HONGK",
-                "HUIZH",
-                "SHAOQ",
-                "QINYN",
-                "ZHAOQ",
-                "YUNFU",
-                "JIANG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HONGK": true,
+                "HUIZH": true,
+                "SHAOQ": true,
+                "QINYN": true,
+                "ZHAOQ": true,
+                "YUNFU": true,
+                "JIANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7038,15 +7036,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIANY",
-                "SUQIA",
-                "YONGQ",
-                "HEZES",
-                "JININ",
-                "LINYI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIANY": true,
+                "SUQIA": true,
+                "YONGQ": true,
+                "HEZES": true,
+                "JININ": true,
+                "LINYI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7077,15 +7075,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHEYA",
-                "HUAIA",
-                "SUQIA",
-                "XUZHO",
-                "LINYI",
-                "RIZHA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHEYA": true,
+                "HUAIA": true,
+                "SUQIA": true,
+                "XUZHO": true,
+                "LINYI": true,
+                "RIZHA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7116,14 +7114,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "LIANY",
-                "HUAIA",
-                "XUZHO",
-                "YONGQ",
-                "CHUZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LIANY": true,
+                "HUAIA": true,
+                "XUZHO": true,
+                "YONGQ": true,
+                "CHUZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7154,14 +7152,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHEYA",
-                "YANGZ",
-                "CHUZH",
-                "SUQIA",
-                "LIANY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHEYA": true,
+                "YANGZ": true,
+                "CHUZH": true,
+                "SUQIA": true,
+                "LIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7192,15 +7190,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NANTO",
-                "NANJI",
-                "CHUZH",
-                "HUAIA",
-                "DAFEN",
-                "SHEYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NANTO": true,
+                "NANJI": true,
+                "CHUZH": true,
+                "HUAIA": true,
+                "DAFEN": true,
+                "SHEYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7231,14 +7229,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "XUANC",
-                "CHAOH",
-                "CHUZH",
-                "YANGZ",
-                "SUZHO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XUANC": true,
+                "CHAOH": true,
+                "CHUZH": true,
+                "YANGZ": true,
+                "SUZHO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7265,13 +7263,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NANJI",
-                "XUANC",
-                "JIAXI",
-                "SHANG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NANJI": true,
+                "XUANC": true,
+                "JIAXI": true,
+                "SHANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7302,11 +7300,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DAFEN",
-                "YANGZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DAFEN": true,
+                "YANGZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7337,13 +7335,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "DAFEN",
-                "YANGZ",
-                "HUAIA",
-                "LIANY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "DAFEN": true,
+                "YANGZ": true,
+                "HUAIA": true,
+                "LIANY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7374,16 +7372,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHEYA",
-                "YANGZ",
-                "NANTO"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 5200,
                 2830
-            ]
+            ],
+            "adjacentRegions": {
+                "SHEYA": true,
+                "YANGZ": true,
+                "NANTO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7410,16 +7408,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XINYA",
-                "HUAGG",
-                "ANQIN",
-                "CHAOH",
-                "SHUSH",
-                "CHUZH",
-                "FUYAN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XINYA": true,
+                "HUAGG": true,
+                "ANQIN": true,
+                "CHAOH": true,
+                "SHUSH": true,
+                "CHUZH": true,
+                "FUYAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7450,14 +7448,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HNGSH",
-                "JIUJI",
-                "HUAGG",
-                "LUANA",
-                "CHAOH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HNGSH": true,
+                "JIUJI": true,
+                "HUAGG": true,
+                "LUANA": true,
+                "CHAOH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7488,16 +7486,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHARO",
-                "QUZHO",
-                "HANGZ",
-                "XUANC",
-                "CHAOH",
-                "ANQIN",
-                "JIUJI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHARO": true,
+                "QUZHO": true,
+                "HANGZ": true,
+                "XUANC": true,
+                "CHAOH": true,
+                "ANQIN": true,
+                "JIUJI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7524,15 +7522,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HNGSH",
-                "HANGZ",
-                "JIAXI",
-                "SUZHO",
-                "NANJI",
-                "CHAOH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HNGSH": true,
+                "HANGZ": true,
+                "JIAXI": true,
+                "SUZHO": true,
+                "NANJI": true,
+                "CHAOH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7559,16 +7557,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NANJI",
-                "XUANC",
-                "HNGSH",
-                "ANQIN",
-                "LUANA",
-                "SHUSH",
-                "CHUZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NANJI": true,
+                "XUANC": true,
+                "HNGSH": true,
+                "ANQIN": true,
+                "LUANA": true,
+                "SHUSH": true,
+                "CHUZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7599,12 +7597,12 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "LUANA",
-                "CHAOH",
-                "CHUZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "LUANA": true,
+                "CHAOH": true,
+                "CHUZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7635,19 +7633,19 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YANGZ",
-                "NANJI",
-                "CHAOH",
-                "SHUSH",
-                "LUANA",
-                "FUYAN",
-                "BOZHO",
-                "YONGQ",
-                "SUQIA",
-                "HUAIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YANGZ": true,
+                "NANJI": true,
+                "CHAOH": true,
+                "SHUSH": true,
+                "LUANA": true,
+                "FUYAN": true,
+                "BOZHO": true,
+                "YONGQ": true,
+                "SUQIA": true,
+                "HUAIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7678,15 +7676,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "BOZHO",
-                "CHUZH",
-                "LUANA",
-                "XINYA",
-                "ZHUMA",
-                "ZHOUK"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "BOZHO": true,
+                "CHUZH": true,
+                "LUANA": true,
+                "XINYA": true,
+                "ZHUMA": true,
+                "ZHOUK": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7717,14 +7715,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHGQU",
-                "YONGQ",
-                "CHUZH",
-                "FUYAN",
-                "ZHOUK"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHGQU": true,
+                "YONGQ": true,
+                "CHUZH": true,
+                "FUYAN": true,
+                "ZHOUK": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7755,13 +7753,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SUZHO",
-                "XUANC",
-                "HANGZ",
-                "SHANG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SUZHO": true,
+                "XUANC": true,
+                "HANGZ": true,
+                "SHANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7792,15 +7790,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "JIAXI",
-                "XUANC",
-                "HNGSH",
-                "QUZHO",
-                "JINHU",
-                "SHAOX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JIAXI": true,
+                "XUANC": true,
+                "HNGSH": true,
+                "QUZHO": true,
+                "JINHU": true,
+                "SHAOX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7831,15 +7829,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINHU",
-                "LISHU",
-                "HANGZ",
-                "HNGSH",
-                "SHARO",
-                "NANPI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINHU": true,
+                "LISHU": true,
+                "HANGZ": true,
+                "HNGSH": true,
+                "SHARO": true,
+                "NANPI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7870,16 +7868,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINHU",
-                "QUZHO",
-                "NANPI",
-                "NINGD",
-                "RUIAN",
-                "YONGJ",
-                "TIAZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINHU": true,
+                "QUZHO": true,
+                "NANPI": true,
+                "NINGD": true,
+                "RUIAN": true,
+                "YONGJ": true,
+                "TIAZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7910,16 +7908,16 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TIAZH",
-                "LISHU",
-                "RUIAN"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 5315,
                 3435
-            ]
+            ],
+            "adjacentRegions": {
+                "TIAZH": true,
+                "LISHU": true,
+                "RUIAN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7946,12 +7944,12 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "YONGJ",
-                "LISHU",
-                "NINGD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "YONGJ": true,
+                "LISHU": true,
+                "NINGD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -7982,14 +7980,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NINGB",
-                "SHAOX",
-                "JINHU",
-                "LISHU",
-                "YONGJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NINGB": true,
+                "SHAOX": true,
+                "JINHU": true,
+                "LISHU": true,
+                "YONGJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8020,14 +8018,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHAOX",
-                "HANGZ",
-                "QUZHO",
-                "LISHU",
-                "TIAZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHAOX": true,
+                "HANGZ": true,
+                "QUZHO": true,
+                "LISHU": true,
+                "TIAZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8058,13 +8056,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HANGZ",
-                "JINHU",
-                "TIAZH",
-                "NINGB"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HANGZ": true,
+                "JINHU": true,
+                "TIAZH": true,
+                "NINGB": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8095,11 +8093,11 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHAOX",
-                "TIAZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHAOX": true,
+                "TIAZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8130,15 +8128,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "SUZHO",
-                "JIAXI"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 5334,
                 3060
-            ]
+            ],
+            "adjacentRegions": {
+                "SUZHO": true,
+                "JIAXI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8165,15 +8163,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FUZHO",
-                "SHARO",
-                "SANMI",
-                "QUZHO",
-                "LISHU",
-                "NINGD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FUZHO": true,
+                "SHARO": true,
+                "SANMI": true,
+                "QUZHO": true,
+                "LISHU": true,
+                "NINGD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8200,15 +8198,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NANPI",
-                "FUZHO",
-                "HUICH",
-                "LONGY",
-                "QUANZ",
-                "NINGD"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NANPI": true,
+                "FUZHO": true,
+                "HUICH": true,
+                "LONGY": true,
+                "QUANZ": true,
+                "NINGD": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8235,15 +8233,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HUICH",
-                "ANYUA",
-                "MEIZH",
-                "XIAME",
-                "QUANZ",
-                "SANMI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HUICH": true,
+                "ANYUA": true,
+                "MEIZH": true,
+                "XIAME": true,
+                "QUANZ": true,
+                "SANMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8270,13 +8268,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHAOZ",
-                "MEIZH",
-                "LONGY",
-                "QUANZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHAOZ": true,
+                "MEIZH": true,
+                "LONGY": true,
+                "QUANZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8291,9 +8289,7 @@
             "name": null,
             "health": 99,
             "ownerID": 99,
-            "coordinates": [
-                
-            ]
+            "coordinates": []
         }
     },
     "QUANZ": {
@@ -8306,13 +8302,13 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NINGD",
-                "SANMI",
-                "LONGY",
-                "XIAME"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NINGD": true,
+                "SANMI": true,
+                "LONGY": true,
+                "XIAME": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8343,14 +8339,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "RUIAN",
-                "LISHU",
-                "NANPI",
-                "SANMI",
-                "QUANZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "RUIAN": true,
+                "LISHU": true,
+                "NANPI": true,
+                "SANMI": true,
+                "QUANZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8381,18 +8377,18 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HNGSH",
-                "SHARO",
-                "NANCH",
-                "PINGX",
-                "YUEYA",
-                "XIANN",
-                "WUHAN",
-                "HUAGG",
-                "ANQIN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HNGSH": true,
+                "SHARO": true,
+                "NANCH": true,
+                "PINGX": true,
+                "YUEYA": true,
+                "XIANN": true,
+                "WUHAN": true,
+                "HUAGG": true,
+                "ANQIN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8423,15 +8419,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "FUZHO",
-                "NANCH",
-                "JIUJI",
-                "YUEYA",
-                "HENGY",
-                "JIANJ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FUZHO": true,
+                "NANCH": true,
+                "JIUJI": true,
+                "YUEYA": true,
+                "HENGY": true,
+                "JIANJ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8462,15 +8458,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HENGY",
-                "CHENZ",
-                "CHGYI",
-                "HUICH",
-                "FUZHO",
-                "PINGX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HENGY": true,
+                "CHENZ": true,
+                "CHGYI": true,
+                "HUICH": true,
+                "FUZHO": true,
+                "PINGX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8497,16 +8493,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JIANJ",
-                "HUICH",
-                "SANMI",
-                "NANPI",
-                "SHARO",
-                "NANCH",
-                "PINGX"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JIANJ": true,
+                "HUICH": true,
+                "SANMI": true,
+                "NANPI": true,
+                "SHARO": true,
+                "NANCH": true,
+                "PINGX": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8533,15 +8529,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "NANPI",
-                "FUZHO",
-                "NANCH",
-                "JIUJI",
-                "HNGSH",
-                "QUZHO"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "NANPI": true,
+                "FUZHO": true,
+                "NANCH": true,
+                "JIUJI": true,
+                "HNGSH": true,
+                "QUZHO": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8568,14 +8564,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JIANJ",
-                "CHENZ",
-                "SHAOQ",
-                "ANYUA",
-                "HUICH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JIANJ": true,
+                "CHENZ": true,
+                "SHAOQ": true,
+                "ANYUA": true,
+                "HUICH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8606,15 +8602,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHGYI",
-                "SHAOQ",
-                "HEYUA",
-                "MEIZH",
-                "LONGY",
-                "HUICH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHGYI": true,
+                "SHAOQ": true,
+                "HEYUA": true,
+                "MEIZH": true,
+                "LONGY": true,
+                "HUICH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8645,15 +8641,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "FUZHO",
-                "JIANJ",
-                "CHGYI",
-                "ANYUA",
-                "LONGY",
-                "SANMI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "FUZHO": true,
+                "JIANJ": true,
+                "CHGYI": true,
+                "ANYUA": true,
+                "LONGY": true,
+                "SANMI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8684,16 +8680,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHIYA",
-                "YUNYA",
-                "FENGD",
-                "YOUYA",
-                "TUJIA",
-                "CHGDE",
-                "YICHA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHIYA": true,
+                "YUNYA": true,
+                "FENGD": true,
+                "YOUYA": true,
+                "TUJIA": true,
+                "CHGDE": true,
+                "YICHA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8720,16 +8716,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHIYA",
-                "XIAYG",
-                "YUNYA",
-                "ENSHI",
-                "CHGDE",
-                "JINGZ",
-                "JINGM"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHIYA": true,
+                "XIAYG": true,
+                "YUNYA": true,
+                "ENSHI": true,
+                "CHGDE": true,
+                "JINGZ": true,
+                "JINGM": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8756,16 +8752,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "ANKAN",
-                "YUNYA",
-                "YICHA",
-                "XIAYG",
-                "NANYA",
-                "SHANL",
-                "ENSHI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "ANKAN": true,
+                "YUNYA": true,
+                "YICHA": true,
+                "XIAYG": true,
+                "NANYA": true,
+                "SHANL": true,
+                "ENSHI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8792,16 +8788,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINGM",
-                "YICHA",
-                "CHGDE",
-                "YUEYA",
-                "XIANN",
-                "WUHAN",
-                "XIAOG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINGM": true,
+                "YICHA": true,
+                "CHGDE": true,
+                "YUEYA": true,
+                "XIANN": true,
+                "WUHAN": true,
+                "XIAOG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8828,13 +8824,13 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WUHAN",
-                "JIUJI",
-                "YUEYA",
-                "JINGZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WUHAN": true,
+                "JIUJI": true,
+                "YUEYA": true,
+                "JINGZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8861,15 +8857,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHIYA",
-                "YICHA",
-                "JINGM",
-                "SUIZH",
-                "TANGH",
-                "NANYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHIYA": true,
+                "YICHA": true,
+                "JINGM": true,
+                "SUIZH": true,
+                "TANGH": true,
+                "NANYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8896,14 +8892,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIAYG",
-                "YICHA",
-                "JINGZ",
-                "XIAOG",
-                "SUIZH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIAYG": true,
+                "YICHA": true,
+                "JINGZ": true,
+                "XIAOG": true,
+                "SUIZH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8930,14 +8926,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIAOG",
-                "JINGM",
-                "XIAYG",
-                "TANGH",
-                "XINYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIAOG": true,
+                "JINGM": true,
+                "XIAYG": true,
+                "TANGH": true,
+                "XINYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -8968,15 +8964,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "WUHAN",
-                "JINGZ",
-                "JINGM",
-                "SUIZH",
-                "XINYA",
-                "HUAGG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "WUHAN": true,
+                "JINGZ": true,
+                "JINGM": true,
+                "SUIZH": true,
+                "XINYA": true,
+                "HUAGG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9007,14 +9003,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "JIUJI",
-                "XIANN",
-                "JINGZ",
-                "XIAOG",
-                "HUAGG"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JIUJI": true,
+                "XIANN": true,
+                "JINGZ": true,
+                "XIAOG": true,
+                "HUAGG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9031,7 +9027,7 @@
             "ownerID": 99,
             "coordinates": [
                 4557,
-                3221  
+                3221
             ]
         }
     },
@@ -9045,15 +9041,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XIAOG",
-                "WUHAN",
-                "JIUJI",
-                "ANQIN",
-                "LUANA",
-                "XINYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XIAOG": true,
+                "WUHAN": true,
+                "JIUJI": true,
+                "ANQIN": true,
+                "LUANA": true,
+                "XINYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9084,16 +9080,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "TONGR",
-                "QIAND",
-                "LIUZH",
-                "GUILI",
-                "SHAOY",
-                "CHGDE",
-                "TUJIA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TONGR": true,
+                "QIAND": true,
+                "LIUZH": true,
+                "GUILI": true,
+                "SHAOY": true,
+                "CHGDE": true,
+                "TUJIA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9120,15 +9116,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HUAIH",
-                "CHGDE",
-                "YUEYA",
-                "HENGY",
-                "YONGZ",
-                "GUILI"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HUAIH": true,
+                "CHGDE": true,
+                "YUEYA": true,
+                "HENGY": true,
+                "YONGZ": true,
+                "GUILI": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9155,15 +9151,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHENZ",
-                "HENGY",
-                "SHAOY",
-                "GUILI",
-                "WUZHO",
-                "QINYN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHENZ": true,
+                "HENGY": true,
+                "SHAOY": true,
+                "GUILI": true,
+                "WUZHO": true,
+                "QINYN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9194,15 +9190,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "HENGY",
-                "JIANJ",
-                "CHGYI",
-                "SHAOQ",
-                "YONGZ",
-                "QINYN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "HENGY": true,
+                "JIANJ": true,
+                "CHGYI": true,
+                "SHAOQ": true,
+                "YONGZ": true,
+                "QINYN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9229,15 +9225,15 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "SHAOY",
-                "YUEYA",
-                "PINGX",
-                "JIANJ",
-                "CHENZ",
-                "YONGZ"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "SHAOY": true,
+                "YUEYA": true,
+                "PINGX": true,
+                "JIANJ": true,
+                "CHENZ": true,
+                "YONGZ": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9264,14 +9260,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "CHGDE",
-                "ENSHI",
-                "YOUYA",
-                "TONGR",
-                "HUAIH"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "CHGDE": true,
+                "ENSHI": true,
+                "YOUYA": true,
+                "TONGR": true,
+                "HUAIH": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9302,16 +9298,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "JINGZ",
-                "YICHA",
-                "ENSHI",
-                "TUJIA",
-                "HUAIH",
-                "SHAOY",
-                "YUEYA"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINGZ": true,
+                "YICHA": true,
+                "ENSHI": true,
+                "TUJIA": true,
+                "HUAIH": true,
+                "SHAOY": true,
+                "YUEYA": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9338,16 +9334,16 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "JINGZ",
-                "CHGDE",
-                "SHAOY",
-                "HENGY",
-                "PINGX",
-                "JIUJI",
-                "XIANN"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "JINGZ": true,
+                "CHGDE": true,
+                "SHAOY": true,
+                "HENGY": true,
+                "PINGX": true,
+                "JIUJI": true,
+                "XIANN": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9374,14 +9370,14 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "GUANG"
-            ],
             "randomStartAllowed": true,
             "coordinates": [
                 4639,
                 4309
-            ]
+            ],
+            "adjacentRegions": {
+                "GUANG": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9408,14 +9404,14 @@
             "nukeTurns": 0,
             "edgeOfMap": false,
             "containsRegionalCapital": true,
-            "adjacencyList": [
-                "TONGL",
-                "CHIFE",
-                "CHNDE",
-                "SONGS",
-                "CHAOY"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "TONGL": true,
+                "CHIFE": true,
+                "CHNDE": true,
+                "SONGS": true,
+                "CHAOY": true
+            }
         },
         "improvementData": {
             "name": null,
@@ -9442,15 +9438,15 @@
             "nukeTurns": 0,
             "edgeOfMap": true,
             "containsRegionalCapital": false,
-            "adjacencyList": [
-                "XUZHO",
-                "SUQIA",
-                "CHUZH",
-                "BOZHO",
-                "SHGQU",
-                "HEZES"
-            ],
-            "randomStartAllowed": true
+            "randomStartAllowed": true,
+            "adjacentRegions": {
+                "XUZHO": true,
+                "SUQIA": true,
+                "CHUZH": true,
+                "BOZHO": true,
+                "SHGQU": true,
+                "HEZES": true
+            }
         },
         "improvementData": {
             "name": null,
