@@ -1277,7 +1277,7 @@ def create_player_upkeep_dict(player_id: int, game_id: str) -> dict:
         if tech_name in technology_data_dict:
             tech_dict = technology_data_dict[tech_name]
         elif tech_name in agenda_data_dict:
-            tech_dict = technology_data_dict[agenda_data_dict]
+            tech_dict = agenda_data_dict[tech_name]
         for target in tech_dict["Modifiers"]: 
             if target not in improvement_data_dict and target not in unit_data_dict:
                 # skip over effects that are not improvements or units
