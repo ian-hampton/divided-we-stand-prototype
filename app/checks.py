@@ -487,13 +487,13 @@ def update_income(game_id: str) -> None:
 
     # create dict for tracking improvement yields
     yield_dict = {}
-    for playerdata in playerdata_list:
-        yield_dict[playerdata[1]] = core.create_player_yield_dict(player_id, game_id)
+    for index, playerdata in enumerate(playerdata_list):
+        yield_dict[playerdata[1]] = core.create_player_yield_dict(index + 1, game_id)
 
     # create dict for tracking improvement upkeep costs
     upkeep_dict = {}
-    for playerdata in playerdata_list:
-        upkeep_dict[playerdata[1]] = core.create_player_upkeep_dict(player_id, game_id)
+    for index, playerdata in enumerate(playerdata_list):
+        upkeep_dict[playerdata[1]] = core.create_player_upkeep_dict(index + 1, game_id)
 
     # add income from regions
     for region_id in regdata_dict:
