@@ -585,15 +585,16 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                     decision = input(f"Enter {nation_name} decision: ")
                     if decision == "Find the Perpetrator" or decision == "Find a Scapegoat":
                         break
-                decision.append(decision)
+                decision_list.append(decision)
             for index, decision in enumerate(decision_list):
-                player_id = index + 1
+                player_id = effected_player_ids_list[index]
                 if decision == "Find the Perpetrator":
                     political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
                     political_power_stored = float(political_power_economy_data[0])
                     political_power_stored -= 5
                     political_power_economy_data[0] = core.round_total_income(political_power_stored)
                     playerdata_list[player_id - 1][10] = str(political_power_economy_data)
+                    scapegoat_nation_name = None
                 elif decision == "Find a Scapegoat":
                     political_power_economy_data = ast.literal_eval(playerdata_list[player_id - 1][10])
                     political_power_stored = float(political_power_economy_data[0])
