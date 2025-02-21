@@ -478,6 +478,7 @@ def resolve_improvement_builds(improvement_build_list, game_id, player_action_lo
         if not cost_check_passed:
             player_action_log.append(f'Failed to build {improvement_name} in region {region_id}. Insufficient resources.')
             player_action_logs[player_id - 1] = player_action_log
+            continue
 
         # pay for improvement
         i = 0
