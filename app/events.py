@@ -1104,12 +1104,12 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                     for region_id in regdata_dict:
                         region = Region(region_id, game_id)
                         if region.owner_id == 99 and region.occupier_id == 0:
-                            if current_turn_num >= 24:
+                            if current_turn_num >= 32:
                                 unit_name = 'Heavy Tank'
-                            elif current_turn_num >= 16:
-                                unit_name = 'Mechanized Infantry'
+                            elif current_turn_num >= 24:
+                                unit_name = 'Special Forces'
                             else:
-                                unit_name = 'Infantry'
+                                unit_name = 'Mechanized Infantry'
                             deploy_action_str = f'Deploy {unit_name} {region_id}'
                             private_actions_dict['Deploy'].append([99, deploy_action_str])
 
