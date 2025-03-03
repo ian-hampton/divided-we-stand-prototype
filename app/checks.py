@@ -1043,7 +1043,7 @@ def resolve_resource_shortages(game_id: str) -> None:
             # if there is still oil debt, we know it is because of energy since we already pruned all exclusively oil dependent upkeep
             energy_consumer = random.choice(energy_consumers)
             if player_count_dict.get(energy_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[energy_consumer]["Oil"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Oil"]["Upkeep Multiplier"]
+                consumer_upkeep = player_upkeep_dict[energy_consumer]["Energy"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Energy"]["Upkeep Multiplier"]
                 # destroy random consumer
                 region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
                 notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
