@@ -548,6 +548,7 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
     player_resource_market_incomes = []
     for i in range(player_count):
         player_resource_market_incomes.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
+    transactions_dict = active_games_dict[game_id]["Transactions Record"]
 
 
     #Calculate This Turn's Prices
@@ -678,6 +679,9 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
         player_action_log.append(f'Bought {desired_count} {desired_resource} from the resource market for {dollars_paid} dollars.')
         player_action_logs[player_id - 1] = player_action_log
 
+        #update statistics
+        transactions_dict[nation_name] += desired_count
+
 
     #Prune Invalid Sell Actions
     for sell_action in market_sell_action_list:
@@ -790,7 +794,6 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
             player_action_logs[player_id - 1] = player_action_log
 
             #update statistics
-            transactions_dict = active_games_dict[game_id]["Transactions Record"]
             transactions_dict[nation_name] += desired_count
 
 
@@ -835,6 +838,7 @@ def resolve_market_actions(market_buy_action_list, market_sell_action_list, stea
 
 
     # Update active_games.json
+    active_games_dict[game_id]["Transactions Record"] = transactions_dict
     with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
