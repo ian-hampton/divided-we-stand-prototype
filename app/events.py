@@ -1094,7 +1094,6 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                         destination_dict = {}
                         ending_region_id, priority = determine_target_region(region.adjacent_regions, destination_dict, game_id)
                         destination_dict[ending_region_id] = priority
-                        print(destination_dict)
                         if ending_region_id is not None:
                             movement_action_str = f'Move {region_id}-{ending_region_id}'
                             private_actions_dict['Move'].append([99, movement_action_str])
@@ -1195,12 +1194,12 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 #print diplomacy log messages
                 if infection_total != 0:
                     if cure_percentage >= 0.5:
+                        notifications.append(f"Pandemic intensify value: {intensify_value}", 2)
+                        notifications.append(f"Pandemic spread value: {spread_value}", 2)
+                    if cure_percentage >= 0.75:
                         for index, score in enumerate(infection_scores):
                             nation_name = playerdata_list[index][1]
                             notifications.append(f"{nation_name} pandemic infection score: {score}", 2)
-                    if cure_percentage >= 0.75:
-                        notifications.append(f"Pandemic intensify value: {intensify_value}", 2)
-                        notifications.append(f"Pandemic spread value: {spread_value}", 2)
                     if cure_percentage < 1:
                         notifications.append(f"Pandemic cure research progress: {completed_cure_research}/{needed_cure_research}", 2)
                     else:
