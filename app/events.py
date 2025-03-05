@@ -755,8 +755,14 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = list(sorted_vote_tally_dict.items())[:2]
-            (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            if len(sorted_vote_tally_dict) >= 2:
+                top_two = list(sorted_vote_tally_dict.items())[:2]
+                (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            elif len(sorted_vote_tally_dict) == 1:
+                winner = list(sorted_vote_tally_dict.items())[:1]
+                nation_name_1 = winner[0][0]
+                count_1 = winner[0][1]
+                count_2 = 0
             if count_1 != count_2:
                 notifications.append(f'With {count_1} votes, {nation_name_1} has been embargoed.', 2)
                 active_event_dict = {}
@@ -789,8 +795,14 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = list(sorted_vote_tally_dict.items())[:2]
-            (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            if len(sorted_vote_tally_dict) >= 2:
+                top_two = list(sorted_vote_tally_dict.items())[:2]
+                (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            elif len(sorted_vote_tally_dict) == 1:
+                winner = list(sorted_vote_tally_dict.items())[:1]
+                nation_name_1 = winner[0][0]
+                count_1 = winner[0][1]
+                count_2 = 0
             if count_1 != count_2:
                 notifications.append(f'With {count_1} votes, {nation_name_1} has been humiliated.', 2)
                 active_event_dict = {}
@@ -823,13 +835,19 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            top_two = list(sorted_vote_tally_dict.items())[:2]
-            (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            if len(sorted_vote_tally_dict) >= 2:
+                top_two = list(sorted_vote_tally_dict.items())[:2]
+                (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            elif len(sorted_vote_tally_dict) == 1:
+                winner = list(sorted_vote_tally_dict.items())[:1]
+                nation_name_1 = winner[0][0]
+                count_1 = winner[0][1]
+                count_2 = 0
             if count_1 != count_2:
                 notifications.append(f'With {count_1} votes, {nation_name_1} will receive the foreign investment.', 2)
                 active_event_dict = {}
                 active_event_dict["Chosen Nation Name"] = nation_name_1
-                active_event_dict["Expiration"] = current_turn_num + 8
+                active_event_dict["Expiration"] = current_turn_num + 17
                 active_games_dict[game_id]["Active Events"][event_name] = active_event_dict
             else:
                 notifications.append(f'Vote tied between {nation_name_1} and {nation_name_2}. No foreign investment will occur.', 2)
@@ -857,14 +875,19 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
             sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
-            print(sorted_vote_tally_dict)
-            top_two = list(sorted_vote_tally_dict.items())[:2]
-            (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            if len(sorted_vote_tally_dict) >= 2:
+                top_two = list(sorted_vote_tally_dict.items())[:2]
+                (nation_name_1, count_1), (nation_name_2, count_2) = top_two
+            elif len(sorted_vote_tally_dict) == 1:
+                winner = list(sorted_vote_tally_dict.items())[:1]
+                nation_name_1 = winner[0][0]
+                count_1 = winner[0][1]
+                count_2 = 0
             if count_1 != count_2:
                 notifications.append(f'With {count_1} votes, {nation_name_1} has been elected Mediator.', 2)
                 active_event_dict = {}
                 active_event_dict["Chosen Nation Name"] = nation_name_1
-                active_event_dict["Expiration"] = current_turn_num + 8
+                active_event_dict["Expiration"] = current_turn_num + 16
                 active_event_dict["Extended Truces List"] = []
                 active_games_dict[game_id]["Active Events"][event_name] = active_event_dict
             else:
@@ -936,12 +959,14 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                         political_power_economy_data[0] = core.round_total_income(political_power_stored)
                         playerdata_list[player_id - 1][10] = str(political_power_economy_data)
                         break
-            if vote_tally_dict != {}:
-                sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
+            sorted_vote_tally_dict = dict(sorted(vote_tally_dict.items(), key=lambda item: item[1], reverse=True))
+            if len(sorted_vote_tally_dict) >= 2:
                 top_two = list(sorted_vote_tally_dict.items())[:2]
                 (nation_name_1, count_1), (nation_name_2, count_2) = top_two
-            else:
-                count_1 = 0
+            elif len(sorted_vote_tally_dict) == 1:
+                winner = list(sorted_vote_tally_dict.items())[:1]
+                nation_name_1 = winner[0][0]
+                count_1 = winner[0][1]
                 count_2 = 0
             if count_1 != count_2:
                 notifications.append(f'With {count_1} votes, {nation_name_1} will be sanctioned.', 2)
@@ -949,9 +974,6 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
                 active_event_dict["Chosen Nation Name"] = nation_name_1
                 active_event_dict["Expiration"] = current_turn_num + 8
                 active_games_dict[game_id]["Active Events"][event_name] = active_event_dict
-            elif count_1 == 0 and count_2 == 0:
-                notifications.append(f'All nations abstained. No nation will be sanctioned.', 2)
-                active_games_dict[game_id]["Inactive Events"].append(event_name)
             else:
                 notifications.append(f'Vote tied between {nation_name_1} and {nation_name_2}. No nation will be sanctioned.', 2)
                 active_games_dict[game_id]["Inactive Events"].append(event_name)
