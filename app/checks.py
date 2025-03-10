@@ -1,5 +1,6 @@
 #STANDARD IMPORTS
 import ast
+import copy
 import csv
 import json
 import random
@@ -515,7 +516,7 @@ def update_income(game_id: str) -> None:
         # add improvement yields to total income
         nation_name = nation_name_list[player_id - 1]
         improvement_income_dict = yield_dict[nation_name][region_improvement.name]
-        improvement_yield_dict = region_improvement.calculate_yield(improvement_income_dict)
+        improvement_yield_dict = region_improvement.calculate_yield(copy.deepcopy(improvement_income_dict))
         for resource_name, amount_gained in improvement_yield_dict.items():
             if amount_gained != 0:
                 gross_income_dict[nation_name]["Total Income"][resource_name] += amount_gained
