@@ -773,11 +773,10 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
     player_information_dict['Missile Data']['Nuclear'] = f'{missile_data[1]}x Nuclear Missiles'
 
     # relations data
-    # to do - stop using relations data, just call is_at_war and is_allied instead
     relation_colors = ['#000000'] * 10
     relations_status_list = ['-'] * 10
     for index, nation_name in enumerate(nation_name_list):
-        player_id_2 = nation_name_list.index(nation_name)
+        player_id_2 = nation_name_list.index(nation_name) + 1
         if nation_name == player_information_dict['Nation Name']:
             continue
         elif wardata.are_at_war(player_id, player_id_2):
