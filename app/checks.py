@@ -1507,7 +1507,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # get set of all nations defeated in war
                 nations_defeated = set()
                 for war_name, war_dict in wardata.wardata_dict.items():
-                    if nation_name not in war_dict["combatants"] and war_dict["outcome"] != "TBD":
+                    if war_dict["outcome"] == "TBD" or nation_name not in war_dict["combatants"]:
                         # we do not care about wars player was not involved in
                         continue
                     nation_role = war_dict["combatants"][nation_name]["role"]
@@ -1524,7 +1524,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # get set of all nations you lost a war to
                 nations_lost_to = set()
                 for war_name, war_dict in wardata.wardata_dict.items():
-                    if nation_name not in war_dict["combatants"] and war_dict["outcome"] != "TBD":
+                    if war_dict["outcome"] == "TBD" or nation_name not in war_dict["combatants"]:
                         # we do not care about wars player was not involved in
                         continue
                     nation_role = war_dict["combatants"][nation_name]["role"]

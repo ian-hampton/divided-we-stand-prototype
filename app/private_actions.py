@@ -341,7 +341,7 @@ def resolve_war_declarations(war_declaration_list, game_id, current_turn_num, pl
                 # get region claims
                 region_claims_str = input(f'List the regions that {attacker_nation_name} is claiming using {war_justification}: ')
                 region_claims_list = region_claims_str.split(',')
-                all_claims_valid, playerdata_list = wardata.validate_war_claims(war_justification, region_claims_list, attacker_player_id, playerdata_list)
+                all_claims_valid, playerdata_list = wardata.validate_war_claims(war_justification, region_claims_list, attacker_nation_name, playerdata_list)
         
         # resolve war declaration
         war_name = wardata.create_war(attacker_player_id, defender_player_id, war_justification, current_turn_num, region_claims_list)

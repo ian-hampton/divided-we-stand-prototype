@@ -318,8 +318,8 @@ class WarData:
             if (
                 not self.are_at_war(player_id, main_defender_id)
                 and not core.check_for_truce(trucedata_list, player_id, main_defender_id, current_turn_num)
-                and not alliance_table.are_allied(main_attacker_name, main_defender_name)
-                and not alliance_table.former_ally_truce(main_attacker_name, main_defender_name)
+                and not alliance_table.are_allied(nation_name, main_defender_name)
+                and not alliance_table.former_ally_truce(nation_name, main_defender_name)
             ):
                 combatant_dict = copy.deepcopy(self.combatant_template)
                 combatant_dict["role"] = "Secondary Attacker"
@@ -328,17 +328,18 @@ class WarData:
         # call in main defender allies
         # possible allies: defensive pacts, puppet states, overlord
         puppet_state_id_list = core.get_subjects(playerdata_list, main_defender_name, "Puppet State")
-        defense_allies = alliance_table.get_allies(nation_name, "Defense Pact")
+        defense_allies = alliance_table.get_allies(main_defender_name, "Defense Pact")
         defense_pact_id_list = []
         for ally_name in defense_allies:
-            defense_pact_id_list.append(nation_name_list.index(nation_name) + 1)
+            defense_pact_id_list.append(nation_name_list.index(ally_name) + 1)
         ally_player_ids = set(puppet_state_id_list) | set(defense_pact_id_list)
         for player_id in ally_player_ids:
+            nation_name = playerdata_list[player_id - 1][1]
             if (
                 not self.are_at_war(player_id, main_attacker_id)
                 and not core.check_for_truce(trucedata_list, player_id, main_attacker_id, current_turn_num)
-                and not alliance_table.are_allied(main_attacker_name, main_defender_name)
-                and not alliance_table.former_ally_truce(main_attacker_name, main_defender_name)
+                and not alliance_table.are_allied(main_attacker_name, nation_name)
+                and not alliance_table.former_ally_truce(main_attacker_name, nation_name)
             ):
                 combatant_dict = copy.deepcopy(self.combatant_template)
                 combatant_dict["role"] = "Secondary Defender"
@@ -551,10 +552,10 @@ class WarData:
         
         # check that all claims are valid
         attacker_player_id = nation_name_list.index(nation_name) + 1
-        for count, region_id in region_claims_list:
+        for i, region_id in enumerate(region_claims_list):
             if region_id not in regdata_dict:
                 return False, playerdata_list
-            if count > free_claims:
+            if i + 1 > free_claims:
                 pp_economy_data = ast.literal_eval(playerdata_list[attacker_player_id - 1][10])
                 new_sum = float(pp_economy_data[0]) - claim_cost
                 if new_sum >= 0:
@@ -562,7 +563,7 @@ class WarData:
                     playerdata_list[attacker_player_id - 1][10] = str(pp_economy_data)
                 else:
                     return False, playerdata_list
-            if count > max_claims:
+            if i + 1 > max_claims:
                 return False, playerdata_list
 
         return True, playerdata_list
