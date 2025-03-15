@@ -997,6 +997,10 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, player_a
                 player_action_logs[player_id_1 - 1] = player_action_log
                 continue
 
+            # check if it has been at least 4 turns since the war began
+            # current_turn_num - war_data["startTurn"] >= 4
+            # TBA 
+
             # resolve war
             if 'Attacker' in war_role_1:
                 outcome = 'Defender Victory'
@@ -1024,6 +1028,10 @@ def resolve_peace_actions(peace_action_list, game_id, current_turn_num, player_a
                 player_action_log.append(f'Failed to white peace with {nation_name_2}. You are not the main attacker/defender or {nation_name_2} is not the main attacker/defender.')
                 player_action_logs[player_id_1 - 1] = player_action_log
                 continue
+
+            # check if it has been at least 4 turns since the war began
+            # current_turn_num - war_data["startTurn"] >= 4
+            # TBA 
                 
             # add white peace request to white_peace_dict
             if war_name in white_peace_dict:

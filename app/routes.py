@@ -769,7 +769,7 @@ def wars(full_game_id):
             case "TBD":
             
                 if current_turn_num - war_data["startTurn"] < 4:
-                    can_end_str = f"A peace deal may be negotiated by the main combatants in {current_turn_num - war_data["startTurn"]} turns."
+                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war_data["startTurn"] + 4) - current_turn_num} turns."
                 else:
                     can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
                 wardata.wardata_dict[war_name]["canEndStr"] = can_end_str
