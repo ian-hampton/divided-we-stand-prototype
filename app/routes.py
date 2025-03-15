@@ -710,7 +710,7 @@ def wars(full_game_id):
                 elif attacker_score == 0 and defender_score != 0:
                     war_status_bar = [defender_color] * 1
                 elif attacker_score == 0 and defender_score == 0:
-                    war_status_bar = attacker_color * 1
+                    war_status_bar = [attacker_color] * 1
                     war_status_bar += [defender_color] * 1
                 else:
                     # calculate attacker value
