@@ -261,7 +261,7 @@ def check_improvement_name(action, library):
     return False
 
 def check_alliance_name(action, library):
-    for alliance_name in library['Alliance name List']:
+    for alliance_name in library['Alliance Name List']:
         if alliance_name in action:
             return True
     return False

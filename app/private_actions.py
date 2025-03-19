@@ -620,6 +620,7 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
         research_masterlist.append(ast.literal_eval(playerdata[26]))
 
     # determine movement order
+    # todo - make this code suck less
     players_moving_units = []
     for unit_movement in unit_movement_list:
         player_id = unit_movement[0]
@@ -696,10 +697,12 @@ def resolve_unit_movements(unit_movement_list, game_id, player_action_logs):
             movement_status = current_region_unit.move(target_region)
             # update player log
             if attacker_player_id != 99:
-                if movement_status == True:
+                if movement_status:
                     player_action_log.append(f'Successfully moved {unit_name} {current_region_id} - {target_region_id}.')
                 else:
                     player_action_log.append(f'Failed to complete move {unit_name} {current_region_id} - {target_region_id}. Check combat log for details.')
                 player_action_logs[attacker_player_id - 1] = player_action_log
+            if movement_status:
+                current_region_id = target_region_id
 
     return player_action_logs

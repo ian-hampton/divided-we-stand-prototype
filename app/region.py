@@ -182,21 +182,23 @@ class Region:
 
         return False
     
-    def check_for_adjacent_unit(self, unit_names: set) -> bool:
+    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 99) -> bool:
         """
-        Checks if there is an unit in unit_names in an owned adjacent region.
+        Checks if there is an unit in unit_names in an adjacent region.
         
         Parameters:
             unit_names (set): A set of unit names.
+            unit_owner_id (int): Expected owner of the unit.
         
         Returns:
             bool: True if unit found. False otherwise.
         """
         from app.unit import Unit
-        owned_adjacent_list = self.owned_adjacent_regions()
         
-        for region_id in owned_adjacent_list:
+        for region_id in self.adjacent_regions:
             region_unit = Unit(region_id, self.game_id)
+            if unit_owner_id != 99 and unit_owner_id != region_unit.owner_id:
+                continue
             if region_unit.name in unit_names:
                 return True
 

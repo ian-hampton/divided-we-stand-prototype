@@ -58,9 +58,9 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
         attacker_roll_modifier += 1
     elif 'Defender' in attacker_war_role and 'Unyielding' in attacker_research_list:
         attacker_roll_modifier += 1
-    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}):
+    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
-    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}):
+    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank' and defending_unit.type == 'Infantry':
         attacker_roll_modifier += 1
@@ -71,22 +71,22 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
         defender_roll_modifier += 1
     elif 'Defender' in defender_war_role and 'Unyielding' in defender_research_list:
         defender_roll_modifier += 1
-    if defending_unit.type == 'Tank' and defender_region.check_for_adjacent_unit({"Mechanized Infantry"}):
+    if defending_unit.type == 'Tank' and defender_region.check_for_adjacent_unit({"Mechanized Infantry"}, defending_unit.owner_id):
         defender_roll_modifier += 1
-    elif defending_unit.type == 'Infantry' and defender_region.check_for_adjacent_unit({"Light Tank"}):
+    elif defending_unit.type == 'Infantry' and defender_region.check_for_adjacent_unit({"Light Tank"}, defending_unit.owner_id):
         defender_roll_modifier += 1
     if defending_unit.name == 'Main Battle Tank' and attacking_unit.type == 'Infantry':
         defender_roll_modifier += 1
 
     # calculate attacker damage modifier
     attacker_damage_modifier = 0
-    if attacker_region.check_for_adjacent_unit({"Artillery"}):
+    if attacker_region.check_for_adjacent_unit({"Artillery"}, attacking_unit.owner_id):
         wardata.append_war_log(war_name, f"    {attacker_nation_name} {attacking_unit.name} has artillery support!")
         attacker_damage_modifier += 1
 
     # calculate defender damage modifier
     defender_damage_modifier = 0
-    if defender_region.check_for_adjacent_unit({"Artillery"}):
+    if defender_region.check_for_adjacent_unit({"Artillery"}, defending_unit.owner_id):
         wardata.append_war_log(war_name, f"    {defender_nation_name} {defending_unit.name} has artillery support!")
         defender_damage_modifier += 1
 
@@ -166,30 +166,30 @@ def unit_vs_unit_fi(attacking_unit: Unit, defending_unit: Unit) -> None:
 
     # calculate attacker roll modifier
     attacker_roll_modifier = 0
-    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}):
+    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
-    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}):
+    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank' and defending_unit.type == 'Infantry':
         attacker_roll_modifier += 1
 
     # calculate defender roll modifier
     defender_roll_modifier = 0
-    if defending_unit.type == 'Tank' and defender_region.check_for_adjacent_unit({"Mechanized Infantry"}):
+    if defending_unit.type == 'Tank' and defender_region.check_for_adjacent_unit({"Mechanized Infantry"}, defending_unit.owner_id):
         defender_roll_modifier += 1
-    elif defending_unit.type == 'Infantry' and defender_region.check_for_adjacent_unit({"Light Tank"}):
+    elif defending_unit.type == 'Infantry' and defender_region.check_for_adjacent_unit({"Light Tank"}, defending_unit.owner_id):
         defender_roll_modifier += 1
     if defending_unit.name == 'Main Battle Tank' and attacking_unit.type == 'Infantry':
         defender_roll_modifier += 1
 
     # calculate attacker damage modifier
     attacker_damage_modifier = 0
-    if attacker_region.check_for_adjacent_unit({"Artillery"}):
+    if attacker_region.check_for_adjacent_unit({"Artillery"}, attacking_unit.owner_id):
         attacker_damage_modifier += 1
 
     # calculate defender damage modifier
     defender_damage_modifier = 0
-    if defender_region.check_for_adjacent_unit({"Artillery"}):
+    if defender_region.check_for_adjacent_unit({"Artillery"}, defending_unit.owner_id):
         defender_damage_modifier += 1
 
     # execute combat
@@ -284,9 +284,9 @@ def unit_vs_improvement_standard(attacking_unit: Unit, defending_improvement: Im
         attacker_roll_modifier += 1
     elif 'Defender' in attacker_war_role and 'Unyielding' in attacker_research_list:
         attacker_roll_modifier += 1
-    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}):
+    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
-    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}):
+    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank':
         attacker_roll_modifier += 1
@@ -298,7 +298,7 @@ def unit_vs_improvement_standard(attacking_unit: Unit, defending_improvement: Im
 
     # calculate attacker damage modifier
     attacker_damage_modifier = 0
-    if attacker_region.check_for_adjacent_unit({"Artillery"}):
+    if attacker_region.check_for_adjacent_unit({"Artillery"}, attacking_unit.owner_id):
         wardata.append_war_log(war_name, f"    {attacker_nation_name} {attacking_unit.name} has artillery support!")
         attacker_damage_modifier += 1
     
@@ -428,9 +428,9 @@ def unit_vs_improvement_fi(attacking_unit: Unit, defending_improvement: Improvem
 
     # calculate attacker roll modifier
     attacker_roll_modifier = 0
-    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}):
+    if attacking_unit.type == 'Tank' and attacker_region.check_for_adjacent_unit({"Mechanized Infantry"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
-    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}):
+    elif attacking_unit.type == 'Infantry' and attacker_region.check_for_adjacent_unit({"Light Tank"}, attacking_unit.owner_id):
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank':
         attacker_roll_modifier += 1
