@@ -643,9 +643,9 @@ def update_income(game_id: str) -> None:
                     gross_income_dict[ally_name]["Total Income"]["Technology"] += research_agreement_yield
                     income_str = f'&Tab;+{research_agreement_yield:.2f} from {alliance.name}.'
                     if income_str not in gross_income_dict[ally_name]["Income Strings"]["Dollars"]:
-                        gross_income_dict[ally_name]["Income Strings"]["Dollars"][income_str] = 1
+                        gross_income_dict[ally_name]["Income Strings"]["Technology"][income_str] = 1
                     else:
-                        gross_income_dict[ally_name]["Income Strings"]["Dollars"][income_str] += 1
+                        gross_income_dict[ally_name]["Income Strings"]["Technology"][income_str] += 1
     
     # apply income rate to gross income
     for nation_name, income_data in gross_income_dict.items():
