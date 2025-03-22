@@ -550,6 +550,8 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
         json.dump(active_games_dict, json_file, indent=4)
     
     # update game_records
+    # to do - game records should not be updated at all until the game is concluded
+    # really, active_games.json and game_records.json should be SQL tables
     new_game_entry = {}
     new_game_entry["Game ID"] = "temp"
     new_game_entry["Game #"] = len(game_records_dict) + 1
@@ -570,9 +572,6 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     game_records_dict[form_data_dict["Game Name"]] = new_game_entry
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
-
-    # get scenario data
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
     # copy starting map images
     files_destination = f'gamedata/{game_id}'
@@ -597,8 +596,10 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
     gamedata_dict = {}
     gamedata_dict["alliances"] = {}
+    gamedata_dict["nations"] = {}
     gamedata_dict["notifications"] = {}
     gamedata_dict["victoryConditions"] = {}
+    gamedata_dict["wars"] = {}
     with open(gamedata_filepath, 'w') as json_file:
         json.dump(gamedata_dict, json_file, indent=4)
 
@@ -607,11 +608,9 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     with open(rmdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(rm_header)
-    
-    # create wardata.json
-    wardata_dict = {}
-    with open(f'gamedata/{game_id}/wardata.json', 'w') as json_file:
-        json.dump(wardata_dict, json_file, indent=4)
+
+    # get scenario data
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
     # create playerdata file
     playerdata_filepath = f"{files_destination}/playerdata.csv"

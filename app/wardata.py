@@ -2,7 +2,6 @@ import ast
 import copy
 import csv
 import json
-from json.decoder import JSONDecodeError
 import os
 import random
 
@@ -18,21 +17,17 @@ class WarData:
     def __init__(self, game_id: str):
         
         # check if game id is valid
-        wardata_filepath = f'gamedata/{game_id}/wardata.json'
-        wardata_dict = {}
+        gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
+        gamedata_dict = {}
         try:
-            with open(wardata_filepath, 'r') as json_file:
-                wardata_dict = json.load(json_file)
+            with open(gamedata_filepath, 'r') as json_file:
+                gamedata_dict = json.load(json_file)
         except FileNotFoundError:
-            print(f"Error: Unable to locate {wardata_filepath} during Wardata class initialization.")
-        except JSONDecodeError:
-            print(f"Error: {wardata_filepath} is not a valid JSON file. Initializing with empty data.")
+            print(f"Error: Unable to locate {gamedata_filepath} during Wardata class initialization.")
 
         # set attributes now that all checks have passed
         self.game_id: str = game_id
-        
-        self.wardata_dict = wardata_dict
-        self.wardata_filepath: str = wardata_filepath
+        self.wardata_dict = gamedata_dict["wars"]
         self.war_template = {
             "startTurn": 0,
             "endTurn": 0,
@@ -80,11 +75,14 @@ class WarData:
     ################################################################################
 
     def _save_changes(self) -> None:
-        with open(self.wardata_filepath, 'r') as json_file:
-            wardata_dict = json.load(json_file)
-        wardata_dict = self.wardata_dict
-        with open(self.wardata_filepath, 'w') as json_file:
-            json.dump(wardata_dict, json_file, indent=4)
+        
+        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
+        with open(gamedata_filepath, 'r') as json_file:
+            gamedata_dict = json.load(json_file)
+        
+        gamedata_dict["wars"] = self.wardata_dict
+        with open(gamedata_filepath, 'w') as json_file:
+            json.dump(gamedata_dict, json_file, indent=4)
 
     def _generate_war_name(self, main_attacker_name: str, main_defender_name: str, war_justification: str, current_turn_num: int) -> str:
         """
