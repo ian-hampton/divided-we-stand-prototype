@@ -24,16 +24,14 @@ class Nation:
         self.missile_count: int = nation_data["missileStockpile"]["standardMissile"]
         self.nuke_count: int = nation_data["missileStockpile"]["nuclearMissile"]
 
+        self.score: int = nation_data["score"]
+        self.chosen_vc_set: str = nation_data["chosenVictorySet"]
+
         self._upkeep_manager: dict = nation_data["upkeepManager"]
         self._sets: dict = nation_data["victorySets"]
         self._resources: dict = nation_data["resources"]
         self._records: dict = nation_data["records"]
         self._improvement_count: list = nation_data["improvementCount"]
-
-        self.chosen_vc_set: str = nation_data["chosenVictorySet"]
-        if self.chosen_vc_set != "N/A":
-            self.vcs = list(self._sets[self.chosen_vc_set].keys())
-            self.vc_progress: list = list(self._sets[self.chosen_vc_set].values())
 
     def _generate_vc_sets(count: int) -> dict:
         """
@@ -96,6 +94,7 @@ class Nation:
                 "oilUpkeep": "0.00",
                 "greenUpkeep": "0.00",
             },
+            "score": 0,
             "chosenVictorySet": "N/A",
             "victorySets": vc_sets,
             "resources": {
@@ -181,6 +180,20 @@ class Nation:
 
         return Nation(nation_id, nation_data, game_id)
 
+    def get_vc_list(self) -> list:
+        """
+        This function is a piece of garbage that exists only because I do not want to refactor the frontend right now.
+
+        Returns:
+            list: List of all victory conditions across all sets.
+        """
+        results = []
+        for key in self._sets["set1"]:
+            results.append(key)
+        for key in self._sets["set2"]:
+            results.append(key)
+        return results
+
 class NationTable:
     
     def __init__(self, game_id):
@@ -248,7 +261,6 @@ class NationTable:
 
         return None
 
-    
     def save(self, nation: Nation) -> None:
         """
         Saves a Nation to the NationTable and updates gamedata.json.
@@ -273,6 +285,7 @@ class NationTable:
                 "standardMissile": nation.missile_count,
                 "nuclearMissile": nation.nuke_count
             },
+            "score": nation.score,
             "upkeepManager": nation._upkeep_manager,
             "chosenVictorySet": nation.chosen_vc_set,
             "victorySets": nation._sets,

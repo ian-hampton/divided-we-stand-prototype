@@ -19,6 +19,7 @@ from app.testing import map_tests
 from app.notifications import Notifications
 from app.alliance import AllianceTable
 from app.alliance import Alliance
+from app.nationdata import NationTable
 from app import map
 
 #ENVIROMENT IMPORTS
@@ -41,52 +42,49 @@ def check_color_correction(color):
     return color
 
 #COLOR NATION NAMES
-def color_nation_names(string, full_game_id):
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    nation_name_list = []
-    nation_color_list = []
-    with open(playerdata_filepath, 'r') as file:
-        reader = csv.reader(file)
-        next(reader,None)
-        for row in reader:
-            if row != []:
-                nation_name = row[1]
-                nation_color = row[2]
-                nation_color = check_color_correction(nation_color)
-                nation_name_list.append(nation_name)
-                nation_color_list.append(nation_color)
-    for index, nation_name in enumerate(nation_name_list):
+def color_nation_names(string: str, game_id: str) -> str:
+    """
+    Takes a string of text and colors any nation names inside it.
+    """
+
+    temp_dict = {}
+    nation_table = NationTable(game_id)
+
+    for nation in nation_table:
+        temp_dict[nation.name] = check_color_correction(nation.color)
+
+    for nation_name, nation_color in temp_dict.items():
         if nation_name in string:
-            string = string.replace(nation_name, f"""<span style="color:{nation_color_list[index]}">{nation_name}</span>""")
+            string = string.replace(nation_name, f"""<span style="color:{nation_color}">{nation_name}</span>""")
+    
     return string
         
 #REFINE PLAYERDATA FUNCTION FOR ACTIVE GAMES
-def generate_refined_player_list_active(full_game_id, current_turn_num):
-    playerdata_list = core.read_file(f'gamedata/{full_game_id}/playerdata.csv', 1)
-    refined_player_data_a = []
-    refined_player_data_b = []
-    for index, playerdata in enumerate(playerdata_list):
-        profile_id = playerdata[29]
-        gov_fp_string = f"""{playerdata[4]} - {playerdata[3]}"""
-        username = player_records_dict[profile_id]["Username"]
-        username_str = f"""<a href="profile/{profile_id}">{username}</a>"""
-        player_color = playerdata[2]
-        player_color = check_color_correction(player_color)
-        player_vc_score = 0
-        if current_turn_num != 0:
-            vc_results = checks.check_victory_conditions(full_game_id, index + 1, current_turn_num)
-            for entry in vc_results:
-                if entry:
-                    player_vc_score += 1
-        if player_vc_score > 0:
-            refined_player_data_a.append([playerdata[1], player_vc_score, gov_fp_string, username_str, player_color, player_color])
+def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> list:
+    """
+    Creates list of nations that is shown alongside each game.
+    """
+
+    data_a = []
+    data_b = []
+    nation_table = NationTable(game_id)
+   
+    for nation in nation_table:
+        gov_fp_str = f"{nation.fp} - {nation.gov}"
+        username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[profile_id]["Username"]}</a>"""
+        player_color = check_color_correction(nation.color)
+        # tba - fix duplicate player color (second one should be redundant)
+        if nation.score > 0:
+            data_a.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
         else:
-            refined_player_data_b.append([playerdata[1], player_vc_score, gov_fp_string, username_str, player_color, player_color])
-    filtered_player_data_a = sorted(refined_player_data_a, key=itemgetter(0), reverse=False)
-    filtered_player_data_a = sorted(filtered_player_data_a, key=itemgetter(1), reverse=True)
-    filtered_player_data_b = sorted(refined_player_data_b, key=itemgetter(0), reverse=False)
-    refined_player_data = filtered_player_data_a + filtered_player_data_b
-    return refined_player_data
+            data_b.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
+
+    filtered_data_a = sorted(data_a, key=itemgetter(0), reverse=False)
+    filtered_data_a = sorted(filtered_data_a, key=itemgetter(1), reverse=True)
+    filtered_data_b = sorted(data_b, key=itemgetter(0), reverse=False)
+    data = filtered_data_a + filtered_data_b
+
+    return data
 
 #REFINE PLAYERDATA FUNCTION FOR INACTIVE GAMES
 def generate_refined_player_list_inactive(game_data):
@@ -126,78 +124,70 @@ def generate_refined_player_list_inactive(game_data):
 @main.route('/games')
 def games():
     
-    #read json files
+    # read game files
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
-    
-    #get dict of active games
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    #read active games
+    # read active games
     for game_id, game_data in active_games_dict.items():
         current_turn = game_data["Statistics"]["Current Turn"]
         if current_turn == "Turn N/A":
             continue
+
+        nation_table = NationTable(game_id)
         
         match current_turn:
 
             case "Starting Region Selection in Progress":
-                #get title and game link
+                # get title and game link
                 game_name = game_data["Game Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                #get status
+                # get status
                 game_data["Status"] = current_turn
-                #get player information
+                # get player information
                 refined_player_data = []
-                playerdata_list = core.read_file(f'gamedata/{game_id}/playerdata.csv', 1)
-                for playerdata in playerdata_list:
-                    profile_id = playerdata[30]
-                    username = player_records_dict[profile_id]["Username"]
-                    username_str = f"""<a href="profile/{profile_id}">{username}</a>"""
-                    refined_player_data.append([playerdata[1], 0, 'TBD', username_str, '#ffffff', '#ffffff'])
-                #get image
+                for nation in nation_table:
+                    username = player_records_dict[nation.player_id]["Username"]
+                    username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
+                    refined_player_data.append([nation.name, 0, 'TBD', username_str, '#ffffff', '#ffffff'])
+                # get image
                 game_map = game_data["Information"]["Map"]
                 if game_map == "United States 2.0":
                     game_map = "united_states"
                 image_url = url_for('main.get_mainmap', full_game_id=game_id)
-                pass
 
             case "Nation Setup in Progress":
-                #get title and game link
+                # get title and game link
                 game_name = game_data["Game Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                #get status
+                # get status
                 game_data["Status"] = current_turn
-                #get player information
+                # get player information
                 refined_player_data = []
-                playerdata_list = core.read_file(f'gamedata/{game_id}/playerdata.csv', 1)
-                for playerdata in playerdata_list:
-                    profile_id = playerdata[30]
-                    username = player_records_dict[profile_id]["Username"]
-                    username_str = f"""<a href="profile/{profile_id}">{username}</a>"""
-                    player_color = playerdata[2]
-                    player_color_2 = check_color_correction(player_color)
-                    refined_player_data.append([playerdata[1], 0, 'TBD', username_str, player_color, player_color_2])
-                #get image
+                for nation in nation_table:
+                    username = player_records_dict[nation.player_id]["Username"]
+                    username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
+                    player_color_2 = check_color_correction(nation.color)
+                    refined_player_data.append([nation.name, 0, 'TBD', username_str, nation.color, player_color_2])
+                # get image
                 image_url = url_for('main.get_mainmap', full_game_id=game_id)
-                pass
 
             case _:
-                #get title and game link
+                # get title and game link
                 game_name = game_data["Game Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                #get status
+                # get status
                 if game_data["Game Active"]:
                     game_data["Status"] = f"Turn {current_turn}"
                 else:
                     game_data["Status"] = "Game Over!"
-                #get player information
+                # get player information
                 refined_player_data = generate_refined_player_list_active(game_id, current_turn)
-                #get image
+                # get image
                 image_url = url_for('main.get_mainmap', full_game_id=game_id)
-                pass
         
         game_data["Playerdata Masterlist"] = refined_player_data
         game_data["image_url"] = image_url
@@ -503,18 +493,6 @@ for profile_id in profile_id_list:
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
-    #define additional functions
-    def define_victory_conditions(row8, row9):
-        vc_set1 = ast.literal_eval(row8)
-        vc1a = vc_set1[0]
-        vc2a = vc_set1[1]
-        vc3a = vc_set1[2]
-        vc_set2 = ast.literal_eval(row9)
-        vc1b = vc_set2[0]
-        vc2b = vc_set2[1]
-        vc3b = vc_set2[2]
-        return vc1a, vc2a, vc3a, vc1b, vc2b, vc3b
-    
     #read the contents of active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -557,73 +535,67 @@ def game_load(full_game_id):
         victory_string = color_nation_names(victory_string, full_game_id)
         return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
     
-    #load active state
+    # load active state
+    # tba - fix this garbage when you get around to redoing the frontend
     match game1_turn:
         
         case "Starting Region Selection in Progress":
+            
             form_key = "main.stage1_resolution"
             player_data = []
-            with open(f'gamedata/{full_game_id}/playerdata.csv', 'r') as file:
-                reader = csv.reader(file)
-                next(reader,None)
-                for index, row in enumerate(reader):
-                    if row != []:
-                        player_number = row[0]
-                        player_color = row[2]
-                        player_id = f'p{index + 1}'
-                        regioninput_id = f'regioninput_{player_id}'
-                        colordropdown_id = f'colordropdown_{player_id}'
-                        vc1a, vc2a, vc3a, vc1b, vc2b, vc3b = define_victory_conditions(row[8], row[9])
-                        refined_player_data = [player_number, player_id, player_color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, regioninput_id, colordropdown_id]
-                        player_data.append(refined_player_data)
-                active_player_data = player_data.pop(0)
+            nation_table = NationTable(full_game_id)
+            
+            for nation in nation_table:
+                p_id = f'p{nation.id}'
+                regioninput_id = f'regioninput_{p_id}'
+                colordropdown_id = f'colordropdown_{p_id}'
+                vc1a, vc2a, vc3a, vc1b, vc2b, vc3b = nation.get_vc_list()
+                refined_player_data = [f"Player #{nation.id}", p_id, nation.color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, regioninput_id, colordropdown_id]
+                player_data.append(refined_player_data)
+            active_player_data = player_data.pop(0)
+            
             return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case "Nation Setup in Progress":
+            
             form_key = "main.stage2_resolution"
             player_data = []
-            with open(f'gamedata/{full_game_id}/playerdata.csv', 'r') as file:
-                reader = csv.reader(file)
-                next(reader,None)
-                for index, row in enumerate(reader):
-                    if row != []:
-                        player_number = row[0]
-                        player_color = row[2]
-                        player_id = f'p{index + 1}'
-                        nameinput_id = f"nameinput_{player_id}"
-                        govinput_id = f"govinput_{player_id}"
-                        fpinput_id = f"fpinput_{player_id}"
-                        vcinput_id = f"vcinput_{player_id}"
-                        vc1a, vc2a, vc3a, vc1b, vc2b, vc3b = define_victory_conditions(row[8], row[9])
-                        refined_player_data = [player_number, player_id, player_color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, nameinput_id, govinput_id, fpinput_id, vcinput_id]
-                        player_data.append(refined_player_data)
-                active_player_data = player_data.pop(0)
+            nation_table = NationTable(full_game_id)
+            
+            for nation in nation_table:
+                p_id = f'p{nation.id}'
+                nameinput_id = f"nameinput_{p_id}"
+                govinput_id = f"govinput_{p_id}"
+                fpinput_id = f"fpinput_{p_id}"
+                vcinput_id = f"vcinput_{p_id}"
+                vc1a, vc2a, vc3a, vc1b, vc2b, vc3b = nation.get_vc_list()
+                refined_player_data = [f"Player #{nation.id}", p_id, nation.color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, nameinput_id, govinput_id, fpinput_id, vcinput_id]
+                player_data.append(refined_player_data)
+            active_player_data = player_data.pop(0)
+            
             return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
         
         case _:
+            
             form_key = "main.turn_resolution"
             main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
             player_data = []
-            with open(f'gamedata/{full_game_id}/playerdata.csv', 'r') as file:
-                reader = csv.reader(file)
-                next(reader,None)
-                for index, row in enumerate(reader):
-                    if row != []:
-                        player_number = row[0]
-                        nation_name = row[1]
-                        player_color = row[2]
-                        player_id = f'p{index + 1}' 
-                        public_actions_textarea_id = f"public_textarea_{player_id}"
-                        private_actions_textarea_id = f"private_textarea_{player_id}"
-                        nation_sheet_url = f'{full_game_id}/player{index + 1}'
-                        refined_player_data = [player_number, player_id, player_color, nation_name, public_actions_textarea_id, private_actions_textarea_id, nation_sheet_url]
-                        player_data.append(refined_player_data)
-                active_player_data = player_data.pop(0)
+            nation_table = NationTable(full_game_id)
+            for nation in nation_table:
+                p_id = f'p{nation.id}'
+                public_actions_textarea_id = f"public_textarea_{p_id}"
+                private_actions_textarea_id = f"private_textarea_{p_id}"
+                nation_sheet_url = f'{full_game_id}/player{nation.id}'
+                refined_player_data = [f"Player #{nation.id}", p_id, nation.color, nation.name, public_actions_textarea_id, private_actions_textarea_id, nation_sheet_url]
+                player_data.append(refined_player_data)
+            active_player_data = player_data.pop(0)
+            
             with open(f'active_games.json', 'r') as json_file:  
                 active_games_dict = json.load(json_file)
             current_event_dict = active_games_dict[full_game_id]["Current Event"]
             if current_event_dict != {}:
                 form_key = "main.event_resolution"
+            
             return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
 
 #GENERATE NATION SHEET PAGES
