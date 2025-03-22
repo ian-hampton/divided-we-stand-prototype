@@ -30,7 +30,7 @@ class Region:
         self.purchase_cost: int = self.data["purchaseCost"]
         self.resource: str = self.data["regionResource"]
         self.fallout: int = self.data["nukeTurns"]
-        self.adjacent_regions: list = self.data["adjacencyList"]
+        self.adjacent_regions: dict = self.data["adjacentRegions"]
         self.is_edge: bool = self.data["edgeOfMap"]
         self.is_significant: bool = self.data["containsRegionalCapital"]
         self.is_start: bool = self.data["randomStartAllowed"]
@@ -127,9 +127,8 @@ class Region:
         Returns:
             list: region_ids of adjacent region owned by the player.
         """
-        adjacent_list = self.adjacent_regions
         owned_adjacent_list = []
-        for region_id in adjacent_list:
+        for region_id in self.adjacent_regions:
             temp = Region(region_id, self.game_id)
             if temp.owner_id == self.owner_id:
                 owned_adjacent_list.append(region_id)
@@ -173,9 +172,8 @@ class Region:
             bool: True if improvement found. False otherwise.
         """
         from app.improvement import Improvement
-        owned_adjacent_list = self.owned_adjacent_regions()
         
-        for region_id in owned_adjacent_list:
+        for region_id in self.owned_adjacent_regions():
             region_improvement = Improvement(region_id, self.game_id)
             if region_improvement.name in improvement_names:
                 return True
