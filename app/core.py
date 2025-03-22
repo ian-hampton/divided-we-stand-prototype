@@ -22,6 +22,8 @@ from app.wardata import WarData
 from app.notifications import Notifications
 from app.alliance import Alliance
 from app.alliance import AllianceTable
+from app.nationdata import Nation
+from app.nationdata import NationTable
 
 
 #TURN PROCESSING PROCEDURE
@@ -136,8 +138,6 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         tech = research_data_dict[key]
         if tech["Cost"] == 5:
             five_point_research_list.append(key)
-    with open(f'gamedata/{game_id}/gamedata.json', 'r') as json_file:
-        gamedata_dict = json.load(json_file)
     
     # read and update playerdata
     for index, player in enumerate(playerdata_list):
@@ -179,31 +179,12 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
                 starting_list = random.sample(five_point_research_list, 3)
                 player[26] = str(starting_list)
 
-    # add vc playerdata
-    # to do - move this into regular playerdata once playerdata rework happens
-    for playerdata in playerdata_list:
-        gamedata_dict["victoryConditions"][playerdata[1]] = [False, False, False]
-    
-    # create records
-    file_names = ['largest_nation', 'strongest_economy', 'largest_military', 'most_research']
-    starting_records_data = [['Turn', 0]]
-    for playerdata in playerdata_list:
-        starting_records_data.append([playerdata[1], 0])
-    for file_name in file_names:
-        with open(f'gamedata/{game_id}/{file_name}.csv', 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(starting_records_data)
-
     # update playerdata.csv
+    # this intermediary save is needed because of the logic of the functions below
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
-
-    # create trucedata.csv
-    with open(f'gamedata/{game_id}/trucedata.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(trucedata_header)
 
     # update misc info in playerdata
     for i in range(player_count):
@@ -234,6 +215,27 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
         writer = csv.writer(file)
         writer.writerow(player_data_header)
         writer.writerows(playerdata_list)
+
+    # update nation data
+    with open(f'gamedata/{game_id}/gamedata.json', 'r') as json_file:
+        gamedata_dict = json.load(json_file)
+    # add vc data - move this into regular playerdata once playerdata rework happens
+    for playerdata in playerdata_list:
+        gamedata_dict["victoryConditions"][playerdata[1]] = [False, False, False]
+    for index, player in enumerate(playerdata_list):
+        if player[0] != "":
+            gamedata_dict[player_nation_name_list[index].title()] = {}
+            records_dict = {
+                "militaryStrength": [],
+                "nationSize": [],
+                "netIncome": [],
+                "researchCount": [],
+                "transactionCount": []
+            }
+            gamedata_dict[player_nation_name_list[index].title()]["records"] = records_dict
+    # save gamedata
+    with open(f'gamedata/{game_id}/gamedata.json', 'w') as json_file:
+        json.dump(gamedata_dict, json_file, indent=4)
     
     # update game_settings
     with open('active_games.json', 'r') as json_file:
@@ -259,10 +261,6 @@ def resolve_stage2_processing(game_id, player_nation_name_list, player_governmen
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    # save gamedata
-    with open(f'gamedata/{game_id}/gamedata.json', 'w') as json_file:
-        json.dump(gamedata_dict, json_file, indent=4)
-
     # update visuals
     current_turn_num = 1
     map_name = active_games_dict[game_id]["Information"]["Map"]
@@ -499,15 +497,18 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 #TURN PROCESSING FUNCTIONS
 ################################################################################
 
-def create_new_game(game_id, form_data_dict, profile_ids_list):
-    '''
-    Backend code for creating the files for a new game. Returns nothing.
+def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> None:
+    """
+    Backend code for creating the files for a new game.
 
-    Parameters:
-    - full_game_id: A valid game_id to be used for the new game.
-    - form_data_dict: Dictionary of data gathered from the turn resolution HTML form.
-    - profile_ids_list: A list of all the profile ids of players participating in the game.
-    '''
+    Params:
+        game_id (str): A valid game_id to be used for the new game.
+        form_data_dict (dict): Dictionary of data gathered from the turn resolution HTML form.
+        user_id_list (list): A list of all the user ids of players participating in the game.
+
+    Returns:
+        None
+    """
 
     # open game record files
     with open('active_games.json', 'r') as json_file:
@@ -592,6 +593,18 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
         with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
 
+    # create rmdata file
+    rmdata_filepath = f'{files_destination}/rmdata.csv'
+    with open(rmdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(rm_header)
+
+    # create trucedata.csv
+    # to do - store in gamedata.json and create truce class?
+    with open(f'gamedata/{game_id}/trucedata.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(trucedata_header)
+
     # create gamedata.json
     gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
     gamedata_dict = {}
@@ -603,63 +616,10 @@ def create_new_game(game_id, form_data_dict, profile_ids_list):
     with open(gamedata_filepath, 'w') as json_file:
         json.dump(gamedata_dict, json_file, indent=4)
 
-    # create rmdata file
-    rmdata_filepath = f'{files_destination}/rmdata.csv'
-    with open(rmdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(rm_header)
-
-    # get scenario data
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-
-    # create playerdata file
-    playerdata_filepath = f"{files_destination}/playerdata.csv"
-    player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count","Status","Global ID"]
-    player_data_temp_a = ["TBD","#ffffff","TBD","TBD","0/0","1:1","TBD"]
-    victory_conditions_list = []
-    player_data_temp_b = [['0.00',100,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],['0.00',50,'0.00',100],[False, False, False, False],[0,0],['Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral','Neutral'],['0.00','0.00','0.00','0.00'],['Capital Resource: None.','Owned Regions: 0','Occupied Regions: 0','Undeveloped Regions: 0','You cannot issue Economic Sanctions.','You cannot issue Military Sanctions.'],"[]","[]",[0] * len(improvement_data_dict), 'Independent Nation']
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(player_data_header)
-        for i in range(int(form_data_dict["Player Count"])):
-            victory_conditions_list = []
-            random_easy_list = random.sample(easy_list, len(easy_list))
-            random_normal_list = random.sample(normal_list, len(normal_list))
-            random_hard_list = random.sample(hard_list, len(hard_list))
-            set_a = []
-            set_a.append(random_easy_list.pop())
-            set_a.append(random_normal_list.pop())
-            set_a.append(random_hard_list.pop())
-            set_b = []
-            set_b.append(random_easy_list.pop())
-            set_b.append(random_normal_list.pop())
-            set_b.append(random_hard_list.pop())
-            victory_conditions_list.append(set_a)
-            victory_conditions_list.append(set_b)
-            player_number = f"Player #{i+1}"
-            player_data_line = player_data_temp_a + victory_conditions_list + player_data_temp_b
-            player_data_line.append(profile_ids_list[i])
-            player_data_line.insert(0, player_number)
-            writer.writerow(player_data_line)
-    relations_data_all = []
-    for i in range(int(form_data_dict["Player Count"])):
-        relations_row = []
-        player_number = "Player #" + str(i+1)
-        relations_row.append(player_number)
-        for i in range(int(form_data_dict["Player Count"])):
-            relations_row.append('Neutral')
-        while len(relations_row) < 11:
-            relations_row.append('-')
-        relations_data_all.append(relations_row)
-    for index, entry in enumerate(relations_data_all):
-        entry[index + 1] = '-'
-    playerdata_list = read_file(playerdata_filepath, 1)
-    for index, entry in enumerate(playerdata_list):
-        entry[23] = relations_data_all[index]
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(player_data_header)
-        writer.writerows(playerdata_list)
+    # create nationdata
+    nation_table = NationTable(game_id)
+    for i, user_id in enumerate(user_id_list):
+        nation_table.create(i + 1, user_id)
 
 def erase_game(full_game_id):
     '''
@@ -1609,35 +1569,6 @@ crime_syndicate_rates = [80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 #war and unit/improvement list data
 RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
 unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
-
-#victory conditions
-easy_list = [
-    "Breakthrough",
-    "Diversified Economy",
-    "Energy Economy",
-    "Industrial Focus",
-    "Leading Defense",
-    "Major Exporter",
-    "Reconstruction Effort",
-    "Secure Strategic Resources"
-]
-normal_list = [
-    "Backstab",
-    "Diversified Army",
-    "Hegemony",
-    "New Empire",
-    "Nuclear Deterrent",
-    "Reliable Ally",
-    "Sphere of Influence",
-    "Warmonger"
-]
-hard_list = [
-    "Economic Domination",
-    "Influence Through Trade",
-    "Military Superpower",
-    "Scientific Leader",
-    "Territorial Control"
-]
 
 #color dictionaries
 player_colors_hex = {
