@@ -15,6 +15,7 @@ from app import public_actions
 from app import private_actions
 from app import checks
 from app import events
+from app import palette
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
@@ -29,41 +30,42 @@ from app.nationdata import NationTable
 #TURN PROCESSING PROCEDURE
 ################################################################################
 
-def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
-    '''
-    Resolves turn processing for a game in stage one.
+def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
+    """
+    Resolves stage one setup for a new game.
 
     Parameters:
-    - game_id: The full game_id of the active game.
-    - starting_region_list: A list of player starting region ids gathered from turn resolution HTML form. 
-    - player_color_list: A list of player colors gathered from turn resolution HTML form. 
-    '''
+        game_id (str): Game ID string.
+        contents_dict (dict): A dictionary containing the setup data for each player.
+    """
 
     # get game files
+    nation_table = NationTable(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
+    # update nation colors
+    for nation_id, setup_data in contents_dict.items():
+        color_name = setup_data["color"]
+        nation = nation_table.get(nation_id)
+        player_color = palette.str_to_hex(color_name)
+        nation.color = player_color
+        nation_table.save(nation)
 
-    # create hex color list
-    hexadecimal_player_color_list = []
-    for player_color in player_color_list:
-        new_player_color = player_colors_hex[player_color]
-        hexadecimal_player_color_list.append(new_player_color)
-    
-
-    # Place Starting Capitals For Players
+    # place chosen starts
     random_assignment_list = []
-    for index, region_id in enumerate(starting_region_list):
-        player_id = index + 1
-        if region_id in regdata_dict:
-            starting_region = Region(region_id, game_id)
-            starting_region_improvement = Improvement(region_id, game_id)
-            starting_region.set_owner_id(player_id)
-            starting_region_improvement.set_improvement("Capital")
-        else:
-            random_assignment_list.append(player_id)
-    
-    # place starting capitals for players who want random start
+    for nation_id, setup_data in contents_dict.items():
+        region_id = setup_data["start"]
+        if region_id is None or region_id not in regdata_dict:
+            random_assignment_list.append(nation_id)
+            continue
+        starting_region = Region(region_id, game_id)
+        starting_region_improvement = Improvement(region_id, game_id)
+        starting_region.set_owner_id(nation_id)
+        starting_region_improvement.set_improvement("Capital")
+
+    # place random starts
+    random.shuffle(random_assignment_list)
     for random_assignment_player_id in random_assignment_list:
         while True:
             # randomly select a region
@@ -88,16 +90,6 @@ def resolve_stage1_processing(game_id, starting_region_list, player_color_list):
                 random_region_improvement = Improvement(random_region_id, game_id)
                 random_region_improvement.set_improvement("Capital")
                 break
-    
-    # read and update playerdata
-    playerdata_list = read_file(f'gamedata/{game_id}/playerdata.csv', 1)
-    for index, player in enumerate(playerdata_list):
-        player[2] = hexadecimal_player_color_list[index]
-    early_player_data_header = ["Player","Nation Name","Color","Government","Foreign Policy","Military Capacity","Trade Fee","Stability Data","VC Set A","VC Set B","Dollars","Political Power","Technology","Coal","Oil","Green Energy","Basic Materials","Common Metals","Advanced Metals","Uranium","Rare Earth Elements","Alliance Data","Missile Data","Diplomatic Relations","Upkeep Manager","Miscellaneous Information","Income Details","Completed Research","Improvement Count"]
-    with open(f'gamedata/{game_id}/playerdata.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(early_player_data_header)
-        writer.writerows(playerdata_list)
     
     # update active_games.json
     with open('active_games.json', 'r') as json_file:
@@ -1571,6 +1563,7 @@ RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Gre
 unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
 
 #color dictionaries
+# tba - remove all of these and use palette instead
 player_colors_hex = {
     "Brown": "#603913",
     "Coral": "#ff974e",
@@ -1627,25 +1620,6 @@ player_colors_conversions = {
     "#f384ae": (243, 132, 174, 255),
     "#b66317": (182, 99, 23, 255),
     "#ffd64b": (255, 214, 75, 255)
-}
-
-player_colors_normal_to_occupied = {
-    (96, 57, 19, 255): (144, 87, 33, 255),
-    (255, 151, 78, 255): (255, 170, 111, 255),
-    (0, 59, 132, 255): (0, 78, 174, 255),
-    (16, 85, 0, 255): (24, 126, 0, 255),
-    (90, 0, 157, 255): (126, 0, 221, 255),
-    (179, 0, 0, 255): (212, 0, 0, 255),
-    (0, 150, 255, 255): (87, 186, 255, 255),
-    (91, 176, 0, 255): (110, 212, 0, 255),
-    (182, 84, 255, 255): (200, 127, 255, 255),
-    (255, 61, 61, 255): (255, 102, 102, 255),
-    (139, 42, 26, 255): (184, 56, 35, 255),
-    (159, 135, 87, 255): (175, 154, 110, 255),
-    (255, 150, 0, 255): (255, 175, 61, 255),
-    (243, 132, 174, 255): (244, 160, 192, 255),
-    (182, 99, 23, 255): (197, 116, 41, 255),
-    (255, 214, 75, 255): (255, 230, 142, 255),
 }
 
 player_colors_normal_to_occupied_hex = {

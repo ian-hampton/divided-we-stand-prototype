@@ -1271,20 +1271,22 @@ def get_controlmap(full_game_id):
 
 #ACTION PROCESSING
 ################################################################################
+
 @main.route('/stage1_resolution', methods=['POST'])
 def stage1_resolution():
-    #process form data
+    
     full_game_id = request.form.get('full_game_id')
-    starting_region_list  = []
-    player_color_list = []
-    for i in range(1, 11):
-        starting_region_str = request.form.get(f'regioninput_p{i}')
-        if starting_region_str:
-            starting_region_list.append(starting_region_str)
-        player_color_str = request.form.get(f'colordropdown_p{i}')
-        if player_color_str:
-            player_color_list.append(player_color_str)
-    core.resolve_stage1_processing(full_game_id, starting_region_list, player_color_list)
+    nation_table = NationTable(full_game_id)
+
+    contents_dict = {}
+    for i in range(len(nation_table)):
+        nation_id = i + 1
+        contents_dict[nation_id] = {}
+        contents_dict[nation_id]["start"] = request.form.get(f'regioninput_p{nation_id}')
+        contents_dict[nation_id]["color"] = request.form.get(f'colordropdown_p{nation_id}')
+    
+    core.resolve_stage1_processing(full_game_id, contents_dict)
+    
     return redirect(f'/{full_game_id}')
 
 @main.route('/stage2_resolution', methods=['POST'])

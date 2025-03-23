@@ -7,7 +7,7 @@ class Nation:
 
         self.game_id = game_id
 
-        self.id = int(nation_id)
+        self.id = nation_id
         self.name: str = nation_data["nationName"]
         self.player_id = nation_data["playerID"]
         self.color = nation_data["color"]
@@ -210,6 +210,9 @@ class NationTable:
         # set attributes
         self.game_id: str = game_id
         self.data: dict = gamedata_dict["nations"]
+        self._name_to_id = {}
+        for nation in self:
+            self._name_to_id[nation.name] = nation.id
 
     def __iter__(self):
         for nation_id, nation_data in self.data.items():
@@ -218,6 +221,21 @@ class NationTable:
     def __len__(self):
         return len(self.data)
     
+    def _get_name_from_id(self, nation_name: str) -> str | None:
+        """
+        Params:
+            nation_name (str): A nation name.
+        
+        Returns:
+            str: Corresponding nation id or None if no match found.
+        """
+        
+        # tba - make this function smarter and able to handle non-exact matches
+        if nation_name in self._name_to_id:
+            return self._name_to_id[nation_name]
+        
+        return None
+
     def create(self, nation_id: int, player_id: int) -> Nation:
         """
         Factory method to create new Nation instance.
@@ -234,30 +252,28 @@ class NationTable:
         self.save(new_nation)
 
         return new_nation
-    
-    def get(self, nation_identifier: str | int) -> Nation:
+
+    def get(self, nation_identifier: str) -> Nation:
         """
         Retrieves a Nation from the NationTable.
 
         Params:
-            nation_identifier (str | int): Either the nation name or the nation id.
+            nation_identifier (str): Either the nation name or the nation id.
         
         Returns:
             Nation: Nation corresponding to nation_identifier or None if match not found.
         """
 
-        if isinstance(nation_identifier, int):
-            nation_id = nation_identifier
-            if nation_id in self.data:
-                return Nation(nation_id, self.data[nation_id], self.game_id)
-            
-        elif isinstance(nation_identifier, str):
-            nation_name_dict = {}
-            for nation in self:
-                nation_name_dict[nation.name] = nation.id
-            if nation_identifier in nation_name_dict:
-                nation_id = nation_name_dict[nation_identifier]
-                return Nation(nation_id, self.data[nation_id], self.game_id)
+        nation_id = str(nation_identifier)
+
+        # check if nation id was provided
+        if nation_id in self.data:
+            return Nation(nation_id, self.data[nation_id], self.game_id)
+        
+        # check if nation name was provided
+        nation_id = self._get_name_from_id(nation_identifier)
+        if nation_id is not None:
+            return Nation(nation_id, self.data[nation_id], self.game_id)
 
         return None
 
@@ -306,6 +322,10 @@ class NationTable:
         gamedata_dict["nations"] = self.data
         with open(gamedata_filepath, 'w') as json_file:
             json.dump(gamedata_dict, json_file, indent=4)
+
+        self._name_to_id = {}
+        for nation in self:
+            self._name_to_id[nation.name] = nation.id
 
 # to do - move these to a scenario file
 EASY_LIST = [
