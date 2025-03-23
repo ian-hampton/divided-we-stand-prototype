@@ -1,18 +1,16 @@
-# STANDARD IMPORTS
 import csv
 from datetime import datetime
 import json
 import random
 
-# ENVIROMENT IMPORTS
 from PIL import Image, ImageDraw
 
-# GAME IMPORTS
 from app import core
+from app import palette
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
-
+from app.nationdata import NationTable
 
 class MainMap:
 
@@ -28,9 +26,8 @@ class MainMap:
         This function populates the map with random improvements.
         """
         
-        # get filepaths and lists
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_location, 1)
+        # get game data
+        nation_table = NationTable(self.game_id)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
         region_id_list = list(regdata_dict.keys())
@@ -43,7 +40,7 @@ class MainMap:
         
         # place improvements randomly
         count = 0
-        placement_quota = 2 * len(playerdata_list)
+        placement_quota = 2 * len(nation_table)
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
@@ -102,7 +99,7 @@ class MainMap:
         print("Updating main map...")
         
         # get filepaths
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
+        nation_table = NationTable(self.game_id)
         match self.turn_num:
             case "Starting Region Selection in Progress" | "Nation Setup in Progress":
                 main_map_save_location = f'gamedata/{self.game_id}/images/0.png'
@@ -118,16 +115,18 @@ class MainMap:
         
         
         # get game data
-        playerdata_list = core.read_file(playerdata_location, 1)
-        nation_info_masterlist = core.get_nation_info(playerdata_list)
-        player_color_list = generate_player_color_list(playerdata_location)
+        nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
-        
+
+        # to do - get rid of this garbage list
+        player_color_list = []
+        for nation in nation_table:
+            player_color_list.append(nation.color)
 
         # Color Regions in Map Image
         main_image = Image.open(main_filepath)
@@ -236,7 +235,8 @@ class MainMap:
                     unit_cords = (cord_x, cord_y)
                 # get unit color
                 if region_unit.owner_id != 0 and region_unit.owner_id != 99:
-                    player_color_str = nation_info_masterlist[region_unit.owner_id - 1][1]
+                    nation = nation_table.get(region_unit.owner_id)
+                    player_color_str = nation.color
                 elif region_unit.owner_id == 0 and "Foreign Invasion" in active_games_dict[self.game_id]["Active Events"]:
                     player_color_str = active_games_dict[self.game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
                 unit_filepath = f'app/static/images/units/{region_unit.abbrev()}{player_color_str}.png'
@@ -360,12 +360,16 @@ class ControlMap:
         texture_filepath = f"{image_resources_filepath}/texture.png"
        
         # get game data
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
-        player_color_list = generate_player_color_list(playerdata_location)
+        nation_table = NationTable(self.game_id)
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
+
+        # to do - get rid of this garbage list
+        player_color_list = []
+        for nation in nation_table:
+            player_color_list.append(nation.color)
 
         # color regions
         main_image = Image.open(main_filepath)
@@ -391,28 +395,6 @@ class ControlMap:
         
         main_image.save(control_map_save_location)
 
-
-def generate_player_color_list(playerdata_location: str) -> list:
-    """
-    Gets a list of all player colors in RGB form.
-
-    Params:
-        playerdata_location (str): Filepath to playerdata.csv.
-    """
-
-    player_color_list = []
-
-    with open(playerdata_location, 'r') as file:
-        reader = csv.reader(file)
-        next(reader,None)
-        for row in reader:
-            if row != []:
-                player_color_hex = row[2]
-                player_color_rgb = core.player_colors_conversions[player_color_hex]
-                player_color_list.append(player_color_rgb)
-
-    return player_color_list
-
 def map_color_fill(owner_id: int, occupier_id: int, player_color_list: list, region_id: str, start_cords_updated: tuple, main_image: Image, full_game_id: str, active_games_dict: dict) -> None:
     """
     Determines what fill color to use for main map and control map generation, depending on region ownership and occupation.
@@ -426,20 +408,21 @@ def determine_region_color(owner_id: int, occupier_id: int, player_color_list: l
     """
     Cheap solution for determing region color.
     Future Ian if you allow this code to survive the next refactoring I will strangle you.
+        "I am sorry but it is not yet time" - Future Ian
     """
-    
+
     if owner_id != 99:
-        fill_color = player_color_list[owner_id - 1]
+        fill_color = palette.hex_to_tup(player_color_list[owner_id - 1], True)
     elif owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
         fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-        fill_color = core.player_colors_conversions[fill_color]
+        fill_color = palette.hex_to_tup(fill_color, True)
     if occupier_id != 0 and occupier_id != 99:
-        fill_color = player_color_list[occupier_id -1]
-        fill_color = core.player_colors_normal_to_occupied[fill_color]
+        fill_color = palette.hex_to_tup(player_color_list[occupier_id - 1], True)
+        fill_color = palette.normal_to_occupied[fill_color]
     elif occupier_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
         fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-        fill_color = core.player_colors_conversions[fill_color]
-        fill_color = core.player_colors_normal_to_occupied[fill_color]
+        fill_color = palette.hex_to_tup(fill_color, True)
+        fill_color = palette.normal_to_occupied[fill_color]
         
     return fill_color
 

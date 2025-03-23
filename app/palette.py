@@ -1,5 +1,7 @@
 from app import core
 
+from PIL import ImageColor
+
 def color_nation_names(string, game_id):
     """
     Adds html span tags around all nation names in given string
@@ -30,6 +32,33 @@ def str_to_hex(color_str):
     color_str = color_str.lower().strip()
     
     return player_colors_hex.get(color_str)
+
+def tup_to_hex(color_tuple: tuple) -> str:
+    """
+    Converts RBG or RGBA color to a hexadecimal string.
+    """
+
+    result = None
+    if len(color_tuple) == 3:
+        result = f"#{color_tuple[0]:02x}{color_tuple[1]:02x}{color_tuple[2]:02x}"
+    elif len(color_tuple) == 4:
+        result = f"#{color_tuple[0]:02x}{color_tuple[1]:02x}{color_tuple[2]:02x}{color_tuple[3]:02x}"
+
+    return result.lower()
+
+def hex_to_tup(color_hex: str, alpha=False) -> tuple:
+    """
+    Converts hexadecimal string to RGB or RGBA.
+    """
+
+    result = ImageColor.getrgb(color_hex)
+
+    if alpha:
+        result = list(result)
+        result.append(255)
+        return tuple(result)
+    
+    return result
 
 player_colors_hex = {
     "brown": "#603913",
