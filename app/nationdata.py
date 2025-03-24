@@ -1,9 +1,11 @@
 import json
 import random
 
+from app import core
+
 class Nation:
     
-    def __init__(self, nation_id: str | int, nation_data: dict, game_id: str):\
+    def __init__(self, nation_id: str | int, nation_data: dict, game_id: str):
 
         self.game_id = game_id
 
@@ -15,7 +17,7 @@ class Nation:
         self.fp: str = nation_data["foreignPolicy"]
         self.status: str = nation_data["status"]
         self.trade_fee: str = nation_data["tradeFee"]
-        self.completed_research: dict = nation_data["completedResearch"]
+        self.completed_research: dict = nation_data["unlockedTechs"]
         self.income_details: list = nation_data["incomeDetails"]
 
         self.used_mc: int = nation_data["militaryCapacity"]["used"]
@@ -27,11 +29,13 @@ class Nation:
         self.score: int = nation_data["score"]
         self.chosen_vc_set: str = nation_data["chosenVictorySet"]
 
+        self.improvement_counts: dict = nation_data["improvementCounts"]
+        self.unit_counts: dict = nation_data["unitCounts"]
+
         self._upkeep_manager: dict = nation_data["upkeepManager"]
         self._sets: dict = nation_data["victorySets"]
         self._resources: dict = nation_data["resources"]
         self._records: dict = nation_data["records"]
-        self._improvement_count: list = nation_data["improvementCount"]
 
     def _generate_vc_sets(count: int) -> dict:
         """
@@ -72,6 +76,15 @@ class Nation:
         """
 
         vc_sets = Nation._generate_vc_sets(2)
+        improvement_dict = core.get_scenario_dict(game_id, "Improvements")
+        unit_dict = core.get_scenario_dict(game_id, "Units")
+        improvement_cache = {}
+        for key in improvement_dict:
+            improvement_cache[key] = 0
+        unit_cache = {}
+        for key in unit_dict:
+            unit_cache[key] = 0
+
         nation_data = {
             "nationName": "N/A",
             "playerID": player_id,
@@ -98,67 +111,67 @@ class Nation:
             "chosenVictorySet": "N/A",
             "victorySets": vc_sets,
             "resources": {
-                "dollars": {
-                    "stored": "0.00",
+                "Dollars": {
+                    "stored": "10.00",
                     "income": "0.00",
                     "max": 100,
                     "rate": 100
                 },
-                "politicalPower": {
+                "Political Power": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "technology": {
+                "Technology": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "coal": {
+                "Coal": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "oil": {
+                "Oil": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "greenEnergy": {
+                "Green Energy": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "basicMaterials": {
+                "Basic Materials": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "commonMetals": {
+                "Common Metals": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "advancedMetals": {
+                "Advanced Metals": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "uranium": {
+                "Uranium": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "rareEarthElements": {
+                "Rare Earth Elements": {
                     "stored": "0.00",
                     "income": "0.00",
                     "max": 50,
@@ -172,13 +185,70 @@ class Nation:
                 "researchCount": [],
                 "transactionCount": []
             },
-            "improvementCount": [],
-            "completedResearch": {},
+            "improvementCounts": improvement_cache,
+            "unitCounts": unit_cache,
+            "unlockedTechs": {},
             "incomeDetails": []
-            
         }
 
         return Nation(nation_id, nation_data, game_id)
+
+    def add_tech(self, technology_name: str) -> None:
+        """
+        Marks an agenda or technology as unlocked.
+
+        Params:
+            technology_name: Name of agenda or technology to add.
+
+        Returns:
+            None
+        """
+
+        if technology_name in self.completed_research:
+            return None
+
+        tech_dict = core.get_scenario_dict(self.game_id, "Technologies")
+        agenda_dict = core.get_scenario_dict(self.game_id, "Agendas")
+        if technology_name not in tech_dict and technology_name not in agenda_dict:
+            return None
+
+        self.completed_research[technology_name] = True
+
+    def reset_income_rates(self) -> None:
+        """
+        Sets income rates based on government choice. Called at the start of the game.
+
+        Returns:
+            None
+        """
+
+        for resource_name in self._resources:
+            amount = INCOME_RATES[self.gov][resource_name]
+            self.update_rate(resource_name, amount, overwrite = True)
+
+    def update_rate(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        """
+        Updates the income rate of a resource.
+
+        Params:
+            resource_name (str): Exact name of resource.
+            amount (int): Percentage you wish to add or set, where the integer 100 is 100%.
+            overwrite (bool): Adds amount to current income rate if False, will overwrite instead if True.
+
+        Returns:
+            None
+        """
+
+        if resource_name not in self._resources:
+            return None
+        
+        if not isinstance(amount, int):
+            return None
+        
+        if overwrite:
+            self._resources[resource_name]["rate"] = amount
+        else:
+            self._resources[resource_name]["rate"] += amount
 
     def get_vc_list(self) -> list:
         """
@@ -307,8 +377,9 @@ class NationTable:
             "victorySets": nation._sets,
             "resources": nation._resources,
             "records": nation._records,
-            "improvementCount": nation._improvement_count,
-            "completedResearch": nation.completed_research,
+            "improvementCounts": nation.improvement_counts,
+            "unitCounts": nation.unit_counts,
+            "unlockedTechs": nation.completed_research,
             "incomeDetails": nation.income_details
             
         }
@@ -327,7 +398,7 @@ class NationTable:
         for nation in self:
             self._name_to_id[nation.name] = nation.id
 
-# to do - move these to a scenario file
+# tba - move everything below to a scenario file
 EASY_LIST = [
     "Breakthrough",
     "Diversified Economy",
@@ -355,3 +426,109 @@ HARD_LIST = [
     "Scientific Leader",
     "Territorial Control"
 ]
+INCOME_RATES = {
+    "Republic": {
+        "Dollars": 100,
+        "Political Power": 100,
+        "Technology": 100,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Technocracy": {
+        "Dollars": 100,
+        "Political Power": 100,
+        "Technology": 100,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Olgarchy": {
+        "Dollars": 120,
+        "Political Power": 100,
+        "Technology": 100,
+        "Coal": 120,
+        "Oil": 120,
+        "Green Energy": 120,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Totalitarian": {
+        "Dollars": 100,
+        "Political Power": 100,
+        "Technology": 100,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Remnant": {
+        "Dollars": 100,
+        "Political Power": 100,
+        "Technology": 100,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Protectorate": {
+        "Dollars": 100,
+        "Political Power": 80,
+        "Technology": 100,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Military Junta": {
+        "Dollars": 100,
+        "Political Power": 100,
+        "Technology": 80,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    },
+    "Crime Syndicate": {
+        "Dollars": 80,
+        "Political Power": 100,
+        "Technology": 100,
+        "Coal": 100,
+        "Oil": 100,
+        "Green Energy": 100,
+        "Basic Materials": 100,
+        "Common Metals": 100,
+        "Advanced Metals": 100,
+        "Uranium": 100,
+        "Rare Earth Elements": 100
+    }
+}

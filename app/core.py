@@ -110,146 +110,63 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     resource_map.update()
     control_map.update()
 
-def resolve_stage2_processing(game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list):
-    '''
-    Resolves turn processing for a game in stage two.
+def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
+    """
+    Resolves stage two setup for a new game.
 
     Parameters:
-    - game_id: The full game_id of the active game.
-    - player_nation_name_list: A list of player nation names gathered from turn resolution HTML form. 
-    - player_government_list: A list of player government choices gathered from turn resolution HTML form. 
-    - player_foreign_policy_list: A list of player fp choices gathered from turn resolution HTML form. 
-    - player_victory_condition_set_list: A list of player vc set choices gathered from turn resolution HTML form. 
-    '''
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
-    player_count = len(playerdata_list)
+        game_id (str): Game ID string.
+        contents_dict (dict): A dictionary containing the setup data for each player.
+    """
+
+    # get game files
+    nation_table = NationTable(game_id)
     research_data_dict = get_scenario_dict(game_id, "Technologies")
     five_point_research_list = []
     for key in research_data_dict:
         tech = research_data_dict[key]
         if tech["Cost"] == 5:
             five_point_research_list.append(key)
-    
-    # read and update playerdata
-    for index, player in enumerate(playerdata_list):
-        if player[0] != "":
-            # update basic nation info
-            player[1] = player_nation_name_list[index].title()
-            player[3] = player_government_list[index]
-            player[4] = player_foreign_policy_list[index]
-            # confirm victory condition set
-            if player_victory_condition_set_list[index] == "Set A":
-                del player[9]
-            else:
-                del player[8]
-            # apply income rates
-            if player[3] == 'Republic':
-                rate_list = republic_rates
-            elif player[3] == 'Technocracy':
-                rate_list = technocracy_rates
-            elif player[3] == 'Oligarchy':
-                rate_list = oligarchy_rates
-            elif player[3] == 'Totalitarian':
-                rate_list = totalitarian_rates
-            elif player[3] == 'Remnant':
-                rate_list = remnant_rates
-            elif player[3] == 'Protectorate':
-                rate_list = protectorate_rates
-            elif player[3] == 'Military Junta':
-                rate_list = military_junta_rates
-            elif player[3] == 'Crime Syndicate':
-                rate_list = crime_syndicate_rates
-            j = 9
-            for rate in rate_list:
-                resource_data = ast.literal_eval(playerdata_list[index][j])
-                resource_data[3] = rate
-                playerdata_list[index][j] = str(resource_data)
-                j += 1
-            # give starting research
-            if player[3] == "Technocracy":
-                starting_list = random.sample(five_point_research_list, 3)
-                player[26] = str(starting_list)
 
-    # update playerdata.csv
-    # this intermediary save is needed because of the logic of the functions below
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(player_data_header)
-        writer.writerows(playerdata_list)
+    # update nation data
+    for nation_id, setup_data in contents_dict.items():
+        nation = nation_table.get(nation_id)
+        nation.name = setup_data["name_choice"]
+        nation.gov = setup_data["gov_choice"]
+        nation.fp = setup_data["fp_choice"]
+        nation.chosen_vc_set = setup_data["vc_choice"]
+        nation.reset_income_rates()
+        if nation.gov == "Technocracy":
+            starting_list = random.sample(five_point_research_list, 3)
+            for technology_name in starting_list:
+                nation.add_tech(technology_name)
+        nation_table.save(nation)
 
-    # update misc info in playerdata
-    for i in range(player_count):
-        player_id = i + 1
-        checks.update_misc_info(game_id, player_id)
-    # update improvement count in playerdata
-    for i in range(player_count):
-        player_id = i + 1
-        checks.update_improvement_count(game_id, player_id)
     # update income in playerdata
     checks.update_income(game_id)
     
-    # gain starting resources
-    playerdata_list = read_file(playerdata_filepath, 1)
-    for player in playerdata_list:
-        dollars_data = ast.literal_eval(player[9])
-        political_power_data = ast.literal_eval(player[10])
-        technology_data = ast.literal_eval(player[11])
-        dollars_data[0] = '10.00'
-        political_power_data[0] = '0.00'
-        technology_data[0] = '0.00'
-        player[9] = str(dollars_data)
-        player[10] = str(political_power_data)
-        player[11] = str(technology_data)
-
-    # update playerdata.csv
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(player_data_header)
-        writer.writerows(playerdata_list)
-
-    # update nation data
-    with open(f'gamedata/{game_id}/gamedata.json', 'r') as json_file:
-        gamedata_dict = json.load(json_file)
-    # add vc data - move this into regular playerdata once playerdata rework happens
-    for playerdata in playerdata_list:
-        gamedata_dict["victoryConditions"][playerdata[1]] = [False, False, False]
-    for index, player in enumerate(playerdata_list):
-        if player[0] != "":
-            gamedata_dict[player_nation_name_list[index].title()] = {}
-            records_dict = {
-                "militaryStrength": [],
-                "nationSize": [],
-                "netIncome": [],
-                "researchCount": [],
-                "transactionCount": []
-            }
-            gamedata_dict[player_nation_name_list[index].title()]["records"] = records_dict
-    # save gamedata
-    with open(f'gamedata/{game_id}/gamedata.json', 'w') as json_file:
-        json.dump(gamedata_dict, json_file, indent=4)
-    
-    # update game_settings
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+
+    # update game_settings
     active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
     active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
     active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
     steal_tracking_dict = {}
-    for playerdata in playerdata_list:
-        if playerdata[3] == 'Crime Syndicate':
+    
+    # add crime syndicate tracking
+    # to do - move this somewhere else
+    for nation in nation_table:
+        if nation.gov == 'Crime Syndicate':
             inner_dict = {
                 'Nation Name': None,
                 'Streak': 0,
             }
-            steal_tracking_dict[playerdata[1]] = inner_dict
+            steal_tracking_dict[nation.name] = inner_dict
     active_games_dict[game_id]["Steal Action Record"] = steal_tracking_dict
-    transactions_dict = {}
-    for playerdata in playerdata_list:
-        transactions_dict[playerdata[1]] = 0
-    active_games_dict[game_id]["Transactions Record"] = transactions_dict
+
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
@@ -367,10 +284,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
     #Post Public Action Checks
     #check for missing war justifications
     checks.prompt_for_missing_war_justifications(full_game_id)
-    #update improvement count in playerdata
-    for i in range(player_count):
-        player_id = i + 1
-        checks.update_improvement_count(full_game_id, player_id)
     #update military capacity
     checks.update_military_capacity(full_game_id)
 
@@ -440,7 +353,6 @@ def resolve_turn_processing(full_game_id, public_actions_list, private_actions_l
 
     for i in range(player_count):
         player_id = i + 1
-        checks.update_improvement_count(full_game_id, player_id)
         checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
     #update income in playerdata
     checks.update_income(full_game_id)
@@ -921,14 +833,10 @@ def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     checks.update_military_capacity(game_id)
     for i in range(player_count):
         player_id = i + 1
-        #update playerdata improvement counts
-        checks.update_improvement_count(game_id, player_id)
         #check refinery ratios
         checks.ratio_check(game_id, player_id)
         #check military capacity
         checks.remove_excess_units(game_id, player_id)
-        #refresh improvement count
-        checks.update_improvement_count(game_id, player_id)
         #update stockpile limits in playerdata
         checks.update_stockpile_limits(game_id, player_id)
     #update income in playerdata
@@ -936,7 +844,6 @@ def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     #update misc info and trade tax in playerdata
     for i in range(player_count):
         player_id = i + 1
-        checks.update_misc_info(game_id, player_id)
         checks.update_trade_tax(game_id, player_id)
     #update records
     checks.update_records(game_id, current_turn_num)
@@ -1547,16 +1454,6 @@ player_data_header = ["Player", "Nation Name", "Color", "Government", "Foreign P
 rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
 rm_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
 trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']
-
-#government and fp list data
-republic_rates = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
-technocracy_rates = [100, 100, 120, 100, 100, 100, 100, 100, 100, 100, 100]
-oligarchy_rates = [120, 100, 100, 120, 120, 120, 100, 100, 100, 100, 100]
-totalitarian_rates = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
-remnant_rates = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
-protectorate_rates = [100, 80, 100, 100, 100, 100, 120, 100, 100, 100, 100]
-military_junta_rates = [100, 100, 80, 100, 100, 100, 100, 100, 100, 100, 100]
-crime_syndicate_rates = [80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 
 #war and unit/improvement list data
 RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']

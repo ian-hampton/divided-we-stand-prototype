@@ -1291,26 +1291,21 @@ def stage1_resolution():
 
 @main.route('/stage2_resolution', methods=['POST'])
 def stage2_resolution():
-    #process form data
+
     full_game_id = request.form.get('full_game_id')
-    player_nation_name_list = []
-    player_government_list = []
-    player_foreign_policy_list = []
-    player_victory_condition_set_list = []
-    for i in range(1, 11):
-        player_nation_name = request.form.get(f'nameinput_p{i}')
-        if player_nation_name:
-            player_nation_name_list.append(player_nation_name)
-        player_government = request.form.get(f'govinput_p{i}')
-        if player_government:
-            player_government_list.append(player_government)
-        player_foreign_policy = request.form.get(f'fpinput_p{i}')
-        if player_foreign_policy:
-            player_foreign_policy_list.append(player_foreign_policy)
-        player_vc_set = request.form.get(f'vcinput_p{i}')
-        if player_vc_set:
-            player_victory_condition_set_list.append(player_vc_set)
-    core.resolve_stage2_processing(full_game_id, player_nation_name_list, player_government_list, player_foreign_policy_list, player_victory_condition_set_list)
+    nation_table = NationTable(full_game_id)
+
+    contents_dict = {}
+    for i in range(len(nation_table)):
+        nation_id = i + 1
+        contents_dict[nation_id] = {}
+        contents_dict[nation_id]["name_choice"] = request.form.get(f'nameinput_p{i}')
+        contents_dict[nation_id]["gov_choice"] = request.form.get(f'govinput_p{i}')
+        contents_dict[nation_id]["fp_choice"] = request.form.get(f'fpinput_p{i}')
+        contents_dict[nation_id]["vc_choice"] = request.form.get(f'vcinput_p{i}')
+
+    core.resolve_stage2_processing(full_game_id, contents_dict)
+    
     return redirect(f'/{full_game_id}')
 
 @main.route('/turn_resolution', methods=['POST'])
