@@ -18,40 +18,6 @@ from app.alliance import AllianceTable
 from app.alliance import Alliance
 
 #END OF TURN CHECKS
-def update_improvement_count(game_id, player_id):
-    '''Gets a count of all improvements for a specific player using regdata_dict. Updates regdata.csv.'''
-    
-    #define core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-
-    #Procedure
-    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-    improvement_name_list = sorted(improvement_data_dict.keys())
-    improvement_data_list = [0] * len(improvement_name_list)
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_improvement = Improvement(region_id, game_id)
-        improvement_name = region_improvement.name
-        if region.owner_id == int(player_id):
-            if improvement_name:
-                index = improvement_name_list.index(improvement_name)
-                improvement_data_list[index] += 1
-    
-    
-    #Update playerdata.csv
-    improvement_data_list = str(improvement_data_list)
-    for player in playerdata_list:
-        desired_player_id = player[0][-1]
-        if desired_player_id == str(player_id):
-            player[27] = improvement_data_list
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
 
 def ratio_check(game_id, player_id):
     '''Check if ratios for refineries are still valid.'''
@@ -258,86 +224,6 @@ def remove_excess_units(game_id, player_id):
     output_str = f'{used_mc}/{total_mc}'
     playerdata[5] = output_str
     playerdata_list[player_id - 1] = playerdata
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
-
-def update_misc_info(game_id, player_id):
-    '''
-    Updates misc info list in playerdata.
-    '''
-    
-    #get core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-    
-    #get needed information from player
-    nation_name_list = []
-    for player in playerdata_list:
-        nation_name_list.append(player[1])
-    i = player_id - 1
-    playerdata = playerdata_list[i]
-    pp_data = ast.literal_eval(playerdata[10])
-    political_power_stored = float(pp_data[0])
-    misc_info = ast.literal_eval(playerdata[24])
-    completed_research_list = ast.literal_eval(playerdata[26])
-
-    
-    #Update Capital Resource (if one not already active)
-    if misc_info[0] == 'Capital Resource: None.':
-        for region_id in regdata_dict:
-            region = Region(region_id, game_id)
-            region_improvement = Improvement(region_id, game_id)
-            if region.owner_id == player_id and region.occupier_id == 0 and region_improvement.name == 'Capital':
-                match region.resource:
-                    case 'Coal':
-                        if 'Coal Mining' in completed_research_list:
-                            misc_info[0] = 'Capital Resource: Coal.'
-                    case 'Oil':
-                        if 'Oil Drilling' in completed_research_list:
-                            misc_info[0] = 'Capital Resource: Oil.'
-                    case 'Basic Materials':
-                        misc_info[0] = 'Capital Resource: Basic Materials.'
-                    case 'Common Metals':
-                        if 'Surface Mining' in completed_research_list:
-                            misc_info[0] = 'Capital Resource: Common Metals.'
-                    case 'Advanced Metals':
-                        if 'Metallurgy' in completed_research_list:
-                            misc_info[0] = 'Capital Resource: Advanced Metals.'
-                    case 'Uranium':
-                        if 'Uranium Extraction' in completed_research_list:
-                            misc_info[0] = 'Capital Resource: Uranium.'
-                    case 'Rare Earth Elements':
-                        if 'REE Mining' in completed_research_list:
-                            misc_info[0] = 'Capital Resource: Rare Earth Elements.'
-                    
-    #Update Region Counts
-    owned_regions = 0
-    occupied_regions = 0
-    undeveloped_regions = 0
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_improvement = Improvement(region_id, game_id)
-        if region.owner_id == player_id and region.occupier_id == 0:
-            owned_regions += 1
-            if region_improvement.name == None:
-                undeveloped_regions += 1
-        elif region.owner_id == player_id and region.occupier_id != 0:
-            occupied_regions += 1
-    misc_info[1] = f'Owned Regions: {owned_regions}'
-    misc_info[2] = f'Occupied Regions: {occupied_regions}'
-    misc_info[3] = f'Undeveloped Regions: {undeveloped_regions}'
-    
-    
-    #Update playerdata.csv
-    misc_info = str(misc_info)
-    full_player_id = f'Player #{player_id}'
-    for player in playerdata_list:
-        if player[0] == full_player_id:
-            player[24] = misc_info
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
