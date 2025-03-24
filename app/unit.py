@@ -4,6 +4,7 @@ import json
 from app import core
 from app.region import Region
 from app.improvement import Improvement
+from app.nationdata import NationTable
 
 class Unit:
 
@@ -90,6 +91,14 @@ class Unit:
         """
         Removes the unit in a region.
         """
+        # update unit count
+        nation_table = NationTable(self.game_id)
+        nation = nation_table.get(self.owner_id)
+        if self.name is not None and nation is not None:
+            nation.unit_counts[self.name] -= 1
+            nation_table.save(nation)
+
+        # remove unit
         self.name = None
         self.health = 99
         self.owner_id = 99
@@ -115,6 +124,13 @@ class Unit:
         self.type = unit_data_dict[self.name]["Unit Type"]
         self.hit_value = unit_data_dict[self.name]["Combat Value"]
         self._save_changes()
+
+        # update unit count
+        nation_table = NationTable(self.game_id)
+        nation = nation_table.get(self.owner_id)
+        if nation is not None:
+            nation.unit_counts[unit_name] += 1
+            nation_table.save(nation)
 
     def heal(self, health_count: int) -> None:
         """

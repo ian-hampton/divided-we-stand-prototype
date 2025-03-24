@@ -154,10 +154,10 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     current_date_string = current_date.strftime("%m/%d/%Y")
     active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
     active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
-    steal_tracking_dict = {}
     
     # add crime syndicate tracking
     # to do - move this somewhere else
+    steal_tracking_dict = {}
     for nation in nation_table:
         if nation.gov == 'Crime Syndicate':
             inner_dict = {
