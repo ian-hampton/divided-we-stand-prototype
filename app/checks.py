@@ -729,7 +729,7 @@ def update_income(game_id: str) -> None:
         }
         dollars_upkeep_sum = sum(player_upkeep_costs_dict["Dollars"][key] for key in player_upkeep_costs_dict["Dollars"])
         oil_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"])
-        uranium_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"])
+        uranium_upkeep_sum = sum(player_upkeep_costs_dict["Uranium"][key] for key in player_upkeep_costs_dict["Uranium"])
         main_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"]) + sum(player_upkeep_costs_dict["Energy"][key] for key in player_upkeep_costs_dict["Energy"])
         dollars_upkeep_sum = round(dollars_upkeep_sum, 2)
         oil_upkeep_sum = round(oil_upkeep_sum, 2)

@@ -245,10 +245,10 @@
         "Research Type": "Infrastructure",
         "Prerequisite": "REE Mining",
         "Cost": 20,
-        "Description": "+1 advanced metals from Advanced Metal Mine improvements. +1 uranium from Uranium Mine improvements.",
+        "Description": "+1 advanced metals from Advanced Metals Mine improvements. +1 uranium from Uranium Mine improvements.",
         "Location": "C3",
         "Modifiers": {
-            "Advanced Metal Mine": {
+            "Advanced Metals Mine": {
                 "Advanced Metals": {
                     "Income": 1
                 }
