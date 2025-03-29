@@ -92,9 +92,10 @@ class Unit:
         Removes the unit in a region.
         """
         # update unit count
-        nation_table = NationTable(self.game_id)
-        nation = nation_table.get(self.owner_id)
-        if self.name is not None and nation is not None:
+        
+        if self.name is not None and self.owner_id != 99:
+            nation_table = NationTable(self.game_id)
+            nation = nation_table.get(self.owner_id)
             nation.unit_counts[self.name] -= 1
             nation_table.save(nation)
 
@@ -126,9 +127,9 @@ class Unit:
         self._save_changes()
 
         # update unit count
-        nation_table = NationTable(self.game_id)
-        nation = nation_table.get(self.owner_id)
-        if nation is not None:
+        if self.owner_id != 99:
+            nation_table = NationTable(self.game_id)
+            nation = nation_table.get(self.owner_id)
             nation.unit_counts[unit_name] += 1
             nation_table.save(nation)
 

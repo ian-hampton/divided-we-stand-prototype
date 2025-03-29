@@ -919,13 +919,13 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
 #DIPLOMACY SUB-FUNCTIONS
 ################################################################################
 
-def get_alliance_count(game_id: str, playerdata: list[list]) -> Tuple[int, int]:
+def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
     """
     Gets a count of a player's active alliances and their total alliance capacity.
 
     Params:
         game_id (str): Game ID string.
-        playerdata (list): A single playerdata list from playerdata.csv.
+        nation (Nation): Nation object.
 
     Returns:
         Tuple:
@@ -933,22 +933,20 @@ def get_alliance_count(game_id: str, playerdata: list[list]) -> Tuple[int, int]:
             int: Alliance limit.
     """
 
-    nation_name = playerdata[1]
-    player_research_list = ast.literal_eval(playerdata[26])
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     
     alliance_count = 0
     alliance_table = AllianceTable(game_id)
-    alliance_report_dict = alliance_table.report(nation_name)
+    alliance_report_dict = alliance_table.report(nation.name)
     alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
     
     alliance_limit = 2
-    if playerdata[3] == 'Republic':
+    if nation.gov == 'Republic':
         alliance_limit += 1
-    if 'Power Broker' in player_research_list:
+    if 'Power Broker' in nation.completed_research:
         alliance_limit += 1
-    if 'Improved Logistics' in player_research_list:
+    if 'Improved Logistics' in nation.completed_research:
         alliance_limit += 1
     if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
         if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
@@ -1035,13 +1033,13 @@ def get_unit_count_list(player_id, game_id):
 
     return count_list
 
-def create_player_yield_dict(player_id: int, game_id: str) -> dict:
+def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     """
     Given a player, this function creates the initial dictionary with the yields of all improvements.
 
     Params:
-        player_id (int): Player ID.
-        game_id (str): Game ID.
+        game_id (str): Game ID string.
+        nation (Nation): Object representing the nation this yield_dict is for.
 
     Returns:
         dict: Yield dictionary detailing income and multiplier for every improvement.
@@ -1051,12 +1049,6 @@ def create_player_yield_dict(player_id: int, game_id: str) -> dict:
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     technology_data_dict = get_scenario_dict(game_id, "Technologies")
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
-
-    # load player info
-    playerdata = playerdata_list[player_id - 1]
-    player_research_list = ast.literal_eval(playerdata[26])
 
     yield_dict = {}
     for improvement_name, improvement_data in improvement_data_dict.items():
@@ -1069,7 +1061,7 @@ def create_player_yield_dict(player_id: int, game_id: str) -> dict:
             yield_dict[improvement_name][resource_name] = inner_dict
     
     # get modifiers from each technology and agenda
-    for tech_name in player_research_list:   
+    for tech_name in nation.completed_research:   
         if tech_name in technology_data_dict:
             tech_dict = technology_data_dict[tech_name]
         elif tech_name in agenda_data_dict:
@@ -1087,13 +1079,13 @@ def create_player_yield_dict(player_id: int, game_id: str) -> dict:
 
     return yield_dict
 
-def create_player_upkeep_dict(player_id: int, game_id: str) -> dict:
+def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     """
     Given a player, this function creates the initial dictionary with the upkeep of all improvements and units.
 
     Params:
-        player_id (int): Player ID.
-        game_id (str): Game ID.
+        game_id (str): Game ID string.
+        nation (Nation): Object representing the nation this yield_dict is for.
 
     Returns:
         dict: Upkeep dictionary detailing upkeep and upkeep multiplier for every improvement.
@@ -1104,12 +1096,6 @@ def create_player_upkeep_dict(player_id: int, game_id: str) -> dict:
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     technology_data_dict = get_scenario_dict(game_id, "Technologies")
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
-
-    # load player info
-    playerdata = playerdata_list[player_id - 1]
-    player_research_list = ast.literal_eval(playerdata[26])
 
     upkeep_dict = {}
     for improvement_name, improvement_data in improvement_data_dict.items():
@@ -1130,7 +1116,7 @@ def create_player_upkeep_dict(player_id: int, game_id: str) -> dict:
             upkeep_dict[unit_name][resource_name] = inner_dict
     
     # get modifiers from each technology and agenda
-    for tech_name in player_research_list:
+    for tech_name in nation.completed_research:
         if tech_name in technology_data_dict:
             tech_dict = technology_data_dict[tech_name]
         elif tech_name in agenda_data_dict:

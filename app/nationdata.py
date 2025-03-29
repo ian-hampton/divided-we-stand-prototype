@@ -20,9 +20,6 @@ class Nation:
         self.completed_research: dict = nation_data["unlockedTechs"]
         self.income_details: list = nation_data["incomeDetails"]
 
-        self.used_mc: int = nation_data["militaryCapacity"]["used"]
-        self.total_mc: int = nation_data["militaryCapacity"]["max"]
-
         self.missile_count: int = nation_data["missileStockpile"]["standardMissile"]
         self.nuke_count: int = nation_data["missileStockpile"]["nuclearMissile"]
 
@@ -32,7 +29,6 @@ class Nation:
         self.improvement_counts: dict = nation_data["improvementCounts"]
         self.unit_counts: dict = nation_data["unitCounts"]
 
-        self._upkeep_manager: dict = nation_data["upkeepManager"]
         self._sets: dict = nation_data["victorySets"]
         self._resources: dict = nation_data["resources"]
         self._records: dict = nation_data["records"]
@@ -92,20 +88,10 @@ class Nation:
             "government": "N/A",
             "foreignPolicy": "N/A",
             "status": "Independent Nation",
-            "militaryCapacity": {
-                "used": 0,
-                "max": 0
-            },
             "tradeFee": "1:2",
             "missileStockpile": {
                 "standardMissile": 0,
                 "nuclearMissile": 0
-            },
-            "upkeepManager": {
-                "totalUpkeepCosts": "0.00",
-                "coalUpkeep": "0.00",
-                "oilUpkeep": "0.00",
-                "greenUpkeep": "0.00",
             },
             "score": 0,
             "chosenVictorySet": "N/A",
@@ -114,69 +100,83 @@ class Nation:
                 "Dollars": {
                     "stored": "10.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 100,
                     "rate": 100
                 },
                 "Political Power": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Technology": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Coal": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Oil": {
                     "stored": "0.00",
                     "income": "0.00",
-                    "max": 50,
-                    "rate": 100
-                },
-                "Green Energy": {
-                    "stored": "0.00",
-                    "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Basic Materials": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Common Metals": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Advanced Metals": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Uranium": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
                 "Rare Earth Elements": {
                     "stored": "0.00",
                     "income": "0.00",
+                    "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
-                }
+                },
+                "Energy": {
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "rate": 100
+                },
+                "Military Capacity": {
+                    "used": "0.00",
+                    "max": "0.00",
+                    "rate": 100
+                },
             },
             "records": {
                 "militaryStrength": [],
@@ -210,9 +210,181 @@ class Nation:
         tech_dict = core.get_scenario_dict(self.game_id, "Technologies")
         agenda_dict = core.get_scenario_dict(self.game_id, "Agendas")
         if technology_name not in tech_dict and technology_name not in agenda_dict:
-            return None
+            raise Exception(f"{technology_name} not recognized as an agenda/technology.")
 
         self.completed_research[technology_name] = True
+
+    def get_stockpile(self, resource_name: str) -> str:
+        """
+        Retrieves stockpile of a given resource.
+        """
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+
+        return self._resources[resource_name]["stored"]
+
+    def update_stockpile(self, resource_name: str, amount: int | float) -> None:
+        """
+        Updates the stockpile of a given resource.
+        """
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        stored = float(self._resources[resource_name]["stored"])
+        stored += amount
+        stored_max = int(self.get_max(resource_name))
+        if stored > stored_max:
+            stored = stored_max
+        self._resources[resource_name]["stored"] = f"{stored:.2f}"
+
+    def get_income(self, resource_name: str) -> str:
+        """
+        Retrives income of a given resource.
+        """
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if resource_name == "Military Capacity":
+            return self.get_max_mc()
+
+        return self._resources[resource_name]["income"]
+
+    def update_income(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        """
+        Updates the income of a specific resource by a specific amount.
+
+        Params:
+            resource_name (str): Exact name of resource to update.
+            amount (int | float): Amount you wish to add.
+            overwrite (bool): Adds amount to current income if False, will overwrite instead if True.
+
+        Returns:
+            None
+        """
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if resource_name == "Military Capacity":
+            return
+        
+        if overwrite:
+            self._resources[resource_name]["income"] = f"{amount:.2f}"
+            return
+
+        income = float(self._resources[resource_name]["income"])
+        income += amount
+        self._resources[resource_name]["income"] = f"{income:.2f}"
+
+    def get_gross_income(self, resource_name: str) -> str:
+        """
+        Retrieves gross income of a given resource.
+        """
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if resource_name == "Military Capacity":
+            return self.get_max_mc()
+
+        return self._resources[resource_name]["grossIncome"]
+
+    def update_gross_income(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        """
+        Updates the gross income of a specific resource by a specific amount.
+
+        Params:
+            resource_name (str): Exact name of resource to update.
+            amount (float): Amount you wish to add.
+            overwrite (bool): Adds amount to current income if False, will overwrite instead if True.
+
+        Returns:
+            None
+        """
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if resource_name == "Military Capacity":
+            self.update_max_mc(amount, overwrite=overwrite)
+            return
+
+        if overwrite:
+            self._resources[resource_name]["grossIncome"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources[resource_name]["grossIncome"])
+        income += amount
+        self._resources[resource_name]["grossIncome"] = f"{income:.2f}"
+
+    def get_max(self, resource_name: str) -> None:
+        """
+        Retrives max storage amount of a given resource.
+        """
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+
+        return self._resources[resource_name]["max"]
+
+    def update_max(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        """
+        Updates max storage amount of a given resource.
+        """
+
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected an integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["max"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources[resource_name]["max"])
+        income += amount
+        self._resources[resource_name]["max"] = f"{income:.2f}"
+
+    def get_rate(self, resource_name: str) -> str:
+        """
+        Retrieves income rate of a given resource.
+        """
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+
+        return self._resources[resource_name]["rate"]
+
+    def update_rate(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        """
+        Updates the income rate of a resource.
+
+        Params:
+            resource_name (str): Exact name of resource to update.
+            amount (int): Percentage you wish to add or set, where the integer 100 is 100%.
+            overwrite (bool): Adds amount to current rate if False, will overwrite instead if True.
+
+        Returns:
+            None
+        """
+
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected an integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["rate"] = amount
+        else:
+            self._resources[resource_name]["rate"] += amount
 
     def reset_income_rates(self) -> None:
         """
@@ -226,29 +398,49 @@ class Nation:
             amount = INCOME_RATES[self.gov][resource_name]
             self.update_rate(resource_name, amount, overwrite = True)
 
-    def update_rate(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+    def get_used_mc(self) -> float:
         """
-        Updates the income rate of a resource.
-
-        Params:
-            resource_name (str): Exact name of resource.
-            amount (int): Percentage you wish to add or set, where the integer 100 is 100%.
-            overwrite (bool): Adds amount to current income rate if False, will overwrite instead if True.
-
-        Returns:
-            None
+        Returns used military capacity of this nation.
         """
+        return float(self._resources["Military Capacity"]["used"])
 
-        if resource_name not in self._resources:
-            return None
+    def update_used_mc(self, amount: int | float, *, overwrite = False) -> None:
+        """
+        Updates used military capacity of this nation.
+        """
         
-        if not isinstance(amount, int):
-            return None
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
         
         if overwrite:
-            self._resources[resource_name]["rate"] = amount
-        else:
-            self._resources[resource_name]["rate"] += amount
+            self._resources["Military Capacity"]["used"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources["Military Capacity"]["used"])
+        income += amount
+        self._resources["Military Capacity"]["used"] = f"{income:.2f}"
+
+    def get_max_mc(self) -> float:
+        """
+        Returns military capacity limit of this nation.
+        """
+        return float(self._resources["Military Capacity"]["max"])
+
+    def update_max_mc(self, amount: int | float, *, overwrite = False) -> None:
+        """
+        Updates max military capacity of this nation.
+        """
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources["Military Capacity"]["max"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources["Military Capacity"]["max"])
+        income += amount
+        self._resources["Military Capacity"]["max"] = f"{income:.2f}"
 
     def get_vc_list(self) -> list:
         """
@@ -345,7 +537,7 @@ class NationTable:
         if nation_id is not None:
             return Nation(nation_id, self.data[nation_id], self.game_id)
 
-        return None
+        raise Exception(f"Failed to retrieve nation with identifier {nation_identifier}.")
 
     def save(self, nation: Nation) -> None:
         """
@@ -362,17 +554,12 @@ class NationTable:
             "government": nation.gov,
             "foreignPolicy": nation.fp,
             "status": nation.status,
-            "militaryCapacity": {
-                "used": nation.used_mc,
-                "max": nation.total_mc
-            },
             "tradeFee": nation.trade_fee,
             "missileStockpile": {
                 "standardMissile": nation.missile_count,
                 "nuclearMissile": nation.nuke_count
             },
             "score": nation.score,
-            "upkeepManager": nation._upkeep_manager,
             "chosenVictorySet": nation.chosen_vc_set,
             "victorySets": nation._sets,
             "resources": nation._resources,
@@ -397,6 +584,13 @@ class NationTable:
         self._name_to_id = {}
         for nation in self:
             self._name_to_id[nation.name] = nation.id
+
+    def update_records(self) -> None:
+        """
+        Updates leaderboard records in each nation.
+        """
+
+        pass
 
 # tba - move everything below to a scenario file
 EASY_LIST = [
@@ -433,12 +627,13 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     },
     "Technocracy": {
         "Dollars": 100,
@@ -446,12 +641,13 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     },
     "Olgarchy": {
         "Dollars": 120,
@@ -459,12 +655,13 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 120,
         "Oil": 120,
-        "Green Energy": 120,
+        "Energy": 120,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     },
     "Totalitarian": {
         "Dollars": 100,
@@ -472,12 +669,13 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 120
     },
     "Remnant": {
         "Dollars": 100,
@@ -485,12 +683,13 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     },
     "Protectorate": {
         "Dollars": 100,
@@ -498,12 +697,13 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     },
     "Military Junta": {
         "Dollars": 100,
@@ -511,12 +711,13 @@ INCOME_RATES = {
         "Technology": 80,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     },
     "Crime Syndicate": {
         "Dollars": 80,
@@ -524,11 +725,12 @@ INCOME_RATES = {
         "Technology": 100,
         "Coal": 100,
         "Oil": 100,
-        "Green Energy": 100,
+        "Energy": 100,
         "Basic Materials": 100,
         "Common Metals": 100,
         "Advanced Metals": 100,
         "Uranium": 100,
-        "Rare Earth Elements": 100
+        "Rare Earth Elements": 100,
+        "Military Capacity": 100
     }
 }

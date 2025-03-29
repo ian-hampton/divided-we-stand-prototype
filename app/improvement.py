@@ -100,9 +100,9 @@ class Improvement:
             pass
 
         # update improvement count
-        nation_table = NationTable(self.game_id)
-        nation = nation_table.get(self.owner_id)
-        if nation is not None:
+        if self.owner_id != 0:
+            nation_table = NationTable(self.game_id)
+            nation = nation_table.get(self.owner_id)
             nation.improvement_counts[improvement_name] += 1
             nation_table.save(nation)
         
@@ -149,9 +149,9 @@ class Improvement:
         """
 
         # update improvement count
-        nation_table = NationTable(self.game_id)
-        nation = nation_table.get(self.owner_id)
-        if self.name is not None and nation is not None:
+        if self.name is not None and self.owner_id != 0:
+            nation_table = NationTable(self.game_id)
+            nation = nation_table.get(self.owner_id)
             nation.improvement_counts[self.name] -= 1
             nation_table.save(nation)
 
@@ -177,15 +177,11 @@ class Improvement:
         
         # load game info
         from app.region import Region
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
         region = Region(self.region_id, self.game_id)
+        nation_table = NationTable(self.game_id)
+        nation = nation_table.get(self.owner_id)
         with open('active_games.json', 'r') as json_file:
             active_games_dict = json.load(json_file)
-
-        # load player info
-        player_government = playerdata_list[self.owner_id - 1][3]
-        player_research_list = ast.literal_eval(playerdata_list[self.owner_id - 1][26])
 
         # get modifer from central banks
         if region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):
@@ -193,7 +189,7 @@ class Improvement:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
 
         # get modifer from remnant government
-        if player_government == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
+        if nation.gov == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
             for resource_name in improvement_income_dict:
                 if resource_name == "Political Power" or resource_name == "Military Capacity":
                     # do not boost political power or military capacity gains
@@ -216,29 +212,34 @@ class Improvement:
                     multiplier = 0
                 improvement_income_dict[resource_name]["Income Multiplier"] = multiplier
 
+        # get shared fate boot camp increase
+        if self.name == "Boot Camp" and "Shared Fate" in active_games_dict[self.game_id]["Active Events"]:
+            if active_games_dict[self.game_id]["Active Events"]["Shared Fate"]["Effect"] == "Conflict":
+                improvement_income_dict["Military Capacity"]["Income"] += 1
+
         # get capital resource if able
         # to do - find a way to not hard code this check
         if self.name == "Capital" and region.resource != "Empty":
             match region.resource:
                 case "Coal":
-                    if 'Coal Mining' in player_research_list:
+                    if 'Coal Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Oil":
-                    if 'Oil Drilling' in player_research_list:
+                    if 'Oil Drilling' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Basic Materials":
                     improvement_income_dict[region.resource]["Income"] += 1
                 case "Common Metals":
-                    if 'Surface Mining' in player_research_list:
+                    if 'Surface Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Advanced Metals":
-                    if 'Metallurgy' in player_research_list:
+                    if 'Metallurgy' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Uranium":
-                    if 'Uranium Extraction' in player_research_list:
+                    if 'Uranium Extraction' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Rare Earth Elements":
-                    if 'REE Mining' in player_research_list:
+                    if 'REE Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
         
         # calculate final income

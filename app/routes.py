@@ -1299,10 +1299,10 @@ def stage2_resolution():
     for i in range(len(nation_table)):
         nation_id = i + 1
         contents_dict[nation_id] = {}
-        contents_dict[nation_id]["name_choice"] = request.form.get(f'nameinput_p{i}')
-        contents_dict[nation_id]["gov_choice"] = request.form.get(f'govinput_p{i}')
-        contents_dict[nation_id]["fp_choice"] = request.form.get(f'fpinput_p{i}')
-        contents_dict[nation_id]["vc_choice"] = request.form.get(f'vcinput_p{i}')
+        contents_dict[nation_id]["name_choice"] = request.form.get(f'nameinput_p{nation_id}')
+        contents_dict[nation_id]["gov_choice"] = request.form.get(f'govinput_p{nation_id}')
+        contents_dict[nation_id]["fp_choice"] = request.form.get(f'fpinput_p{nation_id}')
+        contents_dict[nation_id]["vc_choice"] = request.form.get(f'vcinput_p{nation_id}')
 
     core.resolve_stage2_processing(full_game_id, contents_dict)
     

@@ -128,7 +128,7 @@
                 "Dollars": {
                     "Upkeep": 1
                 },
-                "Green Energy": {
+                "Energy": {
                     "Income": 1
                 }
             },
@@ -136,7 +136,7 @@
                 "Dollars": {
                     "Upkeep": 1
                 },
-                "Green Energy": {
+                "Energy": {
                     "Income": 1
                 }
             }
@@ -248,7 +248,7 @@
         "Description": "+1 advanced metals from Advanced Metal Mine improvements. +1 uranium from Uranium Mine improvements.",
         "Location": "C3",
         "Modifiers": {
-            "Advanced Metal Mine": {
+            "Advanced Metals Mine": {
                 "Advanced Metals": {
                     "Income": 1
                 }
