@@ -122,15 +122,6 @@ pre {
     border: 1px solid rgb(88, 88, 88);
     border-collapse: collapse;
 }
-.upkeep_manager_table {
-    width: 100%;
-    height: 150px;
-    margin-bottom: 20px;
-}
-.upkeep_manager_table td {
-    border: 1px solid rgb(88, 88, 88);
-    border-collapse: collapse;
-}
 .misc_info_table {
     width: 100%;
     height: 100px;
@@ -264,29 +255,15 @@ pre {
                         </tr>
                     {% endfor %}
                 </table>
-                <table class="upkeep_manager_table">
+                <table class="misc_info_table">
                     <tr>
-                        <th colspan="2">Upkeep Manager</th>
+                        <th style="padding-top:3px">Miscellaneous Information</th>
                     </tr>
-                    <tr class="subtitle">
-                        <td style="width:50%;">Resource Name</td>
-                        <td>Amount Dedicated</td>
-                    </tr>
-                    <tr class="coal">
-                        <td><b>Coal</b></td>
-                        <td>{{ player_information_dict['Upkeep Manager']['Coal'] }}</td>
-                    </tr>
-                    <tr class="oil">
-                        <td><b>Oil</b></td>
-                        <td>{{ player_information_dict['Upkeep Manager']['Oil'] }}</td>
-                    </tr>
-                    <tr class="green">
-                        <td><b>Green Energy</b></td>
-                        <td>{{ player_information_dict['Upkeep Manager']['Green Energy'] }}</td>
-                    </tr>
-                    <tr class="subtitle">
-                        <td colspan="2">Total upkeep costs: -{{ player_information_dict['Upkeep Manager']['Total'] }}</td>
-                    </tr>
+                    {% for key, value in player_information_dict['Misc Info'].items() %}
+                        <tr>
+                            <td>{{ value }}</td>
+                        </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div>
@@ -309,30 +286,13 @@ pre {
         </table>
         <table class="ballistics_table">
             <tr>
-                <th class="subtitle"style="padding-top:3px">Ballistic Weapons</th></tr>
+                <th class="subtitle"style="padding-top:3px">Missile Stockpile</th></tr>
             </tr>
             <tr>
                 <td>{{ player_information_dict['Missile Data']['Standard'] }}</td>
             </tr>
             <tr>
                 <td>{{ player_information_dict['Missile Data']['Nuclear'] }}</td>
-            </tr>
-        </table>
-        <table class="misc_info_table">
-            <tr>
-                <th style="padding-top:3px">Miscellaneous Information</th>
-            </tr>
-            <tr>
-                <td>{{ player_information_dict['Misc Info']['Capital Resource'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ player_information_dict['Misc Info']['Owned Regions'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ player_information_dict['Misc Info']['Occupied Regions'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ player_information_dict['Misc Info']['Undeveloped Regions'] }}</td>
             </tr>
         </table>
     </div>

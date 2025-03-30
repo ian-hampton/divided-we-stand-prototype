@@ -9,7 +9,7 @@ from typing import Union, Tuple, List
 
 from app import core
 from app.alliance import AllianceTable
-from app.alliance import Alliance
+from app.nationdata import NationTable
 
 
 class WarData:
@@ -387,10 +387,9 @@ class WarData:
         Returns:
             True or False or war name string.
         """
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
-        nation_name_1 = playerdata_list[player_id_1 - 1][1]
-        nation_name_2 = playerdata_list[player_id_2 - 1][1]
+        nation_table = NationTable(self.game_id)
+        nation_name_1 = nation_table.get(player_id_1).name
+        nation_name_2 = nation_table.get(player_id_2).name
 
         for war_name, war_data in self.wardata_dict.items():
             combatant_dict = war_data["combatants"]
