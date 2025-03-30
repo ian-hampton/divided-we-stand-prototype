@@ -2,6 +2,7 @@ import json
 import random
 
 from app import core
+from app.region import Region
 
 class Nation:
     
@@ -25,11 +26,16 @@ class Nation:
 
         self.score: int = nation_data["score"]
         self.chosen_vc_set: str = nation_data["chosenVictorySet"]
+        self._sets: dict = nation_data["victorySets"]
+        self.victory_conditions: dict = self._sets.get(self.chosen_vc_set)
 
         self.improvement_counts: dict = nation_data["improvementCounts"]
         self.unit_counts: dict = nation_data["unitCounts"]
+        self.regions_owned: int = nation_data["statistics"]["regionsOwned"]
+        self.regions_occupied: int = nation_data["statistics"]["regionsOccupied"]
+        self.resources_given: int = nation_data["statistics"]["resourcesGiven"]
+        self.resources_received: int = nation_data["statistics"]["resourcesReceived"]
 
-        self._sets: dict = nation_data["victorySets"]
         self._resources: dict = nation_data["resources"]
         self._records: dict = nation_data["records"]
 
@@ -178,6 +184,12 @@ class Nation:
                     "rate": 100
                 },
             },
+            "statistics": {
+                "regionsOwned": 0,
+                "regionsOccupied": 0,
+                "resourcesGiven": 0,
+                "resourcesReceived": 0
+            },
             "records": {
                 "militaryStrength": [],
                 "nationSize": [],
@@ -192,6 +204,18 @@ class Nation:
         }
 
         return Nation(nation_id, nation_data, game_id)
+
+    def update_victory_progress(self) -> None:
+        """
+        Updates victory condition progress. Be sure to save the nation object in order to commit the update!
+        """
+        
+        from app import checks
+        current_turn_num = core.get_current_turn_num(self.game_id)
+        vc_results, score = checks.check_victory_conditions(self.game_id, int(self.id), current_turn_num)
+
+        self.victory_conditions = vc_results
+        self.score = score
 
     def add_tech(self, technology_name: str) -> None:
         """
@@ -563,6 +587,12 @@ class NationTable:
             "chosenVictorySet": nation.chosen_vc_set,
             "victorySets": nation._sets,
             "resources": nation._resources,
+            "statistics": {
+                "regionsOwned": nation.regions_owned,
+                "regionsOccupied": nation.regions_occupied,
+                "resourcesGiven": nation.resources_given,
+                "resourcesReceived": nation.resources_received
+            },
             "records": nation._records,
             "improvementCounts": nation.improvement_counts,
             "unitCounts": nation.unit_counts,
@@ -590,7 +620,65 @@ class NationTable:
         Updates leaderboard records in each nation.
         """
 
-        pass
+        current_turn_num = core.get_current_turn_num(self.game_id)
+        tech_data_dict = core.get_scenario_dict(self.game_id, "Technologies")
+        rmdata_filepath = f'gamedata/{self.game_id}/rmdata.csv'
+        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+
+        for nation in self:
+
+            # update military strength
+            military_strength = 0
+            for unit_name, unit_count in nation.unit_counts.items():
+                military_strength += unit_count
+            nation._records["militaryStrength"].append(military_strength)
+
+            # update nation size
+            nation._records["nationSize"].append(nation.regions_owned)
+
+            # update net income total
+            net_income_total = 0
+            for resource_name in nation._resources:
+                if resource_name == "Military Capacity":
+                    continue
+                income = float(nation.get_income(resource_name))
+                net_income_total += income
+            nation._records["netIncome"].append(f"{net_income_total:.2f}")
+
+            # update tech count
+            technology_count = 0
+            for technology_name in nation.completed_research:
+                if technology_name in tech_data_dict:
+                    technology_count += 1
+            nation._records["researchCount"].append(technology_count)
+
+            # update transaction count
+            transaction_count = 0
+            for transaction in rmdata_all_transaction_list:
+                if transaction[1] == nation.name:
+                    transaction_count += int(transaction[3])
+            transaction_count += nation.resources_given
+            transaction_count += nation.resources_received
+            nation._records["transactionCount"].append(transaction_count)
+
+            self.save(nation)
+
+    def get_top_three(self, record_name: str) -> list:
+        """
+        Retrieves the top three of a given record.
+        """
+
+        data = {}
+        for nation in self:
+            if record_name == "netIncome":
+                data[nation.name] = float(nation._records[record_name])
+            else:
+                data[nation.name] = nation._records[record_name]
+
+        sorted_data = dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
+        top_three = list(sorted_data.items())[:3]
+        
+        return top_three
 
 # tba - move everything below to a scenario file
 EASY_LIST = [
