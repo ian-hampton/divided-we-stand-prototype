@@ -1,4 +1,5 @@
 from app import core
+from app.nationdata import NationTable
 
 from PIL import ImageColor
 
@@ -6,13 +7,10 @@ def color_nation_names(string, game_id):
     """
     Adds html span tags around all nation names in given string
     """
-
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-
+    nation_table = NationTable(game_id)
     color_dict = {}
-    for playerdata in playerdata_list:
-        color_dict[playerdata[1]] = playerdata[2]
+    for nation in nation_table:
+        color_dict[nation.name] = nation.color
 
     bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
 

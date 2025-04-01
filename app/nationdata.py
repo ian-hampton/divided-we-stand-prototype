@@ -671,9 +671,9 @@ class NationTable:
         data = {}
         for nation in self:
             if record_name == "netIncome":
-                data[nation.name] = float(nation._records[record_name])
+                data[nation.name] = float(nation._records[record_name][-1])
             else:
-                data[nation.name] = nation._records[record_name]
+                data[nation.name] = nation._records[record_name][-1]
 
         sorted_data = dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
         top_three = list(sorted_data.items())[:3]

@@ -621,7 +621,6 @@ for full_game_id in game_ids:
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
 
-    # define helper functions
     def camel_to_title(camel_str):
         # Insert a space before each uppercase letter and capitalize the words
         title_str = re.sub(r'([A-Z])', r' \1', camel_str).title()
@@ -765,7 +764,8 @@ def wars(full_game_id):
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
     
-    # read the contents of active_games.json
+    # get game data
+    nation_table = NationTable(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Game Name"]
@@ -773,11 +773,9 @@ def technologies(full_game_id):
     scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
 
 
-    # Get Research Information
+    # refine technology dictionary
     refined_dict = {}
     research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
-    
-    # get scenario data
     if scenario == "Standard":
         categories = ["Energy", "Infrastructure", "Military", "Defense"]
         for category in categories:
@@ -814,15 +812,12 @@ def technologies(full_game_id):
         del research_data_dict["Military Intelligence"]
 
     # add player research data
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
     for research_name in research_data_dict:
-        research_data_dict[research_name]["Player Research"] = [None] * len(playerdata_list)
-    for index, playerdata in enumerate(playerdata_list):
-        player_research_list = ast.literal_eval(playerdata[26])
-        for research_name in player_research_list:
+        research_data_dict[research_name]["Player Research"] = [None] * len(nation_table)
+    for index, nation in enumerate(nation_table):
+        for research_name in nation.completed_research:
             if research_name in research_data_dict:
-                research_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+                research_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
     for key, value in research_data_dict.items():
@@ -840,7 +835,8 @@ def technologies(full_game_id):
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
-    # read the contents of active_games.json
+    # get game data
+    nation_table = NationTable(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Game Name"]
@@ -880,15 +876,12 @@ def agendas(full_game_id):
         refined_dict[category]["Table"] = table_contents
 
     # add player research data
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
     for research_name in agenda_data_dict:
-        agenda_data_dict[research_name]["Player Research"] = [None] * len(playerdata_list)
-    for index, playerdata in enumerate(playerdata_list):
-        player_research_list = ast.literal_eval(playerdata[26])
-        for research_name in player_research_list:
+        agenda_data_dict[research_name]["Player Research"] = [None] * len(nation_table)
+    for index, nation in enumerate(nation_table):
+        for research_name in nation.completed_research:
             if research_name in agenda_data_dict:
-                agenda_data_dict[research_name]["Player Research"][index] = (playerdata[2][1:], playerdata[1])
+                agenda_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
     for key, value in agenda_data_dict.items():
@@ -975,8 +968,6 @@ def resource_market(full_game_id):
     page_title = f'{game_name} - Resource Market'
 
     # get resource market records
-    # todo - move contents of rmdata.csv into gamedata.json so we can use a dictionary for this instead of a cringe list of lists
-    # todo - make all of this shit code better when I get around to the playerdata rework
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
     current_turn_num = core.get_current_turn_num(int(full_game_id[-1]))
     request_list = ['Dollars', 'Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
@@ -1040,13 +1031,12 @@ def resource_market(full_game_id):
 def announcements(full_game_id):
 
     # get game data
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    trucedata_list = core.read_file(trucedata_filepath, 1)
+    nation_table = NationTable(full_game_id)
     alliance_table = AllianceTable(full_game_id)
     wardata = WarData(full_game_id)
     notifications = Notifications(full_game_id)
+    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
+    trucedata_list = core.read_file(trucedata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -1060,14 +1050,6 @@ def announcements(full_game_id):
         event_pending = True
     else:
         event_pending = False
-
-    # get needed data from playerdata.csv
-    nation_name_list = []
-    for player in playerdata_list:
-        nation_name = [player[1]]
-        nation_name_list.append(nation_name)
-    while len(nation_name_list) < 10:
-        nation_name_list.append(['N/A'])
 
     # calculate date information
     if not event_pending:
@@ -1101,18 +1083,14 @@ def announcements(full_game_id):
         for i in range(1, 11):
             truce_status = ast.literal_eval(truce[i])
             if truce_status:
-                select_nation_name = nation_name_list[i - 1][0]
-                truce_participants_list.append(select_nation_name)
+                nation = nation_table.get(i)
+                truce_participants_list.append(nation.name)
         truce_name = ' - '.join(truce_participants_list)
         truce_end_turn = int(truce[11])
-        if truce_end_turn >= current_turn_num:
+        if truce_end_turn > current_turn_num:
             diplomacy_list.append(f"{truce_name} truce until turn {truce_end_turn}.")
-        if truce_end_turn < current_turn_num:
+        if truce_end_turn == current_turn_num:
             diplomacy_list.append(f'{truce_name} truce has expired.')
-    # get all ongoing alliances
-    for alliance in alliance_table:
-        if alliance.is_active:
-            diplomacy_list.append(f"{alliance.name} is active.")
     # format diplomacy string
     diplomacy_string = "<br>".join(diplomacy_list)
     diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
@@ -1121,8 +1099,8 @@ def announcements(full_game_id):
     # Build Notifications String
     notifications_list = []
     q = PriorityQueue()
-    for key, value in notifications:
-        q.put(key, value)
+    for string, priority in notifications:
+        q.put((priority, string))
     while not q.empty():
         ntf = q.get()
         notifications_list.append(ntf)
@@ -1155,29 +1133,24 @@ def announcements(full_game_id):
 
     # get top three standings
     standings_dict = {}
-    records = ['largest_nation', 'largest_military', 'most_research', 'strongest_economy']
-    for record in records:
-        standings_dict[record] = list(checks.get_top_three(full_game_id, record, True))
-    standings_dict["most_transactions"] = list(core.get_top_three_transactions(full_game_id))
-    for record, record_data in standings_dict.items():
-        for i in range(len(record_data)):
-            standings_dict[record][i] = palette.color_nation_names(record_data[i], full_game_id)
+    records = ["nationSize", "netIncome", "transactionCount", "militaryStrength", "researchCount"]
+    record_names = ["Largest Nation", "Most Income", "Most Transactions", "Largest Military", "Most Technology"]
+    for i, record in enumerate(records):
+        standings = nation_table.get_top_three(record)
+        standings_filtered = []
+        for entry in standings:
+            nation_name = palette.color_nation_names(entry[0], full_game_id)
+            standings_filtered.append([nation_name, entry[1]])
+        record_name = record_names[i]
+        standings_dict[record_name] = standings_filtered
     
     # update scoreboard
     scoreboard_dict = {}
-    for index, playerdata in enumerate(playerdata_list):
-        player_id = index + 1
-        nation_name = playerdata[1]
-        player_color_hex = playerdata[2]
-        vc_results = checks.check_victory_conditions(full_game_id, player_id, current_turn_num)
-        player_vc_score = 0
-        for result in vc_results:
-            if result == True:
-                player_vc_score += 1
+    for nation in nation_table:
         inner_dict = {}
-        inner_dict["color"] = player_color_hex
-        inner_dict["score"] = player_vc_score
-        scoreboard_dict[nation_name] = inner_dict
+        inner_dict["color"] = nation.color
+        inner_dict["score"] = nation.score
+        scoreboard_dict[nation.name] = inner_dict
     
     # sort scoreboard
     scoreboard_dict = dict(
@@ -1198,14 +1171,7 @@ def alliances(full_game_id):
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} - Alliance Page'
 
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    nation_name_list = []
-    nation_colors = []
-    for player in playerdata_list:
-        nation_name_list.append(player[1])
-        nation_colors.append(player[2])
-
+    nation_table = NationTable(full_game_id)
     alliance_table = AllianceTable(full_game_id)
     alliance_dict = alliance_table.data
     misc_data_dict = core.get_scenario_dict(full_game_id, "Misc")
@@ -1224,13 +1190,12 @@ def alliances(full_game_id):
             # add color to nation names
             alliance_data["currentMembersFormatted"] = {}
             for nation_name, turn_joined in alliance_data["currentMembers"].items():
-                # can't wait to do the playerdata rework to get rid of this garbage color management code
-                index = nation_name_list.index(nation_name)
+                nation = nation_table.get(nation_name)
                 bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
-                if nation_colors[index] in bad_primary_colors_set:
-                    color = palette.normal_to_occupied[nation_colors[index]]
+                if nation.color in bad_primary_colors_set:
+                    color = palette.normal_to_occupied[nation.color]
                 else:
-                    color = nation_colors[index]
+                    color = nation.color
                 # add to new dict
                 alliance_data["currentMembersFormatted"][nation_name] = {}
                 alliance_data["currentMembersFormatted"][nation_name]["turnJoined"] = turn_joined

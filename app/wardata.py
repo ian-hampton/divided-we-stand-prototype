@@ -772,37 +772,32 @@ class WarData:
         Params:
             war_name (str): Name of war.
         """
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
-        nation_name_list = []
-        for nation_info in playerdata_list:
-            nation_name_list.append(nation_info[1])
+        nation_table = NationTable(self.game_id)
         war_dict = self.wardata_dict[war_name]
 
         # initial threshold is a 100 point difference
-        attacker_threshold = 0
-        defender_threshold = 0
+        attacker_threshold = 100
+        defender_threshold = 100
 
         # check for unyielding and crime syndicate
         for combatant_name, combatant_data in war_dict["combatants"].items():
-            combatant_id = nation_name_list.index(combatant_name) + 1
-            combatant_research_list = ast.literal_eval(playerdata_list[combatant_id - 1][26])
+            nation = nation_table.get(combatant_name)
             if combatant_data["role"] == "Main Attacker" and defender_threshold == 0:
-                if playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
+                if nation.gov == "Crime Syndicate":
                     defender_threshold = None
-                elif "Unyielding" in combatant_research_list:
+                elif "Unyielding" in nation.completed_research:
                     defender_threshold = 50
             elif combatant_data["role"] == "Main Defender" and attacker_threshold == 0:
-                if playerdata_list[combatant_id - 1][3] == "Crime Syndicate":
+                if nation.gov == "Crime Syndicate":
                     attacker_threshold = None
-                elif "Unyielding" in combatant_research_list:
+                elif "Unyielding" in nation.completed_research:
                     attacker_threshold = 50
 
         # if not crime syndicate compute remaining threshold
         if attacker_threshold is not None:
-            attacker_threshold += 100 + war_dict["defenderWarScore"]["total"]
+            attacker_threshold += war_dict["defenderWarScore"]["total"]
         if defender_threshold is not None:
-            defender_threshold += 100 + war_dict["attackerWarScore"]["total"]
+            defender_threshold += war_dict["attackerWarScore"]["total"]
 
         return attacker_threshold, defender_threshold
     
@@ -813,11 +808,6 @@ class WarData:
         Params:
             war_name (str): Name of war.
         """
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
-        nation_name_list = []
-        for nation_info in playerdata_list:
-            nation_name_list.append(nation_info[1])
         war_dict = self.wardata_dict[war_name]
 
         for combatant_name, combatant_data in war_dict["combatants"].items():
