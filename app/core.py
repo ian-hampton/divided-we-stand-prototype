@@ -34,9 +34,12 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     """
     Resolves stage one setup for a new game.
 
-    Parameters:
+    Params:
         game_id (str): Game ID string.
         contents_dict (dict): A dictionary containing the setup data for each player.
+    
+    Returns:
+        None
     """
 
     # get game files
@@ -114,9 +117,12 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
     Resolves stage two setup for a new game.
 
-    Parameters:
+    Params:
         game_id (str): Game ID string.
         contents_dict (dict): A dictionary containing the setup data for each player.
+    
+    Returns:
+        None
     """
 
     # get game files
@@ -179,15 +185,18 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
 
-def resolve_turn_processing(full_game_id, public_actions_list, private_actions_list):
-    '''
-    Resolves turn processing for a game in stage three (an active and fully setup game).
+def resolve_turn_processing(full_game_id, contents_dict: dict) -> None:
+    """
+    Resolves a normal turn.
 
-    Parameters:
-    - full_game_id: The full game_id of the active game.
-    - public_actions_list: A list of player public actions gathered from turn resolution HTML form. 
-    - private_actions_list: A list of player private actions gathered from turn resolution HTML form. 
-    '''
+    Params:
+        game_id (str): Game ID string.
+        contents_dict (dict): A dictionary containing the actions submitted by each player.
+
+    Returns:
+        None
+    """
+    
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     playerdata_list = read_file(playerdata_filepath, 1)
     player_count = len(playerdata_list)

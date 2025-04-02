@@ -1103,7 +1103,7 @@ def announcements(full_game_id):
         q.put((priority, string))
     while not q.empty():
         ntf = q.get()
-        notifications_list.append(ntf)
+        notifications_list.append(ntf[1])
     notifications_string = "<br>".join(notifications_list)
     notifications_string = palette.color_nation_names(notifications_string, full_game_id)
 
@@ -1244,11 +1244,10 @@ def stage1_resolution():
     nation_table = NationTable(full_game_id)
 
     contents_dict = {}
-    for i in range(len(nation_table)):
-        nation_id = i + 1
-        contents_dict[nation_id] = {}
-        contents_dict[nation_id]["start"] = request.form.get(f'regioninput_p{nation_id}')
-        contents_dict[nation_id]["color"] = request.form.get(f'colordropdown_p{nation_id}')
+    for nation in nation_table:
+        contents_dict[nation.id] = {}
+        contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
+        contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
     
     core.resolve_stage1_processing(full_game_id, contents_dict)
     
@@ -1261,13 +1260,12 @@ def stage2_resolution():
     nation_table = NationTable(full_game_id)
 
     contents_dict = {}
-    for i in range(len(nation_table)):
-        nation_id = i + 1
-        contents_dict[nation_id] = {}
-        contents_dict[nation_id]["name_choice"] = request.form.get(f'nameinput_p{nation_id}')
-        contents_dict[nation_id]["gov_choice"] = request.form.get(f'govinput_p{nation_id}')
-        contents_dict[nation_id]["fp_choice"] = request.form.get(f'fpinput_p{nation_id}')
-        contents_dict[nation_id]["vc_choice"] = request.form.get(f'vcinput_p{nation_id}')
+    for nation in nation_table:
+        contents_dict[nation.id] = {}
+        contents_dict[nation.id]["name_choice"] = request.form.get(f"nameinput_p{nation.id}")
+        contents_dict[nation.id]["gov_choice"] = request.form.get(f"govinput_p{nation.id}")
+        contents_dict[nation.id]["fp_choice"] = request.form.get(f"fpinput_p{nation.id}")
+        contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
 
     core.resolve_stage2_processing(full_game_id, contents_dict)
     
@@ -1275,26 +1273,24 @@ def stage2_resolution():
 
 @main.route('/turn_resolution', methods=['POST'])
 def turn_resolution():
-    #process form data
+
     full_game_id = request.form.get('full_game_id')
-    public_actions_list = []
-    private_actions_list = []
-    for i in range(1, 11):
-        public_str = request.form.get('public_textarea_p' + str(i))
+    nation_table = NationTable(full_game_id)
+
+    contents_dict = {}
+    for nation in nation_table:
+        contents_dict[nation.id] = []
+        public_str = request.form.get(f"public_textarea_p{nation.id}")
+        private_str = request.form.get(f"private_textarea_p{nation.id}")
         if public_str:
-            #if this player submitted public actions, convert actions into a list
-            player_public_list = public_str.split('\r\n')
-            public_actions_list.append(player_public_list)
-        else:
-            public_actions_list.append([])
-        private_str = request.form.get('private_textarea_p' + str(i))
+            actions_list = public_str.split('\r\n')
+            contents_dict[nation.id].extend(actions_list)
         if private_str:
-            #if this player submitted private actions, convert actions into a list
-            player_private_list = private_str.split('\r\n')
-            private_actions_list.append(player_private_list)
-        else:
-            private_actions_list.append([])
-    core.resolve_turn_processing(full_game_id, public_actions_list, private_actions_list)
+            actions_list = private_str.split('\r\n')
+            contents_dict[nation.id].extend(actions_list)
+
+    core.resolve_turn_processing(full_game_id, contents_dict)
+
     return redirect(f'/{full_game_id}')
 
 @main.route('/event_resolution', methods=['POST'])
