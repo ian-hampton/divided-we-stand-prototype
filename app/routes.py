@@ -604,8 +604,7 @@ def generate_player_route(full_game_id, player_id):
     @main.route(f'/{full_game_id}/player{player_id}', endpoint=route_name)
     def player_route():
         page_title = f'Player #{player_id} Nation Sheet'
-        game_id = int(full_game_id[-1])
-        current_turn_num = core.get_current_turn_num(game_id)
+        current_turn_num = core.get_current_turn_num(full_game_id)
         player_information_dict = core.get_data_for_nation_sheet(full_game_id, player_id, current_turn_num)
         return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
 
@@ -632,7 +631,7 @@ def wars(full_game_id):
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} Wars List'
-    current_turn_num = core.get_current_turn_num(int(full_game_id[-1]))
+    current_turn_num = core.get_current_turn_num(full_game_id)
     wardata = WarData(full_game_id)
 
     # read wars
@@ -969,7 +968,7 @@ def resource_market(full_game_id):
 
     # get resource market records
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
-    current_turn_num = core.get_current_turn_num(int(full_game_id[-1]))
+    current_turn_num = core.get_current_turn_num(full_game_id)
     request_list = ['Dollars', 'Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
     total_exchanged = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
     rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
@@ -1301,13 +1300,12 @@ def event_resolution():
     '''
     
     full_game_id = request.form.get('full_game_id')
-    game_id = int(full_game_id[-1])
     playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'active_games.json', 'r') as json_file:  
         active_games_dict = json.load(json_file)
     
-    current_turn_num = core.get_current_turn_num(game_id)
+    current_turn_num = core.get_current_turn_num(full_game_id)
     player_count = len(playerdata_list)
     
     events.handle_current_event(active_games_dict, full_game_id)

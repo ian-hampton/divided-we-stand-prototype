@@ -64,7 +64,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
             continue
         starting_region = Region(region_id, game_id)
         starting_region_improvement = Improvement(region_id, game_id)
-        starting_region.set_owner_id(nation_id)
+        starting_region.set_owner_id(int(nation_id))
         starting_region_improvement.set_improvement("Capital")
 
     # place random starts
@@ -89,7 +89,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
                     break
             # if no player found place player
             if conflict_detected == False:
-                random_region.set_owner_id(random_assignment_player_id)
+                random_region.set_owner_id(int(random_assignment_player_id))
                 random_region_improvement = Improvement(random_region_id, game_id)
                 random_region_improvement.set_improvement("Capital")
                 break
@@ -102,8 +102,8 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         json.dump(active_games_dict, json_file, indent=4)
     
     # generate and update maps
-    current_turn_num = get_current_turn_num(int(game_id[-1]))
-    map_name = get_map_name(int(game_id[-1]))
+    current_turn_num = get_current_turn_num(game_id)
+    map_name = get_map_name(game_id)
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     resource_map = map.ResourceMap(game_id, map_name)
     control_map = map.ControlMap(game_id, map_name)
@@ -185,7 +185,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
 
-def resolve_turn_processing(full_game_id, contents_dict: dict) -> None:
+def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     Resolves a normal turn.
 
@@ -197,19 +197,12 @@ def resolve_turn_processing(full_game_id, contents_dict: dict) -> None:
         None
     """
     
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
-    player_count = len(playerdata_list)
-    current_turn_num = get_current_turn_num(int(full_game_id[-1]))
-    map_name = get_map_name(int(full_game_id[-1]))
-    
-    #create logs
-    player_action_logs = []
-    for i in range(player_count):
-        player_action_logs.append([])
-    notifications = Notifications(full_game_id)
+    nation_table = NationTable(game_id)
+    notifications = Notifications(game_id)
     notifications.clear()
-
+    current_turn_num = get_current_turn_num(game_id)
+    map_name = get_map_name(game_id)
+    
     #filter
     library = get_library(full_game_id)
     for player_actions_list in public_actions_list:
@@ -325,20 +318,13 @@ def resolve_turn_processing(full_game_id, contents_dict: dict) -> None:
             player_action_logs = private_actions.resolve_unit_movements(private_actions_dict['Move'], full_game_id, player_action_logs)
             update_control_map = True
 
-
-    #Save Logs
-    # clear all files in log directory
-    directory = f'gamedata/{full_game_id}/logs'
-    os.makedirs(directory, exist_ok=True)
-    # player logs
-    for index, action_log in enumerate(player_action_logs):
-        filename = os.path.join(directory, f'Player #{index + 1}.txt')
-        with open(filename, 'w') as file:
-            for string in action_log:
-                file.write(string + '\n')
-    # war logs
+    # export logs
+    for nation in nation_table:
+        nation.export_action_log()
+        nation.action_log = []
+        nation_table.save(nation)
     from app.wardata import WarData
-    wardata = WarData(full_game_id)
+    wardata = WarData(game_id)
     wardata.export_all_logs()
 
 
@@ -401,7 +387,7 @@ def resolve_turn_processing(full_game_id, contents_dict: dict) -> None:
 
 
     #Update Visuals
-    current_turn_num = get_current_turn_num(int(full_game_id[-1]))
+    current_turn_num = get_current_turn_num(game_id)
     #resgraphs.update_all(full_game_id)
     main_map = map.MainMap(full_game_id, map_name, current_turn_num)
     main_map.update()
@@ -752,28 +738,30 @@ def get_game_name(full_game_id):
     game_name = active_games_dict[full_game_id]["Game Name"]
     return game_name
 
-def get_map_name(game_id):
-    '''Retrieves map name string given a game id.'''
-    full_game_id = f'game{game_id}'
+def get_map_name(game_id: str) -> str:
+    """
+    Retrieves map name string given a game id.
+    """
+    
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    map_name = active_games_dict[full_game_id]["Information"]["Map"]
+
+    map_name = active_games_dict[game_id]["Information"]["Map"]
+
     return map_name
 
-def get_current_turn_num(game_id):
-    '''Gets current turn number given game id.'''
-
-    if isinstance(game_id, int):
-        full_game_id = f'game{game_id}'
-    else:
-        full_game_id = game_id
+def get_current_turn_num(game_id: str) -> str | int:
+    """
+    Gets current turn number given game id.
+    """
+    
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
     try:
-        current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+        current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
     except:
-        current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
+        current_turn_num = active_games_dict[game_id]["Statistics"]["Current Turn"]
 
     return current_turn_num
 
@@ -1451,44 +1439,6 @@ unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
 
 #color dictionaries
 # tba - remove all of these and use palette instead
-player_colors_hex = {
-    "Brown": "#603913",
-    "Coral": "#ff974e",
-    "Dark Blue": "#003b84",
-    "Dark Green": "#105500",
-    "Dark Purple": "#5a009d",
-    "Dark Red": "#b30000",
-    "Light Blue": "#0096ff",
-    "Light Green": "#5bb000",
-    "Light Purple": "#b654ff",
-    "Light Red": "#ff3d3d",
-    "Maroon": "#8b2a1a",
-    "Metallic Gold": "#9f8757",
-    "Orange": "#ff9600",
-    "Pink": "#f384ae",
-    "Terracotta": "#b66317",
-    "Yellow": "#ffd64b",
-    None: "None" 
-}
-
-player_colors_rgb = {
-    "Brown": (96, 57, 19, 255),
-    "Coral": (255, 151, 78, 255),
-    "Dark Blue": (0, 59, 132, 255),
-    "Dark Green": (16, 85, 0, 255),
-    "Dark Purple": (90, 0, 157, 255),
-    "Dark Red": (179, 0, 0, 255),
-    "Light Blue": (0, 150, 255, 255),
-    "Light Green": (91, 176, 0, 255),
-    "Light Purple": (182, 84, 255, 255),
-    "Light Red": (255, 61, 61, 255),
-    "Maroon": (139, 42, 26, 255),
-    "Metallic Gold": (159, 135, 87, 255),
-    "Orange": (255, 150, 0, 255),
-    "Pink": (243, 132, 174, 255),
-    "Terracotta": (182, 99, 23, 255),
-    "Yellow": (255, 214, 75, 255)
-}
 
 player_colors_conversions = {
     "#603913": (96, 57, 19, 255),

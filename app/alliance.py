@@ -22,7 +22,7 @@ class Alliance:
             self.is_active: bool = False
 
         if self.is_active:
-            current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+            current_turn_num = core.get_current_turn_num(game_id)
             self.age: int = current_turn_num - self.turn_created
         else:
             self.age: int = self.turn_ended - self.turn_created
@@ -43,7 +43,7 @@ class Alliance:
             Alliance: A created alliance.
         """
 
-        current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+        current_turn_num = core.get_current_turn_num(game_id)
 
         new_alliance_data = {
             "allianceType": alliance_type,
@@ -69,7 +69,7 @@ class Alliance:
             nation_name (str): Nation to add to the alliance.
         """
 
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         if nation_name in self.former_members:
             del self.former_members[nation_name]
@@ -85,7 +85,7 @@ class Alliance:
             nation_name (str): Nation to remove from the alliance.
         """
 
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         del self.current_members[nation_name]
 
@@ -96,7 +96,7 @@ class Alliance:
         Retires an alliance.
         """
         
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         for nation_name in self.current_members:
             self.former_members[nation_name] = current_turn_num
@@ -226,7 +226,7 @@ class AllianceTable:
             bool: True if an grace period is still in effect, False otherwise.
         """
 
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         for alliance in self:
             if nation_name_1 in alliance.former_members and nation_name_2 in alliance.former_members:

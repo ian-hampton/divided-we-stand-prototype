@@ -1,5 +1,6 @@
 import json
 import random
+import os
 
 from app import core
 from app.region import Region
@@ -20,6 +21,7 @@ class Nation:
         self.trade_fee: str = nation_data["tradeFee"]
         self.completed_research: dict = nation_data["unlockedTechs"]
         self.income_details: list = nation_data["incomeDetails"]
+        self.action_log: list = nation_data["actionLog"]
 
         self.missile_count: int = nation_data["missileStockpile"]["standardMissile"]
         self.nuke_count: int = nation_data["missileStockpile"]["nuclearMissile"]
@@ -200,7 +202,8 @@ class Nation:
             "improvementCounts": improvement_cache,
             "unitCounts": unit_cache,
             "unlockedTechs": {},
-            "incomeDetails": []
+            "incomeDetails": [],
+            "actionLog": []
         }
 
         return Nation(nation_id, nation_data, game_id)
@@ -237,6 +240,20 @@ class Nation:
             raise Exception(f"{technology_name} not recognized as an agenda/technology.")
 
         self.completed_research[technology_name] = True
+
+    def export_action_log(self) -> None:
+        """
+        Exports player actions as a text file.
+        """
+
+        log_dir = f"gamedata/{self.game_id}/logs/nation{self.id}.txt"
+        if os.path.exists(log_dir):
+            os.remove(log_dir)
+        
+        os.makedirs(log_dir)
+        with open(log_dir, 'w') as file:
+            for string in self.action_log:
+                file.write(string + '\n')
 
     def get_stockpile(self, resource_name: str) -> str:
         """
@@ -597,8 +614,8 @@ class NationTable:
             "improvementCounts": nation.improvement_counts,
             "unitCounts": nation.unit_counts,
             "unlockedTechs": nation.completed_research,
-            "incomeDetails": nation.income_details
-            
+            "incomeDetails": nation.income_details,
+            "actionLog": nation.action_log
         }
 
         self.data[nation.id] = nation_data

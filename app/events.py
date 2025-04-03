@@ -561,7 +561,7 @@ def handle_current_event(active_games_dict: dict, game_id: str) -> None:
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
     player_action_logs = list([]*len(playerdata_list))
-    current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+    current_turn_num = core.get_current_turn_num(game_id)
     notifications = Notifications(game_id)
 
     #get event data
@@ -1096,7 +1096,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
     #get game information
     playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
-    current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+    current_turn_num = core.get_current_turn_num(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
     notifications = Notifications(game_id)

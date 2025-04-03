@@ -588,7 +588,7 @@ class WarData:
         """
         from app.region import Region
         war_dict: dict = self.wardata_dict[war_name]
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
         main_war_justification = None
 
         # resolve war justifications
@@ -696,7 +696,7 @@ class WarData:
 
         longest_name = None
         longest_time = 0
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         for war_name, war_data in self.wardata_dict.items():
             start_turn = war_data["startTurn"]
