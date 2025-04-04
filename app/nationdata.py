@@ -7,11 +7,11 @@ from app.region import Region
 
 class Nation:
     
-    def __init__(self, nation_id: str | int, nation_data: dict, game_id: str):
+    def __init__(self, nation_id: str, nation_data: dict, game_id: str):
 
         self.game_id = game_id
 
-        self.id = nation_id
+        self.id: str = nation_id
         self.name: str = nation_data["nationName"]
         self.player_id = nation_data["playerID"]
         self.color = nation_data["color"]
