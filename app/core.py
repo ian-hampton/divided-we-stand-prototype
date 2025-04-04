@@ -1,4 +1,3 @@
-# STANDARD IMPORTS
 import ast
 import csv
 from datetime import datetime
@@ -8,7 +7,6 @@ import random
 import shutil
 from typing import Union, Tuple, List
 
-# MY IMPORTS
 from app import map
 from app import interpreter
 from app import public_actions
@@ -25,7 +23,7 @@ from app.alliance import Alliance
 from app.alliance import AllianceTable
 from app.nationdata import Nation
 from app.nationdata import NationTable
-
+from app import actions
 
 #TURN PROCESSING PROCEDURE
 ################################################################################
@@ -185,13 +183,13 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
 
-def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
+def resolve_turn_processing(game_id: str, actions_dict: dict) -> None:
     """
     Resolves a normal turn.
 
     Params:
         game_id (str): Game ID string.
-        contents_dict (dict): A dictionary containing the actions submitted by each player.
+        actions_dict (dict): A dictionary containing the actions submitted by each player.
 
     Returns:
         None
@@ -203,15 +201,14 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     current_turn_num = get_current_turn_num(game_id)
     map_name = get_map_name(game_id)
     
-    #filter
-    library = get_library(full_game_id)
-    for player_actions_list in public_actions_list:
-        for i, action in enumerate(player_actions_list):
-            player_actions_list[i] = interpreter.check_action(action, library, full_game_id)
-    for player_actions_list in private_actions_list:
-        for i, action in enumerate(player_actions_list):
-            player_actions_list[i] = interpreter.check_action(action, library, full_game_id)
-
+    # sort actions
+    actions_dict = {}
+    for nation_id, actions_list in actions_dict.items():
+        for action_str in actions_list:
+            action = actions.validate_action(nation_id, action_str)
+            if action is not None:
+                # tba - add to actions dict
+                pass
 
     #Declare Action Dictionaries
     public_actions_dict = {

@@ -1,6 +1,6 @@
 class AllianceCreateAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.alliance_type: str = None
@@ -11,7 +11,7 @@ class AllianceCreateAction:
 
 class AllianceJoinAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.alliance_name: str = None
@@ -21,7 +21,7 @@ class AllianceJoinAction:
 
 class AllianceLeaveAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.alliance_name: str = None
@@ -31,7 +31,7 @@ class AllianceLeaveAction:
 
 class ClaimAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.target_region: str = None
@@ -41,7 +41,7 @@ class ClaimAction:
 
 class CrimeSyndicateAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.target_nation: str = None
@@ -51,7 +51,7 @@ class CrimeSyndicateAction:
 
 class ImprovementBuildAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.improvement_name: str = None
@@ -62,7 +62,7 @@ class ImprovementBuildAction:
 
 class ImprovementRemoveAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.target_region: str = None
@@ -72,7 +72,7 @@ class ImprovementRemoveAction:
 
 class MarketBuyAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.quantity: int = None
@@ -83,7 +83,7 @@ class MarketBuyAction:
 
 class MarketSellAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.quantity: int = None
@@ -94,7 +94,7 @@ class MarketSellAction:
 
 class MissileMakeAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.quantity: int = None
@@ -105,7 +105,7 @@ class MissileMakeAction:
 
 class MissileLaunchAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.missile_type: str = None
@@ -116,7 +116,7 @@ class MissileLaunchAction:
 
 class RepublicAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.resource_name: str = None
@@ -126,7 +126,7 @@ class RepublicAction:
 
 class ResearchAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.research_name: str = None
@@ -136,7 +136,7 @@ class ResearchAction:
 
 class SurrenderAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.target_nation: str = None
@@ -146,7 +146,7 @@ class SurrenderAction:
 
 class UnitDeployAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.unit_name: str = None
@@ -157,7 +157,7 @@ class UnitDeployAction:
 
 class UnitDisbandAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.target_region: str = None
@@ -167,7 +167,7 @@ class UnitDisbandAction:
 
 class UnitMoveAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.starting_region: str = None
@@ -178,7 +178,7 @@ class UnitMoveAction:
 
 class WarAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.nation_name: str = None
@@ -189,10 +189,84 @@ class WarAction:
 
 class WhitePeaceAction:
 
-    def __init__(self, nation_id: str, action: str):
+    def __init__(self, nation_id: str, action_str: str):
 
         self.id: str = nation_id
         self.target_nation: str = None
     
     def is_valid(self) -> bool:
         pass
+
+def validate_action(nation_id: str, action_str: str) -> any:
+    """
+    Creates action object and validates it.
+
+    Params:
+        nation_id (int): ID of nation/player.
+        action_str (str): Raw action string.
+    
+    Returns:
+        An action class or None if action canceled.
+    """
+
+    while True:
+        
+        action = _create_action(nation_id, action_str)
+        if action is None:
+            return
+        
+        if action.is_valid():
+            return action
+        else:
+            action_str = input("Re-enter action or hit enter to skip: ")
+            if action_str == "":
+                return
+
+def _create_action(nation_id: str, action_str: str) -> any:
+    """
+    Factory method helper function that creates the action object.
+
+    Params:
+        nation_id (int): ID of nation/player.
+        action_str (str): Raw action string.
+    
+    Returns:
+        An action class or None if action canceled.
+    """
+
+    actions = {
+        "Alliance Create": AllianceCreateAction,
+        "Alliance Join": AllianceJoinAction,
+        "Alliance Leave": AllianceLeaveAction,
+        "Claim": ClaimAction,
+        "Steal": CrimeSyndicateAction,
+        "Build": ImprovementBuildAction,
+        "Remove": ImprovementRemoveAction,
+        "Buy": MarketBuyAction,
+        "Sell": MarketSellAction,
+        "Make": MissileMakeAction,
+        "Launch": MissileLaunchAction,
+        "Republic": RepublicAction,
+        "Research": ResearchAction,
+        "Surrender": SurrenderAction,
+        "Deploy": UnitDeployAction,
+        "Disband": UnitDisbandAction,
+        "Move": UnitMoveAction,
+        "War": Warning,
+        "White Peace": WhitePeaceAction
+    }
+
+    while True:
+        
+        words = action_str.split()
+        action_key = words[0].title()
+        if action_key == "Alliance" and len(words) >= 2:
+            action_key = f"{words[0].title()} {words[1].title()}"
+        
+        if action_key in action_key:
+            return actions[action_key](nation_id, action_str)
+        else:
+            print(f"""Action "{action_str}" submitted by player {nation_id} is invalid. Unrecognized action type.""")
+            action_str = input("Re-enter action or hit enter to skip: ")
+            if action_str == "":
+                return
