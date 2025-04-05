@@ -201,42 +201,35 @@ def resolve_turn_processing(game_id: str, actions_dict: dict) -> None:
     current_turn_num = get_current_turn_num(game_id)
     map_name = get_map_name(game_id)
     
+    actions_dict = {
+        "AllianceCreateAction": [],
+        "AllianceJoinAction": [],
+        "AllianceLeaveAction": [],
+        "ClaimAction": [],
+        "CrimeSyndicateAction": [],
+        "ImprovementBuildAction": [],
+        "ImprovementRemoveAction": [],
+        "MarketBuyAction": [],
+        "MarketSellAction": [],
+        "MissileMakeAction": [],
+        "MissileLaunchAction": [],
+        "RepublicAction": [],
+        "ResearchAction": [],
+        "SurrenderAction": [],
+        "UnitDeployAction": [],
+        "UnitDisbandAction": [],
+        "UnitMoveAction": [],
+        "WarAction": [],
+        "WhitePeaceAction": []
+    }
+
     # sort actions
-    actions_dict = {}
     for nation_id, actions_list in actions_dict.items():
         for action_str in actions_list:
-            action = actions.validate_action(nation_id, action_str)
+            action = actions.validate_action(game_id, nation_id, action_str)
             if action is not None:
-                # tba - add to actions dict
-                pass
-
-    #Declare Action Dictionaries
-    public_actions_dict = {
-        'Surrender': [],
-        'White Peace': [],
-        'Purchase': [],
-        'Research': [],
-        'Remove': [],
-        'Build': [],
-        'Make': [],
-        'Buy': [],
-        'Sell': [],
-        'Alliance Create': [],
-        'Alliance Join': [],
-        'Alliance Leave': [],
-        'Republic': [],
-        'Event': []
-    }
-    private_actions_dict = {
-        'Steal': [],
-        'Withdraw': [],
-        'Disband': [],
-        'Deploy': [],
-        'War': [],
-        'Launch': [],
-        'Move': []
-    }
-
+                class_name = type(action).__name__
+                actions_dict[class_name].append(action)
 
     #Oppertunity to Resolve Active Events
     public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
