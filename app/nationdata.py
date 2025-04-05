@@ -532,10 +532,13 @@ class NationTable:
         Returns:
             str: Corresponding nation id or None if no match found.
         """
-        
-        # tba - make this function smarter and able to handle non-exact matches
+
         if nation_name in self._name_to_id:
             return self._name_to_id[nation_name]
+        
+        for temp in self._name_to_id:
+            if nation_name.lower() == temp.lower():
+                return self._name_to_id[temp]
         
         return None
 
