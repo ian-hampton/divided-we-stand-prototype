@@ -766,49 +766,6 @@ def update_turn_num(game_id):
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-def identify(action):
-    ACTIONS_LIST = ['Surrender', 'White Peace', 'Purchase', 'Research', 'Remove', 'Build', 'Alliance Create', 'Alliance Join', 'Alliance Leave', 'Republic', 'Steal', 'Buy', 'Sell', 'Make', 'Withdraw', 'Disband', 'Deploy', 'War', 'Launch', 'Move', 'Event']
-    for action_type in ACTIONS_LIST:
-        if action_type.lower() == action[:len(action_type)].lower():
-            return action_type
-    return None
-
-def get_library(game_id):
-    '''
-    Returns a dictionary containing all game terms. Use this to check validity of actions.
-    '''
-    
-    # get game data
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
-    alliance_table = AllianceTable(game_id)
-    alliance_name_list = []
-    for alliance in alliance_table:
-        alliance_name_list.append(alliance.name)
-
-    #get scenario files
-    agenda_data_dict = get_scenario_dict(game_id, "Agendas")
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    research_data_dict = get_scenario_dict(game_id, "Technologies")
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    misc_data_dict = get_scenario_dict(game_id, "Misc")
-
-    #create library of game terms
-    library = {
-        'Nation Name List': [playerdata[1] for playerdata in playerdata_list],
-        'Research Name List': list(agenda_data_dict.keys()) + list(research_data_dict.keys()),
-        'Improvement List': list(improvement_data_dict.keys()),
-        'Alliance Type List': list(misc_data_dict["allianceTypes"].keys()),
-        'Alliance Name List': alliance_name_list,
-        'Resource Name List': RESOURCE_LIST,
-        'Missile Type List': list(misc_data_dict["missiles"].keys()),
-        'Unit Name List': list(unit_data_dict.keys()),
-        'Unit Abbreviation List': [unit['Abbreviation'] for unit in unit_data_dict.values()],
-        'War Justification Name List': ['Animosity', 'Border Skirmish', 'Conquest', 'Annexation', 'Independence', 'Subjugation']
-    }
-
-    return library
-
 def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     
     checks.prune_alliances(game_id)

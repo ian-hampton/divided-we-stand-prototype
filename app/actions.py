@@ -1,3 +1,5 @@
+import json
+
 import core
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
@@ -16,7 +18,7 @@ class AllianceCreateAction:
 
     def is_valid(self) -> bool:
         
-        if self.alliance_type or self.alliance_name:
+        if self.alliance_type is None or self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
@@ -44,7 +46,17 @@ class AllianceJoinAction:
         self.alliance_name = " ".join(words[2:]) if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.alliance_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        if self.alliance_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
+            return False
+        
+        return True
 
 class AllianceLeaveAction:
 
@@ -58,7 +70,17 @@ class AllianceLeaveAction:
         self.alliance_name = " ".join(words[2:]) if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.alliance_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        if self.alliance_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
+            return False
+        
+        return True
 
 class ClaimAction:
 
@@ -72,7 +94,17 @@ class ClaimAction:
         self.target_region = words[1].upper() if len(words) == 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_region = _check_region_id(self.game_id, self.target_region)
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
+            return False
+        
+        return True
 
 class CrimeSyndicateAction:
 
@@ -86,7 +118,17 @@ class CrimeSyndicateAction:
         self.target_nation = " ".join(words[1:]) if len(words) > 1 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
+            return False
+        
+        return True
 
 class ImprovementBuildAction:
 
@@ -101,7 +143,22 @@ class ImprovementBuildAction:
         self.target_region: str = words[-1].upper() if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.improvement_name is None and self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.improvement_name = _check_improvement_name(self.game_id, self.improvement_name)
+        if self.improvement_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad improvement name.""")
+            return False
+        
+        self.target_region = _check_region_id(self.game_id, self.target_region)
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
+            return False
+        
+        return True
 
 class ImprovementRemoveAction:
 
@@ -115,7 +172,17 @@ class ImprovementRemoveAction:
         self.target_region = words[1].upper() if len(words) == 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_region = _check_region_id(self.game_id, self.target_region)
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
+            return False
+        
+        return True
 
 class MarketBuyAction:
 
@@ -126,11 +193,26 @@ class MarketBuyAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.quantity = int(words[1]) if len(words) > 2 else None
+        self.quantity = words[1] if len(words) > 2 else None
         self.resource_name = words[2:] if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.quantity is None or self.resource_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.quantity = _check_quantity(self.quantity)
+        if self.quantity is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad quantity.""")
+            return False
+        
+        self.resource_name = _check_resource(self.resource_name)
+        if self.resource_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad resource name.""")
+            return False
+        
+        return True
 
 class MarketSellAction:
 
@@ -141,11 +223,26 @@ class MarketSellAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.quantity = int(words[1]) if len(words) > 2 else None
+        self.quantity = words[1] if len(words) > 2 else None
         self.resource_name = words[2:] if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.quantity is None or self.resource_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.quantity = _check_quantity(self.quantity)
+        if self.quantity is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad quantity.""")
+            return False
+        
+        self.resource_name = _check_resource(self.resource_name)
+        if self.resource_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad resource name.""")
+            return False
+        
+        return True
 
 class MissileMakeAction:
 
@@ -156,11 +253,26 @@ class MissileMakeAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.quantity = int(words[1]) if len(words) > 2 else None
+        self.quantity = words[1] if len(words) > 2 else None
         self.missile_type = words[2:] if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.quantity is None or self.missile_type is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.quantity = _check_quantity(self.quantity)
+        if self.quantity is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad quantity.""")
+            return False
+        
+        self.missile_type = _check_missile(self.missile_type)
+        if self.missile_type is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
+            return False
+        
+        return True
 
 class MissileLaunchAction:
 
@@ -175,7 +287,22 @@ class MissileLaunchAction:
         self.target_region = words[-1].upper() if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.missile_type is None or self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.missile_type = _check_missile(self.missile_type)
+        if self.missile_type is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
+            return False
+        
+        self.target_region = _check_region_id(self.game_id, self.target_region)
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
+            return False
+        
+        return True
 
 class RepublicAction:
 
@@ -189,7 +316,17 @@ class RepublicAction:
         self.resource_name = words[1:] if len(words) > 1 else None
 
     def is_valid(self) -> bool:
-        pass
+
+        if self.resource_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.resource_name = _check_resource(self.resource_name)
+        if self.resource_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad resource name.""")
+            return False
+        
+        return True
 
 class ResearchAction:
 
@@ -203,7 +340,17 @@ class ResearchAction:
         self.research_name = words[1:] if len(words) > 1 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.research_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.research_name = _check_research(self.research_name)
+        if self.research_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad resource name.""")
+            return False
+        
+        return True
 
 class SurrenderAction:
 
@@ -217,7 +364,17 @@ class SurrenderAction:
         self.target_nation = words[1:] if len(words) > 1 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
+            return False
+        
+        return True
 
 class UnitDeployAction:
 
@@ -232,7 +389,22 @@ class UnitDeployAction:
         self.target_region = words[-1].upper() if len(words) > 2 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.unit_name is None or self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.unit_name = _check_unit(self.game_id, self.unit_name)
+        if self.unit_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad unit name.""")
+            return False
+
+        self.target_region = _check_region_id(self.game_id, self.target_region)
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
+            return False
+        
+        return True
 
 class UnitDisbandAction:
 
@@ -246,7 +418,17 @@ class UnitDisbandAction:
         self.target_region = words[-1].upper() if len(words) > 1 else None
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_region = _check_region_id(self.game_id, self.target_region)
+        if self.target_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
+            return False
+        
+        return True
 
 class UnitMoveAction:
 
@@ -258,7 +440,7 @@ class UnitMoveAction:
         words = action_str.strip().split()
 
         self.starting_region = None
-        self.target_regions = []
+        self.target_regions = None
         if len(words) > 1:
             regions = words[1].split("-")
             self.starting_region = regions[0].upper()
@@ -268,7 +450,23 @@ class UnitMoveAction:
                     self.target_regions.append(region_id.upper())
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.starting_region is None or self.target_regions is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.starting_region = _check_region_id(self.game_id, self.starting_region)
+        if self.starting_region is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad starting region id.""")
+            return False
+        
+        for i, region_id in enumerate(self.target_regions):
+            region_id = _check_region_id(self.game_id, region_id)
+            if region_id is None:
+                print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad destination region id: {region_id}.""")
+                return False
+        
+        return True
 
 class WarAction:
 
@@ -294,7 +492,12 @@ class WarAction:
                 break
 
     def is_valid(self) -> bool:
-        pass
+        
+        if self.nation_name is None or self.war_justification is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        return True
 
 class WhitePeaceAction:
 
@@ -307,7 +510,17 @@ class WhitePeaceAction:
         self.target_nation = words[2:] if len(words) > 2 else None
     
     def is_valid(self) -> bool:
-        pass
+        
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
+            return False
+        
+        return True
 
 def validate_action(game_id: str, nation_id: str, action_str: str) -> any:
     """
@@ -383,23 +596,174 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
             if action_str == "":
                 return
 
-def _check_alliance_type(game_id: str, alliance_name: str):
+def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
     
     misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
-    alliance_types = list(misc_scenario_dict["allianceTypes"].keys())
+    alliance_types = set(misc_scenario_dict["allianceTypes"].keys())
 
-    for alliance_type in alliance_types:
-        if alliance_type.lower() == alliance_name.lower():
-            return alliance_type
+    if alliance_type.title() in alliance_types:
+        return alliance_type.title()
         
     return None
 
-def _check_alliance_name (game_id: str, alliance_name: str):
+def _check_alliance_name(game_id: str, alliance_name: str) -> str | None:
     
     alliance_table = AllianceTable(game_id)
 
     for alliance in alliance_table:
         if alliance.name.lower() == alliance_name.lower():
             return alliance.name
+        
+    return None
+
+def _check_region_id(game_id: str, region_id: str) -> str | None:
+
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    if region_id in regdata_dict:
+        return region_id
+    
+    return None
+
+def _check_nation_name(game_id: str, nation_name: str) -> str | None:
+
+    nation_table = NationTable(game_id)
+
+    for nation in nation_table:
+        if nation.name.lower() == nation_name.lower():
+            return nation.name
+        
+    return None
+
+def _check_improvement_name(game_id: str, improvement_name: str) -> str | None:
+
+    improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
+    improvement_names = set(improvement_scenario_dict.keys())
+
+    improvement_errors = {
+        "amm": "Advanced Metals Mine",
+        "advanced metal mine": "Advanced Metals Mine",
+        "barracks": "Boot Camp",
+        "bootcamp": "Boot Camp",
+        "bank": "Central Bank",
+        "cmm": "Common Metals Mine",
+        "common metal mine": "Common Metals Mine",
+        "barrier":"Crude Barrier",
+        "iz": "Industrial Zone",
+        "inz": "Industrial Zone",
+        "idz": "Industrial Zone",
+        "indz": "Industrial Zone",
+        "base": "Military Base",
+        "outpost": "Military Outpost",
+        "mdn": "Missile Defense Network",
+        "defense network": "Missile Defense Network",
+        "mds": "Missile Defense System",
+        "defense system": "Missile Defense System",
+        "silo": "Missile Silo",
+        "npp": "Nuclear Power Plant",
+        "power plant": "Nuclear Power Plant",
+        "well": "Oil Well",
+        "ree": "Rare Earth Elements Mine",
+        "reem": "Rare Earth Elements Mine",
+        "ree mine": "Rare Earth Elements Mine",
+        "rare earth element mine": "Rare Earth Elements Mine",
+        "rare earth metal mine": "Rare Earth Elements Mine",
+        "rare earth metals mine": "Rare Earth Elements Mine",
+        "inst": "Research Institute",
+        "institute": "Research Institute",
+        "lab": "Research Laboratory",
+        "research lab": "Research Laboratory",
+        "laboratory": "Research Laboratory",
+        "solar panel": "Solar Farm",
+        "solar panels": "Solar Farm",
+        "radioactive element mine ": "Uranium Mine",
+        "radioactive elements mine ": "Uranium Mine",
+        "wind turbine": "Wind Farm",
+        "wind turbines": "Wind Farm"
+    }
+
+    if improvement_name.title() in improvement_names:
+        return improvement_name.title()
+    
+    return improvement_errors.get(improvement_name.lower())
+
+def _check_quantity(quantity: str) -> int | None:
+    
+    try:
+        quantity = int(quantity)       
+        return quantity
+    except:
+        return None
+    
+def _check_resource(resource_name: str) -> str | None:
+
+    # to do - make this check reference game files
+    resources = {
+        "Dollars",
+        "Political Power",
+        "Technology",
+        "Coal",
+        "Oil",
+        "Basic Materials",
+        "Common Metals",
+        "Advanced Metals",
+        "Uranium",
+        "Rare Earth Elements"
+    }
+
+    resource_errors = {
+        "tech": "Technology",
+        "basic material": "Basic Materials",
+        "common metal": "Common Metals",
+        "advanced metal": "Advanced Metals",
+        "ree": "Rare Earth Elements",
+        "rare earth element": "Rare Earth Elements",
+        "rareearthelements": "Rare Earth Elements",
+        "politicalpower": "Political Power",
+        "commonmetals": "Common Metals",
+        "advancedmetals": "Advanced Metals",
+        "basicmaterials": "Basic Materials",
+    }
+
+    resource_name = resource_name.replace(":", "")
+    if resource_name.title() in resources:
+        return resource_name.title()
+    
+    resource_name = resource_name.lower()
+    return resource_errors.get(resource_name)
+
+def _check_missile(game_id: str, missile_type: str) -> str | None:
+    
+    misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
+    missile_types = set(misc_scenario_dict["missiles"].keys())
+
+    if missile_type.title() in missile_types:
+        return missile_type.title()
+        
+    return None
+
+def _check_research(game_id: str, research_name: str) -> str | None:
+
+    agenda_scenario_dict = core.get_scenario_dict(game_id, "Agendas")
+    improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
+    research_names = set(agenda_scenario_dict.keys()) + set(improvement_scenario_dict.keys())
+
+    if research_name.title() in research_names:
+        return research_name.title()
+        
+    return None
+
+def _check_unit(game_id: str, unit_str: str) -> str | None:
+    
+    unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
+    unit_names = set(unit_scenario_dict.keys())
+    
+    if unit_str.title() in unit_names:
+        return unit_str.title()
+    
+    for unit_name, unit_data in unit_scenario_dict:
+        if unit_data["Abbreviation"] == unit_str.upper():
+            return unit_name
         
     return None
