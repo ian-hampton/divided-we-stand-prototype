@@ -978,6 +978,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # get gross improvement counts using improvement count list
                 sum_dict = {}
                 for temp in nation_table:
+                    sum_dict[temp.name] = 0
                     sum_dict[temp.name] += temp.improvement_counts["Military Outpost"]
                     sum_dict[temp.name] += temp.improvement_counts["Military Base"]
                     sum_dict[temp.name] += temp.improvement_counts["Missile Defense System"]
@@ -1003,6 +1004,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # get gross improvement counts using improvement count list
                 sum_dict = {}
                 for temp in nation_table:
+                    sum_dict[temp.name] = 0
                     sum_dict[temp.name] += temp.improvement_counts["City"]
                 # check if nation has the greatest sum
                 nation_name_sum = sum_dict[nation.name]

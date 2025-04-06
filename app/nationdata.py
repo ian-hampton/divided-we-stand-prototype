@@ -757,7 +757,7 @@ INCOME_RATES = {
         "Rare Earth Elements": 100,
         "Military Capacity": 100
     },
-    "Olgarchy": {
+    "Oligarchy": {
         "Dollars": 120,
         "Political Power": 100,
         "Technology": 100,

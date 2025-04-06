@@ -8,7 +8,6 @@ import shutil
 from typing import Union, Tuple, List
 
 from app import map
-from app import interpreter
 from app import public_actions
 from app import private_actions
 from app import checks
@@ -183,13 +182,13 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
 
-def resolve_turn_processing(game_id: str, actions_dict: dict) -> None:
+def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     Resolves a normal turn.
 
     Params:
         game_id (str): Game ID string.
-        actions_dict (dict): A dictionary containing the actions submitted by each player.
+        contents_dict (dict): A dictionary containing the actions submitted by each player.
 
     Returns:
         None
@@ -224,12 +223,14 @@ def resolve_turn_processing(game_id: str, actions_dict: dict) -> None:
     }
 
     # sort actions
-    for nation_id, actions_list in actions_dict.items():
+    for nation_id, actions_list in contents_dict.items():
         for action_str in actions_list:
             action = actions.validate_action(game_id, nation_id, action_str)
             if action is not None:
                 class_name = type(action).__name__
                 actions_dict[class_name].append(action)
+    
+    ###
 
     #Oppertunity to Resolve Active Events
     public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
@@ -558,7 +559,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
     player_information_dict['Color'] = nation.color
     player_information_dict['Government'] = nation.gov
     player_information_dict['Foreign Policy'] = nation.fp
-    player_information_dict['Military Capacity'] = f"{nation.get_used_mc()}/{nation.get_max_mc()}"
+    player_information_dict['Military Capacity'] = f"{nation.get_used_mc()} / {nation.get_max_mc()}"
     player_information_dict['Trade Fee'] = nation.trade_fee
     player_information_dict['Status'] = nation.status
     
@@ -641,9 +642,12 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
     # misc data
     player_information_dict['Misc Info']['Owned Regions'] = f"Total Regions: {nation.regions_owned}"
     player_information_dict['Misc Info']['Occupied Regions'] = f"Occupied Regions: {nation.regions_occupied}"
-    player_information_dict['Misc Info']['Net Income'] = f"Total Net Income: {nation._records["netIncome"][-1]}"
-    player_information_dict['Misc Info']['Technology Count'] = f"Technology Count: {nation._records["researchCount"][-1]}"
+    if float(nation._records["netIncome"][-1]) >= 0:
+        player_information_dict['Misc Info']['Net Income'] = f"Total Net Income: +{nation._records["netIncome"][-1]}"
+    else:
+        player_information_dict['Misc Info']['Net Income'] = f"Total Net Income: {nation._records["netIncome"][-1]}"
     player_information_dict['Misc Info']['Transaction Total'] = f"Total Transactions: {nation._records["transactionCount"][-1]}"
+    player_information_dict['Misc Info']['Technology Count'] = f"Technology Count: {nation._records["researchCount"][-1]}"
 
     # income details
     income_details = nation.income_details

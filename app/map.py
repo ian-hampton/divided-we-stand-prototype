@@ -412,7 +412,6 @@ def determine_region_color(owner_id: int, occupier_id: int, player_color_list: l
     """
 
     if owner_id != 99:
-        print(f"{owner_id} - {type(owner_id)}")
         fill_color = palette.hex_to_tup(player_color_list[owner_id - 1], True)
     elif owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
         fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
