@@ -1,6 +1,6 @@
 import json
 
-import core
+from app import core
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
 
@@ -15,7 +15,10 @@ class AllianceCreateAction:
 
         self.alliance_type = " ".join(words[2:4]) if len(words) > 4 else None
         self.alliance_name = " ".join(words[4:]) if len(words) > 4 else None
-
+    
+    def __str__(self):
+        return f"[AllianceCreateAction] Alliance Join {self.alliance_type} {self.alliance_name} ({self.id})"
+    
     def is_valid(self) -> bool:
         
         if self.alliance_type is None or self.alliance_name is None:
@@ -44,6 +47,9 @@ class AllianceJoinAction:
         words = action_str.strip().split()
 
         self.alliance_name = " ".join(words[2:]) if len(words) > 2 else None
+    
+    def __str__(self):
+        return f"[AllianceJoinAction] Alliance Join {self.alliance_name} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -69,6 +75,9 @@ class AllianceLeaveAction:
 
         self.alliance_name = " ".join(words[2:]) if len(words) > 2 else None
 
+    def __str__(self):
+        return f"[AllianceLeaveAction] Alliance Leave {self.alliance_name} ({self.id})"
+
     def is_valid(self) -> bool:
         
         if self.alliance_name is None:
@@ -92,6 +101,9 @@ class ClaimAction:
         words = action_str.strip().split()
 
         self.target_region = words[1].upper() if len(words) == 2 else None
+    
+    def __str__(self):
+        return f"[ClaimAction] Claim {self.target_region} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -117,6 +129,9 @@ class CrimeSyndicateAction:
 
         self.target_nation = " ".join(words[1:]) if len(words) > 1 else None
 
+    def __str__(self):
+        return f"[CrimeSyndicateAction] Steal {self.target_nation} ({self.id})"
+
     def is_valid(self) -> bool:
         
         if self.target_nation is None:
@@ -139,8 +154,11 @@ class ImprovementBuildAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.improvement_name: str = " ".join(words[1:-1]) if len(words) > 2 else None
-        self.target_region: str = words[-1].upper() if len(words) > 2 else None
+        self.improvement_name = " ".join(words[1:-1]) if len(words) > 2 else None
+        self.target_region = words[-1].upper() if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[ImprovementBuildAction] Build {self.improvement_name} {self.target_region} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -171,6 +189,9 @@ class ImprovementRemoveAction:
 
         self.target_region = words[1].upper() if len(words) == 2 else None
 
+    def __str__(self):
+        return f"[ImprovementRemoveAction] Remove {self.target_region} ({self.id})"
+
     def is_valid(self) -> bool:
         
         if self.target_region is None:
@@ -194,7 +215,10 @@ class MarketBuyAction:
         words = action_str.strip().split()
 
         self.quantity = words[1] if len(words) > 2 else None
-        self.resource_name = words[2:] if len(words) > 2 else None
+        self.resource_name = " ".join(words[2:]) if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[MarketBuyAction] Buy {self.quantity} {self.resource_name} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -224,7 +248,10 @@ class MarketSellAction:
         words = action_str.strip().split()
 
         self.quantity = words[1] if len(words) > 2 else None
-        self.resource_name = words[2:] if len(words) > 2 else None
+        self.resource_name = " ".join(words[2:]) if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[MarketSellAction] Sell {self.quantity} {self.resource_name} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -254,7 +281,10 @@ class MissileMakeAction:
         words = action_str.strip().split()
 
         self.quantity = words[1] if len(words) > 2 else None
-        self.missile_type = words[2:] if len(words) > 2 else None
+        self.missile_type = " ".join(words[2:]) if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[MissileMakeAction] Make {self.quantity} {self.missile_type} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -267,7 +297,7 @@ class MissileMakeAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad quantity.""")
             return False
         
-        self.missile_type = _check_missile(self.missile_type)
+        self.missile_type = _check_missile(self.game_id, self.missile_type)
         if self.missile_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
@@ -283,8 +313,11 @@ class MissileLaunchAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.missile_type = words[1:-1] if len(words) > 2 else None
+        self.missile_type = " ".join(words[1:-1]) if len(words) > 2 else None
         self.target_region = words[-1].upper() if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[MissileLaunchAction] Launch {self.missile_type} {self.target_region} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -292,7 +325,7 @@ class MissileLaunchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.missile_type = _check_missile(self.missile_type)
+        self.missile_type = _check_missile(self.game_id, self.missile_type)
         if self.missile_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
@@ -313,7 +346,10 @@ class RepublicAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.resource_name = words[1:] if len(words) > 1 else None
+        self.resource_name = " ".join(words[1:]) if len(words) > 1 else None
+
+    def __str__(self):
+        return f"[RepublicAction] Republic {self.resource_name} ({self.id})"
 
     def is_valid(self) -> bool:
 
@@ -337,7 +373,10 @@ class ResearchAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.research_name = words[1:] if len(words) > 1 else None
+        self.research_name = " ".join(words[1:]) if len(words) > 1 else None
+
+    def __str__(self):
+        return f"[ResearchAction] Research {self.research_name} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -345,9 +384,9 @@ class ResearchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.research_name = _check_research(self.research_name)
+        self.research_name = _check_research(self.game_id, self.research_name)
         if self.research_name is None:
-            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad resource name.""")
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad research name.""")
             return False
         
         return True
@@ -361,7 +400,10 @@ class SurrenderAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.target_nation = words[1:] if len(words) > 1 else None
+        self.target_nation = " ".join(words[1:]) if len(words) > 1 else None
+
+    def __str__(self):
+        return f"[SurrenderAction] Surrender {self.target_nation} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -385,8 +427,11 @@ class UnitDeployAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.unit_name = words[1:-1] if len(words) > 2 else None
+        self.unit_name = " ".join(words[1:-1]) if len(words) > 2 else None
         self.target_region = words[-1].upper() if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[UnitDeployAction] Deploy {self.unit_name} {self.target_region} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -416,6 +461,9 @@ class UnitDisbandAction:
         words = action_str.strip().split()
 
         self.target_region = words[-1].upper() if len(words) > 1 else None
+
+    def __str__(self):
+        return f"[UnitDisbandAction] Disband {self.target_region} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -449,6 +497,9 @@ class UnitMoveAction:
                 for region_id in regions[1:]:
                     self.target_regions.append(region_id.upper())
 
+    def __str__(self):
+        return f"[UnitMoveAction] Move {self.starting_region} {self.target_regions} ({self.id})"
+
     def is_valid(self) -> bool:
         
         if self.starting_region is None or self.target_regions is None:
@@ -479,10 +530,10 @@ class WarAction:
         misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
         war_justification_list = list(misc_scenario_dict["warJustifications"].keys())
 
-        self.nation_name = None
+        self.target_nation = None
         for nation in nation_table:
             if nation.name.lower() in action_str.lower():
-                self.nation_name = nation.name
+                self.target_nation = nation.name
                 break
 
         self.war_justification = None
@@ -491,9 +542,12 @@ class WarAction:
                 self.war_justification = war_justification
                 break
 
+    def __str__(self):
+        return f"[WarAction] War {self.target_nation} {self.war_justification} ({self.id})"
+
     def is_valid(self) -> bool:
         
-        if self.nation_name is None or self.war_justification is None:
+        if self.target_nation is None or self.war_justification is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
@@ -507,7 +561,11 @@ class WhitePeaceAction:
         self.game_id = game_id
         self.action_str = action_str
         words = action_str.strip().split()
-        self.target_nation = words[2:] if len(words) > 2 else None
+
+        self.target_nation = " ".join(words[2:]) if len(words) > 2 else None
+
+    def __str__(self):
+        return f"[WhitePeaceAction] White Peace {self.target_nation} ({self.id})"
     
     def is_valid(self) -> bool:
         
@@ -539,7 +597,7 @@ def validate_action(game_id: str, nation_id: str, action_str: str) -> any:
         action = _create_action(game_id, nation_id, action_str)
         if action is None:
             return
-        
+
         if action.is_valid():
             return action
         else:
@@ -577,7 +635,7 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         "Deploy": UnitDeployAction,
         "Disband": UnitDisbandAction,
         "Move": UnitMoveAction,
-        "War": Warning,
+        "War": WarAction,
         "White Peace": WhitePeaceAction
     }
 
@@ -587,9 +645,11 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         action_key = words[0].title()
         if action_key == "Alliance" and len(words) >= 2:
             action_key = f"{words[0].title()} {words[1].title()}"
+        if action_key == "White" and len(words) >= 2:
+            action_key = f"{words[0].title()} {words[1].title()}"
         
-        if action_key in action_key:
-            return actions[action_key](nation_id, game_id, action_str)
+        if action_key in actions:
+            return actions[action_key](game_id, nation_id, action_str)
         else:
             print(f"""Action "{action_str}" submitted by player {nation_id} is invalid. Unrecognized action type.""")
             action_str = input("Re-enter action or hit enter to skip: ")
@@ -746,8 +806,8 @@ def _check_missile(game_id: str, missile_type: str) -> str | None:
 def _check_research(game_id: str, research_name: str) -> str | None:
 
     agenda_scenario_dict = core.get_scenario_dict(game_id, "Agendas")
-    improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
-    research_names = set(agenda_scenario_dict.keys()) + set(improvement_scenario_dict.keys())
+    technology_scenario_dict = core.get_scenario_dict(game_id, "Technologies")
+    research_names = set(agenda_scenario_dict.keys()).union(technology_scenario_dict.keys())
 
     if research_name.title() in research_names:
         return research_name.title()
@@ -762,7 +822,7 @@ def _check_unit(game_id: str, unit_str: str) -> str | None:
     if unit_str.title() in unit_names:
         return unit_str.title()
     
-    for unit_name, unit_data in unit_scenario_dict:
+    for unit_name, unit_data in unit_scenario_dict.items():
         if unit_data["Abbreviation"] == unit_str.upper():
             return unit_name
         
