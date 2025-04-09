@@ -806,5 +806,91 @@
                 "Victory": 0
             }
         }
+    },
+    "Return To China": {
+        "Game ID": "temp",
+        "Game #": 12,
+        "Information": {
+            "Victory Conditions": "Randomized Sets",
+            "Map": "China 2.0",
+            "Accelerated Schedule": "Enabled",
+            "Turn Duration": "48 hours",
+            "Fog of War": "Disabled",
+            "Version": "Development",
+            "Scenario": "Standard"
+        },
+        "Statistics": {
+            "Player Count": 8,
+            "Game End Turn": 32,
+            "Days Ellapsed": 63,
+            "Game Started": "02/05/2025",
+            "Game Ended": "04/09/2025"
+        },
+        "Player Data": {
+            "001": {
+                "Nation Name": "Jinhua Confederation",
+                "Color": "#b30000",
+                "Government": "Totalitarian",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "Plutarchs Of Elonia",
+                "Color": "#ff974e",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "Manchuria Company",
+                "Color": "#9f8757",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 3,
+                "Victory": 1
+            },
+            "008": {
+                "Nation Name": "Deepseek Dynasty",
+                "Color": "#5a009d",
+                "Government": "Technocracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 1,
+                "Victory": 0
+            },
+            "009": {
+                "Nation Name": "People'S Republic Of Sardinia",
+                "Color": "#003b84",
+                "Government": "Republic",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "The Iron Bastion",
+                "Color": "#8b2a1a",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "011": {
+                "Nation Name": "Joj",
+                "Color": "#b654ff",
+                "Government": "Crime Syndicate",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "013": {
+                "Nation Name": "The People'S United States Of China",
+                "Color": "#603913",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
     }
 }
