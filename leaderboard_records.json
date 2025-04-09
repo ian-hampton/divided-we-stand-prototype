@@ -8,17 +8,17 @@
     },
     "Largest Economy": {
         "Description": "Highest net income at the end of a game.",
-        "Player Name": "Xsotan",
-        "Nation Name": "Allied States Of America",
-        "Game Name": "Genisys",
-        "Value": "152.5 total income"
+        "Player Name": "Roman General",
+        "Nation Name": "Manchuria Company",
+        "Game Name": "Return To China",
+        "Value": "172.95 total income"
     },
     "Most Transactions": {
         "Description": "Highest combined total of resources bought & sold to the resource market, and resources traded to and from a nation in a single game.",
         "Player Name": "Xsotan",
-        "Nation Name": "Allied States Of America",
-        "Game Name": "Genisys",
-        "Value": "264 transactions"
+        "Nation Name": "Jinhua Confederation",
+        "Game Name": "Return To China",
+        "Value": "379 transactions"
     },
     "Most Technologies": {
         "Description": "Highest total number of technologies and agendas unlocked during a single game.",
@@ -47,6 +47,13 @@
         "Nation Name": "Guandi Empire",
         "Game Name": "India",
         "Value": "61 battles"
+    },
+    "Longest Alliance": {
+        "Description": "The longest alliance during a single game.",
+        "Alliance Name": "SuS or JoJ",
+        "Player Name": "mudkip & charl",
+        "Game Name": "Return To China",
+        "Value": "22 turns"
     },
     "Longest War": {
         "Description": "The longest war during a single game.",
