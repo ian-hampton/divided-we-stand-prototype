@@ -144,6 +144,21 @@ class CrimeSyndicateAction:
             return False
         
         return True
+    
+class EventAction:
+
+    def __init__(self, game_id: str, nation_id: str, action_str: str):
+
+        self.id = nation_id
+        self.game_id = game_id
+        self.action_str = action_str
+    
+    def __str__(self):
+        return f"[EventAction] {self.action_str} ({self.id})"
+
+    def is_valid(self) -> bool:
+        
+        return True
 
 class ImprovementBuildAction:
 
@@ -623,6 +638,7 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         "Alliance Leave": AllianceLeaveAction,
         "Claim": ClaimAction,
         "Steal": CrimeSyndicateAction,
+        "Event": EventAction,
         "Build": ImprovementBuildAction,
         "Remove": ImprovementRemoveAction,
         "Buy": MarketBuyAction,
@@ -827,3 +843,57 @@ def _check_unit(game_id: str, unit_str: str) -> str | None:
             return unit_name
         
     return None
+
+def resolve_trade_actions(game_id: str) -> None:
+    pass
+
+def resolve_peace_actions(game_id: str, actions_list: list[SurrenderAction | WhitePeaceAction]) -> None:
+    pass
+
+def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
+    pass
+
+def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
+    pass
+
+def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
+    pass
+
+def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
+    pass
+
+def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
+    pass
+
+def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
+    pass
+
+def resolve_improvement_build_actions(game_id: str, actions_list: list[ImprovementBuildAction]) -> None:
+    pass
+
+def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
+    pass
+
+def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
+    pass
+
+def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None:
+    pass
+
+def resolve_market_actions(game_id: str, actions_list: list[CrimeSyndicateAction | MarketBuyAction | MarketSellAction]) -> None:
+    pass
+
+def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAction]) -> None:
+    pass
+
+def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
+    pass
+
+def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
+    pass
+
+def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
+    pass
+
+def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
+    pass

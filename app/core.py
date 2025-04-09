@@ -194,7 +194,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
     
-    nation_table = NationTable(game_id)
     notifications = Notifications(game_id)
     notifications.clear()
     current_turn_num = get_current_turn_num(game_id)
@@ -206,6 +205,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         "AllianceLeaveAction": [],
         "ClaimAction": [],
         "CrimeSyndicateAction": [],
+        "EventAction": [],
         "ImprovementBuildAction": [],
         "ImprovementRemoveAction": [],
         "MarketBuyAction": [],
@@ -229,95 +229,40 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             if action is not None:
                 class_name = type(action).__name__
                 actions_dict[class_name].append(action)
+
+    # prompt for missing war justifications
+    checks.prompt_for_missing_war_justifications(game_id)
     
-    ###
-
-    #Oppertunity to Resolve Active Events
-    public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
-
+    # oppertunity to resolve active events
+    # public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
     
-    #Sort Player Entered Public Actions
-    if public_actions_list != []:
-        for i, player_public_actions_list in enumerate(public_actions_list):
-            for public_action in player_public_actions_list:
-                action_type = identify(public_action)
-                action = [i + 1, public_action]
-                if action_type in public_actions_dict:
-                    public_actions_dict[action_type].append(action)
-    #process actions
-    public_actions.resolve_trades(full_game_id)
-    print("Resolving public actions...")
-    if public_actions_list != []:
-        update_control_map = False
-        if len(public_actions_dict['Surrender'] + public_actions_dict['White Peace']) > 0:
-            peace_action_list = public_actions_dict['Surrender'] + public_actions_dict['White Peace']
-            player_action_logs = public_actions.resolve_peace_actions(peace_action_list, full_game_id, current_turn_num, player_action_logs)
-            update_control_map = True
-        if len(public_actions_dict['Research']) > 0:
-            player_action_logs = public_actions.resolve_research_actions(public_actions_dict['Research'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Alliance Leave']) > 0:
-            player_action_logs = public_actions.resolve_alliance_leaves(public_actions_dict['Alliance Leave'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Alliance Create']) > 0:
-            player_action_logs = public_actions.resolve_alliance_creations(public_actions_dict['Alliance Create'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Alliance Join']) > 0:
-            player_action_logs = public_actions.resolve_alliance_joins(public_actions_dict['Alliance Join'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Purchase']) > 0:
-            player_action_logs = public_actions.resolve_region_purchases(public_actions_dict['Purchase'], full_game_id, player_action_logs)
-            update_control_map = True
-        if len(public_actions_dict['Remove']) > 0:
-            player_action_logs = public_actions.resolve_improvement_removals(public_actions_dict['Remove'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Build']) > 0:
-            player_action_logs = public_actions.resolve_improvement_builds(public_actions_dict['Build'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Republic']) > 0:
-            government_actions_list = public_actions_dict['Republic']
-            player_action_logs = public_actions.resolve_government_abilities(government_actions_list, full_game_id, player_action_logs)
-        if len(public_actions_dict['Make']) > 0:
-            player_action_logs = public_actions.resolve_missile_builds(public_actions_dict['Make'], full_game_id, player_action_logs)
-        if len(public_actions_dict['Event']) > 0:
-            player_action_logs = public_actions.resolve_event_actions(public_actions_dict['Event'], full_game_id, current_turn_num, player_action_logs)
+    # resolve public actions
+    actions.resolve_trade_actions(game_id)
+    actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"] + actions_dict["WhitePeaceAction"])
+    actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
+    actions.resolve_alliance_leave_actions(game_id, actions_dict["AllianceLeaveAction"])
+    actions.resolve_alliance_create_actions(game_id, actions_dict["AllianceCreateAction"])
+    actions.resolve_alliance_join_actions(game_id, actions_dict["AllianceJoinAction"])
+    actions.resolve_claim_actions(game_id, actions_dict["ClaimAction"])
+    actions.resolve_improvement_remove_actions(game_id, actions_dict["ImprovementRemoveAction"])
+    actions.resolve_improvement_build_actions(game_id, actions_dict["ImprovementBuildAction"])
+    actions.resolve_missile_make_actions(game_id, actions_dict["MissileMakeAction"])
+    actions.resolve_government_actions(game_id, actions_dict["RepublicAction"])
+    actions.resolve_event_actions(game_id, actions_dict["EventAction"])
+    actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"] + actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
 
-
-    #Post Public Action Checks
-    #check for missing war justifications
-    checks.prompt_for_missing_war_justifications(full_game_id)
-    #update military capacity
-    checks.update_military_capacity(full_game_id)
-
-
-    #Sort Player Entered Private Actions
-    if private_actions_list != []:
-        for i, player_private_actions_list in enumerate(private_actions_list):
-            for private_action in player_private_actions_list:
-                action_type = identify(private_action)
-                action = [i + 1, private_action]
-                if action_type in private_actions_dict:
-                    private_actions_dict[action_type].append(action)
-    #process actions
-    player_resource_market_incomes = False
-    player_action_logs, player_resource_market_incomes = public_actions.resolve_market_actions(public_actions_dict['Buy'], public_actions_dict['Sell'], private_actions_dict['Steal'], full_game_id, current_turn_num, player_count, player_action_logs)    
-    print("Resolving private actions...")
-    if private_actions_list != []:
-        if len(private_actions_dict['Disband']) > 0:
-            player_action_logs = private_actions.resolve_unit_disbands(private_actions_dict['Disband'], full_game_id, player_action_logs)
-        if len(private_actions_dict['Deploy']) > 0:
-            player_action_logs = private_actions.resolve_unit_deployments(private_actions_dict['Deploy'], full_game_id, player_action_logs)
-        if len(private_actions_dict['War']) > 0:
-            player_action_logs = private_actions.resolve_war_declarations(private_actions_dict['War'], full_game_id, current_turn_num, player_action_logs)
-        if len(private_actions_dict['Launch']) > 0:
-            player_action_logs = private_actions.resolve_missile_launches(private_actions_dict['Launch'], full_game_id, player_action_logs)
-        if len(private_actions_dict['Move']) > 0:
-            player_action_logs = private_actions.resolve_unit_movements(private_actions_dict['Move'], full_game_id, player_action_logs)
-            update_control_map = True
+    # resolve private actions
+    actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
+    actions.resolve_unit_deployment_actions(game_id, actions_dict["UnitDeployAction"])
+    actions.resolve_war_actions(game_id, actions_dict["WarAction"])
+    actions.resolve_missile_launch_actions(game_id, actions_dict["MissileLaunchAction"])
+    actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
 
     # export logs
-    for nation in nation_table:
-        nation.export_action_log()
-        nation.action_log = []
-        nation_table.save(nation)
-    from app.wardata import WarData
     wardata = WarData(game_id)
     wardata.export_all_logs()
 
+    ###
 
     #End of Turn Checks and Updates
     print("Resolving end of turn updates...")
@@ -330,10 +275,8 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         player_id = i + 1
         checks.gain_income(full_game_id, player_id)
         
-    
-    #Oppertunity to Resolve Active Events
-    public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
-
+    # oppertunity to resolve active events
+    # public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
 
     #Prepwork for the Next Turn
     #resolve improvements with countdowns
@@ -379,7 +322,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     #Update Visuals
     current_turn_num = get_current_turn_num(game_id)
-    #resgraphs.update_all(full_game_id)
     main_map = map.MainMap(full_game_id, map_name, current_turn_num)
     main_map.update()
     if update_control_map:
