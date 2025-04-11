@@ -147,9 +147,9 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
 
     # update income in playerdata
     checks.update_income(game_id)
-    nation_table = NationTable(game_id)
+    nation_table.reload()
     nation_table.update_records()
-    nation_table = NationTable(game_id)
+    nation_table.reload()
     
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -258,36 +258,30 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_missile_launch_actions(game_id, actions_dict["MissileLaunchAction"])
     actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
 
+    # oppertunity to resolve active events
+    # public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
+
     # export logs
     wardata = WarData(game_id)
     wardata.export_all_logs()
 
-    ###
-
-    #End of Turn Checks and Updates
+    # end of turn checks
     print("Resolving end of turn updates...")
-    checks.total_occupation_forced_surrender(full_game_id)
-    checks.war_score_forced_surrender(full_game_id)
-    run_end_of_turn_checks(full_game_id, current_turn_num, player_count)
     wardata.add_warscore_from_occupations()
     wardata.update_totals()
+    checks.total_occupation_forced_surrender(game_id)
+    checks.war_score_forced_surrender(game_id)
+    checks.countdown(game_id)
+    run_end_of_turn_checks(game_id)
+    ###
     for i in range(player_count):
         player_id = i + 1
         checks.gain_income(full_game_id, player_id)
-        
-    # oppertunity to resolve active events
-    # public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
 
     #Prepwork for the Next Turn
-    #resolve improvements with countdowns
-    checks.countdown(full_game_id, map_name)
-    checks.resolve_resource_shortages(full_game_id)
-
     for i in range(player_count):
         player_id = i + 1
         checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
-    #update income in playerdata
-    checks.update_income(full_game_id)
     
 
     #Check If Someone Has Won the Game
@@ -712,28 +706,26 @@ def update_turn_num(game_id):
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-def run_end_of_turn_checks(game_id, current_turn_num, player_count):
-    
+def run_end_of_turn_checks(game_id: str) -> None:
+    """
+    Executes end of turn checks and updates.
+    """
+
     checks.prune_alliances(game_id)
-    checks.update_military_capacity(game_id)
-    for i in range(player_count):
-        player_id = i + 1
-        #check refinery ratios
-        checks.ratio_check(game_id, player_id)
-        #check military capacity
-        checks.remove_excess_units(game_id, player_id)
-        #update stockpile limits in playerdata
-        checks.update_stockpile_limits(game_id, player_id)
-    #update income in playerdata
     checks.update_income(game_id)
-    #update misc info and trade tax in playerdata
-    for i in range(player_count):
-        player_id = i + 1
-        checks.update_trade_tax(game_id, player_id)
-    #update records
-    checks.update_records(game_id, current_turn_num)
-    #update income in playerdata now that records have been updated (important for political power bonuses)
+    # resolve resource shortages
+    # resolve military capacity shortages
     checks.update_income(game_id)
+
+    nation_table = NationTable(game_id)
+    for nation in nation_table:
+        nation.update_stockpile_limits()
+        nation.update_trade_fee()
+        nation_table.save(nation)
+
+    nation_table.reload()
+    nation_table.update_records()
+    # add bonuses from top 3
 
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS

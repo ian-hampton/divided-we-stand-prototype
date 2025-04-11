@@ -1300,16 +1300,11 @@ def event_resolution():
     '''
     
     full_game_id = request.form.get('full_game_id')
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'active_games.json', 'r') as json_file:  
         active_games_dict = json.load(json_file)
     
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    player_count = len(playerdata_list)
-    
     events.handle_current_event(active_games_dict, full_game_id)
-    core.run_end_of_turn_checks(full_game_id, current_turn_num, player_count)
+    core.run_end_of_turn_checks(full_game_id)
 
     return redirect(f'/{full_game_id}')
 

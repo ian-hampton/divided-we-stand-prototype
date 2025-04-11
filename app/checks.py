@@ -20,51 +20,6 @@ from app.alliance import AllianceTable
 
 #END OF TURN CHECKS
 
-def ratio_check(game_id, player_id):
-    '''Check if ratios for refineries are still valid.'''
-
-    #define core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-
-    #get needed economy information from each player
-    nation_info_masterlist = core.get_nation_info(playerdata_list)
-    desired_nation_name = nation_info_masterlist[player_id - 1][0]
-    for player in playerdata_list:
-        if player[1] == desired_nation_name:
-            improvement_count_list = ast.literal_eval(player[27])
-
-
-    #Test Ratios
-    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-    improvement_name_list = sorted(improvement_data_dict.keys())
-    refinery_list = ['Oil Refinery']
-    for refinery_improvement in refinery_list:
-        adjustment = 0
-        while True:
-            #get counts
-            if refinery_improvement == 'Oil Refinery':
-                ref_index = improvement_name_list.index('Oil Refinery')
-                sub_index = improvement_name_list.index('Oil Well')
-            ref_count = improvement_count_list[ref_index] - adjustment
-            sub_count = improvement_count_list[sub_index]
-            #remove a refinery if too many, otherwise move on to next refinery type
-            if ref_count == 0 and sub_count == 0:
-                break
-            if ref_count != 0 and sub_count == 0:
-                adjustment += 1
-                region_id = core.search_and_destroy(game_id, player_id, refinery_improvement)
-                adjustment_str = f'{desired_nation_name} lost {refinery_improvement} in {region_id}. Not enough supporting improvements.'
-                print(adjustment_str)
-                continue
-            if ref_count / sub_count > 0.5:
-                adjustment += 1
-                region_id = core.search_and_destroy(game_id, player_id, refinery_improvement)
-                adjustment_str = f'{desired_nation_name} lost {refinery_improvement} in {region_id}. Not enough supporting improvements.'
-                print(adjustment_str)
-            else:
-                break
-
 def remove_excess_units(game_id, player_id):
     '''
     Removes excess units if a players military capacity has been exceeded.
@@ -92,87 +47,6 @@ def remove_excess_units(game_id, player_id):
     output_str = f'{used_mc}/{total_mc}'
     playerdata[5] = output_str
     playerdata_list[player_id - 1] = playerdata
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
-
-def update_trade_tax(game_id: str, player_id: int) -> None:
-    """
-    Calculate's a player's trade tax.
-    """
-    
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    trade_index = 3
-    trade_fee_list = ["1:5","1:4", "1:3", "1:2", "1:1", "2:1", "3:1"]
-    # dollars : resources
-    player_name = playerdata_list[player_id - 1][1]
-    player_research = ast.literal_eval(playerdata_list[player_id - 1][26])
-
-    # check if Improved Logistics in player research
-    if 'Improved Logistics' in player_research:
-        trade_index -= 1
-    # if threat containment applies to target nation count it
-    if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
-        if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == player_name:
-            trade_index += 1
-
-    trade_tax_str = trade_fee_list[trade_index]
-    playerdata_list[player_id - 1][6] = trade_tax_str
-    
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
-
-def update_stockpile_limits(game_id, player_id):
-    '''
-    Updates a player's resource stockpile capacity.
-    '''
-    
-    #get needed data
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    playerdata = playerdata_list[player_id - 1]
-    improvement_count_list = ast.literal_eval(playerdata[27])
-    player_central_bank_count = improvement_count_list[3] # yes this index is hardcoded. too bad!
-    request_list = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-    economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-    
-    #get new resource stockpile limits
-    new_stockpile_limit_dollars = 100 + (20 * player_central_bank_count)
-    new_stockpile_limit_general = 50 + (20 * player_central_bank_count)
-    
-    #update resource data lists
-    player_resource_masterlist = economy_masterlist[player_id - 1]
-    updated_player_resource_masterlist = []
-    i = 0
-    for resource_data_list in player_resource_masterlist:
-        stockpile_value = resource_data_list[0]
-        income_value = resource_data_list[2]
-        rate_value = resource_data_list[3]
-        if i > 0:
-            updated_resource_data_list = [stockpile_value, new_stockpile_limit_general, income_value, rate_value]
-        else:
-            updated_resource_data_list = [stockpile_value, new_stockpile_limit_dollars, income_value, rate_value]
-        updated_player_resource_masterlist.append(updated_resource_data_list)
-        i += 1
-    for resource_data_list in updated_player_resource_masterlist:
-        resource_data_list = str(resource_data_list)
-    
-    
-    #Update playerdata.csv
-    for player in playerdata_list:
-        desired_player_id = player[0][-1]
-        if desired_player_id == str(player_id):
-            k = 9
-            while k <= 19:
-                player[k] = updated_player_resource_masterlist[k-9]
-                k += 1
     with open(playerdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.player_data_header)
@@ -570,15 +444,15 @@ def gain_income(game_id, player_id):
         writer.writerow(core.player_data_header)
         writer.writerows(playerdata_list)
 
-def countdown(game_id, map_name):
-    '''
+def countdown(game_id: str) -> None:
+    """
     Resolves improvements/units that have countdowns associated with them.
-    '''
+    """
+
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
-    # Resolve Strip Mines
-    removed_strip_mine = False
+    # resolve strip mines
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
@@ -588,16 +462,11 @@ def countdown(game_id, map_name):
                 region_improvement.clear()
                 region.set_resource("Empty")
     
-    # Resolve Nuked Regions
+    # resolve nuked regions
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         if region.fallout != 0:
             region.decrease_fallout()
-
-    # Update Resource Map if Needed
-    if removed_strip_mine:
-        resource_map = map.ResourceMap(int(game_id[-1]), map_name)
-        resource_map.update()
 
 def resolve_resource_shortages(game_id: str) -> None:
     """
@@ -1239,7 +1108,7 @@ def bonus_phase_heals(player_id, game_id):
             if 'Peacetime Recovery' in player_research_list and wardata.is_at_peace(player_id):
                 region_unit.heal(100)
 
-def prompt_for_missing_war_justifications(game_id):
+def prompt_for_missing_war_justifications(game_id: str) -> None:
     '''
     Prompts in terminal when a war justification has not been entered for an ongoing war.
 
@@ -1259,22 +1128,15 @@ def total_occupation_forced_surrender(game_id: str) -> None:
         game_id (str): Game ID string.
     """
     
-    # get core lists
+    # get game data
+    nation_table = NationTable(game_id)
     wardata = WarData(game_id)
     notifications = Notifications(game_id)
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    nation_name_list = []
-    for playerdata in playerdata_list:
-        nation_name_list.append(playerdata[1])
-    diplomatic_relations_masterlist = []
-    for player in playerdata_list:
-        diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
     # check all regions for occupation
-    non_occupied_found_list = [False] * len(playerdata_list)
+    non_occupied_found_list = [False] * len(nation_table)
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         owner_id = region.owner_id
@@ -1284,7 +1146,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     # if no unoccupied region found for a player force surrender if main combatant
     for index, region_found in enumerate(non_occupied_found_list):
         player_id_1 = index + 1
-        nation_name_1 = nation_name_list[player_id_1 - 1]
+        nation_name_1 = nation_table.get(player_id_1).name
         if not region_found:
             #look for wars to surrender to
             for war_name, war_data in wardata.wardata_dict.items():
@@ -1305,14 +1167,6 @@ def total_occupation_forced_surrender(game_id: str) -> None:
                     notifications.append(f'{nation_name_1} surrendered to {nation_name_2}.', 4)
                     notifications.append(f'{war_name} has ended due to total occupation.', 4)
 
-    # update playerdata.csv
-    for index, player in enumerate(playerdata_list):
-        player[22] = str(diplomatic_relations_masterlist[index])
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
-
 def war_score_forced_surrender(game_id: str) -> None:
     """
     Forces a side to surrender if critical war score difference reached.
@@ -1321,17 +1175,9 @@ def war_score_forced_surrender(game_id: str) -> None:
         game_id (str): Game ID string.
     """
 
-    # get core lists
+    # get game data
     wardata = WarData(game_id)
     notifications = Notifications(game_id)
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    nation_name_list = []
-    for playerdata in playerdata_list:
-        nation_name_list.append(playerdata[1])
-    diplomatic_relations_masterlist = []
-    for player in playerdata_list:
-        diplomatic_relations_masterlist.append(ast.literal_eval(player[22]))
 
     for war_name, war_data in wardata.wardata_dict.items():
         if war_data["outcome"] == "TBD":
@@ -1351,14 +1197,6 @@ def war_score_forced_surrender(game_id: str) -> None:
                 wardata.end_war(war_name, "Defender Victory")
                 notifications.append(f'{ma_name} surrendered to {md_name}.', 4)
                 notifications.append(f'{war_name} has ended due to war score.', 4)
-
-    # update playerdata.csv
-    for index, player in enumerate(playerdata_list):
-        player[22] = str(diplomatic_relations_masterlist[index])
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
 
 def prune_alliances(game_id: str) -> None:
     """

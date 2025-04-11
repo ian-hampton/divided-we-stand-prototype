@@ -241,6 +241,27 @@ class Nation:
 
         self.completed_research[technology_name] = True
 
+    def update_trade_fee(self) -> None:
+        """
+        Calculations the trade fee this nation has to pay.
+        """
+
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
+
+        # dollars : resources
+        trade_fee_list = ["1:5","1:4", "1:3", "1:2", "1:1", "2:1", "3:1"]
+        trade_index = 3
+
+        if "Improved Logistics" in self.completed_research:
+            trade_index -= 1
+
+        if "Threat Containment" in active_games_dict[self.game_id]["Active Events"]:
+            if active_games_dict[self.game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == self.name:
+                trade_index += 1
+
+        self.trade_fee = trade_fee_list[trade_index]
+
     def export_action_log(self) -> None:
         """
         Exports player actions as a text file.
@@ -394,6 +415,22 @@ class Nation:
         income += amount
         self._resources[resource_name]["max"] = f"{income:.2f}"
 
+    def update_stockpile_limits(self) -> None:
+        """
+        Updates the max stockpile limit for all resources.
+        """
+
+        new_max = 50
+        cb_count = self.improvement_counts["Central Bank"]
+        new_max += cb_count * 20
+
+        for resource_name in self._resources:
+            if resource_name in ["Energy", "Military Capacity"]:
+                continue
+            if resource_name == "Dollars":
+                new_max += 50
+            self.update_max(resource_name, new_max, overwrite=True)
+
     def get_rate(self, resource_name: str) -> str:
         """
         Retrieves income rate of a given resource.
@@ -501,21 +538,13 @@ class NationTable:
     
     def __init__(self, game_id):
 
-        # check if game id is valid
         gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
-        gamedata_dict = {}
-        try:
-            with open(gamedata_filepath, 'r') as json_file:
-                gamedata_dict = json.load(json_file)
-        except FileNotFoundError:
-            print(f"Error: Unable to locate {gamedata_filepath} during nation class initialization.")
-
-        # set attributes
-        self.game_id: str = game_id
-        self.data: dict = gamedata_dict["nations"]
-        self._name_to_id = {}
-        for nation in self:
-            self._name_to_id[nation.name] = nation.id
+        
+        if os.path.exists(gamedata_filepath):
+            self.game_id: str = game_id
+            self.reload()
+        else:
+            raise FileNotFoundError(f"Error: Unable to locate {gamedata_filepath} during nation class initialization.")
 
     def __iter__(self):
         for nation_id, nation_data in self.data.items():
@@ -523,7 +552,7 @@ class NationTable:
 
     def __len__(self):
         return len(self.data)
-    
+
     def _get_name_from_id(self, nation_name: str) -> str | None:
         """
         Params:
@@ -541,6 +570,17 @@ class NationTable:
                 return self._name_to_id[temp]
         
         return None
+
+    def reload(self) -> None:
+        
+        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
+        with open(gamedata_filepath, 'r') as json_file:
+            gamedata_dict = json.load(json_file)
+        
+        self.data: dict = gamedata_dict["nations"]
+        self._name_to_id = {}
+        for nation in self:
+            self._name_to_id[nation.name] = nation.id
 
     def create(self, nation_id: int, player_id: int) -> Nation:
         """
