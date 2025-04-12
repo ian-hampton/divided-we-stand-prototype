@@ -724,7 +724,7 @@ def run_end_of_turn_checks(game_id: str) -> None:
         nation_table.save(nation)
 
     nation_table.update_records()
-    # add bonuses from top 3
+    nation_table.add_leaderboard_bonuses()
 
 
 #GENERAL PURPOSE GLOBAL FUNCTIONS

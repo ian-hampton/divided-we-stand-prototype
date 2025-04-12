@@ -534,6 +534,15 @@ class Nation:
             results.append(key)
         return results
 
+    def _find_pp_index(self) -> int:
+        """
+        Returns in index of where the political power log starts.
+        """
+
+        for i, str in enumerate(self.income_details):
+            if "Political Power" in str:
+                return i
+
 class NationTable:
     
     def __init__(self, game_id):
@@ -739,6 +748,57 @@ class NationTable:
         top_three = list(sorted_data.items())[:3]
         
         return top_three
+
+    def add_leaderboard_bonuses(self) -> None:
+        """
+        Adds political power from leaderboard standings.
+        """
+        
+        # this function is kind of silly but it stops a paradox with the income calculation function so it is what it is
+        # downside - political power bonuses from leaderboard are no longer included in total income calculation
+
+        # leaderboard bonuses only begin starting on turn 5
+        current_turn_num = core.get_current_turn_num(self.game_id)
+        if current_turn_num < 5:
+            return
+
+        bonus = [1, 0.5, 0.25]
+        records = ["nationSize", "netIncome", "transactionCount", "militaryStrength", "researchCount"]
+        record_string = ["from nation size",
+                         "from economic strength",
+                         "from trade power",
+                         "from military strength",
+                         "from research progress"]
+        
+        for i, record_name in enumerate(records):
+            
+            top_three = self.get_top_three(record_name)
+
+            valid = 2
+            if top_three[0][1] == top_three[1][1]:
+                valid = -1
+            elif top_three[1][1] == top_three[2][1]:
+                valid = 0
+
+            for j, entry in enumerate(top_three):
+                nation_name = entry[0]
+                score = entry[1]
+                
+                if j <= valid and score != 0:
+                    
+                    # add political power bonus to stockpile and income
+                    nation = self.get(nation_name)
+                    nation.update_stockpile("Political Power", bonus[j])
+                    nation.update_income("Political Power", bonus[j])
+
+                    # add income string to income details
+                    pp_index = nation._find_pp_index()
+                    p1 = nation.income_details[:pp_index + 1]
+                    p2 = nation.income_details[pp_index + 1:]
+                    p1.append(f"+{bonus[j]:.2f} {record_string[i]}")
+                    nation.income_details = p1 + p2
+
+                    self.save(nation)
 
 # tba - move everything below to a scenario file
 EASY_LIST = [

@@ -317,7 +317,7 @@ def update_income(game_id: str) -> None:
         resource_string_lists = final_income_strings[nation.name]
         temp = []
         for resource_name, string_list in resource_string_lists.items():
-            if len(string_list) > 1:
+            if len(string_list) > 1 or resource_name in ["Dollars", "Political Power", "Technology", "Military Capacity", "Energy"]:
                 temp += string_list
         nation.income_details = temp
         nation_table.save(nation)
