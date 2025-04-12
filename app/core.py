@@ -249,7 +249,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_missile_make_actions(game_id, actions_dict["MissileMakeAction"])
     actions.resolve_government_actions(game_id, actions_dict["RepublicAction"])
     actions.resolve_event_actions(game_id, actions_dict["EventAction"])
-    actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"] + actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
+    actions.resolve_market_actions(game_id, actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
 
     # resolve private actions
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
@@ -273,18 +273,10 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     checks.war_score_forced_surrender(game_id)
     checks.countdown(game_id)
     run_end_of_turn_checks(game_id)
-    ###
-    for i in range(player_count):
-        player_id = i + 1
-        checks.gain_income(full_game_id, player_id)
+    checks.gain_income(game_id)
 
-    #Prepwork for the Next Turn
-    for i in range(player_count):
-        player_id = i + 1
-        checks.gain_resource_market_income(full_game_id, player_id, player_resource_market_incomes)
-    
-
-    #Check If Someone Has Won the Game
+    # prepwork for the next turn
+    checks.gain_market_income(game_id, actions_dict["CrimeSyndicateAction"])
     player_has_won = check_for_winner(full_game_id, player_count, current_turn_num)
 
 

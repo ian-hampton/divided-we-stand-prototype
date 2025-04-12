@@ -360,52 +360,17 @@ def _pay_energy(text_dict: dict, nation: Nation, energy_income: float, resouce_n
 
     return nation
 
-def gain_income(game_id, player_id):
-    '''
-    Updates resource stockpiles by adding given income totals to stockpile totals.
-    '''
+def gain_income(game_id: str) -> None:
 
-    #get core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_table = NationTable(game_id)
 
-    #get needed data
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    playerdata = playerdata_list[player_id - 1]
-    resource_data_masterlist = []
-    j = 9
-    while j <= 19:
-        resource_data = ast.literal_eval(playerdata[j])
-        resource_data_masterlist.append(resource_data)
-        j += 1
-    
+    for nation in nation_table:
 
-    #Gain Resource Incomes
-    for resource_data in resource_data_masterlist:
-        resource_stockpile = float(resource_data[0])
-        resource_stockpile_limit = float(resource_data[1])
-        resource_income = float(resource_data[2])
-        resource_stockpile += resource_income
-        #check if stockpile limit has been exceeded
-        if resource_stockpile > resource_stockpile_limit:
-            resource_stockpile = resource_stockpile_limit
-        #round resource stockpiles and update resource_data_masterlist
-        resource_stockpile_formatted = core.round_total_income(resource_stockpile)
-        resource_data[0] = resource_stockpile_formatted
-    
+        for resource_name in nation._resources:
+            amount = float(nation.get_income(resource_name))
+            nation.update_stockpile(resource_name, amount)
 
-    #Update playerdata.csv
-    for player in playerdata_list:
-        desired_player_id = player[0][-1]
-        if desired_player_id == str(player_id):
-            k = 9
-            while k <= 19:
-                player[k] = resource_data_masterlist[k-9]
-                k += 1
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
+        nation_table.save(nation)
 
 def countdown(game_id: str) -> None:
     """
