@@ -149,7 +149,6 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     checks.update_income(game_id)
     nation_table.reload()
     nation_table.update_records()
-    nation_table.reload()
     
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -713,7 +712,7 @@ def run_end_of_turn_checks(game_id: str) -> None:
 
     checks.prune_alliances(game_id)
     checks.update_income(game_id)
-    # resolve resource shortages
+    checks.resolve_resource_shortages(game_id)
     # resolve military capacity shortages
     checks.update_income(game_id)
 
@@ -1129,10 +1128,11 @@ def get_nation_info(playerdata_list):
         nation_info_masterlist.append(nation_info_list)
     return nation_info_masterlist
 
-def search_and_destroy(game_id, player_id, target_improvement):
-    '''
+def search_and_destroy(game_id: str, player_id: str, target_improvement: str) -> str:
+    """
     Searches for a specific improvement and removes it.
-    '''
+    """
+
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
     
@@ -1141,7 +1141,7 @@ def search_and_destroy(game_id, player_id, target_improvement):
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
-        if region_improvement.name == target_improvement and player_id == region.owner_id:
+        if region_improvement.name == target_improvement and region.owner_id == int(player_id):
             candidate_region_ids.append(region_id)
 
     # randomly select one of the candidate regions
@@ -1152,24 +1152,20 @@ def search_and_destroy(game_id, player_id, target_improvement):
     
     return chosen_region_id
 
-def search_and_destroy_unit(game_id, player_id, desired_unit_name):
-    '''
+def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str) -> str:
+    """
     Randomly destroys one unit of a given type belonging to a specific player.
-    '''
+    """
+
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
-    # get list of regions with desired_unit_id owned by player_id
+    # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []
     if desired_unit_name in unit_ids:
         for region_id in regdata_dict:
             region_unit = Unit(region_id, game_id)
-            if region_unit.name == desired_unit_name and region_unit.owner_id == player_id:
-                candidate_region_ids.append(region_id)
-    elif desired_unit_name == 'ANY':
-        for region_id in regdata_dict:
-            region_unit = Unit(region_id, game_id)
-            if region_unit.owner_id == player_id:
+            if (desired_unit_name == 'ANY' or region_unit.name == desired_unit_name) and region_unit.owner_id == int(player_id):
                 candidate_region_ids.append(region_id)
 
     # randomly select one of the candidate regions

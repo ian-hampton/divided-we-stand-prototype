@@ -474,210 +474,86 @@ def resolve_resource_shortages(game_id: str) -> None:
     """
 
     # get game info
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
+    nation_table = NationTable(game_id)
     notifications = Notifications(game_id)
-    unit_data_dict = core.get_scenario_dict(game_id, "Units")
-    unit_name_list = sorted(unit_data_dict.keys())
-    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
-    improvement_name_list = sorted(improvement_data_dict.keys())
-    nation_name_list = []
-    for playerdata in playerdata_list:
-        nation_name_list.append(playerdata[1])
-    request_list = ['Dollars', 'Coal', 'Oil', 'Green Energy', 'Uranium']
 
-    # create dict for tracking improvement upkeep costs
-    upkeep_dict = {}
-    for playerdata in playerdata_list:
-        nation_name = playerdata[1]
-        player_id = nation_name_list.index(nation_name) + 1
-        upkeep_dict[playerdata[1]] = core.create_player_upkeep_dict(player_id, game_id)
+    for nation in nation_table:
 
-    for playerdata in playerdata_list:
+        upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
 
-        # get player information
-        nation_name = playerdata[1]
-        player_id = nation_name_list.index(nation_name) + 1
-        economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-        improvement_count_list = ast.literal_eval(playerdata[27])
-        unit_count_list = core.get_unit_count_list(player_id, game_id)
-        upkeep_manager_list = ast.literal_eval(playerdata[23])  # 0-coal    #1-oil  #2-green    #3-total
+        # filter out upkeep data for units/improvements player does not have
+        for improvement_name, count in nation.improvement_counts.items():
+            if count == 0 and improvement_name in upkeep_dict:
+                del upkeep_dict[improvement_name]
+        for unit_name, count in nation.unit_counts.items():
+            if count == 0 and unit_name in upkeep_dict:
+                del upkeep_dict[unit_name]
 
-        # temporary stopgap that turns the count lists into dicts
-        player_unit_count_dict = {}
-        for index, count in enumerate(unit_count_list):
-            player_unit_count_dict[unit_name_list[index]] = count
-        player_improvement_count_dict = {}
-        for index, count in enumerate(improvement_count_list):
-            player_improvement_count_dict[improvement_name_list[index]] = count
+        # handle shortages
+        _resolve_shortage("Oil", upkeep_dict, game_id, nation.id, notifications)
+        _resolve_shortage("Coal", upkeep_dict, game_id, nation.id, notifications)
+        _resolve_shortage("Energy", upkeep_dict, game_id, nation.id, notifications)
+        _resolve_shortage("Uranium", upkeep_dict, game_id, nation.id, notifications)
+        _resolve_shortage("Dollars", upkeep_dict, game_id, nation.id, notifications)
+    
+        # update nation data
+        # counts and stockpile must be refreshed so we need to reload everything
+        nation_table_temp = NationTable(game_id)
+        nation_temp = nation_table_temp.get(nation.id)
+        nation_table_temp.save(nation_temp)
 
-        # ignore upkeep data for improvements and units the player does not have
-        player_upkeep_dict = upkeep_dict[nation_name]
-        player_count_dict = player_unit_count_dict | player_improvement_count_dict
-        del player_unit_count_dict
-        del player_improvement_count_dict
-        keys_to_remove = [name for name, count in player_count_dict.items() if count == 0]
-        for name in keys_to_remove:
-            if name in player_upkeep_dict:
-                del player_upkeep_dict[name]
+def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, player_id: str, notifications: Notifications) -> None:
+    """
+    Helper function for resolve_resource_shortages().
+    """
 
-        # get resource stockpiles
-        stockpile_list = []
-        for i in range(len(request_list)):
-            stockpile_list.append(economy_masterlist[player_id - 1][i][0])
-        dollars_stockpile = float(stockpile_list[0])
-        coal_stockpile = float(stockpile_list[1])
-        oil_stockpile = float(stockpile_list[2])
-        green_stockpile = float(stockpile_list[3])
-        uranium_stockpile = float(stockpile_list[4])
+    # get player data
+    nation_table = NationTable(game_id)
+    nation = nation_table.get(player_id)
 
-        # get pool of oil consumers
-        oil_consumers = []
-        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
-            if "Oil" in resource_upkeep_dict and resource_upkeep_dict["Oil"]["Upkeep"] > 0 and resource_upkeep_dict["Oil"]["Upkeep Multiplier"] > 0:
-                oil_consumers.append(target_name)
-        # prune until oil shortage eliminated
-        while oil_stockpile < 0 and oil_consumers != []:
-            oil_consumer = random.choice(oil_consumers)
-            if player_count_dict.get(oil_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[oil_consumer]["Oil"]["Upkeep"] * player_upkeep_dict[oil_consumer]["Oil"]["Upkeep Multiplier"]
-                # destroy random consumer
-                region_id = core.search_and_destroy(game_id, player_id, oil_consumer)
-                notifications.append(f'{nation_name} lost a {oil_consumer} in {region_id} due to oil shortages.', 6)
-                oil_stockpile += consumer_upkeep
-                player_count_dict[oil_consumer] -= 1
-                # adjust upkeep manager
-                total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= consumer_upkeep
-                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
-                dedicated_oil_upkeep = float(upkeep_manager_list[1])
-                dedicated_oil_upkeep -= consumer_upkeep
-                upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
-            else:
-                # no more of that consumer remaining
-                oil_consumers.remove(oil_consumer)
-                del player_upkeep_dict[oil_consumer]
-
-        # get pool of energy consumers
-        # energy upkeep can be covered by either coal, oil, or green energy
-        energy_consumers = []
-        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
-            if "Energy" in resource_upkeep_dict and resource_upkeep_dict["Energy"]["Upkeep"] > 0 and resource_upkeep_dict["Energy"]["Upkeep Multiplier"] > 0:
-                energy_consumers.append(target_name)
-        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
-            if "Oil" in resource_upkeep_dict and resource_upkeep_dict["Oil"]["Upkeep"] > 0 and resource_upkeep_dict["Oil"]["Upkeep Multiplier"] > 0:
-                energy_consumers.append(target_name)
-        # prune until energy shortage eliminated
-        while coal_stockpile < 0 and energy_consumers != []:
-            energy_consumer = random.choice(energy_consumers)
-            if player_count_dict.get(energy_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[energy_consumer]["Energy"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Energy"]["Upkeep Multiplier"]
-                # destroy random consumer
-                region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
-                notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
-                coal_stockpile += consumer_upkeep
-                player_count_dict[energy_consumer] -= 1
-                # adjust upkeep manager
-                total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= consumer_upkeep
-                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
-                dedicated_coal_upkeep = float(upkeep_manager_list[0])
-                dedicated_coal_upkeep -= consumer_upkeep
-                upkeep_manager_list[0] = core.round_total_income(dedicated_coal_upkeep)
-        while oil_stockpile < 0 and energy_consumers != []:
-            # if there is still oil debt, we know it is because of energy since we already pruned all exclusively oil dependent upkeep
-            energy_consumer = random.choice(energy_consumers)
-            if player_count_dict.get(energy_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[energy_consumer]["Energy"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Energy"]["Upkeep Multiplier"]
-                # destroy random consumer
-                region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
-                notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
-                oil_stockpile += consumer_upkeep
-                player_count_dict[energy_consumer] -= 1
-                # adjust upkeep manager
-                total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= consumer_upkeep
-                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
-                dedicated_oil_upkeep = float(upkeep_manager_list[1])
-                dedicated_oil_upkeep -= consumer_upkeep
-                upkeep_manager_list[1] = core.round_total_income(dedicated_oil_upkeep)
-        while green_stockpile < 0 and energy_consumers != []:
-            energy_consumer = random.choice(energy_consumers)
-            if player_count_dict.get(energy_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[energy_consumer]["Energy"]["Upkeep"] * player_upkeep_dict[energy_consumer]["Energy"]["Upkeep Multiplier"]
-                # destroy random consumer
-                region_id = core.search_and_destroy(game_id, player_id, energy_consumer)
-                notifications.append(f'{nation_name} lost a {energy_consumer} in {region_id} due to energy shortages.', 6)
-                green_stockpile += consumer_upkeep
-                player_count_dict[energy_consumer] -= 1
-                # adjust upkeep manager
-                total_dedicated_upkeep = float(upkeep_manager_list[3])
-                total_dedicated_upkeep -= consumer_upkeep
-                upkeep_manager_list[3] = core.round_total_income(total_dedicated_upkeep)
-                dedicated_green_upkeep = float(upkeep_manager_list[2])
-                dedicated_green_upkeep -= consumer_upkeep
-                upkeep_manager_list[2] = core.round_total_income(dedicated_green_upkeep)
+    # get pool of resource consumers
+    consumers_list = []
+    for target_name, resource_upkeep_dict in upkeep_dict.items():
+        if resource_name in resource_upkeep_dict and resource_upkeep_dict[resource_name]["Upkeep"] > 0 and resource_upkeep_dict[resource_name]["Upkeep Multiplier"] > 0:
+            consumers_list.append(target_name)
+    
+    # prune until resource shortage eliminated or no consumers left
+    resource_stockpile = float(nation.get_stockpile(resource_name))
+    while resource_stockpile < 0 and consumers_list != []:
         
-        # get pool of uranium consumers
-        uranium_consumers = []
-        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
-            if "Uranium" in resource_upkeep_dict and resource_upkeep_dict["Uranium"]["Upkeep"] > 0 and resource_upkeep_dict["Uranium"]["Upkeep Multiplier"] > 0:
-                uranium_consumers.append(target_name)
-        # prune until uranium shortage eliminated
-        while uranium_stockpile < 0 and uranium_consumers != []:
-            uranium_consumer = random.choice(uranium_consumers)
-            if player_count_dict.get(uranium_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[uranium_consumer]["Uranium"]["Upkeep"] * player_upkeep_dict[uranium_consumer]["Uranium"]["Upkeep Multiplier"]
-                # destroy random consumer
-                region_id = core.search_and_destroy(game_id, player_id, uranium_consumer)
-                notifications.append(f'{nation_name} lost a {uranium_consumer} in {region_id} due to uranium shortages.', 6)
-                uranium_stockpile += consumer_upkeep
-                player_count_dict[uranium_consumer] -= 1
-            else:
-                # no more of that consumer remaining
-                uranium_consumers.remove(uranium_consumer)
-                del player_upkeep_dict[uranium_consumer]
+        # select random consumer and identify if it is an improvement or unit
+        consumer_name = random.choice(consumers_list)
+        if consumer_name in nation.unit_counts:
+            consumer_type = "unit"
+        else:
+            consumer_type = "improvement"
         
-        # get pool of dollars consumers
-        dollars_consumers = []
-        for target_name, resource_upkeep_dict in player_upkeep_dict.items():
-            if "Dollars" in resource_upkeep_dict and resource_upkeep_dict["Dollars"]["Upkeep"] > 0 and resource_upkeep_dict["Dollars"]["Upkeep Multiplier"] > 0:
-                dollars_consumers.append(target_name)
-        # prune until dollars shortage eliminated
-        while dollars_stockpile < 0 and dollars_consumers != []:
-            dollars_consumer = random.choice(dollars_consumers)
-            if player_count_dict.get(dollars_consumer, 0) > 0:
-                consumer_upkeep = player_upkeep_dict[dollars_consumer]["Dollars"]["Upkeep"] * player_upkeep_dict[dollars_consumer]["Dollars"]["Upkeep Multiplier"]
-                # destroy random consumer
-                region_id = core.search_and_destroy(game_id, player_id, dollars_consumer)
-                notifications.append(f'{nation_name} lost a {dollars_consumer} in {region_id} due to dollars shortages.', 6)
-                dollars_stockpile += consumer_upkeep
-                player_count_dict[dollars_consumer] -= 1
-            else:
-                # no more of that consumer remaining
-                dollars_consumers.remove(dollars_consumer)
-                del player_upkeep_dict[dollars_consumer]
+        # remove consumer
+        if consumer_type == "improvement":
+            region_id = core.search_and_destroy(game_id, player_id, consumer_name)
+        else:
+            region_id = core.search_and_destroy_unit(game_id, player_id, consumer_name)
+        
+        # refresh nation data and add notification
+        nation_table.reload()
+        nation = nation_table.get(player_id)
+        notifications.append(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 6)
+        
+        # update stockpile
+        consumer_upkeep = upkeep_dict[consumer_name][resource_name]["Upkeep"] * upkeep_dict[consumer_name][resource_name]["Upkeep Multiplier"]
+        resource_stockpile += consumer_upkeep
+        nation.update_stockpile(resource_name, consumer_upkeep)
+        
+        # remove consumer from selection pool if no more of it remains
+        if consumer_type == "improvement":
+            count_dict = nation.improvement_counts
+        else:
+            count_dict = nation.unit_counts
+        if count_dict[consumer_name] == 0:
+            consumers_list.remove(consumer_name)
+            del upkeep_dict[consumer_name]
 
-        # save changes to economy data
-        stockpile_list = [dollars_stockpile, coal_stockpile, oil_stockpile, green_stockpile, uranium_stockpile]
-        for i, stockpile in enumerate(stockpile_list):
-            stockpile = core.round_total_income(stockpile)
-            economy_masterlist[player_id - 1][i][0] = stockpile
-        for economy_list in economy_masterlist:
-            for resource_data_list in economy_list:
-                resource_data_list = str(resource_data_list)
-
-    # update playerdata.csv
-    for i, playerdata in enumerate(playerdata_list):
-        playerdata[9] = economy_masterlist[i][0]
-        playerdata[12] = economy_masterlist[i][1]
-        playerdata[13] = economy_masterlist[i][2]
-        playerdata[14] = economy_masterlist[i][3]
-        playerdata[18] = economy_masterlist[i][4]
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
+    nation_table.save(nation)
 
 def gain_resource_market_income(game_id, player_id, player_resource_market_incomes):
     '''Applies the resources gained/lost from resource market activities to player stockpiles.'''
