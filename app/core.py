@@ -5,6 +5,7 @@ import json
 import os
 import random
 import shutil
+import copy
 from typing import Union, Tuple, List
 
 from app import map
@@ -713,7 +714,7 @@ def run_end_of_turn_checks(game_id: str) -> None:
     checks.prune_alliances(game_id)
     checks.update_income(game_id)
     checks.resolve_resource_shortages(game_id)
-    # resolve military capacity shortages
+    checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)
 
     nation_table = NationTable(game_id)
@@ -722,7 +723,6 @@ def run_end_of_turn_checks(game_id: str) -> None:
         nation.update_trade_fee()
         nation_table.save(nation)
 
-    nation_table.reload()
     nation_table.update_records()
     # add bonuses from top 3
 
@@ -1152,7 +1152,7 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     
     return chosen_region_id
 
-def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str) -> str:
+def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str) -> tuple[str, str]:
     """
     Randomly destroys one unit of a given type belonging to a specific player.
     """
@@ -1172,9 +1172,10 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
     target_region_unit = Unit(chosen_region_id, game_id)
+    victim = copy.deepcopy(target_region_unit.name)
     target_region_unit.clear()
 
-    return chosen_region_id
+    return chosen_region_id, victim
 
 def verify_ratio(game_id, improvement_count_list, improvement_name):
 

@@ -1,12 +1,9 @@
-#STANDARD IMPORTS
 import ast
 import copy
 import csv
 import json
 import random
-import re
 
-#UWS SOURCE IMPORTS
 from app import core
 from app import map
 from app.region import Region
@@ -17,40 +14,6 @@ from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
 from app.alliance import AllianceTable
-
-#END OF TURN CHECKS
-
-def remove_excess_units(game_id, player_id):
-    '''
-    Removes excess units if a players military capacity has been exceeded.
-    '''
-
-    # define core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    notifications = Notifications(game_id)
-
-    # Process
-    playerdata = playerdata_list[player_id - 1]
-    player_nation_name = playerdata[1]
-    player_military_capacity_data = playerdata[5]
-    used_mc, total_mc = core.read_military_capacity(player_military_capacity_data)
-    units_lost = 0
-    while used_mc > total_mc:
-        chosen_region_id = core.search_and_destroy_unit(game_id, player_id, 'ANY')
-        used_mc -= 1
-        units_lost += 1
-    if units_lost > 0:
-        notifications.append(f'{player_nation_name} lost {units_lost} units due to insufficient military capacity.', 5)
-
-    # Update playerdata.csv
-    output_str = f'{used_mc}/{total_mc}'
-    playerdata[5] = output_str
-    playerdata_list[player_id - 1] = playerdata
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
 
 def update_income(game_id: str) -> None:
     """
@@ -477,8 +440,10 @@ def resolve_resource_shortages(game_id: str) -> None:
     nation_table = NationTable(game_id)
     notifications = Notifications(game_id)
 
-    for nation in nation_table:
+    for i in range(len(nation_table)):
+        nation_id = str(i + 1)
 
+        nation = nation_table.get(nation_id)
         upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
 
         # filter out upkeep data for units/improvements player does not have
@@ -497,10 +462,9 @@ def resolve_resource_shortages(game_id: str) -> None:
         _resolve_shortage("Dollars", upkeep_dict, game_id, nation.id, notifications)
     
         # update nation data
-        # counts and stockpile must be refreshed so we need to reload everything
-        nation_table_temp = NationTable(game_id)
-        nation_temp = nation_table_temp.get(nation.id)
-        nation_table_temp.save(nation_temp)
+        nation_table.reload()
+        nation = nation_table.get(nation_id)
+        nation_table.save(nation)
 
 def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, player_id: str, notifications: Notifications) -> None:
     """
@@ -532,7 +496,7 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
         if consumer_type == "improvement":
             region_id = core.search_and_destroy(game_id, player_id, consumer_name)
         else:
-            region_id = core.search_and_destroy_unit(game_id, player_id, consumer_name)
+            region_id, victim = core.search_and_destroy_unit(game_id, player_id, consumer_name)
         
         # refresh nation data and add notification
         nation_table.reload()
@@ -554,6 +518,33 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
             del upkeep_dict[consumer_name]
 
     nation_table.save(nation)
+
+def resolve_military_capacity_shortages(game_id: str) -> None:
+    """
+    Resolves military capacity shortages for each player by removing units randomly.
+    """
+
+    nation_table = NationTable(game_id)
+    notifications = Notifications(game_id)
+
+    for i in range(len(nation_table)):
+        nation_id = str(i + 1)
+        
+        while True:
+            
+            # check for shortage
+            nation = nation_table.get(nation_id)
+            if float(nation.get_used_mc()) <= float(nation.get_max_mc()):
+                break
+            
+            # disband a random unit
+            region_id, victim = core.search_and_destroy_unit(game_id, nation_id, 'ANY')
+            notifications.append(f'{nation.name} lost {victim} {region_id} due to insufficient military capacity.', 5)
+
+            # update nation data
+            nation_table.reload()
+            nation = nation_table.get(nation_id)
+            nation_table.save(nation)
 
 def gain_resource_market_income(game_id, player_id, player_resource_market_incomes):
     '''Applies the resources gained/lost from resource market activities to player stockpiles.'''
