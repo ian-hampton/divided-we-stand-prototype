@@ -198,6 +198,8 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     notifications.clear()
     current_turn_num = get_current_turn_num(game_id)
     map_name = get_map_name(game_id)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
     
     actions_dict = {
         "AllianceCreateAction": [],
@@ -249,7 +251,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_missile_make_actions(game_id, actions_dict["MissileMakeAction"])
     actions.resolve_government_actions(game_id, actions_dict["RepublicAction"])
     actions.resolve_event_actions(game_id, actions_dict["EventAction"])
-    actions.resolve_market_actions(game_id, actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
+    actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"] + actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
 
     # resolve private actions
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
@@ -274,44 +276,47 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     checks.countdown(game_id)
     run_end_of_turn_checks(game_id)
     checks.gain_income(game_id)
+    checks.gain_market_income(game_id)
 
-    # prepwork for the next turn
-    checks.gain_market_income(game_id, actions_dict["CrimeSyndicateAction"])
-    player_has_won = check_for_winner(full_game_id, player_count, current_turn_num)
+    # update victory progress and check if player has won the game
+    player_has_won = False
+    nation_table = NationTable(game_id)
+    for nation in nation_table:
+        nation.update_victory_progress()
+        if nation.score == 3:
+            player_has_won = True
+        nation_table.save(nation)
 
-
-    #Resolve Bonus Phase
-    if not player_has_won:
+    if player_has_won:
+        # game end procedure
+        resolve_win(game_id)
+    else:
+        # bonus phase
         if current_turn_num % 4 == 0:
-            checks.bonus_phase_heals(player_id, full_game_id)
+            checks.bonus_phase_heals(game_id)
             notifications.append('All units and defensive improvements have regained 2 health.', 1)
-        #event procedure
         if current_turn_num % 8 == 0:
             print("Triggering an event...")
-            events.trigger_event(full_game_id, current_turn_num)
+            events.trigger_event(game_id)
 
-
-    #Update Game_Settings
-    update_turn_num(int(full_game_id[-1]))
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    start_date = active_games_dict[full_game_id]["Statistics"]["Game Started"]
+    # update active game records
+    update_turn_num(int(game_id[-1]))
+    start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
     current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
     start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
     date_difference = current_date_obj - start_date_obj
-    active_games_dict[full_game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
+    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-
-    #Update Visuals
+    # update game maps
     current_turn_num = get_current_turn_num(game_id)
-    main_map = map.MainMap(full_game_id, map_name, current_turn_num)
+    main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()
     if update_control_map:
-        control_map = map.ControlMap(full_game_id, map_name)
+        control_map = map.ControlMap(game_id, map_name)
         control_map.update()
 
 
@@ -442,7 +447,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     for i, user_id in enumerate(user_id_list):
         nation_table.create(i + 1, user_id)
 
-def erase_game(full_game_id):
+def erase_game(game_id: str) -> None:
     '''
     Erases all the game files of a given game. Returns nothing.
     Note: This does not erase anything from the game_records.json file.
@@ -453,6 +458,55 @@ def erase_game(full_game_id):
     shutil.rmtree(f'gamedata/{full_game_id}')
     os.makedirs(f'gamedata/{full_game_id}/images')
     os.makedirs(f'gamedata/{full_game_id}/logs')
+
+def resolve_win(game_id: str) -> None:
+    """
+    Updates the game state and game records upon player victory.
+    """
+
+    nation_table = NationTable(game_id)
+    game_name = get_game_name(game_id)
+    current_turn_num = get_current_turn_num(game_id)
+
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    with open('game_records.json', 'r') as json_file:
+        game_records_dict = json.load(json_file)
+
+    # update active games
+    active_games_dict[game_id]["Game Active"] = False
+    with open('active_games.json', 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
+
+    # update nation data in archive
+    player_data_dict = {}
+    for nation in nation_table:
+        player_data_entry_dict = {
+            "Nation Name": nation.name,
+            "Color": nation.color,
+            "Government": nation.gov,
+            "Foreign Policy": nation.fp,
+            "Score": nation.score,
+            "Victory": 0
+        }
+        if nation.score == 3:
+            player_data_entry_dict["Victory"] = 1
+        player_data_dict[nation.player_id] = player_data_entry_dict
+    game_records_dict[game_name]["Player Data"] = player_data_dict
+
+    # update other stuff in archive
+    current_date = datetime.today().date()
+    current_date_string = current_date.strftime("%m/%d/%Y")
+    game_records_dict[game_name]["Statistics"]["Game Ended"] = current_date_string
+    game_records_dict[game_name]["Statistics"]["Game End Turn"] = current_turn_num
+    game_records_dict[game_name]["Statistics"]["Game Started"] = active_games_dict[game_id]["Statistics"]["Game Started"]
+    start_date = game_records_dict[game_name]["Statistics"]["Game Started"]
+    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
+    start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
+    date_difference = current_date_obj - start_date_obj
+    game_records_dict[game_name]["Statistics"]["Days Ellapsed"] = date_difference.days
+    with open('game_records.json', 'w') as json_file:
+        json.dump(game_records_dict, json_file, indent=4)
 
 def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: int) -> dict:
     '''
@@ -590,69 +644,6 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
     player_information_dict['Research Details'] = research_str
 
     return player_information_dict
-
-def check_for_winner(full_game_id, player_count, current_turn_num):
-    '''
-    Spaghetti code that checks if a player has won the game and ends the game if so.
-    '''
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
-    player_has_won = False
-    for i in range(player_count):
-        player_id = i + 1
-        victory_list = checks.check_victory_conditions(full_game_id, player_id, current_turn_num)
-        if victory_list == [True, True, True]:
-            player_has_won = True
-            break
-    if player_has_won:
-        game_name = get_game_name(full_game_id)
-        current_date = datetime.today().date()
-        current_date_string = current_date.strftime("%m/%d/%Y")
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-        active_games_dict[full_game_id]["Game Active"] = False
-        with open('active_games.json', 'w') as json_file:
-            json.dump(active_games_dict, json_file, indent=4)
-        with open('game_records.json', 'r') as json_file:
-            game_records_dict = json.load(json_file)
-        player_data_dict = {}
-        playerdata_list = read_file(playerdata_filepath, 1)
-        for index, playerdata in enumerate(playerdata_list):
-            player_data_entry_dict = {
-                "Nation Name": "",
-                "Color": "",
-                "Government": "",
-                "Foreign Policy": "",
-                "Score": 0,
-                "Victory": 0
-            }
-            player_id = index + 1
-            player_global_id = playerdata[29]
-            player_data_entry_dict["Nation Name"] = playerdata[1]
-            player_data_entry_dict["Color"] = playerdata[2]
-            player_data_entry_dict["Government"] = playerdata[3]
-            player_data_entry_dict["Foreign Policy"] = playerdata[4]
-            victory_list = checks.check_victory_conditions(full_game_id, player_id, current_turn_num)
-            player_score = 0
-            for entry in victory_list:
-                if entry:
-                    player_score += 1
-            player_data_entry_dict["Score"] = player_score
-            if player_data_entry_dict["Score"] == 3:
-                player_data_entry_dict["Victory"] = 1
-            player_data_dict[player_global_id] = player_data_entry_dict
-        game_records_dict[game_name]["Player Data"] = player_data_dict
-        game_records_dict[game_name]["Statistics"]["Game End Turn"] = current_turn_num
-        game_records_dict[game_name]["Statistics"]["Game Ended"] = current_date_string
-        game_records_dict[game_name]["Statistics"]["Game Started"] = active_games_dict[full_game_id]["Statistics"]["Game Started"]
-        start_date = game_records_dict[game_name]["Statistics"]["Game Started"]
-        current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-        start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
-        date_difference = current_date_obj - start_date_obj
-        game_records_dict[game_name]["Statistics"]["Days Ellapsed"] = date_difference.days
-        with open('game_records.json', 'w') as json_file:
-            json.dump(game_records_dict, json_file, indent=4)
-
-        return player_has_won
 
 def get_game_name(full_game_id):
     with open('active_games.json', 'r') as json_file:

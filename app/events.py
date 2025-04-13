@@ -15,7 +15,7 @@ from app.notifications import Notifications
 #EVENT INITIATION CODE
 ################################################################################
 
-def trigger_event(full_game_id: str, current_turn_num: int) -> None:
+def trigger_event(game_id: str) -> None:
     """
     Activates and resolves a random event.
 
@@ -25,18 +25,19 @@ def trigger_event(full_game_id: str, current_turn_num: int) -> None:
     """
 
     # get game data
-    playerdata_filepath = f'gamedata/{full_game_id}/playerdata.csv'
+    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
     playerdata_list = core.read_file(playerdata_filepath, 1)
+    current_turn_num = core.get_current_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
     # get list of events already used and build event conditions dict
     events_list = list(EVENT_DICT.keys())
     random.shuffle(events_list)
-    event_conditions_dict = build_event_conditions_dict(full_game_id, current_turn_num, playerdata_list, active_games_dict)
+    event_conditions_dict = build_event_conditions_dict(game_id, current_turn_num, playerdata_list, active_games_dict)
     already_chosen_events_list = []
-    already_chosen_events_list += active_games_dict[full_game_id]["Inactive Events"]
-    already_chosen_events_list += [key for key in active_games_dict[full_game_id]["Active Events"]]
+    already_chosen_events_list += active_games_dict[game_id]["Inactive Events"]
+    already_chosen_events_list += [key for key in active_games_dict[game_id]["Active Events"]]
     event_override = None
 
     chosen_event = None
@@ -46,9 +47,9 @@ def trigger_event(full_game_id: str, current_turn_num: int) -> None:
         if event_override is not None:
             chosen_event = event_override
         # check if event conditions have been met
-        if chosen_event not in already_chosen_events_list and event_conditions_met(chosen_event, event_conditions_dict, full_game_id, active_games_dict):
+        if chosen_event not in already_chosen_events_list and event_conditions_met(chosen_event, event_conditions_dict, game_id, active_games_dict):
             print(chosen_event)
-            active_games_dict, playerdata_list= initiate_event(chosen_event, event_conditions_dict, full_game_id, current_turn_num, active_games_dict, playerdata_list)
+            active_games_dict, playerdata_list= initiate_event(chosen_event, event_conditions_dict, game_id, current_turn_num, active_games_dict, playerdata_list)
             break
 
     # save changes to playerdata

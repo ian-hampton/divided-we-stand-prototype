@@ -897,29 +897,30 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
 
     return vc_dict, score
 
-def bonus_phase_heals(player_id, game_id):
-    '''
+def bonus_phase_heals(game_id: str) -> None:
+    """
     Heals all units and defensive improvements by 2 health.
-    '''
+    """
+    
+    nation_table = NationTable(game_id)
     wardata = WarData(game_id)
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
-
-    playerdata = playerdata_list[player_id - 1]
-    player_research_list = ast.literal_eval(playerdata[26])
     
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
         region_unit = Unit(region_id, game_id)
+        if region_improvement.owner_id not in [0, 99]:
+            nation_improvement = nation_table.get(str(region_improvement.owner_id))
+        if region_unit.owner_id not in [0, 99]:
+            nation_unit = nation_table.get(str(region_unit.owner_id))
         
         # unit heal checks
         heal_allowed = False
         if region_unit.name == 'Special Forces':
             heal_allowed = True
-        elif "Scorched Earth" in player_research_list:
+        elif "Scorched Earth" in nation_unit.completed_research:
             heal_allowed = True
         elif region.owner_id == region_unit.owner_id:
             heal_allowed = True
@@ -929,15 +930,17 @@ def bonus_phase_heals(player_id, game_id):
                 if adjacent_region_unit.owner_id == region_unit.owner_id:
                     heal_allowed = True
 
-        # heal unit or improvement
+        # heal improvement
         if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
             region_improvement.heal(2)
-            if 'Peacetime Recovery' in player_research_list and wardata.is_at_peace(player_id):
+            if nation_improvement.id != 0 and 'Peacetime Recovery' in nation_improvement.completed_research and wardata.is_at_peace(nation_improvement.id):
                 region_improvement.heal(100)
+        
+        # heal unit
         unit_name = region_unit.name
         if unit_name != None and heal_allowed:
             region_unit.heal(2)
-            if 'Peacetime Recovery' in player_research_list and wardata.is_at_peace(player_id):
+            if nation_unit.id != 0 and 'Peacetime Recovery' in nation_unit.completed_research and wardata.is_at_peace(nation_unit.id):
                 region_unit.heal(100)
 
 def prompt_for_missing_war_justifications(game_id: str) -> None:
@@ -1046,3 +1049,8 @@ def prune_alliances(game_id: str) -> None:
             alliance.end()
             alliance_table.save(alliance)
             notifications.append(f"{alliance.name} has dissolved.", 7)
+
+def gain_market_income(game_id: str) -> None:
+    """
+    """
+    pass
