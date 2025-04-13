@@ -25,7 +25,7 @@ from app.nationdata import Nation
 from app.nationdata import NationTable
 from app import actions
 
-#TURN PROCESSING PROCEDURE
+# TURN PROCESSING PROCEDURE
 ################################################################################
 
 def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
@@ -300,7 +300,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             events.trigger_event(game_id)
 
     # update active game records
-    update_turn_num(int(game_id[-1]))
+    update_turn_num(game_id)
     start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
@@ -314,13 +314,12 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # update game maps
     current_turn_num = get_current_turn_num(game_id)
     main_map = map.MainMap(game_id, map_name, current_turn_num)
+    control_map = map.ControlMap(game_id, map_name)
     main_map.update()
-    if update_control_map:
-        control_map = map.ControlMap(game_id, map_name)
-        control_map.update()
+    control_map.update()
 
 
-#TURN PROCESSING FUNCTIONS
+# TURN PROCESSING FUNCTIONS
 ################################################################################
 
 def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> None:
@@ -423,7 +422,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     rmdata_filepath = f'{files_destination}/rmdata.csv'
     with open(rmdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(rm_header)
+        writer.writerow(rmdata_header)
 
     # create trucedata.csv
     # to do - store in gamedata.json and create truce class?
@@ -448,16 +447,13 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         nation_table.create(i + 1, user_id)
 
 def erase_game(game_id: str) -> None:
-    '''
-    Erases all the game files of a given game. Returns nothing.
+    """
+    Erases all the game files of a given game.
     Note: This does not erase anything from the game_records.json file.
-
-    Parameters:
-    - full_game_id: A valid game_id to be erased.
-    '''
-    shutil.rmtree(f'gamedata/{full_game_id}')
-    os.makedirs(f'gamedata/{full_game_id}/images')
-    os.makedirs(f'gamedata/{full_game_id}/logs')
+    """
+    shutil.rmtree(f'gamedata/{game_id}')
+    os.makedirs(f'gamedata/{game_id}/images')
+    os.makedirs(f'gamedata/{game_id}/logs')
 
 def resolve_win(game_id: str) -> None:
     """
@@ -508,7 +504,27 @@ def resolve_win(game_id: str) -> None:
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
-def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: int) -> dict:
+def run_end_of_turn_checks(game_id: str) -> None:
+    """
+    Executes end of turn checks and updates.
+    """
+
+    checks.prune_alliances(game_id)
+    checks.update_income(game_id)
+    checks.resolve_resource_shortages(game_id)
+    checks.resolve_military_capacity_shortages(game_id)
+    checks.update_income(game_id)
+
+    nation_table = NationTable(game_id)
+    for nation in nation_table:
+        nation.update_stockpile_limits()
+        nation.update_trade_fee()
+        nation_table.save(nation)
+
+    nation_table.update_records()
+    nation_table.add_leaderboard_bonuses()
+
+def get_data_for_nation_sheet(game_id: str, player_id: int) -> dict:
     '''
     Gathers all the needed data for a player's nation sheet data and spits it as a dict.
 
@@ -557,17 +573,21 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
     player_information_dict['Victory Conditions Data']['Color List'] = vc_colors
 
     # resource data
-    player_information_dict['Resource Data']['Class List'] = ['dollars', 'political', 'technology', 'coal', 'oil', 'basic', 'common', 'advanced', 'uranium', 'rare']
-    player_information_dict['Resource Data']['Name List'] = RESOURCE_LIST
+    class_list = []
+    name_list = []
     stored_list = []
     income_list = []
     rate_list = []
     for resource_name in nation._resources:
         if resource_name in ["Energy", "Military Capacity"]:
             continue
+        name_list.append(resource_name)
+        class_list.append(resource_name.lower().replace(" ", "-"))
         stored_list.append(f"{nation.get_stockpile(resource_name)}/{nation.get_max(resource_name)}")
         income_list.append(nation.get_income(resource_name))
         rate_list.append(f"{nation.get_rate(resource_name)}%")
+    player_information_dict['Resource Data']['Class List'] = class_list
+    player_information_dict['Resource Data']['Name List'] = name_list
     player_information_dict['Resource Data']['Stored List'] = stored_list
     player_information_dict['Resource Data']['Income List'] = income_list
     player_information_dict['Resource Data']['Rate List'] = rate_list
@@ -645,10 +665,17 @@ def get_data_for_nation_sheet(game_id: str, player_id: int, current_turn_num: in
 
     return player_information_dict
 
-def get_game_name(full_game_id):
+
+# GAMEDATA HELPER FUNCTIONS (TO BE REPLACED WHEN I REWORK GAME MANAGEMENT)
+################################################################################
+
+def get_game_name(game_id: str) -> None:
+    
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    
+    game_name = active_games_dict[game_id]["Game Name"]
+    
     return game_name
 
 def get_map_name(game_id: str) -> str:
@@ -678,39 +705,23 @@ def get_current_turn_num(game_id: str) -> str | int:
 
     return current_turn_num
 
-def update_turn_num(game_id):
-    '''Updates the turn number given game id.'''
-    full_game_id = f'game{game_id}'
+def update_turn_num(game_id: str) -> None:
+    """
+    Updates the turn number given game id.
+    """
+
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
+
+    current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
     current_turn_num += 1
-    active_games_dict[full_game_id]["Statistics"]["Current Turn"] = str(current_turn_num)
+    active_games_dict[game_id]["Statistics"]["Current Turn"] = str(current_turn_num)
+
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-def run_end_of_turn_checks(game_id: str) -> None:
-    """
-    Executes end of turn checks and updates.
-    """
 
-    checks.prune_alliances(game_id)
-    checks.update_income(game_id)
-    checks.resolve_resource_shortages(game_id)
-    checks.resolve_military_capacity_shortages(game_id)
-    checks.update_income(game_id)
-
-    nation_table = NationTable(game_id)
-    for nation in nation_table:
-        nation.update_stockpile_limits()
-        nation.update_trade_fee()
-        nation_table.save(nation)
-
-    nation_table.update_records()
-    nation_table.add_leaderboard_bonuses()
-
-
-#GENERAL PURPOSE GLOBAL FUNCTIONS
+# GENERAL PURPOSE GLOBAL FUNCTIONS
 ################################################################################
 
 def read_file(filepath, skip_value):
@@ -775,7 +786,7 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
     return rmdata_refined_list
 
 
-#DIPLOMACY SUB-FUNCTIONS
+# DIPLOMACY SUB-FUNCTIONS
 ################################################################################
 
 def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
@@ -824,7 +835,7 @@ def get_subjects(playerdata_list, overlord_nation_name, subject_type):
     return player_id_list
 
 
-#ECONOMIC SUB-FUNCTIONS
+# ECONOMIC SUB-FUNCTIONS
 ################################################################################
 
 def get_economy_info(playerdata_list, request_list):
@@ -1014,7 +1025,7 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
     return sum
 
 
-#WAR SUB-FUNCTIONS
+# WAR SUB-FUNCTIONS
 ################################################################################
 
 def read_military_capacity(player_military_capacity_data):
@@ -1066,7 +1077,7 @@ def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
     return False
 
 
-#MISC SUB-FUNCTIONS
+# MISC SUB-FUNCTIONS
 ################################################################################
 
 def date_from_turn_num(current_turn_num):
@@ -1140,18 +1151,20 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     Randomly destroys one unit of a given type belonging to a specific player.
     """
 
+    unit_scenario_dict = get_scenario_dict(game_id, "Units")
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
     # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []
-    if desired_unit_name in unit_ids:
+    if desired_unit_name in unit_scenario_dict:
         for region_id in regdata_dict:
             region_unit = Unit(region_id, game_id)
             if (desired_unit_name == 'ANY' or region_unit.name == desired_unit_name) and region_unit.owner_id == int(player_id):
                 candidate_region_ids.append(region_id)
 
     # randomly select one of the candidate regions
+    # there should always be at least one candidate region because we have already checked that the target unit exists
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
     target_region_unit = Unit(chosen_region_id, game_id)
@@ -1160,7 +1173,7 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
 
     return chosen_region_id, victim
 
-def verify_ratio(game_id, improvement_count_list, improvement_name):
+def verify_ratio(game_id, improvement_count_list, improvement_name):#
 
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     refinery_list = ['Advanced Metals Refinery', 'Oil Refinery', 'Uranium Refinery']
@@ -1293,14 +1306,8 @@ def get_top_three_transactions(game_id):
 # unfortunately like pulling teeth significant refactoring is required to remove some of these - I'm workin' on it!
 
 #file headers
-player_data_header = ["Player", "Nation Name", "Color", "Government", "Foreign Policy", "Military Capacity", "Trade Fee", "Stability Data", "Victory Conditions", "Dollars", "Political Power", "Technology", "Coal", "Oil", "Green Energy", "Basic Materials", "Common Metals", "Advanced Metals", "Uranium", "Rare Earth Elements", "Alliance Data", "Missile Data", "Diplomatic Relations", "Upkeep Manager", "Miscellaneous Information", "Income Details", "Completed Research", "Improvement Count", "Status", "Global ID"]
 rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
-rm_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
 trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']
-
-#war and unit/improvement list data
-RESOURCE_LIST = ['Dollars', 'Political Power', 'Technology', 'Coal', 'Oil', 'Green Energy', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-unit_ids = ['IN', 'AR', 'ME', 'SF', 'MO', 'LT', 'HT', 'BT']
 
 #color dictionaries
 # tba - remove all of these and use palette instead
@@ -1341,14 +1348,4 @@ player_colors_normal_to_occupied_hex = {
     (243, 132, 174, 255): "#f4a0c0",
     (182, 99, 23, 255): "#c57429",
     (255, 214, 75, 255): "#ffe68e",
-}
-
-resource_colors = {
-    "Coal": (166, 124, 82, 255),
-    "Oil": (96, 57, 19, 255),
-    "Basic Materials": (149, 149, 149, 255),
-    "Common Metals": (99, 99, 99, 255),
-    "Advanced Metals": (71, 157, 223, 255),
-    "Uranium": (0, 255, 0, 255),
-    "Rare Earth Elements": (241, 194, 50, 255)
 }

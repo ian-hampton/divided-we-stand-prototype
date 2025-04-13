@@ -321,8 +321,8 @@ class ResourceMap:
                 start_cords_updated = (cord_x, cord_y)
                 if region.cords is not None:
                     start_cords_updated = region.cords
-                main_image = silly_placeholder(main_image, region_id, core.resource_colors[region.resource])
-                ImageDraw.floodfill(main_image, start_cords_updated, core.resource_colors[region.resource], border=(0, 0, 0, 255))
+                main_image = silly_placeholder(main_image, region_id, resource_colors[region.resource])
+                ImageDraw.floodfill(main_image, start_cords_updated, resource_colors[region.resource], border=(0, 0, 0, 255))
         
         # add background textures and text
         if map_str == "united_states":
@@ -518,3 +518,13 @@ def silly_placeholder(main_image, region_id, fill_color):
             ImageDraw.floodfill(main_image, (4609, 4327), fill_color, border=(0, 0, 0, 255))
             ImageDraw.floodfill(main_image, (4643, 4322), fill_color, border=(0, 0, 0, 255))
     return main_image
+
+resource_colors = {
+    "Coal": (166, 124, 82, 255),
+    "Oil": (96, 57, 19, 255),
+    "Basic Materials": (149, 149, 149, 255),
+    "Common Metals": (99, 99, 99, 255),
+    "Advanced Metals": (71, 157, 223, 255),
+    "Uranium": (0, 255, 0, 255),
+    "Rare Earth Elements": (241, 194, 50, 255)
+}
