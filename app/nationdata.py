@@ -387,7 +387,7 @@ class Nation:
         income += amount
         self._resources[resource_name]["grossIncome"] = f"{income:.2f}"
 
-    def get_max(self, resource_name: str) -> None:
+    def get_max(self, resource_name: str) -> int:
         """
         Retrives max storage amount of a given resource.
         """
@@ -408,12 +408,12 @@ class Nation:
             raise TypeError(f"Invalid amount provided. Expected an integer.")
         
         if overwrite:
-            self._resources[resource_name]["max"] = f"{amount:.2f}"
+            self._resources[resource_name]["max"] = f"{amount}"
             return
         
-        income = float(self._resources[resource_name]["max"])
-        income += amount
-        self._resources[resource_name]["max"] = f"{income:.2f}"
+        max = int(self._resources[resource_name]["max"])
+        max += amount
+        self._resources[resource_name]["max"] = f"{max}"
 
     def update_stockpile_limits(self) -> None:
         """
@@ -421,7 +421,7 @@ class Nation:
         """
 
         new_max = 50
-        cb_count = self.improvement_counts["Central Bank"]
+        cb_count = self.improvement_counts.get("Central Bank", 0)
         new_max += cb_count * 20
 
         for resource_name in self._resources:
@@ -429,7 +429,7 @@ class Nation:
                 continue
             if resource_name == "Dollars":
                 new_max += 50
-            self.update_max(resource_name, new_max, overwrite=True)
+            self.update_max(resource_name, int(new_max), overwrite=True)
 
     def get_rate(self, resource_name: str) -> str:
         """

@@ -823,23 +823,21 @@ class WarData:
         Adds warscore from occupied regions.
         """
         from app.region import Region
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
-
+        
+        nation_table = NationTable(self.game_id)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
 
         # for every region that is occupied
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
-            if region.occupier_id != 0 and region.occupier_id != 99:
+            if region.occupier_id not in [0, 99]:
                 # get occupier information
                 war_name = self.are_at_war(region.owner_id, region.occupier_id, True)
-                occupier_nation_name = playerdata_list[region.occupier_id - 1][1]
-                occupier_war_role = self.get_war_role(occupier_nation_name, war_name)
-                occupier_research_list = ast.literal_eval(playerdata_list[region.occupier_id - 1][26])
+                occupier_nation = nation_table.get(str(region.occupier_id))
+                occupier_war_role = self.get_war_role(occupier_nation.name, war_name)
                 # add warscore
-                if 'Scorched Earth' in occupier_research_list:
+                if 'Scorched Earth' in occupier_nation.completed_research:
                     score = 3
                 else:
                     score = 2

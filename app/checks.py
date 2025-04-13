@@ -367,6 +367,8 @@ def gain_income(game_id: str) -> None:
     for nation in nation_table:
 
         for resource_name in nation._resources:
+            if resource_name in ["Energy", "Military Capacity"]:
+                continue
             amount = float(nation.get_income(resource_name))
             nation.update_stockpile(resource_name, amount)
 
@@ -447,7 +449,10 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
             consumers_list.append(target_name)
     
     # prune until resource shortage eliminated or no consumers left
-    resource_stockpile = float(nation.get_stockpile(resource_name))
+    if resource_name == "Energy":
+        resource_stockpile = float(nation.get_income(resource_name))
+    else:
+        resource_stockpile = float(nation.get_stockpile(resource_name))
     while resource_stockpile < 0 and consumers_list != []:
         
         # select random consumer and identify if it is an improvement or unit
@@ -471,7 +476,10 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
         # update stockpile
         consumer_upkeep = upkeep_dict[consumer_name][resource_name]["Upkeep"] * upkeep_dict[consumer_name][resource_name]["Upkeep Multiplier"]
         resource_stockpile += consumer_upkeep
-        nation.update_stockpile(resource_name, consumer_upkeep)
+        if resource_name == "Energy":
+            nation.update_income(resource_name, consumer_upkeep)
+        else:
+            nation.update_stockpile(resource_name, consumer_upkeep)
         
         # remove consumer from selection pool if no more of it remains
         if consumer_type == "improvement":
