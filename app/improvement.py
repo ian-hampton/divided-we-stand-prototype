@@ -184,7 +184,7 @@ class Improvement:
             active_games_dict = json.load(json_file)
 
         # get modifer from central banks
-        if region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):
+        if self.name != "Capital" and region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):
             for resource_name in improvement_income_dict:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
 

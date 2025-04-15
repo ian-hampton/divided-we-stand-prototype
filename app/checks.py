@@ -3,6 +3,7 @@ import copy
 import csv
 import json
 import random
+import datetime
 
 from app import core
 from app import map
@@ -65,7 +66,7 @@ def update_income(game_id: str) -> None:
         region_improvement = Improvement(region_id, game_id)
         region_unit = Unit(region_id, game_id)
         # skip if region is unowned
-        if region.owner_id == 0 or region.owner_id == 99:
+        if region.owner_id in [0, 99]:
             continue
         # update statistics
         nation = nation_table.get(region.owner_id)
@@ -236,6 +237,7 @@ def update_income(game_id: str) -> None:
                 nation_table.save(overlord)
 
         # calculate player upkeep costs
+        # tba - check if there is even a need to calculate unit and improvement upkeep seperately anymore
         player_upkeep_costs_dict = {}
         upkeep_resources = ["Dollars", "Oil", "Uranium", "Energy"]
         for resource_name in upkeep_resources:
@@ -290,7 +292,7 @@ def update_income(game_id: str) -> None:
 
 
     ### refine income strings ###
-    
+
     # create strings for net incomes
     final_income_strings = {}
     for nation in nation_table:
@@ -412,14 +414,6 @@ def resolve_resource_shortages(game_id: str) -> None:
 
         nation = nation_table.get(nation_id)
         upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
-
-        # filter out upkeep data for units/improvements player does not have
-        for improvement_name, count in nation.improvement_counts.items():
-            if count == 0 and improvement_name in upkeep_dict:
-                del upkeep_dict[improvement_name]
-        for unit_name, count in nation.unit_counts.items():
-            if count == 0 and unit_name in upkeep_dict:
-                del upkeep_dict[unit_name]
 
         # handle shortages
         _resolve_shortage("Oil", upkeep_dict, game_id, nation.id, notifications)

@@ -239,6 +239,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
     
     # resolve public actions
+    print("Resolving public actions...")
     actions.resolve_trade_actions(game_id)
     actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"] + actions_dict["WhitePeaceAction"])
     actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
@@ -254,6 +255,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"] + actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
 
     # resolve private actions
+    print("Resolving private actions...")
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
     actions.resolve_unit_deployment_actions(game_id, actions_dict["UnitDeployAction"])
     actions.resolve_war_actions(game_id, actions_dict["WarAction"])
@@ -296,8 +298,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             checks.bonus_phase_heals(game_id)
             notifications.append('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
-            print("Triggering an event...")
-            events.trigger_event(game_id)
+            # print("Triggering an event...")
+            # events.trigger_event(game_id)
+            pass
 
     # update active game records
     update_turn_num(game_id)
@@ -920,8 +923,14 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     technology_data_dict = get_scenario_dict(game_id, "Technologies")
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
 
+    # build yield dict
     yield_dict = {}
     for improvement_name, improvement_data in improvement_data_dict.items():
+        
+        # no point in tracking the data for improvements the player does not have any of
+        if nation.improvement_counts[improvement_name] == 0:
+            continue
+        
         yield_dict[improvement_name] = {}
         for resource_name in improvement_data["Income"]:
             inner_dict = {
@@ -932,14 +941,18 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:   
+        
         if tech_name in technology_data_dict:
             tech_dict = technology_data_dict[tech_name]
         elif tech_name in agenda_data_dict:
             tech_dict = agenda_data_dict[tech_name]
+        
         for target in tech_dict["Modifiers"]: 
-            if target not in improvement_data_dict:
-                # skip over effects that are not affecting improvements
+
+            # skip over modifiers that are not affecting improvements
+            if target not in yield_dict:
                 continue
+            
             improvement_name = target
             for resource_name, modifier_dict in tech_dict["Modifiers"][improvement_name].items():
                 if "Income" in modifier_dict:
@@ -968,7 +981,13 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     agenda_data_dict = get_scenario_dict(game_id, "Agendas")
 
     upkeep_dict = {}
+
     for improvement_name, improvement_data in improvement_data_dict.items():
+
+        # no point in tracking the data for improvements the player does not have any of
+        if nation.improvement_counts[improvement_name] == 0:
+            continue
+        
         upkeep_dict[improvement_name] = {}
         for resource_name in improvement_data["Upkeep"]:
             inner_dict = {
@@ -976,7 +995,13 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
                 "Upkeep Multiplier": 1
             }
             upkeep_dict[improvement_name][resource_name] = inner_dict
+
     for unit_name, unit_data in unit_data_dict.items():
+
+        # no point in tracking the data for units the player does not have any of
+        if nation.unit_counts[unit_name] == 0:
+            continue
+        
         upkeep_dict[unit_name] = {}
         for resource_name in unit_data["Upkeep"]:
             inner_dict = {
@@ -987,14 +1012,18 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:
+        
         if tech_name in technology_data_dict:
             tech_dict = technology_data_dict[tech_name]
         elif tech_name in agenda_data_dict:
             tech_dict = agenda_data_dict[tech_name]
+
         for target in tech_dict["Modifiers"]: 
-            if target not in improvement_data_dict and target not in unit_data_dict:
-                # skip over effects that are not improvements or units
+            
+            # skip over effects that are not improvements or units
+            if target not in upkeep_dict:
                 continue
+            
             for resource_name, modifier_dict in tech_dict["Modifiers"][target].items():
                 if "Upkeep" in modifier_dict:
                     upkeep_dict[target][resource_name]["Upkeep"] += modifier_dict["Upkeep"]
@@ -1015,12 +1044,14 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
     Returns:
         float: Upkeep sum.
     """
+    
     sum = 0.0
-    for name, count in player_count_dict.items():
-        if upkeep_type in player_upkeep_dict[name]:
-            resource_upkeep_dict = player_upkeep_dict[name][upkeep_type]
-            name_upkeep = resource_upkeep_dict["Upkeep"] * resource_upkeep_dict["Upkeep Multiplier"]
-            sum += name_upkeep * count
+
+    for target, target_upkeep_dict in player_upkeep_dict.items():
+        if upkeep_type in target_upkeep_dict and target in player_count_dict:
+            resource_upkeep_dict = player_upkeep_dict[target][upkeep_type]
+            target_upkeep = resource_upkeep_dict["Upkeep"] * resource_upkeep_dict["Upkeep Multiplier"]
+            sum += target_upkeep * player_count_dict[target]
 
     return sum
 
