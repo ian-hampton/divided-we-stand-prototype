@@ -1,5 +1,5 @@
-import ast
 import json
+import copy
 
 from app import core
 from app.nationdata import NationTable
@@ -164,7 +164,7 @@ class Improvement:
     # income methods
     ################################################################################
 
-    def calculate_yield(self, improvement_income_dict: dict) -> dict:
+    def calculate_yield(self, nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
         """
         Calculates the final yield of this improvement.
 
@@ -178,10 +178,7 @@ class Improvement:
         # load game info
         from app.region import Region
         region = Region(self.region_id, self.game_id)
-        nation_table = NationTable(self.game_id)
-        nation = nation_table.get(self.owner_id)
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
+        improvement_income_dict = copy.deepcopy(improvement_income_dict)  # deepcopy required because of modifiers below
 
         # get modifer from central banks
         if self.name != "Capital" and region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):

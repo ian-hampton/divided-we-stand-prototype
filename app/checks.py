@@ -1,4 +1,3 @@
-import ast
 import copy
 import csv
 import json
@@ -6,7 +5,6 @@ import random
 import datetime
 
 from app import core
-from app import map
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
@@ -59,7 +57,6 @@ def update_income(game_id: str) -> None:
 
 
     ### calculate gross income ###
-
     # add income from regions
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
@@ -85,7 +82,7 @@ def update_income(game_id: str) -> None:
                 plural_improvement_name = f'{region_improvement.name[:-1]}ies'
             nation = nation_table.get(region.owner_id)
             improvement_income_dict = yield_dict[nation.name][region_improvement.name]
-            improvement_yield_dict = region_improvement.calculate_yield(copy.deepcopy(improvement_income_dict))
+            improvement_yield_dict = region_improvement.calculate_yield(nation, improvement_income_dict, active_games_dict)
             for resource_name, amount_gained in improvement_yield_dict.items():
                 if amount_gained != 0:
                     nation.update_gross_income(resource_name, amount_gained)
