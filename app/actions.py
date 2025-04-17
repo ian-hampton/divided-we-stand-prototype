@@ -3,6 +3,8 @@ import json
 from app import core
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
+from app.notifications import Notifications
+from app.region import Region
 
 class AllianceCreateAction:
 
@@ -845,7 +847,137 @@ def _check_unit(game_id: str, unit_str: str) -> str | None:
     return None
 
 def resolve_trade_actions(game_id: str) -> None:
-    pass
+    """
+    Resolves trade actions between players via CLI.
+    """
+
+    nation_table = NationTable(game_id)
+    notifications = Notifications(game_id)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    trade_action = input("Are there any trade actions this turn? (Y/n) ")
+
+    while trade_action.upper().strip() != "N":
+        
+        # get nations
+        nation_name_1 = input("Enter 1st nation name: ")
+        nation_name_2 = input("Enter 2nd nation name: ")
+        try:
+            nation1 = nation_table.get(nation_name_1)
+            nation2 = nation_table.get(nation_name_2)
+        except:
+            print("Invalid nation name(s) were given. Please try again.")
+            continue
+
+        # get trade fees
+        nation1_fee = int(nation1.trade_fee[0]) / int(nation1.trade_fee[2])
+        nation2_fee = int(nation2.trade_fee[0]) / int(nation2.trade_fee[2])
+
+        # get trade resources
+        trade_resources = []
+        for resource_name in nation1._resources:
+            if resource_name not in ["Energy", "Military Capacity"]:
+                trade_resources.append(resource_name)
+        
+        # print table
+        print(f"Trade Between {nation1.name} and {nation2.name}")
+        print("{:<21s}{:<33s}{:<33s}".format("Resource", nation1.name, nation2.name))
+        for resource_name in trade_resources:
+            print("{:<21s}{:<33s}{:<33s}".format(resource_name, nation1.get_stockpile(resource_name), nation2.get_stockpile(resource_name)))
+        
+        # create trade deal dict
+        trade_valid = True
+        trade_deal = {
+            "Nation1RegionsCeded": [],
+            "Nation2RegionsCeded": []
+        }
+        for resource_name in trade_resources:
+            trade_deal[resource_name] = 0.00
+
+        # resource trade
+        resource_trade = input("Will any resources be traded in this deal? (Y/n) ")
+        if resource_trade.upper().strip() != "N":
+            for resource_name in trade_resources:
+                resource_count = float(input(f"Enter {resource_name} amount: "))
+                trade_deal[resource_name] = resource_count
+
+        # region trade
+        resource_trade = input("Will any regions be traded in this deal? (Y/n) ")
+        if resource_trade.upper().strip() != "N":
+            
+            invalid_region_given = True
+            while invalid_region_given:
+                nation_region_trades_str = input(f'Enter regions {nation1.name} is trading away: ')
+                nation_region_trades_str = nation_region_trades_str.upper().strip().replace(" ", "")
+                nation_region_trades_list = nation_region_trades_str.split(',')
+                invalid_region_given = False
+                for region_id in nation_region_trades_list:
+                    if region_id not in regdata_dict:
+                        invalid_region_given = True
+                        print(f"{region_id} is invalid. Please try again.")
+                        break
+            trade_deal["Nation1RegionsCeded"].extend(nation_region_trades_list)
+            
+            invalid_region_given = True
+            while invalid_region_given:
+                nation_region_trades_str = input(f'Enter regions {nation2.name} is trading away: ')
+                nation_region_trades_str = nation_region_trades_str.upper().strip().replace(" ", "")
+                nation_region_trades_list = nation_region_trades_str.split(',')
+                invalid_region_given = False
+                for region_id in nation_region_trades_list:
+                    if region_id not in regdata_dict:
+                        invalid_region_given = True
+                        print(f"{region_id} is invalid. Please try again.")
+                        break
+            trade_deal["Nation2RegionsCeded"].extend(nation_region_trades_list)
+        
+        # process traded resources
+        for resource_name in trade_resources:
+            amount = trade_deal[resource_name]
+            
+            if amount > 0:
+                # positive amount -> nation 2
+                nation1.update_stockpile(resource_name, -1 * amount)
+                nation2.update_stockpile(resource_name, amount)
+                nation1.resources_given += abs(amount)
+                # pay trade fee
+                nation1.update_stockpile("Dollars", abs(amount) * nation1_fee)
+            
+            elif amount < 0:
+                # negative amount -> nation 1
+                nation1.update_stockpile(resource_name, -1 * amount)
+                nation2.update_stockpile(resource_name, amount)
+                nation2.resources_given += abs(amount)
+                # pay trade fee
+                nation2.update_stockpile("Dollars", abs(amount) * nation2_fee)
+
+            # validate transaction
+            if float(nation1.get_stockpile("Dollars")) < 0 or float(nation2.get_stockpile("Dollars")) < 0:
+                trade_valid = False
+                break
+            if float(nation1.get_stockpile(resource_name)) < 0 or float(nation2.get_stockpile(resource_name)) < 0:
+                trade_valid = False
+                break
+
+        # process traded regions
+        if trade_valid:
+            for region_id in trade_deal["Nation1RegionsCeded"]:
+                region = Region(region_id, game_id)
+                region.set_owner_id(nation2.id)
+            for region_id in trade_deal["Nation2RegionsCeded"]:
+                region = Region(region_id, game_id)
+                region.set_owner_id(nation1.id)
+
+        # save changes
+        if trade_valid:
+            nation_table.save(nation1)
+            nation_table.save(nation2)
+            notifications.append(f'{nation1.name} traded with {nation2.name}.', 9)
+        else:
+            print(f'Trade between {nation1.name} and {nation2.name} failed. Insufficient resources.')
+
+        trade_action = input("Are there any additional trade actions this turn? (Y/n) ")
 
 def resolve_peace_actions(game_id: str, actions_list: list[SurrenderAction | WhitePeaceAction]) -> None:
     pass
