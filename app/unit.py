@@ -91,15 +91,6 @@ class Unit:
         """
         Removes the unit in a region.
         """
-        # update unit count
-        
-        if self.name is not None and self.owner_id != 99:
-            nation_table = NationTable(self.game_id)
-            nation = nation_table.get(self.owner_id)
-            nation.unit_counts[self.name] -= 1
-            nation_table.save(nation)
-
-        # remove unit
         self.name = None
         self.health = 99
         self.owner_id = 99
@@ -125,13 +116,6 @@ class Unit:
         self.type = unit_data_dict[self.name]["Unit Type"]
         self.hit_value = unit_data_dict[self.name]["Combat Value"]
         self._save_changes()
-
-        # update unit count
-        if self.owner_id != 99:
-            nation_table = NationTable(self.game_id)
-            nation = nation_table.get(self.owner_id)
-            nation.unit_counts[unit_name] += 1
-            nation_table.save(nation)
 
     def heal(self, health_count: int) -> None:
         """
