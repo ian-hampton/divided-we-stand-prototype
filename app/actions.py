@@ -995,7 +995,79 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
     pass
 
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+    # execute actions
+    region_queue: list[Region] = []
+    for action in actions_list:
+        nation = nation_table.get(action.id)
+        region = Region(action.target_region, game_id)
+
+        # ownership check
+        if region.owner_id != 0:
+            nation.action_log.append(f"Failed to claim {action.target_region}. This region is already owned by another nation.")
+            continue
+
+        # event check
+        if "Widespread Civil Disorder" in active_games_dict[game_id]["Active Events"]:
+            nation.action_log.append(f"Failed to claim {action.target_region} due to the Widespread Civil Disorder event.")
+            continue
+
+        # adjacency check
+        # to be added
+        
+        # attempt to pay for region
+        nation.update_stockpile("Dollars", -1 * region.purchase_cost)
+        pp_cost = 0
+        if nation.gov == "Remnant":
+            pp_cost = 0.20
+        nation.update_stockpile("Political Power", -1 * pp_cost)
+        if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
+            nation.action_log.append(f"Failed to claim {action.target_region}. Insufficient resources.")
+            continue
+
+        # all checks passed add to region_queue
+        if region not in region_queue:
+            region.add_claim(action.id)
+            region_queue.append(region)
+        else:
+            index = region_queue.index(region)
+            existing_region = region_queue[index]
+            existing_region.add_claim(action.id)
+            region_queue[index] = existing_region
+
+        # update nation data
+        nation_table.save(nation)
+
+    # resolve claims
+    for region in region_queue:
+
+        if len(region.claim_list) == 1:
+
+            # region purchase successful
+            player_id = region.claim_list[0]
+            nation = nation_table.get(player_id)
+            region.set_owner_id(int(player_id))
+            nation.action_log.append(f"Successfully purchased region {region.region_id} for {region.purchase_cost} dollars.")
+            nation_table.save(nation)
+        
+        else:
+
+            # region is disputed
+            region.increase_purchase_cost()
+            active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
+            for player_id in region.claim_list:
+                nation = nation_table.get(player_id)
+                nation.action_log.append(f"Failed to purchase {region.region_id} due to a region dispute.")
+                nation_table.save(nation)
+    
+    # update active games
+    with open('active_games.json', 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
     pass

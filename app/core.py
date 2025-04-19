@@ -239,8 +239,8 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
     
     # resolve public actions
-    print("Resolving public actions...")
     actions.resolve_trade_actions(game_id)
+    print("Resolving public actions...")
     actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"] + actions_dict["WhitePeaceAction"])
     actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
     actions.resolve_alliance_leave_actions(game_id, actions_dict["AllianceLeaveAction"])
@@ -266,6 +266,11 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
 
     # export logs
+    nation_table = NationTable(game_id)
+    for nation in nation_table:
+        nation.export_action_log()
+        nation.action_log = []
+        nation_table.save(nation)
     wardata = WarData(game_id)
     wardata.export_all_logs()
 
@@ -282,7 +287,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # update victory progress and check if player has won the game
     player_has_won = False
-    nation_table = NationTable(game_id)
+    nation_table.reload()
     for nation in nation_table:
         nation.update_victory_progress()
         if nation.score == 3:
