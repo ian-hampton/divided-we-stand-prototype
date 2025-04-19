@@ -267,12 +267,11 @@ class Nation:
         Exports player actions as a text file.
         """
 
-        log_dir = f"gamedata/{self.game_id}/logs/nation{self.id}.txt"
-        if os.path.exists(log_dir):
-            os.remove(log_dir)
+        log_file = f"gamedata/{self.game_id}/logs/nation{self.id}.txt"
+        log_dir = os.path.dirname(log_file)
         
-        os.makedirs(log_dir)
-        with open(log_dir, 'w') as file:
+        os.makedirs(log_dir, exist_ok=True)
+        with open(log_file, 'w') as file:
             for string in self.action_log:
                 file.write(string + '\n')
 
