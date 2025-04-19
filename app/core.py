@@ -1209,30 +1209,6 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
 
     return chosen_region_id, victim
 
-def verify_ratio(game_id, improvement_count_list, improvement_name):#
-
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    refinery_list = ['Advanced Metals Refinery', 'Oil Refinery', 'Uranium Refinery']
-    improvement_name_list = sorted(improvement_data_dict.keys())
-    
-    if improvement_name in refinery_list:
-        if improvement_name == 'Advanced Metals Refinery':
-            ref_index = improvement_name_list.index('Advanced Metals Refinery')
-            sub_index = improvement_name_list.index('Advanced Metals Mine')
-        elif improvement_name == 'Oil Refinery':
-            ref_index = improvement_name_list.index('Oil Refinery')
-            sub_index = improvement_name_list.index('Oil Well')
-        elif improvement_name == 'Uranium Refinery':
-            ref_index = improvement_name_list.index('Uranium Refinery')
-            sub_index = improvement_name_list.index('Uranium Mine')
-        ref_count = improvement_count_list[ref_index]
-        sub_count = improvement_count_list[sub_index]
-        if sub_count == 0:
-            return False
-        if (ref_count + 1) / sub_count > 0.5:
-            return False
-    return True
-
 def verify_required_research(required_research, player_research):
     '''
     Checks if a certain research has been researched by a specific player.
