@@ -1091,6 +1091,8 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
             continue
 
         # remove improvement
+        if region_improvement.name is not None:
+            nation.improvement_counts[region_improvement.name] -= 1
         region_improvement.clear()
         nation.action_log.append(f"Removed improvement in region {action.target_region}.")
 

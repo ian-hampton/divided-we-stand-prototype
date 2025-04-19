@@ -2,7 +2,6 @@ import json
 import copy
 
 from app import core
-from app.nationdata import NationTable
 
 class Improvement:
 
@@ -98,13 +97,6 @@ class Improvement:
             self.set_turn_timer(8)
         if self.name == 'Surveillance Center':
             pass
-
-        # update improvement count
-        if self.owner_id != 0:
-            nation_table = NationTable(self.game_id)
-            nation = nation_table.get(self.owner_id)
-            nation.improvement_counts[improvement_name] += 1
-            nation_table.save(nation)
         
         self._save_changes()
 
@@ -147,15 +139,6 @@ class Improvement:
         """
         Removes the improvement in a region.
         """
-
-        # update improvement count
-        if self.name is not None and self.owner_id != 0:
-            nation_table = NationTable(self.game_id)
-            nation = nation_table.get(self.owner_id)
-            nation.improvement_counts[self.name] -= 1
-            nation_table.save(nation)
-
-        # remove improvement
         self.name = None
         self.health = 99
         self.turn_timer = 99

@@ -64,6 +64,9 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         starting_region_improvement = Improvement(region_id, game_id)
         starting_region.set_owner_id(int(nation_id))
         starting_region_improvement.set_improvement("Capital")
+        nation = nation_table.get(nation_id)
+        nation.improvement_counts["Capital"] += 1
+        nation_table.save(nation)
 
     # place random starts
     random.shuffle(random_assignment_list)
@@ -90,6 +93,9 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
                 random_region.set_owner_id(int(random_assignment_player_id))
                 random_region_improvement = Improvement(random_region_id, game_id)
                 random_region_improvement.set_improvement("Capital")
+                nation = nation_table.get(nation_id)
+                nation.improvement_counts["Capital"] += 1
+                nation_table.save(nation)
                 break
     
     # update active_games.json

@@ -378,17 +378,21 @@ def countdown(game_id: str) -> None:
     Resolves improvements/units that have countdowns associated with them.
     """
 
+    nation_table = NationTable(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
 
     # resolve strip mines
     for region_id in regdata_dict:
-        region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
         if region_improvement.name == "Strip Mine":
+            nation = nation_table.get(str(region_improvement.owner_id))
             region_improvement.decrease_timer()
             if region_improvement.turn_timer <= 0:
+                nation.improvement_counts[region_improvement.name] -= 1
+                nation_table.save(nation)
                 region_improvement.clear()
+                region = Region(region_id, game_id)
                 region.set_resource("Empty")
     
     # resolve nuked regions
@@ -456,12 +460,9 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
         # remove consumer
         if consumer_type == "improvement":
             region_id = core.search_and_destroy(game_id, player_id, consumer_name)
+            nation.improvement_counts[consumer_name] -= 1
         else:
             region_id, victim = core.search_and_destroy_unit(game_id, player_id, consumer_name)
-        
-        # refresh nation data and add notification
-        nation_table.reload()
-        nation = nation_table.get(player_id)
         notifications.append(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 6)
         
         # update stockpile
