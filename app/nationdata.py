@@ -269,7 +269,7 @@ class Nation:
 
         log_file = f"gamedata/{self.game_id}/logs/nation{self.id}.txt"
         log_dir = os.path.dirname(log_file)
-        
+
         os.makedirs(log_dir, exist_ok=True)
         with open(log_file, 'w') as file:
             for string in self.action_log:
@@ -419,15 +419,18 @@ class Nation:
         Updates the max stockpile limit for all resources.
         """
 
-        new_max = 50
-        cb_count = self.improvement_counts.get("Central Bank", 0)
-        new_max += cb_count * 20
-
         for resource_name in self._resources:
+
             if resource_name in ["Energy", "Military Capacity"]:
                 continue
+            
+            new_max = 50
+            cb_count = self.improvement_counts.get("Central Bank", 0)
+            new_max += cb_count * 20
+            
             if resource_name == "Dollars":
                 new_max += 50
+            
             self.update_max(resource_name, int(new_max), overwrite=True)
 
     def get_rate(self, resource_name: str) -> str:
