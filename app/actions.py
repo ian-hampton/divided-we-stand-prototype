@@ -5,6 +5,8 @@ from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.notifications import Notifications
 from app.region import Region
+from app.improvement import Improvement
+from app.unit import Unit
 
 class AllianceCreateAction:
 
@@ -1010,11 +1012,13 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         # ownership check
         if region.owner_id != 0:
             nation.action_log.append(f"Failed to claim {action.target_region}. This region is already owned by another nation.")
+            nation_table.save(nation)
             continue
 
         # event check
         if "Widespread Civil Disorder" in active_games_dict[game_id]["Active Events"]:
             nation.action_log.append(f"Failed to claim {action.target_region} due to the Widespread Civil Disorder event.")
+            nation_table.save(nation)
             continue
 
         # adjacency check
@@ -1028,6 +1032,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         nation.update_stockpile("Political Power", -1 * pp_cost)
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
             nation.action_log.append(f"Failed to claim {action.target_region}. Insufficient resources.")
+            nation_table.save(nation)
             continue
 
         # all checks passed add to region_queue
@@ -1070,10 +1075,97 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         json.dump(active_games_dict, json_file, indent=4)
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+
+    for action in actions_list:
+        nation = nation_table.get(action.id)
+        region = Region(action.target_region, game_id)
+        region_improvement = Improvement(action.target_region, game_id)
+
+        # ownership check
+        if str(region.owner_id) != action.id or region.occupier_id != 0:
+            nation.action_log.append(f"Failed to remove {region_improvement.name} in region {action.target_region}. You do not own or control this region.")
+            nation_table.save(nation)
+            continue
+
+        # remove improvement
+        region_improvement.clear()
+        nation.action_log.append(f"Removed improvement in region {action.target_region}.")
+
+        # update nation data
+        nation_table.save(nation)
 
 def resolve_improvement_build_actions(game_id: str, actions_list: list[ImprovementBuildAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
+
+    # execute actions
+    for action in actions_list:
+        nation = nation_table.get(action.id)
+        region = Region(action.target_region, game_id)
+        region_improvement = Improvement(action.target_region, game_id)
+
+        # ownership check
+        if str(region.owner_id) != action.id or region.occupier_id != 0:
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not own or control this region.")
+            nation_table.save(nation)
+            continue
+        
+        # required research check
+        required_research = improvement_data_dict[action.improvement_name]["Required Research"]
+        if required_research is not None and required_research not in nation.completed_research:
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not have the required research.")
+            nation_table.save(nation)
+            continue
+
+        # required region resource check
+        required_resource = improvement_data_dict[action.improvement_name]["Required Resource"]
+        if required_resource is not None and required_resource != region.resource:
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. The region does not have the resource required for this improvement.")
+            nation_table.save(nation)
+            continue
+
+        # nuke check
+        if region.fallout != 0:
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Region cannot support an improvement due to nuclear missile detonation.")
+            nation_table.save(nation)
+            continue
+
+        # calculate build cost
+        build_cost_dict = improvement_data_dict[action.improvement_name]["Build Costs"]
+        if nation.gov == "Remnant":
+            for key in build_cost_dict:
+                build_cost_dict[key] *= 0.9
+
+        # pay for improvement
+        costs_list = []
+        for resource_name, cost in build_cost_dict.items():
+            costs_list.append(f"{cost} {resource_name.lower()}")
+            nation.update_stockpile(resource_name, -1 * cost)
+            if float(nation.get_stockpile(resource_name)) < 0:
+                nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Insufficient resources.")
+                nation = nation_table.get(action.id)
+                nation_table.save(nation)
+                continue
+        
+        # add cost log string
+        if len(costs_list) <= 2:
+            costs_str = " and ".join(costs_list)
+        else:
+            costs_str = ", ".join(costs_list)
+            costs_str = " and ".join(costs_str.rsplit(", ", 1))
+        nation.action_log.append(f"Built {action.improvement_name} in region {action.target_region} for {costs_str}.")
+        
+        # place improvement
+        region_improvement.set_improvement(action.improvement_name, player_research=nation.completed_research)
+        nation.improvement_counts[action.improvement_name] += 1
+
+        # update nation data
+        nation_table.save(nation)
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
     pass

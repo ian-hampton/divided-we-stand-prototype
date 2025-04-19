@@ -27,11 +27,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 5,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 5
         }
     },
     "Boot Camp": {
@@ -64,11 +60,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 10,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10
         }
     },
     "Capital": {
@@ -134,11 +126,8 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
             "Basic Materials": 5,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "City": {
@@ -169,11 +158,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 10,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10
         }
     },
     "Coal Mine": {
@@ -204,11 +189,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 5,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 5
         }
     },
     "Common Metals Mine": {
@@ -239,11 +220,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 5,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 5
         }
     },
     "Crude Barrier": {
@@ -274,11 +251,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 5,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 5
         }
     },
     "Industrial Zone": {
@@ -309,11 +282,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 5,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 5
         }
     },
     "Military Base": {
@@ -344,11 +313,8 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
             "Common Metals": 5,
-            "Advanced Metals": 5,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 5
         }
     },
     "Military Outpost": {
@@ -379,11 +345,8 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
             "Basic Materials": 5,
-            "Common Metals": 5,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 5
         }
     },
     "Missile Defense Network": {
@@ -418,8 +381,6 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
             "Common Metals": 10,
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
@@ -457,11 +418,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 1
+            "Common Metals": 10
         }
     },
     "Nuclear Power Plant": {
@@ -492,11 +449,8 @@
             "Uranium": 0.5
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
             "Common Metals": 10,
-            "Advanced Metals": 10,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 10
         }
     },
     "Oil Refinery": {
@@ -529,11 +483,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "Oil Well": {
@@ -564,11 +514,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 5,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 5
         }
     },
     "Uranium Mine": {
@@ -599,11 +545,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 5,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 5
         }
     },
     "Rare Earth Elements Mine": {
@@ -634,11 +576,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 5,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 5
         }
     },
     "Research Institute": {
@@ -669,11 +607,8 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
             "Basic Materials": 5,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "Research Laboratory": {
@@ -704,11 +639,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 5,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 5
         }
     },
     "Missile Silo": {
@@ -741,11 +672,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "Solar Farm": {
@@ -776,9 +703,6 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
         }
@@ -813,11 +737,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 25,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 25
         }
     },
     "Surveillance Center": {
@@ -852,11 +772,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 10,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10
         }
     },
     "Wind Farm": {
@@ -887,11 +803,7 @@
             "Uranium": 0
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 5,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 5
         }
     }
 }
