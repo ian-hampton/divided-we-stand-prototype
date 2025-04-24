@@ -1095,6 +1095,12 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
             nation_table.save(nation)
             continue
 
+        # capital check
+        if region_improvement.name == "Capital":
+            nation.action_log.append(f"Failed to remove {region_improvement.name} in region {action.target_region}. You cannot remove a Capital improvement.")
+            nation_table.save(nation)
+            continue
+
         # remove improvement
         if region_improvement.name is not None:
             nation.improvement_counts[region_improvement.name] -= 1
@@ -1119,6 +1125,12 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
         # ownership check
         if str(region.owner_id) != action.id or region.occupier_id != 0:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not own or control this region.")
+            nation_table.save(nation)
+            continue
+
+        # capital check
+        if region_improvement.name == "Capital":
+            nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
             nation_table.save(nation)
             continue
         
