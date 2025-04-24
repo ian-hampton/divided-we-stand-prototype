@@ -1139,7 +1139,10 @@ def announcements(full_game_id):
         standings_filtered = []
         for entry in standings:
             nation_name = palette.color_nation_names(entry[0], full_game_id)
-            standings_filtered.append([nation_name, entry[1]])
+            if record == "netIncome":
+                standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
+            else:
+                standings_filtered.append([nation_name, entry[1]])
         record_name = record_names[i]
         standings_dict[record_name] = standings_filtered
     
