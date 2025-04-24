@@ -1057,6 +1057,11 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             player_id = region.claim_list[0]
             nation = nation_table.get(player_id)
             region.set_owner_id(int(player_id))
+            # update improvement count if needed
+            region_improvement = Improvement(region.region_id, game_id)
+            if region_improvement.name is not None:
+                nation.improvement_counts[region_improvement.name] += 1
+            # update nation data
             nation.action_log.append(f"Successfully purchased region {region.region_id} for {region.purchase_cost} dollars.")
             nation_table.save(nation)
         
