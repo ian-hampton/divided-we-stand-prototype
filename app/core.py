@@ -999,13 +999,31 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         if nation.improvement_counts[improvement_name] == 0:
             continue
         
-        upkeep_dict[improvement_name] = {}
-        for resource_name in improvement_data["Upkeep"]:
-            inner_dict = {
-                "Upkeep": improvement_data["Upkeep"][resource_name],
+        upkeep_dict[improvement_name] = {
+            "Dollars": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Energy": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Coal": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Oil": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Uranium": {
+                "Upkeep": 0,
                 "Upkeep Multiplier": 1
             }
-            upkeep_dict[improvement_name][resource_name] = inner_dict
+        }
+
+        for resource_name in improvement_data["Upkeep"]:
+            upkeep_dict[improvement_name][resource_name]["Upkeep"] = improvement_data["Upkeep"][resource_name]
 
     for unit_name, unit_data in unit_data_dict.items():
 
@@ -1013,13 +1031,31 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         if nation.unit_counts[unit_name] == 0:
             continue
         
-        upkeep_dict[unit_name] = {}
-        for resource_name in unit_data["Upkeep"]:
-            inner_dict = {
-                "Upkeep": unit_data["Upkeep"][resource_name],
+        upkeep_dict[unit_name] = {
+            "Dollars": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Energy": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Coal": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Oil": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
+            "Uranium": {
+                "Upkeep": 0,
                 "Upkeep Multiplier": 1
             }
-            upkeep_dict[unit_name][resource_name] = inner_dict
+        }
+
+        for resource_name in unit_data["Upkeep"]:
+            upkeep_dict[unit_name][resource_name] = unit_data["Upkeep"][resource_name]
     
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:

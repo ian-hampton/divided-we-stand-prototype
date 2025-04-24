@@ -21,11 +21,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Common Metals": 5
         }
@@ -54,11 +50,7 @@
         "Abilities": [
             "Provides +2 military capacity."
         ],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Basic Materials": 10
         }
@@ -88,11 +80,7 @@
             "Can exploit the resource present in its region once the sufficient technology is researched, providing +1 of that resource.",
             "Cannot be built, removed, or destroyed."
         ],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {}
     },
     "Central Bank": {
@@ -121,9 +109,7 @@
             "Provides +20% income bonus for all improvements in owned adjacent regions. This ability does not stack."
         ],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
             "Basic Materials": 5,
@@ -152,11 +138,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Basic Materials": 10
         }
@@ -183,11 +165,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Dollars": 5
         }
@@ -214,11 +192,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Dollars": 5
         }
@@ -245,11 +219,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Basic Materials": 5
         }
@@ -276,11 +246,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Dollars": 5
         }
@@ -308,9 +274,7 @@
         },
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 2,
-            "Uranium": 0
+            "Energy": 2
         },
         "Build Costs": {
             "Common Metals": 5,
@@ -340,9 +304,7 @@
         },
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
             "Basic Materials": 5,
@@ -376,9 +338,7 @@
         "Standard Missile Defense": 3,
         "Nuclear Missile Defense": 6,
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 2,
-            "Uranium": 0
+            "Energy": 2
         },
         "Build Costs": {
             "Common Metals": 10,
@@ -413,9 +373,7 @@
         "Standard Missile Defense": 6,
         "Nuclear Missile Defense": 99,
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
             "Common Metals": 10
@@ -444,8 +402,6 @@
         },
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
             "Uranium": 0.5
         },
         "Build Costs": {
@@ -478,9 +434,7 @@
             "Can only be built in a ratio of one for every two Oil Wells owned."
         ],
         "Upkeep": {
-            "Dollars": 2,
-            "Energy": 0,
-            "Uranium": 0
+            "Dollars": 2
         },
         "Build Costs": {
             "Common Metals": 10
@@ -508,11 +462,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Basic Materials": 5
         }
@@ -539,11 +489,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Advanced Metals": 5
         }
@@ -570,11 +516,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Advanced Metals": 5
         }
@@ -603,8 +545,7 @@
         "Abilities": [],
         "Upkeep": {
             "Dollars": 3,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
             "Basic Materials": 5,
@@ -633,11 +574,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Basic Materials": 5
         }
@@ -667,9 +604,7 @@
             "May launch up to three Standard Missiles or one Nuclear Missile per turn."
         ],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 2,
-            "Uranium": 0
+            "Energy": 2
         },
         "Build Costs": {
             "Common Metals": 10
@@ -697,11 +632,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
@@ -731,11 +662,7 @@
         "Abilities": [
             "After eight turns, the strip mine will be scuttled and the coal in the region completely drained."
         ],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Dollars": 25
         }
@@ -767,9 +694,7 @@
             "Base intellegence gathering: TBD. Can be upgraded through additional research."
         ],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
             "Basic Materials": 10
@@ -797,11 +722,7 @@
             "Military Capacity": 0
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
             "Common Metals": 5
         }
