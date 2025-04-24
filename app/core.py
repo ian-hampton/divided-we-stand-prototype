@@ -203,9 +203,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     notifications = Notifications(game_id)
     notifications.clear()
     current_turn_num = get_current_turn_num(game_id)
-    map_name = get_map_name(game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
     
     actions_dict = {
         "AllianceCreateAction": [],
@@ -315,6 +312,8 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # update active game records
     update_turn_num(game_id)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
     start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
@@ -327,6 +326,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # update game maps
     current_turn_num = get_current_turn_num(game_id)
+    map_name = get_map_name(game_id)
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     control_map = map.ControlMap(game_id, map_name)
     main_map.update()
