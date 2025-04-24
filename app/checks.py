@@ -410,32 +410,24 @@ def resolve_resource_shortages(game_id: str) -> None:
     nation_table = NationTable(game_id)
     notifications = Notifications(game_id)
 
-    for i in range(len(nation_table)):
-        nation_id = str(i + 1)
+    for nation in nation_table:
 
-        nation = nation_table.get(nation_id)
         upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
 
         # handle shortages
-        _resolve_shortage("Oil", upkeep_dict, game_id, nation.id, notifications)
-        _resolve_shortage("Coal", upkeep_dict, game_id, nation.id, notifications)
-        _resolve_shortage("Energy", upkeep_dict, game_id, nation.id, notifications)
-        _resolve_shortage("Uranium", upkeep_dict, game_id, nation.id, notifications)
-        _resolve_shortage("Dollars", upkeep_dict, game_id, nation.id, notifications)
+        _resolve_shortage("Oil", upkeep_dict, nation, notifications, game_id)
+        _resolve_shortage("Coal", upkeep_dict, nation, notifications, game_id)
+        _resolve_shortage("Energy", upkeep_dict, nation, notifications, game_id)
+        _resolve_shortage("Uranium", upkeep_dict, nation, notifications, game_id)
+        _resolve_shortage("Dollars", upkeep_dict, nation, notifications, game_id)
     
         # update nation data
-        nation_table.reload()
-        nation = nation_table.get(nation_id)
         nation_table.save(nation)
 
-def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, player_id: str, notifications: Notifications) -> None:
+def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, notifications: Notifications, game_id: str) -> None:
     """
     Helper function for resolve_resource_shortages().
     """
-
-    # get player data
-    nation_table = NationTable(game_id)
-    nation = nation_table.get(player_id)
 
     # get pool of resource consumers
     consumers_list = []
@@ -459,10 +451,10 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
         
         # remove consumer
         if consumer_type == "improvement":
-            region_id = core.search_and_destroy(game_id, player_id, consumer_name)
+            region_id = core.search_and_destroy(game_id, nation.id, consumer_name)
             nation.improvement_counts[consumer_name] -= 1
         else:
-            region_id, victim = core.search_and_destroy_unit(game_id, player_id, consumer_name)
+            region_id, victim = core.search_and_destroy_unit(game_id, nation.id, consumer_name)
             nation.unit_counts[consumer_name] -= 1
         notifications.append(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 6)
         
@@ -483,8 +475,6 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, game_id: str, playe
             consumers_list.remove(consumer_name)
             del upkeep_dict[consumer_name]
 
-    nation_table.save(nation)
-
 def resolve_military_capacity_shortages(game_id: str) -> None:
     """
     Resolves military capacity shortages for each player by removing units randomly.
@@ -495,7 +485,7 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
 
     for nation in nation_table:
         
-        while float(nation.get_used_mc()) <= float(nation.get_max_mc()):
+        while float(nation.get_used_mc()) > float(nation.get_max_mc()):
             
             # disband a random unit
             region_id, victim = core.search_and_destroy_unit(game_id, nation.id, 'ANY')
