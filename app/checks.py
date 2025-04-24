@@ -896,37 +896,40 @@ def bonus_phase_heals(game_id: str) -> None:
         region = Region(region_id, game_id)
         region_improvement = Improvement(region_id, game_id)
         region_unit = Unit(region_id, game_id)
+        
         if region_improvement.owner_id not in [0, 99]:
-            nation_improvement = nation_table.get(str(region_improvement.owner_id))
-        if region_unit.owner_id not in [0, 99]:
-            nation_unit = nation_table.get(str(region_unit.owner_id))
-        
-        # unit heal checks
-        heal_allowed = False
-        if region_unit.name == 'Special Forces':
-            heal_allowed = True
-        elif "Scorched Earth" in nation_unit.completed_research:
-            heal_allowed = True
-        elif region.owner_id == region_unit.owner_id:
-            heal_allowed = True
-        else:
-            for adjacent_region_id in region.adjacent_regions:
-                adjacent_region_unit = Unit(adjacent_region_id, game_id)
-                if adjacent_region_unit.owner_id == region_unit.owner_id:
-                    heal_allowed = True
 
-        # heal improvement
-        if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
-            region_improvement.heal(2)
-            if nation_improvement.id != 0 and 'Peacetime Recovery' in nation_improvement.completed_research and wardata.is_at_peace(nation_improvement.id):
-                region_improvement.heal(100)
+            nation_improvement = nation_table.get(str(region_improvement.owner_id))
+
+            # heal improvement
+            if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
+                region_improvement.heal(2)
+                if nation_improvement.id != 0 and 'Peacetime Recovery' in nation_improvement.completed_research and wardata.is_at_peace(nation_improvement.id):
+                    region_improvement.heal(100)
         
-        # heal unit
-        unit_name = region_unit.name
-        if unit_name != None and heal_allowed:
-            region_unit.heal(2)
-            if nation_unit.id != 0 and 'Peacetime Recovery' in nation_unit.completed_research and wardata.is_at_peace(nation_unit.id):
-                region_unit.heal(100)
+        if region_unit.name != None and region_unit.owner_id not in [0, 99]:
+            
+            nation_unit = nation_table.get(str(region_unit.owner_id))
+            heal_allowed = False
+
+            # check if unit is allowed to heal
+            if region_unit.name == 'Special Forces':
+                heal_allowed = True
+            elif "Scorched Earth" in nation_unit.completed_research:
+                heal_allowed = True
+            elif region.owner_id == region_unit.owner_id:
+                heal_allowed = True
+            else:
+                for adjacent_region_id in region.adjacent_regions:
+                    adjacent_region_unit = Unit(adjacent_region_id, game_id)
+                    if adjacent_region_unit.owner_id == region_unit.owner_id:
+                        heal_allowed = True
+
+            # heal unit
+            if heal_allowed:
+                region_unit.heal(2)
+                if nation_unit.id != 0 and 'Peacetime Recovery' in nation_unit.completed_research and wardata.is_at_peace(nation_unit.id):
+                    region_unit.heal(100)
 
 def prompt_for_missing_war_justifications(game_id: str) -> None:
     '''
