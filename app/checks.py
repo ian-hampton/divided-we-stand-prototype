@@ -435,11 +435,13 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, not
         if resource_name in resource_upkeep_dict and resource_upkeep_dict[resource_name]["Upkeep"] > 0 and resource_upkeep_dict[resource_name]["Upkeep Multiplier"] > 0:
             consumers_list.append(target_name)
     
-    # prune until resource shortage eliminated or no consumers left
+    # update stockpile variable
     if resource_name == "Energy":
         resource_stockpile = float(nation.get_income(resource_name))
     else:
         resource_stockpile = float(nation.get_stockpile(resource_name))
+
+    # prune until resource shortage eliminated or no consumers left
     while resource_stockpile < 0 and consumers_list != []:
         
         # select random consumer and identify if it is an improvement or unit
@@ -465,6 +467,12 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, not
             nation.update_income(resource_name, consumer_upkeep)
         else:
             nation.update_stockpile(resource_name, consumer_upkeep)
+
+        # update stockpile variable
+        if resource_name == "Energy":
+            resource_stockpile = float(nation.get_income(resource_name))
+        else:
+            resource_stockpile = float(nation.get_stockpile(resource_name))
         
         # remove consumer from selection pool if no more of it remains
         if consumer_type == "improvement":
