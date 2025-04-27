@@ -597,7 +597,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: int) -> dict:
             continue
         name_list.append(resource_name)
         class_list.append(resource_name.lower().replace(" ", "-"))
-        stored_list.append(f"{nation.get_stockpile(resource_name)}/{nation.get_max(resource_name)}")
+        stored_list.append(f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}")
         income_list.append(nation.get_income(resource_name))
         rate_list.append(f"{nation.get_rate(resource_name)}%")
     player_information_dict['Resource Data']['Class List'] = class_list
