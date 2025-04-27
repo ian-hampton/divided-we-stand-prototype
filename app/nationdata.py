@@ -222,7 +222,7 @@ class Nation:
 
     def add_tech(self, technology_name: str) -> None:
         """
-        Marks an agenda or technology as unlocked.
+        Adds an agenda or technology to a nation's completed research dict.
 
         Params:
             technology_name: Name of agenda or technology to add.
@@ -230,9 +230,6 @@ class Nation:
         Returns:
             None
         """
-
-        if technology_name in self.completed_research:
-            return None
 
         tech_dict = core.get_scenario_dict(self.game_id, "Technologies")
         agenda_dict = core.get_scenario_dict(self.game_id, "Agendas")

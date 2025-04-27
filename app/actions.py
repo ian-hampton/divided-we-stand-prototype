@@ -985,7 +985,134 @@ def resolve_peace_actions(game_id: str, actions_list: list[SurrenderAction | Whi
     pass
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
+    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+    # execute actions
+    for action in actions_list:
+        
+        nation = nation_table.get(action.id)
+
+        # duplication check
+        if action.research_name in nation.completed_research:
+            nation.action_log.append(f"Failed to research {action.research_name}. You have already researched this.")
+            nation_table.save(nation)
+            continue
+
+        # event check
+        if "Humiliation" in active_games_dict[game_id]["Active Events"]:
+            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Humiliation"]["Chosen Nation Name"]
+            if nation.name == chosen_nation_name and action.research_name in agenda_data_dict:
+                nation.action_log.append(f"Failed to research {action.research_name} due to Humiliation event.")
+                nation_table.save(nation)
+                continue
+
+        if action.research_name in agenda_data_dict:
+            
+            cost = agenda_data_dict[action.research_name]['Cost']
+            prereq = agenda_data_dict[action.research_name]['Prerequisite']
+            agenda_type = agenda_data_dict[action.research_name]['Agenda Type']
+
+            # prereq check
+            if prereq != None and prereq not in nation.completed_research:
+                nation.action_log.append(f"Failed to research {action.research_name}. You do not have the prerequisite research.")
+                nation_table.save(nation)
+                continue
+
+            # agenda cost adjustment
+            agenda_cost_adjustment = {
+                "Diplomacy": {
+                    "Diplomatic": -5,
+                    "Commercial": 0,
+                    "Isolationist": 5,
+                    "Imperialist": 0
+                },
+                "Economy": {
+                    "Diplomatic": 0,
+                    "Commercial": -5,
+                    "Isolationist": 0,
+                    "Imperialist": 5
+                },
+                "Security": {
+                    "Diplomatic": 0,
+                    "Commercial": 5,
+                    "Isolationist": -5,
+                    "Imperialist": 0,
+                },
+                "Warfare": {
+                    "Diplomatic": 5,
+                    "Commercial": 0,
+                    "Isolationist": 0,
+                    "Imperialist": -5,
+                }
+            }
+            cost += agenda_cost_adjustment[agenda_type][nation.fp]
+
+            # pay cost
+            nation.update_stockpile("Political Power", -1 * cost)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to research {action.research_name}. Not enough political power.")
+                nation_table.save(nation)
+                continue
+
+            # gain agenda
+            nation.action_log.append(f"Researched {action.research_name} for {cost} political power.")
+            nation.add_tech(action.research_name)
+
+        else:
+
+            cost = research_data_dict[action.research_name]['Cost']
+            prereq = research_data_dict[action.research_name]['Prerequisite']
+
+            # prereq check
+            if prereq != None and prereq not in nation.completed_research:
+                nation.action_log.append(f"Failed to research {action.research_name}. You do not have the prerequisite research.")
+                nation_table.save(nation)
+                continue
+
+            # technology cost adjustment
+            multiplier = 1.0
+            for alliance in alliance_table:
+                if alliance.is_active and nation.name in alliance.current_members and alliance.type == "Research Agreement":
+                    for ally_name in alliance.current_members:
+                        ally_nation = nation_table.get(ally_name)
+                        if ally_name == nation.name:
+                            continue
+                        if action.research_name in ally_nation.completed_research:
+                            multiplier -= 0.2
+                            break
+            if multiplier < 0:
+                multiplier = 0.2
+
+            # pay cost
+            if multiplier != 1.0:
+                cost *= multiplier
+                cost = int(cost)
+            nation.update_stockpile("Technology", -1 * cost)
+            if float(nation.get_stockpile("Technology")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to research {action.research_name}. Not enough technology.")
+                nation_table.save(nation)
+                continue
+
+            # gain technology
+            nation.action_log.append(f"Researched {action.research_name} for {cost} technology.")
+            nation.add_tech(action.research_name)
+
+            # totalitarian bonus
+            totalitarian_discounts = {'Energy', 'Infrastructure'}
+            if nation.gov == 'Totalitarian' and research_data_dict[action.research_name]["Research Type"] in totalitarian_discounts:
+                nation.update_stockpile("Political Power", 2)
+                nation.action_log.append(f'Gained 2 political power for researching {action.research_name}.')
+
+        nation_table.save(nation)
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
     pass
@@ -1031,6 +1158,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             pp_cost = 0.20
         nation.update_stockpile("Political Power", -1 * pp_cost)
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
+            nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to claim {action.target_region}. Insufficient resources.")
             nation_table.save(nation)
             continue
@@ -1163,14 +1291,19 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
         # pay for improvement
         costs_list = []
         for resource_name, cost in build_cost_dict.items():
+            valid = True
             costs_list.append(f"{cost} {resource_name.lower()}")
             nation.update_stockpile(resource_name, -1 * cost)
             if float(nation.get_stockpile(resource_name)) < 0:
-                nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Insufficient resources.")
-                nation = nation_table.get(action.id)
-                nation_table.save(nation)
-                continue
-        
+                valid = False
+                break
+
+        if not valid:
+            nation = nation_table.get(action.id)
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Insufficient resources.")
+            nation_table.save(nation)
+            continue
+
         # add cost log string
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
