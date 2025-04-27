@@ -794,7 +794,7 @@ class NationTable:
                     pp_index = nation._find_pp_index()
                     p1 = nation.income_details[:pp_index + 1]
                     p2 = nation.income_details[pp_index + 1:]
-                    p1.append(f"+{bonus[j]:.2f} {record_string[i]}")
+                    p1.append(f"&Tab;+{bonus[j]:.2f} {record_string[i]}")
                     nation.income_details = p1 + p2
 
                     self.save(nation)
