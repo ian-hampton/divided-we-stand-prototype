@@ -960,70 +960,108 @@ def improvements_ref(full_game_id):
 @main.route('/<full_game_id>/resource_market')
 def resource_market(full_game_id):
 
-    # read the contents of active_games.json
+    # get game data
+    current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} - Resource Market'
 
+    # tba - grab this from scenario files
+    data = {
+        "Technology": {
+            "Base Price": 5,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Coal": {
+            "Base Price": 3,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Oil": {
+            "Base Price": 3,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Basic Materials": {
+            "Base Price": 5,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Common Metals": {
+            "Base Price": 5,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Advanced Metals": {
+            "Base Price": 10,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Uranium": {
+            "Base Price": 10,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Rare Earth Elements": {
+            "Base Price": 20,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+    }
+    
     # get resource market records
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    request_list = ['Dollars', 'Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-    total_exchanged = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
     rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
-    # check if there are records to display
     if len(rmdata_recent_transaction_list) != 0:
         records_flag = True
         rmdata_recent_transaction_list = rmdata_recent_transaction_list[::-1]
     else:
         records_flag = False
-    # add up transactions
+
+    # sum up recent transactions
     for transaction in rmdata_recent_transaction_list: 
         exchange = transaction[2]
         count = transaction[3]
-        resource = transaction[4]
-        resource_index = request_list.index(resource) - 1
-        if exchange == 'Bought':    
-            total_exchanged[resource_index][0] += count
-        elif exchange == 'Sold':
-            total_exchanged[resource_index][1] += count
+        resource_name = transaction[4]
+        if exchange == "Bought":
+            data[resource_name]["Bought"] += count
+        elif exchange == "Sold":
+            data[resource_name]["Sold"] += count
 
-    # calculate resource market prices
-    # why doesn't this match the sell price calculation exactly? because the sell price calculation is done in the previous turn, this is prices as of the start of current turn
-    base_prices = [5.00, 3.00, 3.00, 5.00, 5.00, 10.00, 10.00, 20.00]
-    current_prices = [5, 3, 3, 5, 5, 10, 10, 20]
-    for i in range(len(base_prices)):
-        base_price = base_prices[i]
-        bought_last_12 = total_exchanged[i][0]
-        sold_last_12 = total_exchanged[i][1]
-        next_turn_price = base_price * ( (bought_last_12 + 25) / (sold_last_12 + 25) )
-        if "Market Inflation" in active_games_dict[full_game_id]["Active Events"]:
-            for resource_name in active_games_dict[full_game_id]["Active Events"]["Market Inflation"]["Affected Resources"]:
-                event_resource_index = request_list.index(resource_name) - 1
-                if i == event_resource_index:
-                    next_turn_price *= 2
-        elif "Market Recession" in active_games_dict[full_game_id]["Active Events"]:
-            for resource_name in active_games_dict[full_game_id]["Active Events"]["Market Recession"]["Affected Resources"]:
-                event_resource_index = request_list.index(resource_name) - 1
-                if i == event_resource_index:
-                    next_turn_price *= 0.5
-        current_price = round(next_turn_price, 2)
-        current_prices[i] =  f"{current_price:.2f}"
+    # calculate current prices
+    for resource_name, resource_info in data.items():
+        base_price = resource_info["Base Price"]
+        recently_bought_total = resource_info["Bought"]
+        recently_sold_total = resource_info["Sold"]
+        current_price = base_price * (recently_bought_total + 25) / (recently_sold_total + 25)
+        data[resource_name]["Current Price"] = round(current_price, 2)
     
-    # format price information into a dictionary
-    market_prices_dict = {}
-    for index, resource in enumerate(request_list):
-        if resource == "Dollars":
-            continue
-        inner_dict = {}
-        inner_dict["Base"] = f"{base_prices[index - 1]:.2f}"
-        inner_dict["Bought"] = total_exchanged[index - 1][0]
-        inner_dict["Sold"] = total_exchanged[index - 1][1]
-        inner_dict["Current"] = current_prices[index - 1]
-        market_prices_dict[resource] = inner_dict
+    # factor in impact of events on current prices
+    if "Market Inflation" in active_games_dict[full_game_id]["Active Events"]:
+        for affected_resource_name in active_games_dict[full_game_id]["Active Events"]["Market Inflation"]["Affected Resources"]:
+            new_price = data[affected_resource_name]["Current Price"] * 2
+            data[resource_name]["Current Price"] = round(new_price, 2)
+    elif "Market Recession" in active_games_dict[full_game_id]["Active Events"]:
+        for affected_resource_name in active_games_dict[full_game_id]["Active Events"]["Market Recession"]["Affected Resources"]:
+            new_price = data[affected_resource_name]["Current Price"] * 0.5
+            data[resource_name]["Current Price"] = round(new_price, 0.5)
 
-    return render_template('temp_resource_market.html', page_title = page_title, records_list = rmdata_recent_transaction_list, records_flag = records_flag, prices_dict = market_prices_dict)
+    # format price strings
+    for resource_name in data:
+        data[resource_name]["Base Price"] = f"{data[resource_name]["Base Price"]:.2f}"
+        data[resource_name]["Current Price"] = f"{data[resource_name]["Current Price"]:.2f}"
+
+    return render_template('temp_resource_market.html', page_title = page_title, records_list = rmdata_recent_transaction_list, records_flag = records_flag, prices_dict = data)
 
 # ANNOUNCEMENT PAGE
 @main.route('/<full_game_id>/announcements')

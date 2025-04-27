@@ -255,7 +255,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_missile_make_actions(game_id, actions_dict["MissileMakeAction"])
     actions.resolve_government_actions(game_id, actions_dict["RepublicAction"])
     actions.resolve_event_actions(game_id, actions_dict["EventAction"])
-    actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"] + actions_dict["MarketBuyAction"] + actions_dict["MarketSellAction"])
+    market_results = actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"], actions_dict["MarketBuyAction"], actions_dict["MarketSellAction"])
 
     # resolve private actions
     print("Resolving private actions...")
@@ -286,7 +286,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     checks.countdown(game_id)
     run_end_of_turn_checks(game_id)
     checks.gain_income(game_id)
-    checks.gain_market_income(game_id)
+    checks.gain_market_income(game_id, market_results)
 
     # update victory progress and check if player has won the game
     player_has_won = False

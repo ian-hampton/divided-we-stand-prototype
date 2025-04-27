@@ -1,3 +1,4 @@
+import csv
 import json
 
 from app import core
@@ -1328,8 +1329,240 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
 def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None:
     pass
 
-def resolve_market_actions(game_id: str, actions_list: list[CrimeSyndicateAction | MarketBuyAction | MarketSellAction]) -> None:
-    pass
+def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
+    current_turn_num = core.get_current_turn_num(game_id)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    
+
+    rmdata_update_list = []
+    steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
+    # tba - grab this from scenario files
+    data = {
+        "Technology": {
+            "Base Price": 5,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Coal": {
+            "Base Price": 3,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Oil": {
+            "Base Price": 3,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Basic Materials": {
+            "Base Price": 5,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Common Metals": {
+            "Base Price": 5,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Advanced Metals": {
+            "Base Price": 10,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Uranium": {
+            "Base Price": 10,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+        "Rare Earth Elements": {
+            "Base Price": 20,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
+    }
+
+    # sum up recent transactions
+    rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
+    for transaction in rmdata_recent_transaction_list: 
+        exchange = transaction[2]
+        count = transaction[3]
+        resource_name = transaction[4]
+        if exchange == "Bought":
+            data[resource_name]["Bought"] += count
+        elif exchange == "Sold":
+            data[resource_name]["Sold"] += count
+
+    # calculate current prices
+    for resource_name, resource_info in data.items():
+        base_price = resource_info["Base Price"]
+        recently_bought_total = resource_info["Bought"]
+        recently_sold_total = resource_info["Sold"]
+        current_price = base_price * (recently_bought_total + 25) / (recently_sold_total + 25)
+        data[resource_name]["Current Price"] = round(current_price, 2)
+    
+    # factor in impact of events on current prices
+    if "Market Inflation" in active_games_dict[game_id]["Active Events"]:
+        for affected_resource_name in active_games_dict[game_id]["Active Events"]["Market Inflation"]["Affected Resources"]:
+            new_price = data[affected_resource_name]["Current Price"] * 2
+            data[resource_name]["Current Price"] = round(new_price, 2)
+    elif "Market Recession" in active_games_dict[game_id]["Active Events"]:
+        for affected_resource_name in active_games_dict[game_id]["Active Events"]["Market Recession"]["Affected Resources"]:
+            new_price = data[affected_resource_name]["Current Price"] * 0.5
+            data[resource_name]["Current Price"] = round(new_price, 0.5)
+
+    # create market results dict
+    market_results = {}
+    for nation in nation_table:
+        market_results[nation.name] = {}
+        for resource_name in data:
+            market_results[nation.name][resource_name] = 0
+        market_results[nation.name]["Dollars"] = 0
+        market_results[nation.name]["Thieves"] = []
+
+    # resolve market buying actions
+    for action in buy_list:
+        
+        nation = nation_table.get(action.id)
+        price = data[action.resource_name]["Current Price"]
+        rate = 1.0
+
+        # add discounts
+        if nation.gov == "Protectorate":
+            rate -= 0.2
+        if "Foreign Investment" in active_games_dict[game_id]["Active Events"]:
+            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Foreign Investment"]["Chosen Nation Name"]
+            if nation.name == chosen_nation_name:
+                discounted_rate -= 0.2
+        
+        # event check
+        if "Embargo" in active_games_dict[game_id]["Active Events"]:
+            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Embargo"]["Chosen Nation Name"]
+            if nation.name == chosen_nation_name:
+                nation.action_log.append(f"Failed to buy {action.quantity} {action.resource_name}. Your nation is currently under an embargo.")
+                nation_table.save(nation)
+                continue
+
+        # pay for resource
+        cost = round(action.quantity * price * rate, 2)
+        nation.update_stockpile("Dollars", -1 * cost)
+        if float(nation.get_stockpile("Dollars")) < 0:
+            nation = nation_table.get(action.id)
+            nation.action_log.append(f"Failed to buy {action.quantity} {action.resource_name}. Insufficient dollars.")
+            nation_table.save(nation)
+            continue
+
+        # update rmdata
+        new_entry = [current_turn_num, nation.name, 'Bought', action.quantity, action.resource_name]
+        rmdata_update_list.append(new_entry)
+
+        # update nation data
+        market_results[nation.name][action.resource_name] = action.quantity
+        nation.action_log.append(f"Bought {action.quantity} {action.resource_name} from the resource market for {cost:.2f} dollars.")
+        nation_table.save(nation)
+
+    # resolve market selling actions
+    for action in sell_list:
+        
+        nation = nation_table.get(action.id)
+        price = float(data[action.resource_name]["Current Price"] * 0.5)
+        rate = 1.0
+
+        # event check
+        if "Embargo" in active_games_dict[game_id]["Active Events"]:
+            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Embargo"]["Chosen Nation Name"]
+            if nation.name == chosen_nation_name:
+                nation.action_log.append(f"Failed to sell {action.quantity} {action.resource_name}. Your nation is currently under an embargo.")
+                nation_table.save(nation)
+                continue
+
+        # remove resources from stockpile
+        nation.update_stockpile(action.resource_name, -1 * action.quantity)
+        if float(nation.get_stockpile(action.resource_name)) < 0:
+            nation = nation_table.get(action.id)
+            nation.action_log.append(f"Failed to sell {action.quantity} {action.resource_name}. Insufficient resources in stockpile.")
+            nation_table.save(nation)
+            continue
+
+        # update rmdata
+        new_entry = [current_turn_num, nation.name, 'Sold', action.quantity, action.resource_name]
+        rmdata_update_list.append(new_entry)
+
+        # update nation data
+        dollars_earned = round(action.quantity * price * rate, 2)
+        market_results[nation.name]["Dollars"] += dollars_earned
+        nation.action_log.append(f"Sold {action.quantity} {action.resource_name} to the resource market for {dollars_earned:.2f} dollars.")
+        nation_table.save(nation)
+
+    # process crime syndicate steal actions
+    for action in crime_list:
+        for crime_action in crime_list:
+            market_results[nation.name]["Thieves"].append(crime_action.id)
+    for nation_name, nation_info in market_results.items():
+        thieves_list = nation_info["Thieves"]
+        if len(thieves_list) != 1:
+            for thief_id in thieves_list:
+                syndicate_nation = nation_table.get(thief_id)
+                syndicate_nation.action_log.append(f"Failed to steal from {crime_action.target_nation} due to other crime syndicate stealing attempts.")
+                nation_table.save(syndicate_nation)
+            nation_info["Thieves"] = []
+
+    # resolve crime syndicate steal actions
+    for nation_name, nation_info in market_results.items():
+        thieves_list = nation_info["Thieves"]
+        if thieves_list == []:
+            continue
+        thief_id = thieves_list[0]
+            
+        # retrieve records
+        nation = nation_table.get(nation_name)
+        syndicate_nation = nation_table.get(thief_id)
+        nation_name_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Nation Name"]
+        streak_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Streak"]
+
+        # calculate steal amount and update record
+        modifier = 0.5
+        if nation_name == nation_name_of_last_victim:
+            for i in range(streak_of_last_victim):
+                modifier *= 0.5
+            modifier = round(modifier, 2)
+            steal_tracking_dict[syndicate_nation.name]["Streak"] += 1
+        else:
+            steal_tracking_dict[syndicate_nation.name]["Nation Name"] = nation.name
+            steal_tracking_dict[syndicate_nation.name]["Streak"] = 1
+
+        # execute steal
+        for entry, amount in nation_info.items():
+            
+            if entry == "Thieves":
+                continue
+            
+            stolen_amount = int(amount * modifier)
+            market_results[syndicate_nation.name][entry] += stolen_amount
+            syndicate_nation.action_log.append(f"Stole {stolen_amount} {entry} from {nation.name}. ({int(modifier * 100)}%)")
+            market_results[nation_name][entry] -= stolen_amount
+            nation.action_log.append(f"{syndicate_nation.name} stole {stolen_amount} {entry} from you! ({int(modifier * 100)}%)")
+
+    # update rmdata.csv
+    rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+    with open(rmdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.rmdata_header)
+        writer.writerows(rmdata_all_transaction_list)
+        writer.writerows(rmdata_update_list)
+
+    return market_results
 
 def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAction]) -> None:
     pass

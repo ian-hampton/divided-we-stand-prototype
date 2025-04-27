@@ -504,70 +504,6 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
         # update nation data
         nation_table.save(nation)
 
-def gain_resource_market_income(game_id, player_id, player_resource_market_incomes):
-    '''Applies the resources gained/lost from resource market activities to player stockpiles.'''
-    
-    #define core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    #get needed economy information from each player
-    nation_name_list = []
-    for playerdata in playerdata_list:
-        nation_name_list.append(playerdata[1])
-    request_list = ['Dollars', 'Technology', 'Coal', 'Oil', 'Basic Materials', 'Common Metals', 'Advanced Metals', 'Uranium', 'Rare Earth Elements']
-    economy_masterlist = core.get_economy_info(playerdata_list, request_list)
-
-
-    #Apply Resource Market Income
-    resource_market_income = player_resource_market_incomes[player_id - 1]
-
-    #get resource stockpile data
-    stockpile_list = []
-    stockpile_limit_list = []
-    for i in range(len(request_list)):
-        stockpile_list.append(economy_masterlist[player_id - 1][i][0])
-        stockpile_limit_list.append(economy_masterlist[player_id - 1][i][1])
-
-    #update stockpiles and statistics file
-    for i, stockpile in enumerate(stockpile_list):
-        if resource_market_income[i] > 0:
-            #update stockpile of resource
-            stockpile = float(stockpile)
-            stockpile += resource_market_income[i]
-            if stockpile > stockpile_limit_list[i]:
-                stockpile = stockpile_limit_list[i]
-            stockpile = core.round_total_income(stockpile)
-            economy_masterlist[player_id - 1][i][0] = stockpile
-            #update statistics
-            if i != 0:
-                transactions_dict = active_games_dict[game_id]["Transactions Record"]
-                transactions_dict[nation_name_list[player_id - 1]] += resource_market_income[i]
-
-
-    #Update playerdata.csv
-    for economy_list in economy_masterlist:
-        for resource_data_list in economy_list:
-            resource_data_list = str(resource_data_list)
-    i = 0
-    for playerdata in playerdata_list:
-        playerdata[9] = economy_masterlist[i][0]
-        playerdata[11] = economy_masterlist[i][1]
-        playerdata[12] = economy_masterlist[i][2]
-        playerdata[13] = economy_masterlist[i][3]
-        playerdata[15] = economy_masterlist[i][4]
-        playerdata[16] = economy_masterlist[i][5]
-        playerdata[17] = economy_masterlist[i][6]
-        playerdata[18] = economy_masterlist[i][7]
-        playerdata[19] = economy_masterlist[i][8]
-        i += 1
-    with open(playerdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.player_data_header)
-        writer.writerows(playerdata_list)
-
 def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int) -> tuple[dict, int]:
     """
     Checks victory conditions of a player.
@@ -1046,7 +982,19 @@ def prune_alliances(game_id: str) -> None:
             alliance_table.save(alliance)
             notifications.append(f"{alliance.name} has dissolved.", 7)
 
-def gain_market_income(game_id: str) -> None:
+def gain_market_income(game_id: str, market_results: str) -> None:
     """
+    Adds resources gained from market actions to a player's stockpile.
     """
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+
+    # award income
+    for nation_name, market_info in market_results.items():
+        nation = nation_table.get(nation_name)
+        for resource_name, amount in market_info.items():
+            if resource_name == "Thieves":
+                continue
+            nation.update_stockpile(resource_name, amount)
+        nation_table.save(nation)
