@@ -661,6 +661,9 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
     }
 
     while True:
+
+        if action_str == "":
+            return
         
         words = action_str.strip().split()
         action_key = words[0].title()
@@ -1191,7 +1194,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             if region_improvement.name is not None:
                 nation.improvement_counts[region_improvement.name] += 1
             # update nation data
-            nation.action_log.append(f"Successfully purchased region {region.region_id} for {region.purchase_cost} dollars.")
+            nation.action_log.append(f"Claimed region {region.region_id} for {region.purchase_cost} dollars.")
             nation_table.save(nation)
         
         else:
@@ -1201,7 +1204,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
             for player_id in region.claim_list:
                 nation = nation_table.get(player_id)
-                nation.action_log.append(f"Failed to purchase {region.region_id} due to a region dispute.")
+                nation.action_log.append(f"Failed to claim {region.region_id} due to a region dispute.")
                 nation_table.save(nation)
     
     # update active games
