@@ -35,11 +35,6 @@ class AllianceCreateAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance type.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
-        if self.alliance_name is None:
-            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
-            return False
-        
         return True
 
 class AllianceJoinAction:
@@ -1119,13 +1114,148 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
         nation_table.save(nation)
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
+
+    # process actions
+    for action in actions_list:
+
+        nation = nation_table.get(action.id)
+        alliance = alliance_table.get(action.alliance_name)
+
+        # remove player from alliance
+        alliance.remove_member(nation.name)
+        alliance_table.save(alliance)
+        notifications.append(f"{nation.name} has left the {alliance.name}.", 7)
+        nation.action_log.append(f"Left {action.alliance_name}.")
+        nation_table.save(nation)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
+
+    # process actions
+    alliance_creation_dict = {}
+    for action in actions_list:
+
+        nation = nation_table.get(action.id)
+
+        # required research check
+        # tba - tie this to scenario files
+        research_check_success = True
+        match action.alliance_type:
+            case 'Non-Aggression Pact':
+                if 'Peace Accords' not in nation.completed_research:
+                   research_check_success = False 
+            case 'Defense Pact':
+                if 'Defensive Agreements' not in nation.completed_research:
+                   research_check_success = False 
+            case 'Trade Agreement':
+                if 'Trade Routes' not in nation.completed_research:
+                   research_check_success = False 
+            case 'Research Agreement':
+                if 'Research Exchange' not in nation.completed_research:
+                   research_check_success = False 
+        if not research_check_success:
+            nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have the required agenda.")
+            nation_table.save(nation)
+            continue
+
+        # check alliance capacity
+        if action.alliance_type != 'Non-Aggression Pact':
+            alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
+            if (alliance_count + 1) > alliance_capacity:
+                nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have enough alliance capacity.")
+                nation_table.save(nation)
+                continue
+
+        # check that an alliance with this name does not already exist
+        if action.alliance_name in alliance_table.data:
+            nation.action_log.append(f"Failed to form {action.alliance_name} alliance. An alliance with that name has already been created.")
+            nation_table.save(nation)
+            continue
+
+        # update alliance_creation_dict
+        if action.alliance_name in alliance_creation_dict:
+            alliance_creation_dict[action.alliance_name]["members"].append(nation.name)
+        else:
+            entry = {}
+            entry["type"] = action.alliance_type
+            entry["members"] = [nation.name]
+            alliance_creation_dict[action.alliance_name] = entry
+        
+    # create the alliance if more than two founders
+    for alliance_name, alliance_data in alliance_creation_dict.items():
+        if len(alliance_data["members"]) > 1:
+            # alliance creation success
+            alliance = alliance_table.create(alliance_name, alliance_data["type"], alliance_data["members"])
+            notifications.append(f"{alliance.name} has formed.", 7)
+            for nation_name in alliance_data["members"]:
+                # update log
+                nation = nation_table.get(nation_name)
+                nation.action_log.append(f"Successfully formed {action.alliance_name}.")
+                nation_table.save(nation)
+        else:
+            # alliance creation failed
+            nation_name = alliance_data["members"][0]
+            nation = nation_table.get(nation_name)
+            nation.action_log.append(f"Failed to form {action.alliance_name} alliance. Not enough players agreed to establish it.")
+            nation_table.save(nation)   
 
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
+
+    # process actions
+    for action in actions_list:
+        
+        nation = nation_table.get(action.id)
+        alliance = alliance_table.get(action.alliance_name)
+
+        # required research check
+        # tba - tie this to scenario data
+        research_check_success = False
+        match alliance.type:
+            case 'Non-Aggression Pact':
+                if 'Peace Accords' in nation.completed_research:
+                    research_check_success = True
+            case 'Defense Pact':
+                if 'Defensive Agreements' in nation.completed_research:
+                    research_check_success = True
+            case 'Trade Agreement':
+                if 'Trade Routes' in nation.completed_research:
+                    research_check_success = True
+            case 'Research Agreement':
+                if 'Research Exchange' in nation.completed_research:
+                    research_check_success = True
+        if not research_check_success:
+            nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have the required agenda.")
+            nation_table.save(nation)
+            continue
+
+        # check alliance capacity
+        if alliance.type != 'Non-Aggression Pact':
+            alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
+            if (alliance_count + 1) > alliance_capacity:
+                nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have enough alliance capacity.")
+                nation_table.save(nation)
+                continue
+
+        # add player to the alliance
+        alliance.add_member(nation.name)
+        alliance_table.save(alliance)
+        notifications.append(f"{nation.name} has joined the {alliance.name}.", 7)
+        nation.action_log.append(f"Joined {alliance.name}.")
+        nation_table.save(nation)
 
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
     
