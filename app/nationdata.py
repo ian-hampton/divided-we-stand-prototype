@@ -561,7 +561,7 @@ class NationTable:
     def __len__(self):
         return len(self.data)
 
-    def _get_name_from_id(self, nation_name: str) -> str | None:
+    def _get_id_from_name(self, nation_name: str) -> str | None:
         """
         Params:
             nation_name (str): A nation name.
@@ -625,7 +625,7 @@ class NationTable:
             return Nation(nation_id, self.data[nation_id], self.game_id)
         
         # check if nation name was provided
-        nation_id = self._get_name_from_id(nation_identifier)
+        nation_id = self._get_id_from_name(nation_identifier)
         if nation_id is not None:
             return Nation(nation_id, self.data[nation_id], self.game_id)
 
@@ -681,7 +681,7 @@ class NationTable:
 
         self._name_to_id = {}
         for nation in self:
-            self._name_to_id[nation.name] = nation.id
+            self._name_to_id[nation.name.lower()] = nation.id
 
     def update_records(self) -> None:
         """
