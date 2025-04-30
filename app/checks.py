@@ -75,7 +75,7 @@ def update_income(game_id: str) -> None:
         if region_improvement.name is None and region_unit.name is None:
             continue
         # add improvement yields
-        if region_improvement.name is not None and region.occupier_id == 0:
+        if region_improvement.name is not None and region_improvement.health != 0 and region.occupier_id == 0:
             if region_improvement.name[-1] != 'y':
                 plural_improvement_name = f'{region_improvement.name}s'
             else:
