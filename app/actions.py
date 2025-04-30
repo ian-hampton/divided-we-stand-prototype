@@ -963,11 +963,27 @@ def resolve_trade_actions(game_id: str) -> None:
 
         # process traded regions
         if trade_valid:
+            
             for region_id in trade_deal["Nation1RegionsCeded"]:
+                
                 region = Region(region_id, game_id)
+                region_improvement = Improvement(region_id, game_id)
+
+                if region_improvement.name is not None:
+                    nation1.improvement_counts[region_improvement.name] -= 1
+                    nation2.improvement_counts[region_improvement.name] += 1
+
                 region.set_owner_id(nation2.id)
+            
             for region_id in trade_deal["Nation2RegionsCeded"]:
+                
                 region = Region(region_id, game_id)
+                region_improvement = Improvement(region_id, game_id)
+
+                if region_improvement.name is not None:
+                    nation1.improvement_counts[region_improvement.name] += 1
+                    nation2.improvement_counts[region_improvement.name] -= 1
+
                 region.set_owner_id(nation1.id)
 
         # save changes
@@ -1445,8 +1461,10 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             costs_str = ", ".join(costs_list)
             costs_str = " and ".join(costs_str.rsplit(", ", 1))
         nation.action_log.append(f"Built {action.improvement_name} in region {action.target_region} for {costs_str}.")
-        
+
         # place improvement
+        if region_improvement.name is not None:
+            nation.improvement_counts[region_improvement.name] -= 1
         region_improvement.set_improvement(action.improvement_name, player_research=nation.completed_research)
         nation.improvement_counts[action.improvement_name] += 1
 
