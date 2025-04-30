@@ -1475,7 +1475,36 @@ def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAct
     pass
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    notifications = Notifications(game_id)
+
+    # execute republic actions
+    for action in actions_list:
+
+        nation = nation_table.get(action.id)
+
+        # government check
+        if nation.gov != "Republic":
+            nation.action_log.append(f"Failed to execute Republic government action. Your nation is not a Republic.")
+            nation_table.save(nation)
+            continue
+
+        # pay for action
+        nation.update_stockpile("Political Power", -5)
+        if float(nation.get_stockpile("Political Power")) < 0:
+            nation = nation_table.get(action.id)
+            nation.action_log.append(f"Failed to execute Republic government action. Insufficient political power.")
+            nation_table.save(nation)
+            continue
+
+        # adjust income rates
+        nation.reset_income_rates()
+        nation.update_rate(action.resource_name, 20)
+        nation.action_log.append(f"Used Republic government action to boost {action.resource_name} income.")
+        nation_table.save(nation)
+        notifications.append(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 8)
 
 def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None:
     pass
@@ -1484,6 +1513,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     
     # get game data
     nation_table = NationTable(game_id)
+    notifications = Notifications(game_id)
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     current_turn_num = core.get_current_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
@@ -1704,6 +1734,8 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             syndicate_nation.action_log.append(f"Stole {stolen_amount} {entry} from {nation.name}. ({int(modifier * 100)}%)")
             market_results[nation_name][entry] -= stolen_amount
             nation.action_log.append(f"{syndicate_nation.name} stole {stolen_amount} {entry} from you! ({int(modifier * 100)}%)")
+        
+        notifications.append(f"{syndicate_nation.name} stole from {nation.name}.", 8)
 
     # update rmdata.csv
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
