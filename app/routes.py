@@ -65,13 +65,17 @@ def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> 
     Creates list of nations that is shown alongside each game.
     """
 
+    nation_table = NationTable(game_id)
+    with open('player_records.json', 'r') as json_file:
+        player_records_dict = json.load(json_file)
+    print(player_records_dict)
+
     data_a = []
     data_b = []
-    nation_table = NationTable(game_id)
    
     for nation in nation_table:
         gov_fp_str = f"{nation.fp} - {nation.gov}"
-        username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[profile_id]["Username"]}</a>"""
+        username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
         player_color = check_color_correction(nation.color)
         # tba - fix duplicate player color (second one should be redundant)
         if nation.score > 0:
@@ -125,9 +129,8 @@ def generate_refined_player_list_inactive(game_data):
 def games():
     
     # read game files
-    username_list = []
-    for profile_id, player_data in player_records_dict.items():
-        username_list.append(player_data.get("Username"))
+    with open('player_records.json', 'r') as json_file:
+        player_records_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
