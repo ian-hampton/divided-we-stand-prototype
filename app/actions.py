@@ -1,5 +1,6 @@
 import csv
 import json
+import random
 
 from app import core
 from app.nationdata import NationTable
@@ -1507,7 +1508,406 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
         notifications.append(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 8)
 
 def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None:
-    pass
+    
+    # note: event actions are currently not validated ahead of time
+    # tba - handle event actions better using scenario data so that this function can be cleaner
+
+    # get game data
+    nation_table = NationTable(game_id)
+    current_turn_num = core.get_current_turn_num(game_id)
+    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    trucedata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    trucedata_list = core.read_file(trucedata_filepath, 1)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+    for action in actions_list:
+
+        nation = nation_table.get(action.id)
+
+        # "Event Host Peace Talks [ID]"
+        if "Host Peace Talks" in action.action_str:
+
+            # required event check
+            if "Nominate Mediator" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to Host Peace Talks. Nominate Mediator event is not active.")
+                nation_table.save(nation)
+                continue
+
+            # mediator check
+            if active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Chosen Nation Name"] != nation.name:
+                nation.action_log.append(f"Failed to Host Peace Talks. You are not the Mediator.")
+                nation_table.save(nation)
+                continue
+
+            for truce in trucedata_list:
+                
+                truce_id = str(truce[0])
+                mediator_in_truce = truce[int(action.id)]
+                truce_expire_turn = int(truce[11])
+
+                if truce_id in action.action_str[-2:]:
+                    
+                    # already extended check
+                    if truce_id in active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Extended Truces List"]:
+                        nation.action_log.append(f"Failed to Host Peace Talks for Truce #{truce[0]}. Truce has already been extended.")
+                        break
+                    
+                    # player involved check
+                    if mediator_in_truce:
+                        nation.action_log.append(f"Failed to Host Peace Talks for Truce #{truce[0]}. Mediator is involved in this truce.")
+                        break
+                
+                    # truce not yet expired check
+                    if truce_expire_turn < current_turn_num:
+                        nation.action_log.append(f"Failed to Host Peace Talks for Truce #{truce[0]}. Truce has already expired.")
+                        break
+
+                    # pay for action
+                    nation.update_stockpile("Political Power", -5)
+                    if float(nation.get_stockpile("Political Power")) < 0:
+                        nation = nation_table.get(action.id)
+                        nation.action_log.append(f"Failed to Host Peace Talks for Truce #{truce[0]}. Insufficient political power.")
+                        break
+                    
+                    # resolve action
+                    truce[11] = truce_expire_turn + 4
+                    active_games_dict[game_id]["Active Events"]["Nominate Mediator"]["Extended Truces List"].append(truce_id)
+                    nation.action_log.append(f"Used Host Peace Talks on Truce #{truce[0]}.")
+                    break
+        
+        # "Event Cure Research [Count]"
+        elif "Cure Research" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Cure Research action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+
+            # pay for action
+            event_action_data = action.action_str.split(" ")
+            count = int(event_action_data[-1])
+            nation.update_stockpile("Technology", -1 * count)
+            if float(nation.get_stockpile("Technology")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to spend {count} technology on Cure Research. Insufficient technology.")
+                nation_table.save(nation)
+                continue
+
+            # resolve action
+            research_amount = count
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
+            nation.action_log.append(f"Used Cure Research to spend {count} technology in exchange for {research_amount} cure progress.")
+
+        # "Event Fundraise [Count]"
+        elif "Fundraise" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Fundraise action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # pay for action
+            event_action_data = action.action_str.split(" ")
+            count = int(event_action_data[-1])
+            nation.update_stockpile("Dollars", -1 * count)
+            if float(nation.get_stockpile("Dollars")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to spend {count} dollars on Fundraise. Insufficient dollars.")
+                nation_table.save(nation)
+                continue
+            
+            # resolve action
+            research_amount = count // 3
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
+            nation.action_log.append(f"Used Fundraise to spend {count} dollars in exchange for {research_amount} cure progress.")
+
+        # "Event Inspect [Region ID]"
+        elif "Inspect" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Inspect action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # pay for action
+            event_action_data = action.action_str.split(" ")
+            region_id = event_action_data[-1]
+            nation.update_stockpile("Dollars", -5)
+            if float(nation.get_stockpile("Dollars")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to Inspect {region_id}. Insufficient dollars.")
+                nation_table.save(nation)
+                continue
+
+            # resolve action
+            region = Region(region_id, game_id)
+            nation.action_log.append(f"Used Inspect action for 5 dollars. Region {region_id} has an infection score of {region.infection()}.")
+
+        # "Event Create Quarantine [Region ID]"
+        elif "Create Quarantine" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Create Quarantine action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # pay for action
+            nation.update_stockpile("Political Power", -1)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to quarantine {region_id}. Insufficient political power.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            event_action_data = action.action_str.split(" ")
+            region_id = event_action_data[-1]
+            region.set_quarantine()
+            nation.action_log.append(f"Quarantined {region_id} for 1 political power.")
+
+        # "Event End Quarantine [Region ID]"
+        elif "End Quarantine" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do End Quarantine action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # pay for action
+            nation.update_stockpile("Political Power", -1)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to quarantine {region_id}. Insufficient political power.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            event_action_data = action.action_str.split(" ")
+            region_id = event_action_data[-1]
+            region.set_quarantine(False)
+            nation.action_log.append(f"Ended quarantine in {region_id} for 1 political power.")
+
+        # "Event Open Borders"
+        elif "Open Borders" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Open Borders action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # pay for action
+            nation.update_stockpile("Political Power", -10)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to do Open Borders action. Insufficient political power.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Closed Borders List"].remove(nation.id)
+            nation.action_log.append("Spent 10 political power to Open Borders.")
+
+        # "Event Close Borders"
+        elif "Close Borders" in action.action_str:
+            
+            # required event check
+            if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Close Borders action. Pandemic event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # pay for action
+            nation.update_stockpile("Political Power", -10)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to do Close Borders action. Insufficient political power.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            active_games_dict[game_id]['Active Events']["Pandemic"]["Closed Borders List"].append(nation.id)
+            nation.action_log.append("Spent 10 political power to Close Borders.")
+
+        # Event Search For Artifacts [Region ID]
+        elif "Search For Artifacts" in action.action_str:
+            
+            # required event check
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Search For Artifacts action. Faustian Bargain event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # collaborator check
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation.name:
+                nation.action_log.append(f"Failed to Search For Artifacts. You are not the collaborator.")
+                nation_table.save(nation)
+                continue
+
+            # ownership check
+            event_action_data = action.action_str.split(" ")
+            region_id = event_action_data[-1]
+            region = Region(region_id, game_id)
+            if region.owner_id != int(action.id):
+                nation.action_log.append(f"Failed to do Search For Artifacts action on {region_id}. You do not own that region.")
+                nation_table.save(nation)
+                continue
+
+            # pay for action
+            nation.update_stockpile("Dollars", -3)
+            if float(nation.get_stockpile("Dollars")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to do Search For Artifacts action. Insufficient dollars.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            if random.randint(1, 10) > 5:
+                nation.update_stockpile("Political Power", 1)
+                nation.action_log.append(f"Spent 3 dollars to Search For Artifacts on region {region_id}. Artifacts found! Gained 1 political power.")
+            else:
+                nation.action_log.append(f"Spent 3 dollars to Search For Artifacts on region {region_id}. No artifacts found!")
+
+        # Event Lease Region [Region ID]
+        elif "Lease Region" in action.action_str:
+            
+            # required event check
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Lease Region action. Faustian Bargain event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # collaborator check
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation.name:
+                nation.action_log.append(f"Failed to Lease Region. You are not the collaborator.")
+                nation_table.save(nation)
+                continue
+
+            # ownership check
+            event_action_data = action.action_str.split(" ")
+            region_id = event_action_data[-1]
+            region = Region(region_id, game_id)
+            if region.owner_id != int(action.id):
+                nation.action_log.append(f"Failed to do Search For Artifacts action on {region_id}. You do not own that region.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"].append(region_id)
+            nation.action_log.append(f"Leased region {region_id} to the foreign nation.")
+
+        # Event Outsource Technology [Research Name]
+        elif "Outsource Technology" in action.action_str:
+            
+            # required event check
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Outsource Technology action. Faustian Bargain event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # collaborator check
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation.name:
+                nation.action_log.append(f"Failed to Outsource Technology. You are not the collaborator.")
+                nation_table.save(nation)
+                continue
+            
+            # test research name
+            event_action_list = action.action_str.split(" ")
+            research_name = event_action_list[3:]
+            research_name = " ".join(research_name)
+            if research_name not in research_data_dict:
+                nation.action_log.append(f"Failed to do Outsource Technology action. Technology name \"{research_name}\" not recognized.")
+                nation_table.save(nation)
+                continue
+            if research_name in nation.completed_research:
+                nation.action_log.append(f"Failed to do Outsource Technology action. You already have {research_name}.")
+                nation_table.save(nation)
+                continue
+            research_prereq = research_data_dict[research_name]['Prerequisite']
+            if research_prereq != None and research_prereq not in nation.completed_research:
+                nation.action_log.append(f"Failed to do Outsource Technology action. You do not have the prerequisite for {research_name}.")
+                nation_table.save(nation)
+                continue
+
+            # pay for action
+            nation.update_stockpile("Political Power", -10)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to do Outsource Technology action. Insufficient political power.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            nation.add_tech(research_name)
+            if nation.gov == "Totalitarian":
+                nation.update_stockpile("Political Power", 2)
+            nation.action_log.append(f"Used Outsource Technology to research {research_name}.")
+
+        # Event Military Reinforcements [Unit Name] [Region ID #1],[Region ID #2]
+        elif "Military Reinforcements" in action.action_str:
+            
+            # required event check
+            if "Faustian Bargain" not in active_games_dict[game_id]["Active Events"]:
+                nation.action_log.append(f"Failed to do Military Reinforcements action. Faustian Bargain event is not active.")
+                nation_table.save(nation)
+                continue
+            
+            # collaborator check
+            if active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"] != nation.name:
+                nation.action_log.append(f"Failed to Military Reinforcements. You are not the collaborator.")
+                nation_table.save(nation)
+                continue
+
+            # pay cost
+            nation.update_stockpile("Political Power", -10)
+            if float(nation.get_stockpile("Political Power")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to do Military Reinforcements action. Insufficient political power.")
+                nation_table.save(nation)
+                continue
+
+            # execute action
+            event_action_data = action.action_str.split(" ")
+            region_id_str = event_action_data[-1]
+            unit_type = event_action_data[3:-1]
+            unit_type = " ".join(unit_type)
+            region_id_list = region_id_str.split(",")
+            for region_id in region_id_list:
+                
+                region = Region(region_id, game_id)
+                region_unit = Unit(region_id, game_id)
+                
+                if region.owner_id != int(action.id):
+                    nation.action_log.append(f"Failed to use Military Reinforcements to deploy {unit_type} {region_id}. You do not own that region.")
+                    nation_table.save(nation)
+                    continue
+                
+                if region_unit.owner_id != int(action.id):
+                    nation.action_log.append(f"Failed to use Military Reinforcements to deploy {unit_type} {region_id}. A hostile unit is present.")
+                    nation_table.save(nation)
+                    continue
+                
+                if region_unit.name != None:
+                    nation.unit_counts[region_unit.name] -= 1
+                region_unit.set_unit(unit_type, int(action.id))
+                nation.unit_counts[unit_type] += 1
+                nation.action_log.append(f"Used Military Reinforcements to deploy {unit_type} {region_id}.")
+
+        nation_table.save(nation)
+
+    with open(trucedata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.trucedata_header)
+        writer.writerows(trucedata_list)
+
+    with open('active_games.json', 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
     
