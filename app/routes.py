@@ -68,7 +68,6 @@ def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> 
     nation_table = NationTable(game_id)
     with open('player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
-    print(player_records_dict)
 
     data_a = []
     data_b = []
