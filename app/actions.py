@@ -1448,7 +1448,6 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             if float(nation.get_stockpile(resource_name)) < 0:
                 valid = False
                 break
-
         if not valid:
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Insufficient resources.")
@@ -1466,10 +1465,16 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
         # place improvement
         if region_improvement.name is not None:
             nation.improvement_counts[region_improvement.name] -= 1
+            mc = improvement_data_dict[action.improvement_name]["Income"].get("Military Capacity")
+            if mc is not None:
+                nation.update_max_mc(-1 * mc)
         region_improvement.set_improvement(action.improvement_name, player_research=nation.completed_research)
-        nation.improvement_counts[action.improvement_name] += 1
-
+        
         # update nation data
+        nation.improvement_counts[action.improvement_name] += 1
+        mc = improvement_data_dict[action.improvement_name]["Income"].get("Military Capacity")
+        if mc is not None:
+            nation.update_max_mc(mc)
         nation_table.save(nation)
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
@@ -2148,10 +2153,100 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     return market_results
 
 def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+
+    for action in actions_list:
+        nation = nation_table.get(action.id)
+        region_unit = Unit(action.target_region, game_id)
+
+        # ownership check
+        if str(region_unit.owner_id) != action.id:
+            nation.action_log.append(f"Failed to disband {region_unit.name} in region {action.target_region}. You do not own this unit.")
+            nation_table.save(nation)
+            continue
+
+        # remove unit
+        if region_unit.name is not None:
+            nation.unit_counts[region_unit.name] -= 1
+            nation.update_used_mc(-1)
+        region_unit.clear()
+        
+        # update nation data
+        nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
+        nation.update_used_mc(1)
+        nation_table.save(nation)
 
 def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
+
+    # execute actions
+    for action in actions_list:
+        region = Region(action.target_region, game_id)
+        region_unit = Unit(action.target_region, game_id)
+        nation = nation_table.get(action.id)
+
+        # ownership check
+        if str(region.owner_id) != action.id or region.occupier_id != 0:
+            nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not control this region.")
+            nation_table.save(nation)
+            continue
+        
+        # required research check
+        if unit_scenario_dict[action.unit_name]['Required Research'] not in nation.completed_research:
+            nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not have the required research.")
+            nation_table.save(nation)
+            continue
+
+        # capacity check
+        if nation.get_used_mc() == nation.get_max_mc():
+            nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. Insufficient military capacity.")
+            nation_table.save(nation)
+            continue
+
+        # calculate deployment cost
+        build_cost_dict = unit_scenario_dict[action.unit_name]["Build Costs"]
+        if nation.gov == 'Military Junta':
+            for key in build_cost_dict:
+                build_cost_dict[key] *= 0.8
+
+        # pay for unit
+        costs_list = []
+        for resource_name, cost in build_cost_dict.items():
+            valid = True
+            costs_list.append(f"{cost} {resource_name.lower()}")
+            nation.update_stockpile(resource_name, -1 * cost)
+            if float(nation.get_stockpile(resource_name)) < 0:
+                valid = False
+                break
+        if not valid:
+            nation = nation_table.get(action.id)
+            nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. Insufficient resources.")
+            nation_table.save(nation)
+            continue
+
+        # add cost log string
+        if len(costs_list) <= 2:
+            costs_str = " and ".join(costs_list)
+        else:
+            costs_str = ", ".join(costs_list)
+            costs_str = " and ".join(costs_str.rsplit(", ", 1))
+        nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
+
+        # deploy unit
+        if region_unit.name is not None:
+            nation.unit_counts[region_unit.name] -= 1
+            nation.update_used_mc(-1)
+        region_unit.set_unit(action.unit_name, int(action.id))
+
+        # update nation data
+        nation.unit_counts[region_unit.name] += 1
+        nation.update_used_mc(1)
+        nation_table.save(nation)
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
     pass
