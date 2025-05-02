@@ -1516,7 +1516,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
     nation_table = NationTable(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
-    trucedata_filepath = f'gamedata/{game_id}/playerdata.csv'
+    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     trucedata_list = core.read_file(trucedata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
