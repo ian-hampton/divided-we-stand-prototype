@@ -838,15 +838,16 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
 
     return alliance_count, alliance_limit
 
-def get_subjects(playerdata_list, overlord_nation_name, subject_type):
-    '''Returns a list of all player ids that are subjects of the given nation name.'''
-    player_id_list = []
-    for index, playerdata in enumerate(playerdata_list):
-        status = playerdata[28]
-        if overlord_nation_name in status and subject_type in status:
-            selected_nation_id = index + 1
-            player_id_list.append(selected_nation_id)
-    return player_id_list
+def get_subjects(game_id: str, overlord_name: str, subject_type: str) -> list:
+
+    nation_id_list = []
+    nation_table = NationTable(game_id)
+
+    for nation in nation_table:
+        if overlord_name in nation.status and subject_type in nation.status:
+            nation_id_list.append(nation.id)
+    
+    return nation_id_list
 
 
 # ECONOMIC SUB-FUNCTIONS
@@ -1131,13 +1132,16 @@ def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_n
         writer = csv.writer(file)
         writer.writerows(trucedata_list)
 
-def check_for_truce(trucedata_list, player_id_1, player_id_2, current_turn_num):
-    '''Checks for a truce between two players. Returns True if one is found, otherwise returns False.'''
+def check_for_truce(trucedata_list: list, nation1_id: str, nation2_id: str, current_turn_num) -> bool:
+    
     for truce in trucedata_list:
-        attacker_truce = ast.literal_eval(truce[player_id_1])
-        defender_truce = ast.literal_eval(truce[player_id_2])
+        
+        attacker_truce = ast.literal_eval(truce[int(nation1_id)])
+        defender_truce = ast.literal_eval(truce[int(nation2_id)])
+        
         if attacker_truce and defender_truce and int(truce[11]) > current_turn_num:
             return True
+        
     return False
 
 
