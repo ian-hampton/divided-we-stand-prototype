@@ -2112,6 +2112,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         cost = round(action.quantity * price * rate, 2)
         nation.update_stockpile("Dollars", -1 * cost)
         if float(nation.get_stockpile("Dollars")) < 0:
+            nation_table.reload()
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to buy {action.quantity} {action.resource_name}. Insufficient dollars.")
             nation_table.save(nation)
@@ -2144,6 +2145,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         # remove resources from stockpile
         nation.update_stockpile(action.resource_name, -1 * action.quantity)
         if float(nation.get_stockpile(action.resource_name)) < 0:
+            nation_table.reload()
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to sell {action.quantity} {action.resource_name}. Insufficient resources in stockpile.")
             nation_table.save(nation)
@@ -2292,6 +2294,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
                 valid = False
                 break
         if not valid:
+            nation_table.reload()
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. Insufficient resources.")
             nation_table.save(nation)
