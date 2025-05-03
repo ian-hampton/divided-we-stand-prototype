@@ -3,7 +3,6 @@ from typing import Union, Tuple, List
 
 from app import core
 
-
 class Alliance:
     
     def __init__(self, alliance_name: str, alliance_data: dict, game_id: str):
@@ -103,8 +102,6 @@ class Alliance:
         
         self.current_members = {}
         self.turn_ended = current_turn_num
-
-
 
 class AllianceTable:    
     
@@ -271,15 +268,17 @@ class AllianceTable:
     
     def get_allies(self, nation_name: str, type_to_search = 'ALL') -> list:
         """
-        Creates a list of all nations a player is allied with, no duplicates.
+        Returns a list of all nations a player is allied with, no duplicates.
 
         Params:
             nation_name (str): Nation name string.
             type_to_search (str): Type of alliance to check or 'ALL' to check all aliances.
         
         Returns:
-            list: List of allies found.
+            list: List of nation ids.
         """
+
+        from app.nationdata import NationTable
 
         allies_set = set()
 
@@ -291,7 +290,12 @@ class AllianceTable:
                     if alliance_member_name != nation_name:
                         allies_set.add(alliance_member_name)
 
-        allies_list = list(allies_set)
+        allies_list = []
+        nation_table = NationTable(self.game_id)
+        for nation_name in allies_set:
+            nation = nation_table.get(nation_name)
+            allies_list.append(nation.id)
+
         return allies_list
     
     def get_longest_alliance(self) -> Tuple[str, int]:
