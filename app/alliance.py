@@ -95,11 +95,28 @@ class Alliance:
         Retires an alliance.
         """
         
+        from app.nationdata import NationTable
+        nation_table = NationTable(self.game_id)
         current_turn_num = core.get_current_turn_num(self.game_id)
 
+        # add truce periods
+        for nation1_name in self.current_members:
+            for nation2_name in self.current_members:
+                
+                if nation1_name == nation2_name:
+                    continue
+
+                nation1 = nation_table.get(nation1_name)
+                nation2 = nation_table.get(nation2_name)
+                
+                signatories_list = [False] * len(nation_table)
+                signatories_list[int(nation1.id)] = True
+                signatories_list[int(nation2.id)] = True
+                core.add_truce_period(self.game_id, signatories_list, 2)
+
+        # dissolve alliance
         for nation_name in self.current_members:
             self.former_members[nation_name] = current_turn_num
-        
         self.current_members = {}
         self.turn_ended = current_turn_num
 
@@ -226,17 +243,11 @@ class AllianceTable:
         current_turn_num = core.get_current_turn_num(self.game_id)
 
         for alliance in self:
-            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.former_members:
-                if (
-                    current_turn_num - alliance.former_members[nation_name_1] < 2
-                    or current_turn_num - alliance.former_members[nation_name_2] < 2
-                ):
-                    return True
-            elif nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_1] < 2:
+            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
+                if current_turn_num - alliance.former_members[nation_name_1] <= 2:
                     return True
             elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_2] < 2:
+                if current_turn_num - alliance.former_members[nation_name_2] <= 2:
                     return True
 
         return False

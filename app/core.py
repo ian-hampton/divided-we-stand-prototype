@@ -1108,32 +1108,30 @@ def check_military_capacity(player_military_capacity_data, amount):
         return False
     return True
 
-def add_truce_period(full_game_id, signatories_list, war_outcome, current_turn_num):
-    '''Creates a truce period between the players marked in the signatories list. Length depends on war outcome.'''
+def add_truce_period(game_id: str, signatories_list: list, truce_length: int) -> None:
 
-    #get core lists
-    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
+    # get game data
+    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
     trucedata_list = read_file(trucedata_filepath, 0)
+    current_turn_num = get_current_turn_num(game_id)
 
-    #determine truce period length
-    if war_outcome == 'Animosity' or war_outcome == 'Border Skirmish':
-        truce_length = 4
-    else:
-        truce_length = 8
-
-    #generate output
+    # add truce
     truce_id = len(trucedata_list)
     signatories_list.insert(0, truce_id)
-    signatories_list.append(current_turn_num + truce_length)
+    signatories_list.append(current_turn_num + truce_length + 1)
     trucedata_list.append(signatories_list)
 
-    #update trucedata.csv
+    # update trucedata.csv
     with open(trucedata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(trucedata_list)
 
-def check_for_truce(trucedata_list: list, nation1_id: str, nation2_id: str, current_turn_num) -> bool:
+def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
     
+    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
+    trucedata_list = read_file(trucedata_filepath, 1)
+    current_turn_num = get_current_turn_num(game_id)
+
     for truce in trucedata_list:
         
         attacker_truce = ast.literal_eval(truce[int(nation1_id)])
@@ -1144,6 +1142,35 @@ def check_for_truce(trucedata_list: list, nation1_id: str, nation2_id: str, curr
         
     return False
 
+def validate_war_claims(game_id: str, war_justification: str, region_claims_list: list) -> bool:
+
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    # get war justification info
+    if war_justification == 'Border Skirmish':
+        free_claims = 3
+        max_claims = 6
+        claim_cost = 5
+    elif war_justification == 'Conquest':
+        free_claims = 5
+        max_claims = 10
+        claim_cost = 3
+    
+    # check that all claims are valid
+    total = 0
+    for i, region_id in enumerate(region_claims_list):
+        
+        if region_id not in regdata_dict:
+            return -1
+        
+        if i + 1 > max_claims:
+            return -1
+        
+        if i + 1 > free_claims:
+            total += claim_cost
+
+    return total
 
 # MISC SUB-FUNCTIONS
 ################################################################################

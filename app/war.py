@@ -164,8 +164,7 @@ class War:
             
             case "Subjugation":
                 names = [
-                    f"{main_attacker.name} - {main_defender.name} Annexation Attempt",
-                    f"{main_attacker.name} - {main_defender.name} Subjugation War",
+                    f"{main_attacker.name} - {main_defender.name} Subjugation War"
                 ]
         
         attempts = 0
@@ -194,7 +193,7 @@ class War:
     def get_combatant(self, nation_id) -> Combatant:
 
         if nation_id in self.combatants:
-            return Combatant(nation_id, self.combatants[nation_id])
+            return Combatant(nation_id, self.combatants[nation_id], self.id)
         
         raise Exception(f"Failed to retrieve combatant {nation_id} in war {self.id}.")
 
@@ -217,11 +216,7 @@ class War:
             }
         }
 
-        if combatant.id in self.combatants:
-            self.combatants[combatant.id] = combatant_data
-            return
-        
-        raise Exception(f"Failed to save combatant {combatant.id} in war {self.id}. Combatant not involved in that war.")
+        self.combatants[combatant.id] = combatant_data
 
     def get_role(self, nation_id: str) -> str:
 
@@ -317,7 +312,7 @@ class WarTable:
         pairs = {}
         
         for region_id in war_claims:
-            region = Region(region_id)
+            region = Region(region_id, self.game_id)
             pairs[region_id] = str(region.owner_id)
 
         return pairs
@@ -338,15 +333,12 @@ class WarTable:
         # get game data
         nation_table = NationTable(self.game_id)
         alliance_table = AllianceTable(self.game_id)
-        trucedata_filepath = f'gamedata/{self.game_id}/trucedata.csv'
-        trucedata_list = core.read_file(trucedata_filepath, 1)
-        current_turn_num = core.get_current_turn_num(self.game_id)
 
         # create war
         war_id = str(len(self) + 1)
         main_attacker = nation_table.get(main_attacker_id)
         main_defender = nation_table.get(main_defender_id)
-        new_war: War = War.build(war_id, main_attacker, main_defender, war_justification)
+        new_war: War = War.build(self.game_id, war_id, main_attacker, main_defender, war_justification)
 
         # add main attacker
         combatant = new_war.add_combatant(main_attacker, "Main Attacker")
@@ -355,7 +347,7 @@ class WarTable:
         new_war.save_combatant(combatant)
 
         # add main defender
-        combatant = War.add_combatant(main_defender, "Main Defender")
+        combatant = new_war.add_combatant(main_defender, "Main Defender")
 
         # call in main attacker allies
         # possible allies: puppet states
@@ -364,10 +356,10 @@ class WarTable:
         for ally_id in possible_allies:
             ally = nation_table.get(ally_id)
             if (
-                self.get_war_name(main_defender.id, ally.id) is None                                            # ally cannot already be at war with defender
-                and not core.check_for_truce(trucedata_list, main_defender.id, ally.id, current_turn_num)  # ally cannot have truce with defender
-                and not alliance_table.are_allied(main_defender.name, ally.name)                           # ally cannot be allied with defender
-                and not alliance_table.former_ally_truce(main_defender.name, ally.name)                    # ally cannot be recently allied with defender
+                self.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
+                and not core.check_for_truce(self.game_id, main_defender.id, ally.id)    # ally cannot have truce with defender
+                and not alliance_table.are_allied(main_defender.name, ally.name)         # ally cannot be allied with defender
+                and not alliance_table.former_ally_truce(main_defender.name, ally.name)  # ally cannot be recently allied with defender
             ):
                 combatant = new_war.add_combatant(ally, "Secondary Attacker")
 
@@ -383,10 +375,10 @@ class WarTable:
         for ally_id in possible_allies:
             ally = nation_table.get(ally_id)
             if (
-                self.get_war_name(main_attacker.id, ally.id) is None                                            # ally cannot already be at war with attacker
-                and not core.check_for_truce(trucedata_list, main_attacker.id, ally.id, current_turn_num)  # ally cannot have truce with attacker
-                and not alliance_table.are_allied(main_attacker.name, ally.name)                           # ally cannot be allied with attacker
-                and not alliance_table.former_ally_truce(main_attacker.name, ally.name)                    # ally cannot be recently allied with attacker
+                self.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
+                and not core.check_for_truce(self.game_id, main_attacker.id, ally.id)    # ally cannot have truce with attacker
+                and not alliance_table.are_allied(main_attacker.name, ally.name)         # ally cannot be allied with attacker
+                and not alliance_table.former_ally_truce(main_attacker.name, ally.name)  # ally cannot be recently allied with attacker
             ):
                 combatant = new_war.add_combatant(ally, "Secondary Defender")
         
@@ -396,7 +388,7 @@ class WarTable:
     def save(self, war: War) -> None:
         
         war_data = {
-            "warName": war.name,
+            "name": war.name,
             "start": war.start,
             "end": war.end,
             "outcome": war.outcome,
@@ -433,8 +425,8 @@ class WarTable:
             json.dump(gamedata_dict, json_file, indent=4)
 
         self._name_to_id = {}
-        for nation in self:
-            self._name_to_id[nation.name.lower()] = nation.id
+        for war in self:
+            self._name_to_id[war.name.lower()] = war.id
 
     def get(self, war_identifier: str) -> War:
 

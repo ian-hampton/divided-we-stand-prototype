@@ -5,6 +5,7 @@ import random
 from app import core
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
+from app.war import WarTable
 from app.notifications import Notifications
 from app.region import Region
 from app.improvement import Improvement
@@ -2320,7 +2321,103 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         nation_table.save(nation)
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    war_table = WarTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
+
+    # execute actions
+    for action in actions_list:
+
+        attacker_nation = nation_table.get(action.id)
+        defender_nation = nation_table.get(action.target_nation)
+
+        # agenda check
+        valid_war_justification = False
+        match action.war_justification:
+            case "Animosity" | "Border Skirmish":
+                valid_war_justification = True
+            case "Conquest":
+                if "Early Expansion" in attacker_nation.completed_research:
+                    valid_war_justification = True
+            case "Annexation":
+                if "New Empire" in attacker_nation.completed_research:
+                    valid_war_justification = True
+            case "Independence":
+                if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
+                    valid_war_justification = True
+            case "Subjugation":
+                if "Dominion" in attacker_nation.completed_research:
+                    valid_war_justification = True
+        if not valid_war_justification:
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have the required agenda.")
+            nation_table.save(attacker_nation)
+            continue
+
+        # military capacity check
+        if attacker_nation.get_used_mc() == 0:
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have any military units.")
+            nation_table.save(attacker_nation)
+            continue
+
+        # independence check
+        if attacker_nation.status != "Independent Nation" and action.war_justification != "Independence":
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot declare war.")
+            nation_table.save(attacker_nation)
+            continue
+
+        # existing war check
+        existing_war = war_table.get_war_name(attacker_nation.id, defender_nation.id)
+        if existing_war is not None:
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You are already at war with this nation.")
+            nation_table.save(attacker_nation)
+            continue
+        
+        # truce check
+        if core.check_for_truce(game_id, attacker_nation.id, defender_nation.id):
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have a truce with this nation.")
+            nation_table.save(attacker_nation)
+            continue
+
+        # alliance check
+        if alliance_table.are_allied(attacker_nation.name, defender_nation.name):
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
+            nation_table.save(attacker_nation)
+            continue
+
+        # alliance truce check
+        if alliance_table.former_ally_truce(attacker_nation.name, defender_nation.name):
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
+            nation_table.save(attacker_nation)
+            continue
+
+        # validate war claims
+        region_claims_list = []
+        if action.war_justification in ["Border Skirmish", "Conquest"]:
+            
+            # get claims and calculate political power cost
+            claim_cost = -1
+            while claim_cost == -1:
+                region_claims_str = input(f"List the regions that {attacker_nation.name} is claiming using {action.war_justification}: ")
+                region_claims_list = region_claims_str.split(',')
+                claim_cost = core.validate_war_claims(game_id, action.war_justification, region_claims_list)
+
+            # pay political power cost
+            attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
+            if float(attacker_nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
+                attacker_nation = nation_table.get(action.id)
+                attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
+                nation_table.save(attacker_nation)
+                continue
+
+        # resolve action
+        war_name = war_table.create(attacker_nation.id, defender_nation.id, action.war_justification, region_claims_list)
+        notifications.append(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
+        attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
+        nation_table.save(attacker_nation)
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
     pass
