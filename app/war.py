@@ -229,7 +229,7 @@ class War:
             elif combatant.role == "Main Defender":
                 main_defender_id = nation_id
 
-        return main_attacker_id, main_attacker_id
+        return main_attacker_id, main_defender_id
 
     def add_missing_justifications(self) -> None:
         pass
@@ -246,11 +246,15 @@ class War:
         for combatant_id, combatant_data in self.combatants.items():
             combatant = Combatant(combatant_id, combatant_data)
             combatant_nation = nation_table.get(combatant_id)
+            
+            # add modifiers to defender threshold
             if combatant.role == "Main Attacker" and defender_threshold == 100:
                 if combatant_nation.gov == "Crime Syndicate":
                     defender_threshold = None
                 elif "Unyielding" in combatant_nation.completed_research:
                     defender_threshold += 50
+            
+            # add modifiers to attacker threshold
             elif combatant.role == "Main Defender" and attacker_threshold == 100:
                 if combatant_nation.gov == "Crime Syndicate":
                     attacker_threshold = None
@@ -439,7 +443,7 @@ class WarTable:
     def get_war_name(self, nation1_id: str, nation2_id: str) -> str | None:
         
         for war in self:
-            if war.end == 0 and nation1_id in war.combatants and nation2_id in war.combatants:
+            if war.outcome == "TBD" and nation1_id in war.combatants and nation2_id in war.combatants:
                 return war.name
             
         return None
@@ -447,7 +451,7 @@ class WarTable:
     def is_at_peace(self, nation_id: str) -> bool:
 
         for war in self:
-            if nation_id in war.combatants:
+            if war.outcome == "TBD" and nation_id in war.combatants:
                 return False
             
         return True
@@ -473,7 +477,7 @@ class WarTable:
                 occupier_nation = nation_table.get(str(region.occupier_id))
 
                 score = 2
-                if 'Scorched Earth' in occupier_nation.completed_research:
+                if "Scorched Earth" in occupier_nation.completed_research:
                     score = 3
                 
                 if "Attacker" in occupier_war_role:
