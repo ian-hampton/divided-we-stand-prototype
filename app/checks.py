@@ -8,11 +8,11 @@ from app import core
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
-from app.wardata import WarData
 from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
 from app.alliance import AllianceTable
+from app.war import WarTable
 
 def update_income(game_id: str) -> None:
     """
@@ -522,7 +522,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
     # get game info
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    wardata = WarData(game_id)
+    war_table = WarTable(game_id)
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
     tech_data_dict = core.get_scenario_dict(game_id, "Technologies")
@@ -658,38 +658,36 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
             case 'Backstab':
                 # get set of all nations defeated in war
                 nations_defeated = set()
-                for war_name, war_dict in wardata.wardata_dict.items():
-                    if war_dict["outcome"] == "TBD" or nation.name not in war_dict["combatants"]:
+                for war in war_table:
+                    if war.outcome == "TBD" or nation.name not in war.combatants:
                         # we do not care about wars player was not involved in
                         continue
-                    nation_role = war_dict["combatants"][nation.name]["role"]
-                    if "Attacker" in nation_role:
+                    if "Attacker" in war.get_role(nation.id):
                         nation_side = "Attacker"
                     else:
                         nation_side = "Defender"
-                    if nation_side not in war_dict["outcome"]:
+                    if nation_side not in war.outcome:
                         # we do not care about wars the player lost or white peaced
                         continue
-                    for combatant_name, combatant_data in war_dict["combatants"].items():
-                        if nation_side not in combatant_data["role"]:
-                            nations_defeated.add(combatant_name)
+                    for combatant_id in war.combatants:
+                        if nation_side not in war.get_role(combatant_id):
+                            nations_defeated.add(combatant_id)
                 # get set of all nations you lost a war to
                 nations_lost_to = set()
-                for war_name, war_dict in wardata.wardata_dict.items():
-                    if war_dict["outcome"] == "TBD" or nation.name not in war_dict["combatants"]:
+                for war in war_table:
+                    if war.outcome == "TBD" or nation.name not in war.combatants:
                         # we do not care about wars player was not involved in
                         continue
-                    nation_role = war_dict["combatants"][nation.name]["role"]
-                    if "Attacker" in nation_role:
+                    if "Attacker" in war.get_role(nation.id):
                         nation_side = "Attacker"
                     else:
                         nation_side = "Defender"
-                    if nation_side in war_dict["outcome"] or "White Peace" == war_dict["outcome"]:
+                    if nation_side in war.outcome or "White Peace" == war.outcome:
                         # we do not care about wars the player won or white peaced
                         continue
-                    for combatant_name, combatant_data in war_dict["combatants"].items():
-                        if nation_side not in combatant_data["role"]:
-                            nations_lost_to.add(combatant_name)
+                    for combatant_id in war.combatants:
+                        if nation_side not in war.get_role(combatant_id):
+                            nations_lost_to.add(combatant_id)
                 # get set of all former allies
                 current_allies = set()
                 former_allies = set()
@@ -713,12 +711,13 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 former_allies = former_allies_filtered
                 # win a war against a former ally
                 for former_ally in former_allies:
-                    if former_ally in nations_defeated:
+                    temp = nation_table.get(former_ally)
+                    if temp.id in nations_defeated:
                         score += 1
                         vc_dict[victory_condition_2] = True    # vc is permanently fulfilled
                 # win a war against someone you lost to
-                for enemy_nation in nations_lost_to:
-                    if enemy_nation in nations_defeated:
+                for enemy_id in nations_lost_to:
+                    if enemy_id in nations_defeated:
                         score += 1
                         vc_dict[victory_condition_2] = True    # vc is permanently fulfilled
 
@@ -787,8 +786,8 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                     
             case 'Warmonger':
                 count = 0
-                for war_name, war_dict in wardata.wardata_dict.items():
-                    if war_dict["outcome"] == "Attacker Victory" and war_dict["combatants"][nation.name]["role"] == "Main Attacker":
+                for war in war_table:
+                    if war.outcome == "Attacker Victory" and war.get_role(nation.id) == "Main Attacker":
                         count += 1
                 if count >= 3:
                     score += 1
@@ -832,8 +831,8 @@ def bonus_phase_heals(game_id: str) -> None:
     """
     
     nation_table = NationTable(game_id)
-    wardata = WarData(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+    war_table = WarTable(game_id)
+    with open(f"gamedata/{game_id}/regdata.json", 'r') as json_file:
         regdata_dict = json.load(json_file)
     
     for region_id in regdata_dict:
@@ -848,7 +847,7 @@ def bonus_phase_heals(game_id: str) -> None:
             # heal improvement
             if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
                 region_improvement.heal(2)
-                if nation_improvement.id != 0 and 'Peacetime Recovery' in nation_improvement.completed_research and wardata.is_at_peace(nation_improvement.id):
+                if nation_improvement.id != 0 and "Peacetime Recovery" in nation_improvement.completed_research and war_table.is_at_peace(nation_improvement.id):
                     region_improvement.heal(100)
         
         if region_unit.name != None and region_unit.owner_id not in [0, 99]:
@@ -857,7 +856,7 @@ def bonus_phase_heals(game_id: str) -> None:
             heal_allowed = False
 
             # check if unit is allowed to heal
-            if region_unit.name == 'Special Forces':
+            if region_unit.name == "Special Forces":
                 heal_allowed = True
             elif "Scorched Earth" in nation_unit.completed_research:
                 heal_allowed = True
@@ -872,20 +871,22 @@ def bonus_phase_heals(game_id: str) -> None:
             # heal unit
             if heal_allowed:
                 region_unit.heal(2)
-                if nation_unit.id != 0 and 'Peacetime Recovery' in nation_unit.completed_research and wardata.is_at_peace(nation_unit.id):
+                if nation_unit.id != 0 and "Peacetime Recovery" in nation_unit.completed_research and war_table.is_at_peace(nation_unit.id):
                     region_unit.heal(100)
 
 def prompt_for_missing_war_justifications(game_id: str) -> None:
-    '''
+    """
     Prompts in terminal when a war justification has not been entered for an ongoing war.
 
     :param game_id: The full game_id of the active game.
-    '''
-    wardata = WarData(game_id)
+    """
 
-    for war_name, war_data in wardata.wardata_dict.items():
-        if war_data["outcome"] == "TBD":
-            wardata.add_missing_war_justifications(war_name)
+    war_table = WarTable(game_id)
+
+    for war in war_table:
+        if war.outcome == "TBD":
+            war.add_missing_justifications()
+            war_table.save(war)
 
 def total_occupation_forced_surrender(game_id: str) -> None:
     """
@@ -897,7 +898,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     
     # get game data
     nation_table = NationTable(game_id)
-    wardata = WarData(game_id)
+    war_table = WarTable(game_id)
     notifications = Notifications(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
@@ -912,27 +913,25 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     
     # if no unoccupied region found for a player force surrender if main combatant
     for index, region_found in enumerate(non_occupied_found_list):
-        player_id_1 = index + 1
-        nation_name_1 = nation_table.get(player_id_1).name
+        looser_id = index + 1
+        looser_name = nation_table.get(looser_id).name
+        
         if not region_found:
-            #look for wars to surrender to
-            for war_name, war_data in wardata.wardata_dict.items():
-                combatant_dict = war_data["combatants"]
-                if war_data["outcome"] == "TBD" and nation_name_1 in combatant_dict and 'Main' in combatant_dict[nation_name_1]["role"]:
-                    war_role_1 = combatant_dict[nation_name_1]["role"]
-                    for nation_name in combatant_dict:
-                        if 'Main' in combatant_dict[nation_name]["role"] and war_role_1 != combatant_dict[nation_name]["role"]:
-                            nation_name_2 = nation_name
-                            war_role_2 = combatant_dict[nation_name_2]["role"]
-                            break
-                    # process surrender
-                    if 'Attacker' in war_role_1:
-                        outcome = 'Attacker Victory'
-                    else:
-                        outcome = 'Defender Victory'
-                    wardata.end_war(war_name, outcome)
-                    notifications.append(f'{nation_name_1} surrendered to {nation_name_2}.', 4)
-                    notifications.append(f'{war_name} has ended due to total occupation.', 4)
+            
+            # look for wars to surrender to
+            for war in war_table:
+                if war.outcome == "TBD" and looser_name in war.combatants and "Main" in war.get_role(str(looser_id)):
+                    
+                    main_attacker_id, main_defender_id = war.get_main_combatant_ids()
+                    
+                    if looser_id == main_attacker_id:
+                        outcome = "Defender Victory"
+                    elif looser_id == main_defender_id:
+                        outcome = "Attacker Victory"
+                    war.end_conflict(outcome)
+
+                    notifications.append(f"{war.name} has ended due to {looser_name} total occupation.", 4)
+                    war_table.save(war)
 
 def war_score_forced_surrender(game_id: str) -> None:
     """
@@ -943,27 +942,29 @@ def war_score_forced_surrender(game_id: str) -> None:
     """
 
     # get game data
-    wardata = WarData(game_id)
+    nation_table = NationTable(game_id)
+    war_table = WarTable(game_id)
     notifications = Notifications(game_id)
 
-    for war_name, war_data in wardata.wardata_dict.items():
-        if war_data["outcome"] == "TBD":
+    for war in war_table:
+        if war.outcome == "TBD":
         
-            # get war score information
-            attacker_war_score = war_data["attackerWarScore"]["total"]
-            defender_war_score = war_data["defenderWarScore"]["total"]
-            attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
-            ma_name, md_name = wardata.get_main_combatants(war_name)
+            attacker_threshold, defender_threshold = war.calculate_score_threshold()
+            attacker_id, defender_id = war.get_main_combatant_ids()
+            attacker_nation = nation_table.get(attacker_id)
+            defender_nation = nation_table.get(defender_id)
+            
+            if attacker_threshold is not None and war.attacker_total >= attacker_threshold:
+                war.end_conflict("Attacker Victory")
+                notifications.append(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 4)
+                notifications.append(f"{war.name} has ended due to war score.", 4)
+                war_table.save(war)
 
-            # end war if a threshold was met
-            if attacker_threshold and attacker_war_score >= attacker_threshold:
-                wardata.end_war(war_name, "Attacker Victory")
-                notifications.append(f'{md_name} surrendered to {ma_name}.', 4)
-                notifications.append(f'{war_name} has ended due to war score.', 4)
-            elif defender_threshold and defender_war_score >= defender_threshold:
-                wardata.end_war(war_name, "Defender Victory")
-                notifications.append(f'{ma_name} surrendered to {md_name}.', 4)
-                notifications.append(f'{war_name} has ended due to war score.', 4)
+            elif defender_threshold is not None and war.defender_total >= defender_threshold:
+                war.end_conflict("Defender Victory")
+                notifications.append(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 4)
+                notifications.append(f"{war.name} has ended due to war score.", 4)
+                war_table.save(war)
 
 def prune_alliances(game_id: str) -> None:
     """

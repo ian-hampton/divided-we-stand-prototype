@@ -17,7 +17,7 @@ from app import palette
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
-from app.wardata import WarData
+from app.war import WarTable
 from app.notifications import Notifications
 from app.alliance import Alliance
 from app.alliance import AllianceTable
@@ -274,13 +274,13 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         nation.export_action_log()
         nation.action_log = []
         nation_table.save(nation)
-    wardata = WarData(game_id)
-    wardata.export_all_logs()
+    war_table = WarTable(game_id)
+    war_table.export_all_logs()
 
     # end of turn checks
     print("Resolving end of turn updates...")
-    wardata.add_warscore_from_occupations()
-    wardata.update_totals()
+    war_table.add_warscore_from_occupations()
+    war_table.update_totals()
     checks.total_occupation_forced_surrender(game_id)
     checks.war_score_forced_surrender(game_id)
     checks.countdown(game_id)
@@ -555,7 +555,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: int) -> dict:
     nation_table = NationTable(game_id)
     nation = nation_table.get(player_id)
     alliance_table = AllianceTable(game_id)
-    wardata = WarData(game_id)
+    war_table = WarTable(game_id)
     misc_data_dict = get_scenario_dict(game_id, "Misc")
 
     # build player info dict
@@ -639,7 +639,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: int) -> dict:
         temp = nation_table.get(i + 1)
         if temp.name == nation.name:
             continue
-        elif wardata.are_at_war(player_id, temp.id):
+        elif war_table.get_war_name(player_id, temp.id) is not None:
             relation_colors[i] = '#ff0000'
             relations_status_list[i] = "At War"
         elif alliance_table.are_allied(nation.name, temp.name):

@@ -10,7 +10,7 @@ from app.alliance import AllianceTable
 
 class Combatant:
     
-    def __init__(self, combatant_id: str, combatant_data: str, war_id: str):
+    def __init__(self, combatant_id: str, combatant_data: dict, war_id: str):
         
         self.war_id = war_id
 
@@ -212,6 +212,62 @@ class War:
 
         self.combatants[combatant.id] = combatant_data
 
+    def get_role(self, nation_id: str) -> str:
+
+        combatant = Combatant(nation_id, self.combatants[nation_id])
+        return combatant.role
+
+    def get_main_combatant_ids(self) -> tuple:
+
+        main_attacker_id = ""
+        main_defender_id = ""
+
+        for nation_id, data in self.combatants.items():
+            combatant = Combatant(nation_id, data)
+            if combatant.role == "Main Attacker":
+                main_attacker_id = nation_id
+            elif combatant.role == "Main Defender":
+                main_defender_id = nation_id
+
+        return main_attacker_id, main_attacker_id
+
+    def add_missing_justifications(self) -> None:
+        pass
+
+    def calculate_score_threshold(self) -> tuple:
+        
+        nation_table = NationTable(self.game_id)
+
+        # initial win threshold is a 100 point difference
+        attacker_threshold = 100
+        defender_threshold = 100
+
+        # check for unyielding and crime syndicate
+        for combatant_id, combatant_data in self.combatants.items():
+            combatant = Combatant(combatant_id, combatant_data)
+            combatant_nation = nation_table.get(combatant_id)
+            if combatant.role == "Main Attacker" and defender_threshold == 100:
+                if combatant_nation.gov == "Crime Syndicate":
+                    defender_threshold = None
+                elif "Unyielding" in combatant_nation.completed_research:
+                    defender_threshold += 50
+            elif combatant.role == "Main Defender" and attacker_threshold == 100:
+                if combatant_nation.gov == "Crime Syndicate":
+                    attacker_threshold = None
+                elif "Unyielding" in combatant_nation.completed_research:
+                    attacker_threshold += 50
+
+        # if not crime syndicate compute remaining threshold
+        if attacker_threshold is not None:
+            attacker_threshold += self.defender_total
+        if defender_threshold is not None:
+            defender_threshold += self.attacker_total
+
+        return attacker_threshold, defender_threshold
+
+    def end_conflict(self, outcome: str) -> None:
+        pass
+
 class WarTable:
     
     def __init__(self, game_id: str):
@@ -293,7 +349,7 @@ class WarTable:
         for ally_id in possible_allies:
             ally = nation_table.get(ally_id)
             if (
-                self.get_war(main_defender.id, ally.id) is None                                            # ally cannot already be at war with defender
+                self.get_war_name(main_defender.id, ally.id) is None                                            # ally cannot already be at war with defender
                 and not core.check_for_truce(trucedata_list, main_defender.id, ally.id, current_turn_num)  # ally cannot have truce with defender
                 and not alliance_table.are_allied(main_defender.name, ally.name)                           # ally cannot be allied with defender
                 and not alliance_table.former_ally_truce(main_defender.name, ally.name)                    # ally cannot be recently allied with defender
@@ -312,7 +368,7 @@ class WarTable:
         for ally_id in possible_allies:
             ally = nation_table.get(ally_id)
             if (
-                self.get_war(main_attacker.id, ally.id) is None                                            # ally cannot already be at war with attacker
+                self.get_war_name(main_attacker.id, ally.id) is None                                            # ally cannot already be at war with attacker
                 and not core.check_for_truce(trucedata_list, main_attacker.id, ally.id, current_turn_num)  # ally cannot have truce with attacker
                 and not alliance_table.are_allied(main_attacker.name, ally.name)                           # ally cannot be allied with attacker
                 and not alliance_table.former_ally_truce(main_attacker.name, ally.name)                    # ally cannot be recently allied with attacker
@@ -365,11 +421,108 @@ class WarTable:
         for nation in self:
             self._name_to_id[nation.name.lower()] = nation.id
 
-    def get_war(self, nation1_id: str, nation2_id: str) -> str | None:
+    def get(self, war_identifier: str) -> War:
+
+        war_id = str(war_identifier)
+
+        # check if war id was provided
+        if war_id in self.data:
+            return War(war_id, self.data[war_id], self.game_id)
+        
+        # check if war name was provided
+        war_id = self._get_id_from_name(war_identifier)
+        if war_id is not None:
+            return Nation(war_id, self.data[war_id], self.game_id)
+
+        raise Exception(f"Failed to retrieve war with identifier {war_identifier}.")
+
+    def get_war_name(self, nation1_id: str, nation2_id: str) -> str | None:
         
         for war in self:
             if war.end == 0 and nation1_id in war.combatants and nation2_id in war.combatants:
                 return war.name
             
         return None
+    
+    def is_at_peace(self, nation_id: str) -> bool:
+
+        for war in self:
+            if nation_id in war.combatants:
+                return False
+            
+        return True
+
+    def add_warscore_from_occupations(self) -> None:
+        """
+        Adds warscore from occupied regions.
+        """
+
+        from app.region import Region
+        nation_table = NationTable(self.game_id)
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            
+            if region.occupier_id not in [0, 99]:
+
+                war_name = self.get_war_name(str(region.owner_id), str(region.occupier_id))
+                war = self.get(war_name)
+                occupier_war_role = war.get_role(str(region.occupier_id))
+                occupier_nation = nation_table.get(str(region.occupier_id))
+
+                score = 2
+                if 'Scorched Earth' in occupier_nation.completed_research:
+                    score = 3
                 
+                if "Attacker" in occupier_war_role:
+                    war.attacker_occupation += score
+                else:
+                    war.defender_occupation += score
+                
+                self.save(war)
+
+    def update_totals(self) -> None:
+
+        for war in self:
+            if war.outcome == "TBD":
+
+                war.attacker_total = 0
+                war.attacker_total += war.attacker_occupation
+                war.attacker_total += war.attacker_victories
+                war.attacker_total += war.attacker_destroyed_units
+                war.attacker_total += war.attacker_destroyed_improvements
+                war.attacker_total += war.attacker_captures
+                war.attacker_total += war.attacker_nuclear_strikes
+
+                war.defender_total = 0
+                war.defender_total += war.defender_occupation
+                war.defender_total += war.defender_victories
+                war.defender_total += war.defender_destroyed_units
+                war.defender_total += war.defender_destroyed_improvements
+                war.defender_total += war.defender_captures
+                war.defender_total += war.defender_nuclear_strikes
+
+                self.save(war)
+
+    def export_all_logs(self) -> None:
+        """
+        Saves all of the combat logs for ongoing wars as .txt files. Then wipes the logs.
+        """
+        
+        directory = f"gamedata/{self.game_id}/logs"
+
+        for war in self:
+            
+            if war.outcome == "TBD":
+
+                os.makedirs(directory, exist_ok=True)
+                filename = os.path.join(directory, f"{war.name}.txt")
+                
+                with open(filename, 'w') as file:
+                    for entry in war.log:
+                        file.write(entry + '\n')
+                
+                war.log = []
+                self.save(war)
