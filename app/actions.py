@@ -1478,7 +1478,57 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
         nation_table.save(nation)
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    # tba - add missile data to scenario
+
+    # execute actions
+    for action in actions_list:
+
+        nation = nation_table.get(action.id)
+
+        # required technology check
+        if action.missile_type == "Standard Missile" and "Missile Technology" not in nation.completed_research:
+            nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Missile Technology technology.")
+            nation_table.save(nation)
+            continue
+        elif action.missile_type == "Nuclear Missile" and "Nuclear Warhead" not in nation.completed_research:
+            nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Nuclear Warhead technology.")
+            nation_table.save(nation)
+            continue
+        
+        # pay for missile(s)
+        if action.missile_type == "Standard Missile":
+            nation.update_stockpile("Common Metals", -5 * action.quantity)
+            if float(nation.get_stockpile("Common Metals")) < 0:
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
+                nation_table.save(nation)
+                continue
+        elif action.missile_type == "Nuclear Missile":
+            nation.update_stockpile("Advanced Metals", -2 * action.quantity)
+            nation.update_stockpile("Uranium", -2 * action.quantity)
+            nation.update_stockpile("Rare Earth Elements", -2 * action.quantity)
+            if (
+                float(nation.get_stockpile("Advanced Metals")) < 0
+                or float(nation.get_stockpile("Uranium")) < 0
+                or float(nation.get_stockpile("Rare Earth Elements")) < 0
+               ):
+                nation = nation_table.get(action.id)
+                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
+                nation_table.save(nation)
+                continue
+
+        # execute action
+        if action.missile_type == "Standard Missile":
+            nation.missile_count += action.quantity
+        elif action.missile_type == "Nuclear Missile":
+            nation.nuke_count += action.quantity
+
+        # update nation data
+        nation.action_log.append(f"Manufactured {action.quantity}x {action.missile_type}.")
+        nation_table.save(nation)
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
     
