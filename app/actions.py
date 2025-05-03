@@ -1073,6 +1073,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             # pay cost
             nation.update_stockpile("Political Power", -1 * cost)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to research {action.research_name}. Not enough political power.")
                 nation_table.save(nation)
@@ -1113,6 +1114,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
                 cost = int(cost)
             nation.update_stockpile("Technology", -1 * cost)
             if float(nation.get_stockpile("Technology")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to research {action.research_name}. Not enough technology.")
                 nation_table.save(nation)
@@ -1309,6 +1311,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             pp_cost = 0.20
         nation.update_stockpile("Political Power", -1 * pp_cost)
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
+            nation_table.reload()
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to claim {action.target_region}. Insufficient resources.")
             nation_table.save(nation)
@@ -1449,6 +1452,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
                 valid = False
                 break
         if not valid:
+            nation_table.reload()
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Insufficient resources.")
             nation_table.save(nation)
@@ -1502,6 +1506,7 @@ def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAct
         if action.missile_type == "Standard Missile":
             nation.update_stockpile("Common Metals", -5 * action.quantity)
             if float(nation.get_stockpile("Common Metals")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
                 nation_table.save(nation)
@@ -1515,6 +1520,7 @@ def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAct
                 or float(nation.get_stockpile("Uranium")) < 0
                 or float(nation.get_stockpile("Rare Earth Elements")) < 0
                ):
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
                 nation_table.save(nation)
@@ -1550,6 +1556,7 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
         # pay for action
         nation.update_stockpile("Political Power", -5)
         if float(nation.get_stockpile("Political Power")) < 0:
+            nation_table.reload()
             nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to execute Republic government action. Insufficient political power.")
             nation_table.save(nation)
@@ -1621,6 +1628,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
                     # pay for action
                     nation.update_stockpile("Political Power", -5)
                     if float(nation.get_stockpile("Political Power")) < 0:
+                        nation_table.reload()
                         nation = nation_table.get(action.id)
                         nation.action_log.append(f"Failed to Host Peace Talks for Truce #{truce[0]}. Insufficient political power.")
                         break
@@ -1645,6 +1653,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             count = int(event_action_data[-1])
             nation.update_stockpile("Technology", -1 * count)
             if float(nation.get_stockpile("Technology")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to spend {count} technology on Cure Research. Insufficient technology.")
                 nation_table.save(nation)
@@ -1669,6 +1678,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             count = int(event_action_data[-1])
             nation.update_stockpile("Dollars", -1 * count)
             if float(nation.get_stockpile("Dollars")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to spend {count} dollars on Fundraise. Insufficient dollars.")
                 nation_table.save(nation)
@@ -1693,6 +1703,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             region_id = event_action_data[-1]
             nation.update_stockpile("Dollars", -5)
             if float(nation.get_stockpile("Dollars")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to Inspect {region_id}. Insufficient dollars.")
                 nation_table.save(nation)
@@ -1714,6 +1725,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             nation.update_stockpile("Political Power", -1)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to quarantine {region_id}. Insufficient political power.")
                 nation_table.save(nation)
@@ -1737,6 +1749,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             nation.update_stockpile("Political Power", -1)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to quarantine {region_id}. Insufficient political power.")
                 nation_table.save(nation)
@@ -1760,6 +1773,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             nation.update_stockpile("Political Power", -10)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to do Open Borders action. Insufficient political power.")
                 nation_table.save(nation)
@@ -1781,6 +1795,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             nation.update_stockpile("Political Power", -10)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to do Close Borders action. Insufficient political power.")
                 nation_table.save(nation)
@@ -1817,6 +1832,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             nation.update_stockpile("Dollars", -3)
             if float(nation.get_stockpile("Dollars")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to do Search For Artifacts action. Insufficient dollars.")
                 nation_table.save(nation)
@@ -1893,6 +1909,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             nation.update_stockpile("Political Power", -10)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to do Outsource Technology action. Insufficient political power.")
                 nation_table.save(nation)
@@ -1922,6 +1939,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay cost
             nation.update_stockpile("Political Power", -10)
             if float(nation.get_stockpile("Political Power")) < 0:
+                nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to do Military Reinforcements action. Insufficient political power.")
                 nation_table.save(nation)

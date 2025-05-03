@@ -562,16 +562,6 @@ class NationTable:
         return len(self.data)
 
     def _get_id_from_name(self, nation_name: str) -> str | None:
-        """
-        Params:
-            nation_name (str): A nation name.
-        
-        Returns:
-            str: Corresponding nation id or None if no match found.
-        """
-
-        if nation_name in self._name_to_id:
-            return self._name_to_id[nation_name]
         
         for temp in self._name_to_id:
             if nation_name.lower() == temp.lower():
@@ -588,7 +578,7 @@ class NationTable:
         self.data: dict = gamedata_dict["nations"]
         self._name_to_id = {}
         for nation in self:
-            self._name_to_id[nation.name] = nation.id
+            self._name_to_id[nation.name.lower()] = nation.id
 
     def create(self, nation_id: int, player_id: int) -> Nation:
         """
@@ -607,6 +597,7 @@ class NationTable:
 
         return new_nation
 
+    # tba - experiment with using deepcopy on self.data to reduce nation_data.reload() calls in actions.py
     def get(self, nation_identifier: str) -> Nation:
         """
         Retrieves a Nation from the NationTable.
