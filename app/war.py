@@ -191,6 +191,13 @@ class War:
 
         return combatant
 
+    def get_combatant(self, nation_id) -> Combatant:
+
+        if nation_id in self.combatants:
+            return Combatant(nation_id, self.combatants[nation_id])
+        
+        raise Exception(f"Failed to retrieve combatant {nation_id} in war {self.id}.")
+
     def save_combatant(self, combatant: Combatant) -> None:
         
         combatant_data = {
@@ -210,11 +217,15 @@ class War:
             }
         }
 
-        self.combatants[combatant.id] = combatant_data
+        if combatant.id in self.combatants:
+            self.combatants[combatant.id] = combatant_data
+            return
+        
+        raise Exception(f"Failed to save combatant {combatant.id} in war {self.id}. Combatant not involved in that war.")
 
     def get_role(self, nation_id: str) -> str:
 
-        combatant = Combatant(nation_id, self.combatants[nation_id])
+        combatant = self.get_combatant(nation_id)
         return combatant.role
 
     def get_main_combatant_ids(self) -> tuple:
@@ -222,8 +233,8 @@ class War:
         main_attacker_id = ""
         main_defender_id = ""
 
-        for nation_id, data in self.combatants.items():
-            combatant = Combatant(nation_id, data)
+        for nation_id in self.combatants:
+            combatant = self.get_combatant(nation_id)
             if combatant.role == "Main Attacker":
                 main_attacker_id = nation_id
             elif combatant.role == "Main Defender":
@@ -243,8 +254,8 @@ class War:
         defender_threshold = 100
 
         # check for unyielding and crime syndicate
-        for combatant_id, combatant_data in self.combatants.items():
-            combatant = Combatant(combatant_id, combatant_data)
+        for combatant_id in self.combatants:
+            combatant = self.get_combatant(combatant_id)
             combatant_nation = nation_table.get(combatant_id)
             
             # add modifiers to defender threshold
