@@ -238,7 +238,45 @@ class War:
         return main_attacker_id, main_defender_id
 
     def add_missing_justifications(self) -> None:
-        pass
+        
+        # get game data
+        nation_table = NationTable(self.game_id)
+
+        # check all combatants
+        for combatant_id in self.combatants:
+            combatant = self.get_combatant(combatant_id)
+            combatant_nation = nation_table.get(combatant_id)
+
+            if combatant.justification == "TBD":
+                
+                war_justification = input(f'Please enter {combatant.name} war justification for {self.name} or enter SKIP to postpone: ')
+                
+                if war_justification != 'SKIP':
+
+                    # validate war claims
+                    region_claims_list = []
+                    if war_justification in ["Border Skirmish", "Conquest"]:
+                        
+                        # get claims and calculate political power cost
+                        claim_cost = -1
+                        while claim_cost == -1:
+                            region_claims_str = input(f"List the regions that {combatant.name} is claiming using {war_justification}: ")
+                            region_claims_list = region_claims_str.split(',')
+                            claim_cost = core.validate_war_claims(self.game_id, war_justification, region_claims_list)
+
+                        # pay political power cost
+                        combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
+                        if float(combatant_nation.get_stockpile("Political Power")) < 0:
+                            nation_table.reload()
+                            combatant_nation = nation_table.get(combatant_id)
+                            combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
+                            nation_table.save(combatant_nation)
+                            continue
+
+                    # update information
+                    combatant.justification = war_justification
+                    combatant.claims = region_claims_list
+                    self.save_combatant(combatant)
 
     def calculate_score_threshold(self) -> tuple:
         
