@@ -131,7 +131,7 @@ class AllianceTable:
             with open(gamedata_filepath, 'r') as json_file:
                 gamedata_dict = json.load(json_file)
         except FileNotFoundError:
-            print(f"Error: Unable to locate {gamedata_filepath} during Wardata class initialization.")
+            print(f"Error: Unable to locate {gamedata_filepath} during AllianceTable class initialization.")
 
         # set attributes
         self.game_id: str = game_id
