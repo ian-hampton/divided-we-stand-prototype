@@ -110,13 +110,13 @@ table {
     margin-bottom: 20px;
 }
 .war .bottom-bar .war-box {
-    flex-basis: calc(22.5% - 70px);
+    flex-basis: calc(25% - 70px);
     background-color: rgba(41, 41, 41, 0.75);
     margin: 0px;
     padding: 10px;
 }
 .war .bottom-bar .log-box {
-    flex-basis: calc(55%);
+    flex-basis: calc(50%);
     background-color: rgba(41, 41, 41, 0.75);
     margin: 0px;
     padding: 10px;
@@ -232,15 +232,17 @@ table {
 
         <div class="war-box">
             {% for key, value in war_data["attackerWarScore"].items() %}
-                <div class="record-bar">
                 {% if loop.first %}
-                    <div> {{ key }}: </div>
-                    <div> <span class="color-red"> {{ value }} </span> </div>
+                    <div class="record-bar" style="padding-bottom:5px;">
+                        <div> {{ key }}: </div>
+                        <div> <span class="color-red"> {{ value }} </span> </div>
+                    </div>
                 {% else %}
-                    <div class="record"> {{ key }}: </div>
-                    <div class="record"> <span class="color-red"> {{ value }} </span> </div>
+                    <div class="record-bar">
+                        <div class="record"> {{ key }}: </div>
+                        <div class="record"> <span class="color-red"> {{ value }} </span> </div>
+                    </div>
                 {% endif %}
-                </div>
             {% endfor %}
         </div>
 
@@ -248,15 +250,17 @@ table {
 
         <div class="war-box">
             {% for key, value in war_data["defenderWarScore"].items() %}
-                <div class="record-bar">
                 {% if loop.first %}
-                    <div> {{ key }}: </div>
-                    <div> <span class="color-blue"> {{ value }} </span> </div>
+                    <div class="record-bar" style="padding-bottom:5px;">
+                        <div> {{ key }}: </div>
+                        <div> <span class="color-blue"> {{ value }} </span> </div>
+                    </div>
                 {% else %}
-                    <div class="record"> {{ key }}: </div>
-                    <div class="record"> <span class="color-blue"> {{ value }} </span> </div>
+                    <div class="record-bar">
+                        <div class="record"> {{ key }}: </div>
+                        <div class="record"> <span class="color-blue"> {{ value }} </span> </div>
+                    </div>
                 {% endif %}
-                </div>
             {% endfor %}
         </div>
 

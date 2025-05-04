@@ -621,145 +621,148 @@ for full_game_id in game_ids:
 #WARS PAGE
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
-
-    def camel_to_title(camel_str):
-        # Insert a space before each uppercase letter and capitalize the words
-        title_str = re.sub(r'([A-Z])', r' \1', camel_str).title()
-        return title_str.strip()
     
-    # read from game files
-    from app.wardata import WarData
+    # get game data
+    nation_table = NationTable(full_game_id)
+    war_table = WarTable(full_game_id)
+    current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Game Name"]
     page_title = f'{game_name} Wars List'
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    wardata = WarData(full_game_id)
-
+    
     # read wars
-    for war_name, war_data in wardata.wardata_dict.items():
+    results = {}
+    for war in war_table:
+
+        inner_dict = {}
         
-        #get war timeframe
-        war_start = war_data["startTurn"]
-        season, year = core.date_from_turn_num(war_start)
-        war_start = f'{season} {year}'
-        war_end = war_data["endTurn"]
-        if war_end != 0:
-            war_end = int(war_end)
-            season, year = core.date_from_turn_num(war_end)
-            war_end = f'{season} {year}'
+        # get war timeframe
+        season, year = core.date_from_turn_num(war.start)
+        start_str = f"{season} {year}"
+        if war.end != 0:
+            season, year = core.date_from_turn_num(war.end)
+            end_str = f"{season} {year}"
         else:
-            war_end = "Present"
-        wardata.wardata_dict[war_name]["timeframe"] = f'{war_start} - {war_end}'
+            end_str = "Present"
+        inner_dict["timeframe"] = f"{start_str} - {end_str}"
 
         # get war score information
-        attacker_war_score = war_data["attackerWarScore"]["total"]
-        defender_war_score = war_data["defenderWarScore"]["total"]
-        attacker_threshold, defender_threshold = wardata.calculate_score_threshold(war_name)
-        ma_name, md_name = wardata.get_main_combatants(war_name)
+        attacker_threshold, defender_threshold = war.calculate_score_threshold()
+        ma_id, md_id = war.get_main_combatant_ids()
+        main_attacker = nation_table.get(ma_id)
+        main_defender = nation_table.get(md_id)
 
         # implement a score bar using an html table >:)
-        war_status = wardata.wardata_dict[war_name]["outcome"]
+        inner_dict["outcome"] = war.outcome
         attacker_color = """background-image: linear-gradient(#cc4125, #eb5a3d)"""
         defender_color = """background-image: linear-gradient(#3c78d8, #5793f3)"""
         white_color = """background-image: linear-gradient(#c0c0c0, #b0b0b0)"""
-        match war_status:
+        match war.outcome:
             case "Attacker Victory":
-                # set bar entirely red
-                war_status_bar = [attacker_color] * 1
+                war_status_bar = [attacker_color] * 1  # set bar entirely red
             case "Defender Victory":
-                # set bar entirely blue
-                war_status_bar = [defender_color] * 1
+                war_status_bar = [defender_color] * 1  # set bar entirely blue
             case "White Peace":
-                # set bar entirely white
-                war_status_bar = [white_color] * 1
+                war_status_bar = [white_color] * 1     # set bar entirely white
             case "TBD":
                 # color bar based on percentage
-                attacker_score = wardata.wardata_dict[war_name]["attackerWarScore"]["total"]
-                defender_score = wardata.wardata_dict[war_name]["defenderWarScore"]["total"]
-                if attacker_score != 0 and defender_score == 0:
+                if war.attacker_total != 0 and war.defender_total == 0:
                     war_status_bar = [attacker_color] * 1
-                elif attacker_score == 0 and defender_score != 0:
+                elif war.attacker_total == 0 and war.defender_total != 0:
                     war_status_bar = [defender_color] * 1
-                elif attacker_score == 0 and defender_score == 0:
+                elif war.attacker_total == 0 and war.defender_total == 0:
                     war_status_bar = [attacker_color] * 1
                     war_status_bar += [defender_color] * 1
                 else:
                     # calculate attacker value
-                    attacker_percent = float(attacker_score) / float(attacker_score + defender_score)
+                    attacker_percent = float(war.attacker_total) / float(war.attacker_total + war.defender_total)
                     attacker_percent = round(attacker_percent, 2)
                     attacker_points = int(attacker_percent * 100)
                     attacker_steps = round(attacker_points / 5)
                     # calculate defender value
-                    defender_percent = float(defender_score) / float(attacker_score + defender_score)
+                    defender_percent = float(war.defender_total) / float(war.attacker_total + war.defender_total)
                     defender_percent = round(defender_percent, 2)
                     defender_points = int(defender_percent * 100)
                     defender_steps = round(defender_points / 5)
                     # add to score bar
                     war_status_bar = [attacker_color] * attacker_steps
                     war_status_bar += [defender_color] * defender_steps
-        wardata.wardata_dict[war_name]["scoreBar"] = war_status_bar
+        inner_dict["scoreBar"] = war_status_bar
 
-        # convert warscore keys from camel case to title case with spaces
-        copy = {}
-        for key, value in wardata.wardata_dict[war_name]["attackerWarScore"].items():
-            new_key = camel_to_title(key)
-            if new_key == "Total":
-                new_key += " War Score"
-            elif new_key == "Enemy Improvements Destroyed":
-                new_key = "Enemy Impr. Destroyed"
-            copy[new_key] = value
-        wardata.wardata_dict[war_name]["attackerWarScore"] = copy
-        copy = {}
-        for key, value in wardata.wardata_dict[war_name]["defenderWarScore"].items():
-            new_key = camel_to_title(key)
-            if new_key == "Total":
-                new_key += " War Score"
-            elif new_key == "Enemy Improvements Destroyed":
-                new_key = "Enemy Impr. Destroyed"
-            copy[new_key] = value
-        wardata.wardata_dict[war_name]["defenderWarScore"] = copy
+        # get attacker warscore data
+        copy = {
+            "Total War Score": war.attacker_total,
+            "From Occupation": war.attacker_occupation,
+            "From Combat Victories": war.attacker_victories,
+            "From Enemy Units Destroyed": war.attacker_destroyed_units,
+            "From Enemy Impr. Destroyed": war.attacker_destroyed_improvements,
+            "From Capital Captures": war.attacker_captures,
+            "From Nuclear Strikes": war.attacker_nuclear_strikes
+        }
+        inner_dict["attackerWarScore"] = copy
+        
+        # get defender warscore data
+        copy = {
+            "Total War Score": war.defender_total,
+            "From Occupation": war.defender_occupation,
+            "From Combat Victories": war.defender_victories,
+            "From Enemy Units Destroyed": war.defender_destroyed_units,
+            "From Enemy Impr. Destroyed": war.defender_destroyed_improvements,
+            "From Capital Captures": war.defender_captures,
+            "From Nuclear Strikes": war.defender_nuclear_strikes
+        }
+        inner_dict["defenderWarScore"] = copy
 
         # create war resolution strings
-        match war_status:
+        match war.outcome:
             
             case "Attacker Victory":
-
                 war_end_str = """This war concluded with an <span class="color-red">attacker victory</span>."""
-                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+                inner_dict["warEndStr"] = war_end_str
             
             case "Defender Victory":
-                
                 war_end_str = """This war concluded with a <span class="color-blue">defender victory</span>."""
-                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+                inner_dict["warEndStr"] = war_end_str
             
             case "White Peace":
-                
                 war_end_str = """This war concluded with a white peace."""
-                wardata.wardata_dict[war_name]["warEndStr"] = war_end_str
+                inner_dict["warEndStr"] = war_end_str
             
             case "TBD":
-            
-                if current_turn_num - war_data["startTurn"] < 4:
-                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war_data["startTurn"] + 4) - current_turn_num} turns."
+                # calculate negotiation turn
+                if current_turn_num - war.start < 4:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war.start + 4) - current_turn_num} turns."
                 else:
                     can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
-                wardata.wardata_dict[war_name]["canEndStr"] = can_end_str
-                
-                if attacker_war_score > defender_war_score:
+                inner_dict["canEndStr"] = can_end_str
+                # calculate forced end score
+                if war.attacker_total > war.defender_total:
                     if attacker_threshold is not None:
                         forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {attacker_threshold} </span> war score."""
                     else:
-                        forced_end_str = f"""The <span class="color-red"> attackers </span> cannot win this war using war score since <span class="color-blue"> {md_name} </span> is a Crime Syndicate."""
+                        forced_end_str = f"""The <span class="color-red"> attackers </span> cannot win this war using war score since <span class="color-blue"> {main_defender.name} </span> is a Crime Syndicate."""
                 else:
                     if defender_threshold is not None:
                         forced_end_str = f"""The <span class="color-blue"> defenders </span> will win this war upon reaching <span class="color-blue"> {defender_threshold} </span> war score."""
                     else:
-                        forced_end_str = f"""The <span class="color-blue"> defenders </span> cannot win this war using war score since <span class="color-red"> {ma_name} </span> is a Crime Syndicate."""
-                    
-                wardata.wardata_dict[war_name]["forcedEndStr"] = forced_end_str
+                        forced_end_str = f"""The <span class="color-blue"> defenders </span> cannot win this war using war score since <span class="color-red"> {main_attacker.name} </span> is a Crime Syndicate."""
+                inner_dict["forcedEndStr"] = forced_end_str
 
-    return render_template('temp_wars.html', page_title = page_title, dict = wardata.wardata_dict)
+        # add combatants
+        inner_dict["combatants"] = {}
+        for combatant_id in war.combatants:
+            combatant = war.get_combatant(combatant_id)
+            combatant_data = {
+                "role": combatant.role,
+                "warJustification": combatant.justification,
+                "warClaims": combatant.claims
+            }
+            inner_dict["combatants"][combatant.name] = combatant_data
+
+        results[war.name] = inner_dict
+
+    return render_template('temp_wars.html', page_title = page_title, dict = results)
 
 #RESEARCH PAGE
 @main.route('/<full_game_id>/technologies')
