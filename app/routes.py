@@ -14,13 +14,13 @@ from app import core
 from app import checks
 from app import events
 from app import palette
-from app.wardata import WarData
+from app import map
 from app.testing import map_tests
 from app.notifications import Notifications
 from app.alliance import AllianceTable
 from app.alliance import Alliance
 from app.nationdata import NationTable
-from app import map
+from app.war import WarTable
 
 #ENVIROMENT IMPORTS
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
@@ -1072,7 +1072,7 @@ def announcements(full_game_id):
     # get game data
     nation_table = NationTable(full_game_id)
     alliance_table = AllianceTable(full_game_id)
-    wardata = WarData(full_game_id)
+    war_table = WarTable(full_game_id)
     notifications = Notifications(full_game_id)
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     trucedata_list = core.read_file(trucedata_filepath, 1)
@@ -1113,9 +1113,9 @@ def announcements(full_game_id):
     elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
         diplomacy_list.append('Normal turn schedule is now in effect.')
     # get all ongoing wars
-    for war in wardata.wardata_dict:
-        if wardata.wardata_dict[war]["outcome"] == "TBD":
-            diplomacy_list.append(f'{war} is ongoing.')
+    for war in war_table:
+        if war.outcome == "TBD":
+            diplomacy_list.append(f"{war.name} is ongoing.")
     # get all ongoing truces
     for truce in trucedata_list:
         truce_participants_list = []
@@ -1155,11 +1155,11 @@ def announcements(full_game_id):
         statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
     else:
         statistics_list.append(f"Longest alliance: N/A")
-    statistics_list.append(f"Total wars: {wardata.war_count()}")
-    statistics_list.append(f"Units lost in war: {wardata.unit_casualties()}")
-    statistics_list.append(f"Improvements destroyed in war: {wardata.improvement_casualties()}")
-    statistics_list.append(f"Missiles launched: {wardata.missiles_launched_count()}")
-    war_name, war_duration = wardata.get_longest_war()
+    statistics_list.append(f"Total wars: {len(war_table)}")
+    statistics_list.append(f"Units lost in war: {war_table.total_units_lost()}")
+    statistics_list.append(f"Improvements destroyed in war: {war_table.total_units_lost()}")
+    statistics_list.append(f"Nuclear Missiles launched: {war_table.total_missiles_launched()}")
+    war_name, war_duration = war_table.find_longest_war()
     if war_name is not None:
         statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
     else:

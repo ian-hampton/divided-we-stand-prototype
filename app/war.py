@@ -190,7 +190,7 @@ class War:
 
         return combatant
 
-    def get_combatant(self, nation_id) -> Combatant:
+    def get_combatant(self, nation_id: str) -> Combatant:
 
         if nation_id in self.combatants:
             return Combatant(nation_id, self.combatants[nation_id], self.id)
@@ -458,6 +458,55 @@ class WarTable:
                 return False
             
         return True
+
+    def total_units_lost(self) -> int:
+        
+        total = 0
+        for war in self:
+            for combatant_id in war.combatants:
+                combatant = war.get_combatant(combatant_id)
+                total += combatant.lost_units
+
+        return total
+
+    def total_improvements_lost(self) -> int:
+        
+        total = 0
+        for war in self:
+            for combatant_id in war.combatants:
+                combatant = war.get_combatant(combatant_id)
+                total += combatant.lost_improvements
+
+        return total
+
+    def total_missiles_launched(self) -> int:
+        
+        total = 0
+        for war in self:
+            for combatant_id in war.combatants:
+                combatant = war.get_combatant(combatant_id)
+                total += combatant.launched_nukes
+
+        return total
+
+    def find_longest_war(self) -> tuple:
+        
+        longest_name = None
+        longest_time = 0
+        current_turn_num = core.get_current_turn_num(self.game_id)
+
+        for war in self:
+            
+            if war.outcome == "TBD":
+                war_duration = current_turn_num - war.start
+            else:
+                war_duration = war.end - war.start
+            
+            if war_duration > longest_time:
+                longest_name = war.name
+                longest_time = war_duration
+        
+        return longest_name, longest_time
 
     def add_warscore_from_occupations(self) -> None:
         """
