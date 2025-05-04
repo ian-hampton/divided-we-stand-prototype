@@ -556,7 +556,8 @@ class NationTable:
 
     def __iter__(self):
         for nation_id, nation_data in self.data.items():
-            yield Nation(nation_id, nation_data, self.game_id)
+            if nation_id != 99:
+                yield Nation(nation_id, nation_data, self.game_id)
 
     def __len__(self):
         return len(self.data)

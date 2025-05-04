@@ -237,7 +237,7 @@ class MainMap:
                 if region_unit.owner_id != 0 and region_unit.owner_id != 99:
                     nation = nation_table.get(region_unit.owner_id)
                     player_color_str = nation.color
-                elif region_unit.owner_id == 0 and "Foreign Invasion" in active_games_dict[self.game_id]["Active Events"]:
+                elif region_unit.owner_id == 99 and "Foreign Invasion" in active_games_dict[self.game_id]["Active Events"]:
                     player_color_str = active_games_dict[self.game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
                 unit_filepath = f'app/static/images/units/{region_unit.abbrev()}{player_color_str}.png'
                 # place unit

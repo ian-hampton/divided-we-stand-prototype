@@ -93,7 +93,7 @@ class Unit:
         """
         self.name = None
         self.health = 99
-        self.owner_id = 99
+        self.owner_id = 0
         self.type = None
         self.hit_value = 99
         self._save_changes()
@@ -191,7 +191,7 @@ class Unit:
                 self.clear()
                 # destroy improvement if needed
                 if target_region_improvement.name is not None and target_region_improvement.name != 'Capital' and target_region.owner_id != original_player_id:
-                    if original_player_id != 0:
+                    if original_player_id != 99:
                         playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
                         playerdata_list = core.read_file(playerdata_filepath, 1)
                         attacker_nation_name = playerdata_list[original_player_id - 1][1]
@@ -205,8 +205,6 @@ class Unit:
                         # log and destroy
                         wardata.append_war_log(war_name, f"    {defender_nation_name} {target_region_improvement.name} has been destroyed!")
                     target_region_improvement.clear()
-                if original_player_id == 0:
-                    original_player_id = 99
                 # occupation step
                 if target_region.owner_id != original_player_id:
                     target_region.set_occupier_id(original_player_id)
@@ -235,15 +233,15 @@ class Unit:
         wardata = WarData(self.game_id)
 
         # if no unit return False
-        if self.owner_id == 99 or other_player_id == 99:
+        if self.owner_id == 0 or other_player_id == 0:
             return False
 
         # if player_ids are the same than return False
         if self.owner_id == other_player_id:
             return False
         
-        # if attacking unit id = 0 return True
-        if other_player_id == 0:
+        # if other_player_id = 99 return True (defending unit is controlled by event)
+        if other_player_id == 99:
             return True
         
         # check if at war

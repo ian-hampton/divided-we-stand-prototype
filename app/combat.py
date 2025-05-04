@@ -18,7 +18,7 @@ def unit_vs_unit(attacking_unit: Unit, defending_unit: Unit) -> None:
         defending_unit (Unit): object representing defending unit
     """
 
-    if attacking_unit.owner_id == 0:
+    if attacking_unit.owner_id == 99:
         unit_vs_unit_fi(attacking_unit, defending_unit)
         return
 
@@ -242,7 +242,7 @@ def unit_vs_improvement(attacking_unit: Unit, defending_improvement: Improvement
 
     target_region_unit = Unit(defending_improvement.region_id, defending_improvement.game_id)
 
-    if attacking_unit.owner_id == 0:
+    if attacking_unit.owner_id == 99:
         unit_vs_improvement_fi(attacking_unit, defending_improvement)
         return
     elif attacking_unit.name == 'Special Forces' and not target_region_unit.is_hostile(attacking_unit.owner_id):

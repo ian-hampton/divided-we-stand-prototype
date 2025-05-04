@@ -27,7 +27,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 453,
                 255
@@ -65,7 +65,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 467,
                 400
@@ -102,7 +102,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 536,
                 360
@@ -138,7 +138,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 647,
                 268
@@ -174,7 +174,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 824,
                 254
@@ -214,7 +214,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WILVA": {
@@ -246,7 +246,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 417,
                 565
@@ -284,7 +284,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHOR": {
@@ -319,7 +319,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASOR": {
@@ -354,7 +354,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "IDPAN": {
@@ -389,7 +389,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1027,
                 499
@@ -428,7 +428,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STEID": {
@@ -463,7 +463,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESMT": {
@@ -496,7 +496,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASMT": {
@@ -529,7 +529,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTHWY": {
@@ -564,7 +564,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHWY": {
@@ -601,7 +601,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTHCT": {
@@ -634,7 +634,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 252,
                 1152
@@ -671,7 +671,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SACRA": {
@@ -707,7 +707,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 390,
                 1296
@@ -743,7 +743,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 315,
                 1383
@@ -783,7 +783,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 642,
                 1573
@@ -820,7 +820,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CENCT": {
@@ -854,7 +854,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 325,
                 1558
@@ -892,7 +892,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LOSAN": {
@@ -929,7 +929,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "INEMP": {
@@ -965,7 +965,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHBR": {
@@ -997,7 +997,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 761,
                 2053
@@ -1038,7 +1038,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASNV": {
@@ -1073,7 +1073,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHNV": {
@@ -1108,7 +1108,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LASVE": {
@@ -1141,7 +1141,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CACHE": {
@@ -1175,7 +1175,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1119,
                 1138
@@ -1213,7 +1213,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1242,
                 1296
@@ -1251,7 +1251,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWUT": {
@@ -1287,7 +1287,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SANJU": {
@@ -1321,7 +1321,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1404,
                 1512
@@ -1360,7 +1360,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTECO": {
@@ -1396,7 +1396,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWCO": {
@@ -1430,7 +1430,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1592,
                 1539
@@ -1469,7 +1469,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "MOHAV": {
@@ -1505,7 +1505,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 946,
                 1876
@@ -1544,7 +1544,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 893,
                 2122
@@ -1581,7 +1581,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1112,
                 1949
@@ -1618,7 +1618,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHAZ": {
@@ -1651,7 +1651,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASAZ": {
@@ -1688,7 +1688,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTWNM": {
@@ -1722,7 +1722,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTENM": {
@@ -1757,7 +1757,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWNM": {
@@ -1791,7 +1791,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STENM": {
@@ -1825,7 +1825,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESND": {
@@ -1857,7 +1857,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASND": {
@@ -1890,7 +1890,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESSD": {
@@ -1926,7 +1926,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASSD": {
@@ -1962,7 +1962,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESNE": {
@@ -1996,7 +1996,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CENNE": {
@@ -2031,7 +2031,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASNE": {
@@ -2067,7 +2067,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTHKS": {
@@ -2101,7 +2101,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHKS": {
@@ -2136,7 +2136,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "EASKS": {
@@ -2171,7 +2171,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "REDCA": {
@@ -2206,7 +2206,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GREEN": {
@@ -2242,7 +2242,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GRTPL": {
@@ -2276,7 +2276,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHOCT": {
@@ -2311,7 +2311,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TXPAN": {
@@ -2347,7 +2347,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "METRO": {
@@ -2382,7 +2382,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTETX": {
@@ -2418,7 +2418,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESTX": {
@@ -2452,7 +2452,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HILLC": {
@@ -2486,7 +2486,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CENTX": {
@@ -2521,7 +2521,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHTX": {
@@ -2554,7 +2554,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CBEND": {
@@ -2586,7 +2586,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 2479,
                 2728
@@ -2623,7 +2623,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 2625,
                 2510
@@ -2661,7 +2661,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 2761,
                 2544
@@ -2699,7 +2699,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTEMN": {
@@ -2731,7 +2731,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CENMN": {
@@ -2765,7 +2765,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWMN": {
@@ -2799,7 +2799,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STEMN": {
@@ -2834,7 +2834,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTWIA": {
@@ -2869,7 +2869,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTEIA": {
@@ -2904,7 +2904,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWIA": {
@@ -2938,7 +2938,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STEIA": {
@@ -2972,7 +2972,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTHMO": {
@@ -3009,7 +3009,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESMO": {
@@ -3044,7 +3044,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 2766,
                 1717
@@ -3082,7 +3082,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "OZARK": {
@@ -3116,7 +3116,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STEMO": {
@@ -3152,7 +3152,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3077,
                 1726
@@ -3192,7 +3192,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTEAR": {
@@ -3228,7 +3228,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3094,
                 1955
@@ -3266,7 +3266,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STEAR": {
@@ -3300,7 +3300,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3003,
                 2167
@@ -3340,7 +3340,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CROSS": {
@@ -3374,7 +3374,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ACADI": {
@@ -3406,7 +3406,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NEWOR": {
@@ -3439,7 +3439,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3114,
                 2498
@@ -3477,7 +3477,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CENWI": {
@@ -3511,7 +3511,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3131,
                 799
@@ -3547,7 +3547,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3234,
                 831
@@ -3586,7 +3586,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3064,
                 1098
@@ -3624,7 +3624,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "UPPER": {
@@ -3656,7 +3656,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3392,
                 690
@@ -3692,7 +3692,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3447,
                 917
@@ -3730,7 +3730,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3453,
                 1065
@@ -3767,7 +3767,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3561,
                 1076
@@ -3802,7 +3802,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3666,
                 961
@@ -3839,7 +3839,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3590,
                 1161
@@ -3879,7 +3879,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3159,
                 1259
@@ -3917,7 +3917,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3256,
                 1180
@@ -3955,7 +3955,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3039,
                 1378
@@ -3993,7 +3993,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWIL": {
@@ -4029,7 +4029,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3153,
                 1577
@@ -4069,7 +4069,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3295,
                 1533
@@ -4109,7 +4109,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3278,
                 1617
@@ -4147,7 +4147,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3420,
                 1238
@@ -4187,7 +4187,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3526,
                 1371
@@ -4223,7 +4223,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3436,
                 1411
@@ -4261,7 +4261,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3385,
                 1535
@@ -4303,7 +4303,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3522,
                 1508
@@ -4343,7 +4343,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CLEVE": {
@@ -4377,7 +4377,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "MIAVA": {
@@ -4411,7 +4411,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3609,
                 1375
@@ -4450,7 +4450,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3734,
                 1392
@@ -4489,7 +4489,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3629,
                 1469
@@ -4527,7 +4527,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3812,
                 1449
@@ -4564,7 +4564,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3889,
                 1353
@@ -4601,7 +4601,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3614,
                 1545
@@ -4640,7 +4640,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3254,
                 1786
@@ -4680,7 +4680,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3487,
                 1679
@@ -4721,7 +4721,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTWTN": {
@@ -4756,7 +4756,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NASHV": {
@@ -4790,7 +4790,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3380,
                 1832
@@ -4827,7 +4827,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3527,
                 1812
@@ -4866,7 +4866,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3769,
                 1798
@@ -4904,7 +4904,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHATT": {
@@ -4941,7 +4941,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3507,
                 1935
@@ -4981,7 +4981,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3123,
                 2185
@@ -5021,7 +5021,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3259,
                 2220
@@ -5057,7 +5057,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3232,
                 2404
@@ -5096,7 +5096,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3534,
                 2022
@@ -5135,7 +5135,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3405,
                 2224
@@ -5172,7 +5172,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3572,
                 2150
@@ -5210,7 +5210,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STEAL": {
@@ -5245,7 +5245,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "FLPAN": {
@@ -5279,7 +5279,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3713,
                 2479
@@ -5317,7 +5317,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3864,
                 2475
@@ -5358,7 +5358,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HALIF": {
@@ -5392,7 +5392,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4103,
                 2672
@@ -5432,7 +5432,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWFL": {
@@ -5464,7 +5464,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4100,
                 2888
@@ -5499,7 +5499,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4185,
                 2954
@@ -5540,7 +5540,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3636,
                 2071
@@ -5579,7 +5579,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3752,
                 1992
@@ -5616,7 +5616,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3732,
                 2156
@@ -5656,7 +5656,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWGA": {
@@ -5691,7 +5691,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3751,
                 2387
@@ -5730,7 +5730,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3837,
                 2284
@@ -5771,7 +5771,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "PIEDM": {
@@ -5803,7 +5803,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3820,
                 1960
@@ -5843,7 +5843,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4016,
                 1965
@@ -5881,7 +5881,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SCLOW": {
@@ -5914,7 +5914,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "MOUNT": {
@@ -5951,7 +5951,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "MTRLA": {
@@ -5987,7 +5987,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4027,
                 1864
@@ -6025,7 +6025,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4199,
                 1716
@@ -6062,7 +6062,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4270,
                 1730
@@ -6099,7 +6099,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4145,
                 1893
@@ -6136,7 +6136,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4239,
                 1959
@@ -6175,7 +6175,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4065,
                 1607
@@ -6213,7 +6213,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4228,
                 1425
@@ -6250,7 +6250,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STWVA": {
@@ -6286,7 +6286,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHVA": {
@@ -6322,7 +6322,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4107,
                 1671
@@ -6365,7 +6365,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "VALLE": {
@@ -6402,7 +6402,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3940,
                 1408
@@ -6441,7 +6441,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4094,
                 1406
@@ -6479,7 +6479,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESMD": {
@@ -6514,7 +6514,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4286,
                 1436
@@ -6556,7 +6556,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "DELAW": {
@@ -6591,7 +6591,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTWPA": {
@@ -6625,7 +6625,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4002,
                 1136
@@ -6663,7 +6663,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTEPA": {
@@ -6699,7 +6699,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4265,
                 1086
@@ -6739,7 +6739,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3995,
                 1311
@@ -6777,7 +6777,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4196,
                 1228
@@ -6815,7 +6815,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4204,
                 1291
@@ -6855,7 +6855,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4352,
                 1194
@@ -6892,7 +6892,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4435,
                 1132
@@ -6927,7 +6927,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4459,
                 1240
@@ -6964,7 +6964,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4257,
                 811
@@ -7002,7 +7002,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4170,
                 1028
@@ -7039,7 +7039,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4108,
                 971
@@ -7076,7 +7076,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4338,
                 822
@@ -7116,7 +7116,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4418,
                 831
@@ -7155,7 +7155,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4365,
                 960
@@ -7194,7 +7194,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4453,
                 1000
@@ -7231,7 +7231,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "RHODE": {
@@ -7267,7 +7267,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WESMA": {
@@ -7302,7 +7302,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4512,
                 936
@@ -7344,7 +7344,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "STHMA": {
@@ -7379,7 +7379,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTHVT": {
@@ -7412,7 +7412,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4524,
                 675
@@ -7450,7 +7450,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4505,
                 774
@@ -7487,7 +7487,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4589,
                 707
@@ -7525,7 +7525,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NTHME": {
@@ -7555,7 +7555,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4818,
                 549
@@ -7591,7 +7591,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     }
 }

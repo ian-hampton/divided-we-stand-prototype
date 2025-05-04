@@ -180,7 +180,7 @@ class Region:
 
         return False
     
-    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 99) -> bool:
+    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 0) -> bool:
         """
         Checks if there is an unit in unit_names in an adjacent region.
         
@@ -195,7 +195,7 @@ class Region:
         
         for region_id in self.adjacent_regions:
             region_unit = Unit(region_id, self.game_id)
-            if unit_owner_id != 99 and unit_owner_id != region_unit.owner_id:
+            if unit_owner_id != 0 and unit_owner_id != region_unit.owner_id:
                 continue
             if region_unit.name in unit_names:
                 return True

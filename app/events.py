@@ -1113,7 +1113,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 for region_id in regdata_dict:
                     region = Region(region_id, game_id)
                     region_unit = Unit(region_id, game_id)
-                    if region_unit.name != None and region_unit.owner_id == 0:
+                    if region_unit.name != None and region_unit.owner_id == 99:
                         destination_dict = {}
                         ending_region_id, priority = determine_target_region(region.adjacent_regions, destination_dict, game_id)
                         destination_dict[ending_region_id] = priority
@@ -1140,7 +1140,7 @@ def handle_active_event(event_name, public_actions_dict, private_actions_dict, a
                 invasion_unit_count = 0
                 for region_id in regdata_dict:
                     region_unit = Unit(region_id, game_id)
-                    if region_unit.name != None and region_unit.owner_id == 0:
+                    if region_unit.name != None and region_unit.owner_id == 99:
                         invasion_unit_count += 1
                 if invasion_unit_count == 0:
                     end_foreign_invasion(game_id)
