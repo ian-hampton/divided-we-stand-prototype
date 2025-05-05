@@ -538,7 +538,7 @@ def run_end_of_turn_checks(game_id: str) -> None:
     nation_table.update_records()
     nation_table.add_leaderboard_bonuses()
 
-def get_data_for_nation_sheet(game_id: str, player_id: int) -> dict:
+def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     '''
     Gathers all the needed data for a player's nation sheet data and spits it as a dict.
 
@@ -1171,6 +1171,47 @@ def validate_war_claims(game_id: str, war_justification: str, region_claims_list
             total += claim_cost
 
     return total
+
+def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
+    """
+    Identifies best missile defense to counter incoming missile. Returns None if not found.
+    """
+    
+    # get game data
+    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
+    target_region = Region(target_region_id, game_id)
+    target_region_improvement = Improvement(target_region_id, game_id)
+
+    defender_name = None
+    # tba - get priority for missile defense from game files
+    # tba - get defensive capabilities from game files
+
+    # check for MDN
+    if target_region_improvement.name == "Missile Defense Network":
+        defender_name = "Missile Defense Network"
+    else:
+        missile_defense_network_candidates_list = target_region.get_regions_in_radius(2)
+        for select_region_id in missile_defense_network_candidates_list:
+            select_region = Region(select_region_id, game_id)
+            select_region_improvement = Improvement(select_region_id, game_id)
+            if select_region_improvement.name == "Missile Defense Network" and select_region.owner_id == target_region.owner_id:
+                defender_name = "Missile Defense Network"
+                break
+
+    # check for MDS
+    if defender_name is None and missile_type == "Standard Missile":
+        if target_region_improvement.name == "Missile Defense System":
+            defender_name = "Missile Defense System"
+        elif target_region.check_for_adjacent_improvement({"Missile Defense System"}):
+            defender_name = "Missile Defense System"
+
+    # last resort - check for local defense
+    if defender_name is None and "Local Missile Defense" in target_nation.completed_research:
+        if target_region_improvement is not None and target_region_improvement.health != 0:
+            if target_region_improvement.missile_defense != 99:
+                defender_name = target_region_improvement.name
+
+    return defender_name
 
 # MISC SUB-FUNCTIONS
 ################################################################################

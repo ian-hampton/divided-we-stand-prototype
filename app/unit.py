@@ -50,9 +50,11 @@ class Unit:
         if self.name is not None:
             self.type = unit_data_dict[self.name]["Unit Type"]
             self.hit_value = unit_data_dict[self.name]["Combat Value"]
+            self.value = unit_data_dict[self.name]["Point Value"]
         else:
             self.type = None
             self.hit_value = None
+            self.value = None
 
     def _save_changes(self) -> None:
         """

@@ -20,6 +20,7 @@ class Combatant:
         self.justification: str = combatant_data["justification"]
         self.claims: dict = combatant_data["claims"]
 
+        # combatant war stats
         self.battles_won : int = combatant_data["statistics"]["battlesWon"]
         self.battles_lost : int = combatant_data["statistics"]["battlesLost"]
         self.destroyed_units : int = combatant_data["statistics"]["enemyUnitsDestroyed"]
@@ -64,6 +65,14 @@ class War:
         self.log: list = war_data["warLog"]
         self.combatants: dict = war_data["combatants"]
 
+        # warscore rewards
+        self.warscore_victory = 1
+        self.warscore_occupation = 2
+        self.warscore_destroy_improvement = 2
+        self.warscore_capital_capture = 20
+        self.warscore_nuclear_strike = 5
+
+        # attacker warscore records
         self.attacker_total: int = war_data["attackerWarScore"]["total"]
         self.attacker_occupation: int = war_data["attackerWarScore"]["occupation"]
         self.attacker_victories: int = war_data["attackerWarScore"]["combatVictories"]
@@ -72,6 +81,7 @@ class War:
         self.attacker_captures: int = war_data["attackerWarScore"]["capitalCaptures"]
         self.attacker_nuclear_strikes: int = war_data["attackerWarScore"]["nukedEnemyRegions"]
 
+        # defender warscore records
         self.defender_total: int = war_data["defenderWarScore"]["total"]
         self.defender_occupation: int = war_data["defenderWarScore"]["occupation"]
         self.defender_victories: int = war_data["defenderWarScore"]["combatVictories"]
@@ -477,12 +487,15 @@ class WarTable:
         # check if war name was provided
         war_id = self._get_id_from_name(war_identifier)
         if war_id is not None:
-            return Nation(war_id, self.data[war_id], self.game_id)
+            return War(war_id, self.data[war_id], self.game_id)
 
         raise Exception(f"Failed to retrieve war with identifier {war_identifier}.")
 
     def get_war_name(self, nation1_id: str, nation2_id: str) -> str | None:
         
+        if nation1_id == nation2_id:
+            return None
+
         for war in self:
             if war.outcome == "TBD" and nation1_id in war.combatants and nation2_id in war.combatants:
                 return war.name
@@ -566,9 +579,9 @@ class WarTable:
                 occupier_war_role = war.get_role(str(region.occupier_id))
                 occupier_nation = nation_table.get(str(region.occupier_id))
 
-                score = 2
+                score = war.warscore_occupation
                 if "Scorched Earth" in occupier_nation.completed_research:
-                    score = 3
+                    score += 1
                 
                 if "Attacker" in occupier_war_role:
                     war.attacker_occupation += score

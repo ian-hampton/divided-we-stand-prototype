@@ -49,8 +49,12 @@ class Improvement:
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         if self.name is not None:
             self.hit_value = improvement_data_dict[self.name]["Combat Value"]
+            self.missile_defense = improvement_data_dict[self.name]["Standard Missile Defense"]
+            self.nuke_defense = improvement_data_dict[self.name]["Nuclear Missile Defense"]
         else:
             self.hit_value = None
+            self.missile_defense = None
+            self.nuke_defense = None
         region_obj = Region(self.region_id, self.game_id)
         self.owner_id = region_obj.owner_id
         self.occupier_id = region_obj.occupier_id
@@ -59,11 +63,17 @@ class Improvement:
         """
         Saves changes made to Improvement object to game files.
         """
+
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+
+        if self.name is not None and self.health < 0:
+            self.health = 0
+
         self.data["name"] = self.name
         self.data["health"] = self.health
         self.data["turnTimer"] = self.turn_timer
+
         regdata_dict[self.region_id]["improvementData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
