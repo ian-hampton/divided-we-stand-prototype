@@ -607,7 +607,7 @@ def generate_player_route(full_game_id, player_id):
     def player_route():
         page_title = f'Player #{player_id} Nation Sheet'
         current_turn_num = core.get_current_turn_num(full_game_id)
-        player_information_dict = core.get_data_for_nation_sheet(full_game_id, player_id)
+        player_information_dict = core.get_data_for_nation_sheet(full_game_id, str(player_id))
         return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
 
 #GENERATION PROCEDURE
