@@ -96,6 +96,19 @@ a {
             {% endfor %}
             <div class="section">
                 <div class="row-spaced">
+                    <div class="cell-left"> <b>Longest Alliance</b> </div>
+                    <div class="cell-right"> {{ leaderboard_records_dict["Longest Alliance"]["Value"] }} </div>
+                </div>
+                <div class="row-spaced">
+                    <div class="cell-left"> {{ leaderboard_records_dict["Longest Alliance"]["Player Name"] }} </div>
+                    <div class="cell-right"> {{ leaderboard_records_dict["Longest Alliance"]["Game Name"] }} </div>
+                </div>
+                <div class="row-spaced">
+                    <div class="cell-left"> {{ leaderboard_records_dict["Longest Alliance"]["Alliance Name"] }} </div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="row-spaced">
                     <div class="cell-left"> <b>Longest War</b> </div>
                     <div class="cell-right"> {{ leaderboard_records_dict["Longest War"]["Value"] }} </div>
                 </div>

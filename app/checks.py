@@ -583,7 +583,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # check if nation has the greatest sum
                 nation_name_sum = sum_dict[nation.name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     score += 1
@@ -599,7 +599,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # check if nation has the greatest sum
                 nation_name_sum = sum_dict[nation.name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     score += 1
@@ -616,7 +616,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # check if nation has the greatest sum
                 nation_name_sum = sum_dict[nation.name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     score += 1
@@ -639,7 +639,7 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                 # check if nation has the greatest sum
                 nation_name_sum = sum_dict[nation.name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     score += 1

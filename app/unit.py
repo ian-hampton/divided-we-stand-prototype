@@ -62,10 +62,9 @@ class Unit:
         """
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
-        self.data["name"] = self.name
-        self.data["health"] = self.health
-        self.data["ownerID"] = self.owner_id
-        regdata_dict[self.region_id]["unitData"] = self.data
+        regdata_dict[self.region_id]["unitData"]["name"] = self.name
+        regdata_dict[self.region_id]["unitData"]["health"] = self.health
+        regdata_dict[self.region_id]["unitData"]["ownerID"] = self.owner_id
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
     
@@ -163,7 +162,6 @@ class Unit:
         
         else:
             # to-do add checks from movement action to here when player log class is made
-
             # get war information
             wardata = WarData(self.game_id)
 
