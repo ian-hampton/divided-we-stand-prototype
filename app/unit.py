@@ -175,7 +175,7 @@ class Unit:
                 target_region_unit.load_attributes()
 
             # if target improvement hostile conduct combat
-            if target_region_improvement.is_hostile(self.owner_id):
+            if self.name is not None and target_region_improvement.is_hostile(self.owner_id):
                 combat.unit_vs_improvement(self, target_region_improvement)
                 # reload objects
                 self.load_attributes()
