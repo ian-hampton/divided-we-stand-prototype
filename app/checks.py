@@ -729,7 +729,7 @@ def update_income(game_id: str) -> None:
         }
         dollars_upkeep_sum = sum(player_upkeep_costs_dict["Dollars"][key] for key in player_upkeep_costs_dict["Dollars"])
         oil_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"])
-        uranium_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"])
+        uranium_upkeep_sum = sum(player_upkeep_costs_dict["Uranium"][key] for key in player_upkeep_costs_dict["Uranium"])
         main_upkeep_sum = sum(player_upkeep_costs_dict["Oil"][key] for key in player_upkeep_costs_dict["Oil"]) + sum(player_upkeep_costs_dict["Energy"][key] for key in player_upkeep_costs_dict["Energy"])
         dollars_upkeep_sum = round(dollars_upkeep_sum, 2)
         oil_upkeep_sum = round(oil_upkeep_sum, 2)
@@ -1419,9 +1419,9 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                             case "Coal" | "Oil" | "Green Energy":
                                 sum_dict[temp_nation_name] += gross_income
                 # check if nation has the greatest sum
-                nation_name_sum = sum_dict[temp_nation_name]
+                nation_name_sum = sum_dict[nation_name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     vc_1_completed = True
@@ -1437,9 +1437,9 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                             case "Basic Materials" | "Common Metals":
                                 sum_dict[temp_nation_name] += gross_income
                 # check if nation has the greatest sum
-                nation_name_sum = sum_dict[temp_nation_name]
+                nation_name_sum = sum_dict[nation_name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     vc_1_completed = True
@@ -1456,9 +1456,9 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                     sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Missile Defense System')]
                     sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('Missile Defense Network')]
                 # check if nation has the greatest sum
-                nation_name_sum = sum_dict[temp_nation_name]
+                nation_name_sum = sum_dict[nation_name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     vc_1_completed = True
@@ -1481,9 +1481,9 @@ def check_victory_conditions(game_id: str, player_id: int, current_turn_num: int
                     temp_improvement_count_list = ast.literal_eval(player[27])
                     sum_dict[player[1]] += temp_improvement_count_list[improvement_name_list.index('City')]
                 # check if nation has the greatest sum
-                nation_name_sum = sum_dict[temp_nation_name]
+                nation_name_sum = sum_dict[nation_name]
                 for temp_nation_name, sum in sum_dict.items():
-                    if sum >= nation_name_sum:
+                    if temp_nation_name != nation_name and sum >= nation_name_sum:
                         nation_name_sum = False
                 if nation_name_sum:
                     vc_1_completed = True

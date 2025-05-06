@@ -967,11 +967,13 @@ def get_library(game_id):
 def run_end_of_turn_checks(game_id, current_turn_num, player_count):
     
     checks.prune_alliances(game_id)
-    checks.update_military_capacity(game_id)
     for i in range(player_count):
         player_id = i + 1
         #update playerdata improvement counts
         checks.update_improvement_count(game_id, player_id)
+    checks.update_military_capacity(game_id)
+    for i in range(player_count):
+        player_id = i + 1
         #check refinery ratios
         checks.ratio_check(game_id, player_id)
         #check military capacity
