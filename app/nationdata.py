@@ -281,7 +281,7 @@ class Nation:
 
         return self._resources[resource_name]["stored"]
 
-    def update_stockpile(self, resource_name: str, amount: int | float) -> None:
+    def update_stockpile(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
         """
         Updates the stockpile of a given resource.
         """
@@ -290,6 +290,10 @@ class Nation:
         
         if not isinstance(amount, float) and not isinstance(amount, int):
             raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["stored"] = f"{amount:.2f}"
+            return
         
         stored = float(self._resources[resource_name]["stored"])
         stored += amount

@@ -154,7 +154,6 @@ class Unit:
         target_region_unit = Unit(target_region_id, self.game_id)
 
         if withdraw:
-            # to-do: add checks from withdraw action function to here when player log class is made
             original_region_id = copy.deepcopy(self.region_id)
             self.region_id = target_region_unit.region_id
             self._save_changes()

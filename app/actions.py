@@ -3,6 +3,7 @@ import json
 import random
 
 from app import core
+from app.nationdata import Nation
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
@@ -1007,8 +1008,93 @@ def resolve_trade_actions(game_id: str) -> None:
 
         trade_action = input("Are there any additional trade actions this turn? (Y/n) ")
 
-def resolve_peace_actions(game_id: str, actions_list: list[SurrenderAction | WhitePeaceAction]) -> None:
-    pass
+def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], white_peace_list: list[WhitePeaceAction]) -> None:
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    war_table = WarTable(game_id)
+    notifications = Notifications(game_id)
+    current_turn_num = core.get_current_turn_num(game_id)
+
+    # execute surrender actions
+    for action in surrender_list:
+        
+        surrendering_nation = nation_table.get(action.id)
+        winning_nation = nation_table.get(action.target_nation)
+
+       # check if peace is possible
+        if not _peace_action_valid(war_table, nation_table, surrendering_nation, winning_nation, current_turn_num):
+            continue
+
+        # get war and war outcome
+        war_name = war_table.get_war_name(surrendering_nation.id, winning_nation.id)
+        war = war_table.get(war_name)
+        c1 = war.get_combatant(surrendering_nation.id)
+        if 'Attacker' in c1.role:
+            outcome = "Defender Victory"
+        else:
+            outcome = "Attacker Victory"
+
+        # save nation data
+        nation_table.save(surrendering_nation)
+
+        # end war
+        war.end_conflict(outcome)
+        war_table.save(war)
+        notifications.append(f"{surrendering_nation.name} surrendered to {winning_nation.name}.", 4)
+        notifications.append(f"{war_name} has ended.", 4)
+
+    # execute white peace actions
+    white_peace_dict = {}
+    for action in white_peace_list:
+        
+        surrendering_nation = nation_table.get(action.id)
+        winning_nation = nation_table.get(action.target_nation)
+
+        # check if peace is possible
+        if not _peace_action_valid(war_table, nation_table, surrendering_nation, winning_nation, current_turn_num):
+            continue
+
+        # add white peace request to white_peace_dict
+        war_name = war_table.get_war_name(surrendering_nation.id, winning_nation.id)
+        if war_name in white_peace_dict:
+            white_peace_dict[war_name] += 1
+        else:
+            white_peace_dict[war_name] = 1
+
+    # process white peace if both sides agreed
+    for war_name in white_peace_dict:
+        if white_peace_dict[war_name] == 2:
+            war = war_table.get(war_name)
+            war.end_conflict("White Peace")
+            war_table.save(war)
+            notifications.append(f'{war_name} has ended with a white peace.', 4)
+
+def _peace_action_valid(war_table: WarTable, nation_table: NationTable, surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
+
+    # check that war exists
+    war_name = war_table.get_war_name(surrendering_nation.id, winning_nation.id)
+    if war_name is None:
+        surrendering_nation.action_log.append(f"Failed to surrender to {winning_nation.name}. You are not at war with that nation.")
+        nation_table.save(surrendering_nation)
+        return False
+
+    # check that surrendee(?) has authority to surrender
+    war = war_table.get(war_name)
+    c1 = war.get_combatant(surrendering_nation.id)
+    c2 = war.get_combatant(winning_nation.id)
+    if 'Main' not in c1.role or 'Main' not in c2.role:
+        surrendering_nation.action_log.append(f"Failed to surrender to {winning_nation.name}. You are not the main attacker/defender or {winning_nation.name} is not the main attacker/defender.")
+        nation_table.save(surrendering_nation)
+        return False
+
+    # check that it has been 4 turns since war began
+    if current_turn_num - war.start < 4:
+        surrendering_nation.action_log.append(f"Failed to surrender to {winning_nation.name}. At least four turns must pass before peace can be made.")
+        nation_table.save(surrendering_nation)
+        return False
+
+    return True
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
     

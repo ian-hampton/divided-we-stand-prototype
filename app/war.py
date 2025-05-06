@@ -18,6 +18,7 @@ class Combatant:
         self.name: str = combatant_data["name"]
         self.role: str = combatant_data["role"]
         self.justification: str = combatant_data["justification"]
+        self.target: str = combatant_data["targetID"]
         self.claims: dict = combatant_data["claims"]
 
         # combatant war stats
@@ -30,12 +31,13 @@ class Combatant:
         self.launched_missiles : int = combatant_data["statistics"]["missilesLaunched"]
         self.launched_nukes : int = combatant_data["statistics"]["nukesLaunched"]
 
-    def _build(nation: Nation, role: str, war_id: str):
+    def _build(nation: Nation, role: str, target_id: str, war_id: str):
 
         combatant_data = {
             "name": nation.name,
             "role": role,
             "justification": "TBD",
+            "targetID": target_id,
             "claims": {},
             "statistics": {
                 "battlesWon": 0,
@@ -193,9 +195,56 @@ class War:
             
             return war_name
     
-    def add_combatant(self, nation: Nation, role: str) -> Combatant:
+    def _resolve_war_justification(self, nation_id: str):
+
+        from app.improvement import Improvement
         
-        combatant = Combatant._build(nation, role, self.id)
+        # get winner data
+        nation_table = NationTable(self.game_id)
+        winner_nation = nation_table.get(nation_id)
+        winner_combatant_data = self.get_combatant(nation_id)
+
+        match winner_combatant_data.justification:
+
+            case "Border Skirmish" | "Conquest":
+                for region_id, original_owner_id in winner_combatant_data.claims.items():
+                    region = Region(region_id, self.game_id)
+                    region_improvement = Improvement(region_id, self.game_id)
+                    
+                    if str(region.owner_id) != original_owner_id:
+                        continue
+                        
+                    if region_improvement.name is not None:
+                        looser_nation = nation_table.get(original_owner_id)
+                        looser_nation.improvement_counts[region_improvement.name] -= 1
+                        winner_nation.improvement_counts[region_improvement.name] += 1
+                        nation_table.save(looser_nation)
+                    
+                    region.set_owner_id(int(winner_nation.id))
+                    region.set_occupier_id(0)
+                        
+            case "Animosity":
+                looser_nation = nation_table.get(winner_combatant_data.target)
+                winner_nation.update_stockpile("Political Power", 10)
+                winner_nation.update_stockpile("Technology", 10)
+                looser_nation.update_stockpile("Political Power", 0, overwrite=True)
+                nation_table.save(looser_nation)
+
+            case "Subjugation":
+                looser_nation = nation_table.get(winner_combatant_data.target)
+                looser_nation.status = f"Puppet State of {winner_nation.name}"
+                nation_table.save(looser_nation)
+
+            case "Independence":
+                looser_nation = nation_table.get(winner_combatant_data.target)
+                looser_nation.status = "Independent Nation"
+                nation_table.save(looser_nation)
+
+        nation_table.save(winner_nation)
+
+    def add_combatant(self, nation: Nation, role: str, target_id: str) -> Combatant:
+        
+        combatant = Combatant._build(nation, role, target_id, self.id)
         self.save_combatant(combatant)
 
         return combatant
@@ -213,6 +262,7 @@ class War:
             "name": combatant.name,
             "role": combatant.role,
             "justification": combatant.justification,
+            "targetID": combatant.target,
             "claims": combatant.claims,
             "statistics": {
                 "battlesWon": combatant.battles_won,
@@ -229,9 +279,12 @@ class War:
         self.combatants[combatant.id] = combatant_data
 
     def get_role(self, nation_id: str) -> str:
-
-        combatant = self.get_combatant(nation_id)
-        return combatant.role
+        
+        if nation_id in self.combatants:
+            combatant = self.get_combatant(nation_id)
+            return combatant.role
+        
+        return None
 
     def get_main_combatant_ids(self) -> tuple:
 
@@ -259,34 +312,43 @@ class War:
 
             if combatant.justification == "TBD":
                 
-                war_justification = input(f'Please enter {combatant.name} war justification for {self.name} or enter SKIP to postpone: ')
+                war_justification = input(f"Please enter {combatant.name} war justification for {self.name} or enter SKIP to postpone: ")
+                if war_justification == "SKIP":
+                    continue
+
+                # process war claims
+                region_claims_list = []
+                if war_justification in ["Border Skirmish", "Conquest"]:
+
+                    combatant.target = "N/A"
+                    
+                    # get claims and calculate political power cost
+                    claim_cost = -1
+                    while claim_cost == -1:
+                        region_claims_str = input(f"List the regions that {combatant.name} is claiming using {war_justification}: ")
+                        region_claims_list = region_claims_str.split(',')
+                        claim_cost = core.validate_war_claims(self.game_id, war_justification, region_claims_list)
+
+                    # pay political power cost
+                    combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
+                    if float(combatant_nation.get_stockpile("Political Power")) < 0:
+                        nation_table.reload()
+                        combatant_nation = nation_table.get(combatant_id)
+                        combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
+                        nation_table.save(combatant_nation)
+                        continue
                 
-                if war_justification != 'SKIP':
-
-                    # validate war claims
-                    region_claims_list = []
-                    if war_justification in ["Border Skirmish", "Conquest"]:
-                        
-                        # get claims and calculate political power cost
-                        claim_cost = -1
-                        while claim_cost == -1:
-                            region_claims_str = input(f"List the regions that {combatant.name} is claiming using {war_justification}: ")
-                            region_claims_list = region_claims_str.split(',')
-                            claim_cost = core.validate_war_claims(self.game_id, war_justification, region_claims_list)
-
-                        # pay political power cost
-                        combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
-                        if float(combatant_nation.get_stockpile("Political Power")) < 0:
-                            nation_table.reload()
-                            combatant_nation = nation_table.get(combatant_id)
-                            combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
-                            nation_table.save(combatant_nation)
-                            continue
-
-                    # update information
-                    combatant.justification = war_justification
-                    combatant.claims = region_claims_list
-                    self.save_combatant(combatant)
+                # OR handle war justification that does not seize territory
+                else:
+                    
+                    # get target id
+                    target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {war_justification}: ")
+                    combatant.target = str(target_id)
+                
+                # update information
+                combatant.justification = war_justification
+                combatant.claims = region_claims_list
+                self.save_combatant(combatant)
 
     def calculate_score_threshold(self) -> tuple:
         
@@ -324,7 +386,59 @@ class War:
         return attacker_threshold, defender_threshold
 
     def end_conflict(self, outcome: str) -> None:
-        pass
+        
+        # get game data
+        nation_table = NationTable(self.game_id)
+        current_turn_num = core.get_current_turn_num(self.game_id)
+        
+        # resolve war justifications
+        truce_length = 4
+        match outcome:
+            
+            case "Attacker Victory":
+                for combatant_id in self.combatants:
+                    combatant = self.get_combatant(combatant_id)
+                    if "Attacker" in combatant.role:
+                        self._resolve_war_justification(combatant_id)
+                    if "Main Attacker" == combatant.role and combatant.justification not in ["Animosity", "Border Skirmish"]:
+                        truce_length = 8
+
+            case "Defender Victory":
+                for combatant_id in self.combatants:
+                    combatant = self.get_combatant(combatant_id)
+                    if "Defender" in combatant.role:
+                        self._resolve_war_justification(combatant_id)
+                    if "Main Defender" == combatant.role and combatant.justification not in ["Animosity", "Border Skirmish"]:
+                        truce_length = 8
+        
+        # add truce periods
+        for combatant_id in self.combatants:
+            attacker = self.get_combatant(combatant_id)
+            if 'Attacker' not in attacker.role:
+                continue
+            signatories_list = [False] * len(nation_table)
+            for temp_id in self.combatants:
+                defender = self.get_combatant(temp_id)
+                if temp_id == combatant_id or 'Defender' not in defender.role:
+                    continue
+                signatories_list[int(attacker.id) - 1] = True
+                signatories_list[int(defender.id) - 1] = True
+                core.add_truce_period(self.game_id, signatories_list, truce_length)
+
+        # update war
+        self.end = current_turn_num
+        self.outcome = outcome
+
+        # end occupations
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            if str(region.owner_id) in self.combatants and str(region.occupier_id) in self.combatants:
+                region.set_occupier_id(0)
+
+        # withdraw units
+        core.withdraw_units(self.game_id)
 
 class WarTable:
     
@@ -389,13 +503,13 @@ class WarTable:
         new_war: War = War.build(self.game_id, war_id, main_attacker, main_defender, war_justification)
 
         # add main attacker
-        combatant = new_war.add_combatant(main_attacker, "Main Attacker")
+        combatant = new_war.add_combatant(main_attacker, "Main Attacker", main_defender.id)
         combatant.justification = war_justification
         combatant.claims = self._claim_pairs(war_claims)
         new_war.save_combatant(combatant)
 
         # add main defender
-        combatant = new_war.add_combatant(main_defender, "Main Defender")
+        combatant = new_war.add_combatant(main_defender, "Main Defender", "TBD")
 
         # call in main attacker allies
         # possible allies: puppet states
@@ -409,7 +523,7 @@ class WarTable:
                 and not alliance_table.are_allied(main_defender.name, ally.name)         # ally cannot be allied with defender
                 and not alliance_table.former_ally_truce(main_defender.name, ally.name)  # ally cannot be recently allied with defender
             ):
-                combatant = new_war.add_combatant(ally, "Secondary Attacker")
+                combatant = new_war.add_combatant(ally, "Secondary Attacker", "TBD")
 
         # call in main defender allies
         # possible allies: puppet states, defensive pacts, overlord
@@ -428,7 +542,7 @@ class WarTable:
                 and not alliance_table.are_allied(main_attacker.name, ally.name)         # ally cannot be allied with attacker
                 and not alliance_table.former_ally_truce(main_attacker.name, ally.name)  # ally cannot be recently allied with attacker
             ):
-                combatant = new_war.add_combatant(ally, "Secondary Defender")
+                combatant = new_war.add_combatant(ally, "Secondary Defender", "TBD")
         
         self.save(new_war)
         return new_war

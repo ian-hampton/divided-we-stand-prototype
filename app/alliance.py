@@ -110,8 +110,8 @@ class Alliance:
                 nation2 = nation_table.get(nation2_name)
                 
                 signatories_list = [False] * len(nation_table)
-                signatories_list[int(nation1.id)] = True
-                signatories_list[int(nation2.id)] = True
+                signatories_list[int(nation1.id) - 1] = True
+                signatories_list[int(nation2.id) - 1] = True
                 core.add_truce_period(self.game_id, signatories_list, 2)
 
         # dissolve alliance

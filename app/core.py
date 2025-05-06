@@ -244,7 +244,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # resolve public actions
     actions.resolve_trade_actions(game_id)
     print("Resolving public actions...")
-    actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"] + actions_dict["WhitePeaceAction"])
+    actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"], actions_dict["WhitePeaceAction"])
     actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
     actions.resolve_alliance_leave_actions(game_id, actions_dict["AllianceLeaveAction"])
     actions.resolve_alliance_create_actions(game_id, actions_dict["AllianceCreateAction"])
@@ -1137,7 +1137,7 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
         attacker_truce = ast.literal_eval(truce[int(nation1_id)])
         defender_truce = ast.literal_eval(truce[int(nation2_id)])
         
-        if attacker_truce and defender_truce and int(truce[11]) > current_turn_num:
+        if attacker_truce and defender_truce and int(len(truce)) > current_turn_num:
             return True
         
     return False
@@ -1212,6 +1212,32 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
                 defender_name = target_region_improvement.name
 
     return defender_name
+
+def withdraw_units(game_id: str):
+
+    nation_table = NationTable(game_id)
+    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+        regdata_dict = json.load(json_file)
+
+    for region_id in regdata_dict:
+        region = Region(region_id, game_id)
+        region_unit = Unit(region_id, game_id)
+        
+        # a unit can only be present in another nation without occupation if a war just ended 
+        if region_unit.name is not None and region_unit.owner_id != region.owner_id and region.occupier_id == 0:
+            
+            nation = nation_table.get(str(region_unit.owner_id))
+            target_id = region.find_suitable_region()
+            
+            if target_id is not None:
+                nation.action_log.append(f"Withdrew {region_unit.name} {region_unit.region_id} to {target_id}.")
+                region_unit.move(Region(target_id, game_id), withdraw=True)
+            else:
+                nation.action_log.append(f"Failed to withdraw {region_unit.name} {region_unit.region_id}. Unit disbanded!")
+                nation.unit_counts[region_unit.name] -= 1
+                region_unit.clear()
+            
+            nation_table.save(nation)
 
 # MISC SUB-FUNCTIONS
 ################################################################################

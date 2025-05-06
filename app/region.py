@@ -202,7 +202,7 @@ class Region:
 
         return False
     
-    def find_suitable_region(self) -> str:
+    def find_suitable_region(self) -> str | None:
         """
         Finds a region to move the unit in this region to.
         Called only for withdraws at the moment, but this function could be generalized in the future.
@@ -231,9 +231,9 @@ class Region:
 
             # check if region is suitable
             if (
-                current_region.owner_id == withdrawing_unit.owner_id # region must be owned by the unit owner
-                and current_region_unit.name is None # region must not have another unit in it
-                and current_region.occupier_id == 0 # region must not be occupied by another nation
+                current_region.owner_id == withdrawing_unit.owner_id    # region must be owned by the unit owner
+                and current_region_unit.name is None                    # region must not have another unit in it
+                and current_region.occupier_id == 0                     # region must not be occupied by another nation
             ):
                 return current_region_id
             
@@ -243,7 +243,6 @@ class Region:
                     queue.append(adjacent_id)
 
         # return None if we failed to find a region
-        # ( you better hope that doesn't happen because there are 200+ regions to check )
         return None
     
     # combat methods
