@@ -978,7 +978,7 @@ def prune_alliances(game_id: str) -> None:
     notifications = Notifications(game_id)
 
     for alliance in alliance_table:
-        if len(alliance.current_members) < 2:
+        if alliance.is_active and len(alliance.current_members) < 2:
             alliance.end()
             alliance_table.save(alliance)
             notifications.append(f"{alliance.name} has dissolved.", 7)
