@@ -193,7 +193,7 @@ class Unit:
                 war_table = WarTable(self.game_id)
 
                 # load war and combatant data
-                attacking_nation = nation_table.get(str(self.owner_id))
+                attacking_nation = nation_table.get(str(original_player_id))
                 defending_nation = nation_table.get(str(target_region_improvement.owner_id))
                 war_name = war_table.get_war_name(attacking_nation.id, defending_nation.id)
                 war = war_table.get(war_name)
@@ -240,8 +240,8 @@ class Unit:
         Returns:
             bool: True if this unit is hostile to provided player_id. False otherwise.
         """
-        from app.wardata import WarData
-        wardata = WarData(self.game_id)
+
+        war_table = WarTable(self.game_id)
 
         # if no unit return False
         if self.owner_id == 0 or other_player_id == 0:
@@ -256,7 +256,7 @@ class Unit:
             return True
         
         # check if at war
-        if wardata.are_at_war(self.owner_id, other_player_id):
+        if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None:
             return True
-        else:
-            return False
+        
+        return False

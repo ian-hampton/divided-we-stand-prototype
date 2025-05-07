@@ -417,12 +417,12 @@ def determine_region_color(owner_id: int, occupier_id: int, player_color_list: l
         fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
         fill_color = palette.hex_to_tup(fill_color, True)
     if occupier_id != 0 and occupier_id != 99:
-        fill_color = palette.hex_to_tup(player_color_list[occupier_id - 1], True)
-        fill_color = palette.normal_to_occupied[fill_color]
+        fill_color = palette.normal_to_occupied[player_color_list[occupier_id - 1]]
+        fill_color = palette.hex_to_tup(fill_color, True)
     elif occupier_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
         fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-        fill_color = palette.hex_to_tup(fill_color, True)
         fill_color = palette.normal_to_occupied[fill_color]
+        fill_color = palette.hex_to_tup(fill_color, True)
         
     return fill_color
 

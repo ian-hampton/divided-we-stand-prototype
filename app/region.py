@@ -259,23 +259,25 @@ class Region:
         Returns:
             bool: True if all checks pass. False otherwise.
         """
-        from app.wardata import WarData
-        wardata = WarData(self.game_id)
+        
+        from app.war import WarTable
+        war_table = WarTable(self.game_id)
 
         # you can always move into regions owned by you
         if self.owner_id == other_player_id:
             return True
 
         # you may move into unoccupied regions owned by an enemy
-        if wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id == 0:
+        if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None and self.occupier_id == 0:
             return True
+        
         # you may move into occupied regions owned by an enemy in two cases
-        elif wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id != 0:
+        elif war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None and self.occupier_id != 0:
             # you are the occupier
             if self.occupier_id == other_player_id:
                 return True
             # you are also at war with the occupier
-            if wardata.are_at_war(self.occupier_id, other_player_id):
+            if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None:
                 return True
                 
         return False
