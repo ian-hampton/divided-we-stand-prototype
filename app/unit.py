@@ -5,6 +5,7 @@ from app import core
 from app.region import Region
 from app.improvement import Improvement
 from app.nationdata import NationTable
+from app.war import WarTable
 
 class Unit:
 
@@ -146,12 +147,14 @@ class Unit:
         Returns:
             bool: True if action succeeded, False otherwise.
         """
-        from app import combat
-        from app.wardata import WarData
-        target_region_id = target_region.region_id
-        target_region_improvement = Improvement(target_region_id, self.game_id)
-        target_region_unit = Unit(target_region_id, self.game_id)
 
+        from app import combat
+
+        # get target info
+        target_region_improvement = Improvement(target_region.region_id, self.game_id)
+        target_region_unit = Unit(target_region.region_id, self.game_id)
+
+        # follow withdraw procedure if this movement is a withdraw
         if withdraw:
             original_region_id = copy.deepcopy(self.region_id)
             self.region_id = target_region_unit.region_id
@@ -159,59 +162,68 @@ class Unit:
             self.region_id = original_region_id
             self.clear()
             return True
-        
-        else:
-            # to-do add checks from movement action to here when player log class is made
-            # get war information
-            wardata = WarData(self.game_id)
 
-            # if target unit hostile conduct combat
-            if target_region_unit.is_hostile(self.owner_id):
-                combat.unit_vs_unit(self, target_region_unit)
-                # reload objects
-                self.load_attributes()
-                target_region_unit.load_attributes()
+        # if target unit hostile conduct combat
+        if target_region_unit.is_hostile(self.owner_id):
+            combat.unit_vs_unit(self, target_region_unit)
+            self.load_attributes()
+            target_region_unit.load_attributes()
 
-            # if target improvement hostile conduct combat
-            if self.name is not None and target_region_improvement.is_hostile(self.owner_id):
-                combat.unit_vs_improvement(self, target_region_improvement)
-                # reload objects
-                self.load_attributes()
-                target_region_improvement.load_attributes()
+        # if target improvement hostile conduct combat
+        if self.name is not None and target_region_improvement.is_hostile(self.owner_id):
+            combat.unit_vs_improvement(self, target_region_improvement)
+            self.load_attributes()
+            target_region_improvement.load_attributes()
 
-            # if no resistance and still alive complete move
-            if not target_region_unit.is_hostile(self.owner_id) and not target_region_improvement.is_hostile(self.owner_id) and self.name is not None:
-                # move unit
-                original_player_id = copy.deepcopy(self.owner_id)
-                original_region_id = copy.deepcopy(self.region_id)
-                self.region_id = target_region_unit.region_id
-                self._save_changes()
-                self.region_id = original_region_id
-                self.clear()
-                # destroy improvement if needed
-                if target_region_improvement.name is not None and target_region_improvement.name != 'Capital' and target_region.owner_id != original_player_id:
-                    if original_player_id != 99:
-                        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-                        playerdata_list = core.read_file(playerdata_filepath, 1)
-                        attacker_nation_name = playerdata_list[original_player_id - 1][1]
-                        defender_nation_name = playerdata_list[target_region_improvement.owner_id - 1][1]
-                        war_name = wardata.are_at_war(original_player_id, target_region_improvement.owner_id, True)
-                        attacker_war_role = wardata.get_war_role(attacker_nation_name, war_name)
-                        # award points
-                        wardata.statistic_add(war_name, attacker_nation_name, "enemyImprovementsDestroyed")
-                        wardata.statistic_add(war_name, defender_nation_name, "friendlyImprovementsDestroyed")
-                        wardata.warscore_add(war_name, attacker_war_role, "enemyImprovementsDestroyed", 2)
-                        # log and destroy
-                        wardata.append_war_log(war_name, f"    {defender_nation_name} {target_region_improvement.name} has been destroyed!")
-                    target_region_improvement.clear()
-                # occupation step
-                if target_region.owner_id != original_player_id:
-                    target_region.set_occupier_id(original_player_id)
-                else:
-                    target_region.set_occupier_id(0)
-                target_region._save_changes()
+        # if no resistance and still alive complete move
+        if self.name is not None and not target_region_unit.is_hostile(self.owner_id) and not target_region_improvement.is_hostile(self.owner_id):
+            
+            # move unit
+            original_player_id = copy.deepcopy(self.owner_id)
+            original_region_id = copy.deepcopy(self.region_id)
+            self.region_id = target_region_unit.region_id
+            self._save_changes()
+            self.region_id = original_region_id
+            self.clear()
+            
+            # destroy improvement if needed
+            if target_region_improvement.name is not None and target_region_improvement.name != 'Capital' and target_region.owner_id != original_player_id:
+                
+                nation_table = NationTable(self.game_id)
+                war_table = WarTable(self.game_id)
 
-                return True
+                # load war and combatant data
+                attacking_nation = nation_table.get(str(self.owner_id))
+                defending_nation = nation_table.get(str(target_region_improvement.owner_id))
+                war_name = war_table.get_war_name(attacking_nation.id, defending_nation.id)
+                war = war_table.get(war_name)
+                attacking_nation_combatant_data = war.get_combatant(attacking_nation.id)
+                defending_nation_combatant_data = war.get_combatant(defending_nation.id)
+                
+                # award points
+                war.attacker_destroyed_improvements += war.warscore_destroy_improvement
+                attacking_nation_combatant_data.destroyed_improvements += 1
+                defending_nation_combatant_data.lost_improvements += 1
+                
+                # save war data
+                war.log.append(f"    {defending_nation.name} {target_region_improvement.name} has been destroyed!")
+                war.save_combatant(attacking_nation_combatant_data)
+                war.save_combatant(defending_nation_combatant_data)
+                war_table.save(war)
+
+                # save nation data
+                nation_table.save(attacking_nation)
+
+                # remove improvement
+                target_region_improvement.clear()
+            
+            # occupation step
+            target_region.set_occupier_id(0)
+            if target_region.owner_id != original_player_id:
+                target_region.set_occupier_id(original_player_id)
+            target_region._save_changes()
+
+            return True
 
         return False
 

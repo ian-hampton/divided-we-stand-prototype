@@ -505,31 +505,36 @@ class UnitMoveAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.starting_region = None
-        self.target_regions = None
+        self.current_region_id = None
+        self.target_region_ids = None
+        
         if len(words) > 1:
+
+            # get starting region
             regions = words[1].split("-")
-            self.starting_region = regions[0].upper()
-            self.target_regions = []
+            self.current_region_id = regions[0].upper()
+            
+            # list of target region ids will be a stack
+            self.target_region_ids = []
             if len(regions) > 1:
-                for region_id in regions[1:]:
-                    self.target_regions.append(region_id.upper())
+                for region_id in regions[:0:-1]:
+                    self.target_region_ids.append(region_id.upper())
 
     def __str__(self):
-        return f"[UnitMoveAction] Move {self.starting_region} {self.target_regions} ({self.id})"
+        return f"[UnitMoveAction] Move {self.current_region_id} {self.target_region_ids} ({self.id})"
 
     def is_valid(self) -> bool:
         
-        if self.starting_region is None or self.target_regions is None:
+        if self.current_region_id is None or self.target_region_ids is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.starting_region = _check_region_id(self.game_id, self.starting_region)
-        if self.starting_region is None:
+        self.current_region_id = _check_region_id(self.game_id, self.current_region_id)
+        if self.current_region_id is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad starting region id.""")
             return False
         
-        for i, region_id in enumerate(self.target_regions):
+        for i, region_id in enumerate(self.target_region_ids):
             region_id = _check_region_id(self.game_id, region_id)
             if region_id is None:
                 print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad destination region id: {region_id}.""")
@@ -2764,4 +2769,81 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         nation_table.save(target_nation)
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
-    pass
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    current_turn_num = core.get_current_turn_num(game_id)
+
+    # generate movement order for the turn
+    players_moving_units: list[str] = []
+    for action in actions_list:
+        if action.id not in players_moving_units:
+            players_moving_units.append(action.id)
+    random.shuffle(players_moving_units)
+    ordered_actions_list: list[UnitMoveAction] = []
+    for nation_id in players_moving_units:
+        for action in actions_list:
+            if action.id == nation_id:
+                ordered_actions_list.append(action)
+
+    # print movement order
+    if len(players_moving_units) != 0: 
+        print(f"Movement Order - Turn {current_turn_num}")
+    for i, nation_id in enumerate(players_moving_units):
+        nation = nation_table.get(nation_id)
+        print(f"{i + 1}. {nation.name}")
+
+    # execute actions
+    for action in actions_list:
+        while action.target_region_ids != []:
+            
+            target_region_id = action.target_region_ids.pop()
+            nation = nation_table.get(action.id)
+
+            # load current region objects
+            current_region = Region(action.current_region_id, game_id)
+            current_region_unit = Unit(action.current_region_id, game_id)
+
+            # load target region objects
+            target_region = Region(target_region_id, game_id)
+            target_region_unit = Unit(target_region_id, game_id)
+
+            # current region checks
+            if current_region_unit.name == None or action.id != str(current_region_unit.owner_id):
+                nation.action_log.append(f"Failed to perform a move action from {action.current_region_id}. You do not control a unit there.")
+                nation_table.save(nation)
+                continue
+            if target_region_id not in current_region.adjacent_regions:
+                nation.action_log.append(f"Failed to move {current_region_unit.name} {action.current_region_id} - {target_region_id}. Target region not adjacent to current region.")
+                nation_table.save(nation)
+                continue
+            if target_region_id == action.current_region_id:
+                continue
+
+            # target region checks
+            if target_region.owner_id == 0:
+                nation.action_log.append(f"Failed to move {target_region_unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
+                nation_table.save(nation)
+                continue
+
+            # illegal move check
+            if target_region_unit.name != None and not target_region_unit.is_hostile(current_region_unit.owner_id):
+                nation.action_log.append(f"Failed to move {current_region_unit.name} {action.current_region_id} - {target_region_id}. A friendly unit is present in the target region.")
+                nation_table.save(nation)
+                continue
+            if not target_region.is_valid_move(current_region_unit.owner_id):
+                nation.action_log.append(f"Failed to move {current_region_unit.name} {action.current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.")
+                nation_table.save(nation)
+                continue
+
+            # execute movement order
+            unit_name = current_region_unit.name
+            movement_success = current_region_unit.move(target_region)
+            nation_table.reload()
+            nation = nation_table.get(action.id)
+            if movement_success:
+                nation.action_log.append(f"Successfully moved {unit_name} {action.current_region_id} - {target_region_id}.")
+                action.current_region_id = target_region_id
+            else:
+                nation.action_log.append(f"Failed to complete move {unit_name} {action.current_region_id} - {target_region_id}. Check combat log for details.")
+            nation_table.save(nation)
