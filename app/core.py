@@ -9,8 +9,6 @@ import copy
 from typing import Union, Tuple, List
 
 from app import map
-from app import public_actions
-from app import private_actions
 from app import checks
 from app import events
 from app import palette
@@ -19,7 +17,6 @@ from app.improvement import Improvement
 from app.unit import Unit
 from app.war import WarTable
 from app.notifications import Notifications
-from app.alliance import Alliance
 from app.alliance import AllianceTable
 from app.nationdata import Nation
 from app.nationdata import NationTable
@@ -475,13 +472,13 @@ def resolve_win(game_id: str) -> None:
     """
 
     nation_table = NationTable(game_id)
-    game_name = get_game_name(game_id)
     current_turn_num = get_current_turn_num(game_id)
-
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
+
+    game_name = active_games_dict[game_id]["Game Name"]
 
     # update active games
     active_games_dict[game_id]["Game Active"] = False
@@ -683,15 +680,6 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 # GAMEDATA HELPER FUNCTIONS (TO BE REPLACED WHEN I REWORK GAME MANAGEMENT)
 ################################################################################
 
-def get_game_name(game_id: str) -> None:
-    
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    
-    game_name = active_games_dict[game_id]["Game Name"]
-    
-    return game_name
-
 def get_map_name(game_id: str) -> str:
     """
     Retrieves map name string given a game id.
@@ -852,71 +840,6 @@ def get_subjects(game_id: str, overlord_name: str, subject_type: str) -> list:
 
 # ECONOMIC SUB-FUNCTIONS
 ################################################################################
-
-def get_economy_info(playerdata_list, request_list):
-    '''Generates a list of lists of lists for requested economy information. Sub-function for action functions.'''
-    index_list = []
-    for resource in request_list:
-        if resource == 'Dollars':
-            index_list.append(9)
-        elif resource == 'Political Power':
-            index_list.append(10)
-        elif resource == 'Technology':
-            index_list.append(11)
-        elif resource == 'Coal':
-            index_list.append(12)
-        elif resource == 'Oil':
-            index_list.append(13)
-        elif resource == 'Green Energy':
-            index_list.append(14)
-        elif resource == 'Basic Materials':
-            index_list.append(15)
-        elif resource == 'Common Metals':
-            index_list.append(16)
-        elif resource == 'Advanced Metals':
-            index_list.append(17)
-        elif resource == 'Uranium':
-            index_list.append(18)
-        elif resource == 'Rare Earth Elements':
-            index_list.append(19)
-    economy_masterlist = []
-    for playerdata in playerdata_list:
-        economy_list = []
-        for i in index_list:
-            resource_data_list = ast.literal_eval(playerdata[i])
-            economy_list.append(resource_data_list)
-        economy_masterlist.append(economy_list)
-    return economy_masterlist
-
-def round_total_income(total_income):
-    '''Forcibly rounds a given income number to two digits. Sub-function of update_income().'''
-    total_income = round(total_income, 2)
-    total_income = "{:.2f}".format(total_income)
-    return total_income
-
-def update_stockpile(stockpile, cost):
-    '''Updates a stockpile by subtracting the improvement cost and then rounding it. Meant to be saved to economydata_masterlist.'''
-    stockpile -= cost
-    stockpile = round_total_income(stockpile)
-    return stockpile
-
-def get_unit_count_list(player_id, game_id):
-    
-    unit_data_dict = get_scenario_dict(game_id, "Units")
-    unit_name_list = sorted(unit_data_dict.keys())
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-    count_list = []
-    for unit_name in unit_name_list:
-        count = 0
-        for region_id in regdata_dict:
-            region_unit = Unit(region_id, game_id)
-            if region_unit.owner_id == player_id and region_unit.name == unit_name:
-                count += 1
-        count_list.append(count)
-
-    return count_list
 
 def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     """
@@ -1093,21 +1016,6 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
 # WAR SUB-FUNCTIONS
 ################################################################################
 
-def read_military_capacity(player_military_capacity_data):
-    player_military_capacity_list = player_military_capacity_data.split('/')
-    used_mc = int(player_military_capacity_list[0])
-    total_mc = float(player_military_capacity_list[1])
-    return used_mc, total_mc
-
-def check_military_capacity(player_military_capacity_data, amount):
-    '''Calculates if a player has an amount of military capacity available.'''
-    player_military_capacity_list = player_military_capacity_data.split('/')
-    used_mc = int(player_military_capacity_list[0])
-    total_mc = float(player_military_capacity_list[1])
-    if used_mc + amount > total_mc:
-        return False
-    return True
-
 def add_truce_period(game_id: str, signatories_list: list, truce_length: int) -> None:
 
     # get game data
@@ -1239,6 +1147,7 @@ def withdraw_units(game_id: str):
             
             nation_table.save(nation)
 
+
 # MISC SUB-FUNCTIONS
 ################################################################################
 
@@ -1257,32 +1166,6 @@ def date_from_turn_num(current_turn_num):
     if season == 'Winter':
         year -= 1
     return season, year
-
-def get_adjacency_list(regdata_list, region_id):
-    for region in regdata_list:
-         if region[0] == region_id:
-            adjacency_list = ast.literal_eval(region[8])
-            return adjacency_list
-
-def get_nation_info(playerdata_list):
-    '''Gets each nation's name, color, government, and fp info. Sub-function for resolve_research_actions()'''
-    nation_info_masterlist = []
-    for player in playerdata_list:
-        player_nation_name = player[1]
-        player_color = player[2]
-        player_government = player[3]
-        player_fp = player[4]
-        player_military_capacity = player[5]
-        player_trade_fee = player[6]
-        if player_trade_fee != 'No Trade Fee':
-            n = int(player_trade_fee[0])
-            d = int(player_trade_fee[2])
-            player_trade_fee = float(n / d)
-        else:
-            player_trade_fee = 0
-        nation_info_list = [player_nation_name, player_color, player_government, player_fp, player_military_capacity, player_trade_fee]
-        nation_info_masterlist.append(nation_info_list)
-    return nation_info_masterlist
 
 def search_and_destroy(game_id: str, player_id: str, target_improvement: str) -> str:
     """
@@ -1335,35 +1218,6 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
 
     return chosen_region_id, victim
 
-def verify_required_research(required_research, player_research):
-    '''
-    Checks if a certain research has been researched by a specific player.
-
-    Parameters:
-    - required_research: The name of the research in question (string).
-    - player_research: A list of all research researched by a specific player.
-    '''
-    if required_research != None:
-        if required_research not in player_research:
-            return False
-    return True
-
-def has_capital(player_id, game_id):
-    '''
-    Checks if a player has a capital in their territory.
-    '''
-    regdata_filepath = f'gamedata/{game_id}/regdata.json'
-    with open(regdata_filepath, 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_improvement = Improvement(region_id, game_id)
-        if region.owner_id == player_id and region_improvement.name == 'Capital':
-            return True
-        
-    return False
-
 def get_scenario_dict(game_id, dictionary_name):
     '''
     Gets a dictionary from the chosen scenario.
@@ -1386,104 +1240,9 @@ def get_scenario_dict(game_id, dictionary_name):
 
     return chosen_dictionary
 
-def get_lowest_in_record(game_id, record_name):
-    # get core lists
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = read_file(playerdata_filepath, 1)
 
-    # get nation names
-    nation_name_list = []
-    for playerdata in playerdata_list:
-        nation_name_list.append(playerdata[1])
-    
-    #get lowest
-    if record_name != "most_transactions":
-        record_filepath = f'gamedata/{game_id}/{record_name}.csv'
-        record_list = read_file(record_filepath, 0)
-        candidates = []
-        for index, record in enumerate(record_list):
-            if index == 0:
-                continue
-            if record_name == 'strongest_economy':
-                value = float(record[-1])
-            else:
-                value = int(record[-1])
-            nation_name = nation_name_list[index - 1]
-            candidates.append([nation_name, value])
-        sorted_candidates = sorted(candidates, key = lambda x: x[-1], reverse = False)
-        return sorted_candidates[0][0]
-    else:
-        pass
-
-def get_top_three_transactions(game_id):
-    """
-    Temporary cringe function to read transactions.
-    """
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    
-    transactions_dict = active_games_dict[game_id]["Transactions Record"]
-    sorted_dict = dict(
-        sorted(
-            transactions_dict.items(),
-            key = lambda item: (-item[1], item[0])
-        )
-    )
-
-    top_three = tuple(sorted_dict.keys())[:3]
-    top_three_list = []
-    for index, key in enumerate(top_three):
-        top_three_list.append(f"{index+1}. {key} ({sorted_dict[key]})")
-
-    return tuple(top_three_list)
-
-
-# DISGUSTING GLOBAL VARIABLES
+# CSV File Headers
 ################################################################################
 
-# unfortunately like pulling teeth significant refactoring is required to remove some of these - I'm workin' on it!
-
-#file headers
 rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
-trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']
-
-#color dictionaries
-# tba - remove all of these and use palette instead
-
-player_colors_conversions = {
-    "#603913": (96, 57, 19, 255),
-    "#ff974e": (255, 151, 78, 255),
-    "#003b84": (0, 59, 132, 255),
-    "#105500": (16, 85, 0, 255),
-    "#5a009d": (90, 0, 157, 255),
-    "#b30000": (179, 0, 0, 255),
-    "#0096ff": (0, 150, 255, 255),
-    "#5bb000": (91, 176, 0, 255),
-    "#b654ff": (182, 84, 255, 255),
-    "#ff3d3d": (255, 61, 61, 255),
-    "#8b2a1a": (139, 42, 26, 255),
-    "#9f8757": (159, 135, 87, 255),
-    "#ff9600": (255, 150, 0, 255),
-    "#f384ae": (243, 132, 174, 255),
-    "#b66317": (182, 99, 23, 255),
-    "#ffd64b": (255, 214, 75, 255)
-}
-
-player_colors_normal_to_occupied_hex = {
-    (96, 57, 19, 255): "#905721",
-    (255, 151, 78, 255): "#ffaa6f",
-    (0, 59, 132, 255): "#004eae",
-    (16, 85, 0, 255): "#187e00",
-    (90, 0, 157, 255): "#7e00dd",
-    (179, 0, 0, 255): "#d40000",
-    (0, 150, 255, 255): "#57baff",
-    (91, 176, 0, 255): "#6ed400",
-    (182, 84, 255, 255): "#c87fff",
-    (255, 61, 61, 255): "#ff6666",
-    (139, 42, 26, 255): "#b83823",
-    (159, 135, 87, 255): "#af9a6e",
-    (255, 150, 0, 255): "#ffaf3d",
-    (243, 132, 174, 255): "#f4a0c0",
-    (182, 99, 23, 255): "#c57429",
-    (255, 214, 75, 255): "#ffe68e",
-}
+trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']    # not actually needed anymore

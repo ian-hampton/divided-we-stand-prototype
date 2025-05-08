@@ -3,7 +3,9 @@ from app.nationdata import NationTable
 
 from PIL import ImageColor
 
-def color_nation_names(string, game_id):
+BAD_PRIMARY_COLORS = {"#603913", "#105500", "#8b2a1a"}
+
+def color_nation_names(string: str, game_id: str):
     """
     Adds html span tags around all nation names in given string
     """
@@ -12,17 +14,15 @@ def color_nation_names(string, game_id):
     for nation in nation_table:
         color_dict[nation.name] = nation.color
 
-    bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
-
     for nation_name, color in color_dict.items():
-        if color in bad_primary_colors_set:
+        if color in BAD_PRIMARY_COLORS:
             color = normal_to_occupied[color]
-        html_nation_name = f"""<span style="color: {color}">{nation_name}</span>"""
+        html_nation_name = f"""<span style="color:{color}">{nation_name}</span>"""
         string = string.replace(nation_name, html_nation_name)
 
     return string
 
-def str_to_hex(color_str):
+def str_to_hex(color_str: str):
     """
     Retrives a hexadecimal color value that corresponds to a string name.
     """

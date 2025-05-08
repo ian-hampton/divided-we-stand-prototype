@@ -35,29 +35,9 @@ def main_function():
 
 #COLOR CORRECTION
 def check_color_correction(color):
-    swap_list = ['#b30000', '#105500', '#003b84', '#603913', '#8b2a1a', '#5bb000'] 
-    if color in swap_list:
-        player_color_rgb = core.player_colors_conversions[color]
-        color = core.player_colors_normal_to_occupied_hex[player_color_rgb]
+    if color in palette.BAD_PRIMARY_COLORS:
+        color = palette.normal_to_occupied[color]
     return color
-
-#COLOR NATION NAMES
-def color_nation_names(string: str, game_id: str) -> str:
-    """
-    Takes a string of text and colors any nation names inside it.
-    """
-
-    temp_dict = {}
-    nation_table = NationTable(game_id)
-
-    for nation in nation_table:
-        temp_dict[nation.name] = check_color_correction(nation.color)
-
-    for nation_name, nation_color in temp_dict.items():
-        if nation_name in string:
-            string = string.replace(nation_name, f"""<span style="color:{nation_color}">{nation_name}</span>""")
-    
-    return string
         
 #REFINE PLAYERDATA FUNCTION FOR ACTIVE GAMES
 def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> list:
@@ -496,6 +476,7 @@ for profile_id in profile_id_list:
 def game_load(full_game_id):
     
     #read the contents of active_games.json
+    nation_table = NationTable(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game1_title = active_games_dict[full_game_id]["Game Name"]
@@ -512,19 +493,19 @@ def game_load(full_game_id):
         with open('game_records.json', 'r') as json_file:
             game_records_dict = json.load(json_file)
         game_data = game_records_dict[game1_title]
-        largest_nation_tup = checks.get_top_three(full_game_id, 'largest_nation', True)
-        strongest_economy_tup = checks.get_top_three(full_game_id, 'strongest_economy', True)
-        largest_military_tup = checks.get_top_three(full_game_id, 'largest_military', True)
-        most_research_tup = checks.get_top_three(full_game_id, 'most_research', True)
+        largest_nation_tup = nation_table.get_top_three("Largest Nation")
+        strongest_economy_tup = nation_table.get_top_three("Most Income")
+        largest_military_tup = nation_table.get_top_three("Largest Military")
+        most_research_tup = nation_table.get_top_three("Most Technology")
         largest_nation_list = list(largest_nation_tup)
         strongest_economy_list = list(strongest_economy_tup)
         largest_military_list = list(largest_military_tup)
         most_research_list = list(most_research_tup)
         for i in range(len(largest_nation_list)):
-            largest_nation_list[i] = color_nation_names(largest_nation_list[i], full_game_id)
-            strongest_economy_list[i] = color_nation_names(strongest_economy_list[i], full_game_id)
-            largest_military_list[i] = color_nation_names(largest_military_list[i], full_game_id)
-            most_research_list[i] = color_nation_names(most_research_list[i], full_game_id)
+            largest_nation_list[i] = palette.color_nation_names(largest_nation_list[i], full_game_id)
+            strongest_economy_list[i] = palette.color_nation_names(strongest_economy_list[i], full_game_id)
+            largest_military_list[i] = palette.color_nation_names(largest_military_list[i], full_game_id)
+            most_research_list[i] = palette.color_nation_names(most_research_list[i], full_game_id)
         archived_player_data_list, players_who_won_list = generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
@@ -534,7 +515,7 @@ def game_load(full_game_id):
             victory_string = (f'{victors_str} have won the game.')
         elif len(players_who_won_list) == 0:
             victory_string = (f'Game drawn.')
-        victory_string = color_nation_names(victory_string, full_game_id)
+        victory_string = palette.color_nation_names(victory_string, full_game_id)
         return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
     
     # load active state
@@ -545,7 +526,6 @@ def game_load(full_game_id):
             
             form_key = "main.stage1_resolution"
             player_data = []
-            nation_table = NationTable(full_game_id)
             
             for nation in nation_table:
                 p_id = f'p{nation.id}'
@@ -562,7 +542,6 @@ def game_load(full_game_id):
             
             form_key = "main.stage2_resolution"
             player_data = []
-            nation_table = NationTable(full_game_id)
             
             for nation in nation_table:
                 p_id = f'p{nation.id}'
@@ -582,7 +561,7 @@ def game_load(full_game_id):
             form_key = "main.turn_resolution"
             main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
             player_data = []
-            nation_table = NationTable(full_game_id)
+
             for nation in nation_table:
                 p_id = f'p{nation.id}'
                 public_actions_textarea_id = f"public_textarea_{p_id}"
