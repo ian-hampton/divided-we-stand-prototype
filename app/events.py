@@ -4,12 +4,10 @@ import json
 import random
 
 from app import core
-from app import private_actions
 from app import checks
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
-from app.wardata import WarData
 from app.notifications import Notifications
 
 #EVENT INITIATION CODE

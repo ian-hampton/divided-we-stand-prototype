@@ -1,106 +1,31 @@
-#STANDARD IMPORTS
 import ast
 from queue import PriorityQueue 
 import csv
 from datetime import datetime
 import json
-from operator import itemgetter
 import os
-import re
 import uuid
 
-#UWS SOURCE IMPORTS
+from app import site_functions
 from app import core
-from app import checks
 from app import events
 from app import palette
 from app import map
-from app.testing import map_tests
 from app.notifications import Notifications
 from app.alliance import AllianceTable
-from app.alliance import Alliance
 from app.nationdata import NationTable
 from app.war import WarTable
 
-#ENVIROMENT IMPORTS
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
+
 app = Flask(__name__)
 main = Blueprint('main', __name__)
 @main.route('/')
 def main_function():
     return render_template('index.html')
 
-#SITE FUNCTIONS
-################################################################################
 
-#COLOR CORRECTION
-def check_color_correction(color):
-    if color in palette.BAD_PRIMARY_COLORS:
-        color = palette.normal_to_occupied[color]
-    return color
-        
-#REFINE PLAYERDATA FUNCTION FOR ACTIVE GAMES
-def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> list:
-    """
-    Creates list of nations that is shown alongside each game.
-    """
-
-    nation_table = NationTable(game_id)
-    with open('player_records.json', 'r') as json_file:
-        player_records_dict = json.load(json_file)
-
-    data_a = []
-    data_b = []
-   
-    for nation in nation_table:
-        gov_fp_str = f"{nation.fp} - {nation.gov}"
-        username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
-        player_color = check_color_correction(nation.color)
-        # tba - fix duplicate player color (second one should be redundant)
-        if nation.score > 0:
-            data_a.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
-        else:
-            data_b.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
-
-    filtered_data_a = sorted(data_a, key=itemgetter(0), reverse=False)
-    filtered_data_a = sorted(filtered_data_a, key=itemgetter(1), reverse=True)
-    filtered_data_b = sorted(data_b, key=itemgetter(0), reverse=False)
-    data = filtered_data_a + filtered_data_b
-
-    return data
-
-#REFINE PLAYERDATA FUNCTION FOR INACTIVE GAMES
-def generate_refined_player_list_inactive(game_data):
-    refined_player_data_a = []
-    refined_player_data_b = []
-    players_who_won = []
-    for select_profile_id, player_data in game_data.get("Player Data", {}).items():
-        player_data_list = []
-        player_data_list.append(player_data.get("Nation Name"))
-        player_data_list.append(player_data.get("Score"))
-        gov_fp_string = f"""{player_data.get("Foreign Policy")} - {player_data.get("Government")}"""
-        player_data_list.append(gov_fp_string)
-        username = player_records_dict[select_profile_id]["Username"]
-        username_str = f"""<a href="profile/{select_profile_id}">{username}</a>"""
-        player_data_list.append(username_str)
-        player_color = player_data.get("Color")
-        player_data_list.append(player_color)
-        player_color_occupied_hex = check_color_correction(player_color)
-        player_data_list.append(player_color_occupied_hex)
-        if player_data.get("Victory") == 1:
-            players_who_won.append(player_data.get("Nation Name"))
-        if player_data.get("Score") > 0:
-            refined_player_data_a.append(player_data_list)
-        else:
-            refined_player_data_b.append(player_data_list)
-    filtered_player_data_a = sorted(refined_player_data_a, key=itemgetter(0), reverse=False)
-    filtered_player_data_a = sorted(filtered_player_data_a, key=itemgetter(1), reverse=True)
-    filtered_player_data_b = sorted(refined_player_data_b, key=itemgetter(0), reverse=False)
-    refined_player_data = filtered_player_data_a + filtered_player_data_b
-    return refined_player_data, players_who_won
-
-
-#CORE SITE PAGES
+# SITE PAGES
 ################################################################################
 
 #GAMES PAGE
@@ -152,7 +77,7 @@ def games():
                 for nation in nation_table:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
-                    player_color_2 = check_color_correction(nation.color)
+                    player_color_2 = site_functions.check_color_correction(nation.color)
                     refined_player_data.append([nation.name, 0, 'TBD', username_str, nation.color, player_color_2])
                 # get image
                 image_url = url_for('main.get_mainmap', full_game_id=game_id)
@@ -167,7 +92,7 @@ def games():
                 else:
                     game_data["Status"] = "Game Over!"
                 # get player information
-                refined_player_data = generate_refined_player_list_active(game_id, current_turn)
+                refined_player_data = site_functions.generate_refined_player_list_active(game_id, current_turn)
                 # get image
                 image_url = url_for('main.get_mainmap', full_game_id=game_id)
         
@@ -176,7 +101,7 @@ def games():
     
     return render_template('temp_games.html', dict = active_games_dict, full_game_id = game_id)
 
-#SETTINGS PAGE
+# SETTINGS PAGE
 @main.route('/settings')
 def settings():
     username_list = []
@@ -184,7 +109,7 @@ def settings():
         username_list.append(player_data.get("Username"))
     return render_template('temp_settings.html', username_list = username_list)
 
-#SETTINGS PAGE - Create Game Procedure
+# SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
 def create_game():
     
@@ -249,7 +174,7 @@ def create_game():
                 "Active Events": {},
                 "Current Event": {}
             }
-            core.erase_game(active_game_id)
+            site_functions.erase_game(active_game_id)
         active_games = [key for key, value in game_records_dict.items() if value.get("Statistics").get("Game Ended") == "Present"]
         for active_game_name in active_games:
             del game_records_dict[active_game_name]
@@ -266,13 +191,13 @@ def create_game():
             full_game_id = select_game_id
             break
     if full_game_id != None:
-        core.create_new_game(full_game_id, form_data_dict, profile_ids_list)
+        site_functions.create_new_game(full_game_id, form_data_dict, profile_ids_list)
         return redirect(f'/games')
     else:
         print("Error: No inactive game found to overwrite.")
         quit()
 
-#GAMES ARCHIVE PAGE
+# GAMES ARCHIVE PAGE
 @main.route('/archived_games')
 def archived_games():
     
@@ -288,7 +213,7 @@ def archived_games():
             continue
         
         #get playerdata
-        archived_player_data_list, players_who_won_list = generate_refined_player_list_inactive(game_data)
+        archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
             game_data["Winner String"] = f'{victors_str} Victory!'
@@ -337,7 +262,7 @@ def archived_games():
     
     return render_template('temp_archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
 
-#LEADERBOARD PAGE
+# LEADERBOARD PAGE
 @main.route('/leaderboard')
 def leaderboard():
     
@@ -367,7 +292,7 @@ def leaderboard():
     
     return render_template('temp_leaderboard_new.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_records_dict = leaderboard_records_dict)
 
-#GENRATE PROFILE PAGES
+# CREATE PROFILE PAGES
 def generate_profile_route(profile_id):
     route_name = f'profile_route_{uuid.uuid4().hex}'
     @main.route(f'/profile/{profile_id}', endpoint=route_name)
@@ -468,10 +393,10 @@ for profile_id in profile_id_list:
     generate_profile_route(profile_id)
 
 
-#GAME LOADING
+# GAME PAGES
 ################################################################################
 
-#LOAD GAME PAGE
+# LOAD GAME PAGE
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
@@ -506,7 +431,7 @@ def game_load(full_game_id):
             strongest_economy_list[i] = palette.color_nation_names(strongest_economy_list[i], full_game_id)
             largest_military_list[i] = palette.color_nation_names(largest_military_list[i], full_game_id)
             most_research_list[i] = palette.color_nation_names(most_research_list[i], full_game_id)
-        archived_player_data_list, players_who_won_list = generate_refined_player_list_inactive(game_data)
+        archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
             victory_string = (f"""{victors_str} has won the game.""")
@@ -579,17 +504,17 @@ def game_load(full_game_id):
             
             return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
 
-#GENERATE NATION SHEET PAGES
+# GENERATE NATION SHEET PAGES
 def generate_player_route(full_game_id, player_id):
     route_name = f'player_route_{uuid.uuid4().hex}'
     @main.route(f'/{full_game_id}/player{player_id}', endpoint=route_name)
     def player_route():
         page_title = f'Player #{player_id} Nation Sheet'
         current_turn_num = core.get_current_turn_num(full_game_id)
-        player_information_dict = core.get_data_for_nation_sheet(full_game_id, str(player_id))
+        player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
         return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
 
-#GENERATION PROCEDURE
+# GENERATION PROCEDURE
 game_ids = ['game1', 'game2']
 map_names = ['mainmap', 'resourcemap', 'controlmap']
 player_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -597,7 +522,7 @@ for full_game_id in game_ids:
     for player_id in player_ids:
         generate_player_route(full_game_id, player_id)
 
-#WARS PAGE
+# WARS PAGE
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
     
@@ -743,7 +668,7 @@ def wars(full_game_id):
 
     return render_template('temp_wars.html', page_title = page_title, dict = results)
 
-#RESEARCH PAGE
+# RESEARCH PAGE
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
     
@@ -814,7 +739,7 @@ def technologies(full_game_id):
     
     return render_template('temp_research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
 
-#AGENDAS PAGE
+# AGENDAS PAGE
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
@@ -1232,7 +1157,7 @@ def alliances(full_game_id):
 
     return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_type_dict, page_title = page_title)
 
-#MAP IMAGES
+# MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
@@ -1258,7 +1183,7 @@ def get_controlmap(full_game_id):
     return send_file(filepath, mimetype='image/png')
 
 
-#ACTION PROCESSING
+# ACTION PROCESSING
 ################################################################################
 
 @main.route('/stage1_resolution', methods=['POST'])
@@ -1273,7 +1198,7 @@ def stage1_resolution():
         contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
         contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
     
-    core.resolve_stage1_processing(full_game_id, contents_dict)
+    site_functions.resolve_stage1_processing(full_game_id, contents_dict)
     
     return redirect(f'/{full_game_id}')
 
@@ -1291,7 +1216,7 @@ def stage2_resolution():
         contents_dict[nation.id]["fp_choice"] = request.form.get(f"fpinput_p{nation.id}")
         contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
 
-    core.resolve_stage2_processing(full_game_id, contents_dict)
+    site_functions.resolve_stage2_processing(full_game_id, contents_dict)
     
     return redirect(f'/{full_game_id}')
 
@@ -1313,7 +1238,7 @@ def turn_resolution():
             actions_list = private_str.split('\r\n')
             contents_dict[nation.id].extend(actions_list)
 
-    core.resolve_turn_processing(full_game_id, contents_dict)
+    site_functions.resolve_turn_processing(full_game_id, contents_dict)
 
     return redirect(f'/{full_game_id}')
 
@@ -1329,8 +1254,6 @@ def event_resolution():
         active_games_dict = json.load(json_file)
     
     events.handle_current_event(active_games_dict, full_game_id)
-    core.run_end_of_turn_checks(full_game_id)
+    site_functions.run_end_of_turn_checks(full_game_id)
 
     return redirect(f'/{full_game_id}')
-
-#map_tests.run()

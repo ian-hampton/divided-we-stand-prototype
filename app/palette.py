@@ -1,4 +1,3 @@
-from app import core
 from app.nationdata import NationTable
 
 from PIL import ImageColor
