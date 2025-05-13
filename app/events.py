@@ -40,7 +40,7 @@ def trigger_event(game_id: str) -> None:
     # select and initiate random event
     chosen_event = random.choice(events)
     print(f"Triggering {chosen_event} event...")
-    initiate_event(game_id, "Foreign Invasion", active_games_dict)
+    initiate_event(game_id, event_name, active_games_dict)
 
     # save changes to active_games.json
     with open('active_games.json', 'w') as json_file:
@@ -936,7 +936,7 @@ def resolve_active_events(game_id: str, turn_status: str, actions_dict: dict[str
                     
                     # check if Foreign Invasion has no unoccupied reinforcement regions
                     invasion_unoccupied_count = 0
-                    for region_id in active_games_dict :
+                    for region_id in regdata_dict:
                         region = Region(region_id, game_id)
                         if region.owner_id == 99 and region.occupier_id == 0:
                             invasion_unoccupied_count += 1
@@ -1055,7 +1055,7 @@ def resolve_active_events(game_id: str, turn_status: str, actions_dict: dict[str
         for event_name, event_data in active_games_dict[game_id]["Active Events"].items():
             
             # event has expired - end it
-            if isinstance(event_data, int) and current_turn_num >= event_data:
+            if isinstance(event_data, int):
                 expire_turn = event_data
                 if current_turn_num >= expire_turn:
                     notifications.append(f"{event_name} event has ended.", 2)
@@ -1077,7 +1077,7 @@ def resolve_active_events(game_id: str, turn_status: str, actions_dict: dict[str
             else:
                 notifications.append(f"{event_name} event is active.", 2)
     
-    active_games_dict[game_id]["Active Events"] = active_events_filtered
+        active_games_dict[game_id]["Active Events"] = active_events_filtered
     
     # save active games
     with open('active_games.json', 'w') as json_file:
@@ -1307,6 +1307,10 @@ def _foreign_invasion_initial_spawn(game_id: str, region_id: str, unit_name: str
     region.set_occupier_id(0)
     region_unit.set_unit(unit_name, 99)
 
+    foreign_nation = nation_table.get("99")
+    foreign_nation.unit_counts[unit_name] += 1
+    nation_table.save(foreign_nation)
+
 def _foreign_invasion_calculate_target_region(game_id: str, adjacency_list: list, destination_dict: dict) -> tuple:
     """
     Function that contains Foreign Invasion attack logic.
@@ -1385,8 +1389,8 @@ def _foreign_invasion_end(game_id: str, foreign_invasion_nation: Nation):
     
     for region_id in regdata_dict:
         
-        region = Region(game_id, region_id)
-        region_unit = Unit(game_id, region_id)
+        region = Region(region_id, game_id)
+        region_unit = Unit(region_id, game_id)
         
         # reinforcement regions are abandoned
         if region.owner_id == 99:

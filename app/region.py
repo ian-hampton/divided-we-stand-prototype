@@ -279,6 +279,10 @@ class Region:
             # you are also at war with the occupier
             if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None:
                 return True
+            
+        # foreign invasion may move into unclaimed regions
+        if self.owner_id == 0 and other_player_id == 99:
+            return True
                 
         return False
     
