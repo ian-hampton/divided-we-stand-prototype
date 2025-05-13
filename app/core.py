@@ -140,15 +140,14 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
             int: Alliance count.
             int: Alliance limit.
     """
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
     
+    # get alliance data
     alliance_count = 0
     alliance_table = AllianceTable(game_id)
     alliance_report_dict = alliance_table.report(nation.name)
     alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
     
+    # calculate limit
     alliance_limit = 2
     if nation.gov == 'Republic':
         alliance_limit += 1
@@ -156,9 +155,8 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
         alliance_limit += 1
     if 'Improved Logistics' in nation.completed_research:
         alliance_limit += 1
-    if "Shared Fate" in active_games_dict[game_id]["Active Events"]:
-        if active_games_dict[game_id]["Active Events"]["Shared Fate"]["Effect"] == "Cooperation":
-            alliance_limit += 1
+    for tag_name, tag_data in nation.tags.items():
+        alliance_limit += tag_data.get("Alliance Limit Modifier", 0)
 
     return alliance_count, alliance_limit
 

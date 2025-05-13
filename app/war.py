@@ -440,6 +440,18 @@ class War:
         # withdraw units
         core.withdraw_units(self.game_id)
 
+        # resolve foreign interference tag if applicable (event)
+        attacker_id, defender_id = self.get_main_combatant_ids()
+        attacker_nation = nation_table.get(attacker_id)
+        defender_nation = nation_table.get(defender_id)
+        if "Foreign Interference" in attacker_nation.tags and attacker_nation.tags["Foreign Interference"]["Foreign Interference Target"] == defender_nation.name:
+            del attacker_nation.tags["Foreign Interference"]
+            if outcome == "Attacker Victory":
+                attacker_nation.update_stockpile("Dollars", 50)
+                attacker_nation.update_stockpile("Technology", 20)
+                attacker_nation.update_stockpile("Advanced Metals", 10)
+            nation_table.save(attacker_nation)
+
 class WarTable:
     
     def __init__(self, game_id: str):
@@ -623,6 +635,23 @@ class WarTable:
                 return False
             
         return True
+    
+    def at_peace_for_x(self, nation_id: str) -> int:
+        """
+        Returns number of turns a player has been at peace for. If 0, the player is actively at war.
+        """
+
+        current_turn_num = core.get_current_turn_num(self.game_id)
+
+        last_at_war_turn = -1
+        for war in self:
+            if nation_id in war.combatants:
+                if war.outcome == "TBD":
+                    return 0
+                elif war.end > last_at_war_turn:
+                    last_at_war_turn = war.end
+        
+        return current_turn_num - last_at_war_turn
 
     def total_units_lost(self) -> int:
         

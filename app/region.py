@@ -362,8 +362,8 @@ class Region:
         Used for Pandemic event.
         """
         self.data["infection"] += amount
-        if self.data["infection"] > 10:
-            self.data["infection"] = 10
+        if self.data["infection"] > 5:
+            self.data["infection"] = 5
         elif self.data["infection"] < 0:
             self.data["infection"] = 0
         self._save_changes()

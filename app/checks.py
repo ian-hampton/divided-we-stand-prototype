@@ -57,6 +57,7 @@ def update_income(game_id: str) -> None:
 
 
     ### calculate gross income ###
+
     # add income from regions
     for region_id in regdata_dict:
         region = Region(region_id, game_id)
@@ -101,11 +102,12 @@ def update_income(game_id: str) -> None:
 
     # political power income from alliances
     for nation in nation_table:
+        alliance_income = 0.5
         alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
-        if 'Power Broker' in nation.completed_research:
-            alliance_income = 0.75
-        else:
-            alliance_income = 0.5
+        if "Power Broker" in nation.completed_research:
+            alliance_income += 0.25
+        for tag_name, tag_data in nation.tags.items():
+            alliance_income += tag_data.get("Alliance Political Power Bonus", 0)
         if alliance_income * alliance_count == 0:
             continue
         nation.update_gross_income("Political Power", alliance_income * alliance_count)
@@ -116,6 +118,10 @@ def update_income(game_id: str) -> None:
 
     # political power from events
     for nation in nation_table:
+        if "Observer Status" in nation.tags:
+            nation.update_gross_income("Political Power", 0.5)
+            income_str = f"+{0.5:.2f} from Observer Status"
+            _update_text_dict(text_dict, nation.name, "Political Power", income_str)
         if "Faustian Bargain" in active_games_dict[game_id]["Active Events"]:
             chosen_nation_name = active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"]
             if nation.name != chosen_nation_name:
@@ -125,7 +131,7 @@ def update_income(game_id: str) -> None:
                 nation.update_gross_income("Political Power", pp_from_lease)
                 income_str = f'+{pp_from_lease:.2f} from events.'
                 _update_text_dict(text_dict, nation.name, "Political Power", income_str)
-                nation_table.save(nation)
+        nation_table.save(nation)
 
     # dollars from trade agreements
     for alliance in alliance_table:
@@ -920,7 +926,12 @@ def total_occupation_forced_surrender(game_id: str) -> None:
             
             # look for wars to surrender to
             for war in war_table:
+
                 if war.outcome == "TBD" and looser_name in war.combatants and "Main" in war.get_role(str(looser_id)):
+
+                    # never force end the war caused by foreign invasion
+                    if war.name == "Foreign Invasion":
+                        continue
                     
                     main_attacker_id, main_defender_id = war.get_main_combatant_ids()
                     
@@ -948,6 +959,10 @@ def war_score_forced_surrender(game_id: str) -> None:
 
     for war in war_table:
         if war.outcome == "TBD":
+
+            # never force end the war caused by foreign invasion
+            if war.name == "Foreign Invasion":
+                continue
         
             attacker_threshold, defender_threshold = war.calculate_score_threshold()
             attacker_id, defender_id = war.get_main_combatant_ids()

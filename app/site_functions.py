@@ -18,6 +18,7 @@ from app.notifications import Notifications
 from app import actions
 from app import checks
 from app import map
+from app import events
 
 
 # TURN PROCESSING
@@ -234,7 +235,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     checks.prompt_for_missing_war_justifications(game_id)
     
     # oppertunity to resolve active events
-    # public_actions_dict, private_actions_dict = events.resolve_active_events("Before Actions", public_actions_dict, private_actions_dict, full_game_id)
+    events.resolve_active_events(game_id, "Before Actions", actions_dict)
     
     # resolve public actions
     actions.resolve_trade_actions(game_id)
@@ -261,7 +262,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
 
     # oppertunity to resolve active events
-    # public_actions_dict, private_actions_dict = events.resolve_active_events("After Actions", public_actions_dict, private_actions_dict, full_game_id)
+    events.resolve_active_events(game_id, "After Actions", actions_dict)
 
     # export logs
     nation_table = NationTable(game_id)
@@ -301,8 +302,8 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             checks.bonus_phase_heals(game_id)
             notifications.append('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
-            # print("Triggering an event...")
-            # events.trigger_event(game_id)
+            print("Triggering an event...")
+            events.trigger_event(game_id)
             pass
 
     # update active game records
@@ -332,13 +333,16 @@ def run_end_of_turn_checks(game_id: str) -> None:
     Executes end of turn checks and updates.
     """
 
+    nation_table = NationTable(game_id)
+
+    nation_table.check_tags()
+
     checks.prune_alliances(game_id)
     checks.update_income(game_id)
     checks.resolve_resource_shortages(game_id)
     checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)
-
-    nation_table = NationTable(game_id)
+    
     for nation in nation_table:
         nation.update_stockpile_limits()
         nation.update_trade_fee()

@@ -1,5 +1,6 @@
 import json
 import copy
+from app.nationdata import Nation
 
 from app import core
 
@@ -157,7 +158,7 @@ class Improvement:
     # income methods
     ################################################################################
 
-    def calculate_yield(self, nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
+    def calculate_yield(self, nation: Nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
         """
         Calculates the final yield of this improvement.
 
@@ -202,13 +203,28 @@ class Improvement:
                     multiplier = 0
                 improvement_income_dict[resource_name]["Income Multiplier"] = multiplier
 
-        # get shared fate boot camp increase
-        if self.name == "Boot Camp" and "Shared Fate" in active_games_dict[self.game_id]["Active Events"]:
-            if active_games_dict[self.game_id]["Active Events"]["Shared Fate"]["Effect"] == "Conflict":
-                improvement_income_dict["Military Capacity"]["Income"] += 1
+        # get income modifiers from tags
+        for tag_name, tag_data in nation.tags.items():
+            if "Improvement Income" not in tag_data:
+                continue
+            for improvement_name, resource_data in tag_data["Improvement Income"].items():
+                if improvement_name != self.name:
+                    continue
+                for resource_name, income_modifier in resource_data.items():
+                    improvement_income_dict[resource_name]["Income"] += income_modifier
+        
+        # get income multiplier modifiers from tags
+        for tag_name, tag_data in nation.tags.items():
+            if "Improvement Income Multiplier" not in tag_data:
+                continue
+            for improvement_name, resource_data in tag_data["Improvement Income Multiplier"].items():
+                if improvement_name != self.name:
+                    continue
+                for resource_name, income_modifier in resource_data.items():
+                    improvement_income_dict[resource_name]["Income Multiplier"] += income_modifier
 
         # get capital resource if able
-        # to do - find a way to not hard code this check
+        # tba - find a way to not hard code this check
         if self.name == "Capital" and region.resource != "Empty":
             match region.resource:
                 case "Coal":

@@ -857,9 +857,14 @@ def improvements_ref(full_game_id):
             case _:
                 improvement_data["stat_color"] = "stat-grey"
 
-        # hide fog of war techs
+        # hide fog of war improvements
         if active_games_dict[full_game_id]["Information"]["Fog of War"] != "Enabled" and improvement_data.get("Fog of War Improvement", None):
             continue
+
+        # hide event improvements
+        if improvement_name == "Colony" and "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
+            continue
+
         improvement_dict_filtered[improvement_name] = improvement_data
 
     improvement_dict_filtered = {key: improvement_dict_filtered[key] for key in sorted(improvement_dict_filtered)}
@@ -957,12 +962,12 @@ def resource_market(full_game_id):
     
     # factor in impact of events on current prices
     if "Market Inflation" in active_games_dict[full_game_id]["Active Events"]:
-        for affected_resource_name in active_games_dict[full_game_id]["Active Events"]["Market Inflation"]["Affected Resources"]:
-            new_price = data[affected_resource_name]["Current Price"] * 2
+        for resource_name in data:
+            new_price = data[resource_name]["Current Price"] * 2
             data[resource_name]["Current Price"] = round(new_price, 2)
     elif "Market Recession" in active_games_dict[full_game_id]["Active Events"]:
-        for affected_resource_name in active_games_dict[full_game_id]["Active Events"]["Market Recession"]["Affected Resources"]:
-            new_price = data[affected_resource_name]["Current Price"] * 0.5
+        for resource_name in data:
+            new_price = data[resource_name]["Current Price"] * 0.5
             data[resource_name]["Current Price"] = round(new_price, 0.5)
 
     # format price strings
@@ -1250,10 +1255,8 @@ def event_resolution():
     '''
     
     full_game_id = request.form.get('full_game_id')
-    with open(f'active_games.json', 'r') as json_file:  
-        active_games_dict = json.load(json_file)
     
-    events.handle_current_event(active_games_dict, full_game_id)
+    events.handle_current_event(full_game_id)
     site_functions.run_end_of_turn_checks(full_game_id)
 
     return redirect(f'/{full_game_id}')

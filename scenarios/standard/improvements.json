@@ -116,6 +116,29 @@
             "Dollars": 5
         }
     },
+    "Colony": {
+        "Required Research": null,
+        "Required Resource": null,
+        "Health": 5,
+        "Victory Damage": 3,
+        "Combat Value": 9,
+        "Draw Damage": 1,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {
+            "Dollars": 10,
+            "Political Power": 0.25,
+            "Technology": 1
+        },
+        "Abilities": [],
+        "Upkeep": {
+            "Energy": 1
+        },
+        "Build Costs": {
+            "Basic Materials": 10,
+            "Common Metals": 10
+        }
+    },
     "Common Metals Mine": {
         "Required Research": "Surface Mining",
         "Required Resource": "Common Metals",

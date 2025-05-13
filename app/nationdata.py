@@ -4,6 +4,7 @@ import os
 
 from app import core
 from app.region import Region
+from typing import Union, Tuple, List
 
 class Nation:
     
@@ -21,6 +22,7 @@ class Nation:
         self.trade_fee: str = nation_data["tradeFee"]
         self.completed_research: dict = nation_data["unlockedTechs"]
         self.income_details: list = nation_data["incomeDetails"]
+        self.tags: dict = nation_data["tags"]
         self.action_log: list = nation_data["actionLog"]
 
         self.missile_count: int = nation_data["missileStockpile"]["standardMissile"]
@@ -203,6 +205,7 @@ class Nation:
             "unitCounts": unit_cache,
             "unlockedTechs": {},
             "incomeDetails": [],
+            "tags": {},
             "actionLog": []
         }
 
@@ -243,19 +246,16 @@ class Nation:
         Calculations the trade fee this nation has to pay.
         """
 
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-
         # dollars : resources
         trade_fee_list = ["1:5","1:4", "1:3", "1:2", "1:1", "2:1", "3:1"]
+        trade_fee_list = ["3:1", "2:1", "1:1", "1:2", "1:3", "1:4", "1:5"]
         trade_index = 3
 
         if "Improved Logistics" in self.completed_research:
-            trade_index -= 1
+            trade_index += 1
 
-        if "Threat Containment" in active_games_dict[self.game_id]["Active Events"]:
-            if active_games_dict[self.game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == self.name:
-                trade_index += 1
+        for tag_name, tag_data in self.tags.items():
+            rate += tag_data.get("Trade Fee Modifier", 0)
 
         self.trade_fee = trade_fee_list[trade_index]
 
@@ -434,14 +434,19 @@ class Nation:
             
             self.update_max(resource_name, int(new_max), overwrite=True)
 
-    def get_rate(self, resource_name: str) -> str:
+    def get_rate(self, resource_name: str) -> int:
         """
         Retrieves income rate of a given resource.
         """
+
         if resource_name not in self._resources:
             raise Exception(f"Resource {resource_name} not recognized.")
+        
+        rate = self._resources[resource_name]["rate"]
+        for tag_name, tag_data in self.tags.items():
+            rate += tag_data.get(f"{resource_name} Rate", 0)
 
-        return self._resources[resource_name]["rate"]
+        return rate
 
     def update_rate(self, resource_name: str, amount: int, *, overwrite = False) -> None:
         """
@@ -505,6 +510,11 @@ class Nation:
         """
         Returns military capacity limit of this nation.
         """
+
+        # do not enforce military capacity restrictions on foreign adversary
+        if self.name == "Foreign Adversary":
+            return 99999
+
         return float(self._resources["Military Capacity"]["max"])
 
     def update_max_mc(self, amount: int | float, *, overwrite = False) -> None:
@@ -667,6 +677,7 @@ class NationTable:
             "unitCounts": nation.unit_counts,
             "unlockedTechs": nation.completed_research,
             "incomeDetails": nation.income_details,
+            "tags": nation.tags,
             "actionLog": nation.action_log
         }
 
@@ -732,9 +743,16 @@ class NationTable:
 
             self.save(nation)
 
-    def get_top_three(self, record_name: str) -> list:
+    def get_top_three(self, record_name: str) -> list[Tuple[str, float|int]]:
         """
         Retrieves the top three of a given record.
+                
+        Options:
+            "militaryStrength"
+            "nationSize"
+            "netIncome"
+            "researchCount"
+            "transactionCount"
         """
 
         data = {}
@@ -748,6 +766,27 @@ class NationTable:
         top_three = list(sorted_data.items())[:3]
         
         return top_three
+    
+    def get_lowest_in_record(self, record_name: str) -> Tuple[str, float|int]:
+        """
+        Retrieves the nation with lowest value of a given record.
+                
+        Options:
+            "militaryStrength"
+            "nationSize"
+            "netIncome"
+            "researchCount"
+            "transactionCount"
+        """
+
+        data = {}
+        for nation in self:
+            if record_name == "netIncome":
+                data[nation.name] = float(nation._records[record_name][-1])
+            else:
+                data[nation.name] = nation._records[record_name][-1]
+
+        return min(data.items(), key=lambda item: item[1])
 
     def add_leaderboard_bonuses(self) -> None:
         """
@@ -799,6 +838,20 @@ class NationTable:
                     nation.income_details = p1 + p2
 
                     self.save(nation)
+
+    def check_tags(self) -> None:
+
+        current_turn_num = core.get_current_turn_num(self.game_id)
+        
+        for nation in self:
+            
+            tags_filtered = {}
+            for tag_name, tag_data in nation.tags.items():
+                if tag_data["Expire Turn"] > current_turn_num:
+                    tags_filtered[tag_name] = tag_data
+            
+            nation.tags = tags_filtered
+            self.save(nation)
 
 # tba - move everything below to a scenario file
 EASY_LIST = [
