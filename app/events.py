@@ -29,18 +29,16 @@ def trigger_event(game_id: str) -> None:
     already_chosen_events= set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
 
     # filter out inelligable events
-    event_dict_filtered = {}
+    events = []
     for event_name, event_details in EVENT_DICT.items():
         if event_name in already_chosen_events:
             continue
         if not _is_valid(game_id, event_details["Conditions"], already_chosen_events):
             continue
-        event_dict_filtered[event_name] = event_details
+        events.append(event_name)
     
     # select and initiate random event
-    events_list = list(EVENT_DICT.keys())
-    random.shuffle(events_list)
-    chosen_event = events_list.pop()
+    chosen_event = random.choice(events)
     initiate_event(game_id, chosen_event, active_games_dict)
 
     # save changes to active_games.json
