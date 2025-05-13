@@ -178,6 +178,11 @@ class War:
                 names = [
                     f"{main_attacker.name} - {main_defender.name} Subjugation War"
                 ]
+
+            case "NULL":
+                names = [
+                    "Foreign Invasion"
+                ]
         
         attempts = 0
         war_prefixes = ['2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th']

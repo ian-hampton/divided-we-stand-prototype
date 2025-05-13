@@ -396,8 +396,17 @@ def determine_region_color(owner_id: int, occupier_id: int, player_color_list: l
 
     if owner_id != 99:
         fill_color = palette.hex_to_tup(player_color_list[owner_id - 1], True)
-    elif occupier_id != 0:
+    else:
+        nation_table = NationTable(full_game_id)
+        temp = nation_table.get("99")
+        fill_color = palette.hex_to_tup(temp.color, True)
+    if occupier_id not in [0, 99]:
         fill_color = palette.normal_to_occupied[player_color_list[occupier_id - 1]]
+        fill_color = palette.hex_to_tup(fill_color, True)
+    elif occupier_id == 99:
+        nation_table = NationTable(full_game_id)
+        temp = nation_table.get("99")
+        fill_color = palette.normal_to_occupied[temp.color]
         fill_color = palette.hex_to_tup(fill_color, True)
         
     return fill_color

@@ -196,12 +196,14 @@ table {
                 {% if "Attacker" in nation_data["role"] %}
                     <div class="entry">
                         <div class="nation-name"> {{ nation_name }} </div>
-                        <div class="nation-details">War Role: <span class="color-red"> {{ nation_data["role"] }} </span> </div>
-                        <div class="nation-details">War Justification: <span class="color-red"> {{ nation_data["warJustification"] }} </span> </div>
-                        {% if nation_data["warClaims"] %}
-                            <div class="nation-details">War Claims: <span class="color-red"> {{ nation_data["warClaims"]|join(", ") }} </span> </div>
-                        {% else %}
-                            <div class="nation-details">War Claims: <span class="color-red"> None </span> </div>
+                        {% if war_name != "Foreign Invasion" %}
+                            <div class="nation-details">War Role: <span class="color-red"> {{ nation_data["role"] }} </span> </div>
+                            <div class="nation-details">War Justification: <span class="color-red"> {{ nation_data["warJustification"] }} </span> </div>
+                            {% if nation_data["warClaims"] %}
+                                <div class="nation-details">War Claims: <span class="color-red"> {{ nation_data["warClaims"]|join(", ") }} </span> </div>
+                            {% else %}
+                                <div class="nation-details">War Claims: <span class="color-red"> None </span> </div>
+                            {% endif %}
                         {% endif %}
                     </div>
                 {% endif %}
@@ -214,12 +216,14 @@ table {
                 {% if "Defender" in nation_data["role"] %}
                     <div class="entry">
                         <div class="nation-name"> {{ nation_name }} </div>
-                        <div class="nation-details">War Role: <span class="color-blue"> {{ nation_data["role"] }} </span> </div>
-                        <div class="nation-details">War Justification: <span class="color-blue"> {{ nation_data["warJustification"] }} </span> </div>
-                        {% if nation_data["warClaims"] %}
-                            <div class="nation-details">War Claims: <span class="color-blue"> {{ nation_data["warClaims"]|join(", ") }} </span> </div>
-                        {% else %}
-                            <div class="nation-details">War Claims: <span class="color-blue"> None </span> </div>
+                        {% if war_name != "Foreign Invasion" %}
+                            <div class="nation-details">War Role: <span class="color-blue"> {{ nation_data["role"] }} </span> </div>
+                            <div class="nation-details">War Justification: <span class="color-blue"> {{ nation_data["warJustification"] }} </span> </div>
+                            {% if nation_data["warClaims"] %}
+                                <div class="nation-details">War Claims: <span class="color-blue"> {{ nation_data["warClaims"]|join(", ") }} </span> </div>
+                            {% else %}
+                                <div class="nation-details">War Claims: <span class="color-blue"> None </span> </div>
+                            {% endif %}
                         {% endif %}
                     </div>
                 {% endif %}
@@ -270,7 +274,11 @@ table {
     <div class="actual-bottom">
 
         {% autoescape false %}
-        {% if war_data["outcome"] == "TBD" %}
+        {% if war_name == "Foreign Invasion" %}
+
+            <div style="padding-top: 10px;padding-bottom: 10px"> The <span class="color-red">Foreign Adversary</span> will not negotiate a peace deal. </div>
+
+        {% elif war_data["outcome"] == "TBD" %}
 
             <div style="padding-top: 10px;padding-bottom: 5px"> {{ war_data["canEndStr"] }} </div>
             

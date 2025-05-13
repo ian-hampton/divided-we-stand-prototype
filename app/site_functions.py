@@ -302,7 +302,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             checks.bonus_phase_heals(game_id)
             notifications.append('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
-            print("Triggering an event...")
             events.trigger_event(game_id)
             pass
 

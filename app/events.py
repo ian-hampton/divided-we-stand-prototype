@@ -39,7 +39,8 @@ def trigger_event(game_id: str) -> None:
     
     # select and initiate random event
     chosen_event = random.choice(events)
-    initiate_event(game_id, chosen_event, active_games_dict)
+    print(f"Triggering {chosen_event} event...")
+    initiate_event(game_id, "Foreign Invasion", active_games_dict)
 
     # save changes to active_games.json
     with open('active_games.json', 'w') as json_file:
@@ -62,7 +63,7 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Assassination":
             # select victim
-            victim_player_id = random.randint(1, len(nation_table) + 1) 
+            victim_player_id = random.randint(1, len(nation_table)) 
             victim_nation = nation_table.get(str(victim_player_id))
             notifications.append(f"{victim_nation.name} has been randomly selected for the {chosen_event} event!", 2)
             # save to Current Event key to be activated later
@@ -78,11 +79,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
             new_tag = {}
             new_tag["Dollars Rate"] = -20
             new_tag["Political Power Rate"] = -20
-            new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+            new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
             victim_nation.tags["Corruption Scandal"] = new_tag
             nation_table.save(victim_nation)
             # save to active events list
-            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT["Duration"] + 1
+            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
         
         case "Coup":
             # select victim
@@ -192,7 +193,7 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Lost Nuclear Weapons":
             # select victim
-            victim_player_id = random.randint(1, len(nation_table) + 1) 
+            victim_player_id = random.randint(1, len(nation_table)) 
             victim_nation = nation_table.get(str(victim_player_id))
             notifications.append(f"{victim_nation.name} has been randomly selected for the {chosen_event} event!", 2)
             #save to Current Event key to be activated later
@@ -208,12 +209,12 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
         case "Market Inflation":
             # save as an active event
             active_event_dict = {}
-            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT["Duration"] + 1
+            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
         
         case "Market Recession":
             # save as an active event
             active_event_dict = {}
-            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT["Duration"] + 1
+            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
 
         case "Observer Status Invitation":
             notifications.append(f"New Event: {chosen_event}!", 2)
@@ -227,7 +228,7 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
                     effected_player_ids.append(nation.id)
                     names.append(nation.name)
             nations_receiving_award_str = ", ".join(names)
-            notifications.append(f"New Event: {chosen_event}!")
+            notifications.append(f"New Event: {chosen_event}!", 2)
             notifications.append(f"Receiving reward: {nations_receiving_award_str}.", 2)
             # save to Current Event key to be activated later
             active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
@@ -276,11 +277,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
             notifications.append(f"New Event: {chosen_event}!", 2)
             for nation in nation_table:
                 new_tag = {}
-                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
                 nation.tags["Civil Disorder"] = new_tag
                 nation_table.save(nation)
             # save as an active event
-            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT["Duration"] + 1
+            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
         
         case "Embargo":
             notifications.append(f"New Event: {chosen_event}!", 2)
@@ -336,35 +337,37 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
             color_candidates = list(palette.normal_to_occupied.keys())
             for nation in nation_table:
                 color_candidates.remove(nation.color)
-            random.shuffle(color_candidates)
             nation_table.create("99", "NULL")
             foreign_invasion_nation = nation_table.get("99")
-            foreign_invasion_nation.color = color_candidates.pop()
-            nation.name = "Foreign Adversary"
-            nation.gov = "Foreign Nation"
-            nation.fp = "Hostile"
+            foreign_invasion_nation.color = random.choice(color_candidates)
+            foreign_invasion_nation.name = "Foreign Adversary"
+            foreign_invasion_nation.gov = "Foreign Nation"
+            foreign_invasion_nation.fp = "Hostile"
+            nation_table.save(foreign_invasion_nation)
 
             # create war
             # note - all war justifications are set to null because this is not a conventional war
             war = war_table.create("99", "1", "NULL", [])
-            war.name = "Foreign Invasion"
             for nation in nation_table:
                 if nation.id == "1":
                     combatant = war.get_combatant(nation.id)
                     combatant.justification = "NULL"
                     war.save_combatant(combatant)
                 else:
-                    combatant = war.add_combatant(nation, "Secondary Defender", "NULL")
+                    combatant = war.add_combatant(nation, "Secondary Defender", "N/A")
+                    combatant.justification = "NULL"
+                    war.save_combatant(combatant)
+            war_table.save(war)
 
             # summon initial invasion
             unit_name = _foreign_invasion_unit(current_turn_num)
             invasion_point = Region(invasion_point_id, game_id)
             _foreign_invasion_initial_spawn(game_id, invasion_point_id, unit_name, nation_table)
             for adj_id in invasion_point.adjacent_regions:
-                _foreign_invasion_initial_spawn(game_id, invasion_point_id, unit_name, nation_table)
+                _foreign_invasion_initial_spawn(game_id, adj_id, unit_name, nation_table)
             
             # save as an active event
-            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT["Duration"] + 1
+            active_games_dict[game_id]["Active Events"][chosen_event] = current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
 
         case "Pandemic":
             
@@ -386,7 +389,7 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
                 "Completed Cure Research": 0,
                 "Needed Cure Research": len(nation_table) * 50,
                 "Closed Borders List": [],
-                "Expiration": current_turn_num + EVENT_DICT["Duration"] + 1
+                "Expiration": current_turn_num + EVENT_DICT[chosen_event]["Duration"] + 1
             }
             active_games_dict[game_id]["Active Events"][chosen_event] = active_event_dict
 
@@ -449,9 +452,9 @@ def handle_current_event(game_id: str) -> None:
                             print("Unrecognized nation name, try again.")
                     new_tag = {}
                     new_tag["Combat Roll Bonus"] = scapegoat.id
-                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                     nation.tags["Assassination Scapegoat"] = new_tag
-                    active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                    active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                 nation_table.save(nation)
 
         case "Diplomatic Summit":
@@ -490,11 +493,11 @@ def handle_current_event(game_id: str) -> None:
                     new_tag = {}
                     for attendee_id in summit_attendance_list:
                         new_tag[f"Cannot Declare War On #{attendee_id}"] = True
-                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                     nation.tags["Summit"] = new_tag
                     nation_table.save(nation)
                 # save event
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
 
         case "Foreign Interference":
             choices = ["Accept", "Decline"]
@@ -589,10 +592,10 @@ def handle_current_event(game_id: str) -> None:
             # add tag
             new_tag = {}
             new_tag["Technology Rate"] = -20
-            new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+            new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             victim_nation.tags["Security Breach"] = new_tag
             nation_table.save(victim_nation)
-            active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+            active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
 
         case "Observer Status Invitation":
             choices = ["Accept", "Decline"]
@@ -611,7 +614,7 @@ def handle_current_event(game_id: str) -> None:
                 nation = nation_table.get(nation_id)
                 if decision == "Accept":
                     new_tag = {}
-                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                     nation.tags["Observer Status"] = new_tag
                 elif decision == "Decline":
                     valid_research = False
@@ -656,7 +659,7 @@ def handle_current_event(game_id: str) -> None:
                     # add tag
                     new_tag = {}
                     new_tag["Political Power Rate"] = -20
-                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                     nation.tags["Shifting Attitudes"] = new_tag
                     # give research
                     valid_research = False
@@ -678,11 +681,11 @@ def handle_current_event(game_id: str) -> None:
             if nation_name is not None:
                 nation = nation_table.get(nation_name)
                 new_tag = {}
-                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                 nation.tags["Embargo"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Having received {vote_tally_dict[nation_name]} votes, {nation_name} has been embargoed", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # vote tied
             else:
@@ -701,11 +704,11 @@ def handle_current_event(game_id: str) -> None:
                 nation = nation_table.get(nation_name)
                 new_tag = {}
                 new_tag["No Agenda Research"] = True
-                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                 nation.tags["Humiliation"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Having received {vote_tally_dict[nation_name]} votes, {nation_name} has been humiliated.", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # vote tied
             else:
@@ -723,11 +726,11 @@ def handle_current_event(game_id: str) -> None:
             if nation_name is not None:
                 nation = nation_table.get(nation_name)
                 new_tag = {}
-                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                 nation.tags["Foreign Investment"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Having received {vote_tally_dict[nation_name]} votes, {nation_name} has recieved the foreign investment.", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # vote tied
             else:
@@ -747,12 +750,12 @@ def handle_current_event(game_id: str) -> None:
                 new_tag = {
                     "Alliance Political Power Bonus": 0.25,
                     "Truces Extended": [],
-                    "Expire Turn": current_turn_num + EVENT_DICT["Duration"] + 1
+                    "Expire Turn": current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                 }
                 nation.tags["Mediator"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Having received {vote_tally_dict[nation_name]} votes, {nation_name} has been elected Mediator.", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # vote tied
             else:
@@ -775,7 +778,7 @@ def handle_current_event(game_id: str) -> None:
                 nation.tags["Shared Fate"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Cooperation won in a {vote_tally_dict.get("Cooperation")} - {vote_tally_dict.get("Conflict")} decision.", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
 
             elif option_name == "Conflict":
                 nation = nation_table.get(nation_name)
@@ -790,7 +793,7 @@ def handle_current_event(game_id: str) -> None:
                 nation.tags["Shared Fate"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Conflict won in a {vote_tally_dict.get("Conflict")} - {vote_tally_dict.get("Cooperation")} decision.", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # vote tied
             else:
@@ -810,11 +813,11 @@ def handle_current_event(game_id: str) -> None:
                 new_tag = {}
                 new_tag["Military Capacity Rate"] = -20
                 new_tag["Trade Fee Modifier"] = -1
-                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT["Duration"] + 1
+                new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
                 nation.tags["Threat Containment"] = new_tag
                 nation_table.save(nation)
                 notifications.append(f"Having received {vote_tally_dict[nation_name]} votes, {nation_name} has been sanctioned.", 2)
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # vote tied
             else:
@@ -852,7 +855,7 @@ def handle_current_event(game_id: str) -> None:
                         alliance.remove_member(nation_name)
                 # add tag
                 new_tag = {
-                    "Expire Turn": current_turn_num + EVENT_DICT["Duration"] + 1,
+                    "Expire Turn": current_turn_num + EVENT_DICT[event_name]["Duration"] + 1,
                     "No Agenda Research": True
                 }
                 for resource_name in nation._resources:
@@ -861,7 +864,7 @@ def handle_current_event(game_id: str) -> None:
                 nation.tags["Faustian Bargain"] = new_tag
                 nation_table.save(nation)
                 # save event
-                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT["Duration"] + 1
+                active_games_dict[game_id]["Active Events"][event_name] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             
             # nobody wanted to be a dirty filthy traitor
             else:
@@ -902,7 +905,7 @@ def resolve_active_events(game_id: str, turn_status: str, actions_dict: dict[str
                         region_unit = Unit(region_id, game_id)
                         if region_unit.name is not None and region_unit.owner_id == 99:
                             destination_dict = {}
-                            ending_region_id, priority = _foreign_invasion_calculate_target_region(game_id, region.adjacent_regions, destination_dict)
+                            ending_region_id, priority = _foreign_invasion_calculate_target_region(game_id, list(region.adjacent_regions.keys()), destination_dict)
                             destination_dict[ending_region_id] = priority
                             if ending_region_id is not None:
                                 # foreign invasion always moves each unit one region at a time
@@ -1286,14 +1289,14 @@ def _foreign_invasion_initial_spawn(game_id: str, region_id: str, unit_name: str
     region_improvement = Improvement(region_id, game_id)
     region_unit = Unit(region_id, game_id)
 
-    if region_unit is not None:
+    if region_unit.name is not None:
         # remove old unit
         temp = nation_table.get(str(region_unit.owner_id))
         temp.unit_counts[region_unit.name] -= 1
         region_unit.clear()
         nation_table.save(temp)
 
-    if region_improvement is not None:
+    if region_improvement.name is not None:
         # remove old improvement
         temp = nation_table.get(str(region_improvement.owner_id))
         temp.improvement_counts[region_improvement.name] -= 1
@@ -1304,18 +1307,22 @@ def _foreign_invasion_initial_spawn(game_id: str, region_id: str, unit_name: str
     region.set_occupier_id(0)
     region_unit.set_unit(unit_name, 99)
 
-def _foreign_invasion_calculate_target_region(game_id, adjacency_list, destination_dict):
+def _foreign_invasion_calculate_target_region(game_id: str, adjacency_list: list, destination_dict: dict) -> tuple:
     """
     Function that contains Foreign Invasion attack logic.
     Designed to find path of least resistance but has no care for the health of its own units.
     """
     
-    random.shuffle(adjacency_list)
     target_region_id = None
     target_region_health = 0
     target_region_priority = -1
 
-    for adjacent_region_id in adjacency_list:
+    while adjacency_list != []:
+
+        # get random adjacent region
+        index = random.randrange(len(adjacency_list))
+        adjacent_region_id = adjacency_list.pop(index)
+
         # get data from region
         region = Region(adjacent_region_id, game_id)
         region_improvement = Improvement(adjacent_region_id, game_id)

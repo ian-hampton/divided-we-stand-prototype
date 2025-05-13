@@ -418,6 +418,9 @@ def resolve_resource_shortages(game_id: str) -> None:
 
     for nation in nation_table:
 
+        if nation.name == "Foreign Invasion":
+            continue
+
         upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
 
         # handle shortages
