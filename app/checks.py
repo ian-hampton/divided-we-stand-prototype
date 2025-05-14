@@ -122,15 +122,6 @@ def update_income(game_id: str) -> None:
             nation.update_gross_income("Political Power", 0.5)
             income_str = f"+{0.5:.2f} from Observer Status"
             _update_text_dict(text_dict, nation.name, "Political Power", income_str)
-        if "Faustian Bargain" in active_games_dict[game_id]["Active Events"]:
-            chosen_nation_name = active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Chosen Nation Name"]
-            if nation.name != chosen_nation_name:
-                continue
-            pp_from_lease = 0.2 * len(active_games_dict[game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"])
-            if pp_from_lease != 0:
-                nation.update_gross_income("Political Power", pp_from_lease)
-                income_str = f'+{pp_from_lease:.2f} from events.'
-                _update_text_dict(text_dict, nation.name, "Political Power", income_str)
         nation_table.save(nation)
 
     # dollars from trade agreements
