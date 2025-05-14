@@ -413,6 +413,9 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         None
     """
 
+    # get game data
+    map_str = map.get_map_str(new_game_entry["Information"]["Map"])
+
     # open game record files
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -479,22 +482,39 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
 
     # copy starting map images
     files_destination = f'gamedata/{game_id}'
-    map_str = map.get_map_str(new_game_entry["Information"]["Map"])
     starting_map_images = ['resourcemap', 'controlmap']
     for map_filename in starting_map_images:
         shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
         shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
     
     # create regdata.json
-    shutil.copy(f"maps/{map_str}/regdata.json", files_destination)
-    if form_data_dict["Scenario"] == 'Standard':
-        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
-        for region_id in regdata_dict:
+    with open(f'maps/{map_str}/graph.json', 'r') as json_file:
+        graph_dict = json.load(json_file)
+    regdata_dict = {}
+    for region_id in graph_dict:
+        regdata_dict[region_id] = {}
+        regdata_dict[region_id]["regionData"] = {
+            "ownerID": 0,
+            "occupierID": 0,
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+        }
+        regdata_dict[region_id]["improvementData"] = {
+            "name": None,
+            "health": 99,
+            "turnTimer": 99
+        }
+        regdata_dict[region_id]["unitData"] = {
+            "name": None,
+            "health": 99,
+            "ownerID": 0
+        }
+        if form_data_dict["Scenario"] == 'Standard':
             regdata_dict[region_id]["regionData"]["infection"] = 0
             regdata_dict[region_id]["regionData"]["quarantine"] = False
-        with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
-            json.dump(regdata_dict, json_file, indent=4)
+    with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
+        json.dump(regdata_dict, json_file, indent=4)
 
     # create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
