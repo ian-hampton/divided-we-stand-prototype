@@ -255,7 +255,7 @@ class Nation:
             trade_index += 1
 
         for tag_name, tag_data in self.tags.items():
-            rate += tag_data.get("Trade Fee Modifier", 0)
+            trade_index += tag_data.get("Trade Fee Modifier", 0)
 
         self.trade_fee = trade_fee_list[trade_index]
 
