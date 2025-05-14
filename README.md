@@ -10,12 +10,9 @@ Divided We Stand is a turn-based strategy game set in the modern era.
 
 <img src="app/static/preview.png" width="100%" alt="preview">
 
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
-
-
 
 ## About This Project
-This repository is an experimental turn processor and game manager for Divided We Stand.
+This repository is a prototype! It is meant to be used by a game administrator to manage games, process game turns, view completed games. This is not a production-ready website.
 
 ### Built With
 * [Flask](https://flask.palletsprojects.com/en/stable/)
@@ -23,73 +20,26 @@ This repository is an experimental turn processor and game manager for Divided W
 
 ### Roadmap
 
-- [x] Region code refactoring.
-- [ ] Player code refactoring.
-- [ ] Game management code refactoring.
-- [ ] New frontend?
-- [ ] Move game data into a proper SQL database and create config files.
+- [x] Rewrite Part 1 - Region Data Management
+- [x] Update #9
+- [ ] Rewrite Part 2 - Nation Data Management
+- [ ] Update #10
+- [ ] Rewrite Part 3 - Game Management
+- [ ] Update #11
 
 See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to view proposed features and what is currently being worked on.
-
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
-
-
-
-## Development Environment Setup
-
-### Prerequisites
-* Install python virtualenv (if you do not already have it installed)
-    ```sh
-    pip install virtualenv
-    ```
-
-### Installation
-
-1. Get into your directory of choice and clone the dev branch.
-    ```sh
-   git clone -b dev --single-branch https://github.com/ian-hampton/Divided-We-Stand.git
-   ```
-2. Download image assets and paste them into the 'static' folder.  
-    Note: Game archive images are currently unavailable.
-    ```
-    https://drive.google.com/drive/folders/1KX-A1SJXS72XJk-dEyoSqpg7B-2L_KMG?usp=sharing
-    ```
-3. Create a python virtualenv for this project using the provided requirements.txt file.
-    1. cd into the root folder of your local repo.
-        ```sh
-        cd <repo>
-        ```
-    2. Create the virtual enviroment.
-        ```sh
-        python -m venv .venv
-        ```
-    3. Activate the virtual enviroment.
-        ```sh
-        source .venv\Scripts\activate
-        ```
-    4. Install project requirements.
-        ```sh
-        pip install -r requirements.txt
-        ```
-
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
-
 
 
 ## Contact
 
-Ian Hampton - ianhampton313@gmail.com
+Ian Hampton
 
 Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.com/ian-hampton/Divided-We-Stand)
-
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
-
 
 
 ## Acknowledgments
 
-* Raster data for game maps provided by [Natural Earth](https://www.naturalearthdata.com/about/).
-* Vector data for game maps provided by [Natural Earth](https://www.naturalearthdata.com/about/) and [GADM](https://gadm.org/).
+* Game maps created with raster data provided by [Natural Earth](https://www.naturalearthdata.com/about/) and vector datasets from [Natural Earth](https://www.naturalearthdata.com/about/) and [GADM](https://gadm.org/).
 * <details>
     <summary>Web icon attributions:</summary>
       <ul>
@@ -124,5 +74,4 @@ Special thanks to everyone who has playtested the many early versions of this ga
   * Joey Badra
   * Kendal Hampton
   * Malcolm Hollingworth
-
-<p align="right">(<a href="#divided-we-stand">back to top</a>)</p>
+  * Will Schmidtfranz
