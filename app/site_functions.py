@@ -342,6 +342,7 @@ def run_end_of_turn_checks(game_id: str) -> None:
     checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)
     
+    nation_table.reload()
     for nation in nation_table:
         nation.update_stockpile_limits()
         nation.update_trade_fee()
