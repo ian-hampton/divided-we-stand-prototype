@@ -22,12 +22,10 @@ This repository is a prototype! It is meant to be used by a game administrator t
 
 - [x] Rewrite Part 1 - Region Data Management
 - [x] Update #9
-- [ ] Rewrite Part 2 - Nation Data Management
+- [ ] Rewrite Part 2 - Nation Data Management & Map Code Rewrite
 - [ ] Update #10
 - [ ] Rewrite Part 3 - Game Management
 - [ ] Update #11
-
-See the [open issues](https://github.com/ian-hampton/Divided-We-Stand/issues) to view proposed features and what is currently being worked on.
 
 
 ## Contact
