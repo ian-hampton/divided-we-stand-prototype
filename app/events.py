@@ -40,7 +40,7 @@ def trigger_event(game_id: str) -> None:
     # select and initiate random event
     chosen_event = random.choice(events)
     print(f"Triggering {chosen_event} event...")
-    initiate_event(game_id, event_name, active_games_dict)
+    initiate_event(game_id, chosen_event, active_games_dict)
 
     # save changes to active_games.json
     with open('active_games.json', 'w') as json_file:
@@ -977,9 +977,16 @@ def resolve_active_events(game_id: str, turn_status: str, actions_dict: dict[str
                                     region.add_infection(2)
                                 else:
                                     region.add_infection(1)
+
+                        # get a list of regions infected before spreading starts
+                        infected_regions = []
+                        for region_id in regdata_dict:
+                            region = Region(region_id, game_id)
+                            if region.infection() > 0:
+                                infected_regions.append(region_id)
                         
                         # conduct spread roles
-                        for region_id in regdata_dict:
+                        for region_id in infected_regions:
                             region = Region(region_id, game_id)
                             if region.infection() > 0:
                                 for adjacent_region_id in region.adjacent_regions:
