@@ -180,7 +180,7 @@ class Region:
 
         return False
     
-    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 99) -> bool:
+    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 0) -> bool:
         """
         Checks if there is an unit in unit_names in an adjacent region.
         
@@ -195,14 +195,14 @@ class Region:
         
         for region_id in self.adjacent_regions:
             region_unit = Unit(region_id, self.game_id)
-            if unit_owner_id != 99 and unit_owner_id != region_unit.owner_id:
+            if unit_owner_id != 0 and unit_owner_id != region_unit.owner_id:
                 continue
             if region_unit.name in unit_names:
                 return True
 
         return False
     
-    def find_suitable_region(self) -> str:
+    def find_suitable_region(self) -> str | None:
         """
         Finds a region to move the unit in this region to.
         Called only for withdraws at the moment, but this function could be generalized in the future.
@@ -231,9 +231,9 @@ class Region:
 
             # check if region is suitable
             if (
-                current_region.owner_id == withdrawing_unit.owner_id # region must be owned by the unit owner
-                and current_region_unit.name is None # region must not have another unit in it
-                and current_region.occupier_id == 0 # region must not be occupied by another nation
+                current_region.owner_id == withdrawing_unit.owner_id    # region must be owned by the unit owner
+                and current_region_unit.name is None                    # region must not have another unit in it
+                and current_region.occupier_id == 0                     # region must not be occupied by another nation
             ):
                 return current_region_id
             
@@ -243,7 +243,6 @@ class Region:
                     queue.append(adjacent_id)
 
         # return None if we failed to find a region
-        # ( you better hope that doesn't happen because there are 200+ regions to check )
         return None
     
     # combat methods
@@ -260,24 +259,30 @@ class Region:
         Returns:
             bool: True if all checks pass. False otherwise.
         """
-        from app.wardata import WarData
-        wardata = WarData(self.game_id)
+        
+        from app.war import WarTable
+        war_table = WarTable(self.game_id)
 
         # you can always move into regions owned by you
         if self.owner_id == other_player_id:
             return True
 
         # you may move into unoccupied regions owned by an enemy
-        if wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id == 0:
+        if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None and self.occupier_id == 0:
             return True
+        
         # you may move into occupied regions owned by an enemy in two cases
-        elif wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id != 0:
+        elif war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None and self.occupier_id != 0:
             # you are the occupier
             if self.occupier_id == other_player_id:
                 return True
             # you are also at war with the occupier
-            if wardata.are_at_war(self.occupier_id, other_player_id):
+            if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None:
                 return True
+            
+        # foreign invasion may move into unclaimed regions
+        if self.owner_id == 0 and other_player_id == 99:
+            return True
                 
         return False
     
@@ -361,8 +366,8 @@ class Region:
         Used for Pandemic event.
         """
         self.data["infection"] += amount
-        if self.data["infection"] > 10:
-            self.data["infection"] = 10
+        if self.data["infection"] > 5:
+            self.data["infection"] = 5
         elif self.data["infection"] < 0:
             self.data["infection"] = 0
         self._save_changes()

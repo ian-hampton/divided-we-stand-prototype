@@ -6,10 +6,9 @@ import core
 import map
 
 def run():
-    full_game_id = input("Enter Full Game ID: ")
-    game_id = int(full_game_id[-1])
-    map_name = core.get_map_name(game_id)
-    current_turn_num = core.get_current_turn_num(game_id)
+    game_id = input("Enter Full Game ID: ")
+    map_name = core.get_map_name(int(game_id[-1]))
+    current_turn_num = core.get_current_turn_num(int(game_id[-1]))
 
     main_map = map.MainMap(game_id, map_name, current_turn_num)
     main_map.update()

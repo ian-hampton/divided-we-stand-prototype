@@ -3,7 +3,6 @@ from typing import Union, Tuple, List
 
 from app import core
 
-
 class Alliance:
     
     def __init__(self, alliance_name: str, alliance_data: dict, game_id: str):
@@ -22,7 +21,7 @@ class Alliance:
             self.is_active: bool = False
 
         if self.is_active:
-            current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+            current_turn_num = core.get_current_turn_num(game_id)
             self.age: int = current_turn_num - self.turn_created
         else:
             self.age: int = self.turn_ended - self.turn_created
@@ -43,7 +42,7 @@ class Alliance:
             Alliance: A created alliance.
         """
 
-        current_turn_num = core.get_current_turn_num(int(game_id[-1]))
+        current_turn_num = core.get_current_turn_num(game_id)
 
         new_alliance_data = {
             "allianceType": alliance_type,
@@ -69,7 +68,7 @@ class Alliance:
             nation_name (str): Nation to add to the alliance.
         """
 
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         if nation_name in self.former_members:
             del self.former_members[nation_name]
@@ -85,7 +84,7 @@ class Alliance:
             nation_name (str): Nation to remove from the alliance.
         """
 
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         del self.current_members[nation_name]
 
@@ -96,15 +95,30 @@ class Alliance:
         Retires an alliance.
         """
         
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        from app.nationdata import NationTable
+        nation_table = NationTable(self.game_id)
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
+        # add truce periods
+        for nation1_name in self.current_members:
+            for nation2_name in self.current_members:
+                
+                if nation1_name == nation2_name:
+                    continue
+
+                nation1 = nation_table.get(nation1_name)
+                nation2 = nation_table.get(nation2_name)
+                
+                signatories_list = [False] * len(nation_table)
+                signatories_list[int(nation1.id) - 1] = True
+                signatories_list[int(nation2.id) - 1] = True
+                core.add_truce_period(self.game_id, signatories_list, 2)
+
+        # dissolve alliance
         for nation_name in self.current_members:
             self.former_members[nation_name] = current_turn_num
-        
         self.current_members = {}
         self.turn_ended = current_turn_num
-
-
 
 class AllianceTable:    
     
@@ -117,7 +131,7 @@ class AllianceTable:
             with open(gamedata_filepath, 'r') as json_file:
                 gamedata_dict = json.load(json_file)
         except FileNotFoundError:
-            print(f"Error: Unable to locate {gamedata_filepath} during Wardata class initialization.")
+            print(f"Error: Unable to locate {gamedata_filepath} during AllianceTable class initialization.")
 
         # set attributes
         self.game_id: str = game_id
@@ -226,20 +240,14 @@ class AllianceTable:
             bool: True if an grace period is still in effect, False otherwise.
         """
 
-        current_turn_num = core.get_current_turn_num(int(self.game_id[-1]))
+        current_turn_num = core.get_current_turn_num(self.game_id)
 
         for alliance in self:
-            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.former_members:
-                if (
-                    current_turn_num - alliance.former_members[nation_name_1] < 2
-                    or current_turn_num - alliance.former_members[nation_name_2] < 2
-                ):
-                    return True
-            elif nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_1] < 2:
+            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
+                if current_turn_num - alliance.former_members[nation_name_1] <= 2:
                     return True
             elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_2] < 2:
+                if current_turn_num - alliance.former_members[nation_name_2] <= 2:
                     return True
 
         return False
@@ -271,15 +279,17 @@ class AllianceTable:
     
     def get_allies(self, nation_name: str, type_to_search = 'ALL') -> list:
         """
-        Creates a list of all nations a player is allied with, no duplicates.
+        Returns a list of all nations a player is allied with, no duplicates.
 
         Params:
             nation_name (str): Nation name string.
             type_to_search (str): Type of alliance to check or 'ALL' to check all aliances.
         
         Returns:
-            list: List of allies found.
+            list: List of nation ids.
         """
+
+        from app.nationdata import NationTable
 
         allies_set = set()
 
@@ -291,7 +301,12 @@ class AllianceTable:
                     if alliance_member_name != nation_name:
                         allies_set.add(alliance_member_name)
 
-        allies_list = list(allies_set)
+        allies_list = []
+        nation_table = NationTable(self.game_id)
+        for nation_name in allies_set:
+            nation = nation_table.get(nation_name)
+            allies_list.append(nation.id)
+
         return allies_list
     
     def get_longest_alliance(self) -> Tuple[str, int]:

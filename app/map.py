@@ -1,18 +1,16 @@
-# STANDARD IMPORTS
 import csv
 from datetime import datetime
 import json
 import random
 
-# ENVIROMENT IMPORTS
 from PIL import Image, ImageDraw
 
-# GAME IMPORTS
 from app import core
+from app import palette
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
-
+from app.nationdata import NationTable
 
 class MainMap:
 
@@ -28,9 +26,8 @@ class MainMap:
         This function populates the map with random improvements.
         """
         
-        # get filepaths and lists
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_location, 1)
+        # get game data
+        nation_table = NationTable(self.game_id)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
         region_id_list = list(regdata_dict.keys())
@@ -43,7 +40,7 @@ class MainMap:
         
         # place improvements randomly
         count = 0
-        placement_quota = 2 * len(playerdata_list)
+        placement_quota = 2 * len(nation_table)
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
@@ -102,7 +99,7 @@ class MainMap:
         print("Updating main map...")
         
         # get filepaths
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
+        nation_table = NationTable(self.game_id)
         match self.turn_num:
             case "Starting Region Selection in Progress" | "Nation Setup in Progress":
                 main_map_save_location = f'gamedata/{self.game_id}/images/0.png'
@@ -118,16 +115,16 @@ class MainMap:
         
         
         # get game data
-        playerdata_list = core.read_file(playerdata_location, 1)
-        nation_info_masterlist = core.get_nation_info(playerdata_list)
-        player_color_list = generate_player_color_list(playerdata_location)
+        nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
-        
+
+        # to do - get rid of this garbage list
+        player_color_list = []
+        for nation in nation_table:
+            player_color_list.append(nation.color)
 
         # Color Regions in Map Image
         main_image = Image.open(main_filepath)
@@ -142,7 +139,7 @@ class MainMap:
                 start_cords_updated = (cord_x, cord_y)
                 if region.cords is not None:
                     start_cords_updated = region.cords
-                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id, active_games_dict)
+                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id)
         
         # add texture and background to temp image
         if map_str == "united_states":
@@ -159,7 +156,7 @@ class MainMap:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
             if region.cords is not None and (region.owner_id != 0 or region.occupier_id != 0):
-                fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id, active_games_dict)
+                fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id)
                 cord_x = (region_improvement.cords[0] + 25)
                 cord_y = (region_improvement.cords[1] + 25)
                 improvement_box_start_cords = (cord_x, cord_y)
@@ -186,15 +183,6 @@ class MainMap:
                 mask = nuke_image.split()[3]
                 main_image.paste(nuke_image, region_improvement.cords, mask)
                 continue
-            # check for fautasian bargan case lease
-            if "Faustian Bargain" in active_games_dict[self.game_id]["Active Events"]:
-                if region_id in active_games_dict[self.game_id]["Active Events"]["Faustian Bargain"]["Leased Regions List"]:
-                    print(region_id)
-                    lease_filepath = 'app/static/images/lease.png'
-                    lease_image = Image.open(lease_filepath)
-                    mask = lease_image.split()[3]
-                    main_image.paste(lease_image, region_improvement.cords, mask)
-                    continue
             # place improvement if present
             if region_improvement.name is not None:
                 # place improvement image
@@ -235,11 +223,8 @@ class MainMap:
                     cord_y = (region_unit.cords[1] - 20)
                     unit_cords = (cord_x, cord_y)
                 # get unit color
-                if region_unit.owner_id != 0 and region_unit.owner_id != 99:
-                    player_color_str = nation_info_masterlist[region_unit.owner_id - 1][1]
-                elif region_unit.owner_id == 0 and "Foreign Invasion" in active_games_dict[self.game_id]["Active Events"]:
-                    player_color_str = active_games_dict[self.game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-                unit_filepath = f'app/static/images/units/{region_unit.abbrev()}{player_color_str}.png'
+                nation = nation_table.get(region_unit.owner_id)
+                unit_filepath = f'app/static/images/units/{region_unit.abbrev()}{nation.color}.png'
                 # place unit
                 unit_image = Image.open(unit_filepath)
                 mask = unit_image.split()[3]
@@ -321,8 +306,8 @@ class ResourceMap:
                 start_cords_updated = (cord_x, cord_y)
                 if region.cords is not None:
                     start_cords_updated = region.cords
-                main_image = silly_placeholder(main_image, region_id, core.resource_colors[region.resource])
-                ImageDraw.floodfill(main_image, start_cords_updated, core.resource_colors[region.resource], border=(0, 0, 0, 255))
+                main_image = silly_placeholder(main_image, region_id, resource_colors[region.resource])
+                ImageDraw.floodfill(main_image, start_cords_updated, resource_colors[region.resource], border=(0, 0, 0, 255))
         
         # add background textures and text
         if map_str == "united_states":
@@ -360,12 +345,14 @@ class ControlMap:
         texture_filepath = f"{image_resources_filepath}/texture.png"
        
         # get game data
-        playerdata_location = f'gamedata/{self.game_id}/playerdata.csv'
-        player_color_list = generate_player_color_list(playerdata_location)
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
+        nation_table = NationTable(self.game_id)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
+
+        # to do - get rid of this garbage list
+        player_color_list = []
+        for nation in nation_table:
+            player_color_list.append(nation.color)
 
         # color regions
         main_image = Image.open(main_filepath)
@@ -380,7 +367,7 @@ class ControlMap:
                 start_cords_updated = (cord_x, cord_y)
                 if region.cords is not None:
                     start_cords_updated = region.cords
-                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id, active_games_dict)
+                map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id)
         
         # add background textures and text
         if map_str == "united_states":
@@ -391,55 +378,36 @@ class ControlMap:
         
         main_image.save(control_map_save_location)
 
-
-def generate_player_color_list(playerdata_location: str) -> list:
-    """
-    Gets a list of all player colors in RGB form.
-
-    Params:
-        playerdata_location (str): Filepath to playerdata.csv.
-    """
-
-    player_color_list = []
-
-    with open(playerdata_location, 'r') as file:
-        reader = csv.reader(file)
-        next(reader,None)
-        for row in reader:
-            if row != []:
-                player_color_hex = row[2]
-                player_color_rgb = core.player_colors_conversions[player_color_hex]
-                player_color_list.append(player_color_rgb)
-
-    return player_color_list
-
-def map_color_fill(owner_id: int, occupier_id: int, player_color_list: list, region_id: str, start_cords_updated: tuple, main_image: Image, full_game_id: str, active_games_dict: dict) -> None:
+def map_color_fill(owner_id: int, occupier_id: int, player_color_list: list, region_id: str, start_cords_updated: tuple, main_image: Image, full_game_id: str) -> None:
     """
     Determines what fill color to use for main map and control map generation, depending on region ownership and occupation.
     """
 
-    fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id, active_games_dict)
+    fill_color = determine_region_color(owner_id, occupier_id, player_color_list, full_game_id)
     main_image = silly_placeholder(main_image, region_id, fill_color)
     ImageDraw.floodfill(main_image, start_cords_updated, fill_color, border=(0, 0, 0, 255))
 
-def determine_region_color(owner_id: int, occupier_id: int, player_color_list: list, full_game_id: str, active_games_dict: dict) -> tuple:
+def determine_region_color(owner_id: int, occupier_id: int, player_color_list: list, full_game_id: str) -> tuple:
     """
     Cheap solution for determing region color.
     Future Ian if you allow this code to survive the next refactoring I will strangle you.
+        "I am sorry but it is not yet time" - Future Ian
     """
-    
+
     if owner_id != 99:
-        fill_color = player_color_list[owner_id - 1]
-    elif owner_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
-        fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-        fill_color = core.player_colors_conversions[fill_color]
-    if occupier_id != 0 and occupier_id != 99:
-        fill_color = player_color_list[occupier_id -1]
-        fill_color = core.player_colors_normal_to_occupied[fill_color]
-    elif occupier_id == 99 and "Foreign Invasion" in active_games_dict[full_game_id]["Active Events"]:
-        fill_color = active_games_dict[full_game_id]["Active Events"]["Foreign Invasion"]["Invasion Color"]
-        fill_color = core.player_colors_conversions[fill_color]
-        fill_color = core.player_colors_normal_to_occupied[fill_color]
+        fill_color = palette.hex_to_tup(player_color_list[owner_id - 1], True)
+    else:
+        nation_table = NationTable(full_game_id)
+        temp = nation_table.get("99")
+        fill_color = palette.hex_to_tup(temp.color, True)
+    if occupier_id not in [0, 99]:
+        fill_color = palette.normal_to_occupied[player_color_list[occupier_id - 1]]
+        fill_color = palette.hex_to_tup(fill_color, True)
+    elif occupier_id == 99:
+        nation_table = NationTable(full_game_id)
+        temp = nation_table.get("99")
+        fill_color = palette.normal_to_occupied[temp.color]
+        fill_color = palette.hex_to_tup(fill_color, True)
         
     return fill_color
 
@@ -535,3 +503,13 @@ def silly_placeholder(main_image, region_id, fill_color):
             ImageDraw.floodfill(main_image, (4609, 4327), fill_color, border=(0, 0, 0, 255))
             ImageDraw.floodfill(main_image, (4643, 4322), fill_color, border=(0, 0, 0, 255))
     return main_image
+
+resource_colors = {
+    "Coal": (166, 124, 82, 255),
+    "Oil": (96, 57, 19, 255),
+    "Basic Materials": (149, 149, 149, 255),
+    "Common Metals": (99, 99, 99, 255),
+    "Advanced Metals": (71, 157, 223, 255),
+    "Uranium": (0, 255, 0, 255),
+    "Rare Earth Elements": (241, 194, 50, 255)
+}

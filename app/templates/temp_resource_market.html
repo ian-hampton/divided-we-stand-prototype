@@ -43,12 +43,12 @@
 
         <div class="box">
 
-            <div class="top">Current Prices</div>
+            <div class="top">Market Prices</div>
 
             <div class="row">
                 <div class="cell-bold" style="width: 30%">Resource</div>
-                <div class="cell-bold" style="width: 17.5%">Base Price</div>
                 <div class="cell-bold" style="width: 17.5%">Current Price</div>
+                <div class="cell-bold" style="width: 17.5%">Base Price</div>
                 <div class="cell-bold" style="width: 17.5%">Bought</div>
                 <div class="cell-bold" style="width: 17.5%">Sold</div>
             </div>
@@ -56,8 +56,8 @@
             {% for resource_name, resource_data in prices_dict.items() %}
                 <div class="row">
                     <div class="cell" style="width: 30%">{{ resource_name }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Base"] }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Current"] }}</div>
+                    <div class="cell" style="width: 17.5%">{{ resource_data["Current Price"] }}</div>
+                    <div class="cell" style="width: 17.5%">{{ resource_data["Base Price"] }}</div>
                     <div class="cell" style="width: 17.5%">{{ resource_data["Bought"] }}</div>
                     <div class="cell" style="width: 17.5%">{{ resource_data["Sold"] }}</div>
                 </div>
@@ -73,9 +73,9 @@
             <div class="row">
                 <div class="cell" style="width: 100%">
                     Resource prices begin at a set base price, but will fluctuate based on supply and demand.
-                    <br><br><b>Buy Price:</b> The price at which you are buying a resource this turn is simply the current price listed in the table above. It is calculated from all resource market actions from the last 12 turns.
-                    <br><br><b>Sell Price:</b> The price at which you are selling a resource for is a bit more complex. It is calculated from all resource market actions from the last 11 turns, plus all resource market actions conducted this turn (including actions submitted by you). You can calculate the sell price using this formula:
-                    <br>&emsp;sell_price = base_price * (total_bought + 25) / (total_sold + 25)
+                    <br><br><b>Buy Price:</b> The buying price of a resource is simply the current price listed in the table above. It is calculated from all resource market actions from the last 12 turns using the following formula:
+                    <br>&emsp;buy_price = base_price * (total_bought_last_12 + 25) / (total_sold_last_12 + 25)
+                    <br><br><b>Sell Price:</b> The selling price of a resource is half of the buying price, rounded to the nearest hundredth.
                 </div>
             </div>
 

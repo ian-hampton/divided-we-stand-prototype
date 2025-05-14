@@ -28,7 +28,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NAGQU": {
@@ -65,7 +65,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XIGAZ": {
@@ -98,7 +98,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LHASA": {
@@ -131,7 +131,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHANN": {
@@ -163,7 +163,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QAMDO": {
@@ -197,7 +197,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NYING": {
@@ -231,7 +231,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HOTAN": {
@@ -266,7 +266,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "KASHG": {
@@ -297,7 +297,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 707,
                 1773
@@ -334,7 +334,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "KIZIL": {
@@ -366,7 +366,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "AKSUP": {
@@ -399,7 +399,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XAYAR": {
@@ -432,7 +432,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ILIKA": {
@@ -465,7 +465,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BORTA": {
@@ -496,7 +496,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1277,
                 1197
@@ -535,7 +535,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "KARAM": {
@@ -565,7 +565,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1589,
                 1263
@@ -602,7 +602,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "FUKAN": {
@@ -635,7 +635,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "URUMQ": {
@@ -669,7 +669,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 1873,
                 1490
@@ -706,7 +706,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TURPA": {
@@ -739,7 +739,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "KUMUL": {
@@ -772,7 +772,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAYIN": {
@@ -813,7 +813,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YUSHU": {
@@ -848,7 +848,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HAIXI": {
@@ -884,7 +884,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HAIBE": {
@@ -918,7 +918,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XININ": {
@@ -953,7 +953,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3130,
                 2484
@@ -991,7 +991,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HUANG": {
@@ -1024,7 +1024,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3145,
                 2669
@@ -1064,7 +1064,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JIUQU": {
@@ -1098,7 +1098,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZHANG": {
@@ -1132,7 +1132,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 2952,
                 2100
@@ -1171,7 +1171,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3271,
                 2271
@@ -1209,7 +1209,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3378,
                 2591
@@ -1249,7 +1249,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GANNA": {
@@ -1285,7 +1285,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "DINGX": {
@@ -1319,7 +1319,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LONGN": {
@@ -1356,7 +1356,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TIANS": {
@@ -1392,7 +1392,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QINGY": {
@@ -1427,7 +1427,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ALXAL": {
@@ -1464,7 +1464,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAYAN": {
@@ -1496,7 +1496,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ORDOS": {
@@ -1532,7 +1532,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAOTO": {
@@ -1565,7 +1565,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HOHHO": {
@@ -1599,7 +1599,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ULANQ": {
@@ -1633,7 +1633,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XILIN": {
@@ -1667,7 +1667,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHIFE": {
@@ -1700,7 +1700,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SONGS": {
@@ -1732,7 +1732,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4795,
                 1661
@@ -1775,7 +1775,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HORQI": {
@@ -1809,7 +1809,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HINGG": {
@@ -1843,7 +1843,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HULUN": {
@@ -1876,7 +1876,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "DAXIN": {
@@ -1907,7 +1907,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HEIHE": {
@@ -1941,7 +1941,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YICHU": {
@@ -1974,7 +1974,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JIAMU": {
@@ -2006,7 +2006,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHUAN": {
@@ -2039,7 +2039,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JIXIH": {
@@ -2070,7 +2070,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QIQIH": {
@@ -2105,7 +2105,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "DAQIN": {
@@ -2139,7 +2139,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5181,
                 977
@@ -2177,7 +2177,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HARBI": {
@@ -2216,7 +2216,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "MUDAN": {
@@ -2249,7 +2249,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAICH": {
@@ -2282,7 +2282,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SONGY": {
@@ -2317,7 +2317,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5290,
                 1174
@@ -2358,7 +2358,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5381,
                 1445
@@ -2395,7 +2395,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JILIN": {
@@ -2430,7 +2430,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TONGH": {
@@ -2464,7 +2464,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAISH": {
@@ -2496,7 +2496,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YANBI": {
@@ -2529,7 +2529,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GUYUA": {
@@ -2563,7 +2563,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3638,
                 2591
@@ -2602,7 +2602,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZHONG": {
@@ -2635,7 +2635,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3503,
                 2406
@@ -2676,7 +2676,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HULUD": {
@@ -2708,7 +2708,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5004,
                 1812
@@ -2744,7 +2744,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5242,
                 1894
@@ -2781,7 +2781,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "DANDO": {
@@ -2815,7 +2815,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5428,
                 1717
@@ -2853,7 +2853,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TIELI": {
@@ -2886,7 +2886,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5255,
                 1463
@@ -2926,7 +2926,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5206,
                 1583
@@ -2964,7 +2964,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5127,
                 1573
@@ -3002,7 +3002,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZHAOT": {
@@ -3036,7 +3036,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QUJIN": {
@@ -3073,7 +3073,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3361,
                 3897
@@ -3109,7 +3109,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHUXI": {
@@ -3144,7 +3144,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "KUNMI": {
@@ -3177,7 +3177,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3232,
                 3921
@@ -3215,7 +3215,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "PUERC": {
@@ -3247,7 +3247,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LIJIA": {
@@ -3282,7 +3282,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LINCA": {
@@ -3314,7 +3314,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YIBIN": {
@@ -3349,7 +3349,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NEIJI": {
@@ -3384,7 +3384,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3526,
                 3387
@@ -3423,7 +3423,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3621,
                 3210
@@ -3460,7 +3460,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3738,
                 3465
@@ -3499,7 +3499,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": []
         }
     },
@@ -3534,7 +3534,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "MIANY": {
@@ -3569,7 +3569,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LESHA": {
@@ -3605,7 +3605,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3224,
                 3425
@@ -3642,7 +3642,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3379,
                 3292
@@ -3682,7 +3682,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GARZE": {
@@ -3718,7 +3718,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LIANG": {
@@ -3754,7 +3754,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HANDA": {
@@ -3788,7 +3788,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XINGT": {
@@ -3823,7 +3823,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHIJI": {
@@ -3857,7 +3857,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HENGS": {
@@ -3891,7 +3891,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4578,
                 2244
@@ -3931,7 +3931,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAODI": {
@@ -3967,7 +3967,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZHKOU": {
@@ -4003,7 +4003,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHNDE": {
@@ -4042,7 +4042,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TNGSN": {
@@ -4076,7 +4076,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4790,
                 1943
@@ -4113,7 +4113,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4867,
                 1897
@@ -4151,7 +4151,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4623,
                 2003
@@ -4189,7 +4189,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4614,
                 1906
@@ -4225,7 +4225,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4752,
                 2052
@@ -4264,7 +4264,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4700,
                 1975
@@ -4302,7 +4302,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHUOZ": {
@@ -4339,7 +4339,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TAIYU": {
@@ -4373,7 +4373,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YANGQ": {
@@ -4409,7 +4409,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LINFE": {
@@ -4444,7 +4444,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YUNCH": {
@@ -4479,7 +4479,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4183,
                 2654
@@ -4519,7 +4519,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4297,
                 2470
@@ -4558,7 +4558,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QINZH": {
@@ -4593,7 +4593,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ANKAN": {
@@ -4628,7 +4628,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HANZH": {
@@ -4663,7 +4663,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAOJI": {
@@ -4696,7 +4696,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHANL": {
@@ -4731,7 +4731,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XIANY": {
@@ -4768,7 +4768,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WEINA": {
@@ -4803,7 +4803,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4020,
                 2680
@@ -4842,7 +4842,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HEZES": {
@@ -4877,7 +4877,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4628,
                 2574
@@ -4915,7 +4915,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LINYI": {
@@ -4951,7 +4951,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4899,
                 2512
@@ -4992,7 +4992,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TAIAN": {
@@ -5026,7 +5026,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4797,
                 2472
@@ -5066,7 +5066,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LIAOC": {
@@ -5101,7 +5101,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4644,
                 2420
@@ -5140,7 +5140,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4702,
                 2291
@@ -5177,7 +5177,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4806,
                 2227
@@ -5214,7 +5214,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4888,
                 2219
@@ -5251,7 +5251,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QINGD": {
@@ -5283,7 +5283,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5032,
                 2346
@@ -5318,7 +5318,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HAIKO": {
@@ -5349,7 +5349,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4180,
                 4691
@@ -5383,7 +5383,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4005,
                 4775
@@ -5421,7 +5421,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4182,
                 2744
@@ -5459,7 +5459,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4276,
                 2729
@@ -5498,7 +5498,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4363,
                 2907
@@ -5538,7 +5538,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XINYA": {
@@ -5574,7 +5574,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZHUMA": {
@@ -5608,7 +5608,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4531,
                 2940
@@ -5647,7 +5647,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4599,
                 2817
@@ -5687,7 +5687,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHGQU": {
@@ -5721,7 +5721,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4583,
                 2716
@@ -5759,7 +5759,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4428,
                 2711
@@ -5799,7 +5799,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4436,
                 2629
@@ -5839,7 +5839,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BIJIE": {
@@ -5874,7 +5874,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZUNYI": {
@@ -5911,7 +5911,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TONGR": {
@@ -5945,7 +5945,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QIANX": {
@@ -5978,7 +5978,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QIANN": {
@@ -6013,7 +6013,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QIAND": {
@@ -6048,7 +6048,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "BAISE": {
@@ -6084,7 +6084,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HECHI": {
@@ -6120,7 +6120,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LIUZH": {
@@ -6154,7 +6154,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4016,
                 3960
@@ -6193,7 +6193,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "WUZHO": {
@@ -6230,7 +6230,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GUIGA": {
@@ -6265,7 +6265,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NANNI": {
@@ -6300,7 +6300,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "FANGC": {
@@ -6332,7 +6332,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHONG": {
@@ -6366,7 +6366,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YOUYA": {
@@ -6400,7 +6400,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 3940,
                 3525
@@ -6440,7 +6440,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YUNYA": {
@@ -6474,7 +6474,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "ZHANJ": {
@@ -6506,7 +6506,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4123,
                 4563
@@ -6544,7 +6544,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4239,
                 4350
@@ -6580,7 +6580,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4331,
                 4342
@@ -6619,7 +6619,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JIANG": {
@@ -6651,7 +6651,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4465,
                 4313
@@ -6688,7 +6688,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "QINYN": {
@@ -6723,7 +6723,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4389,
                 4026
@@ -6763,7 +6763,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HEYUA": {
@@ -6797,7 +6797,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4716,
                 4033
@@ -6837,7 +6837,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HUIZH": {
@@ -6870,7 +6870,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4616,
                 4161
@@ -6911,7 +6911,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JIEYA": {
@@ -6947,7 +6947,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHAOZ": {
@@ -6983,7 +6983,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "GUANG": {
@@ -7019,7 +7019,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4539,
                 4177
@@ -7058,7 +7058,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4744,
                 2667
@@ -7097,7 +7097,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4977,
                 2642
@@ -7135,7 +7135,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4974,
                 2713
@@ -7173,7 +7173,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4969,
                 2860
@@ -7212,7 +7212,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5082,
                 2852
@@ -7250,7 +7250,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SUZHO": {
@@ -7283,7 +7283,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5196,
                 2991
@@ -7318,7 +7318,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5264,
                 2932
@@ -7355,7 +7355,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5090,
                 2688
@@ -7395,7 +7395,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LUANA": {
@@ -7431,7 +7431,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4744,
                 3016
@@ -7469,7 +7469,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4820,
                 3179
@@ -7509,7 +7509,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XUANC": {
@@ -7544,7 +7544,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHAOH": {
@@ -7580,7 +7580,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4932,
                 3054
@@ -7616,7 +7616,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4837,
                 2984
@@ -7659,7 +7659,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4941,
                 2950
@@ -7698,7 +7698,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4699,
                 2929
@@ -7736,7 +7736,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4669,
                 2816
@@ -7773,7 +7773,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5248,
                 3131
@@ -7812,7 +7812,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5168,
                 3209
@@ -7851,7 +7851,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5092,
                 3376
@@ -7891,7 +7891,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5222,
                 3440
@@ -7931,7 +7931,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "RUIAN": {
@@ -7963,7 +7963,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5266,
                 3506
@@ -8001,7 +8001,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5341,
                 3344
@@ -8039,7 +8039,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5226,
                 3330
@@ -8076,7 +8076,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5285,
                 3272
@@ -8111,7 +8111,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5320,
                 3185
@@ -8150,7 +8150,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "NANPI": {
@@ -8185,7 +8185,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SANMI": {
@@ -8220,7 +8220,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "LONGY": {
@@ -8255,7 +8255,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XIAME": {
@@ -8288,7 +8288,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": []
         }
     },
@@ -8322,7 +8322,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5105,
                 3851
@@ -8360,7 +8360,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 5189,
                 3611
@@ -8402,7 +8402,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4581,
                 3366
@@ -8441,7 +8441,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4662,
                 3499
@@ -8480,7 +8480,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "FUZHO": {
@@ -8516,7 +8516,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHARO": {
@@ -8551,7 +8551,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "CHGYI": {
@@ -8585,7 +8585,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4661,
                 3848
@@ -8624,7 +8624,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4752,
                 3952
@@ -8663,7 +8663,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4777,
                 3750
@@ -8703,7 +8703,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YICHA": {
@@ -8739,7 +8739,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHIYA": {
@@ -8775,7 +8775,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JINGZ": {
@@ -8811,7 +8811,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XIANN": {
@@ -8844,7 +8844,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "XIAYG": {
@@ -8879,7 +8879,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "JINGM": {
@@ -8913,7 +8913,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SUIZH": {
@@ -8947,7 +8947,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4432,
                 3055
@@ -8986,7 +8986,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4490,
                 3163
@@ -9024,7 +9024,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4557,
                 3221
@@ -9063,7 +9063,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4640,
                 3160
@@ -9103,7 +9103,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "SHAOY": {
@@ -9138,7 +9138,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YONGZ": {
@@ -9173,7 +9173,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4301,
                 3854
@@ -9212,7 +9212,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HENGY": {
@@ -9247,7 +9247,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "TUJIA": {
@@ -9281,7 +9281,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4118,
                 3443
@@ -9321,7 +9321,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YUEYA": {
@@ -9357,7 +9357,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "HONGK": {
@@ -9391,7 +9391,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "AOHAN": {
@@ -9425,7 +9425,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99
+            "ownerID": 0
         }
     },
     "YONGQ": {
@@ -9460,7 +9460,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 99,
+            "ownerID": 0,
             "coordinates": [
                 4839,
                 2792
