@@ -3499,8 +3499,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 0,
-            "coordinates": []
+            "ownerID": 0
         }
     },
     "BAZHO": {
@@ -8288,8 +8287,7 @@
         "unitData": {
             "name": null,
             "health": 99,
-            "ownerID": 0,
-            "coordinates": []
+            "ownerID": 0
         }
     },
     "QUANZ": {
