@@ -1,0 +1,4548 @@
+{
+    "DAXIN": {
+        "improvementCords": [
+            4912,
+            257
+        ],
+        "unitCords": [
+            4977,
+            257
+        ],
+        "adjacencyMap": {
+            "HEIHE": true,
+            "HULUN": true
+        }
+    },
+    "HEIHE": {
+        "improvementCords": [
+            5268,
+            623
+        ],
+        "unitCords": [
+            5333,
+            623
+        ],
+        "adjacencyMap": {
+            "DAXIN": true,
+            "HULUN": true,
+            "QIQIH": true,
+            "SUIHU": true,
+            "YICHU": true
+        }
+    },
+    "HULUN": {
+        "improvementCords": [
+            4825,
+            659
+        ],
+        "unitCords": [
+            4890,
+            659
+        ],
+        "adjacencyMap": {
+            "DAXIN": true,
+            "HEIHE": true,
+            "HINGG": true,
+            "QIQIH": true
+        }
+    },
+    "JIAMU": {
+        "improvementCords": [
+            5715,
+            730
+        ],
+        "unitCords": [
+            5780,
+            730
+        ],
+        "adjacencyMap": {
+            "HARBI": true,
+            "SHUAN": true,
+            "YICHU": true
+        }
+    },
+    "YICHU": {
+        "improvementCords": [
+            5493,
+            752
+        ],
+        "unitCords": [
+            5558,
+            752
+        ],
+        "adjacencyMap": {
+            "HARBI": true,
+            "HEIHE": true,
+            "JIAMU": true,
+            "SUIHU": true
+        }
+    },
+    "QIQIH": {
+        "improvementCords": [
+            5135,
+            825
+        ],
+        "unitCords": [
+            5200,
+            825
+        ],
+        "adjacencyMap": {
+            "BAICH": true,
+            "DAQIN": true,
+            "HEIHE": true,
+            "HINGG": true,
+            "HULUN": true,
+            "SUIHU": true
+        }
+    },
+    "SHUAN": {
+        "improvementCords": [
+            5784,
+            823
+        ],
+        "unitCords": [
+            5849,
+            823
+        ],
+        "adjacencyMap": {
+            "HARBI": true,
+            "JIAMU": true,
+            "JIXIH": true,
+            "MUDAN": true
+        }
+    },
+    "SUIHU": {
+        "improvementCords": [
+            5328,
+            881
+        ],
+        "unitCords": [
+            5393,
+            881
+        ],
+        "adjacencyMap": {
+            "DAQIN": true,
+            "HARBI": true,
+            "HEIHE": true,
+            "QIQIH": true,
+            "YICHU": true
+        }
+    },
+    "JIXIH": {
+        "improvementCords": [
+            5892,
+            926
+        ],
+        "unitCords": [
+            5795,
+            991
+        ],
+        "adjacencyMap": {
+            "MUDAN": true,
+            "SHUAN": true
+        }
+    },
+    "HARBI": {
+        "improvementCords": [
+            5474,
+            1038
+        ],
+        "unitCords": [
+            5539,
+            1038
+        ],
+        "adjacencyMap": {
+            "CCHUN": true,
+            "DAQIN": true,
+            "JIAMU": true,
+            "JILIN": true,
+            "MUDAN": true,
+            "SHUAN": true,
+            "SONGY": true,
+            "SUIHU": true,
+            "YANBI": true,
+            "YICHU": true
+        }
+    },
+    "ALTAY": {
+        "improvementCords": [
+            1956,
+            1098
+        ],
+        "unitCords": [
+            2021,
+            1098
+        ],
+        "adjacencyMap": {
+            "CHANG": true,
+            "FUKAN": true,
+            "TACHE": true,
+            "URUMQ": true
+        }
+    },
+    "HINGG": {
+        "improvementCords": [
+            4859,
+            1089
+        ],
+        "unitCords": [
+            4924,
+            1089
+        ],
+        "adjacencyMap": {
+            "BAICH": true,
+            "HULUN": true,
+            "QIQIH": true,
+            "TONGL": true,
+            "XILIN": true
+        }
+    },
+    "TACHE": {
+        "improvementCords": [
+            1524,
+            1067
+        ],
+        "unitCords": [
+            1589,
+            1067
+        ],
+        "adjacencyMap": {
+            "BORTA": true,
+            "CHANG": true,
+            "ILIKA": true,
+            "KARAM": true,
+            "ALTAY": true,
+            "BAYIN": true
+        }
+    },
+    "DAQIN": {
+        "improvementCords": [
+            5205,
+            1059
+        ],
+        "unitCords": [
+            5181,
+            957
+        ],
+        "adjacencyMap": {
+            "BAICH": true,
+            "HARBI": true,
+            "QIQIH": true,
+            "SONGY": true,
+            "SUIHU": true
+        }
+    },
+    "MUDAN": {
+        "improvementCords": [
+            5688,
+            1115
+        ],
+        "unitCords": [
+            5753,
+            1115
+        ],
+        "adjacencyMap": {
+            "HARBI": true,
+            "JIXIH": true,
+            "SHUAN": true,
+            "YANBI": true
+        }
+    },
+    "KARAM": {
+        "improvementCords": [
+            1615,
+            1173
+        ],
+        "unitCords": [
+            1589,
+            1243
+        ],
+        "adjacencyMap": {
+            "TACHE": true
+        }
+    },
+    "BAICH": {
+        "improvementCords": [
+            5073,
+            1163
+        ],
+        "unitCords": [
+            5129,
+            1173
+        ],
+        "adjacencyMap": {
+            "DAQIN": true,
+            "HINGG": true,
+            "QIQIH": true,
+            "SONGY": true,
+            "TONGL": true
+        }
+    },
+    "SONGY": {
+        "improvementCords": [
+            5227,
+            1196
+        ],
+        "unitCords": [
+            5290,
+            1154
+        ],
+        "adjacencyMap": {
+            "BAICH": true,
+            "CCHUN": true,
+            "DAQIN": true,
+            "HARBI": true,
+            "SIPIN": true,
+            "TONGL": true
+        }
+    },
+    "BORTA": {
+        "improvementCords": [
+            1325,
+            1200
+        ],
+        "unitCords": [
+            1397,
+            1240
+        ],
+        "adjacencyMap": {
+            "ILIKA": true,
+            "TACHE": true
+        }
+    },
+    "CCHUN": {
+        "improvementCords": [
+            5315,
+            1245
+        ],
+        "unitCords": [
+            5380,
+            1245
+        ],
+        "adjacencyMap": {
+            "HARBI": true,
+            "JILIN": true,
+            "SIPIN": true,
+            "SONGY": true
+        }
+    },
+    "JILIN": {
+        "improvementCords": [
+            5460,
+            1312
+        ],
+        "unitCords": [
+            5525,
+            1312
+        ],
+        "adjacencyMap": {
+            "BAISH": true,
+            "CCHUN": true,
+            "HARBI": true,
+            "SIPIN": true,
+            "TONGH": true,
+            "YANBI": true
+        }
+    },
+    "YANBI": {
+        "improvementCords": [
+            5658,
+            1339
+        ],
+        "unitCords": [
+            5723,
+            1339
+        ],
+        "adjacencyMap": {
+            "BAISH": true,
+            "HARBI": true,
+            "JILIN": true,
+            "MUDAN": true
+        }
+    },
+    "CHANG": {
+        "improvementCords": [
+            1735,
+            1362
+        ],
+        "unitCords": [
+            1755,
+            1299
+        ],
+        "adjacencyMap": {
+            "TACHE": true,
+            "URUMQ": true,
+            "ALTAY": true,
+            "BAYIN": true
+        }
+    },
+    "TONGL": {
+        "improvementCords": [
+            4970,
+            1351
+        ],
+        "unitCords": [
+            5035,
+            1351
+        ],
+        "adjacencyMap": {
+            "AOHAN": true,
+            "BAICH": true,
+            "CHAOY": true,
+            "CHIFE": true,
+            "FUXIN": true,
+            "HINGG": true,
+            "HORQI": true,
+            "SIPIN": true,
+            "SONGY": true,
+            "XILIN": true
+        }
+    },
+    "ILIKA": {
+        "improvementCords": [
+            1284,
+            1379
+        ],
+        "unitCords": [
+            1349,
+            1379
+        ],
+        "adjacencyMap": {
+            "BORTA": true,
+            "TACHE": true,
+            "XAYAR": true,
+            "BAYIN": true
+        }
+    },
+    "SIPIN": {
+        "improvementCords": [
+            5317,
+            1373
+        ],
+        "unitCords": [
+            5377,
+            1417
+        ],
+        "adjacencyMap": {
+            "CCHUN": true,
+            "FUSHU": true,
+            "HORQI": true,
+            "JILIN": true,
+            "SONGY": true,
+            "TIELI": true,
+            "TONGH": true,
+            "TONGL": true
+        }
+    },
+    "FUKAN": {
+        "improvementCords": [
+            1992,
+            1395
+        ],
+        "unitCords": [
+            2057,
+            1395
+        ],
+        "adjacencyMap": {
+            "KUMUL": true,
+            "TURPA": true,
+            "URUMQ": true,
+            "ALTAY": true
+        }
+    },
+    "HORQI": {
+        "improvementCords": [
+            5089,
+            1437
+        ],
+        "unitCords": [
+            5154,
+            1437
+        ],
+        "adjacencyMap": {
+            "FUXIN": true,
+            "SHENY": true,
+            "SIPIN": true,
+            "TIELI": true,
+            "TONGL": true
+        }
+    },
+    "CHIFE": {
+        "improvementCords": [
+            4728,
+            1445
+        ],
+        "unitCords": [
+            4793,
+            1445
+        ],
+        "adjacencyMap": {
+            "AOHAN": true,
+            "CHNDE": true,
+            "TONGL": true,
+            "XILIN": true
+        }
+    },
+    "XILIN": {
+        "improvementCords": [
+            4413,
+            1429
+        ],
+        "unitCords": [
+            4478,
+            1429
+        ],
+        "adjacencyMap": {
+            "CHIFE": true,
+            "CHNDE": true,
+            "HINGG": true,
+            "TONGL": true,
+            "ULANQ": true,
+            "ZHKOU": true
+        }
+    },
+    "URUMQ": {
+        "improvementCords": [
+            1815,
+            1425
+        ],
+        "unitCords": [
+            1873,
+            1469
+        ],
+        "adjacencyMap": {
+            "CHANG": true,
+            "FUKAN": true,
+            "TURPA": true,
+            "ALTAY": true,
+            "BAYIN": true
+        }
+    },
+    "BAISH": {
+        "improvementCords": [
+            5563,
+            1471
+        ],
+        "unitCords": [
+            5618,
+            1511
+        ],
+        "adjacencyMap": {
+            "JILIN": true,
+            "TONGH": true,
+            "YANBI": true
+        }
+    },
+    "TIELI": {
+        "improvementCords": [
+            5290,
+            1498
+        ],
+        "unitCords": [
+            5255,
+            1443
+        ],
+        "adjacencyMap": {
+            "FUSHU": true,
+            "HORQI": true,
+            "SHENY": true,
+            "SIPIN": true
+        }
+    },
+    "AOHAN": {
+        "improvementCords": [
+            4819,
+            1535
+        ],
+        "unitCords": [
+            4884,
+            1535
+        ],
+        "adjacencyMap": {
+            "CHAOY": true,
+            "CHIFE": true,
+            "CHNDE": true,
+            "SONGS": true,
+            "TONGL": true
+        }
+    },
+    "TONGH": {
+        "improvementCords": [
+            5459,
+            1556
+        ],
+        "unitCords": [
+            5463,
+            1483
+        ],
+        "adjacencyMap": {
+            "BAISH": true,
+            "DANDO": true,
+            "FUSHU": true,
+            "JILIN": true,
+            "SIPIN": true
+        }
+    },
+    "FUXIN": {
+        "improvementCords": [
+            5061,
+            1599
+        ],
+        "unitCords": [
+            5116,
+            1555
+        ],
+        "adjacencyMap": {
+            "CHAOY": true,
+            "HORQI": true,
+            "JINZH": true,
+            "SHENY": true,
+            "TONGL": true
+        }
+    },
+    "XAYAR": {
+        "improvementCords": [
+            1265,
+            1606
+        ],
+        "unitCords": [
+            1330,
+            1606
+        ],
+        "adjacencyMap": {
+            "AKSUP": true,
+            "HOTAN": true,
+            "ILIKA": true,
+            "BAYIN": true
+        }
+    },
+    "KUMUL": {
+        "improvementCords": [
+            2332,
+            1609
+        ],
+        "unitCords": [
+            2397,
+            1609
+        ],
+        "adjacencyMap": {
+            "FUKAN": true,
+            "JIUQU": true,
+            "TURPA": true,
+            "BAYIN": true
+        }
+    },
+    "FUSHU": {
+        "improvementCords": [
+            5326,
+            1616
+        ],
+        "unitCords": [
+            5391,
+            1616
+        ],
+        "adjacencyMap": {
+            "DANDO": true,
+            "SHENY": true,
+            "SIPIN": true,
+            "TIELI": true,
+            "TONGH": true
+        }
+    },
+    "SHENY": {
+        "improvementCords": [
+            5214,
+            1621
+        ],
+        "unitCords": [
+            5206,
+            1563
+        ],
+        "adjacencyMap": {
+            "ANSHA": true,
+            "DANDO": true,
+            "FUSHU": true,
+            "FUXIN": true,
+            "HORQI": true,
+            "JINZH": true,
+            "TIELI": true
+        }
+    },
+    "TURPA": {
+        "improvementCords": [
+            1955,
+            1644
+        ],
+        "unitCords": [
+            2020,
+            1644
+        ],
+        "adjacencyMap": {
+            "FUKAN": true,
+            "KUMUL": true,
+            "URUMQ": true,
+            "BAYIN": true
+        }
+    },
+    "KIZIL": {
+        "improvementCords": [
+            491,
+            1653
+        ],
+        "unitCords": [
+            556,
+            1653
+        ],
+        "adjacencyMap": {
+            "AKSUP": true,
+            "KARGI": true,
+            "KASHG": true
+        }
+    },
+    "SONGS": {
+        "improvementCords": [
+            4813,
+            1702
+        ],
+        "unitCords": [
+            4795,
+            1641
+        ],
+        "adjacencyMap": {
+            "AOHAN": true,
+            "CHAOY": true,
+            "CHNDE": true
+        }
+    },
+    "JINZH": {
+        "improvementCords": [
+            5059,
+            1713
+        ],
+        "unitCords": [
+            5116,
+            1713
+        ],
+        "adjacencyMap": {
+            "ANSHA": true,
+            "CHAOY": true,
+            "FUXIN": true,
+            "HULUD": true,
+            "SHENY": true
+        }
+    },
+    "CHAOY": {
+        "improvementCords": [
+            4939,
+            1725
+        ],
+        "unitCords": [
+            4984,
+            1668
+        ],
+        "adjacencyMap": {
+            "AOHAN": true,
+            "CHNDE": true,
+            "FUXIN": true,
+            "HULUD": true,
+            "JINZH": true,
+            "QINHU": true,
+            "SONGS": true,
+            "TONGL": true
+        }
+    },
+    "DANDO": {
+        "improvementCords": [
+            5357,
+            1765
+        ],
+        "unitCords": [
+            5412,
+            1703
+        ],
+        "adjacencyMap": {
+            "ANSHA": true,
+            "DALIA": true,
+            "FUSHU": true,
+            "SHENY": true,
+            "TONGH": true
+        }
+    },
+    "KASHG": {
+        "improvementCords": [
+            643,
+            1781
+        ],
+        "unitCords": [
+            707,
+            1753
+        ],
+        "adjacencyMap": {
+            "KARGI": true,
+            "KIZIL": true
+        }
+    },
+    "AKSUP": {
+        "improvementCords": [
+            1048,
+            1756
+        ],
+        "unitCords": [
+            1113,
+            1756
+        ],
+        "adjacencyMap": {
+            "HOTAN": true,
+            "KARGI": true,
+            "KIZIL": true,
+            "XAYAR": true
+        }
+    },
+    "CHNDE": {
+        "improvementCords": [
+            4671,
+            1785
+        ],
+        "unitCords": [
+            4736,
+            1785
+        ],
+        "adjacencyMap": {
+            "AOHAN": true,
+            "CHAOY": true,
+            "CHIFE": true,
+            "LANGF": true,
+            "QINHU": true,
+            "SHUNY": true,
+            "SONGS": true,
+            "TNGSN": true,
+            "XILIN": true,
+            "ZHKOU": true
+        }
+    },
+    "BAOTO": {
+        "improvementCords": [
+            3947,
+            1791
+        ],
+        "unitCords": [
+            4012,
+            1791
+        ],
+        "adjacencyMap": {
+            "BAYAN": true,
+            "HOHHO": true,
+            "ORDOS": true,
+            "ULANQ": true
+        }
+    },
+    "ANSHA": {
+        "improvementCords": [
+            5206,
+            1793
+        ],
+        "unitCords": [
+            5271,
+            1793
+        ],
+        "adjacencyMap": {
+            "DALIA": true,
+            "DANDO": true,
+            "JINZH": true,
+            "SHENY": true
+        }
+    },
+    "ULANQ": {
+        "improvementCords": [
+            4221,
+            1841
+        ],
+        "unitCords": [
+            4286,
+            1841
+        ],
+        "adjacencyMap": {
+            "BAOTO": true,
+            "DATON": true,
+            "HOHHO": true,
+            "XILIN": true,
+            "ZHKOU": true
+        }
+    },
+    "BAYAN": {
+        "improvementCords": [
+            3693,
+            1839
+        ],
+        "unitCords": [
+            3758,
+            1839
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "BAOTO": true,
+            "ORDOS": true
+        }
+    },
+    "HULUD": {
+        "improvementCords": [
+            4948,
+            1843
+        ],
+        "unitCords": [
+            4999,
+            1799
+        ],
+        "adjacencyMap": {
+            "CHAOY": true,
+            "JINZH": true,
+            "QINHU": true
+        }
+    },
+    "ZHKOU": {
+        "improvementCords": [
+            4433,
+            1879
+        ],
+        "unitCords": [
+            4498,
+            1879
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "BEIJI": true,
+            "CHNDE": true,
+            "DATON": true,
+            "SHUNY": true,
+            "ULANQ": true,
+            "XILIN": true
+        }
+    },
+    "KARGI": {
+        "improvementCords": [
+            649,
+            1935
+        ],
+        "unitCords": [
+            714,
+            1935
+        ],
+        "adjacencyMap": {
+            "AKSUP": true,
+            "HOTAN": true,
+            "KASHG": true,
+            "KIZIL": true
+        }
+    },
+    "SHUNY": {
+        "improvementCords": [
+            4651,
+            1901
+        ],
+        "unitCords": [
+            4600,
+            1884
+        ],
+        "adjacencyMap": {
+            "BEIJI": true,
+            "CHNDE": true,
+            "LANGF": true,
+            "ZHKOU": true
+        }
+    },
+    "QINHU": {
+        "improvementCords": [
+            4886,
+            1932
+        ],
+        "unitCords": [
+            4886,
+            1877
+        ],
+        "adjacencyMap": {
+            "CHAOY": true,
+            "CHNDE": true,
+            "HULUD": true,
+            "TNGSN": true
+        }
+    },
+    "DALIA": {
+        "improvementCords": [
+            5172,
+            1914
+        ],
+        "unitCords": [
+            5227,
+            1890
+        ],
+        "adjacencyMap": {
+            "ANSHA": true,
+            "DANDO": true,
+            "YANTA": true
+        }
+    },
+    "HOHHO": {
+        "improvementCords": [
+            4067,
+            1935
+        ],
+        "unitCords": [
+            4132,
+            1935
+        ],
+        "adjacencyMap": {
+            "BAOTO": true,
+            "DATON": true,
+            "ORDOS": true,
+            "SHUOZ": true,
+            "ULANQ": true
+        }
+    },
+    "JIUQU": {
+        "improvementCords": [
+            2559,
+            1955
+        ],
+        "unitCords": [
+            2624,
+            1955
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "HAIXI": true,
+            "KUMUL": true,
+            "BAYIN": true,
+            "ZHANG": true
+        }
+    },
+    "ALXAL": {
+        "improvementCords": [
+            3220,
+            1988
+        ],
+        "unitCords": [
+            3285,
+            1988
+        ],
+        "adjacencyMap": {
+            "BAYAN": true,
+            "BAIYI": true,
+            "JIUQU": true,
+            "ORDOS": true,
+            "WUWEI": true,
+            "YINCH": true,
+            "ZHANG": true,
+            "ZHONG": true
+        }
+    },
+    "TNGSN": {
+        "improvementCords": [
+            4809,
+            1982
+        ],
+        "unitCords": [
+            4796,
+            1924
+        ],
+        "adjacencyMap": {
+            "CHNDE": true,
+            "DONGY": true,
+            "LANGF": true,
+            "QINHU": true,
+            "TIANJ": true
+        }
+    },
+    "BEIJI": {
+        "improvementCords": [
+            4561,
+            1985
+        ],
+        "unitCords": [
+            4614,
+            1981
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "CANGZ": true,
+            "LANGF": true,
+            "SHUNY": true,
+            "ZHKOU": true
+        }
+    },
+    "LANGF": {
+        "improvementCords": [
+            4695,
+            2004
+        ],
+        "unitCords": [
+            4700,
+            1953
+        ],
+        "adjacencyMap": {
+            "BEIJI": true,
+            "CANGZ": true,
+            "CHNDE": true,
+            "SHUNY": true,
+            "TIANJ": true,
+            "TNGSN": true
+        }
+    },
+    "BAYIN": {
+        "improvementCords": [
+            1689,
+            2015
+        ],
+        "unitCords": [
+            1754,
+            2015
+        ],
+        "adjacencyMap": {
+            "CHANG": true,
+            "HAIXI": true,
+            "HOTAN": true,
+            "ILIKA": true,
+            "JIUQU": true,
+            "KUMUL": true,
+            "NAGQU": true,
+            "TACHE": true,
+            "TURPA": true,
+            "URUMQ": true,
+            "XAYAR": true,
+            "YUSHU": true
+        }
+    },
+    "DATON": {
+        "improvementCords": [
+            4257,
+            2027
+        ],
+        "unitCords": [
+            4322,
+            2027
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "HOHHO": true,
+            "SHUOZ": true,
+            "ULANQ": true,
+            "ZHKOU": true
+        }
+    },
+    "TIANJ": {
+        "improvementCords": [
+            4711,
+            2092
+        ],
+        "unitCords": [
+            4747,
+            2041
+        ],
+        "adjacencyMap": {
+            "CANGZ": true,
+            "LANGF": true,
+            "TNGSN": true
+        }
+    },
+    "ORDOS": {
+        "improvementCords": [
+            3803,
+            2110
+        ],
+        "unitCords": [
+            3868,
+            2110
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "BAYAN": true,
+            "BAOTO": true,
+            "HOHHO": true,
+            "SHUOZ": true,
+            "YINCH": true,
+            "YULIN": true
+        }
+    },
+    "BAODI": {
+        "improvementCords": [
+            4478,
+            2103
+        ],
+        "unitCords": [
+            4543,
+            2103
+        ],
+        "adjacencyMap": {
+            "BEIJI": true,
+            "CANGZ": true,
+            "DATON": true,
+            "HENGS": true,
+            "SHIJI": true,
+            "SHUOZ": true,
+            "ZHKOU": true
+        }
+    },
+    "HOTAN": {
+        "improvementCords": [
+            959,
+            2152
+        ],
+        "unitCords": [
+            1024,
+            2152
+        ],
+        "adjacencyMap": {
+            "AKSUP": true,
+            "KARGI": true,
+            "NAGQU": true,
+            "NGARI": true,
+            "XAYAR": true,
+            "BAYIN": true
+        }
+    },
+    "SHUOZ": {
+        "improvementCords": [
+            4196,
+            2172
+        ],
+        "unitCords": [
+            4261,
+            2172
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "DATON": true,
+            "HOHHO": true,
+            "ORDOS": true,
+            "SHIJI": true,
+            "TAIYU": true,
+            "YANGQ": true,
+            "YULIN": true
+        }
+    },
+    "CANGZ": {
+        "improvementCords": [
+            4661,
+            2177
+        ],
+        "unitCords": [
+            4726,
+            2177
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "BEIJI": true,
+            "BINZH": true,
+            "DEZHO": true,
+            "HENGS": true,
+            "LANGF": true,
+            "TIANJ": true
+        }
+    },
+    "ZHANG": {
+        "improvementCords": [
+            3032,
+            2227
+        ],
+        "unitCords": [
+            2952,
+            2169
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "HAIBE": true,
+            "HAIXI": true,
+            "JIUQU": true,
+            "WUWEI": true
+        }
+    },
+    "SHIJI": {
+        "improvementCords": [
+            4437,
+            2237
+        ],
+        "unitCords": [
+            4502,
+            2237
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "HENGS": true,
+            "SHUOZ": true,
+            "XINGT": true,
+            "YANGQ": true
+        }
+    },
+    "YANTA": {
+        "improvementCords": [
+            5125,
+            2246
+        ],
+        "unitCords": [
+            5190,
+            2246
+        ],
+        "adjacencyMap": {
+            "DALIA": true,
+            "QINGD": true
+        }
+    },
+    "DONGY": {
+        "improvementCords": [
+            4884,
+            2250
+        ],
+        "unitCords": [
+            4888,
+            2199
+        ],
+        "adjacencyMap": {
+            "BINZH": true,
+            "JINAN": true,
+            "TNGSN": true,
+            "WEIFA": true
+        }
+    },
+    "HENGS": {
+        "improvementCords": [
+            4600,
+            2276
+        ],
+        "unitCords": [
+            4578,
+            2224
+        ],
+        "adjacencyMap": {
+            "BAODI": true,
+            "CANGZ": true,
+            "DEZHO": true,
+            "SHIJI": true,
+            "XINGT": true
+        }
+    },
+    "BINZH": {
+        "improvementCords": [
+            4802,
+            2271
+        ],
+        "unitCords": [
+            4806,
+            2207
+        ],
+        "adjacencyMap": {
+            "CANGZ": true,
+            "DEZHO": true,
+            "DONGY": true,
+            "JINAN": true
+        }
+    },
+    "YULIN": {
+        "improvementCords": [
+            3936,
+            2293
+        ],
+        "unitCords": [
+            4001,
+            2293
+        ],
+        "adjacencyMap": {
+            "ORDOS": true,
+            "QINGY": true,
+            "SHUOZ": true,
+            "TAIYU": true,
+            "YANAN": true,
+            "YINCH": true
+        }
+    },
+    "TAIYU": {
+        "improvementCords": [
+            4121,
+            2321
+        ],
+        "unitCords": [
+            4186,
+            2321
+        ],
+        "adjacencyMap": {
+            "LINFE": true,
+            "SHUOZ": true,
+            "YANAN": true,
+            "YANGQ": true,
+            "YULIN": true
+        }
+    },
+    "YANGQ": {
+        "improvementCords": [
+            4302,
+            2323
+        ],
+        "unitCords": [
+            4367,
+            2323
+        ],
+        "adjacencyMap": {
+            "HANDA": true,
+            "JINCH": true,
+            "LINFE": true,
+            "SHIJI": true,
+            "SHUOZ": true,
+            "TAIYU": true,
+            "XINGT": true
+        }
+    },
+    "DEZHO": {
+        "improvementCords": [
+            4683,
+            2323
+        ],
+        "unitCords": [
+            4702,
+            2271
+        ],
+        "adjacencyMap": {
+            "BINZH": true,
+            "CANGZ": true,
+            "HENGS": true,
+            "JINAN": true,
+            "LIAOC": true,
+            "XINGT": true
+        }
+    },
+    "QINGD": {
+        "improvementCords": [
+            5088,
+            2356
+        ],
+        "unitCords": [
+            5032,
+            2326
+        ],
+        "adjacencyMap": {
+            "RIZHA": true,
+            "WEIFA": true,
+            "YANTA": true
+        }
+    },
+    "XINGT": {
+        "improvementCords": [
+            4470,
+            2345
+        ],
+        "unitCords": [
+            4535,
+            2345
+        ],
+        "adjacencyMap": {
+            "DEZHO": true,
+            "HANDA": true,
+            "HENGS": true,
+            "LIAOC": true,
+            "SHIJI": true,
+            "YANGQ": true
+        }
+    },
+    "HAIBE": {
+        "improvementCords": [
+            2968,
+            2351
+        ],
+        "unitCords": [
+            3033,
+            2351
+        ],
+        "adjacencyMap": {
+            "HAINA": true,
+            "HAIXI": true,
+            "WUWEI": true,
+            "XININ": true,
+            "ZHANG": true
+        }
+    },
+    "YINCH": {
+        "improvementCords": [
+            3612,
+            2399
+        ],
+        "unitCords": [
+            3666,
+            2341
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "GUYUA": true,
+            "ORDOS": true,
+            "QINGY": true,
+            "YULIN": true,
+            "ZHONG": true
+        }
+    },
+    "WUWEI": {
+        "improvementCords": [
+            3256,
+            2334
+        ],
+        "unitCords": [
+            3271,
+            2215
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "BAIYI": true,
+            "HAIBE": true,
+            "LANZH": true,
+            "XININ": true,
+            "ZHANG": true
+        }
+    },
+    "JINAN": {
+        "improvementCords": [
+            4763,
+            2365
+        ],
+        "unitCords": [
+            4828,
+            2365
+        ],
+        "adjacencyMap": {
+            "BINZH": true,
+            "DEZHO": true,
+            "DONGY": true,
+            "LIAOC": true,
+            "LINYI": true,
+            "TAIAN": true,
+            "WEIFA": true
+        }
+    },
+    "HAIXI": {
+        "improvementCords": [
+            2422,
+            2408
+        ],
+        "unitCords": [
+            2487,
+            2408
+        ],
+        "adjacencyMap": {
+            "GOLOG": true,
+            "HAIBE": true,
+            "HAINA": true,
+            "JIUQU": true,
+            "BAYIN": true,
+            "YUSHU": true,
+            "ZHANG": true
+        }
+    },
+    "WEIFA": {
+        "improvementCords": [
+            4919,
+            2378
+        ],
+        "unitCords": [
+            4984,
+            2378
+        ],
+        "adjacencyMap": {
+            "DONGY": true,
+            "JINAN": true,
+            "LINYI": true,
+            "QINGD": true,
+            "RIZHA": true
+        }
+    },
+    "ZHONG": {
+        "improvementCords": [
+            3544,
+            2492
+        ],
+        "unitCords": [
+            3503,
+            2385
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "BAIYI": true,
+            "GUYUA": true,
+            "YINCH": true
+        }
+    },
+    "LIAOC": {
+        "improvementCords": [
+            4615,
+            2453
+        ],
+        "unitCords": [
+            4642,
+            2401
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "DEZHO": true,
+            "HANDA": true,
+            "JINAN": true,
+            "TAIAN": true,
+            "XINGT": true
+        }
+    },
+    "HANDA": {
+        "improvementCords": [
+            4450,
+            2437
+        ],
+        "unitCords": [
+            4515,
+            2437
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "JINCH": true,
+            "LIAOC": true,
+            "XINGT": true,
+            "YANGQ": true
+        }
+    },
+    "TAIAN": {
+        "improvementCords": [
+            4740,
+            2471
+        ],
+        "unitCords": [
+            4797,
+            2452
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "JINAN": true,
+            "JININ": true,
+            "LIAOC": true,
+            "LINYI": true
+        }
+    },
+    "BAIYI": {
+        "improvementCords": [
+            3400,
+            2479
+        ],
+        "unitCords": [
+            3465,
+            2479
+        ],
+        "adjacencyMap": {
+            "ALXAL": true,
+            "DINGX": true,
+            "GUYUA": true,
+            "LANZH": true,
+            "TIANS": true,
+            "WUWEI": true,
+            "ZHONG": true
+        }
+    },
+    "XININ": {
+        "improvementCords": [
+            3178,
+            2523
+        ],
+        "unitCords": [
+            3130,
+            2464
+        ],
+        "adjacencyMap": {
+            "GANNA": true,
+            "HAIBE": true,
+            "HAINA": true,
+            "HUANG": true,
+            "LANZH": true,
+            "WUWEI": true
+        }
+    },
+    "YANAN": {
+        "improvementCords": [
+            3926,
+            2510
+        ],
+        "unitCords": [
+            3991,
+            2510
+        ],
+        "adjacencyMap": {
+            "LINFE": true,
+            "QINGY": true,
+            "TAIYU": true,
+            "WEINA": true,
+            "XIANY": true,
+            "YULIN": true
+        }
+    },
+    "RIZHA": {
+        "improvementCords": [
+            5127,
+            2549
+        ],
+        "unitCords": [
+            5192,
+            2549
+        ],
+        "adjacencyMap": {
+            "LIANY": true,
+            "LINYI": true,
+            "QINGD": true,
+            "WEIFA": true
+        }
+    },
+    "LINFE": {
+        "improvementCords": [
+            4124,
+            2513
+        ],
+        "unitCords": [
+            4189,
+            2513
+        ],
+        "adjacencyMap": {
+            "JINCH": true,
+            "TAIYU": true,
+            "WEINA": true,
+            "YANAN": true,
+            "YANGQ": true,
+            "YUNCH": true
+        }
+    },
+    "JINCH": {
+        "improvementCords": [
+            4332,
+            2515
+        ],
+        "unitCords": [
+            4297,
+            2450
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "HANDA": true,
+            "KAIFE": true,
+            "LINFE": true,
+            "YANGQ": true,
+            "YUNCH": true,
+            "ZHENG": true
+        }
+    },
+    "ANYAN": {
+        "improvementCords": [
+            4473,
+            2530
+        ],
+        "unitCords": [
+            4538,
+            2530
+        ],
+        "adjacencyMap": {
+            "HANDA": true,
+            "HEZES": true,
+            "JINCH": true,
+            "JININ": true,
+            "KAIFE": true,
+            "LIAOC": true,
+            "TAIAN": true
+        }
+    },
+    "QINGY": {
+        "improvementCords": [
+            3729,
+            2550
+        ],
+        "unitCords": [
+            3794,
+            2550
+        ],
+        "adjacencyMap": {
+            "GUYUA": true,
+            "TIANS": true,
+            "XIANY": true,
+            "YANAN": true,
+            "YINCH": true,
+            "YULIN": true
+        }
+    },
+    "LANZH": {
+        "improvementCords": [
+            3311,
+            2529
+        ],
+        "unitCords": [
+            3378,
+            2571
+        ],
+        "adjacencyMap": {
+            "BAIYI": true,
+            "DINGX": true,
+            "GANNA": true,
+            "WUWEI": true,
+            "XININ": true
+        }
+    },
+    "HAINA": {
+        "improvementCords": [
+            2937,
+            2575
+        ],
+        "unitCords": [
+            3002,
+            2575
+        ],
+        "adjacencyMap": {
+            "GOLOG": true,
+            "HAIBE": true,
+            "HAIXI": true,
+            "HUANG": true,
+            "XININ": true
+        }
+    },
+    "LINYI": {
+        "improvementCords": [
+            4888,
+            2561
+        ],
+        "unitCords": [
+            4899,
+            2492
+        ],
+        "adjacencyMap": {
+            "JINAN": true,
+            "JININ": true,
+            "LIANY": true,
+            "RIZHA": true,
+            "TAIAN": true,
+            "WEIFA": true,
+            "XUZHO": true
+        }
+    },
+    "JININ": {
+        "improvementCords": [
+            4744,
+            2561
+        ],
+        "unitCords": [
+            4799,
+            2608
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "HEZES": true,
+            "LINYI": true,
+            "TAIAN": true,
+            "XUZHO": true
+        }
+    },
+    "GUYUA": {
+        "improvementCords": [
+            3584,
+            2585
+        ],
+        "unitCords": [
+            3638,
+            2571
+        ],
+        "adjacencyMap": {
+            "BAIYI": true,
+            "QINGY": true,
+            "TIANS": true,
+            "YINCH": true,
+            "ZHONG": true
+        }
+    },
+    "HEZES": {
+        "improvementCords": [
+            4629,
+            2620
+        ],
+        "unitCords": [
+            4628,
+            2554
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "JININ": true,
+            "KAIFE": true,
+            "SHGQU": true,
+            "XUZHO": true,
+            "YONGQ": true
+        }
+    },
+    "LIANY": {
+        "improvementCords": [
+            5027,
+            2639
+        ],
+        "unitCords": [
+            4976,
+            2622
+        ],
+        "adjacencyMap": {
+            "HUAIA": true,
+            "LINYI": true,
+            "RIZHA": true,
+            "SHEYA": true,
+            "SUQIA": true,
+            "XUZHO": true
+        }
+    },
+    "KAIFE": {
+        "improvementCords": [
+            4505,
+            2668
+        ],
+        "unitCords": [
+            4436,
+            2609
+        ],
+        "adjacencyMap": {
+            "ANYAN": true,
+            "HEZES": true,
+            "JINCH": true,
+            "PINGD": true,
+            "SHGQU": true,
+            "ZHENG": true,
+            "ZHOUK": true
+        }
+    },
+    "YUNCH": {
+        "improvementCords": [
+            4112,
+            2658
+        ],
+        "unitCords": [
+            4183,
+            2634
+        ],
+        "adjacencyMap": {
+            "JINCH": true,
+            "LINFE": true,
+            "LUOYA": true,
+            "SANME": true,
+            "WEINA": true,
+            "ZHENG": true
+        }
+    },
+    "DINGX": {
+        "improvementCords": [
+            3396,
+            2683
+        ],
+        "unitCords": [
+            3463,
+            2678
+        ],
+        "adjacencyMap": {
+            "BAIYI": true,
+            "GANNA": true,
+            "LANZH": true,
+            "LONGN": true,
+            "TIANS": true
+        }
+    },
+    "WEINA": {
+        "improvementCords": [
+            3997,
+            2715
+        ],
+        "unitCords": [
+            4020,
+            2660
+        ],
+        "adjacencyMap": {
+            "LINFE": true,
+            "SANME": true,
+            "SHANL": true,
+            "XIANY": true,
+            "YANAN": true,
+            "YUNCH": true
+        }
+    },
+    "HUANG": {
+        "improvementCords": [
+            3104,
+            2700
+        ],
+        "unitCords": [
+            3148,
+            2648
+        ],
+        "adjacencyMap": {
+            "GANNA": true,
+            "GOLOG": true,
+            "HAINA": true,
+            "XININ": true
+        }
+    },
+    "ZHENG": {
+        "improvementCords": [
+            4367,
+            2674
+        ],
+        "unitCords": [
+            4429,
+            2691
+        ],
+        "adjacencyMap": {
+            "JINCH": true,
+            "KAIFE": true,
+            "LUOYA": true,
+            "PINGD": true,
+            "YUNCH": true
+        }
+    },
+    "NGARI": {
+        "improvementCords": [
+            959,
+            2713
+        ],
+        "unitCords": [
+            1024,
+            2713
+        ],
+        "adjacencyMap": {
+            "HOTAN": true,
+            "NAGQU": true,
+            "XIGAZ": true
+        }
+    },
+    "XUZHO": {
+        "improvementCords": [
+            4863,
+            2694
+        ],
+        "unitCords": [
+            4744,
+            2648
+        ],
+        "adjacencyMap": {
+            "HEZES": true,
+            "JININ": true,
+            "LIANY": true,
+            "LINYI": true,
+            "SUQIA": true,
+            "YONGQ": true
+        }
+    },
+    "SHGQU": {
+        "improvementCords": [
+            4644,
+            2713
+        ],
+        "unitCords": [
+            4581,
+            2700
+        ],
+        "adjacencyMap": {
+            "BOZHO": true,
+            "HEZES": true,
+            "KAIFE": true,
+            "YONGQ": true,
+            "ZHOUK": true
+        }
+    },
+    "SHEYA": {
+        "improvementCords": [
+            5111,
+            2724
+        ],
+        "unitCords": [
+            5090,
+            2668
+        ],
+        "adjacencyMap": {
+            "DAFEN": true,
+            "HUAIA": true,
+            "LIANY": true,
+            "YANGZ": true
+        }
+    },
+    "TIANS": {
+        "improvementCords": [
+            3529,
+            2738
+        ],
+        "unitCords": [
+            3594,
+            2738
+        ],
+        "adjacencyMap": {
+            "BAIYI": true,
+            "BAOJI": true,
+            "DINGX": true,
+            "GUYUA": true,
+            "LONGN": true,
+            "QINGY": true,
+            "XIANY": true
+        }
+    },
+    "GANNA": {
+        "improvementCords": [
+            3223,
+            2746
+        ],
+        "unitCords": [
+            3288,
+            2746
+        ],
+        "adjacencyMap": {
+            "DINGX": true,
+            "GOLOG": true,
+            "HUANG": true,
+            "LANZH": true,
+            "LONGN": true,
+            "NGAWA": true,
+            "XININ": true
+        }
+    },
+    "SUQIA": {
+        "improvementCords": [
+            4946,
+            2757
+        ],
+        "unitCords": [
+            4974,
+            2693
+        ],
+        "adjacencyMap": {
+            "CHUZH": true,
+            "HUAIA": true,
+            "LIANY": true,
+            "XUZHO": true,
+            "YONGQ": true
+        }
+    },
+    "LUOYA": {
+        "improvementCords": [
+            4263,
+            2769
+        ],
+        "unitCords": [
+            4276,
+            2709
+        ],
+        "adjacencyMap": {
+            "NANYA": true,
+            "PINGD": true,
+            "SANME": true,
+            "YUNCH": true,
+            "ZHENG": true
+        }
+    },
+    "YUSHU": {
+        "improvementCords": [
+            2242,
+            2782
+        ],
+        "unitCords": [
+            2307,
+            2782
+        ],
+        "adjacencyMap": {
+            "GARZE": true,
+            "GOLOG": true,
+            "HAIXI": true,
+            "NAGQU": true,
+            "QAMDO": true,
+            "BAYIN": true
+        }
+    },
+    "XIANY": {
+        "improvementCords": [
+            3849,
+            2766
+        ],
+        "unitCords": [
+            3914,
+            2766
+        ],
+        "adjacencyMap": {
+            "ANKAN": true,
+            "BAOJI": true,
+            "HANZH": true,
+            "QINGY": true,
+            "SHANL": true,
+            "TIANS": true,
+            "WEINA": true,
+            "YANAN": true
+        }
+    },
+    "YONGQ": {
+        "improvementCords": [
+            4783,
+            2756
+        ],
+        "unitCords": [
+            4839,
+            2772
+        ],
+        "adjacencyMap": {
+            "BOZHO": true,
+            "CHUZH": true,
+            "HEZES": true,
+            "SHGQU": true,
+            "SUQIA": true,
+            "XUZHO": true
+        }
+    },
+    "SANME": {
+        "improvementCords": [
+            4157,
+            2781
+        ],
+        "unitCords": [
+            4182,
+            2724
+        ],
+        "adjacencyMap": {
+            "LUOYA": true,
+            "NANYA": true,
+            "SHANL": true,
+            "WEINA": true,
+            "YUNCH": true
+        }
+    },
+    "BAOJI": {
+        "improvementCords": [
+            3698,
+            2784
+        ],
+        "unitCords": [
+            3763,
+            2784
+        ],
+        "adjacencyMap": {
+            "HANZH": true,
+            "LONGN": true,
+            "TIANS": true,
+            "XIANY": true
+        }
+    },
+    "PINGD": {
+        "improvementCords": [
+            4363,
+            2801
+        ],
+        "unitCords": [
+            4428,
+            2801
+        ],
+        "adjacencyMap": {
+            "KAIFE": true,
+            "LUOYA": true,
+            "NANYA": true,
+            "TANGH": true,
+            "ZHENG": true,
+            "ZHOUK": true,
+            "ZHUMA": true
+        }
+    },
+    "GOLOG": {
+        "improvementCords": [
+            2841,
+            2816
+        ],
+        "unitCords": [
+            2906,
+            2816
+        ],
+        "adjacencyMap": {
+            "GANNA": true,
+            "GARZE": true,
+            "HAINA": true,
+            "HAIXI": true,
+            "HUANG": true,
+            "NGAWA": true,
+            "YUSHU": true
+        }
+    },
+    "ZHOUK": {
+        "improvementCords": [
+            4538,
+            2781
+        ],
+        "unitCords": [
+            4580,
+            2837
+        ],
+        "adjacencyMap": {
+            "BOZHO": true,
+            "FUYAN": true,
+            "KAIFE": true,
+            "PINGD": true,
+            "SHGQU": true,
+            "ZHUMA": true
+        }
+    },
+    "DAFEN": {
+        "improvementCords": [
+            5336,
+            2804
+        ],
+        "unitCords": [
+            5401,
+            2804
+        ],
+        "adjacencyMap": {
+            "NANTO": true,
+            "SHEYA": true,
+            "YANGZ": true
+        }
+    },
+    "HUAIA": {
+        "improvementCords": [
+            5020,
+            2749
+        ],
+        "unitCords": [
+            4983,
+            2825
+        ],
+        "adjacencyMap": {
+            "CHUZH": true,
+            "LIANY": true,
+            "SHEYA": true,
+            "SUQIA": true,
+            "YANGZ": true
+        }
+    },
+    "BOZHO": {
+        "improvementCords": [
+            4722,
+            2840
+        ],
+        "unitCords": [
+            4669,
+            2796
+        ],
+        "adjacencyMap": {
+            "CHUZH": true,
+            "FUYAN": true,
+            "SHGQU": true,
+            "YONGQ": true,
+            "ZHOUK": true
+        }
+    },
+    "YANGZ": {
+        "improvementCords": [
+            5100,
+            2876
+        ],
+        "unitCords": [
+            5076,
+            2822
+        ],
+        "adjacencyMap": {
+            "CHUZH": true,
+            "DAFEN": true,
+            "HUAIA": true,
+            "NANJI": true,
+            "NANTO": true,
+            "SHEYA": true
+        }
+    },
+    "SHANL": {
+        "improvementCords": [
+            3993,
+            2865
+        ],
+        "unitCords": [
+            4058,
+            2865
+        ],
+        "adjacencyMap": {
+            "ANKAN": true,
+            "NANYA": true,
+            "SANME": true,
+            "SHIYA": true,
+            "WEINA": true,
+            "XIANY": true
+        }
+    },
+    "LONGN": {
+        "improvementCords": [
+            3499,
+            2897
+        ],
+        "unitCords": [
+            3554,
+            2861
+        ],
+        "adjacencyMap": {
+            "BAOJI": true,
+            "BAZHO": true,
+            "DINGX": true,
+            "GANNA": true,
+            "HANZH": true,
+            "MIANY": true,
+            "NGAWA": true,
+            "TIANS": true
+        }
+    },
+    "CHUZH": {
+        "improvementCords": [
+            4863,
+            2877
+        ],
+        "unitCords": [
+            4927,
+            2919
+        ],
+        "adjacencyMap": {
+            "BOZHO": true,
+            "CHAOH": true,
+            "FUYAN": true,
+            "HUAIA": true,
+            "LUANA": true,
+            "NANJI": true,
+            "SHUSH": true,
+            "SUQIA": true,
+            "YANGZ": true,
+            "YONGQ": true
+        }
+    },
+    "NAGQU": {
+        "improvementCords": [
+            1631,
+            2912
+        ],
+        "unitCords": [
+            1696,
+            2912
+        ],
+        "adjacencyMap": {
+            "HOTAN": true,
+            "LHASA": true,
+            "NGARI": true,
+            "NYING": true,
+            "QAMDO": true,
+            "XIGAZ": true,
+            "BAYIN": true,
+            "YUSHU": true
+        }
+    },
+    "NANTO": {
+        "improvementCords": [
+            5211,
+            2888
+        ],
+        "unitCords": [
+            5264,
+            2912
+        ],
+        "adjacencyMap": {
+            "DAFEN": true,
+            "YANGZ": true
+        }
+    },
+    "FUYAN": {
+        "improvementCords": [
+            4642,
+            2889
+        ],
+        "unitCords": [
+            4699,
+            2909
+        ],
+        "adjacencyMap": {
+            "BOZHO": true,
+            "CHUZH": true,
+            "LUANA": true,
+            "XINYA": true,
+            "ZHOUK": true,
+            "ZHUMA": true
+        }
+    },
+    "NANYA": {
+        "improvementCords": [
+            4202,
+            2894
+        ],
+        "unitCords": [
+            4256,
+            2933
+        ],
+        "adjacencyMap": {
+            "LUOYA": true,
+            "PINGD": true,
+            "SANME": true,
+            "SHANL": true,
+            "SHIYA": true,
+            "TANGH": true,
+            "XIAYG": true
+        }
+    },
+    "ZHUMA": {
+        "improvementCords": [
+            4466,
+            2920
+        ],
+        "unitCords": [
+            4531,
+            2920
+        ],
+        "adjacencyMap": {
+            "FUYAN": true,
+            "PINGD": true,
+            "TANGH": true,
+            "XINYA": true,
+            "ZHOUK": true
+        }
+    },
+    "HANZH": {
+        "improvementCords": [
+            3681,
+            2947
+        ],
+        "unitCords": [
+            3746,
+            2947
+        ],
+        "adjacencyMap": {
+            "ANKAN": true,
+            "BAOJI": true,
+            "BAZHO": true,
+            "DAZHO": true,
+            "LONGN": true,
+            "XIANY": true
+        }
+    },
+    "TANGH": {
+        "improvementCords": [
+            4342,
+            2946
+        ],
+        "unitCords": [
+            4363,
+            2887
+        ],
+        "adjacencyMap": {
+            "NANYA": true,
+            "PINGD": true,
+            "SUIZH": true,
+            "XIAYG": true,
+            "XINYA": true,
+            "ZHUMA": true
+        }
+    },
+    "NANJI": {
+        "improvementCords": [
+            5032,
+            2972
+        ],
+        "unitCords": [
+            5097,
+            2972
+        ],
+        "adjacencyMap": {
+            "CHAOH": true,
+            "CHUZH": true,
+            "SUZHO": true,
+            "XUANC": true,
+            "YANGZ": true
+        }
+    },
+    "ANKAN": {
+        "improvementCords": [
+            3887,
+            3001
+        ],
+        "unitCords": [
+            3952,
+            3001
+        ],
+        "adjacencyMap": {
+            "DAZHO": true,
+            "HANZH": true,
+            "SHANL": true,
+            "SHIYA": true,
+            "XIANY": true,
+            "YUNYA": true
+        }
+    },
+    "SHUSH": {
+        "improvementCords": [
+            4848,
+            3015
+        ],
+        "unitCords": [
+            4837,
+            2964
+        ],
+        "adjacencyMap": {
+            "CHAOH": true,
+            "CHUZH": true,
+            "LUANA": true
+        }
+    },
+    "SUZHO": {
+        "improvementCords": [
+            5206,
+            3028
+        ],
+        "unitCords": [
+            5196,
+            2971
+        ],
+        "adjacencyMap": {
+            "JIAXI": true,
+            "NANJI": true,
+            "SHANG": true,
+            "XUANC": true
+        }
+    },
+    "XINYA": {
+        "improvementCords": [
+            4561,
+            3024
+        ],
+        "unitCords": [
+            4626,
+            3024
+        ],
+        "adjacencyMap": {
+            "FUYAN": true,
+            "HUAGG": true,
+            "LUANA": true,
+            "SUIZH": true,
+            "TANGH": true,
+            "XIAOG": true,
+            "ZHUMA": true
+        }
+    },
+    "SHIYA": {
+        "improvementCords": [
+            4059,
+            3039
+        ],
+        "unitCords": [
+            4124,
+            3039
+        ],
+        "adjacencyMap": {
+            "ANKAN": true,
+            "ENSHI": true,
+            "NANYA": true,
+            "SHANL": true,
+            "XIAYG": true,
+            "YICHA": true,
+            "YUNYA": true
+        }
+    },
+    "SHANG": {
+        "improvementCords": [
+            5487,
+            3039
+        ],
+        "unitCords": [
+            5552,
+            3039
+        ],
+        "adjacencyMap": {
+            "JIAXI": true,
+            "SUZHO": true
+        }
+    },
+    "NGAWA": {
+        "improvementCords": [
+            3180,
+            3057
+        ],
+        "unitCords": [
+            3245,
+            3057
+        ],
+        "adjacencyMap": {
+            "CHENG": true,
+            "GANNA": true,
+            "GARZE": true,
+            "GOLOG": true,
+            "LESHA": true,
+            "LONGN": true,
+            "MIANY": true
+        }
+    },
+    "XIAYG": {
+        "improvementCords": [
+            4232,
+            3068
+        ],
+        "unitCords": [
+            4297,
+            3068
+        ],
+        "adjacencyMap": {
+            "JINGM": true,
+            "NANYA": true,
+            "SHIYA": true,
+            "SUIZH": true,
+            "TANGH": true,
+            "YICHA": true
+        }
+    },
+    "LUANA": {
+        "improvementCords": [
+            4744,
+            3068
+        ],
+        "unitCords": [
+            4744,
+            2996
+        ],
+        "adjacencyMap": {
+            "ANQIN": true,
+            "CHAOH": true,
+            "CHUZH": true,
+            "FUYAN": true,
+            "HUAGG": true,
+            "SHUSH": true,
+            "XINYA": true
+        }
+    },
+    "BAZHO": {
+        "improvementCords": [
+            3609,
+            3077
+        ],
+        "unitCords": [
+            3674,
+            3077
+        ],
+        "adjacencyMap": {
+            "DAZHO": true,
+            "HANZH": true,
+            "LONGN": true,
+            "MIANY": true,
+            "SUINI": true
+        }
+    },
+    "CHAOH": {
+        "improvementCords": [
+            4891,
+            3083
+        ],
+        "unitCords": [
+            4932,
+            3034
+        ],
+        "adjacencyMap": {
+            "ANQIN": true,
+            "CHUZH": true,
+            "HNGSH": true,
+            "LUANA": true,
+            "NANJI": true,
+            "SHUSH": true,
+            "XUANC": true
+        }
+    },
+    "SUIZH": {
+        "improvementCords": [
+            4411,
+            3089
+        ],
+        "unitCords": [
+            4430,
+            3035
+        ],
+        "adjacencyMap": {
+            "JINGM": true,
+            "TANGH": true,
+            "XIAOG": true,
+            "XIAYG": true,
+            "XINYA": true
+        }
+    },
+    "JIAXI": {
+        "improvementCords": [
+            5155,
+            3109
+        ],
+        "unitCords": [
+            5248,
+            3111
+        ],
+        "adjacencyMap": {
+            "HANGZ": true,
+            "SHANG": true,
+            "SUZHO": true,
+            "XUANC": true
+        }
+    },
+    "XUANC": {
+        "improvementCords": [
+            4996,
+            3127
+        ],
+        "unitCords": [
+            5061,
+            3127
+        ],
+        "adjacencyMap": {
+            "CHAOH": true,
+            "HANGZ": true,
+            "HNGSH": true,
+            "JIAXI": true,
+            "NANJI": true,
+            "SUZHO": true
+        }
+    },
+    "MIANY": {
+        "improvementCords": [
+            3443,
+            3123
+        ],
+        "unitCords": [
+            3466,
+            3183
+        ],
+        "adjacencyMap": {
+            "BAZHO": true,
+            "CHENG": true,
+            "LONGN": true,
+            "NEIJI": true,
+            "NGAWA": true,
+            "SUINI": true
+        }
+    },
+    "XIAOG": {
+        "improvementCords": [
+            4468,
+            3172
+        ],
+        "unitCords": [
+            4508,
+            3117
+        ],
+        "adjacencyMap": {
+            "HUAGG": true,
+            "JINGM": true,
+            "JINGZ": true,
+            "SUIZH": true,
+            "WUHAN": true,
+            "XINYA": true
+        }
+    },
+    "JINGM": {
+        "improvementCords": [
+            4322,
+            3182
+        ],
+        "unitCords": [
+            4387,
+            3182
+        ],
+        "adjacencyMap": {
+            "JINGZ": true,
+            "SUIZH": true,
+            "XIAOG": true,
+            "XIAYG": true,
+            "YICHA": true
+        }
+    },
+    "YUNYA": {
+        "improvementCords": [
+            3916,
+            3185
+        ],
+        "unitCords": [
+            3981,
+            3185
+        ],
+        "adjacencyMap": {
+            "ANKAN": true,
+            "DAZHO": true,
+            "ENSHI": true,
+            "FENGD": true,
+            "SHIYA": true
+        }
+    },
+    "ANQIN": {
+        "improvementCords": [
+            4774,
+            3210
+        ],
+        "unitCords": [
+            4820,
+            3159
+        ],
+        "adjacencyMap": {
+            "CHAOH": true,
+            "HNGSH": true,
+            "HUAGG": true,
+            "LUANA": true,
+            "JIUJI": true
+        }
+    },
+    "DAZHO": {
+        "improvementCords": [
+            3786,
+            3184
+        ],
+        "unitCords": [
+            3816,
+            3122
+        ],
+        "adjacencyMap": {
+            "ANKAN": true,
+            "BAZHO": true,
+            "FENGD": true,
+            "HANZH": true,
+            "SUINI": true,
+            "YUNYA": true
+        }
+    },
+    "HUAGG": {
+        "improvementCords": [
+            4665,
+            3212
+        ],
+        "unitCords": [
+            4640,
+            3140
+        ],
+        "adjacencyMap": {
+            "ANQIN": true,
+            "LUANA": true,
+            "JIUJI": true,
+            "WUHAN": true,
+            "XIAOG": true,
+            "XINYA": true
+        }
+    },
+    "NINGB": {
+        "improvementCords": [
+            5338,
+            3200
+        ],
+        "unitCords": [
+            5362,
+            3251
+        ],
+        "adjacencyMap": {
+            "SHAOX": true,
+            "TIAZH": true
+        }
+    },
+    "QAMDO": {
+        "improvementCords": [
+            2601,
+            3240
+        ],
+        "unitCords": [
+            2666,
+            3240
+        ],
+        "adjacencyMap": {
+            "GARZE": true,
+            "LIJIA": true,
+            "NAGQU": true,
+            "NYING": true,
+            "YUSHU": true
+        }
+    },
+    "YICHA": {
+        "improvementCords": [
+            4158,
+            3233
+        ],
+        "unitCords": [
+            4223,
+            3233
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "ENSHI": true,
+            "JINGM": true,
+            "JINGZ": true,
+            "SHIYA": true,
+            "XIAYG": true
+        }
+    },
+    "HANGZ": {
+        "improvementCords": [
+            5119,
+            3233
+        ],
+        "unitCords": [
+            5168,
+            3189
+        ],
+        "adjacencyMap": {
+            "HNGSH": true,
+            "JIAXI": true,
+            "JINHU": true,
+            "QUZHO": true,
+            "SHAOX": true,
+            "XUANC": true
+        }
+    },
+    "SHAOX": {
+        "improvementCords": [
+            5247,
+            3202
+        ],
+        "unitCords": [
+            5289,
+            3253
+        ],
+        "adjacencyMap": {
+            "HANGZ": true,
+            "JINHU": true,
+            "NINGB": true,
+            "TIAZH": true
+        }
+    },
+    "HNGSH": {
+        "improvementCords": [
+            4903,
+            3237
+        ],
+        "unitCords": [
+            4968,
+            3237
+        ],
+        "adjacencyMap": {
+            "ANQIN": true,
+            "CHAOH": true,
+            "HANGZ": true,
+            "QUZHO": true,
+            "SHARO": true,
+            "JIUJI": true,
+            "XUANC": true
+        }
+    },
+    "GARZE": {
+        "improvementCords": [
+            2916,
+            3258
+        ],
+        "unitCords": [
+            2981,
+            3258
+        ],
+        "adjacencyMap": {
+            "GOLOG": true,
+            "LESHA": true,
+            "LIANG": true,
+            "LIJIA": true,
+            "NGAWA": true,
+            "QAMDO": true,
+            "YUSHU": true
+        }
+    },
+    "WUHAN": {
+        "improvementCords": [
+            4582,
+            3256
+        ],
+        "unitCords": [
+            4557,
+            3201
+        ],
+        "adjacencyMap": {
+            "HUAGG": true,
+            "JINGZ": true,
+            "JIUJI": true,
+            "XIANN": true,
+            "XIAOG": true
+        }
+    },
+    "SUINI": {
+        "improvementCords": [
+            3621,
+            3257
+        ],
+        "unitCords": [
+            3621,
+            3190
+        ],
+        "adjacencyMap": {
+            "BAZHO": true,
+            "CHONG": true,
+            "DAZHO": true,
+            "FENGD": true,
+            "MIANY": true,
+            "NEIJI": true
+        }
+    },
+    "LHASA": {
+        "improvementCords": [
+            1876,
+            3274
+        ],
+        "unitCords": [
+            1941,
+            3274
+        ],
+        "adjacencyMap": {
+            "NAGQU": true,
+            "NYING": true,
+            "SHANN": true,
+            "XIGAZ": true
+        }
+    },
+    "XIGAZ": {
+        "improvementCords": [
+            1344,
+            3306
+        ],
+        "unitCords": [
+            1409,
+            3306
+        ],
+        "adjacencyMap": {
+            "LHASA": true,
+            "NAGQU": true,
+            "NGARI": true,
+            "SHANN": true
+        }
+    },
+    "CHENG": {
+        "improvementCords": [
+            3349,
+            3328
+        ],
+        "unitCords": [
+            3379,
+            3272
+        ],
+        "adjacencyMap": {
+            "LESHA": true,
+            "MIANY": true,
+            "NEIJI": true,
+            "NGAWA": true
+        }
+    },
+    "JINGZ": {
+        "improvementCords": [
+            4336,
+            3303
+        ],
+        "unitCords": [
+            4401,
+            3303
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "JINGM": true,
+            "WUHAN": true,
+            "XIANN": true,
+            "XIAOG": true,
+            "YICHA": true,
+            "YUEYA": true
+        }
+    },
+    "JINHU": {
+        "improvementCords": [
+            5164,
+            3332
+        ],
+        "unitCords": [
+            5226,
+            3310
+        ],
+        "adjacencyMap": {
+            "HANGZ": true,
+            "LISHU": true,
+            "QUZHO": true,
+            "SHAOX": true,
+            "TIAZH": true
+        }
+    },
+    "NYING": {
+        "improvementCords": [
+            2383,
+            3359
+        ],
+        "unitCords": [
+            2448,
+            3359
+        ],
+        "adjacencyMap": {
+            "LHASA": true,
+            "LIJIA": true,
+            "NAGQU": true,
+            "QAMDO": true,
+            "SHANN": true
+        }
+    },
+    "ENSHI": {
+        "improvementCords": [
+            3968,
+            3326
+        ],
+        "unitCords": [
+            4033,
+            3326
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "FENGD": true,
+            "SHIYA": true,
+            "TUJIA": true,
+            "YICHA": true,
+            "YOUYA": true,
+            "YUNYA": true
+        }
+    },
+    "XIANN": {
+        "improvementCords": [
+            4511,
+            3341
+        ],
+        "unitCords": [
+            4566,
+            3341
+        ],
+        "adjacencyMap": {
+            "JINGZ": true,
+            "JIUJI": true,
+            "WUHAN": true,
+            "YUEYA": true
+        }
+    },
+    "FENGD": {
+        "improvementCords": [
+            3779,
+            3347
+        ],
+        "unitCords": [
+            3844,
+            3347
+        ],
+        "adjacencyMap": {
+            "CHONG": true,
+            "DAZHO": true,
+            "ENSHI": true,
+            "SUINI": true,
+            "YOUYA": true,
+            "YUNYA": true,
+            "ZUNYI": true
+        }
+    },
+    "TIAZH": {
+        "improvementCords": [
+            5303,
+            3342
+        ],
+        "unitCords": [
+            5354,
+            3342
+        ],
+        "adjacencyMap": {
+            "JINHU": true,
+            "LISHU": true,
+            "NINGB": true,
+            "SHAOX": true,
+            "YONGJ": true
+        }
+    },
+    "JIUJI": {
+        "improvementCords": [
+            4684,
+            3368
+        ],
+        "unitCords": [
+            4763,
+            3342
+        ],
+        "adjacencyMap": {
+            "ANQIN": true,
+            "HNGSH": true,
+            "HUAGG": true,
+            "NANCH": true,
+            "PINGX": true,
+            "SHARO": true,
+            "WUHAN": true,
+            "XIANN": true,
+            "YUEYA": true
+        }
+    },
+    "QUZHO": {
+        "improvementCords": [
+            5057,
+            3387
+        ],
+        "unitCords": [
+            5092,
+            3356
+        ],
+        "adjacencyMap": {
+            "HANGZ": true,
+            "HNGSH": true,
+            "JINHU": true,
+            "LISHU": true,
+            "NANPI": true,
+            "SHARO": true
+        }
+    },
+    "NEIJI": {
+        "improvementCords": [
+            3462,
+            3402
+        ],
+        "unitCords": [
+            3517,
+            3366
+        ],
+        "adjacencyMap": {
+            "CHENG": true,
+            "CHONG": true,
+            "LESHA": true,
+            "MIANY": true,
+            "SUINI": true,
+            "YIBIN": true
+        }
+    },
+    "SHARO": {
+        "improvementCords": [
+            4872,
+            3389
+        ],
+        "unitCords": [
+            4937,
+            3389
+        ],
+        "adjacencyMap": {
+            "FUZHO": true,
+            "HNGSH": true,
+            "NANCH": true,
+            "NANPI": true,
+            "QUZHO": true,
+            "JIUJI": true
+        }
+    },
+    "YONGJ": {
+        "improvementCords": [
+            5442,
+            3467
+        ],
+        "unitCords": [
+            5507,
+            3467
+        ],
+        "adjacencyMap": {
+            "LISHU": true,
+            "RUIAN": true,
+            "TIAZH": true
+        }
+    },
+    "LESHA": {
+        "improvementCords": [
+            3317,
+            3475
+        ],
+        "unitCords": [
+            3224,
+            3405
+        ],
+        "adjacencyMap": {
+            "CHENG": true,
+            "GARZE": true,
+            "LIANG": true,
+            "NEIJI": true,
+            "NGAWA": true,
+            "YIBIN": true,
+            "ZHAOT": true
+        }
+    },
+    "CHONG": {
+        "improvementCords": [
+            3625,
+            3410
+        ],
+        "unitCords": [
+            3679,
+            3469
+        ],
+        "adjacencyMap": {
+            "FENGD": true,
+            "NEIJI": true,
+            "SUINI": true,
+            "YIBIN": true,
+            "ZUNYI": true
+        }
+    },
+    "SHANN": {
+        "improvementCords": [
+            1915,
+            3452
+        ],
+        "unitCords": [
+            1980,
+            3452
+        ],
+        "adjacencyMap": {
+            "LHASA": true,
+            "NYING": true,
+            "XIGAZ": true
+        }
+    },
+    "LISHU": {
+        "improvementCords": [
+            5143,
+            3463
+        ],
+        "unitCords": [
+            5211,
+            3426
+        ],
+        "adjacencyMap": {
+            "JINHU": true,
+            "NANPI": true,
+            "NINGD": true,
+            "QUZHO": true,
+            "RUIAN": true,
+            "TIAZH": true,
+            "YONGJ": true
+        }
+    },
+    "NANCH": {
+        "improvementCords": [
+            4780,
+            3466
+        ],
+        "unitCords": [
+            4729,
+            3430
+        ],
+        "adjacencyMap": {
+            "FUZHO": true,
+            "PINGX": true,
+            "SHARO": true,
+            "JIUJI": true
+        }
+    },
+    "TUJIA": {
+        "improvementCords": [
+            4043,
+            3483
+        ],
+        "unitCords": [
+            4118,
+            3423
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "ENSHI": true,
+            "HUAIH": true,
+            "TONGR": true,
+            "YOUYA": true
+        }
+    },
+    "YOUYA": {
+        "improvementCords": [
+            3890,
+            3426
+        ],
+        "unitCords": [
+            3940,
+            3505
+        ],
+        "adjacencyMap": {
+            "ENSHI": true,
+            "FENGD": true,
+            "TONGR": true,
+            "TUJIA": true,
+            "ZUNYI": true
+        }
+    },
+    "CHGDE": {
+        "improvementCords": [
+            4245,
+            3463
+        ],
+        "unitCords": [
+            4310,
+            3463
+        ],
+        "adjacencyMap": {
+            "ENSHI": true,
+            "HUAIH": true,
+            "JINGZ": true,
+            "SHAOY": true,
+            "TUJIA": true,
+            "YICHA": true,
+            "YUEYA": true
+        }
+    },
+    "YUEYA": {
+        "improvementCords": [
+            4425,
+            3497
+        ],
+        "unitCords": [
+            4490,
+            3497
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "HENGY": true,
+            "JINGZ": true,
+            "PINGX": true,
+            "SHAOY": true,
+            "JIUJI": true,
+            "XIANN": true
+        }
+    },
+    "RUIAN": {
+        "improvementCords": [
+            5227,
+            3508
+        ],
+        "unitCords": [
+            5282,
+            3484
+        ],
+        "adjacencyMap": {
+            "LISHU": true,
+            "NINGD": true,
+            "YONGJ": true
+        }
+    },
+    "PINGX": {
+        "improvementCords": [
+            4594,
+            3551
+        ],
+        "unitCords": [
+            4659,
+            3506
+        ],
+        "adjacencyMap": {
+            "FUZHO": true,
+            "HENGY": true,
+            "JIANJ": true,
+            "NANCH": true,
+            "JIUJI": true,
+            "YUEYA": true
+        }
+    },
+    "YIBIN": {
+        "improvementCords": [
+            3462,
+            3570
+        ],
+        "unitCords": [
+            3527,
+            3570
+        ],
+        "adjacencyMap": {
+            "BIJIE": true,
+            "CHONG": true,
+            "LESHA": true,
+            "NEIJI": true,
+            "ZHAOT": true,
+            "ZUNYI": true
+        }
+    },
+    "FUZHO": {
+        "improvementCords": [
+            4795,
+            3581
+        ],
+        "unitCords": [
+            4860,
+            3581
+        ],
+        "adjacencyMap": {
+            "HUICH": true,
+            "JIANJ": true,
+            "NANCH": true,
+            "NANPI": true,
+            "PINGX": true,
+            "SANMI": true,
+            "SHARO": true
+        }
+    },
+    "NANPI": {
+        "improvementCords": [
+            4988,
+            3590
+        ],
+        "unitCords": [
+            5053,
+            3590
+        ],
+        "adjacencyMap": {
+            "FUZHO": true,
+            "LISHU": true,
+            "NINGD": true,
+            "QUZHO": true,
+            "SANMI": true,
+            "SHARO": true
+        }
+    },
+    "ZUNYI": {
+        "improvementCords": [
+            3704,
+            3609
+        ],
+        "unitCords": [
+            3769,
+            3609
+        ],
+        "adjacencyMap": {
+            "BIJIE": true,
+            "CHONG": true,
+            "FENGD": true,
+            "QIAND": true,
+            "QIANN": true,
+            "TONGR": true,
+            "YIBIN": true,
+            "YOUYA": true
+        }
+    },
+    "TONGR": {
+        "improvementCords": [
+            3882,
+            3629
+        ],
+        "unitCords": [
+            3947,
+            3629
+        ],
+        "adjacencyMap": {
+            "HUAIH": true,
+            "QIAND": true,
+            "TUJIA": true,
+            "YOUYA": true,
+            "ZUNYI": true
+        }
+    },
+    "HUAIH": {
+        "improvementCords": [
+            4080,
+            3665
+        ],
+        "unitCords": [
+            4128,
+            3603
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "GUILI": true,
+            "LIUZH": true,
+            "QIAND": true,
+            "SHAOY": true,
+            "TONGR": true,
+            "TUJIA": true
+        }
+    },
+    "NINGD": {
+        "improvementCords": [
+            5149,
+            3661
+        ],
+        "unitCords": [
+            5189,
+            3591
+        ],
+        "adjacencyMap": {
+            "LISHU": true,
+            "NANPI": true,
+            "QUANZ": true,
+            "RUIAN": true,
+            "SANMI": true
+        }
+    },
+    "LIANG": {
+        "improvementCords": [
+            3111,
+            3685
+        ],
+        "unitCords": [
+            3176,
+            3685
+        ],
+        "adjacencyMap": {
+            "CHUXI": true,
+            "GARZE": true,
+            "KUNMI": true,
+            "LESHA": true,
+            "LIJIA": true,
+            "QUJIN": true,
+            "ZHAOT": true
+        }
+    },
+    "ZHAOT": {
+        "improvementCords": [
+            3365,
+            3663
+        ],
+        "unitCords": [
+            3456,
+            3678
+        ],
+        "adjacencyMap": {
+            "BIJIE": true,
+            "LESHA": true,
+            "LIANG": true,
+            "QUJIN": true,
+            "YIBIN": true
+        }
+    },
+    "JIANJ": {
+        "improvementCords": [
+            4616,
+            3681
+        ],
+        "unitCords": [
+            4681,
+            3681
+        ],
+        "adjacencyMap": {
+            "CHENZ": true,
+            "CHGYI": true,
+            "FUZHO": true,
+            "HENGY": true,
+            "HUICH": true,
+            "PINGX": true
+        }
+    },
+    "HENGY": {
+        "improvementCords": [
+            4394,
+            3723
+        ],
+        "unitCords": [
+            4427,
+            3668
+        ],
+        "adjacencyMap": {
+            "CHENZ": true,
+            "JIANJ": true,
+            "PINGX": true,
+            "SHAOY": true,
+            "YONGZ": true,
+            "YUEYA": true
+        }
+    },
+    "LIJIA": {
+        "improvementCords": [
+            2833,
+            3708
+        ],
+        "unitCords": [
+            2898,
+            3708
+        ],
+        "adjacencyMap": {
+            "CHUXI": true,
+            "GARZE": true,
+            "LIANG": true,
+            "LINCA": true,
+            "NYING": true,
+            "QAMDO": true
+        }
+    },
+    "SHAOY": {
+        "improvementCords": [
+            4182,
+            3740
+        ],
+        "unitCords": [
+            4230,
+            3680
+        ],
+        "adjacencyMap": {
+            "CHGDE": true,
+            "GUILI": true,
+            "HENGY": true,
+            "HUAIH": true,
+            "YONGZ": true,
+            "YUEYA": true
+        }
+    },
+    "SANMI": {
+        "improvementCords": [
+            4921,
+            3741
+        ],
+        "unitCords": [
+            4986,
+            3741
+        ],
+        "adjacencyMap": {
+            "FUZHO": true,
+            "HUICH": true,
+            "LONGY": true,
+            "NANPI": true,
+            "NINGD": true,
+            "QUANZ": true
+        }
+    },
+    "BIJIE": {
+        "improvementCords": [
+            3503,
+            3743
+        ],
+        "unitCords": [
+            3568,
+            3743
+        ],
+        "adjacencyMap": {
+            "QIANN": true,
+            "QIANX": true,
+            "QUJIN": true,
+            "YIBIN": true,
+            "ZHAOT": true,
+            "ZUNYI": true
+        }
+    },
+    "HUICH": {
+        "improvementCords": [
+            4758,
+            3811
+        ],
+        "unitCords": [
+            4781,
+            3745
+        ],
+        "adjacencyMap": {
+            "ANYUA": true,
+            "CHGYI": true,
+            "FUZHO": true,
+            "JIANJ": true,
+            "LONGY": true,
+            "SANMI": true
+        }
+    },
+    "QIAND": {
+        "improvementCords": [
+            3878,
+            3809
+        ],
+        "unitCords": [
+            3943,
+            3809
+        ],
+        "adjacencyMap": {
+            "HECHI": true,
+            "HUAIH": true,
+            "LIUZH": true,
+            "QIANN": true,
+            "TONGR": true,
+            "ZUNYI": true
+        }
+    },
+    "CHGYI": {
+        "improvementCords": [
+            4599,
+            3856
+        ],
+        "unitCords": [
+            4661,
+            3828
+        ],
+        "adjacencyMap": {
+            "ANYUA": true,
+            "CHENZ": true,
+            "HUICH": true,
+            "JIANJ": true,
+            "SHAOQ": true
+        }
+    },
+    "CHENZ": {
+        "improvementCords": [
+            4439,
+            3856
+        ],
+        "unitCords": [
+            4504,
+            3856
+        ],
+        "adjacencyMap": {
+            "CHGYI": true,
+            "HENGY": true,
+            "JIANJ": true,
+            "QINYN": true,
+            "SHAOQ": true,
+            "YONGZ": true
+        }
+    },
+    "QUANZ": {
+        "improvementCords": [
+            5046,
+            3858
+        ],
+        "unitCords": [
+            5105,
+            3831
+        ],
+        "adjacencyMap": {
+            "LONGY": true,
+            "NINGD": true,
+            "SANMI": true,
+            "XIAME": true
+        }
+    },
+    "QIANN": {
+        "improvementCords": [
+            3709,
+            3861
+        ],
+        "unitCords": [
+            3774,
+            3861
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "BIJIE": true,
+            "HECHI": true,
+            "QIAND": true,
+            "QIANX": true,
+            "ZUNYI": true
+        }
+    },
+    "LONGY": {
+        "improvementCords": [
+            4854,
+            3877
+        ],
+        "unitCords": [
+            4919,
+            3877
+        ],
+        "adjacencyMap": {
+            "ANYUA": true,
+            "HUICH": true,
+            "MEIZH": true,
+            "QUANZ": true,
+            "SANMI": true,
+            "XIAME": true
+        }
+    },
+    "QUJIN": {
+        "improvementCords": [
+            3380,
+            3991
+        ],
+        "unitCords": [
+            3361,
+            3877
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "BIJIE": true,
+            "HONGH": true,
+            "KUNMI": true,
+            "LIANG": true,
+            "QIANX": true,
+            "WENSH": true,
+            "ZHAOT": true
+        }
+    },
+    "YONGZ": {
+        "improvementCords": [
+            4300,
+            3922
+        ],
+        "unitCords": [
+            4301,
+            3834
+        ],
+        "adjacencyMap": {
+            "CHENZ": true,
+            "GUILI": true,
+            "HENGY": true,
+            "QINYN": true,
+            "SHAOY": true,
+            "WUZHO": true
+        }
+    },
+    "QIANX": {
+        "improvementCords": [
+            3516,
+            3929
+        ],
+        "unitCords": [
+            3581,
+            3929
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "BIJIE": true,
+            "QIANN": true,
+            "QUJIN": true
+        }
+    },
+    "ANYUA": {
+        "improvementCords": [
+            4693,
+            3921
+        ],
+        "unitCords": [
+            4752,
+            3932
+        ],
+        "adjacencyMap": {
+            "CHGYI": true,
+            "HEYUA": true,
+            "HUICH": true,
+            "LONGY": true,
+            "MEIZH": true,
+            "SHAOQ": true
+        }
+    },
+    "GUILI": {
+        "improvementCords": [
+            4108,
+            3954
+        ],
+        "unitCords": [
+            4173,
+            3954
+        ],
+        "adjacencyMap": {
+            "GUIGA": true,
+            "HUAIH": true,
+            "LIUZH": true,
+            "SHAOY": true,
+            "WUZHO": true,
+            "YONGZ": true
+        }
+    },
+    "CHUXI": {
+        "improvementCords": [
+            2967,
+            3954
+        ],
+        "unitCords": [
+            3032,
+            3954
+        ],
+        "adjacencyMap": {
+            "HONGH": true,
+            "KUNMI": true,
+            "LIANG": true,
+            "LINCA": true,
+            "LIJIA": true,
+            "PUERC": true
+        }
+    },
+    "KUNMI": {
+        "improvementCords": [
+            3244,
+            3981
+        ],
+        "unitCords": [
+            3232,
+            3901
+        ],
+        "adjacencyMap": {
+            "CHUXI": true,
+            "HONGH": true,
+            "LIANG": true,
+            "QUJIN": true
+        }
+    },
+    "SHAOQ": {
+        "improvementCords": [
+            4496,
+            3968
+        ],
+        "unitCords": [
+            4561,
+            3968
+        ],
+        "adjacencyMap": {
+            "ANYUA": true,
+            "CHENZ": true,
+            "CHGYI": true,
+            "GUANG": true,
+            "HEYUA": true,
+            "HUIZH": true,
+            "QINYN": true
+        }
+    },
+    "XIAME": {
+        "improvementCords": [
+            4966,
+            3997
+        ],
+        "unitCords": [
+            4991,
+            3943
+        ],
+        "adjacencyMap": {
+            "CHAOZ": true,
+            "LONGY": true,
+            "MEIZH": true,
+            "QUANZ": true
+        }
+    },
+    "MEIZH": {
+        "improvementCords": [
+            4802,
+            4047
+        ],
+        "unitCords": [
+            4853,
+            3996
+        ],
+        "adjacencyMap": {
+            "ANYUA": true,
+            "CHAOZ": true,
+            "HEYUA": true,
+            "JIEYA": true,
+            "LONGY": true,
+            "SHANW": true,
+            "XIAME": true
+        }
+    },
+    "LIUZH": {
+        "improvementCords": [
+            4015,
+            4023
+        ],
+        "unitCords": [
+            4016,
+            3940
+        ],
+        "adjacencyMap": {
+            "GUIGA": true,
+            "GUILI": true,
+            "HECHI": true,
+            "HUAIH": true,
+            "QIAND": true
+        }
+    },
+    "QINYN": {
+        "improvementCords": [
+            4460,
+            4076
+        ],
+        "unitCords": [
+            4389,
+            4006
+        ],
+        "adjacencyMap": {
+            "CHENZ": true,
+            "GUANG": true,
+            "SHAOQ": true,
+            "WUZHO": true,
+            "YONGZ": true,
+            "ZHAOQ": true
+        }
+    },
+    "HECHI": {
+        "improvementCords": [
+            3801,
+            4063
+        ],
+        "unitCords": [
+            3866,
+            4063
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "GUIGA": true,
+            "LIUZH": true,
+            "NANNI": true,
+            "QIAND": true,
+            "QIANN": true
+        }
+    },
+    "HEYUA": {
+        "improvementCords": [
+            4692,
+            4072
+        ],
+        "unitCords": [
+            4716,
+            4013
+        ],
+        "adjacencyMap": {
+            "ANYUA": true,
+            "HUIZH": true,
+            "MEIZH": true,
+            "SHAOQ": true,
+            "SHANW": true
+        }
+    },
+    "LINCA": {
+        "improvementCords": [
+            2756,
+            4077
+        ],
+        "unitCords": [
+            2821,
+            4077
+        ],
+        "adjacencyMap": {
+            "CHUXI": true,
+            "LIJIA": true,
+            "PUERC": true
+        }
+    },
+    "CHAOZ": {
+        "improvementCords": [
+            5020,
+            4140
+        ],
+        "unitCords": [
+            5085,
+            4140
+        ],
+        "adjacencyMap": {
+            "JIEYA": true,
+            "MEIZH": true,
+            "XIAME": true
+        }
+    },
+    "WUZHO": {
+        "improvementCords": [
+            4198,
+            4125
+        ],
+        "unitCords": [
+            4263,
+            4125
+        ],
+        "adjacencyMap": {
+            "GUIGA": true,
+            "GUILI": true,
+            "MAOMI": true,
+            "QINYN": true,
+            "QINZH": true,
+            "YONGZ": true,
+            "YUNFU": true,
+            "ZHAOQ": true
+        }
+    },
+    "JIEYA": {
+        "improvementCords": [
+            4969,
+            4241
+        ],
+        "unitCords": [
+            5034,
+            4241
+        ],
+        "adjacencyMap": {
+            "CHAOZ": true,
+            "MEIZH": true,
+            "SHANW": true
+        }
+    },
+    "ZHAOQ": {
+        "improvementCords": [
+            4334,
+            4162
+        ],
+        "unitCords": [
+            4399,
+            4162
+        ],
+        "adjacencyMap": {
+            "GUANG": true,
+            "QINYN": true,
+            "WUZHO": true,
+            "YUNFU": true
+        }
+    },
+    "HUIZH": {
+        "improvementCords": [
+            4651,
+            4196
+        ],
+        "unitCords": [
+            4616,
+            4141
+        ],
+        "adjacencyMap": {
+            "GUANG": true,
+            "HEYUA": true,
+            "SHAOQ": true,
+            "SHANW": true
+        }
+    },
+    "GUIGA": {
+        "improvementCords": [
+            4045,
+            4185
+        ],
+        "unitCords": [
+            4110,
+            4185
+        ],
+        "adjacencyMap": {
+            "GUILI": true,
+            "HECHI": true,
+            "LIUZH": true,
+            "NANNI": true,
+            "QINZH": true,
+            "WUZHO": true
+        }
+    },
+    "WENSH": {
+        "improvementCords": [
+            3436,
+            4186
+        ],
+        "unitCords": [
+            3501,
+            4186
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "HONGH": true,
+            "QUJIN": true
+        }
+    },
+    "BAISE": {
+        "improvementCords": [
+            3685,
+            4186
+        ],
+        "unitCords": [
+            3750,
+            4186
+        ],
+        "adjacencyMap": {
+            "FANGC": true,
+            "HECHI": true,
+            "NANNI": true,
+            "QIANN": true,
+            "QIANX": true,
+            "QUJIN": true,
+            "WENSH": true
+        }
+    },
+    "GUANG": {
+        "improvementCords": [
+            4481,
+            4192
+        ],
+        "unitCords": [
+            4539,
+            4157
+        ],
+        "adjacencyMap": {
+            "HONGK": true,
+            "HUIZH": true,
+            "JIANG": true,
+            "QINYN": true,
+            "SHAOQ": true,
+            "YUNFU": true,
+            "ZHAOQ": true
+        }
+    },
+    "SHANW": {
+        "improvementCords": [
+            4755,
+            4317
+        ],
+        "unitCords": [
+            4820,
+            4317
+        ],
+        "adjacencyMap": {
+            "HEYUA": true,
+            "HUIZH": true,
+            "JIEYA": true,
+            "MEIZH": true
+        }
+    },
+    "HONGH": {
+        "improvementCords": [
+            3194,
+            4206
+        ],
+        "unitCords": [
+            3259,
+            4206
+        ],
+        "adjacencyMap": {
+            "CHUXI": true,
+            "KUNMI": true,
+            "PUERC": true,
+            "QUJIN": true,
+            "WENSH": true
+        }
+    },
+    "NANNI": {
+        "improvementCords": [
+            3890,
+            4252
+        ],
+        "unitCords": [
+            3955,
+            4252
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "FANGC": true,
+            "GUIGA": true,
+            "HECHI": true,
+            "QINZH": true
+        }
+    },
+    "YUNFU": {
+        "improvementCords": [
+            4302,
+            4256
+        ],
+        "unitCords": [
+            4355,
+            4252
+        ],
+        "adjacencyMap": {
+            "GUANG": true,
+            "JIANG": true,
+            "MAOMI": true,
+            "WUZHO": true,
+            "YANGJ": true,
+            "ZHAOQ": true
+        }
+    },
+    "PUERC": {
+        "improvementCords": [
+            2950,
+            4282
+        ],
+        "unitCords": [
+            3015,
+            4282
+        ],
+        "adjacencyMap": {
+            "CHUXI": true,
+            "HONGH": true,
+            "LINCA": true
+        }
+    },
+    "JIANG": {
+        "improvementCords": [
+            4412,
+            4317
+        ],
+        "unitCords": [
+            4463,
+            4290
+        ],
+        "adjacencyMap": {
+            "GUANG": true,
+            "YANGJ": true,
+            "YUNFU": true
+        }
+    },
+    "HONGK": {
+        "improvementCords": [
+            4573,
+            4416
+        ],
+        "unitCords": [
+            4638,
+            4416
+        ],
+        "adjacencyMap": {
+            "GUANG": true
+        }
+    },
+    "YANGJ": {
+        "improvementCords": [
+            4313,
+            4373
+        ],
+        "unitCords": [
+            4331,
+            4322
+        ],
+        "adjacencyMap": {
+            "JIANG": true,
+            "MAOMI": true,
+            "YUNFU": true
+        }
+    },
+    "FANGC": {
+        "improvementCords": [
+            3761,
+            4356
+        ],
+        "unitCords": [
+            3826,
+            4356
+        ],
+        "adjacencyMap": {
+            "BAISE": true,
+            "NANNI": true,
+            "QINZH": true
+        }
+    },
+    "QINZH": {
+        "improvementCords": [
+            4042,
+            4365
+        ],
+        "unitCords": [
+            4112,
+            4319
+        ],
+        "adjacencyMap": {
+            "FANGC": true,
+            "GUIGA": true,
+            "MAOMI": true,
+            "NANNI": true,
+            "WUZHO": true,
+            "ZHANJ": true
+        }
+    },
+    "MAOMI": {
+        "improvementCords": [
+            4213,
+            4383
+        ],
+        "unitCords": [
+            4239,
+            4330
+        ],
+        "adjacencyMap": {
+            "QINZH": true,
+            "WUZHO": true,
+            "YANGJ": true,
+            "YUNFU": true,
+            "ZHANJ": true
+        }
+    },
+    "ZHANJ": {
+        "improvementCords": [
+            4126,
+            4458
+        ],
+        "unitCords": [
+            4112,
+            4519
+        ],
+        "adjacencyMap": {
+            "HAIKO": true,
+            "MAOMI": true,
+            "QINZH": true
+        }
+    },
+    "HAIKO": {
+        "improvementCords": [
+            4133,
+            4711
+        ],
+        "unitCords": [
+            4188,
+            4667
+        ],
+        "adjacencyMap": {
+            "SANYA": true,
+            "ZHANJ": true
+        }
+    },
+    "SANYA": {
+        "improvementCords": [
+            4047,
+            4808
+        ],
+        "unitCords": [
+            4005,
+            4754
+        ],
+        "adjacencyMap": {
+            "HAIKO": true
+        }
+    }
+}
