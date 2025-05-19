@@ -1,5 +1,11 @@
 {
     "DAXIN": {
+        "fullName": "Daxinganling Prefecture",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4912,
             257
@@ -14,6 +20,12 @@
         }
     },
     "HEIHE": {
+        "fullName": "Heihe",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5268,
             623
@@ -31,6 +43,12 @@
         }
     },
     "HULUN": {
+        "fullName": "Hulunbuir",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4825,
             659
@@ -47,6 +65,12 @@
         }
     },
     "JIAMU": {
+        "fullName": "Jiamusi",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5715,
             730
@@ -62,6 +86,12 @@
         }
     },
     "YICHU": {
+        "fullName": "Yichun",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5493,
             752
@@ -78,6 +108,12 @@
         }
     },
     "QIQIH": {
+        "fullName": "Qiqihar",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5135,
             825
@@ -96,6 +132,12 @@
         }
     },
     "SHUAN": {
+        "fullName": "Shuangyashan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5784,
             823
@@ -112,6 +154,12 @@
         }
     },
     "SUIHU": {
+        "fullName": "Suihua",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5328,
             881
@@ -129,6 +177,12 @@
         }
     },
     "JIXIH": {
+        "fullName": "Jixi",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5892,
             926
@@ -143,6 +197,12 @@
         }
     },
     "HARBI": {
+        "fullName": "Harbin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5474,
             1038
@@ -165,6 +225,12 @@
         }
     },
     "ALTAY": {
+        "fullName": "Altay Prefecture",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1956,
             1098
@@ -181,6 +247,12 @@
         }
     },
     "HINGG": {
+        "fullName": "Hinggan League",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4859,
             1089
@@ -198,6 +270,12 @@
         }
     },
     "TACHE": {
+        "fullName": "Tacheng Prefecture",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1524,
             1067
@@ -216,6 +294,12 @@
         }
     },
     "DAQIN": {
+        "fullName": "Daqing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5205,
             1059
@@ -233,6 +317,12 @@
         }
     },
     "MUDAN": {
+        "fullName": "Mudanjiang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5688,
             1115
@@ -249,6 +339,12 @@
         }
     },
     "KARAM": {
+        "fullName": "Karamay",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1615,
             1173
@@ -262,6 +358,12 @@
         }
     },
     "BAICH": {
+        "fullName": "Baicheng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5073,
             1163
@@ -279,6 +381,12 @@
         }
     },
     "SONGY": {
+        "fullName": "Songyuan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5227,
             1196
@@ -297,6 +405,12 @@
         }
     },
     "BORTA": {
+        "fullName": "Bortala Mongol AP",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1325,
             1200
@@ -311,6 +425,12 @@
         }
     },
     "CCHUN": {
+        "fullName": "Changchun",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5315,
             1245
@@ -327,6 +447,12 @@
         }
     },
     "JILIN": {
+        "fullName": "Jilin City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5460,
             1312
@@ -345,6 +471,12 @@
         }
     },
     "YANBI": {
+        "fullName": "Yanbian Korean AP",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5658,
             1339
@@ -361,6 +493,12 @@
         }
     },
     "CHANG": {
+        "fullName": "Changji City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1735,
             1362
@@ -377,6 +515,12 @@
         }
     },
     "TONGL": {
+        "fullName": "Tongliao",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4970,
             1351
@@ -399,6 +543,12 @@
         }
     },
     "ILIKA": {
+        "fullName": "Ili Kazakh AP",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1284,
             1379
@@ -415,6 +565,12 @@
         }
     },
     "SIPIN": {
+        "fullName": "Siping",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5317,
             1373
@@ -435,6 +591,12 @@
         }
     },
     "FUKAN": {
+        "fullName": "Fukang City",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1992,
             1395
@@ -451,6 +613,12 @@
         }
     },
     "HORQI": {
+        "fullName": "Horqin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5089,
             1437
@@ -468,6 +636,12 @@
         }
     },
     "CHIFE": {
+        "fullName": "Chifeng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4728,
             1445
@@ -484,6 +658,12 @@
         }
     },
     "XILIN": {
+        "fullName": "Xilingol League",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4413,
             1429
@@ -502,6 +682,12 @@
         }
     },
     "URUMQ": {
+        "fullName": "Urumqi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1815,
             1425
@@ -519,6 +705,12 @@
         }
     },
     "BAISH": {
+        "fullName": "Baishan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5563,
             1471
@@ -534,6 +726,12 @@
         }
     },
     "TIELI": {
+        "fullName": "Tieling",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5290,
             1498
@@ -550,6 +748,12 @@
         }
     },
     "AOHAN": {
+        "fullName": "AOHAN Banner",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4819,
             1535
@@ -567,6 +771,12 @@
         }
     },
     "TONGH": {
+        "fullName": "Tonghua",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5459,
             1556
@@ -584,6 +794,12 @@
         }
     },
     "FUXIN": {
+        "fullName": "Fuxin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5061,
             1599
@@ -601,6 +817,12 @@
         }
     },
     "XAYAR": {
+        "fullName": "Xayar County",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1265,
             1606
@@ -617,6 +839,12 @@
         }
     },
     "KUMUL": {
+        "fullName": "Kumul",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2332,
             1609
@@ -633,6 +861,12 @@
         }
     },
     "FUSHU": {
+        "fullName": "Fushun",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5326,
             1616
@@ -650,6 +884,12 @@
         }
     },
     "SHENY": {
+        "fullName": "Shenyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5214,
             1621
@@ -669,6 +909,12 @@
         }
     },
     "TURPA": {
+        "fullName": "Turpan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1955,
             1644
@@ -685,6 +931,12 @@
         }
     },
     "KIZIL": {
+        "fullName": "Kizilsu Kyrgyz AP",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             491,
             1653
@@ -700,6 +952,12 @@
         }
     },
     "SONGS": {
+        "fullName": "Songshan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4813,
             1702
@@ -715,6 +973,12 @@
         }
     },
     "JINZH": {
+        "fullName": "Jinzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5059,
             1713
@@ -732,6 +996,12 @@
         }
     },
     "CHAOY": {
+        "fullName": "Chaoyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4939,
             1725
@@ -752,6 +1022,12 @@
         }
     },
     "DANDO": {
+        "fullName": "Dandong",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5357,
             1765
@@ -769,6 +1045,12 @@
         }
     },
     "KASHG": {
+        "fullName": "Kasgar",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             643,
             1781
@@ -783,6 +1065,12 @@
         }
     },
     "AKSUP": {
+        "fullName": "Aksu Prefecture",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1048,
             1756
@@ -799,6 +1087,12 @@
         }
     },
     "CHNDE": {
+        "fullName": "Chengde",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4671,
             1785
@@ -821,6 +1115,12 @@
         }
     },
     "BAOTO": {
+        "fullName": "Baotou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3947,
             1791
@@ -837,6 +1137,12 @@
         }
     },
     "ANSHA": {
+        "fullName": "Anshan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5206,
             1793
@@ -853,6 +1159,12 @@
         }
     },
     "ULANQ": {
+        "fullName": "Ulanqab",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4221,
             1841
@@ -870,6 +1182,12 @@
         }
     },
     "BAYAN": {
+        "fullName": "Bayannur",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3693,
             1839
@@ -885,6 +1203,12 @@
         }
     },
     "HULUD": {
+        "fullName": "Huludao",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4948,
             1843
@@ -900,6 +1224,12 @@
         }
     },
     "ZHKOU": {
+        "fullName": "Zhangjiakou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4433,
             1879
@@ -919,6 +1249,12 @@
         }
     },
     "KARGI": {
+        "fullName": "Kargilik County",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             649,
             1935
@@ -935,6 +1271,12 @@
         }
     },
     "SHUNY": {
+        "fullName": "Shunyi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4651,
             1901
@@ -951,6 +1293,12 @@
         }
     },
     "QINHU": {
+        "fullName": "Qinhuangdao",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4886,
             1932
@@ -967,6 +1315,12 @@
         }
     },
     "DALIA": {
+        "fullName": "Dalian",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5172,
             1914
@@ -982,6 +1336,12 @@
         }
     },
     "HOHHO": {
+        "fullName": "Hohhot",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4067,
             1935
@@ -999,6 +1359,12 @@
         }
     },
     "JIUQU": {
+        "fullName": "Jiuquan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2559,
             1955
@@ -1016,6 +1382,12 @@
         }
     },
     "ALXAL": {
+        "fullName": "Alxa League",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
         "improvementCords": [
             3220,
             1988
@@ -1036,6 +1408,12 @@
         }
     },
     "TNGSN": {
+        "fullName": "Tangshan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4809,
             1982
@@ -1053,6 +1431,12 @@
         }
     },
     "BEIJI": {
+        "fullName": "Beijing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4561,
             1985
@@ -1070,6 +1454,12 @@
         }
     },
     "LANGF": {
+        "fullName": "Langfang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4695,
             2004
@@ -1088,6 +1478,12 @@
         }
     },
     "BAYIN": {
+        "fullName": "Bayingolin Mongol AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1689,
             2015
@@ -1112,6 +1508,12 @@
         }
     },
     "DATON": {
+        "fullName": "Datong",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4257,
             2027
@@ -1129,6 +1531,12 @@
         }
     },
     "TIANJ": {
+        "fullName": "Tianjin",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4711,
             2092
@@ -1144,6 +1552,12 @@
         }
     },
     "ORDOS": {
+        "fullName": "Ordos City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3803,
             2110
@@ -1163,6 +1577,12 @@
         }
     },
     "BAODI": {
+        "fullName": "Baoding",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4478,
             2103
@@ -1182,6 +1602,12 @@
         }
     },
     "HOTAN": {
+        "fullName": "Hotan Prefecture",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             959,
             2152
@@ -1200,6 +1626,12 @@
         }
     },
     "SHUOZ": {
+        "fullName": "Shuozhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4196,
             2172
@@ -1220,6 +1652,12 @@
         }
     },
     "CANGZ": {
+        "fullName": "Cangzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4661,
             2177
@@ -1239,6 +1677,12 @@
         }
     },
     "ZHANG": {
+        "fullName": "Zhangye",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3032,
             2227
@@ -1256,6 +1700,12 @@
         }
     },
     "SHIJI": {
+        "fullName": "Shijiazhuang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4437,
             2237
@@ -1273,6 +1723,12 @@
         }
     },
     "YANTA": {
+        "fullName": "Yantai",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5125,
             2246
@@ -1287,6 +1743,12 @@
         }
     },
     "DONGY": {
+        "fullName": "Dongying",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4884,
             2250
@@ -1303,6 +1765,12 @@
         }
     },
     "HENGS": {
+        "fullName": "Hengshui",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4600,
             2276
@@ -1320,6 +1788,12 @@
         }
     },
     "BINZH": {
+        "fullName": "Binzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4802,
             2271
@@ -1336,6 +1810,12 @@
         }
     },
     "YULIN": {
+        "fullName": "Yulin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3936,
             2293
@@ -1354,6 +1834,12 @@
         }
     },
     "TAIYU": {
+        "fullName": "Taiyuan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4121,
             2321
@@ -1371,6 +1857,12 @@
         }
     },
     "YANGQ": {
+        "fullName": "Yangquan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4302,
             2323
@@ -1390,6 +1882,12 @@
         }
     },
     "DEZHO": {
+        "fullName": "Dezhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4683,
             2323
@@ -1408,6 +1906,12 @@
         }
     },
     "QINGD": {
+        "fullName": "Qingdao",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5088,
             2356
@@ -1423,6 +1927,12 @@
         }
     },
     "XINGT": {
+        "fullName": "Xingtai",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4470,
             2345
@@ -1441,6 +1951,12 @@
         }
     },
     "HAIBE": {
+        "fullName": "Haibei Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2968,
             2351
@@ -1458,6 +1974,12 @@
         }
     },
     "YINCH": {
+        "fullName": "Yinchuan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3612,
             2399
@@ -1476,6 +1998,12 @@
         }
     },
     "WUWEI": {
+        "fullName": "Wuwei",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3256,
             2334
@@ -1494,6 +2022,12 @@
         }
     },
     "JINAN": {
+        "fullName": "Jinan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4763,
             2365
@@ -1513,6 +2047,12 @@
         }
     },
     "HAIXI": {
+        "fullName": "Haixi Mongolian and Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2422,
             2408
@@ -1532,6 +2072,12 @@
         }
     },
     "WEIFA": {
+        "fullName": "Weifang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4919,
             2378
@@ -1549,6 +2095,12 @@
         }
     },
     "ZHONG": {
+        "fullName": "Zhongwei",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3544,
             2492
@@ -1565,6 +2117,12 @@
         }
     },
     "LIAOC": {
+        "fullName": "Liaocheng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4615,
             2453
@@ -1583,6 +2141,12 @@
         }
     },
     "HANDA": {
+        "fullName": "Handan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4450,
             2437
@@ -1600,6 +2164,12 @@
         }
     },
     "TAIAN": {
+        "fullName": "Taian",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4740,
             2471
@@ -1617,6 +2187,12 @@
         }
     },
     "BAIYI": {
+        "fullName": "Baiyin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3400,
             2479
@@ -1636,6 +2212,12 @@
         }
     },
     "XININ": {
+        "fullName": "Xining",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3178,
             2523
@@ -1654,6 +2236,12 @@
         }
     },
     "YANAN": {
+        "fullName": "Yanan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3926,
             2510
@@ -1672,6 +2260,12 @@
         }
     },
     "RIZHA": {
+        "fullName": "Rizhao",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5127,
             2549
@@ -1688,6 +2282,12 @@
         }
     },
     "LINFE": {
+        "fullName": "Linfen",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4124,
             2513
@@ -1706,6 +2306,12 @@
         }
     },
     "JINCH": {
+        "fullName": "Jincheng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4332,
             2515
@@ -1725,6 +2331,12 @@
         }
     },
     "ANYAN": {
+        "fullName": "Anyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4473,
             2530
@@ -1744,6 +2356,12 @@
         }
     },
     "QINGY": {
+        "fullName": "Qingyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3729,
             2550
@@ -1762,6 +2380,12 @@
         }
     },
     "LANZH": {
+        "fullName": "Lanzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3311,
             2529
@@ -1779,6 +2403,12 @@
         }
     },
     "HAINA": {
+        "fullName": "Hainan Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2937,
             2575
@@ -1796,6 +2426,12 @@
         }
     },
     "LINYI": {
+        "fullName": "Linyi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4888,
             2561
@@ -1815,6 +2451,12 @@
         }
     },
     "JININ": {
+        "fullName": "Jining",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4744,
             2561
@@ -1832,6 +2474,12 @@
         }
     },
     "GUYUA": {
+        "fullName": "Guyuan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3584,
             2585
@@ -1849,6 +2497,12 @@
         }
     },
     "HEZES": {
+        "fullName": "Heze",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4629,
             2620
@@ -1867,6 +2521,12 @@
         }
     },
     "LIANY": {
+        "fullName": "Lianyungang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5027,
             2639
@@ -1885,6 +2545,12 @@
         }
     },
     "KAIFE": {
+        "fullName": "Kaifeng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4505,
             2668
@@ -1904,6 +2570,12 @@
         }
     },
     "YUNCH": {
+        "fullName": "Yuncheng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4112,
             2658
@@ -1922,6 +2594,12 @@
         }
     },
     "DINGX": {
+        "fullName": "Dingxi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3396,
             2683
@@ -1939,6 +2617,12 @@
         }
     },
     "WEINA": {
+        "fullName": "Weinan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3997,
             2715
@@ -1957,6 +2641,12 @@
         }
     },
     "HUANG": {
+        "fullName": "Huangnan Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3104,
             2700
@@ -1973,6 +2663,12 @@
         }
     },
     "ZHENG": {
+        "fullName": "Zhengzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4367,
             2674
@@ -1990,6 +2686,12 @@
         }
     },
     "NGARI": {
+        "fullName": "Ngari Prefecture",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             959,
             2713
@@ -2005,6 +2707,12 @@
         }
     },
     "XUZHO": {
+        "fullName": "Xuzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4863,
             2694
@@ -2023,6 +2731,12 @@
         }
     },
     "SHGQU": {
+        "fullName": "Shangqiu",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4644,
             2713
@@ -2040,6 +2754,12 @@
         }
     },
     "SHEYA": {
+        "fullName": "Sheyang County",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5111,
             2724
@@ -2056,6 +2776,12 @@
         }
     },
     "TIANS": {
+        "fullName": "Tianshui",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3529,
             2738
@@ -2075,6 +2801,12 @@
         }
     },
     "GANNA": {
+        "fullName": "Gannan Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3223,
             2746
@@ -2094,6 +2826,12 @@
         }
     },
     "SUQIA": {
+        "fullName": "Suqian",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4946,
             2757
@@ -2111,6 +2849,12 @@
         }
     },
     "LUOYA": {
+        "fullName": "Luoyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4263,
             2769
@@ -2128,6 +2872,12 @@
         }
     },
     "YUSHU": {
+        "fullName": "Yushu Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2242,
             2782
@@ -2146,6 +2896,12 @@
         }
     },
     "XIANY": {
+        "fullName": "Xianyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3849,
             2766
@@ -2166,6 +2922,12 @@
         }
     },
     "YONGQ": {
+        "fullName": "Yongqiao District",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4783,
             2756
@@ -2184,6 +2946,12 @@
         }
     },
     "SANME": {
+        "fullName": "Sanmenxia",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4157,
             2781
@@ -2201,6 +2969,12 @@
         }
     },
     "BAOJI": {
+        "fullName": "Baoji",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3698,
             2784
@@ -2217,6 +2991,12 @@
         }
     },
     "PINGD": {
+        "fullName": "Pingdingshan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4363,
             2801
@@ -2236,6 +3016,12 @@
         }
     },
     "GOLOG": {
+        "fullName": "Golog Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2841,
             2816
@@ -2255,6 +3041,12 @@
         }
     },
     "ZHOUK": {
+        "fullName": "Zhoukou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4538,
             2781
@@ -2273,6 +3065,12 @@
         }
     },
     "DAFEN": {
+        "fullName": "Dafeng District",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5336,
             2804
@@ -2288,6 +3086,12 @@
         }
     },
     "HUAIA": {
+        "fullName": "Huaian",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5020,
             2749
@@ -2305,6 +3109,12 @@
         }
     },
     "BOZHO": {
+        "fullName": "Bozhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4722,
             2840
@@ -2322,6 +3132,12 @@
         }
     },
     "YANGZ": {
+        "fullName": "Yangzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5100,
             2876
@@ -2340,6 +3156,12 @@
         }
     },
     "SHANL": {
+        "fullName": "Shangluo",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3993,
             2865
@@ -2358,6 +3180,12 @@
         }
     },
     "LONGN": {
+        "fullName": "Longnan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3499,
             2897
@@ -2378,6 +3206,12 @@
         }
     },
     "CHUZH": {
+        "fullName": "Chuzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4863,
             2877
@@ -2400,6 +3234,12 @@
         }
     },
     "NAGQU": {
+        "fullName": "Nagqu",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1631,
             2912
@@ -2420,6 +3260,12 @@
         }
     },
     "NANTO": {
+        "fullName": "Nantong",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5211,
             2888
@@ -2434,6 +3280,12 @@
         }
     },
     "FUYAN": {
+        "fullName": "Fuyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4642,
             2889
@@ -2452,6 +3304,12 @@
         }
     },
     "NANYA": {
+        "fullName": "Nanyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4202,
             2894
@@ -2471,6 +3329,12 @@
         }
     },
     "ZHUMA": {
+        "fullName": "Zhumadian",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4466,
             2920
@@ -2488,6 +3352,12 @@
         }
     },
     "HANZH": {
+        "fullName": "Hanzhong",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3681,
             2947
@@ -2506,6 +3376,12 @@
         }
     },
     "TANGH": {
+        "fullName": "Tanghe",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4342,
             2946
@@ -2524,6 +3400,12 @@
         }
     },
     "NANJI": {
+        "fullName": "Nanjing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5032,
             2972
@@ -2541,6 +3423,12 @@
         }
     },
     "ANKAN": {
+        "fullName": "Ankang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3887,
             3001
@@ -2559,6 +3447,12 @@
         }
     },
     "SHUSH": {
+        "fullName": "Shushan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4848,
             3015
@@ -2574,6 +3468,12 @@
         }
     },
     "SUZHO": {
+        "fullName": "Suzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5206,
             3028
@@ -2590,6 +3490,12 @@
         }
     },
     "XINYA": {
+        "fullName": "Xinyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4561,
             3024
@@ -2609,6 +3515,12 @@
         }
     },
     "SHIYA": {
+        "fullName": "Shiyan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4059,
             3039
@@ -2628,6 +3540,12 @@
         }
     },
     "SHANG": {
+        "fullName": "Shanghai",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5487,
             3039
@@ -2642,6 +3560,12 @@
         }
     },
     "NGAWA": {
+        "fullName": "Ngawa Tibetan and Qiang AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3180,
             3057
@@ -2661,6 +3585,12 @@
         }
     },
     "XIAYG": {
+        "fullName": "Xiangyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4232,
             3068
@@ -2679,6 +3609,12 @@
         }
     },
     "LUANA": {
+        "fullName": "Luan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4744,
             3068
@@ -2698,6 +3634,12 @@
         }
     },
     "BAZHO": {
+        "fullName": "Bazhong",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3609,
             3077
@@ -2715,6 +3657,12 @@
         }
     },
     "CHAOH": {
+        "fullName": "Chaohu",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4891,
             3083
@@ -2734,6 +3682,12 @@
         }
     },
     "SUIZH": {
+        "fullName": "Suizhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4411,
             3089
@@ -2751,6 +3705,12 @@
         }
     },
     "JIAXI": {
+        "fullName": "Jiaxing",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5155,
             3109
@@ -2767,6 +3727,12 @@
         }
     },
     "XUANC": {
+        "fullName": "Xuancheng",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4996,
             3127
@@ -2785,6 +3751,12 @@
         }
     },
     "MIANY": {
+        "fullName": "Mianyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3443,
             3123
@@ -2803,6 +3775,12 @@
         }
     },
     "XIAOG": {
+        "fullName": "Xiaogan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4468,
             3172
@@ -2821,6 +3799,12 @@
         }
     },
     "JINGM": {
+        "fullName": "Jingmen",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4322,
             3182
@@ -2838,6 +3822,12 @@
         }
     },
     "YUNYA": {
+        "fullName": "Yunyang County",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3916,
             3185
@@ -2855,6 +3845,12 @@
         }
     },
     "ANQIN": {
+        "fullName": "Anqing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4774,
             3210
@@ -2872,6 +3868,12 @@
         }
     },
     "DAZHO": {
+        "fullName": "Dazhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3786,
             3184
@@ -2890,6 +3892,12 @@
         }
     },
     "HUAGG": {
+        "fullName": "Huanggang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4665,
             3212
@@ -2908,6 +3916,12 @@
         }
     },
     "NINGB": {
+        "fullName": "Ningbo",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5338,
             3200
@@ -2922,6 +3936,12 @@
         }
     },
     "QAMDO": {
+        "fullName": "Qamdo",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2601,
             3240
@@ -2939,6 +3959,12 @@
         }
     },
     "YICHA": {
+        "fullName": "Yichang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4158,
             3233
@@ -2957,6 +3983,12 @@
         }
     },
     "HANGZ": {
+        "fullName": "Hangzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5119,
             3233
@@ -2975,6 +4007,12 @@
         }
     },
     "SHAOX": {
+        "fullName": "Shaoxing",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5247,
             3202
@@ -2991,6 +4029,12 @@
         }
     },
     "HNGSH": {
+        "fullName": "Huangshan City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4903,
             3237
@@ -3010,6 +4054,12 @@
         }
     },
     "GARZE": {
+        "fullName": "Garze Tibetan AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2916,
             3258
@@ -3029,6 +4079,12 @@
         }
     },
     "WUHAN": {
+        "fullName": "Wuhan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4582,
             3256
@@ -3046,6 +4102,12 @@
         }
     },
     "SUINI": {
+        "fullName": "Suining",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3621,
             3257
@@ -3064,6 +4126,12 @@
         }
     },
     "LHASA": {
+        "fullName": "Lhasa",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1876,
             3274
@@ -3080,6 +4148,12 @@
         }
     },
     "XIGAZ": {
+        "fullName": "Xigaze",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1344,
             3306
@@ -3096,6 +4170,12 @@
         }
     },
     "CHENG": {
+        "fullName": "Chengdu",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3349,
             3328
@@ -3112,6 +4192,12 @@
         }
     },
     "JINGZ": {
+        "fullName": "Jingzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4336,
             3303
@@ -3131,6 +4217,12 @@
         }
     },
     "JINHU": {
+        "fullName": "Jinhua",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5164,
             3332
@@ -3148,6 +4240,12 @@
         }
     },
     "NYING": {
+        "fullName": "Nyingchi",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2383,
             3359
@@ -3165,6 +4263,12 @@
         }
     },
     "ENSHI": {
+        "fullName": "Enshi Tujia and Miao AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3968,
             3326
@@ -3184,6 +4288,12 @@
         }
     },
     "XIANN": {
+        "fullName": "Xianning",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4511,
             3341
@@ -3200,6 +4310,12 @@
         }
     },
     "FENGD": {
+        "fullName": "Fengdu County",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3779,
             3347
@@ -3219,6 +4335,12 @@
         }
     },
     "TIAZH": {
+        "fullName": "Taizhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5303,
             3342
@@ -3236,6 +4358,12 @@
         }
     },
     "JIUJI": {
+        "fullName": "Jiujiang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4684,
             3368
@@ -3257,6 +4385,12 @@
         }
     },
     "QUZHO": {
+        "fullName": "Quzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5057,
             3387
@@ -3275,6 +4409,12 @@
         }
     },
     "NEIJI": {
+        "fullName": "Neijiang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3462,
             3402
@@ -3293,6 +4433,12 @@
         }
     },
     "SHARO": {
+        "fullName": "Shangrao",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4872,
             3389
@@ -3311,6 +4457,12 @@
         }
     },
     "YONGJ": {
+        "fullName": "Yongjia County",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5442,
             3467
@@ -3326,6 +4478,12 @@
         }
     },
     "LESHA": {
+        "fullName": "Leshan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3317,
             3475
@@ -3345,6 +4503,12 @@
         }
     },
     "CHONG": {
+        "fullName": "Chongqing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3625,
             3410
@@ -3362,6 +4526,12 @@
         }
     },
     "SHANN": {
+        "fullName": "Shannan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             1915,
             3452
@@ -3377,6 +4547,12 @@
         }
     },
     "LISHU": {
+        "fullName": "Lishui",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5143,
             3463
@@ -3396,6 +4572,12 @@
         }
     },
     "NANCH": {
+        "fullName": "Nanchang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4780,
             3466
@@ -3412,6 +4594,12 @@
         }
     },
     "TUJIA": {
+        "fullName": "Xiangxi Tujia and Miao AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4043,
             3483
@@ -3429,6 +4617,12 @@
         }
     },
     "YOUYA": {
+        "fullName": "Youyang Tujia and Miao AC",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3890,
             3426
@@ -3446,6 +4640,12 @@
         }
     },
     "CHGDE": {
+        "fullName": "Changde",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4245,
             3463
@@ -3465,6 +4665,12 @@
         }
     },
     "YUEYA": {
+        "fullName": "Yueyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4425,
             3497
@@ -3484,6 +4690,12 @@
         }
     },
     "RUIAN": {
+        "fullName": "Ruian",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5227,
             3508
@@ -3499,6 +4711,12 @@
         }
     },
     "PINGX": {
+        "fullName": "Pingxiang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4594,
             3551
@@ -3517,6 +4735,12 @@
         }
     },
     "YIBIN": {
+        "fullName": "Yibin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3462,
             3570
@@ -3535,6 +4759,12 @@
         }
     },
     "FUZHO": {
+        "fullName": "Fuzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4795,
             3581
@@ -3554,6 +4784,12 @@
         }
     },
     "NANPI": {
+        "fullName": "Nanping",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4988,
             3590
@@ -3572,6 +4808,12 @@
         }
     },
     "ZUNYI": {
+        "fullName": "Zunyi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3704,
             3609
@@ -3592,6 +4834,12 @@
         }
     },
     "TONGR": {
+        "fullName": "Tongren",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3882,
             3629
@@ -3609,6 +4857,12 @@
         }
     },
     "HUAIH": {
+        "fullName": "Huaihua",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4080,
             3665
@@ -3628,6 +4882,12 @@
         }
     },
     "NINGD": {
+        "fullName": "Ningde",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5149,
             3661
@@ -3645,6 +4905,12 @@
         }
     },
     "LIANG": {
+        "fullName": "Liangshan Yi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3111,
             3685
@@ -3664,6 +4930,12 @@
         }
     },
     "ZHAOT": {
+        "fullName": "Zhaotong",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3365,
             3663
@@ -3681,6 +4953,12 @@
         }
     },
     "JIANJ": {
+        "fullName": "Jian",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4616,
             3681
@@ -3699,6 +4977,12 @@
         }
     },
     "HENGY": {
+        "fullName": "Hengyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4394,
             3723
@@ -3717,6 +5001,12 @@
         }
     },
     "LIJIA": {
+        "fullName": "Lijiang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2833,
             3708
@@ -3735,6 +5025,12 @@
         }
     },
     "SHAOY": {
+        "fullName": "Shaoyang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4182,
             3740
@@ -3753,6 +5049,12 @@
         }
     },
     "SANMI": {
+        "fullName": "Sanming",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4921,
             3741
@@ -3771,6 +5073,12 @@
         }
     },
     "BIJIE": {
+        "fullName": "Bijie",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3503,
             3743
@@ -3789,6 +5097,12 @@
         }
     },
     "HUICH": {
+        "fullName": "Huichang County",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4758,
             3811
@@ -3807,6 +5121,12 @@
         }
     },
     "QIAND": {
+        "fullName": "Qiandongnan Miao and Dong AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3878,
             3809
@@ -3825,6 +5145,12 @@
         }
     },
     "CHGYI": {
+        "fullName": "Chongyi County",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4599,
             3856
@@ -3842,6 +5168,12 @@
         }
     },
     "CHENZ": {
+        "fullName": "Chenzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4439,
             3856
@@ -3860,6 +5192,12 @@
         }
     },
     "QUANZ": {
+        "fullName": "Quanzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5046,
             3858
@@ -3876,6 +5214,12 @@
         }
     },
     "QIANN": {
+        "fullName": "Qiannan Buyei and Miao AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3709,
             3861
@@ -3894,6 +5238,12 @@
         }
     },
     "LONGY": {
+        "fullName": "Longyan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4854,
             3877
@@ -3912,6 +5262,12 @@
         }
     },
     "QUJIN": {
+        "fullName": "Qujing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3380,
             3991
@@ -3932,6 +5288,12 @@
         }
     },
     "YONGZ": {
+        "fullName": "Yongzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4300,
             3922
@@ -3950,6 +5312,12 @@
         }
     },
     "QIANX": {
+        "fullName": "Qianxinan Buyei and Miao AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3516,
             3929
@@ -3966,6 +5334,12 @@
         }
     },
     "ANYUA": {
+        "fullName": "Anyuan County",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4693,
             3921
@@ -3984,6 +5358,12 @@
         }
     },
     "GUILI": {
+        "fullName": "Guilin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4108,
             3954
@@ -4002,6 +5382,12 @@
         }
     },
     "CHUXI": {
+        "fullName": "Chuxiong Yi AP",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2967,
             3954
@@ -4020,6 +5406,12 @@
         }
     },
     "KUNMI": {
+        "fullName": "Kunming",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3244,
             3981
@@ -4036,6 +5428,12 @@
         }
     },
     "SHAOQ": {
+        "fullName": "Shaoguan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4496,
             3968
@@ -4055,6 +5453,12 @@
         }
     },
     "XIAME": {
+        "fullName": "Xiamen",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4966,
             3997
@@ -4071,6 +5475,12 @@
         }
     },
     "MEIZH": {
+        "fullName": "Meizhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4802,
             4047
@@ -4090,6 +5500,12 @@
         }
     },
     "LIUZH": {
+        "fullName": "Liuzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4015,
             4023
@@ -4107,6 +5523,12 @@
         }
     },
     "QINYN": {
+        "fullName": "Qingyuan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4460,
             4076
@@ -4125,6 +5547,12 @@
         }
     },
     "HECHI": {
+        "fullName": "Hechi",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3801,
             4063
@@ -4143,6 +5571,12 @@
         }
     },
     "HEYUA": {
+        "fullName": "Heyuan",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4692,
             4072
@@ -4160,6 +5594,12 @@
         }
     },
     "LINCA": {
+        "fullName": "Lincang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2756,
             4077
@@ -4175,6 +5615,12 @@
         }
     },
     "CHAOZ": {
+        "fullName": "Chaozhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             5020,
             4140
@@ -4190,6 +5636,12 @@
         }
     },
     "WUZHO": {
+        "fullName": "Wuzhou",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4198,
             4125
@@ -4210,6 +5662,12 @@
         }
     },
     "JIEYA": {
+        "fullName": "Jieyang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4969,
             4241
@@ -4225,6 +5683,12 @@
         }
     },
     "ZHAOQ": {
+        "fullName": "Zhaoqing",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4334,
             4162
@@ -4241,6 +5705,12 @@
         }
     },
     "HUIZH": {
+        "fullName": "Huizhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4651,
             4196
@@ -4257,6 +5727,12 @@
         }
     },
     "GUIGA": {
+        "fullName": "Guigang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4045,
             4185
@@ -4275,6 +5751,12 @@
         }
     },
     "WENSH": {
+        "fullName": "Wenshan Zhuang and Miao AP",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3436,
             4186
@@ -4290,6 +5772,12 @@
         }
     },
     "BAISE": {
+        "fullName": "Baise",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3685,
             4186
@@ -4309,6 +5797,12 @@
         }
     },
     "GUANG": {
+        "fullName": "Guangzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4481,
             4192
@@ -4328,6 +5822,12 @@
         }
     },
     "SHANW": {
+        "fullName": "Shanwei",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4755,
             4317
@@ -4344,6 +5844,12 @@
         }
     },
     "HONGH": {
+        "fullName": "Honghe",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3194,
             4206
@@ -4361,6 +5867,12 @@
         }
     },
     "NANNI": {
+        "fullName": "Nanning",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3890,
             4252
@@ -4378,6 +5890,12 @@
         }
     },
     "YUNFU": {
+        "fullName": "Yunfu",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4302,
             4256
@@ -4396,6 +5914,12 @@
         }
     },
     "PUERC": {
+        "fullName": "Puer City",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             2950,
             4282
@@ -4411,6 +5935,12 @@
         }
     },
     "JIANG": {
+        "fullName": "Jiangmen",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4412,
             4317
@@ -4426,6 +5956,12 @@
         }
     },
     "HONGK": {
+        "fullName": "Hong Kong",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": true,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4573,
             4416
@@ -4439,6 +5975,12 @@
         }
     },
     "YANGJ": {
+        "fullName": "Yangjiang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4313,
             4373
@@ -4454,6 +5996,12 @@
         }
     },
     "FANGC": {
+        "fullName": "Fangchenggang",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             3761,
             4356
@@ -4469,6 +6017,12 @@
         }
     },
     "QINZH": {
+        "fullName": "Qinzhou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4042,
             4365
@@ -4487,6 +6041,12 @@
         }
     },
     "MAOMI": {
+        "fullName": "Maoming",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4213,
             4383
@@ -4504,6 +6064,12 @@
         }
     },
     "ZHANJ": {
+        "fullName": "Zhanjiang",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
         "improvementCords": [
             4126,
             4458
@@ -4519,6 +6085,12 @@
         }
     },
     "HAIKO": {
+        "fullName": "Haikou",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
         "improvementCords": [
             4133,
             4711
@@ -4533,6 +6105,12 @@
         }
     },
     "SANYA": {
+        "fullName": "Sanya",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
         "improvementCords": [
             4047,
             4808
