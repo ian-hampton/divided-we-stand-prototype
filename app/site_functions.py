@@ -492,23 +492,24 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         graph_dict = json.load(json_file)
     regdata_dict = {}
     for region_id in graph_dict:
-        regdata_dict[region_id] = {}
-        regdata_dict[region_id]["regionData"] = {
-            "ownerID": 0,
-            "occupierID": 0,
-            "purchaseCost": 5,
-            "regionResource": "Empty",
-            "nukeTurns": 0,
-        }
-        regdata_dict[region_id]["improvementData"] = {
-            "name": None,
-            "health": 99,
-            "turnTimer": 99
-        }
-        regdata_dict[region_id]["unitData"] = {
-            "name": None,
-            "health": 99,
-            "ownerID": 0
+        regdata_dict[region_id] = {
+            "regionData": {
+                "ownerID": 0,
+                "occupierID": 0,
+                "purchaseCost": 5,
+                "regionResource": "Empty",
+                "nukeTurns": 0,
+            },
+            "improvementData": {
+                "name": None,
+                "health": 99,
+                "turnTimer": 99
+            },
+            "unitData": {
+                "name": None,
+                "health": 99,
+                "ownerID": 0
+            }
         }
         if form_data_dict["Scenario"] == 'Standard':
             regdata_dict[region_id]["regionData"]["infection"] = 0
