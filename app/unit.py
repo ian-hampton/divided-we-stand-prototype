@@ -1,5 +1,6 @@
 import copy
 import json
+import os
 
 from app import core
 from app.region import Region
@@ -18,8 +19,23 @@ class Unit:
             game_id (str): Unique string used to identify a game.
 
         """
+        
+        from app import map
+
+        # check if game files exist
+        regdata_filepath = f"gamedata/{self.game_id}/regdata.json"
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
+        map_str = map.get_map_str(active_games_dict[self.game_id]["Information"]["Map"])    # TODO: this function should be in core
+        graph_filepath = f"gamedata/{map_str}/regdata.json"
+        if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
+            raise FileNotFoundError(f"Error: Unable to locate required game files during Unit class initialization.")
+
+        # define attributes
         self.region_id = region_id
         self.game_id = game_id
+        self.regdata_filepath = regdata_filepath
+        self.graph_filepath = graph_filepath
         self.load_attributes()
 
     def load_attributes(self) -> None:
@@ -27,27 +43,22 @@ class Unit:
         Loads data from game files for this class.
         """
         
-        # check if game id is valid
-        regdata_filepath = f'gamedata/{self.game_id}/regdata.json'
-        try:
-            with open(regdata_filepath, 'r') as json_file:
-                regdata_dict = json.load(json_file)
-        except FileNotFoundError:
-            print(f"Error: Unable to locate {regdata_filepath} during Unit class initialization.")
-        
-        # check if region id is valid
-        try:
-            unit_data = regdata_dict[self.region_id]["unitData"]
-        except KeyError:
-            print(f"Error: {self.region_id} not recognized during Unit class initialization.")
-        self.data: dict = unit_data
-        self.regdata_filepath = regdata_filepath
+        # load game files
+        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+        with open(self.regdata_filepath, 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        with open(self.graph_filepath, 'r') as json_file:
+            graph_dict = json.load(json_file)
 
+        # check if region exists
+        if self.region_id not in regdata_dict:
+            raise Exception(f"Error: Region ID {self.region_id} not found.")
+
+        # get attributes
+        self.data: dict = regdata_dict[self.region_id]["unitData"]
         self.name: str = self.data["name"]
         self.health: int = self.data["health"]
         self.owner_id: int = self.data["ownerID"]
-        self.cords: list = self.data.get("coordinates", None)
-        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
         if self.name is not None:
             self.type = unit_data_dict[self.name]["Unit Type"]
             self.hit_value = unit_data_dict[self.name]["Combat Value"]
@@ -56,16 +67,21 @@ class Unit:
             self.type = None
             self.hit_value = None
             self.value = None
+        self.cords: list = graph_dict[self.region_id]["unitCords"]
 
     def _save_changes(self) -> None:
         """
         Saves changes made to Unit object to game files.
         """
+        
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
-        regdata_dict[self.region_id]["unitData"]["name"] = self.name
-        regdata_dict[self.region_id]["unitData"]["health"] = self.health
-        regdata_dict[self.region_id]["unitData"]["ownerID"] = self.owner_id
+        
+        self.data["name"] = self.name
+        self.data["health"] = self.health
+        self.data["ownerID"] = self.owner_id
+
+        regdata_dict[self.region_id]["unitData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
     
