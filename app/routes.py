@@ -1168,7 +1168,7 @@ def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
-    map_str = map.get_map_str(active_games_dict[full_game_id]["Information"]["Map"])
+    map_str = core.get_map_str(full_game_id)
     try:
         current_turn_num = int(current_turn_num)
         filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'

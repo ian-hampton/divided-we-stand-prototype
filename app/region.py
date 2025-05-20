@@ -4,18 +4,15 @@ import os
 from collections import deque
 from typing import Union, Tuple
 
+from app import core
+
 class Region:
 
     def __init__(self, region_id: str, game_id: str):
-
-        from app import map
         
         # check if game files exist
         regdata_filepath = f"gamedata/{self.game_id}/regdata.json"
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-        map_str = map.get_map_str(active_games_dict[self.game_id]["Information"]["Map"])    # TODO: this function should be in core
-        graph_filepath = f"gamedata/{map_str}/regdata.json"
+        graph_filepath = f"gamedata/{core.get_map_str(game_id)}/regdata.json"
         if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
             raise FileNotFoundError(f"Error: Unable to locate required game files during Region class initialization.")
         

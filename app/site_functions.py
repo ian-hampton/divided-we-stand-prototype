@@ -413,9 +413,6 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         None
     """
 
-    # get game data
-    map_str = map.get_map_str(new_game_entry["Information"]["Map"])
-
     # open game record files
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -481,6 +478,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         json.dump(game_records_dict, json_file, indent=4)
 
     # copy starting map images
+    map_str = core.get_map_str(game_id)
     files_destination = f'gamedata/{game_id}'
     starting_map_images = ['resourcemap', 'controlmap']
     for map_filename in starting_map_images:
