@@ -64,7 +64,7 @@ class Improvement:
             self.hit_value = None
             self.missile_defense = None
             self.nuke_defense = None
-        self.cords: list = graph_dict[self.region_id]["improvementCords"]
+        self.coords: list = graph_dict[self.region_id]["improvementCords"]
         
         # get owner and occupier id attributes
         # TODO: improvement should become a child class of Region so we don't have to do this garbage

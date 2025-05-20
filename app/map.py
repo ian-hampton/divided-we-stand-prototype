@@ -134,11 +134,11 @@ class MainMap:
             region_improvement = Improvement(region_id, self.game_id)
             # only color a region if it is owned or occupied
             if region.owner_id  != 0 or region.occupier_id != 0:
-                cord_x = (region_improvement.cords[0] + 25)
-                cord_y = (region_improvement.cords[1] + 25)
+                cord_x = (region_improvement.coords[0] + 25)
+                cord_y = (region_improvement.coords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
-                if region.cords is not None:
-                    start_cords_updated = region.cords
+                if region.coords is not None:
+                    start_cords_updated = region.coords
                 map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id)
         
         # add texture and background to temp image
@@ -155,16 +155,16 @@ class MainMap:
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             region_improvement = Improvement(region_id, self.game_id)
-            if region.cords is not None and (region.owner_id != 0 or region.occupier_id != 0):
+            if region.coords is not None and (region.owner_id != 0 or region.occupier_id != 0):
                 fill_color = determine_region_color(region.owner_id, region.occupier_id, player_color_list, self.game_id)
-                cord_x = (region_improvement.cords[0] + 25)
-                cord_y = (region_improvement.cords[1] + 25)
+                cord_x = (region_improvement.coords[0] + 25)
+                cord_y = (region_improvement.coords[1] + 25)
                 improvement_box_start_cords = (cord_x, cord_y)
-                cord_x = (region_improvement.cords[0] + 55)
-                cord_y = (region_improvement.cords[1] + 25)
+                cord_x = (region_improvement.coords[0] + 55)
+                cord_y = (region_improvement.coords[1] + 25)
                 main_box_start_cords = (cord_x, cord_y)
-                cord_x = (region_improvement.cords[0] + 70)
-                cord_y = (region_improvement.cords[1] + 25)
+                cord_x = (region_improvement.coords[0] + 70)
+                cord_y = (region_improvement.coords[1] + 25)
                 unit_box_start_cords = (cord_x, cord_y)
                 ImageDraw.floodfill(main_image, improvement_box_start_cords, fill_color, border=(0, 0, 0, 255))
                 ImageDraw.floodfill(main_image, main_box_start_cords, fill_color, border=(0, 0, 0, 255))
@@ -181,18 +181,18 @@ class MainMap:
             # place nuclear explosion
             if nuke:
                 mask = nuke_image.split()[3]
-                main_image.paste(nuke_image, region_improvement.cords, mask)
+                main_image.paste(nuke_image, region_improvement.coords, mask)
                 continue
             # place improvement if present
             if region_improvement.name is not None:
                 # place improvement image
                 improvement_filepath = f'app/static/images/improvements/{region_improvement.name}.png'
                 improvement_image = Image.open(improvement_filepath)
-                main_image.paste(improvement_image, region_improvement.cords)
+                main_image.paste(improvement_image, region_improvement.coords)
                 # place improvement health
                 if region_improvement.health != 99:
-                    cord_x = (region_improvement.cords[0] - 13)
-                    cord_y = (region_improvement.cords[1] + 54)
+                    cord_x = (region_improvement.coords[0] - 13)
+                    cord_y = (region_improvement.coords[1] + 54)
                     health_start_cords = (cord_x, cord_y)
                     ten_health_improvements = set()
                     for improvement_name, improvement_dict in improvement_data_dict.items():
@@ -212,15 +212,15 @@ class MainMap:
             region_unit = Unit(region_id, self.game_id)
             # get cords of unit if present
             if region_unit.name is not None:
-                if region_unit.cords is None:
+                if region_unit.coords is None:
                     # unit placement is the standard 15 pixels to the right of improvement
-                    cord_x = (region_improvement.cords[0] + 65)
-                    cord_y = (region_improvement.cords[1])
+                    cord_x = (region_improvement.coords[0] + 65)
+                    cord_y = (region_improvement.coords[1])
                     unit_cords = (cord_x, cord_y)
                 else:
                     # unit placement is custom
-                    cord_x = (region_unit.cords[0])
-                    cord_y = (region_unit.cords[1] - 20)
+                    cord_x = (region_unit.coords[0])
+                    cord_y = (region_unit.coords[1] - 20)
                     unit_cords = (cord_x, cord_y)
                 # get unit color
                 nation = nation_table.get(region_unit.owner_id)
@@ -301,11 +301,11 @@ class ResourceMap:
             region_improvement = Improvement(region_id, self.game_id)
             # if region has a resource color it
             if region.resource != 'Empty':
-                cord_x = (region_improvement.cords[0] + 25)
-                cord_y = (region_improvement.cords[1] + 25)
+                cord_x = (region_improvement.coords[0] + 25)
+                cord_y = (region_improvement.coords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
-                if region.cords is not None:
-                    start_cords_updated = region.cords
+                if region.coords is not None:
+                    start_cords_updated = region.coords
                 main_image = silly_placeholder(main_image, region_id, resource_colors[region.resource])
                 ImageDraw.floodfill(main_image, start_cords_updated, resource_colors[region.resource], border=(0, 0, 0, 255))
         
@@ -362,11 +362,11 @@ class ControlMap:
             region_improvement = Improvement(region_id, self.game_id)
             # only color region if it is owned or occupied
             if region.owner_id != 0 or region.occupier_id != 0:
-                cord_x = (region_improvement.cords[0] + 25)
-                cord_y = (region_improvement.cords[1] + 25)
+                cord_x = (region_improvement.coords[0] + 25)
+                cord_y = (region_improvement.coords[1] + 25)
                 start_cords_updated = (cord_x, cord_y)
-                if region.cords is not None:
-                    start_cords_updated = region.cords
+                if region.coords is not None:
+                    start_cords_updated = region.coords
                 map_color_fill(region.owner_id, region.occupier_id, player_color_list, region_id, start_cords_updated, main_image, self.game_id)
         
         # add background textures and text

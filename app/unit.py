@@ -67,7 +67,7 @@ class Unit:
             self.type = None
             self.hit_value = None
             self.value = None
-        self.cords: list = graph_dict[self.region_id]["unitCords"]
+        self.coords: list = graph_dict[self.region_id]["unitCords"]
 
     def _save_changes(self) -> None:
         """
