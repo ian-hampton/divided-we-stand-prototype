@@ -24,8 +24,103 @@ class GameMaps:
 
     def update_all(self) -> None:
         """
+        Exports updated maps to game files.
         """
-        pass
+        
+        # get game data
+        nation_table = NationTable(self.game_id)
+        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
+        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+
+        # initialize map images
+        self._init_images()
+
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            improvement = Improvement(region_id, self.game_id)
+
+            # color region using ownership
+            fill_color = self._get_fill_color(nation_table, region)
+            if fill_color is not None:
+                if not region.is_magnified:
+                    x = improvement.coords[0] + 25
+                    y = improvement.coords[1] + 25
+                    ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+                    ImageDraw.floodfill(self.control_map, (x, y), fill_color, border=(0, 0, 0, 255))
+                for coords in region.additional_region_coordinates:
+                    ImageDraw.floodfill(self.main_map, tuple(coords), fill_color, border=(0, 0, 0, 255))
+                    ImageDraw.floodfill(self.control_map, tuple(coords), fill_color, border=(0, 0, 0, 255))
+            
+            # color region using resource
+            if region.resource != "Empty":
+                fill_color = palette.resource_colors[region.resource]
+                if not region.is_magnified:
+                    x = improvement.coords[0] + 25
+                    y = improvement.coords[1] + 25
+                    coords = (x, y)
+                    ImageDraw.floodfill(self.resource_map, coords, fill_color, border=(0, 0, 0, 255))
+                for coords in region.additional_region_coordinates:
+                    ImageDraw.floodfill(self.resource_map, tuple(coords), fill_color, border=(0, 0, 0, 255))
+
+            # apply background texture
+            MAP_OPACITY = 0.75
+            background_img = Image.open(self.filepath_background)
+            background_img = background_img.convert("RGBA")
+            self.main_map = Image.blend(background_img, self.main_map, MAP_OPACITY)
+            self.resource_map = Image.blend(background_img, self.resource_map, MAP_OPACITY)
+            self.control_map = Image.blend(background_img, self.control_map, MAP_OPACITY)
+
+            # magnified regions
+            magnified_img = Image.open(self.filepath_magnified)
+            self.main_map = Image.alpha_composite(self.main_map, magnified_img)
+            for region_id in regdata_dict:
+                region = Region(region_id, self.game_id)
+                improvement = Improvement(region_id, self.game_id)
+
+                # skip non-magnified or unclaimed
+                fill_color = self._get_fill_color(nation_table, region)
+                if not region.is_magnified or fill_color is None:
+                    continue
+
+                # color magnified box using ownership
+                x = improvement.coords[0] + 25
+                y = improvement.coords[1] + 25
+                ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+                x = improvement.coords[0] + 55
+                ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+                x = improvement.coords[0] + 70
+                ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+
+            # add text
+            text_img = Image.open(self.filepath_text)
+            self.resource_map = Image.alpha_composite(self.resource_map, text_img)
+            self.control_map = Image.alpha_composite(self.control_map, text_img)
+
+            # place units and improvements
+            for region_id in regdata_dict:
+                region = Region(region_id, self.game_id)
+                improvement = Improvement(region_id, self.game_id)
+                unit = Unit(region_id, self.game_id)
+
+                # place unit
+                pass
+
+                # place nuclear explosion
+                pass
+            
+                # place improvement
+                pass
+
+            # save images
+            match self.turn_num:
+                case "Starting Region Selection in Progress" | "Nation Setup in Progress":
+                    self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
+                case _:
+                    self.main_map.save(f"gamedata/{self.game_id}/images/{self.turn_num - 1}.png")
+            self.resource_map.save(f"gamedata/{self.game_id}/images/resourcemap.png")
+            self.control_map.save(f"gamedata/{self.game_id}/images/controlmap.png")
 
     def populate_main_map(self) -> None:
         """
@@ -131,3 +226,16 @@ class GameMaps:
         self.main_map = Image.open(self.filepath_main).convert("RGBA")
         self.resource_map = Image.open(self.filepath_main).convert("RGBA")
         self.control_map = Image.open(self.filepath_main).convert("RGBA")
+
+    def _get_fill_color(self, nation_table: NationTable, region: Region) -> tuple | None:
+        
+        if region.occupier_id != 0:
+            nation = nation_table.get(str(region.occupier_id))
+            fill_color = palette.normal_to_occupied[nation.color]
+            return palette.hex_to_tup(fill_color, alpha=True)
+        
+        if region.owner_id != 0:
+            nation = nation_table.get(str(region.owner_id))
+            return palette.hex_to_tup(nation.color, alpha=True)
+        
+        return None
