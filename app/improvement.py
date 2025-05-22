@@ -8,18 +8,10 @@ from app.nationdata import Nation
 class Improvement:
 
     def __init__(self, region_id: str, game_id: str):
-        """
-        Initializes improvement class. Calls load_attributes() to load data from game files.
-
-        Params:
-            region_id (str): Unique five letter string used to identify a region.
-            game_id (str): Unique string used to identify a game.
-
-        """
 
         # check if game files exist
-        regdata_filepath = f"gamedata/{self.game_id}/regdata.json"
-        graph_filepath = f"gamedata/{core.get_map_str(game_id)}/regdata.json"
+        regdata_filepath = f"gamedata/{game_id}/regdata.json"
+        graph_filepath = f"maps/{core.get_map_str(game_id)}/graph.json"
         if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
             raise FileNotFoundError(f"Error: Unable to locate required game files during Improvement class initialization.")
 

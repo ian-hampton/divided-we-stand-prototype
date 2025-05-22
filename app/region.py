@@ -9,10 +9,10 @@ from app import core
 class Region:
 
     def __init__(self, region_id: str, game_id: str):
-        
+
         # check if game files exist
-        regdata_filepath = f"gamedata/{self.game_id}/regdata.json"
-        graph_filepath = f"gamedata/{core.get_map_str(game_id)}/regdata.json"
+        regdata_filepath = f"gamedata/{game_id}/regdata.json"
+        graph_filepath = f"maps/{core.get_map_str(game_id)}/graph.json"
         if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
             raise FileNotFoundError(f"Error: Unable to locate required game files during Region class initialization.")
         
