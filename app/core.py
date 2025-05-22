@@ -53,17 +53,17 @@ def get_map_str(game_id: str) -> str:
 
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-        
+
     map_name: str = active_games_dict[game_id]["Information"]["Map"]
 
     map_name_actual = ""
-    for char in map_name:
+    for index, char in enumerate(map_name):
         if char.isalpha():
             map_name_actual += char.lower()
         elif char == " ":
             map_name_actual += "_"
 
-    return map_name_actual
+    return map_name_actual.strip("_")
 
 # DIPLOMACY SUB-FUNCTIONS
 ################################################################################
