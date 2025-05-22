@@ -90,7 +90,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
                 random_region.set_owner_id(int(random_assignment_player_id))
                 random_region_improvement = Improvement(random_region_id, game_id)
                 random_region_improvement.set_improvement("Capital")
-                nation = nation_table.get(nation_id)
+                nation = nation_table.get(random_assignment_player_id)
                 nation.improvement_counts["Capital"] += 1
                 nation_table.save(nation)
                 break
@@ -172,10 +172,6 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
 
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
-    
-    # update game maps
-    maps = GameMaps(game_id)
-    maps.update_all()
 
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
