@@ -31,17 +31,20 @@ class GameMaps:
         """
         Exports updated maps to game files.
         """
+
+        print("Updating game maps...")
         
         # get game data
         nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
-        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+        with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
             regdata_dict = json.load(json_file)
 
         # initialize map images
         self._init_images()
 
+        # color regions
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             improvement = Improvement(region_id, self.game_id)
@@ -69,98 +72,101 @@ class GameMaps:
                 for coords in region.additional_region_coordinates:
                     ImageDraw.floodfill(self.resource_map, tuple(coords), fill_color, border=(0, 0, 0, 255))
 
-            # apply background texture
-            background_img = Image.open(self.filepath_background)
-            background_img = background_img.convert("RGBA")
-            self.main_map = Image.blend(background_img, self.main_map, MAP_OPACITY)
-            self.resource_map = Image.blend(background_img, self.resource_map, MAP_OPACITY)
-            self.control_map = Image.blend(background_img, self.control_map, MAP_OPACITY)
+        # apply background texture
+        background_img = Image.open(self.filepath_background)
+        background_img = background_img.convert("RGBA")
+        self.main_map = Image.blend(background_img, self.main_map, MAP_OPACITY)
+        self.resource_map = Image.blend(background_img, self.resource_map, MAP_OPACITY)
+        self.control_map = Image.blend(background_img, self.control_map, MAP_OPACITY)
 
-            # magnified regions
-            magnified_img = Image.open(self.filepath_magnified)
-            self.main_map = Image.alpha_composite(self.main_map, magnified_img)
-            for region_id in regdata_dict:
-                region = Region(region_id, self.game_id)
-                improvement = Improvement(region_id, self.game_id)
+        # add magnified boxes
+        magnified_img = Image.open(self.filepath_magnified)
+        self.main_map = Image.alpha_composite(self.main_map, magnified_img)
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            improvement = Improvement(region_id, self.game_id)
 
-                # skip non-magnified or unclaimed
-                fill_color = self._get_fill_color(nation_table, region)
-                if not region.is_magnified or fill_color is None:
-                    continue
+            # skip non-magnified or unclaimed
+            fill_color = self._get_fill_color(nation_table, region)
+            if not region.is_magnified or fill_color is None:
+                continue
 
-                # color magnified box using ownership
-                x = improvement.coords[0] + 25
-                y = improvement.coords[1] + 25
-                ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
-                x = improvement.coords[0] + 55
-                ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
-                x = improvement.coords[0] + 70
-                ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+            # color magnified box using ownership
+            x = improvement.coords[0] + 25
+            y = improvement.coords[1] + 25
+            ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+            x = improvement.coords[0] + 55
+            ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
+            x = improvement.coords[0] + 70
+            ImageDraw.floodfill(self.main_map, (x, y), fill_color, border=(0, 0, 0, 255))
 
-            # add text
-            text_img = Image.open(self.filepath_text)
-            self.resource_map = Image.alpha_composite(self.resource_map, text_img)
-            self.control_map = Image.alpha_composite(self.control_map, text_img)
+        # add text
+        text_img = Image.open(self.filepath_text)
+        self.resource_map = Image.alpha_composite(self.resource_map, text_img)
+        self.control_map = Image.alpha_composite(self.control_map, text_img)
 
-            # place units and improvements
-            for region_id in regdata_dict:
-                region = Region(region_id, self.game_id)
-                improvement = Improvement(region_id, self.game_id)
-                unit = Unit(region_id, self.game_id)
-                
-                if unit.name is not None:
-                    
-                    # place unit image
-                    nation = nation_table.get(str(region.occupier_id))
-                    fill_color = palette.hex_to_tup(nation.color, alpha=True)
-                    unit_img = Image.open(self.filepath_unit_back)
-                    ImageDraw.floodfill(unit_img, (1, 1), fill_color, border=(0, 0, 0, 255))
-
-                    # place unit symbol
-                    fill_color = palette.normal_to_occupied[nation.color]
-                    fill_color = palette.hex_to_tup(fill_color, alpha=True)
-                    symb_back_img = Image.open(self.filepath_unit_symb_back)
-                    ImageDraw.floodfill(symb_back_img, (1, 1), fill_color, border=(0, 0, 0, 255))
-                    symb_img = Image.open(f"{self.images_filepath}/units/{unit.name.lower()}.png")
-                    symb_img = Image.alpha_composite(symb_img, symb_back_img)
-                    unit_img.paste(symb_img, (9, 16))
-
-                    # place unit name
-                    font = ImageFont.truetype("app/fonts/LeelawUI.ttf", size=12)
-                    ImageDraw.Draw(unit_img).text(xy=(24, 4), text=unit.abbrev(), fill=(0, 0, 0, 255), font=font, align="center")
-
-                    # place unit health
-                    max_health = unit_data_dict[unit.name]["Health"]
-                    ImageDraw.Draw(unit_img).text(xy=(24, 35), text=f"{unit.health}/{max_health}", fill=(0, 0, 0, 255), font=font, align="center")
-                    
-                    # place unit on map
-                    x = unit.coords[0]
-                    y = unit.coords[1]
-                    self.main_map.paste(unit_img, (x, y))
-
-                if region.fallout:
-                    # place nuclear explosion
-                    # TODO: make shadow blend properly
-                    mask = self.nuke_img.split()[3]
-                    self.main_map.paste(self.nuke_img, improvement.coords, mask)
-                    continue
+        # place units and improvements
+        '''
+        for region_id in regdata_dict:
+            region = Region(region_id, self.game_id)
+            improvement = Improvement(region_id, self.game_id)
+            unit = Unit(region_id, self.game_id)
             
-                if improvement.name is not None:
-                    
-                    # place improvement image
-                    pass
-                    
-                    # place improvement health
-                    pass
+            if unit.name is not None:
+                
+                # place unit image
+                nation = nation_table.get(str(region.occupier_id))
+                fill_color = palette.hex_to_tup(nation.color, alpha=True)
+                unit_img = Image.open(self.filepath_unit_back)
+                ImageDraw.floodfill(unit_img, (1, 1), fill_color, border=(0, 0, 0, 255))
 
-            # save images
-            match self.turn_num:
-                case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-                    self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
-                case _:
-                    self.main_map.save(f"gamedata/{self.game_id}/images/{self.turn_num - 1}.png")
-            self.resource_map.save(f"gamedata/{self.game_id}/images/resourcemap.png")
-            self.control_map.save(f"gamedata/{self.game_id}/images/controlmap.png")
+                # place unit symbol
+                fill_color = palette.normal_to_occupied[nation.color]
+                fill_color = palette.hex_to_tup(fill_color, alpha=True)
+                symb_back_img = Image.open(self.filepath_unit_symb_back)
+                ImageDraw.floodfill(symb_back_img, (1, 1), fill_color, border=(0, 0, 0, 255))
+                symb_img = Image.open(f"{self.images_filepath}/units/{unit.name.lower()}.png")
+                symb_img = Image.alpha_composite(symb_img, symb_back_img)
+                unit_img.paste(symb_img, (9, 16))
+
+                # place unit name
+                font = ImageFont.truetype("app/fonts/LeelawUI.ttf", size=12)
+                ImageDraw.Draw(unit_img).text(xy=(24, 4), text=unit.abbrev(), fill=(0, 0, 0, 255), font=font, align="center")
+
+                # place unit health
+                max_health = unit_data_dict[unit.name]["Health"]
+                ImageDraw.Draw(unit_img).text(xy=(24, 35), text=f"{unit.health}/{max_health}", fill=(0, 0, 0, 255), font=font, align="center")
+                
+                # place unit on map
+                x = unit.coords[0]
+                y = unit.coords[1]
+                self.main_map.paste(unit_img, (x, y))
+
+            if region.fallout:
+            
+                # place nuclear explosion
+                # TODO: make shadow blend properly
+                mask = self.nuke_img.split()[3]
+                self.main_map.paste(self.nuke_img, improvement.coords, mask)
+                continue
+        
+            if improvement.name is not None:
+                
+                # place improvement image
+                pass
+                
+                # place improvement health
+                pass
+        '''
+
+        # save images
+        match self.turn_num:
+            case "Starting Region Selection in Progress" | "Nation Setup in Progress":
+                self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
+            case _:
+                self.main_map.save(f"gamedata/{self.game_id}/images/{self.turn_num - 1}.png")
+        self.resource_map.save(f"gamedata/{self.game_id}/images/resourcemap.png")
+        self.control_map.save(f"gamedata/{self.game_id}/images/controlmap.png")
 
     def populate_main_map(self) -> None:
         """
@@ -170,7 +176,7 @@ class GameMaps:
         # get game data
         nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
-        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
+        with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
             regdata_dict = json.load(json_file)
         region_id_list = list(regdata_dict.keys())
         
