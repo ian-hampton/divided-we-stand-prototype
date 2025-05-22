@@ -1413,7 +1413,12 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4868,
+                2087
+            ]
+        ],
         "improvementCords": [
             4809,
             1982
@@ -2265,7 +2270,12 @@
         "hasRegionalCapital": false,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5000,
+                2525
+            ]
+        ],
         "improvementCords": [
             5127,
             2549
@@ -3070,7 +3080,12 @@
         "hasRegionalCapital": false,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5200,
+                2828
+            ]
+        ],
         "improvementCords": [
             5336,
             2804
@@ -3137,7 +3152,12 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5146,
+                2953
+            ]
+        ],
         "improvementCords": [
             5100,
             2876
@@ -3545,7 +3565,16 @@
         "hasRegionalCapital": true,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5341,
+                3046
+            ],
+            [
+                5345,
+                2986
+            ]
+        ],
         "improvementCords": [
             5487,
             3039
@@ -3921,7 +3950,16 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5434,
+                3148
+            ],
+            [
+                5434,
+                3179
+            ]
+        ],
         "improvementCords": [
             5338,
             3200
@@ -4340,7 +4378,12 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5374,
+                3450
+            ]
+        ],
         "improvementCords": [
             5303,
             3342
@@ -4462,7 +4505,12 @@
         "hasRegionalCapital": false,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5310,
+                3430
+            ]
+        ],
         "improvementCords": [
             5442,
             3467
@@ -4887,7 +4935,20 @@
         "hasRegionalCapital": true,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5270,
+                3660
+            ],
+            [
+                5196,
+                3758
+            ],
+            [
+                5258,
+                3807
+            ]
+        ],
         "improvementCords": [
             5149,
             3661
@@ -5458,7 +5519,16 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                5083,
+                3972
+            ],
+            [
+                5008,
+                4088
+            ]
+        ],
         "improvementCords": [
             4966,
             3997
@@ -5620,7 +5690,20 @@
         "hasRegionalCapital": false,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4939,
+                4105
+            ],
+            [
+                4976,
+                4129
+            ],
+            [
+                4962,
+                4130
+            ]
+        ],
         "improvementCords": [
             5020,
             4140
@@ -5667,7 +5750,12 @@
         "hasRegionalCapital": false,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4870,
+                4160
+            ]
+        ],
         "improvementCords": [
             4969,
             4241
@@ -5802,7 +5890,20 @@
         "hasRegionalCapital": true,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4556,
+                4246
+            ],
+            [
+                4546,
+                4253
+            ],
+            [
+                4558,
+                4273
+            ]
+        ],
         "improvementCords": [
             4481,
             4192
@@ -5827,7 +5928,12 @@
         "hasRegionalCapital": false,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4790,
+                4180
+            ]
+        ],
         "improvementCords": [
             4755,
             4317
@@ -5961,7 +6067,24 @@
         "hasRegionalCapital": true,
         "isMagnified": true,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4629,
+                4305
+            ],
+            [
+                4608,
+                4326
+            ],
+            [
+                4643,
+                4323
+            ],
+            [
+                4657,
+                4302
+            ]
+        ],
         "improvementCords": [
             4573,
             4416
@@ -5980,7 +6103,12 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4370,
+                4431
+            ]
+        ],
         "improvementCords": [
             4313,
             4373
@@ -6069,7 +6197,24 @@
         "hasRegionalCapital": false,
         "isMagnified": false,
         "randomStartAllowed": true,
-        "additionalRegionCords": [],
+        "additionalRegionCords": [
+            [
+                4224,
+                4475
+            ],
+            [
+                4207,
+                4507
+            ],
+            [
+                4202,
+                4518
+            ],
+            [
+               4189,
+               4554 
+            ]
+        ],
         "improvementCords": [
             4126,
             4458
