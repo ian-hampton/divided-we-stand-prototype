@@ -12,8 +12,8 @@ from app.nationdata import NationTable
 
 
 MAP_OPACITY = 0.75
-DO_NOT_SPAWN = {'Capital', 'Military Base', 'Missile Defense Network', 'Missile Silo', 'Oil Refinery',
-                'Research Institute', 'Surveillance Center', 'Nuclear Power Plant'}
+DO_NOT_SPAWN = {"Capital", "Colony", "Military Base", "Missile Defense Network", "Missile Silo", "Oil Refinery",
+                "Research Institute", "Surveillance Center", "Nuclear Power Plant"}
 
 class GameMaps:
     
