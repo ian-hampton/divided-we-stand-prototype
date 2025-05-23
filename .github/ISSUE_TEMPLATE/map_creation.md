@@ -2,7 +2,7 @@
 name: Map Creation Template
 about: Checklist for map creation issues.
 title: New Map - [Map Name]
-labels: ''
+labels: ["enhancement", "graphics"]
 assignees: ''
 
 ---
