@@ -110,9 +110,33 @@ class GameMaps:
             region = Region(region_id, self.game_id)
             improvement = Improvement(region_id, self.game_id)
             unit = Unit(region_id, self.game_id)
+
+            if region.fallout:
             
-            if unit.name is not None:
+                # place nuclear explosion
+                # TODO: make shadow blend properly
+                mask = self.nuke_img.split()[3]
+                self.main_map.paste(self.nuke_img, improvement.coords, mask)
+                continue
+        
+            if improvement.name is not None:
                 
+                # place improvement on map
+                improvement_img = Image.open(f"{self.images_filepath}/improvements/{improvement.name.lower()}.png")
+                x = improvement.coords[0]
+                y = improvement.coords[1]
+                self.main_map.paste(improvement_img, (x, y))
+
+                # place improvement health
+                if improvement.health != 99:
+                    max_health = improvement_data_dict[improvement.name]["Health"]
+                    health_img = Image.open(f"{self.images_filepath}/health/{improvement.health}-{max_health}.png")
+                    x = improvement.coords[0] - 12
+                    y = improvement.coords[1] + 52
+                    self.main_map.paste(health_img, (x, y))
+
+            if unit.name is not None:
+            
                 # place unit image
                 nation = nation_table.get(str(region.owner_id))
                 fill_color = palette.hex_to_tup(nation.color, alpha=True)
@@ -130,7 +154,8 @@ class GameMaps:
 
                 # place unit name
                 font = ImageFont.truetype("app/fonts/LeelaUIb.ttf", size=12)
-                ImageDraw.Draw(unit_img).text(xy=(25, 4), text=unit.abbrev(), fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
+                abbrev = unit_data_dict[unit.name]["Abbreviation"]
+                ImageDraw.Draw(unit_img).text(xy=(25, 4), text=abbrev, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
 
                 # place unit health
                 max_health = unit_data_dict[unit.name]["Health"]
@@ -140,22 +165,6 @@ class GameMaps:
                 x = unit.coords[0]
                 y = unit.coords[1]
                 self.main_map.paste(unit_img, (x, y))
-
-            if region.fallout:
-            
-                # place nuclear explosion
-                # TODO: make shadow blend properly
-                mask = self.nuke_img.split()[3]
-                self.main_map.paste(self.nuke_img, improvement.coords, mask)
-                continue
-        
-            if improvement.name is not None:
-                
-                # place improvement image
-                pass
-                
-                # place improvement health
-                pass
 
         # save images
         match self.turn_num:
