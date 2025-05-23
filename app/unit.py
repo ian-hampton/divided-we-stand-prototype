@@ -78,19 +78,6 @@ class Unit:
         """
         self.owner_id = new_owner_id
         self._save_changes()
-    
-    def abbrev(self) -> str:
-        """
-        Returns the unit name abbreviation or None if no unit is present.
-        """
-
-        # This function is used for only one purpose and that is rendering the units. Should be thrown into the dustbin of commit history next time I update unit rendering.
-        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
-
-        if self.name is not None:
-            return unit_data_dict[self.name]["Abbreviation"]
-        else:
-            return None
 
     def clear(self) -> None:
         """
