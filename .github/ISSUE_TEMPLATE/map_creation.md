@@ -26,6 +26,6 @@ assignees: ''
     - [ ] blank.png
     - [ ] reference.png
 - [ ] Create map data files.
-    - [ ] regdata.json
-    - [ ] map_config.json
+    - [ ] graph.json
+    - [ ] config.json
 - [ ] Test to make sure new map is working with turn processor.
