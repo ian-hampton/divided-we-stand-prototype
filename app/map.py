@@ -106,7 +106,6 @@ class GameMaps:
         self.control_map = Image.alpha_composite(self.control_map, text_img)
 
         # place units and improvements
-        '''
         for region_id in regdata_dict:
             region = Region(region_id, self.game_id)
             improvement = Improvement(region_id, self.game_id)
@@ -115,27 +114,27 @@ class GameMaps:
             if unit.name is not None:
                 
                 # place unit image
-                nation = nation_table.get(str(region.occupier_id))
+                nation = nation_table.get(str(region.owner_id))
                 fill_color = palette.hex_to_tup(nation.color, alpha=True)
-                unit_img = Image.open(self.filepath_unit_back)
+                unit_img = Image.open(self.filepath_unit_back).convert("RGBA")
                 ImageDraw.floodfill(unit_img, (1, 1), fill_color, border=(0, 0, 0, 255))
 
                 # place unit symbol
                 fill_color = palette.normal_to_occupied[nation.color]
                 fill_color = palette.hex_to_tup(fill_color, alpha=True)
-                symb_back_img = Image.open(self.filepath_unit_symb_back)
+                symb_back_img = Image.open(self.filepath_unit_symb_back).convert("RGBA")
                 ImageDraw.floodfill(symb_back_img, (1, 1), fill_color, border=(0, 0, 0, 255))
                 symb_img = Image.open(f"{self.images_filepath}/units/{unit.name.lower()}.png")
-                symb_img = Image.alpha_composite(symb_img, symb_back_img)
+                symb_img = Image.alpha_composite(symb_back_img, symb_img)
                 unit_img.paste(symb_img, (9, 16))
 
                 # place unit name
-                font = ImageFont.truetype("app/fonts/LeelawUI.ttf", size=12)
-                ImageDraw.Draw(unit_img).text(xy=(24, 4), text=unit.abbrev(), fill=(0, 0, 0, 255), font=font, align="center")
+                font = ImageFont.truetype("app/fonts/LeelaUIb.ttf", size=12)
+                ImageDraw.Draw(unit_img).text(xy=(25, 4), text=unit.abbrev(), fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
 
                 # place unit health
                 max_health = unit_data_dict[unit.name]["Health"]
-                ImageDraw.Draw(unit_img).text(xy=(24, 35), text=f"{unit.health}/{max_health}", fill=(0, 0, 0, 255), font=font, align="center")
+                ImageDraw.Draw(unit_img).text(xy=(25, 36), text=f"{unit.health}/{max_health}", fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
                 
                 # place unit on map
                 x = unit.coords[0]
@@ -157,7 +156,6 @@ class GameMaps:
                 
                 # place improvement health
                 pass
-        '''
 
         # save images
         match self.turn_num:
