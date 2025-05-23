@@ -16,18 +16,6 @@ from app.nationdata import NationTable
 # GAMEDATA HELPER FUNCTIONS
 ################################################################################
 
-def get_map_name(game_id: str) -> str:
-    """
-    Retrieves map name string given a game id.
-    """
-    
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    map_name = active_games_dict[game_id]["Information"]["Map"]
-
-    return map_name
-
 def get_current_turn_num(game_id: str) -> str | int:
     """
     Gets current turn number given game id.
@@ -58,71 +46,24 @@ def update_turn_num(game_id: str) -> None:
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
+def get_map_str(game_id: str) -> str:
+    """
+    Takes a map name and returns its filepath
+    """
 
-# GENERAL PURPOSE GLOBAL FUNCTIONS
-################################################################################
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
 
-def read_file(filepath, skip_value):
+    map_name: str = active_games_dict[game_id]["Information"]["Map"]
 
-    '''
-    Reads a csv file given a filepath and returns it as a list of lists.
+    map_name_actual = ""
+    for index, char in enumerate(map_name):
+        if char.isalpha():
+            map_name_actual += char.lower()
+        elif char == " ":
+            map_name_actual += "_"
 
-    Parameters:
-    - filepath: The full filepath to the desired file relative to core.py.
-    - skip_value: A positive integer value representing how many of the first rows to skip. Usually 0-2.
-    '''
-    output = []
-    with open(filepath, 'r') as file:
-        reader = csv.reader(file)
-        for i in range(0, skip_value):
-            next(reader, None)
-        for row in reader:
-            if row != []:
-                output.append(row)
-    return output
-
-def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
-    '''
-    Reads rmdata.csv and generates a list of all currently relevant transactions.
-
-    Parameters:
-    - rmdata_filepath: The full relative filepath to rmdata.csv.
-    - current_turn_num: An integer number representing the game's current turn number.
-    - refine: A count representing how many turns back you want of resource market data. Define as a positive integer or False if you want all records.
-    - keep_header: A boolean value. Enter as True if you don't care about the header rows being in your data.
-    '''
-
-    #Get list of all transactions
-    rmdata_list = []
-    if keep_header == True:
-        with open(rmdata_filepath, 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                if row != []:
-                    rmdata_list.append(row)
-    if keep_header == False:
-        with open(rmdata_filepath, 'r') as file:
-                reader = csv.reader(file)
-                next(reader,None)
-                for row in reader:
-                    if row != []:
-                        rmdata_list.append(row)
-    #Refine list as needed
-    rmdata_refined_list = []
-    if refine:
-        limit = current_turn_num - refine
-        for transaction in rmdata_list:
-            transaction[0] = int(transaction[0])
-            transaction[3] = int(transaction[3])
-            if transaction[0] >= limit:
-                rmdata_refined_list.append(transaction)
-    elif refine == False:
-        for transaction in rmdata_list:
-            transaction[0] = int(transaction[0])
-            transaction[3] = int(transaction[3])
-            rmdata_refined_list.append(transaction)
-    return rmdata_refined_list
-
+    return map_name_actual.strip("_")
 
 # DIPLOMACY SUB-FUNCTIONS
 ################################################################################
@@ -484,6 +425,67 @@ def withdraw_units(game_id: str):
 
 # MISC SUB-FUNCTIONS
 ################################################################################
+
+def read_file(filepath, skip_value):
+
+    '''
+    Reads a csv file given a filepath and returns it as a list of lists.
+
+    Parameters:
+    - filepath: The full filepath to the desired file relative to core.py.
+    - skip_value: A positive integer value representing how many of the first rows to skip. Usually 0-2.
+    '''
+    output = []
+    with open(filepath, 'r') as file:
+        reader = csv.reader(file)
+        for i in range(0, skip_value):
+            next(reader, None)
+        for row in reader:
+            if row != []:
+                output.append(row)
+    return output
+
+def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
+    '''
+    Reads rmdata.csv and generates a list of all currently relevant transactions.
+
+    Parameters:
+    - rmdata_filepath: The full relative filepath to rmdata.csv.
+    - current_turn_num: An integer number representing the game's current turn number.
+    - refine: A count representing how many turns back you want of resource market data. Define as a positive integer or False if you want all records.
+    - keep_header: A boolean value. Enter as True if you don't care about the header rows being in your data.
+    '''
+
+    #Get list of all transactions
+    rmdata_list = []
+    if keep_header == True:
+        with open(rmdata_filepath, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row != []:
+                    rmdata_list.append(row)
+    if keep_header == False:
+        with open(rmdata_filepath, 'r') as file:
+                reader = csv.reader(file)
+                next(reader,None)
+                for row in reader:
+                    if row != []:
+                        rmdata_list.append(row)
+    #Refine list as needed
+    rmdata_refined_list = []
+    if refine:
+        limit = current_turn_num - refine
+        for transaction in rmdata_list:
+            transaction[0] = int(transaction[0])
+            transaction[3] = int(transaction[3])
+            if transaction[0] >= limit:
+                rmdata_refined_list.append(transaction)
+    elif refine == False:
+        for transaction in rmdata_list:
+            transaction[0] = int(transaction[0])
+            transaction[3] = int(transaction[3])
+            rmdata_refined_list.append(transaction)
+    return rmdata_refined_list
 
 def date_from_turn_num(current_turn_num):
     remainder = current_turn_num % 4

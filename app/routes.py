@@ -10,7 +10,6 @@ from app import site_functions
 from app import core
 from app import events
 from app import palette
-from app import map
 from app.notifications import Notifications
 from app.alliance import AllianceTable
 from app.nationdata import NationTable
@@ -113,20 +112,18 @@ def settings():
 @main.route('/create_game', methods=['POST'])
 def create_game():
     
-    #get game record dictionaries
+    # get game record dictionaries
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    with open('game_records.json', 'r') as json_file:
-        game_records_dict = json.load(json_file)
 
-    #get username list
+    # get username list
     username_list = []
     with open('player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
     
-    #get values from settings form
+    # get values from settings form
     form_data_dict = {
         "Game Name": request.form.get('name_input'),
         "Player Count": request.form.get('pc_dropdown'),
@@ -140,13 +137,14 @@ def create_game():
     }
     profile_ids_list = []
     for index, username in enumerate(username_list):
-        #if checked, checkbox returns True. Otherwise returns none.
+        # if checked, checkbox returns True. Otherwise returns None.
         add_player_value = request.form.get(username)
         if add_player_value:
             profile_ids_list.append(profile_id_list[index])
 
-    #erase all active games override
+    # erase all active games override
     if form_data_dict["Game Name"] == "5EQM8Z5VoLxvxqeP1GAu":
+        
         active_games = [key for key, value in active_games_dict.items() if value.get("Game Active")]
         for active_game_id in active_games:
             active_games_dict[active_game_id] = {
@@ -175,16 +173,13 @@ def create_game():
                 "Current Event": {}
             }
             site_functions.erase_game(active_game_id)
-        active_games = [key for key, value in game_records_dict.items() if value.get("Statistics").get("Game Ended") == "Present"]
-        for active_game_name in active_games:
-            del game_records_dict[active_game_name]
+        
         with open('active_games.json', 'w') as json_file:
             json.dump(active_games_dict, json_file, indent=4)
-        with open('game_records.json', 'w') as json_file:
-            json.dump(game_records_dict, json_file, indent=4)
+
         return redirect(f'/games')
 
-    #check if a game slot is available
+    # check if a game slot is available
     full_game_id = None
     for select_game_id, value in active_games_dict.items():
         if not value.get("Game Active"):
@@ -1168,7 +1163,7 @@ def get_mainmap(full_game_id):
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
-    map_str = map.get_map_str(active_games_dict[full_game_id]["Information"]["Map"])
+    map_str = core.get_map_str(full_game_id)
     try:
         current_turn_num = int(current_turn_num)
         filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'

@@ -3,6 +3,7 @@ import json
 import random
 import shutil
 import os
+import copy
 from datetime import datetime
 from operator import itemgetter
 
@@ -15,9 +16,9 @@ from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
 from app.notifications import Notifications
+from app.map import GameMaps
 from app import actions
 from app import checks
-from app import map
 from app import events
 
 
@@ -89,7 +90,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
                 random_region.set_owner_id(int(random_assignment_player_id))
                 random_region_improvement = Improvement(random_region_id, game_id)
                 random_region_improvement.set_improvement("Capital")
-                nation = nation_table.get(nation_id)
+                nation = nation_table.get(random_assignment_player_id)
                 nation.improvement_counts["Capital"] += 1
                 nation_table.save(nation)
                 break
@@ -101,17 +102,11 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    # generate and update maps
-    current_turn_num = core.get_current_turn_num(game_id)
-    map_name = core.get_map_name(game_id)
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
-    resource_map = map.ResourceMap(game_id, map_name)
-    control_map = map.ControlMap(game_id, map_name)
-    resource_map.create()
-    main_map.place_random()
-    main_map.update()
-    resource_map.update()
-    control_map.update()
+    # update game maps
+    maps = GameMaps(game_id)
+    maps.populate_resource_map()
+    maps.populate_main_map()
+    maps.update_all()
 
 def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
@@ -177,12 +172,6 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
 
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
-    
-    # update visuals
-    current_turn_num = 1
-    map_name = active_games_dict[game_id]["Information"]["Map"]
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
-    main_map.update()
 
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
@@ -320,12 +309,8 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         json.dump(active_games_dict, json_file, indent=4)
 
     # update game maps
-    current_turn_num = core.get_current_turn_num(game_id)
-    map_name = core.get_map_name(game_id)
-    main_map = map.MainMap(game_id, map_name, current_turn_num)
-    control_map = map.ControlMap(game_id, map_name)
-    main_map.update()
-    control_map.update()
+    maps = GameMaps(game_id)
+    maps.update_all()
 
 def run_end_of_turn_checks(game_id: str) -> None:
     """
@@ -356,21 +341,36 @@ def resolve_win(game_id: str) -> None:
     Updates the game state and game records upon player victory.
     """
 
+    # load game data
     nation_table = NationTable(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
-
     game_name = active_games_dict[game_id]["Game Name"]
 
     # update active games
     active_games_dict[game_id]["Game Active"] = False
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
-
-    # update nation data in archive
+    
+    # add game data to game archive
+    game_records_dict[game_name] = copy.deepcopy(active_games_dict[game_id])
+    del game_records_dict[game_name]["Inactive Events"]
+    del game_records_dict[game_name]["Active Events"]
+    del game_records_dict[game_name]["Current Event"]
+    game_records_dict[game_name]["Game ID"] = "TBA"
+    current_date = datetime.today().date()
+    current_date_string = current_date.strftime("%m/%d/%Y")
+    game_records_dict[game_name]["Statistics"]["Game Ended"] = current_date_string
+    game_records_dict[game_name]["Statistics"]["Game End Turn"] = current_turn_num
+    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
+    start_date_obj = datetime.strptime(game_records_dict[game_name]["Statistics"]["Game Started"], "%m/%d/%Y")
+    date_difference = current_date_obj - start_date_obj
+    game_records_dict[game_name]["Statistics"]["Days Ellapsed"] = date_difference.days
+    
+    # add player data from game to game archive
     player_data_dict = {}
     for nation in nation_table:
         player_data_entry_dict = {
@@ -386,17 +386,7 @@ def resolve_win(game_id: str) -> None:
         player_data_dict[nation.player_id] = player_data_entry_dict
     game_records_dict[game_name]["Player Data"] = player_data_dict
 
-    # update other stuff in archive
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    game_records_dict[game_name]["Statistics"]["Game Ended"] = current_date_string
-    game_records_dict[game_name]["Statistics"]["Game End Turn"] = current_turn_num
-    game_records_dict[game_name]["Statistics"]["Game Started"] = active_games_dict[game_id]["Statistics"]["Game Started"]
-    start_date = game_records_dict[game_name]["Statistics"]["Game Started"]
-    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-    start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
-    date_difference = current_date_obj - start_date_obj
-    game_records_dict[game_name]["Statistics"]["Days Ellapsed"] = date_difference.days
+    # save game data
     with open('game_records.json', 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
@@ -431,70 +421,71 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     erase_game(game_id)
     
     # update active_games
-    active_games_dict[game_id]["Game Name"] = form_data_dict["Game Name"]
-    active_games_dict[game_id]["Statistics"]["Player Count"] = form_data_dict["Player Count"]
-    active_games_dict[game_id]["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
-    active_games_dict[game_id]["Information"]["Map"] = form_data_dict["Map"]
-    active_games_dict[game_id]["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
-    active_games_dict[game_id]["Information"]["Turn Length"] = form_data_dict["Turn Length"]
-    active_games_dict[game_id]["Information"]["Fog of War"] = form_data_dict["Fog of War"]
-    active_games_dict[game_id]["Information"]["Deadlines on Weekends"] = form_data_dict["Deadlines on Weekends"]
-    active_games_dict[game_id]["Information"]["Scenario"] = form_data_dict["Scenario"]
-    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Starting Region Selection in Progress"
-    active_games_dict[game_id]["Game #"] = len(game_records_dict) + 1
-    active_games_dict[game_id]["Information"]["Version"] = game_version
-    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
-    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[game_id]["Statistics"]["Region Disputes"] = 0
-    active_games_dict[game_id]["Inactive Events"] = []
-    active_games_dict[game_id]["Active Events"] = {}
-    active_games_dict[game_id]["Current Event"] = {}
-    active_games_dict[game_id]["Game Active"] = True
+    active_games_dict[game_id] = {
+        "Game Name": form_data_dict["Game Name"],
+        "Game #": len(game_records_dict) + 1,
+        "Game Active": True,
+        "Information": {
+            "Version": game_version,
+            "Scenario": form_data_dict["Scenario"],
+            "Map": form_data_dict["Map"],
+            "Victory Conditions": form_data_dict["Victory Conditions"],
+            "Fog of War": form_data_dict["Fog of War"],
+            "Turn Length": form_data_dict["Turn Length"],
+            "Accelerated Schedule": form_data_dict["Accelerated Schedule"],
+            "Deadlines on Weekends": form_data_dict["Deadlines on Weekends"]
+        },
+        "Statistics": {
+            "Player Count": form_data_dict["Player Count"],
+            "Region Disputes": 0,
+            "Current Turn": "Starting Region Selection in Progress",
+            "Days Ellapsed": 0,
+            "Game Started": current_date_string
+        },
+        "Inactive Events": [],
+        "Active Events": {},
+        "Current Event": {}
+    }
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
-    
-    # update game_records
-    # to do - game records should not be updated at all until the game is concluded
-    # really, active_games.json and game_records.json should be SQL tables
-    new_game_entry = {}
-    new_game_entry["Game ID"] = "temp"
-    new_game_entry["Game #"] = len(game_records_dict) + 1
-    new_game_entry["Information"] = {}
-    new_game_entry ["Statistics"] = {}
-    new_game_entry["Statistics"]["Player Count"] = int(form_data_dict["Player Count"])
-    new_game_entry["Information"]["Victory Conditions"] = form_data_dict["Victory Conditions"]
-    new_game_entry["Information"]["Map"] = form_data_dict["Map"]
-    new_game_entry["Information"]["Accelerated Schedule"] = form_data_dict["Accelerated Schedule"]
-    new_game_entry["Information"]["Turn Duration"] = form_data_dict["Turn Length"]
-    new_game_entry["Information"]["Fog of War"] = form_data_dict["Fog of War"]
-    new_game_entry["Information"]["Version"] = game_version
-    new_game_entry["Information"]["Scenario"] = form_data_dict["Scenario"]
-    new_game_entry["Statistics"]["Game End Turn"] = 0
-    new_game_entry["Statistics"]["Days Ellapsed"] = 0
-    new_game_entry["Statistics"]["Game Started"] = current_date_string
-    new_game_entry["Statistics"]["Game Ended"] = 'Present'
-    game_records_dict[form_data_dict["Game Name"]] = new_game_entry
-    with open('game_records.json', 'w') as json_file:
-        json.dump(game_records_dict, json_file, indent=4)
 
     # copy starting map images
+    map_str = core.get_map_str(game_id)
     files_destination = f'gamedata/{game_id}'
-    map_str = map.get_map_str(new_game_entry["Information"]["Map"])
     starting_map_images = ['resourcemap', 'controlmap']
     for map_filename in starting_map_images:
         shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
         shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
     
     # create regdata.json
-    shutil.copy(f"maps/{map_str}/regdata.json", files_destination)
-    if form_data_dict["Scenario"] == 'Standard':
-        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
-        for region_id in regdata_dict:
+    with open(f'maps/{map_str}/graph.json', 'r') as json_file:
+        graph_dict = json.load(json_file)
+    regdata_dict = {}
+    for region_id in graph_dict:
+        regdata_dict[region_id] = {
+            "regionData": {
+                "ownerID": 0,
+                "occupierID": 0,
+                "purchaseCost": 5,
+                "regionResource": "Empty",
+                "nukeTurns": 0,
+            },
+            "improvementData": {
+                "name": None,
+                "health": 99,
+                "turnTimer": 99
+            },
+            "unitData": {
+                "name": None,
+                "health": 99,
+                "ownerID": 0
+            }
+        }
+        if form_data_dict["Scenario"] == 'Standard':
             regdata_dict[region_id]["regionData"]["infection"] = 0
             regdata_dict[region_id]["regionData"]["quarantine"] = False
-        with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
-            json.dump(regdata_dict, json_file, indent=4)
+    with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
+        json.dump(regdata_dict, json_file, indent=4)
 
     # create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
@@ -510,12 +501,13 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
 
     # create gamedata.json
     gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
-    gamedata_dict = {}
-    gamedata_dict["alliances"] = {}
-    gamedata_dict["nations"] = {}
-    gamedata_dict["notifications"] = {}
-    gamedata_dict["victoryConditions"] = {}
-    gamedata_dict["wars"] = {}
+    gamedata_dict = {
+        "alliances": {},
+        "nations": {},
+        "notifications": {},
+        "victoryConditions": {},
+        "wars": {}
+    }
     with open(gamedata_filepath, 'w') as json_file:
         json.dump(gamedata_dict, json_file, indent=4)
 

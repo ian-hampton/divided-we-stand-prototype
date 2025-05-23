@@ -94,3 +94,13 @@ normal_to_occupied = {
     "#b66317": "#c57429",
     "#ffd64b": "#ffe68e" 
 }
+
+resource_colors = {
+    "Coal": (166, 124, 82, 255),
+    "Oil": (96, 57, 19, 255),
+    "Basic Materials": (149, 149, 149, 255),
+    "Common Metals": (99, 99, 99, 255),
+    "Advanced Metals": (71, 157, 223, 255),
+    "Uranium": (0, 255, 0, 255),
+    "Rare Earth Elements": (241, 194, 50, 255)
+}

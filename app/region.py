@@ -1,42 +1,42 @@
 import json
 import random
-
+import os
 from collections import deque
 from typing import Union, Tuple
+
+from app import core
 
 class Region:
 
     def __init__(self, region_id: str, game_id: str):
+
+        # check if game files exist
+        regdata_filepath = f"gamedata/{game_id}/regdata.json"
+        graph_filepath = f"maps/{core.get_map_str(game_id)}/graph.json"
+        if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
+            raise FileNotFoundError(f"Error: Unable to locate required game files during Region class initialization.")
         
-        # check if game id is valid
-        regdata_filepath = f'gamedata/{game_id}/regdata.json'
-        try:
-            with open(regdata_filepath, 'r') as json_file:
-                regdata_dict = json.load(json_file)
-        except FileNotFoundError:
-            print(f"Error: Unable to locate {regdata_filepath} during Region class initialization.")
+        # load game files
+        with open(regdata_filepath, 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        with open(graph_filepath, 'r') as json_file:
+            graph_dict = json.load(json_file)
 
-        # check if region id is valid
-        try:
-            region_data = regdata_dict[region_id]["regionData"]
-        except KeyError:
-            print(f"Error: {region_id} not recognized during Region class initialization.")
-
-        # set attributes now that all checks have passed
+        # set attributes
+        self.game_id: str = game_id
         self.region_id: str = region_id
-        self.data: dict = region_data
+        self.data: dict = regdata_dict[region_id]["regionData"]
         self.owner_id: int = self.data["ownerID"]
         self.occupier_id: int = self.data["occupierID"]
         self.purchase_cost: int = self.data["purchaseCost"]
         self.resource: str = self.data["regionResource"]
         self.fallout: int = self.data["nukeTurns"]
-        self.adjacent_regions: dict = self.data["adjacentRegions"]
-        self.is_edge: bool = self.data["edgeOfMap"]
-        self.is_significant: bool = self.data["containsRegionalCapital"]
-        self.is_start: bool = self.data["randomStartAllowed"]
-        self.cords: list = self.data.get("coordinates", None)
-        self.game_id: str = game_id
-        self.regdata_filepath: str = regdata_filepath
+        self.is_edge: bool = graph_dict[self.region_id]["isEdgeOfMap"]
+        self.is_significant: bool = graph_dict[self.region_id]["hasRegionalCapital"]
+        self.is_magnified: bool = graph_dict[self.region_id]["isMagnified"]
+        self.is_start: bool = graph_dict[self.region_id]["randomStartAllowed"]
+        self.additional_region_coordinates: list = graph_dict[self.region_id]["additionalRegionCords"]
+        self.adjacent_regions: dict = graph_dict[self.region_id]["adjacencyMap"]
         self.claim_list = []
     
     def __eq__(self, other):
@@ -51,17 +51,21 @@ class Region:
         """
         Saves changes made to Region object to game files.
         """
-        with open(self.regdata_filepath, 'r') as json_file:
+
+        regdata_filepath = f"gamedata/{self.game_id}/regdata.json"
+        with open(regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+        
         self.data["ownerID"] = self.owner_id
         self.data["occupierID"] = self.occupier_id
         self.data["purchaseCost"] = self.purchase_cost
         self.data["regionResource"] = self.resource
         self.data["nukeTurns"] = self.fallout
+        
         regdata_dict[self.region_id]["regionData"] = self.data
-        with open(self.regdata_filepath, 'w') as json_file:
+        with open(regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
-    
+
     def set_owner_id(self, new_owner_id: int) -> None:
         """
         Changes the owner of a region.
