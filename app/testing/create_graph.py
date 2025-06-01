@@ -1,7 +1,7 @@
 import json
 
 # This script generates a graph file for a map using the graph.json file outputted from the image-to-graph step.
-# Last updated 5/22/2025
+# Last updated 6/1/2025
 
 # STEPS TO USE
 # 1. Generate graph.json using the image-to-graph-dws script.
@@ -15,6 +15,7 @@ import json
 #   - randomStartAllowed
 #   - additionalRegionCords
 #   - improvementCords and unitCords for magnified regions
+#   - sea routes
 
 MAP_STR = "united_states"
 GRAPH_FILEPATH = f"../../maps/{MAP_STR}/graph.json"
