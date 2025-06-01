@@ -25,7 +25,17 @@ assignees: ''
 - [ ] Create map reference in Affinity Photo.
     - [ ] blank.png
     - [ ] reference.png
-- [ ] Create map data files.
-    - [ ] graph.json
-    - [ ] config.json
-- [ ] Test to make sure new map is working with turn processor.
+- [ ] Create map graph.
+    - [ ] Generate graph.json using image-to-graph-dws script.
+    - [ ] Run create_graph.py on graph.json.
+    - [ ] Manually fill in the following region data:
+        - [ ] fullName
+        - [ ] isEdgeOfMap
+        - [ ] hasRegionalCapital
+        - [ ] isMagnified
+        - [ ] randomStartAllowed
+        - [ ] additionalRegionCoords
+        - [ ] improvementCoords and unitCoords for magnified regions
+        - [ ] adjacency data from sea routes (if applicable)
+- [ ] Create map config file (config.json).
+- [ ] Run map_test_complete.py to verify map generation is working.
