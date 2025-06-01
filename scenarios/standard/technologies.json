@@ -128,7 +128,7 @@
                 "Dollars": {
                     "Upkeep": 1
                 },
-                "Green Energy": {
+                "Energy": {
                     "Income": 1
                 }
             },
@@ -136,7 +136,7 @@
                 "Dollars": {
                     "Upkeep": 1
                 },
-                "Green Energy": {
+                "Energy": {
                     "Income": 1
                 }
             }
@@ -233,7 +233,7 @@
         "Location": "C1",
         "Modifiers": {}
     },
-    "REE Mining": {
+    "Rare Earth Mining": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Uranium Extraction",
         "Cost": 15,
@@ -243,7 +243,7 @@
     },
     "Resource Enrichment": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "REE Mining",
+        "Prerequisite": "Rare Earth Mining",
         "Cost": 20,
         "Description": "+1 advanced metals from Advanced Metals Mine improvements. +1 uranium from Uranium Mine improvements.",
         "Location": "C3",

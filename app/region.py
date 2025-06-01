@@ -1,42 +1,42 @@
 import json
 import random
-
+import os
 from collections import deque
 from typing import Union, Tuple
+
+from app import core
 
 class Region:
 
     def __init__(self, region_id: str, game_id: str):
+
+        # check if game files exist
+        regdata_filepath = f"gamedata/{game_id}/regdata.json"
+        graph_filepath = f"maps/{core.get_map_str(game_id)}/graph.json"
+        if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
+            raise FileNotFoundError(f"Error: Unable to locate required game files during Region class initialization.")
         
-        # check if game id is valid
-        regdata_filepath = f'gamedata/{game_id}/regdata.json'
-        try:
-            with open(regdata_filepath, 'r') as json_file:
-                regdata_dict = json.load(json_file)
-        except FileNotFoundError:
-            print(f"Error: Unable to locate {regdata_filepath} during Region class initialization.")
+        # load game files
+        with open(regdata_filepath, 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        with open(graph_filepath, 'r') as json_file:
+            graph_dict = json.load(json_file)
 
-        # check if region id is valid
-        try:
-            region_data = regdata_dict[region_id]["regionData"]
-        except KeyError:
-            print(f"Error: {region_id} not recognized during Region class initialization.")
-
-        # set attributes now that all checks have passed
+        # set attributes
+        self.game_id: str = game_id
         self.region_id: str = region_id
-        self.data: dict = region_data
+        self.data: dict = regdata_dict[region_id]["regionData"]
         self.owner_id: int = self.data["ownerID"]
         self.occupier_id: int = self.data["occupierID"]
         self.purchase_cost: int = self.data["purchaseCost"]
         self.resource: str = self.data["regionResource"]
         self.fallout: int = self.data["nukeTurns"]
-        self.adjacent_regions: list = self.data["adjacencyList"]
-        self.is_edge: bool = self.data["edgeOfMap"]
-        self.is_significant: bool = self.data["containsRegionalCapital"]
-        self.is_start: bool = self.data["randomStartAllowed"]
-        self.cords: list = self.data.get("coordinates", None)
-        self.game_id: str = game_id
-        self.regdata_filepath: str = regdata_filepath
+        self.is_edge: bool = graph_dict[self.region_id]["isEdgeOfMap"]
+        self.is_significant: bool = graph_dict[self.region_id]["hasRegionalCapital"]
+        self.is_magnified: bool = graph_dict[self.region_id]["isMagnified"]
+        self.is_start: bool = graph_dict[self.region_id]["randomStartAllowed"]
+        self.additional_region_coordinates: list = graph_dict[self.region_id]["additionalRegionCords"]
+        self.adjacent_regions: dict = graph_dict[self.region_id]["adjacencyMap"]
         self.claim_list = []
     
     def __eq__(self, other):
@@ -51,17 +51,21 @@ class Region:
         """
         Saves changes made to Region object to game files.
         """
-        with open(self.regdata_filepath, 'r') as json_file:
+
+        regdata_filepath = f"gamedata/{self.game_id}/regdata.json"
+        with open(regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+        
         self.data["ownerID"] = self.owner_id
         self.data["occupierID"] = self.occupier_id
         self.data["purchaseCost"] = self.purchase_cost
         self.data["regionResource"] = self.resource
         self.data["nukeTurns"] = self.fallout
+        
         regdata_dict[self.region_id]["regionData"] = self.data
-        with open(self.regdata_filepath, 'w') as json_file:
+        with open(regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
-    
+
     def set_owner_id(self, new_owner_id: int) -> None:
         """
         Changes the owner of a region.
@@ -127,9 +131,8 @@ class Region:
         Returns:
             list: region_ids of adjacent region owned by the player.
         """
-        adjacent_list = self.adjacent_regions
         owned_adjacent_list = []
-        for region_id in adjacent_list:
+        for region_id in self.adjacent_regions:
             temp = Region(region_id, self.game_id)
             if temp.owner_id == self.owner_id:
                 owned_adjacent_list.append(region_id)
@@ -173,16 +176,15 @@ class Region:
             bool: True if improvement found. False otherwise.
         """
         from app.improvement import Improvement
-        owned_adjacent_list = self.owned_adjacent_regions()
         
-        for region_id in owned_adjacent_list:
+        for region_id in self.owned_adjacent_regions():
             region_improvement = Improvement(region_id, self.game_id)
             if region_improvement.name in improvement_names:
                 return True
 
         return False
     
-    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 99) -> bool:
+    def check_for_adjacent_unit(self, unit_names: set, unit_owner_id: 0) -> bool:
         """
         Checks if there is an unit in unit_names in an adjacent region.
         
@@ -197,14 +199,14 @@ class Region:
         
         for region_id in self.adjacent_regions:
             region_unit = Unit(region_id, self.game_id)
-            if unit_owner_id != 99 and unit_owner_id != region_unit.owner_id:
+            if unit_owner_id != 0 and unit_owner_id != region_unit.owner_id:
                 continue
             if region_unit.name in unit_names:
                 return True
 
         return False
     
-    def find_suitable_region(self) -> str:
+    def find_suitable_region(self) -> str | None:
         """
         Finds a region to move the unit in this region to.
         Called only for withdraws at the moment, but this function could be generalized in the future.
@@ -233,9 +235,9 @@ class Region:
 
             # check if region is suitable
             if (
-                current_region.owner_id == withdrawing_unit.owner_id # region must be owned by the unit owner
-                and current_region_unit.name is None # region must not have another unit in it
-                and current_region.occupier_id == 0 # region must not be occupied by another nation
+                current_region.owner_id == withdrawing_unit.owner_id    # region must be owned by the unit owner
+                and current_region_unit.name is None                    # region must not have another unit in it
+                and current_region.occupier_id == 0                     # region must not be occupied by another nation
             ):
                 return current_region_id
             
@@ -245,7 +247,6 @@ class Region:
                     queue.append(adjacent_id)
 
         # return None if we failed to find a region
-        # ( you better hope that doesn't happen because there are 200+ regions to check )
         return None
     
     # combat methods
@@ -262,24 +263,30 @@ class Region:
         Returns:
             bool: True if all checks pass. False otherwise.
         """
-        from app.wardata import WarData
-        wardata = WarData(self.game_id)
+        
+        from app.war import WarTable
+        war_table = WarTable(self.game_id)
 
         # you can always move into regions owned by you
         if self.owner_id == other_player_id:
             return True
 
         # you may move into unoccupied regions owned by an enemy
-        if wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id == 0:
+        if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None and self.occupier_id == 0:
             return True
+        
         # you may move into occupied regions owned by an enemy in two cases
-        elif wardata.are_at_war(self.owner_id, other_player_id) and self.occupier_id != 0:
+        elif war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None and self.occupier_id != 0:
             # you are the occupier
             if self.occupier_id == other_player_id:
                 return True
             # you are also at war with the occupier
-            if wardata.are_at_war(self.occupier_id, other_player_id):
+            if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None:
                 return True
+            
+        # foreign invasion may move into unclaimed regions
+        if self.owner_id == 0 and other_player_id == 99:
+            return True
                 
         return False
     
@@ -363,8 +370,8 @@ class Region:
         Used for Pandemic event.
         """
         self.data["infection"] += amount
-        if self.data["infection"] > 10:
-            self.data["infection"] = 10
+        if self.data["infection"] > 5:
+            self.data["infection"] = 5
         elif self.data["infection"] < 0:
             self.data["infection"] = 0
         self._save_changes()

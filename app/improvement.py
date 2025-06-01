@@ -1,56 +1,61 @@
-import ast
 import json
+import copy
+import os
 
 from app import core
+from app.nationdata import Nation
 
 class Improvement:
 
     def __init__(self, region_id: str, game_id: str):
-        """
-        Initializes improvement class. Calls load_attributes() to load data from game files.
 
-        Params:
-            region_id (str): Unique five letter string used to identify a region.
-            game_id (str): Unique string used to identify a game.
+        # check if game files exist
+        regdata_filepath = f"gamedata/{game_id}/regdata.json"
+        graph_filepath = f"maps/{core.get_map_str(game_id)}/graph.json"
+        if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
+            raise FileNotFoundError(f"Error: Unable to locate required game files during Improvement class initialization.")
 
-        """
+        # define attributes
         self.region_id = region_id
         self.game_id = game_id
+        self.regdata_filepath = regdata_filepath
+        self.graph_filepath = graph_filepath
         self.load_attributes()
 
     def load_attributes(self) -> None:
         """
         Loads data from game files for this class.
         """
-        
-        from app.region import Region
-        
-        # check if game id is valid
-        regdata_filepath = f'gamedata/{self.game_id}/regdata.json'
-        try:
-            with open(regdata_filepath, 'r') as json_file:
-                regdata_dict = json.load(json_file)
-        except FileNotFoundError:
-            print(f"Error: Unable to locate {regdata_filepath} during Region class initialization.")
 
-        # check if region id is valid
-        try:
-            improvement_data = regdata_dict[self.region_id]["improvementData"]
-        except KeyError:
-            print(f"Error: {self.region_id} not recognized during Region class initialization.")
+        # load game files
+        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
+        with open(self.regdata_filepath, 'r') as json_file:
+            regdata_dict = json.load(json_file)
+        with open(self.graph_filepath, 'r') as json_file:
+            graph_dict = json.load(json_file)
 
-        # set attributes now that all checks have passed
-        self.data: dict = improvement_data
-        self.regdata_filepath: str = regdata_filepath
+        # check if region exists
+        if self.region_id not in regdata_dict:
+            raise Exception(f"Error: Region ID {self.region_id} not found.")
+
+        # set attributes
+        self.data: dict = regdata_dict[self.region_id]["improvementData"]
         self.name: str = self.data["name"]
         self.health: int = self.data["health"]
         self.turn_timer: int = self.data["turnTimer"]
-        self.cords: list = self.data.get("coordinates", None)
-        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         if self.name is not None:
             self.hit_value = improvement_data_dict[self.name]["Combat Value"]
+            self.missile_defense = improvement_data_dict[self.name]["Standard Missile Defense"]
+            self.nuke_defense = improvement_data_dict[self.name]["Nuclear Missile Defense"]
         else:
             self.hit_value = None
+            self.missile_defense = None
+            self.nuke_defense = None
+        self.coords: list = graph_dict[self.region_id]["improvementCords"]
+        
+        # get owner and occupier id attributes
+        # TODO: improvement should become a child class of Region so we don't have to do this garbage
+        from app.region import Region
         region_obj = Region(self.region_id, self.game_id)
         self.owner_id = region_obj.owner_id
         self.occupier_id = region_obj.occupier_id
@@ -59,11 +64,17 @@ class Improvement:
         """
         Saves changes made to Improvement object to game files.
         """
+
         with open(self.regdata_filepath, 'r') as json_file:
             regdata_dict = json.load(json_file)
+
+        if self.name is not None and self.health < 0:
+            self.health = 0
+
         self.data["name"] = self.name
         self.data["health"] = self.health
         self.data["turnTimer"] = self.turn_timer
+
         regdata_dict[self.region_id]["improvementData"] = self.data
         with open(self.regdata_filepath, 'w') as json_file:
             json.dump(regdata_dict, json_file, indent=4)
@@ -147,7 +158,7 @@ class Improvement:
     # income methods
     ################################################################################
 
-    def calculate_yield(self, improvement_income_dict: dict) -> dict:
+    def calculate_yield(self, nation: Nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
         """
         Calculates the final yield of this improvement.
 
@@ -160,23 +171,16 @@ class Improvement:
         
         # load game info
         from app.region import Region
-        playerdata_filepath = f'gamedata/{self.game_id}/playerdata.csv'
-        playerdata_list = core.read_file(playerdata_filepath, 1)
         region = Region(self.region_id, self.game_id)
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-
-        # load player info
-        player_government = playerdata_list[self.owner_id - 1][3]
-        player_research_list = ast.literal_eval(playerdata_list[self.owner_id - 1][26])
+        improvement_income_dict = copy.deepcopy(improvement_income_dict)  # deepcopy required because of modifiers below
 
         # get modifer from central banks
-        if region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):
+        if self.name != "Capital" and region.check_for_adjacent_improvement(improvement_names={"Central Bank"}):
             for resource_name in improvement_income_dict:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
 
         # get modifer from remnant government
-        if player_government == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
+        if nation.gov == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
             for resource_name in improvement_income_dict:
                 if resource_name == "Political Power" or resource_name == "Military Capacity":
                     # do not boost political power or military capacity gains
@@ -199,29 +203,49 @@ class Improvement:
                     multiplier = 0
                 improvement_income_dict[resource_name]["Income Multiplier"] = multiplier
 
+        # get income modifiers from tags
+        for tag_name, tag_data in nation.tags.items():
+            if "Improvement Income" not in tag_data:
+                continue
+            for improvement_name, resource_data in tag_data["Improvement Income"].items():
+                if improvement_name != self.name:
+                    continue
+                for resource_name, income_modifier in resource_data.items():
+                    improvement_income_dict[resource_name]["Income"] += income_modifier
+        
+        # get income multiplier modifiers from tags
+        for tag_name, tag_data in nation.tags.items():
+            if "Improvement Income Multiplier" not in tag_data:
+                continue
+            for improvement_name, resource_data in tag_data["Improvement Income Multiplier"].items():
+                if improvement_name != self.name:
+                    continue
+                for resource_name, income_modifier in resource_data.items():
+                    improvement_income_dict[resource_name]["Income Multiplier"] += income_modifier
+
         # get capital resource if able
-        # to do - find a way to not hard code this check
+        # tba - find a way to not hard code this check
         if self.name == "Capital" and region.resource != "Empty":
             match region.resource:
                 case "Coal":
-                    if 'Coal Mining' in player_research_list:
+                    if 'Coal Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Oil":
-                    if 'Oil Drilling' in player_research_list:
+                    if 'Oil Drilling' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Basic Materials":
                     improvement_income_dict[region.resource]["Income"] += 1
                 case "Common Metals":
-                    if 'Surface Mining' in player_research_list:
+                    if 'Surface Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Advanced Metals":
-                    if 'Metallurgy' in player_research_list:
+                    if 'Metallurgy' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Uranium":
-                    if 'Uranium Extraction' in player_research_list:
+                    if 'Uranium Extraction' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Rare Earth Elements":
-                    if 'REE Mining' in player_research_list:
+                    if 'REE Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
         
         # calculate final income

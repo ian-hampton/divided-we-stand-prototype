@@ -1,28 +1,27 @@
-from app import core
+from app.nationdata import NationTable
 
-def color_nation_names(string, game_id):
+from PIL import ImageColor
+
+BAD_PRIMARY_COLORS = {"#603913", "#105500", "#8b2a1a"}
+
+def color_nation_names(string: str, game_id: str):
     """
     Adds html span tags around all nation names in given string
     """
-
-    playerdata_filepath = f'gamedata/{game_id}/playerdata.csv'
-    playerdata_list = core.read_file(playerdata_filepath, 1)
-
+    nation_table = NationTable(game_id)
     color_dict = {}
-    for playerdata in playerdata_list:
-        color_dict[playerdata[1]] = playerdata[2]
-
-    bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+    for nation in nation_table:
+        color_dict[nation.name] = nation.color
 
     for nation_name, color in color_dict.items():
-        if color in bad_primary_colors_set:
+        if color in BAD_PRIMARY_COLORS:
             color = normal_to_occupied[color]
-        html_nation_name = f"""<span style="color: {color}">{nation_name}</span>"""
+        html_nation_name = f"""<span style="color:{color}">{nation_name}</span>"""
         string = string.replace(nation_name, html_nation_name)
 
     return string
 
-def str_to_hex(color_str):
+def str_to_hex(color_str: str):
     """
     Retrives a hexadecimal color value that corresponds to a string name.
     """
@@ -30,6 +29,33 @@ def str_to_hex(color_str):
     color_str = color_str.lower().strip()
     
     return player_colors_hex.get(color_str)
+
+def tup_to_hex(color_tuple: tuple) -> str:
+    """
+    Converts RBG or RGBA color to a hexadecimal string.
+    """
+
+    result = None
+    if len(color_tuple) == 3:
+        result = f"#{color_tuple[0]:02x}{color_tuple[1]:02x}{color_tuple[2]:02x}"
+    elif len(color_tuple) == 4:
+        result = f"#{color_tuple[0]:02x}{color_tuple[1]:02x}{color_tuple[2]:02x}{color_tuple[3]:02x}"
+
+    return result.lower()
+
+def hex_to_tup(color_hex: str, alpha=False) -> tuple:
+    """
+    Converts hexadecimal string to RGB or RGBA.
+    """
+
+    result = ImageColor.getrgb(color_hex)
+
+    if alpha:
+        result = list(result)
+        result.append(255)
+        return tuple(result)
+    
+    return result
 
 player_colors_hex = {
     "brown": "#603913",
@@ -67,4 +93,14 @@ normal_to_occupied = {
     "#f384ae": "#f4a0c0",
     "#b66317": "#c57429",
     "#ffd64b": "#ffe68e" 
+}
+
+resource_colors = {
+    "Coal": (166, 124, 82, 255),
+    "Oil": (96, 57, 19, 255),
+    "Basic Materials": (149, 149, 149, 255),
+    "Common Metals": (99, 99, 99, 255),
+    "Advanced Metals": (71, 157, 223, 255),
+    "Uranium": (0, 255, 0, 255),
+    "Rare Earth Elements": (241, 194, 50, 255)
 }

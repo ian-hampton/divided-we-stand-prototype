@@ -6,174 +6,96 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 1,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Advanced Metals": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 5,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 5
         }
     },
     "Boot Camp": {
         "Required Research": "Standing Army",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 9,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
             "Military Capacity": 2
         },
         "Abilities": [
             "Provides +2 military capacity."
         ],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 10,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10
         }
     },
     "Capital": {
         "Required Research": null,
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 9,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
             "Dollars": 5,
             "Political Power": 1,
-            "Technology": 2,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Technology": 2
         },
         "Abilities": [
             "Can exploit the resource present in its region once the sufficient technology is researched, providing +1 of that resource.",
             "Cannot be built, removed, or destroyed."
         ],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {}
     },
     "Central Bank": {
         "Required Research": "Central Banking System",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [
             "Provides +20 storage capacity for all resources.",
             "Provides +20% income bonus for all improvements in owned adjacent regions. This ability does not stack."
         ],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
-            "Dollars": 0,
             "Basic Materials": 5,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "City": {
         "Required Research": "City Resettlement",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 3,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Dollars": 3
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 10,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10
         }
     },
     "Coal Mine": {
@@ -183,32 +105,38 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 1,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Coal": 1
+        },
+        "Abilities": [],
+        "Upkeep": {},
+        "Build Costs": {
+            "Dollars": 5
+        }
+    },
+    "Colony": {
+        "Required Research": null,
+        "Required Resource": null,
+        "Health": 6,
+        "Victory Damage": 3,
+        "Combat Value": 9,
+        "Draw Damage": 1,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {
+            "Dollars": 10,
+            "Political Power": 0.25,
+            "Technology": 1
         },
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
-            "Dollars": 5,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10,
+            "Common Metals": 10
         }
     },
     "Common Metals Mine": {
@@ -218,67 +146,31 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 1,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Common Metals": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 5,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 5
         }
     },
     "Crude Barrier": {
         "Required Research": "Basic Defenses",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 9,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 5,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 5
         }
     },
     "Industrial Zone": {
@@ -288,102 +180,53 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 1,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Basic Materials": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 5,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 5
         }
     },
     "Military Base": {
         "Required Research": "Military Bases",
         "Required Resource": null,
-        "Health": 10,
+        "Health": 12,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 5,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 2,
-            "Uranium": 0
+            "Energy": 2
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
             "Common Metals": 5,
-            "Advanced Metals": 5,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 5
         }
     },
     "Military Outpost": {
         "Required Research": "Military Outposts",
         "Required Resource": null,
-        "Health": 10,
+        "Health": 12,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 7,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
-            "Dollars": 0,
             "Basic Materials": 5,
-            "Common Metals": 5,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 5
         }
     },
     "Missile Defense Network": {
@@ -393,33 +236,16 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 3,
+        "Nuclear Missile Defense": 6,
+        "Income": {},
         "Abilities": [
             "Intercepts incoming Standard Missiles and Nuclear Missiles. Defends its own region and all regions within a two region radius. Upon a successful interception, the incoming missile is destroyed and causes no damage."
         ],
-        "Standard Missile Defense": 3,
-        "Nuclear Missile Defense": 6,
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 2,
-            "Uranium": 0
+            "Energy": 2
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
             "Common Metals": 10,
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
@@ -432,36 +258,17 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 6,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [
             "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions. Upon a successful interception, the incoming missile is destroyed and causes no damage."
         ],
-        "Standard Missile Defense": 6,
-        "Nuclear Missile Defense": 99,
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 1
+            "Common Metals": 10
         }
     },
     "Nuclear Power Plant": {
@@ -471,32 +278,18 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 6,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Energy": 6
         },
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
             "Uranium": 0.5
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
             "Common Metals": 10,
-            "Advanced Metals": 10,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 10
         }
     },
     "Oil Refinery": {
@@ -506,34 +299,19 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 2,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Oil": 2
         },
         "Abilities": [
             "Can only be built in a ratio of one for every two Oil Wells owned."
         ],
         "Upkeep": {
-            "Dollars": 2,
-            "Energy": 0,
-            "Uranium": 0
+            "Dollars": 2
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "Oil Well": {
@@ -543,32 +321,15 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 1,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Oil": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 5,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 5
         }
     },
     "Uranium Mine": {
@@ -578,32 +339,15 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 1,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Uranium": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 5,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 5
         }
     },
     "Rare Earth Elements Mine": {
@@ -613,32 +357,15 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 1,
-            "Military Capacity": 0
+            "Rare Earth Elements": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 5,
-            "Rare Earth Elements": 0
+            "Advanced Metals": 5
         }
     },
     "Research Institute": {
@@ -648,32 +375,19 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 5,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Technology": 5
         },
         "Abilities": [],
         "Upkeep": {
             "Dollars": 3,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
-            "Dollars": 0,
             "Basic Materials": 5,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "Research Laboratory": {
@@ -683,69 +397,35 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 1,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Technology": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 5,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 5
         }
     },
     "Missile Silo": {
         "Required Research": "Launch Codes",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 7,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [
             "May launch up to three Standard Missiles or one Nuclear Missile per turn."
         ],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 2,
-            "Uranium": 0
+            "Energy": 2
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 10,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 10
         }
     },
     "Solar Farm": {
@@ -755,30 +435,14 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 2,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Energy": 2
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
         }
@@ -790,34 +454,18 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
             "Coal": 4,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 2,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Common Metals": 2
         },
         "Abilities": [
             "After eight turns, the strip mine will be scuttled and the coal in the region completely drained."
         ],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 25,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Dollars": 25
         }
     },
     "Surveillance Center": {
@@ -828,35 +476,18 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
-        "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 0,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
-        },
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
         "Abilities": [
             "Allows your nation to gather intelligence on an enemy nation.",
             "Base intellegence gathering: TBD. Can be upgraded through additional research."
         ],
         "Upkeep": {
-            "Dollars": 0,
-            "Energy": 1,
-            "Uranium": 0
+            "Energy": 1
         },
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 10,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Basic Materials": 10
         }
     },
     "Wind Farm": {
@@ -866,32 +497,15 @@
         "Victory Damage": 99,
         "Draw Damage": 99,
         "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 0,
-            "Political Power": 0,
-            "Technology": 0,
-            "Coal": 0,
-            "Oil": 0,
-            "Green Energy": 1,
-            "Basic Materials": 0,
-            "Common Metals": 0,
-            "Advanced Metals": 0,
-            "Uranium": 0,
-            "Rare Earth Elements": 0,
-            "Military Capacity": 0
+            "Energy": 1
         },
         "Abilities": [],
-        "Upkeep": {
-            "Dollars": 0,
-            "Energy": 0,
-            "Uranium": 0
-        },
+        "Upkeep": {},
         "Build Costs": {
-            "Dollars": 0,
-            "Basic Materials": 0,
-            "Common Metals": 5,
-            "Advanced Metals": 0,
-            "Rare Earth Elements": 0
+            "Common Metals": 5
         }
     }
 }
