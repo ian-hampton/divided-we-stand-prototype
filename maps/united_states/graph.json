@@ -1,0 +1,5463 @@
+{
+    "NTCAS": {
+        "fullName": "Northern Cascades",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                737,
+                478
+            ],
+            [
+                754,
+                474
+            ],
+            [
+                762,
+                471
+            ],
+            [
+                768,
+                484
+            ],
+            [
+                750,
+                490
+            ],
+            [
+                770,
+                500
+            ],
+            [
+                766,
+                515
+            ],
+            [
+                757,
+                531
+            ],
+            [
+                771,
+                533
+            ],
+            [
+                758,
+                547
+            ],
+            [
+                767,
+                560
+            ]
+        ],
+        "improvementCords": [
+            805,
+            515
+        ],
+        "unitCords": [
+            857,
+            475
+        ],
+        "adjacencyMap": {
+            "COLBA": true,
+            "SEATT": true,
+            "SPOKA": true
+        }
+    },
+    "SPOKA": {
+        "fullName": "Spokane",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1034,
+            549
+        ],
+        "unitCords": [
+            1098,
+            549
+        ],
+        "adjacencyMap": {
+            "COLBA": true,
+            "IDPAN": true,
+            "NTCAS": true
+        }
+    },
+    "OLYMP": {
+        "fullName": "Olympia",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            629,
+            541
+        ],
+        "unitCords": [
+            624,
+            597
+        ],
+        "adjacencyMap": {
+            "PACAS": true,
+            "SEATT": true
+        }
+    },
+    "SEATT": {
+        "fullName": "Seattle",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                702,
+                643
+            ],
+            [
+                711,
+                645
+            ],
+            [
+                713,
+                656
+            ],
+            [
+                743,
+                626
+            ],
+            [
+                746,
+                600
+            ]
+        ],
+        "improvementCords": [
+            728,
+            659
+        ],
+        "unitCords": [
+            768,
+            606
+        ],
+        "adjacencyMap": {
+            "COLBA": true,
+            "NTCAS": true,
+            "OLYMP": true,
+            "PACAS": true
+        }
+    },
+    "NTHME": {
+        "fullName": "Northern Maine",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                5404,
+                844
+            ],
+            [
+                5380,
+                870
+            ],
+            [
+                5401,
+                873
+            ],
+            [
+                5390,
+                890
+            ],
+            [
+                5368,
+                886
+            ],
+            [
+                5375,
+                894
+            ]
+        ],
+        "improvementCords": [
+            5314,
+            737
+        ],
+        "unitCords": [
+            5378,
+            737
+        ],
+        "adjacencyMap": {
+            "STHME": true
+        }
+    },
+    "COLBA": {
+        "fullName": "Columbia Basin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            906,
+            738
+        ],
+        "unitCords": [
+            970,
+            738
+        ],
+        "adjacencyMap": {
+            "CENOR": true,
+            "EASOR": true,
+            "IDPAN": true,
+            "NTCAS": true,
+            "PACAS": true,
+            "SEATT": true,
+            "SPOKA": true
+        }
+    },
+    "PACAS": {
+        "fullName": "Pacific Cascades",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            660,
+            718
+        ],
+        "unitCords": [
+            699,
+            774
+        ],
+        "adjacencyMap": {
+            "CENOR": true,
+            "COLBA": true,
+            "OLYMP": true,
+            "PORTL": true,
+            "SEATT": true
+        }
+    },
+    "NTWMN": {
+        "fullName": "Northwest Minnesota",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2946,
+            806
+        ],
+        "unitCords": [
+            3010,
+            806
+        ],
+        "adjacencyMap": {
+            "CENMN": true,
+            "DULUT": true,
+            "EASND": true
+        }
+    },
+    "PORTL": {
+        "fullName": "Portland",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            578,
+            803
+        ],
+        "unitCords": [
+            656,
+            873
+        ],
+        "adjacencyMap": {
+            "CENOR": true,
+            "PACAS": true,
+            "SALEM": true
+        }
+    },
+    "IDPAN": {
+        "fullName": "Idaho Panhandle",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1196,
+            863
+        ],
+        "unitCords": [
+            1260,
+            863
+        ],
+        "adjacencyMap": {
+            "BOISE": true,
+            "COLBA": true,
+            "EASOR": true,
+            "HELEN": true,
+            "SPOKA": true
+        }
+    },
+    "STHME": {
+        "fullName": "Southern Maine",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5199,
+            857
+        ],
+        "unitCords": [
+            5263,
+            857
+        ],
+        "adjacencyMap": {
+            "NTHME": true,
+            "NTHNH": true,
+            "STHNH": true
+        }
+    },
+    "DULUT": {
+        "fullName": "Duluth",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3207,
+            869
+        ],
+        "unitCords": [
+            3271,
+            869
+        ],
+        "adjacencyMap": {
+            "CENMN": true,
+            "EAUCL": true,
+            "MINNE": true,
+            "NTWMN": true
+        }
+    },
+    "WESND": {
+        "fullName": "Western North Dakota",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2370,
+            898
+        ],
+        "unitCords": [
+            2434,
+            898
+        ],
+        "adjacencyMap": {
+            "BLING": true,
+            "EASND": true,
+            "EASSD": true,
+            "WESSD": true
+        }
+    },
+    "EASND": {
+        "fullName": "Eastern North Dakota",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2701,
+            892
+        ],
+        "unitCords": [
+            2765,
+            892
+        ],
+        "adjacencyMap": {
+            "CENMN": true,
+            "EASSD": true,
+            "NTWMN": true,
+            "WESND": true
+        }
+    },
+    "BLING": {
+        "fullName": "Billings",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1939,
+            898
+        ],
+        "unitCords": [
+            2003,
+            898
+        ],
+        "adjacencyMap": {
+            "HELEN": true,
+            "NTHWY": true,
+            "WESND": true,
+            "WESSD": true
+        }
+    },
+    "HELEN": {
+        "fullName": "Helena",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1466,
+            920
+        ],
+        "unitCords": [
+            1530,
+            920
+        ],
+        "adjacencyMap": {
+            "BLING": true,
+            "BOISE": true,
+            "IDPAN": true,
+            "NTHWY": true,
+            "TWNFA": true
+        }
+    },
+    "NTHVT": {
+        "fullName": "Northern Vermont",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5007,
+            931
+        ],
+        "unitCords": [
+            5060,
+            887
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "NTHNH": true,
+            "STHVT": true,
+            "WTRTW": true
+        }
+    },
+    "SALEM": {
+        "fullName": "Salem",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            538,
+            951
+        ],
+        "unitCords": [
+            593,
+            985
+        ],
+        "adjacencyMap": {
+            "CENOR": true,
+            "MEDFO": true,
+            "PORTL": true
+        }
+    },
+    "UPPEN": {
+        "fullName": "Upper Peninsula",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                4070,
+                979
+            ],
+            [
+                4019,
+                950
+            ],
+            [
+                4010,
+                924
+            ],
+            [
+                3798,
+                952
+            ],
+            [
+                3638,
+                878
+            ],
+            [
+                3582,
+                790
+            ]
+        ],
+        "improvementCords": [
+            3718,
+            973
+        ],
+        "unitCords": [
+            3782,
+            973
+        ],
+        "adjacencyMap": {
+            "EAUCL": true,
+            "NTHMI": true,
+            "STEVE": true
+        }
+    },
+    "NTHNH": {
+        "fullName": "Northern New Hampshire",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5128,
+            932
+        ],
+        "unitCords": [
+            5158,
+            984
+        ],
+        "adjacencyMap": {
+            "NTHVT": true,
+            "STHME": true,
+            "STHNH": true,
+            "STHVT": true
+        }
+    },
+    "CENOR": {
+        "fullName": "Central Oregon",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            723,
+            997
+        ],
+        "unitCords": [
+            787,
+            997
+        ],
+        "adjacencyMap": {
+            "COLBA": true,
+            "EASOR": true,
+            "MEDFO": true,
+            "PACAS": true,
+            "PORTL": true,
+            "SALEM": true
+        }
+    },
+    "WTRTW": {
+        "fullName": "Watertown",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4802,
+            1001
+        ],
+        "unitCords": [
+            4862,
+            952
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "NTHVT": true,
+            "SYRAC": true
+        }
+    },
+    "CENMN": {
+        "fullName": "Central Minnesota",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2993,
+            1031
+        ],
+        "unitCords": [
+            3057,
+            1031
+        ],
+        "adjacencyMap": {
+            "DULUT": true,
+            "EASND": true,
+            "EASSD": true,
+            "MARSH": true,
+            "MINNE": true,
+            "NTWMN": true
+        }
+    },
+    "STHVT": {
+        "fullName": "Southern Vermont",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5046,
+            1044
+        ],
+        "unitCords": [
+            5060,
+            1105
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "NTHNH": true,
+            "NTHVT": true,
+            "STHNH": true,
+            "WORCE": true
+        }
+    },
+    "STHNH": {
+        "fullName": "Southern New Hampshire",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5124,
+            1092
+        ],
+        "unitCords": [
+            5179,
+            1071
+        ],
+        "adjacencyMap": {
+            "BOSTO": true,
+            "NTHNH": true,
+            "STHME": true,
+            "STHVT": true,
+            "WORCE": true
+        }
+    },
+    "EAUCL": {
+        "fullName": "Eau Claire",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                3442,
+                953
+            ]
+        ],
+        "improvementCords": [
+            3345,
+            1098
+        ],
+        "unitCords": [
+            3409,
+            1098
+        ],
+        "adjacencyMap": {
+            "DULUT": true,
+            "MADIS": true,
+            "MANKA": true,
+            "MINNE": true,
+            "STEVE": true,
+            "UPPEN": true
+        }
+    },
+    "ALBAN": {
+        "fullName": "Albany",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4980,
+            1094
+        ],
+        "unitCords": [
+            4945,
+            1011
+        ],
+        "adjacencyMap": {
+            "BINGH": true,
+            "NEWYO": true,
+            "NTHVT": true,
+            "STHVT": true,
+            "SYRAC": true,
+            "WORCE": true,
+            "WTRTW": true
+        }
+    },
+    "EASOR": {
+        "fullName": "Eastern Oregon",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            910,
+            1129
+        ],
+        "unitCords": [
+            974,
+            1129
+        ],
+        "adjacencyMap": {
+            "BOISE": true,
+            "CENOR": true,
+            "COLBA": true,
+            "IDPAN": true,
+            "MEDFO": true,
+            "WESNV": true
+        }
+    },
+    "STEVE": {
+        "fullName": "Stevens Point",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3561,
+            1129
+        ],
+        "unitCords": [
+            3625,
+            1129
+        ],
+        "adjacencyMap": {
+            "EAUCL": true,
+            "GRBAY": true,
+            "MADIS": true,
+            "UPPEN": true
+        }
+    },
+    "MINNE": {
+        "fullName": "Minneapolis",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3183,
+            1133
+        ],
+        "unitCords": [
+            3203,
+            1069
+        ],
+        "adjacencyMap": {
+            "CENMN": true,
+            "DULUT": true,
+            "EAUCL": true,
+            "MANKA": true,
+            "MARSH": true
+        }
+    },
+    "BOSTO": {
+        "fullName": "Boston",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                5285,
+                1118
+            ],
+            [
+                5242,
+                1157
+            ]
+        ],
+        "improvementCords": [
+            5337,
+            1037
+        ],
+        "unitCords": [
+            5402,
+            1037
+        ],
+        "adjacencyMap": {
+            "PLYMO": true,
+            "RHODE": true,
+            "STHNH": true,
+            "WORCE": true
+        }
+    },
+    "NTHMI": {
+        "fullName": "Northern Michigan",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                3872,
+                1134
+            ],
+            [
+                3881,
+                1119
+            ],
+            [
+                3911,
+                1049
+            ],
+            [
+                4003,
+                1018
+            ]
+        ],
+        "improvementCords": [
+            3957,
+            1140
+        ],
+        "unitCords": [
+            4021,
+            1140
+        ],
+        "adjacencyMap": {
+            "GRAPI": true,
+            "LANSI": true,
+            "UPPEN": true
+        }
+    },
+    "SYRAC": {
+        "fullName": "Syracuse",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4823,
+            1164
+        ],
+        "unitCords": [
+            4883,
+            1129
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "BINGH": true,
+            "ROCHE": true,
+            "WTRTW": true
+        }
+    },
+    "WORCE": {
+        "fullName": "Worcester",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5086,
+            1185
+        ],
+        "unitCords": [
+            5150,
+            1170
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "BOSTO": true,
+            "CONNE": true,
+            "NEWYO": true,
+            "RHODE": true,
+            "STHNH": true,
+            "STHVT": true
+        }
+    },
+    "BOISE": {
+        "fullName": "Boise",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1184,
+            1113
+        ],
+        "unitCords": [
+            1248,
+            1113
+        ],
+        "adjacencyMap": {
+            "EASNV": true,
+            "EASOR": true,
+            "HELEN": true,
+            "IDPAN": true,
+            "TWNFA": true
+        }
+    },
+    "MEDFO": {
+        "fullName": "Medford",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            556,
+            1194
+        ],
+        "unitCords": [
+            620,
+            1194
+        ],
+        "adjacencyMap": {
+            "CENOR": true,
+            "EASOR": true,
+            "REDDI": true,
+            "SALEM": true,
+            "WESNV": true
+        }
+    },
+    "PLYMO": {
+        "fullName": "Plymouth",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                5292,
+                1220
+            ],
+            [
+                5333,
+                1271
+            ],
+            [
+                5350,
+                1265
+            ],
+            [
+                5391,
+                1267
+            ]
+        ],
+        "improvementCords": [
+            5427,
+            1143
+        ],
+        "unitCords": [
+            5492,
+            1143
+        ],
+        "adjacencyMap": {
+            "BOSTO": true,
+            "RHODE": true
+        }
+    },
+    "ROCHE": {
+        "fullName": "Rochester",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4638,
+            1233
+        ],
+        "unitCords": [
+            4708,
+            1219
+        ],
+        "adjacencyMap": {
+            "BINGH": true,
+            "BUFFA": true,
+            "SYRAC": true
+        }
+    },
+    "MARSH": {
+        "fullName": "Marshall",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2993,
+            1262
+        ],
+        "unitCords": [
+            3052,
+            1195
+        ],
+        "adjacencyMap": {
+            "CENMN": true,
+            "EASSD": true,
+            "MANKA": true,
+            "MINNE": true,
+            "SIOUX": true
+        }
+    },
+    "BINGH": {
+        "fullName": "Binghamton",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4838,
+            1266
+        ],
+        "unitCords": [
+            4904,
+            1226
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "BUFFA": true,
+            "NEWYO": true,
+            "NTHPA": true,
+            "ROCHE": true,
+            "SCRAN": true,
+            "SYRAC": true
+        }
+    },
+    "WESSD": {
+        "fullName": "Western South Dakota",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2334,
+            1274
+        ],
+        "unitCords": [
+            2398,
+            1274
+        ],
+        "adjacencyMap": {
+            "BLING": true,
+            "EASSD": true,
+            "NTHNE": true,
+            "NTHWY": true,
+            "WESND": true
+        }
+    },
+    "EASSD": {
+        "fullName": "Eastern South Dakota",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2685,
+            1253
+        ],
+        "unitCords": [
+            2749,
+            1253
+        ],
+        "adjacencyMap": {
+            "CENMN": true,
+            "EASND": true,
+            "MARSH": true,
+            "NTHNE": true,
+            "OMAHA": true,
+            "SIOUX": true,
+            "WESND": true,
+            "WESSD": true
+        }
+    },
+    "GRBAY": {
+        "fullName": "Green Bay",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                3775,
+                1143
+            ],
+            [
+                3797,
+                1099
+            ]
+        ],
+        "improvementCords": [
+            3697,
+            1227
+        ],
+        "unitCords": [
+            3657,
+            1278
+        ],
+        "adjacencyMap": {
+            "MADIS": true,
+            "MILWA": true,
+            "STEVE": true
+        }
+    },
+    "CONNE": {
+        "fullName": "Connecticut",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            5102,
+            1279
+        ],
+        "unitCords": [
+            5160,
+            1255
+        ],
+        "adjacencyMap": {
+            "NEWYO": true,
+            "RHODE": true,
+            "WORCE": true
+        }
+    },
+    "RHODE": {
+        "fullName": "Rhode Island",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": true,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                5242,
+                1257
+            ],
+            [
+                5283,
+                1263
+            ],
+            [
+                5275,
+                1271
+            ],
+            [
+                5270,
+                1252
+            ],
+            [
+                5263,
+                1245
+            ],
+            [
+                5263,
+                1324
+            ]
+        ],
+        "improvementCords": [
+            5337,
+            1319
+        ],
+        "unitCords": [
+            5402,
+            1319
+        ],
+        "adjacencyMap": {
+            "BOSTO": true,
+            "CONNE": true,
+            "PLYMO": true,
+            "WORCE": true
+        }
+    },
+    "THUMB": {
+        "fullName": "The Thumb",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4153,
+            1301
+        ],
+        "unitCords": [
+            4153,
+            1239
+        ],
+        "adjacencyMap": {
+            "DETRO": true,
+            "LANSI": true
+        }
+    },
+    "NTHWY": {
+        "fullName": "Northern Wyoming",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1872,
+            1317
+        ],
+        "unitCords": [
+            1936,
+            1317
+        ],
+        "adjacencyMap": {
+            "BLING": true,
+            "HELEN": true,
+            "NTHNE": true,
+            "STHWY": true,
+            "TWNFA": true,
+            "WESSD": true
+        }
+    },
+    "MANKA": {
+        "fullName": "Mankato",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3173,
+            1307
+        ],
+        "unitCords": [
+            3237,
+            1307
+        ],
+        "adjacencyMap": {
+            "EAUCL": true,
+            "MADIS": true,
+            "MARSH": true,
+            "MINNE": true,
+            "SIOUX": true,
+            "WATER": true
+        }
+    },
+    "NEWYO": {
+        "fullName": "New York City",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                5204,
+                1346
+            ],
+            [
+                5203,
+                1356
+            ],
+            [
+                5210,
+                1369
+            ],
+            [
+                5133,
+                1410
+            ],
+            [
+                5060,
+                1464
+            ]
+        ],
+        "improvementCords": [
+            4997,
+            1321
+        ],
+        "unitCords": [
+            4997,
+            1257
+        ],
+        "adjacencyMap": {
+            "ALBAN": true,
+            "BINGH": true,
+            "CONNE": true,
+            "NTHNJ": true,
+            "SCRAN": true,
+            "WORCE": true
+        }
+    },
+    "LANSI": {
+        "fullName": "Lansing",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4045,
+            1328
+        ],
+        "unitCords": [
+            4035,
+            1264
+        ],
+        "adjacencyMap": {
+            "DETRO": true,
+            "GRAPI": true,
+            "KALAM": true,
+            "NTHMI": true,
+            "THUMB": true
+        }
+    },
+    "BUFFA": {
+        "fullName": "Buffalo",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                4558,
+                1269
+            ]
+        ],
+        "improvementCords": [
+            4564,
+            1333
+        ],
+        "unitCords": [
+            4637,
+            1322
+        ],
+        "adjacencyMap": {
+            "BINGH": true,
+            "NTHPA": true,
+            "NTWPA": true,
+            "ROCHE": true
+        }
+    },
+    "TWNFA": {
+        "fullName": "Twin Falls",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1362,
+            1344
+        ],
+        "unitCords": [
+            1426,
+            1344
+        ],
+        "adjacencyMap": {
+            "BOISE": true,
+            "EASNV": true,
+            "HELEN": true,
+            "NTHWY": true,
+            "SLTLK": true,
+            "STHWY": true
+        }
+    },
+    "GRAPI": {
+        "fullName": "Grand Rapids",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3903,
+            1312
+        ],
+        "unitCords": [
+            3962,
+            1341
+        ],
+        "adjacencyMap": {
+            "KALAM": true,
+            "LANSI": true,
+            "NTHMI": true
+        }
+    },
+    "MADIS": {
+        "fullName": "Madison",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3484,
+            1353
+        ],
+        "unitCords": [
+            3548,
+            1353
+        ],
+        "adjacencyMap": {
+            "EAUCL": true,
+            "GRBAY": true,
+            "MANKA": true,
+            "MILWA": true,
+            "ROCKF": true,
+            "STEVE": true,
+            "WATER": true
+        }
+    },
+    "SCRAN": {
+        "fullName": "Scranton",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4840,
+            1356
+        ],
+        "unitCords": [
+            4899,
+            1391
+        ],
+        "adjacencyMap": {
+            "BINGH": true,
+            "HARRI": true,
+            "NEWYO": true,
+            "NTHNJ": true,
+            "NTHPA": true,
+            "PHILA": true
+        }
+    },
+    "MILWA": {
+        "fullName": "Milwaukee",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3660,
+            1423
+        ],
+        "unitCords": [
+            3687,
+            1368
+        ],
+        "adjacencyMap": {
+            "CHICA": true,
+            "GRBAY": true,
+            "MADIS": true,
+            "ROCKF": true
+        }
+    },
+    "NTHCT": {
+        "fullName": "Northern Coast",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            362,
+            1461
+        ],
+        "unitCords": [
+            362,
+            1523
+        ],
+        "adjacencyMap": {
+            "REDDI": true,
+            "SACRA": true,
+            "SROSA": true
+        }
+    },
+    "NTHNJ": {
+        "fullName": "Northern New Jersey",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4996,
+            1455
+        ],
+        "unitCords": [
+            4981,
+            1400
+        ],
+        "adjacencyMap": {
+            "NEWYO": true,
+            "PHILA": true,
+            "SCRAN": true,
+            "STHNJ": true
+        }
+    },
+    "DETRO": {
+        "fullName": "Detroit",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4107,
+            1449
+        ],
+        "unitCords": [
+            4147,
+            1391
+        ],
+        "adjacencyMap": {
+            "KALAM": true,
+            "LANSI": true,
+            "THUMB": true,
+            "TOLED": true
+        }
+    },
+    "NTWPA": {
+        "fullName": "Northwestern Pennsylvania",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4472,
+            1472
+        ],
+        "unitCords": [
+            4527,
+            1458
+        ],
+        "adjacencyMap": {
+            "BUFFA": true,
+            "CLEVE": true,
+            "NTHPA": true,
+            "PITTS": true
+        }
+    },
+    "NTHPA": {
+        "fullName": "Northern Pennsylvania",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4650,
+            1450
+        ],
+        "unitCords": [
+            4717,
+            1416
+        ],
+        "adjacencyMap": {
+            "BINGH": true,
+            "BUFFA": true,
+            "HARRI": true,
+            "NTWPA": true,
+            "PITTS": true,
+            "SCRAN": true
+        }
+    },
+    "WATER": {
+        "fullName": "Waterloo",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3310,
+            1441
+        ],
+        "unitCords": [
+            3374,
+            1441
+        ],
+        "adjacencyMap": {
+            "CEDAR": true,
+            "DESMO": true,
+            "MADIS": true,
+            "MANKA": true,
+            "ROCKF": true,
+            "SIOUX": true
+        }
+    },
+    "REDDI": {
+        "fullName": "Redding",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            540,
+            1443
+        ],
+        "unitCords": [
+            604,
+            1443
+        ],
+        "adjacencyMap": {
+            "MEDFO": true,
+            "NTHCT": true,
+            "SACRA": true,
+            "WESNV": true
+        }
+    },
+    "SIOUX": {
+        "fullName": "Sioux City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3057,
+            1457
+        ],
+        "unitCords": [
+            3121,
+            1457
+        ],
+        "adjacencyMap": {
+            "DESMO": true,
+            "EASSD": true,
+            "MANKA": true,
+            "MARSH": true,
+            "OMAHA": true,
+            "WATER": true
+        }
+    },
+    "KALAM": {
+        "fullName": "Kalamazoo",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3925,
+            1463
+        ],
+        "unitCords": [
+            3989,
+            1463
+        ],
+        "adjacencyMap": {
+            "DETRO": true,
+            "GRAPI": true,
+            "LANSI": true,
+            "SBEND": true,
+            "TOLED": true,
+            "WAYNE": true
+        }
+    },
+    "HARRI": {
+        "fullName": "Harrisburg",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4803,
+            1464
+        ],
+        "unitCords": [
+            4754,
+            1518
+        ],
+        "adjacencyMap": {
+            "LANCA": true,
+            "NTHPA": true,
+            "PHILA": true,
+            "PITTS": true,
+            "SCRAN": true
+        }
+    },
+    "PHILA": {
+        "fullName": "Philadelphia",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4922,
+            1539
+        ],
+        "unitCords": [
+            4914,
+            1485
+        ],
+        "adjacencyMap": {
+            "DELAW": true,
+            "EASMD": true,
+            "HARRI": true,
+            "LANCA": true,
+            "NTHNJ": true,
+            "SCRAN": true,
+            "STHNJ": true
+        }
+    },
+    "CLEVE": {
+        "fullName": "Cleveland",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4325,
+            1553
+        ],
+        "unitCords": [
+            4387,
+            1513
+        ],
+        "adjacencyMap": {
+            "COLUM": true,
+            "EASOH": true,
+            "NTWPA": true,
+            "PARKE": true,
+            "PITTS": true,
+            "TOLED": true
+        }
+    },
+    "CHICA": {
+        "fullName": "Chicago",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3707,
+            1526
+        ],
+        "unitCords": [
+            3739,
+            1582
+        ],
+        "adjacencyMap": {
+            "CHAMP": true,
+            "MILWA": true,
+            "PEORI": true,
+            "ROCKF": true,
+            "SBEND": true
+        }
+    },
+    "NTHNE": {
+        "fullName": "Northern Nebraska",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2430,
+            1543
+        ],
+        "unitCords": [
+            2494,
+            1543
+        ],
+        "adjacencyMap": {
+            "DENVE": true,
+            "EASSD": true,
+            "KEARN": true,
+            "NTHWY": true,
+            "OMAHA": true,
+            "STHWY": true,
+            "WESSD": true
+        }
+    },
+    "TOLED": {
+        "fullName": "Toledo",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4121,
+            1546
+        ],
+        "unitCords": [
+            4192,
+            1557
+        ],
+        "adjacencyMap": {
+            "CLEVE": true,
+            "COLUM": true,
+            "DETRO": true,
+            "KALAM": true,
+            "MIAVA": true,
+            "WAYNE": true
+        }
+    },
+    "STHWY": {
+        "fullName": "Southern Wyoming",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1821,
+            1578
+        ],
+        "unitCords": [
+            1885,
+            1578
+        ],
+        "adjacencyMap": {
+            "DENVE": true,
+            "GJUNC": true,
+            "NTHNE": true,
+            "NTHWY": true,
+            "PROVO": true,
+            "SLTLK": true,
+            "TWNFA": true
+        }
+    },
+    "ROCKF": {
+        "fullName": "Rockford",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3600,
+            1585
+        ],
+        "unitCords": [
+            3576,
+            1530
+        ],
+        "adjacencyMap": {
+            "CEDAR": true,
+            "CHICA": true,
+            "MADIS": true,
+            "MILWA": true,
+            "PEORI": true,
+            "QUINC": true,
+            "WATER": true
+        }
+    },
+    "WESNV": {
+        "fullName": "Western Nevada",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            760,
+            1583
+        ],
+        "unitCords": [
+            824,
+            1583
+        ],
+        "adjacencyMap": {
+            "EASNV": true,
+            "EASOR": true,
+            "MEDFO": true,
+            "REDDI": true,
+            "SACRA": true,
+            "SIENV": true,
+            "STHNV": true
+        }
+    },
+    "SLTLK": {
+        "fullName": "Salt Lake City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1348,
+            1586
+        ],
+        "unitCords": [
+            1412,
+            1586
+        ],
+        "adjacencyMap": {
+            "EASNV": true,
+            "PROVO": true,
+            "STGEO": true,
+            "STHWY": true,
+            "TWNFA": true
+        }
+    },
+    "LANCA": {
+        "fullName": "Lancaster",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4781,
+            1586
+        ],
+        "unitCords": [
+            4839,
+            1560
+        ],
+        "adjacencyMap": {
+            "BALTI": true,
+            "EASMD": true,
+            "HARRI": true,
+            "PHILA": true,
+            "PITTS": true
+        }
+    },
+    "STHNJ": {
+        "fullName": "Southern New Jersey",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4991,
+            1586
+        ],
+        "unitCords": [
+            5027,
+            1535
+        ],
+        "adjacencyMap": {
+            "NTHNJ": true,
+            "PHILA": true
+        }
+    },
+    "SBEND": {
+        "fullName": "South Bend",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3839,
+            1592
+        ],
+        "unitCords": [
+            3901,
+            1568
+        ],
+        "adjacencyMap": {
+            "CHAMP": true,
+            "CHICA": true,
+            "KALAM": true,
+            "TERRE": true,
+            "WAYNE": true
+        }
+    },
+    "EASNV": {
+        "fullName": "Eastern Nevada",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1063,
+            1622
+        ],
+        "unitCords": [
+            1127,
+            1622
+        ],
+        "adjacencyMap": {
+            "BOISE": true,
+            "SLTLK": true,
+            "STGEO": true,
+            "STHNV": true,
+            "TWNFA": true,
+            "WESNV": true
+        }
+    },
+    "PITTS": {
+        "fullName": "Pittsburgh",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4555,
+            1621
+        ],
+        "unitCords": [
+            4619,
+            1607
+        ],
+        "adjacencyMap": {
+            "BALTI": true,
+            "CLEVE": true,
+            "HARRI": true,
+            "LANCA": true,
+            "NTHPA": true,
+            "NTWPA": true,
+            "PARKE": true
+        }
+    },
+    "CEDAR": {
+        "fullName": "Cedar Rapids",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3339,
+            1623
+        ],
+        "unitCords": [
+            3403,
+            1623
+        ],
+        "adjacencyMap": {
+            "DESMO": true,
+            "NTHMO": true,
+            "QUINC": true,
+            "ROCKF": true,
+            "WATER": true
+        }
+    },
+    "DESMO": {
+        "fullName": "Des Moines",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3087,
+            1636
+        ],
+        "unitCords": [
+            3151,
+            1636
+        ],
+        "adjacencyMap": {
+            "CEDAR": true,
+            "NTHMO": true,
+            "OMAHA": true,
+            "SIOUX": true,
+            "WATER": true
+        }
+    },
+    "BALTI": {
+        "fullName": "Baltimore",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4786,
+            1653
+        ],
+        "unitCords": [
+            4841,
+            1639
+        ],
+        "adjacencyMap": {
+            "ANNAP": true,
+            "EASMD": true,
+            "FREDE": true,
+            "LANCA": true,
+            "PARKE": true,
+            "PITTS": true,
+            "POTOM": true
+        }
+    },
+    "OMAHA": {
+        "fullName": "Omaha",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2833,
+            1666
+        ],
+        "unitCords": [
+            2897,
+            1666
+        ],
+        "adjacencyMap": {
+            "DESMO": true,
+            "EASSD": true,
+            "HAYSK": true,
+            "KEARN": true,
+            "NTHMO": true,
+            "NTHNE": true,
+            "SIOUX": true,
+            "TOPEK": true
+        }
+    },
+    "EASOH": {
+        "fullName": "Eastern Ohio",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4360,
+            1679
+        ],
+        "unitCords": [
+            4415,
+            1649
+        ],
+        "adjacencyMap": {
+            "CLEVE": true,
+            "COLUM": true,
+            "PARKE": true,
+            "STHOH": true
+        }
+    },
+    "SACRA": {
+        "fullName": "Scraamento",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            512,
+            1676
+        ],
+        "unitCords": [
+            576,
+            1676
+        ],
+        "adjacencyMap": {
+            "NTHCT": true,
+            "REDDI": true,
+            "SANFR": true,
+            "SIENV": true,
+            "SROSA": true,
+            "STOCK": true,
+            "WESNV": true
+        }
+    },
+    "MIAVA": {
+        "fullName": "Miami Valley",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4097,
+            1651
+        ],
+        "unitCords": [
+            4151,
+            1690
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "CINCI": true,
+            "COLUM": true,
+            "TOLED": true,
+            "WAYNE": true
+        }
+    },
+    "WAYNE": {
+        "fullName": "Fort Wayne",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4008,
+            1610
+        ],
+        "unitCords": [
+            4021,
+            1669
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "INDIA": true,
+            "KALAM": true,
+            "MIAVA": true,
+            "SBEND": true,
+            "TERRE": true,
+            "TOLED": true
+        }
+    },
+    "COLUM": {
+        "fullName": "Columbus",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4259,
+            1661
+        ],
+        "unitCords": [
+            4234,
+            1724
+        ],
+        "adjacencyMap": {
+            "CINCI": true,
+            "CLEVE": true,
+            "EASOH": true,
+            "MIAVA": true,
+            "STHOH": true,
+            "TOLED": true
+        }
+    },
+    "PEORI": {
+        "fullName": "Peoria",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3597,
+            1702
+        ],
+        "unitCords": [
+            3661,
+            1702
+        ],
+        "adjacencyMap": {
+            "CHAMP": true,
+            "CHICA": true,
+            "QUINC": true,
+            "ROCKF": true,
+            "SPRIN": true
+        }
+    },
+    "TERRE": {
+        "fullName": "Terre Haute",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3895,
+            1683
+        ],
+        "unitCords": [
+            3840,
+            1721
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "CHAMP": true,
+            "INDIA": true,
+            "SBEND": true,
+            "WAYNE": true
+        }
+    },
+    "PROVO": {
+        "fullName": "Provo",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1552,
+            1713
+        ],
+        "unitCords": [
+            1616,
+            1713
+        ],
+        "adjacencyMap": {
+            "GJUNC": true,
+            "SLTLK": true,
+            "STEUT": true,
+            "STGEO": true,
+            "STHWY": true
+        }
+    },
+    "DELAW": {
+        "fullName": "Delaware",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4979,
+            1701
+        ],
+        "unitCords": [
+            4954,
+            1646
+        ],
+        "adjacencyMap": {
+            "EASMD": true,
+            "PHILA": true
+        }
+    },
+    "SROSA": {
+        "fullName": "Santa Rosa",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            377,
+            1700
+        ],
+        "unitCords": [
+            430,
+            1725
+        ],
+        "adjacencyMap": {
+            "NTHCT": true,
+            "SACRA": true,
+            "SANFR": true
+        }
+    },
+    "KEARN": {
+        "fullName": "Kearney",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2546,
+            1733
+        ],
+        "unitCords": [
+            2610,
+            1733
+        ],
+        "adjacencyMap": {
+            "DENVE": true,
+            "HAYSK": true,
+            "NTHNE": true,
+            "OMAHA": true
+        }
+    },
+    "ANNAP": {
+        "fullName": "Annapolis",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                4900,
+                1712
+            ]
+        ],
+        "improvementCords": [
+            4850,
+            1712
+        ],
+        "unitCords": [
+            4860,
+            1766
+        ],
+        "adjacencyMap": {
+            "BALTI": true,
+            "FREDE": true
+        }
+    },
+    "FREDE": {
+        "fullName": "Fredericksburg",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4743,
+            1757
+        ],
+        "unitCords": [
+            4793,
+            1738
+        ],
+        "adjacencyMap": {
+            "ANNAP": true,
+            "BALTI": true,
+            "NEWPO": true,
+            "POTOM": true,
+            "RICHM": true,
+            "WINCH": true
+        }
+    },
+    "GJUNC": {
+        "fullName": "Grand Junction",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1802,
+            1774
+        ],
+        "unitCords": [
+            1866,
+            1774
+        ],
+        "adjacencyMap": {
+            "DENVE": true,
+            "DURAN": true,
+            "PROVO": true,
+            "STEUT": true,
+            "STHWY": true
+        }
+    },
+    "EASMD": {
+        "fullName": "Eastern Maryland",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": true,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                4961,
+                1721
+            ],
+            [
+                4963,
+                1808
+            ]
+        ],
+        "improvementCords": [
+            5122,
+            1762
+        ],
+        "unitCords": [
+            5187,
+            1762
+        ],
+        "adjacencyMap": {
+            "BALTI": true,
+            "DELAW": true,
+            "LANCA": true,
+            "NORFO": true,
+            "PHILA": true
+        }
+    },
+    "POTOM": {
+        "fullName": "Potomac Highlands",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4588,
+            1776
+        ],
+        "unitCords": [
+            4646,
+            1722
+        ],
+        "adjacencyMap": {
+            "BALTI": true,
+            "FREDE": true,
+            "HUNTI": true,
+            "PARKE": true,
+            "WINCH": true
+        }
+    },
+    "INDIA": {
+        "fullName": "Indianapolis",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3934,
+            1796
+        ],
+        "unitCords": [
+            3963,
+            1745
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "TERRE": true,
+            "WAYNE": true
+        }
+    },
+    "DENVE": {
+        "fullName": "Denver",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2155,
+            1790
+        ],
+        "unitCords": [
+            2219,
+            1790
+        ],
+        "adjacencyMap": {
+            "COSPR": true,
+            "DURAN": true,
+            "GJUNC": true,
+            "HAYSK": true,
+            "KEARN": true,
+            "NTHNE": true,
+            "STHWY": true
+        }
+    },
+    "QUINC": {
+        "fullName": "Quincy",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3466,
+            1790
+        ],
+        "unitCords": [
+            3482,
+            1732
+        ],
+        "adjacencyMap": {
+            "CEDAR": true,
+            "NTHMO": true,
+            "PEORI": true,
+            "ROCKF": true,
+            "SPRIN": true,
+            "STLOU": true
+        }
+    },
+    "PARKE": {
+        "fullName": "Parkersburg",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4439,
+            1789
+        ],
+        "unitCords": [
+            4482,
+            1735
+        ],
+        "adjacencyMap": {
+            "BALTI": true,
+            "CLEVE": true,
+            "EASOH": true,
+            "HUNTI": true,
+            "PITTS": true,
+            "POTOM": true,
+            "STHOH": true
+        }
+    },
+    "CINCI": {
+        "fullName": "Cincinnati",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4156,
+            1775
+        ],
+        "unitCords": [
+            4105,
+            1783
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "COLUM": true,
+            "LOUIS": true,
+            "MIAVA": true,
+            "STHOH": true
+        }
+    },
+    "CHAMP": {
+        "fullName": "Champaign",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3755,
+            1787
+        ],
+        "unitCords": [
+            3766,
+            1856
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "CHICA": true,
+            "EGYPT": true,
+            "PEORI": true,
+            "SBEND": true,
+            "SPRIN": true,
+            "STWIL": true,
+            "TERRE": true
+        }
+    },
+    "NTHMO": {
+        "fullName": "Northern Missouri",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3223,
+            1815
+        ],
+        "unitCords": [
+            3287,
+            1815
+        ],
+        "adjacencyMap": {
+            "CEDAR": true,
+            "DESMO": true,
+            "JEFFC": true,
+            "KANSA": true,
+            "OMAHA": true,
+            "QUINC": true,
+            "STLOU": true,
+            "TOPEK": true
+        }
+    },
+    "SANFR": {
+        "fullName": "San Francisco",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                478,
+                1796
+            ],
+            [
+                405,
+                1857
+            ]
+        ],
+        "improvementCords": [
+            431,
+            1804
+        ],
+        "unitCords": [
+            379,
+            1828
+        ],
+        "adjacencyMap": {
+            "SACRA": true,
+            "SANJO": true,
+            "SROSA": true,
+            "STOCK": true
+        }
+    },
+    "SIENV": {
+        "fullName": "Sierra-Nevada",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            604,
+            1813
+        ],
+        "unitCords": [
+            668,
+            1813
+        ],
+        "adjacencyMap": {
+            "BAKER": true,
+            "FRESN": true,
+            "INEMP": true,
+            "LASVE": true,
+            "SACRA": true,
+            "STHNV": true,
+            "STOCK": true,
+            "WESNV": true
+        }
+    },
+    "STHOH": {
+        "fullName": "Southern Ohio",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4249,
+            1818
+        ],
+        "unitCords": [
+            4309,
+            1794
+        ],
+        "adjacencyMap": {
+            "ASHLA": true,
+            "CINCI": true,
+            "COLUM": true,
+            "EASOH": true,
+            "HUNTI": true,
+            "LOUIS": true,
+            "PARKE": true
+        }
+    },
+    "SPRIN": {
+        "fullName": "Springfield",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3575,
+            1841
+        ],
+        "unitCords": [
+            3639,
+            1841
+        ],
+        "adjacencyMap": {
+            "CHAMP": true,
+            "PEORI": true,
+            "QUINC": true,
+            "STLOU": true,
+            "STWIL": true
+        }
+    },
+    "STGEO": {
+        "fullName": "St. George",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1271,
+            1858
+        ],
+        "unitCords": [
+            1335,
+            1858
+        ],
+        "adjacencyMap": {
+            "EASNV": true,
+            "MOHAV": true,
+            "PROVO": true,
+            "SLTLK": true,
+            "STEUT": true,
+            "STHNV": true
+        }
+    },
+    "STOCK": {
+        "fullName": "Stockton",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            500,
+            1828
+        ],
+        "unitCords": [
+            521,
+            1887
+        ],
+        "adjacencyMap": {
+            "FRESN": true,
+            "SACRA": true,
+            "SANFR": true,
+            "SANJO": true,
+            "SIENV": true
+        }
+    },
+    "WINCH": {
+        "fullName": "Winchester",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4630,
+            1860
+        ],
+        "unitCords": [
+            4669,
+            1800
+        ],
+        "adjacencyMap": {
+            "FREDE": true,
+            "HUNTI": true,
+            "POTOM": true,
+            "RICHM": true,
+            "ROANO": true
+        }
+    },
+    "NEWPO": {
+        "fullName": "Newport News",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4848,
+            1832
+        ],
+        "unitCords": [
+            4883,
+            1883
+        ],
+        "adjacencyMap": {
+            "FREDE": true,
+            "RICHM": true
+        }
+    },
+    "RICHM": {
+        "fullName": "Richmond",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4735,
+            1882
+        ],
+        "unitCords": [
+            4799,
+            1882
+        ],
+        "adjacencyMap": {
+            "DANVI": true,
+            "FREDE": true,
+            "NEWPO": true,
+            "NORFO": true,
+            "ROANO": true,
+            "WINCH": true
+        }
+    },
+    "HAYSK": {
+        "fullName": "Hays",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2586,
+            1913
+        ],
+        "unitCords": [
+            2650,
+            1913
+        ],
+        "adjacencyMap": {
+            "COSPR": true,
+            "DENVE": true,
+            "KEARN": true,
+            "OMAHA": true,
+            "TOPEK": true,
+            "WICHI": true
+        }
+    },
+    "STHNV": {
+        "fullName": "Southern Nevada",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            957,
+            1938
+        ],
+        "unitCords": [
+            1021,
+            1938
+        ],
+        "adjacencyMap": {
+            "EASNV": true,
+            "LASVE": true,
+            "MOHAV": true,
+            "SIENV": true,
+            "STGEO": true,
+            "WESNV": true
+        }
+    },
+    "BLOOM": {
+        "fullName": "Bloomington",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3926,
+            1934
+        ],
+        "unitCords": [
+            3983,
+            1874
+        ],
+        "adjacencyMap": {
+            "BOWLI": true,
+            "CHAMP": true,
+            "CINCI": true,
+            "EGYPT": true,
+            "INDIA": true,
+            "LOUIS": true,
+            "MIAVA": true,
+            "PADUC": true,
+            "TERRE": true,
+            "WAYNE": true
+        }
+    },
+    "HUNTI": {
+        "fullName": "Huntington",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4405,
+            1927
+        ],
+        "unitCords": [
+            4469,
+            1927
+        ],
+        "adjacencyMap": {
+            "ASHLA": true,
+            "PARKE": true,
+            "POTOM": true,
+            "ROANO": true,
+            "STHOH": true,
+            "STWVA": true,
+            "WINCH": true
+        }
+    },
+    "LOUIS": {
+        "fullName": "Louisville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4071,
+            1950
+        ],
+        "unitCords": [
+            4130,
+            1912
+        ],
+        "adjacencyMap": {
+            "ASHLA": true,
+            "BLOOM": true,
+            "BOWLI": true,
+            "CINCI": true,
+            "STHOH": true
+        }
+    },
+    "STLOU": {
+        "fullName": "St. Louis",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3514,
+            1990
+        ],
+        "unitCords": [
+            3481,
+            1939
+        ],
+        "adjacencyMap": {
+            "JEFFC": true,
+            "NTHMO": true,
+            "QUINC": true,
+            "SPRIN": true,
+            "STEMO": true,
+            "STWIL": true
+        }
+    },
+    "NORFO": {
+        "fullName": "Norfolk",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                5010,
+                1866
+            ],
+            [
+                5010,
+                1927
+            ]
+        ],
+        "improvementCords": [
+            4887,
+            1977
+        ],
+        "unitCords": [
+            4942,
+            1964
+        ],
+        "adjacencyMap": {
+            "DANVI": true,
+            "EASMD": true,
+            "RICHM": true,
+            "ROCKY": true
+        }
+    },
+    "SANJO": {
+        "fullName": "San Jose",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            440,
+            1944
+        ],
+        "unitCords": [
+            453,
+            1999
+        ],
+        "adjacencyMap": {
+            "BAKER": true,
+            "FRESN": true,
+            "SANFR": true,
+            "STOCK": true
+        }
+    },
+    "TOPEK": {
+        "fullName": "Topeka",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2970,
+            2004
+        ],
+        "unitCords": [
+            3034,
+            2004
+        ],
+        "adjacencyMap": {
+            "HAYSK": true,
+            "JOPLI": true,
+            "KANSA": true,
+            "NTHMO": true,
+            "OMAHA": true,
+            "TULSA": true,
+            "WICHI": true
+        }
+    },
+    "STWIL": {
+        "fullName": "Southwestern Illinois",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3606,
+            1955
+        ],
+        "unitCords": [
+            3622,
+            2011
+        ],
+        "adjacencyMap": {
+            "CHAMP": true,
+            "EGYPT": true,
+            "SPRIN": true,
+            "STEMO": true,
+            "STLOU": true
+        }
+    },
+    "ROANO": {
+        "fullName": "Roanoke",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4601,
+            1981
+        ],
+        "unitCords": [
+            4669,
+            1956
+        ],
+        "adjacencyMap": {
+            "DANVI": true,
+            "HUNTI": true,
+            "RICHM": true,
+            "STWVA": true,
+            "WINCH": true
+        }
+    },
+    "STEUT": {
+        "fullName": "Southeastern Utah",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1490,
+            2005
+        ],
+        "unitCords": [
+            1554,
+            2005
+        ],
+        "adjacencyMap": {
+            "DURAN": true,
+            "GJUNC": true,
+            "MOHAV": true,
+            "NTEAZ": true,
+            "PROVO": true,
+            "STGEO": true
+        }
+    },
+    "ASHLA": {
+        "fullName": "Ashland",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4233,
+            2002
+        ],
+        "unitCords": [
+            4297,
+            2002
+        ],
+        "adjacencyMap": {
+            "BOWLI": true,
+            "HUNTI": true,
+            "KNOXV": true,
+            "LOUIS": true,
+            "STHOH": true,
+            "STWVA": true
+        }
+    },
+    "FRESN": {
+        "fullName": "Fresno",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            590,
+            2020
+        ],
+        "unitCords": [
+            654,
+            2020
+        ],
+        "adjacencyMap": {
+            "BAKER": true,
+            "SANJO": true,
+            "SIENV": true,
+            "STOCK": true
+        }
+    },
+    "KANSA": {
+        "fullName": "Kansas City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3172,
+            2017
+        ],
+        "unitCords": [
+            3236,
+            2017
+        ],
+        "adjacencyMap": {
+            "JEFFC": true,
+            "JOPLI": true,
+            "NTHMO": true,
+            "TOPEK": true
+        }
+    },
+    "JEFFC": {
+        "fullName": "Jefferson City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3341,
+            2016
+        ],
+        "unitCords": [
+            3405,
+            2016
+        ],
+        "adjacencyMap": {
+            "JOPLI": true,
+            "KANSA": true,
+            "NTHMO": true,
+            "STEMO": true,
+            "STLOU": true
+        }
+    },
+    "DANVI": {
+        "fullName": "Danville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4681,
+            2025
+        ],
+        "unitCords": [
+            4754,
+            2006
+        ],
+        "adjacencyMap": {
+            "GBORO": true,
+            "NORFO": true,
+            "RALEI": true,
+            "RICHM": true,
+            "ROANO": true,
+            "ROCKY": true,
+            "STWVA": true
+        }
+    },
+    "DURAN": {
+        "fullName": "Durango",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1824,
+            2061
+        ],
+        "unitCords": [
+            1888,
+            2061
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "COSPR": true,
+            "DENVE": true,
+            "GJUNC": true,
+            "STEUT": true
+        }
+    },
+    "COSPR": {
+        "fullName": "Cold Springs",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2176,
+            2062
+        ],
+        "unitCords": [
+            2240,
+            2062
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "DENVE": true,
+            "DURAN": true,
+            "HAYSK": true,
+            "REDCA": true,
+            "WICHI": true
+        }
+    },
+    "EGYPT": {
+        "fullName": "Little Egypt",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3702,
+            2078
+        ],
+        "unitCords": [
+            3737,
+            2018
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "CHAMP": true,
+            "PADUC": true,
+            "STEMO": true,
+            "STWIL": true
+        }
+    },
+    "STWVA": {
+        "fullName": "Southwestern Virginia",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4401,
+            2069
+        ],
+        "unitCords": [
+            4464,
+            2059
+        ],
+        "adjacencyMap": {
+            "ASHEV": true,
+            "ASHLA": true,
+            "DANVI": true,
+            "GBORO": true,
+            "HUNTI": true,
+            "JOHNS": true,
+            "KNOXV": true,
+            "ROANO": true
+        }
+    },
+    "BOWLI": {
+        "fullName": "Bowling Green",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4067,
+            2095
+        ],
+        "unitCords": [
+            4131,
+            2095
+        ],
+        "adjacencyMap": {
+            "ASHLA": true,
+            "BLOOM": true,
+            "KNOXV": true,
+            "LOUIS": true,
+            "NASHV": true,
+            "PADUC": true
+        }
+    },
+    "ROCKY": {
+        "fullName": "Rocky Mount",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                5023,
+                2011
+            ],
+            [
+                5070,
+                2084
+            ]
+        ],
+        "improvementCords": [
+            4849,
+            2099
+        ],
+        "unitCords": [
+            4903,
+            2081
+        ],
+        "adjacencyMap": {
+            "DANVI": true,
+            "NORFO": true,
+            "RALEI": true,
+            "WILMI": true
+        }
+    },
+    "WICHI": {
+        "fullName": "Wichita",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2622,
+            2126
+        ],
+        "unitCords": [
+            2686,
+            2126
+        ],
+        "adjacencyMap": {
+            "COSPR": true,
+            "HAYSK": true,
+            "REDCA": true,
+            "TOPEK": true,
+            "TULSA": true
+        }
+    },
+    "PADUC": {
+        "fullName": "Paducah",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3827,
+            2127
+        ],
+        "unitCords": [
+            3891,
+            2127
+        ],
+        "adjacencyMap": {
+            "BLOOM": true,
+            "BOWLI": true,
+            "EGYPT": true,
+            "MEMPH": true,
+            "NASHV": true,
+            "STEMO": true
+        }
+    },
+    "LASVE": {
+        "fullName": "Las Vegas",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1023,
+            2134
+        ],
+        "unitCords": [
+            1087,
+            2134
+        ],
+        "adjacencyMap": {
+            "INEMP": true,
+            "MOHAV": true,
+            "SIENV": true,
+            "STHNV": true
+        }
+    },
+    "JOHNS": {
+        "fullName": "Johnson City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4336,
+            2160
+        ],
+        "unitCords": [
+            4391,
+            2141
+        ],
+        "adjacencyMap": {
+            "ASHEV": true,
+            "KNOXV": true,
+            "STWVA": true
+        }
+    },
+    "GBORO": {
+        "fullName": "Greensboro",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4585,
+            2147
+        ],
+        "unitCords": [
+            4645,
+            2114
+        ],
+        "adjacencyMap": {
+            "ASHEV": true,
+            "CHRLO": true,
+            "DANVI": true,
+            "FAYET": true,
+            "RALEI": true,
+            "STWVA": true
+        }
+    },
+    "RALEI": {
+        "fullName": "Raleigh",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4726,
+            2142
+        ],
+        "unitCords": [
+            4768,
+            2088
+        ],
+        "adjacencyMap": {
+            "DANVI": true,
+            "FAYET": true,
+            "GBORO": true,
+            "ROCKY": true,
+            "WILMI": true
+        }
+    },
+    "STEMO": {
+        "fullName": "Southeastern Missouri",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3536,
+            2164
+        ],
+        "unitCords": [
+            3600,
+            2164
+        ],
+        "adjacencyMap": {
+            "EGYPT": true,
+            "JEFFC": true,
+            "JONES": true,
+            "JOPLI": true,
+            "MEMPH": true,
+            "PADUC": true,
+            "STLOU": true,
+            "STWIL": true
+        }
+    },
+    "BAKER": {
+        "fullName": "Bakersfield",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                492,
+                2327
+            ],
+            [
+                514,
+                2340
+            ],
+            [
+                547,
+                2344
+            ],
+            [
+                571,
+                2349
+            ]
+        ],
+        "improvementCords": [
+            538,
+            2188
+        ],
+        "unitCords": [
+            602,
+            2188
+        ],
+        "adjacencyMap": {
+            "FRESN": true,
+            "INEMP": true,
+            "LOSAN": true,
+            "SANJO": true,
+            "SIENV": true
+        }
+    },
+    "JOPLI": {
+        "fullName": "Joplin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3244,
+            2201
+        ],
+        "unitCords": [
+            3308,
+            2201
+        ],
+        "adjacencyMap": {
+            "JEFFC": true,
+            "JONES": true,
+            "KANSA": true,
+            "SMITH": true,
+            "STEMO": true,
+            "TOPEK": true,
+            "TULSA": true
+        }
+    },
+    "KNOXV": {
+        "fullName": "Knoxville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4184,
+            2210
+        ],
+        "unitCords": [
+            4248,
+            2210
+        ],
+        "adjacencyMap": {
+            "ASHEV": true,
+            "ASHLA": true,
+            "BOWLI": true,
+            "CHATT": true,
+            "JOHNS": true,
+            "NASHV": true,
+            "STWVA": true
+        }
+    },
+    "NASHV": {
+        "fullName": "Nashville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3938,
+            2223
+        ],
+        "unitCords": [
+            4002,
+            2223
+        ],
+        "adjacencyMap": {
+            "BOWLI": true,
+            "CHATT": true,
+            "KNOXV": true,
+            "LAWRE": true,
+            "MEMPH": true,
+            "PADUC": true
+        }
+    },
+    "WILMI": {
+        "fullName": "Wilmington",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                4894,
+                2388
+            ]
+        ],
+        "improvementCords": [
+            4869,
+            2257
+        ],
+        "unitCords": [
+            4898,
+            2201
+        ],
+        "adjacencyMap": {
+            "FAYET": true,
+            "FLORE": true,
+            "RALEI": true,
+            "ROCKY": true
+        }
+    },
+    "ASHEV": {
+        "fullName": "Asheville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4370,
+            2246
+        ],
+        "unitCords": [
+            4434,
+            2246
+        ],
+        "adjacencyMap": {
+            "ATHEN": true,
+            "CHATT": true,
+            "CHRLO": true,
+            "CLBIA": true,
+            "GBORO": true,
+            "GREEN": true,
+            "JOHNS": true,
+            "KNOXV": true,
+            "STWVA": true
+        }
+    },
+    "CHRLO": {
+        "fullName": "Charlotte",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4567,
+            2218
+        ],
+        "unitCords": [
+            4602,
+            2269
+        ],
+        "adjacencyMap": {
+            "ASHEV": true,
+            "CLBIA": true,
+            "FAYET": true,
+            "FLORE": true,
+            "GBORO": true
+        }
+    },
+    "MOHAV": {
+        "fullName": "Mohave",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1151,
+            2247
+        ],
+        "unitCords": [
+            1136,
+            2308
+        ],
+        "adjacencyMap": {
+            "INEMP": true,
+            "LAPAZ": true,
+            "LASVE": true,
+            "NTEAZ": true,
+            "STEUT": true,
+            "STGEO": true,
+            "STHNV": true,
+            "YAVAP": true
+        }
+    },
+    "REDCA": {
+        "fullName": "Red Carpet",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2687,
+            2286
+        ],
+        "unitCords": [
+            2751,
+            2286
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "COSPR": true,
+            "LAWTO": true,
+            "OKLAH": true,
+            "TULSA": true,
+            "TXPAN": true,
+            "WICHI": true
+        }
+    },
+    "FAYET": {
+        "fullName": "Fayetteville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4731,
+            2275
+        ],
+        "unitCords": [
+            4787,
+            2248
+        ],
+        "adjacencyMap": {
+            "CHRLO": true,
+            "FLORE": true,
+            "GBORO": true,
+            "RALEI": true,
+            "WILMI": true
+        }
+    },
+    "TULSA": {
+        "fullName": "Tulsa",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3001,
+            2314
+        ],
+        "unitCords": [
+            3065,
+            2314
+        ],
+        "adjacencyMap": {
+            "CHOCT": true,
+            "JOPLI": true,
+            "OKLAH": true,
+            "REDCA": true,
+            "SMITH": true,
+            "TOPEK": true,
+            "WICHI": true
+        }
+    },
+    "JONES": {
+        "fullName": "Jonesboro",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3459,
+            2317
+        ],
+        "unitCords": [
+            3523,
+            2317
+        ],
+        "adjacencyMap": {
+            "JOPLI": true,
+            "LROCK": true,
+            "MEMPH": true,
+            "SMITH": true,
+            "STEMO": true,
+            "TUPEL": true
+        }
+    },
+    "CHATT": {
+        "fullName": "Chattanooga",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4095,
+            2317
+        ],
+        "unitCords": [
+            4159,
+            2317
+        ],
+        "adjacencyMap": {
+            "ASHEV": true,
+            "ATHEN": true,
+            "ATLAN": true,
+            "HUNTS": true,
+            "KNOXV": true,
+            "LAWRE": true,
+            "NASHV": true
+        }
+    },
+    "ALBUQ": {
+        "fullName": "Albuquerque",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1909,
+            2346
+        ],
+        "unitCords": [
+            1973,
+            2346
+        ],
+        "adjacencyMap": {
+            "COSPR": true,
+            "DURAN": true,
+            "LASCR": true,
+            "NTEAZ": true,
+            "REDCA": true,
+            "ROSWE": true,
+            "TXPAN": true
+        }
+    },
+    "MEMPH": {
+        "fullName": "Mephis",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3700,
+            2322
+        ],
+        "unitCords": [
+            3764,
+            2322
+        ],
+        "adjacencyMap": {
+            "HUNTS": true,
+            "JONES": true,
+            "LAWRE": true,
+            "NASHV": true,
+            "PADUC": true,
+            "STEMO": true,
+            "TUPEL": true
+        }
+    },
+    "LOSAN": {
+        "fullName": "Los Angles",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                557,
+                2446
+            ],
+            [
+                659,
+                2444
+            ],
+            [
+                669,
+                2459
+            ],
+            [
+                652,
+                2518
+            ]
+        ],
+        "improvementCords": [
+            692,
+            2347
+        ],
+        "unitCords": [
+            681,
+            2291
+        ],
+        "adjacencyMap": {
+            "BAKER": true,
+            "INEMP": true,
+            "SANDI": true
+        }
+    },
+    "INEMP": {
+        "fullName": "Inland Empire",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            864,
+            2348
+        ],
+        "unitCords": [
+            928,
+            2348
+        ],
+        "adjacencyMap": {
+            "BAKER": true,
+            "LAPAZ": true,
+            "LASVE": true,
+            "LOSAN": true,
+            "MOHAV": true,
+            "SANDI": true,
+            "SIENV": true
+        }
+    },
+    "GREEN": {
+        "fullName": "Greenville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4380,
+            2353
+        ],
+        "unitCords": [
+            4437,
+            2313
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "ASHEV": true,
+            "ATHEN": true,
+            "CLBIA": true
+        }
+    },
+    "LAWRE": {
+        "fullName": "Lawrenceburg",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3899,
+            2344
+        ],
+        "unitCords": [
+            3963,
+            2344
+        ],
+        "adjacencyMap": {
+            "CHATT": true,
+            "HUNTS": true,
+            "MEMPH": true,
+            "NASHV": true
+        }
+    },
+    "SMITH": {
+        "fullName": "Fort Smith",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3221,
+            2354
+        ],
+        "unitCords": [
+            3285,
+            2354
+        ],
+        "adjacencyMap": {
+            "CHOCT": true,
+            "JONES": true,
+            "JOPLI": true,
+            "LROCK": true,
+            "TEXAR": true,
+            "TULSA": true
+        }
+    },
+    "NTEAZ": {
+        "fullName": "Northeast Arizona",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1465,
+            2394
+        ],
+        "unitCords": [
+            1529,
+            2394
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "LASCR": true,
+            "MOHAV": true,
+            "PHOEN": true,
+            "STEUT": true,
+            "TUCSO": true,
+            "YAVAP": true
+        }
+    },
+    "CLBIA": {
+        "fullName": "Columbia",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4527,
+            2377
+        ],
+        "unitCords": [
+            4591,
+            2377
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "ASHEV": true,
+            "CHRLO": true,
+            "FLORE": true,
+            "GREEN": true
+        }
+    },
+    "FLORE": {
+        "fullName": "Florence",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4735,
+            2407
+        ],
+        "unitCords": [
+            4700,
+            2353
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "CHARL": true,
+            "CHRLO": true,
+            "CLBIA": true,
+            "FAYET": true,
+            "WILMI": true
+        }
+    },
+    "YAVAP": {
+        "fullName": "Yavapai",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1236,
+            2405
+        ],
+        "unitCords": [
+            1300,
+            2405
+        ],
+        "adjacencyMap": {
+            "LAPAZ": true,
+            "MOHAV": true,
+            "NTEAZ": true,
+            "PHOEN": true
+        }
+    },
+    "OKLAH": {
+        "fullName": "Oklahoma City",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2842,
+            2415
+        ],
+        "unitCords": [
+            2906,
+            2415
+        ],
+        "adjacencyMap": {
+            "CHOCT": true,
+            "LAWTO": true,
+            "REDCA": true,
+            "TULSA": true
+        }
+    },
+    "ATHEN": {
+        "fullName": "Athens",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4300,
+            2417
+        ],
+        "unitCords": [
+            4356,
+            2466
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "ASHEV": true,
+            "ATLAN": true,
+            "AUGUS": true,
+            "CHATT": true,
+            "GREEN": true,
+            "MACON": true
+        }
+    },
+    "HUNTS": {
+        "fullName": "Huntsville",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3923,
+            2463
+        ],
+        "unitCords": [
+            3987,
+            2463
+        ],
+        "adjacencyMap": {
+            "ATLAN": true,
+            "BIRMI": true,
+            "CHATT": true,
+            "JACKS": true,
+            "LAWRE": true,
+            "MEMPH": true,
+            "TUPEL": true,
+            "TUSCA": true
+        }
+    },
+    "LAWTO": {
+        "fullName": "Lawton",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2656,
+            2486
+        ],
+        "unitCords": [
+            2720,
+            2486
+        ],
+        "adjacencyMap": {
+            "CHOCT": true,
+            "DALLA": true,
+            "OKLAH": true,
+            "REDCA": true,
+            "TXPAN": true
+        }
+    },
+    "AIKEN": {
+        "fullName": "Aiken",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4518,
+            2486
+        ],
+        "unitCords": [
+            4435,
+            2421
+        ],
+        "adjacencyMap": {
+            "ATHEN": true,
+            "AUGUS": true,
+            "CHARL": true,
+            "CLBIA": true,
+            "FLORE": true,
+            "GACPL": true,
+            "GREEN": true
+        }
+    },
+    "ATLAN": {
+        "fullName": "Atlanta",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4174,
+            2503
+        ],
+        "unitCords": [
+            4238,
+            2503
+        ],
+        "adjacencyMap": {
+            "ATHEN": true,
+            "BIRMI": true,
+            "CHATT": true,
+            "HUNTS": true,
+            "MACON": true,
+            "VALDO": true
+        }
+    },
+    "LROCK": {
+        "fullName": "Little Rock",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3419,
+            2516
+        ],
+        "unitCords": [
+            3483,
+            2516
+        ],
+        "adjacencyMap": {
+            "JONES": true,
+            "SHREV": true,
+            "SMITH": true,
+            "TEXAR": true,
+            "TUPEL": true
+        }
+    },
+    "TUPEL": {
+        "fullName": "Tupelo",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3631,
+            2546
+        ],
+        "unitCords": [
+            3695,
+            2546
+        ],
+        "adjacencyMap": {
+            "HUNTS": true,
+            "JACKS": true,
+            "JONES": true,
+            "LROCK": true,
+            "MEMPH": true,
+            "SHREV": true
+        }
+    },
+    "SANDI": {
+        "fullName": "San Diego",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            851,
+            2526
+        ],
+        "unitCords": [
+            915,
+            2540
+        ],
+        "adjacencyMap": {
+            "INEMP": true,
+            "LAPAZ": true,
+            "LOSAN": true
+        }
+    },
+    "CHOCT": {
+        "fullName": "Choctaw Country",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2968,
+            2541
+        ],
+        "unitCords": [
+            3032,
+            2541
+        ],
+        "adjacencyMap": {
+            "DALLA": true,
+            "LAWTO": true,
+            "OKLAH": true,
+            "SMITH": true,
+            "TEXAR": true,
+            "TULSA": true,
+            "TYLER": true
+        }
+    },
+    "LAPAZ": {
+        "fullName": "La Paz",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1108,
+            2502
+        ],
+        "unitCords": [
+            1095,
+            2561
+        ],
+        "adjacencyMap": {
+            "INEMP": true,
+            "MOHAV": true,
+            "PHOEN": true,
+            "SANDI": true,
+            "TUCSO": true,
+            "YAVAP": true
+        }
+    },
+    "AUGUS": {
+        "fullName": "Augusta",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4434,
+            2520
+        ],
+        "unitCords": [
+            4484,
+            2544
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "ATHEN": true,
+            "GACPL": true,
+            "MACON": true
+        }
+    },
+    "CHARL": {
+        "fullName": "Charleston",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4612,
+            2559
+        ],
+        "unitCords": [
+            4667,
+            2525
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "FLORE": true,
+            "GACPL": true,
+            "SAVAN": true
+        }
+    },
+    "PHOEN": {
+        "fullName": "Phoenix",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1252,
+            2587
+        ],
+        "unitCords": [
+            1316,
+            2587
+        ],
+        "adjacencyMap": {
+            "LAPAZ": true,
+            "NTEAZ": true,
+            "TUCSO": true,
+            "YAVAP": true
+        }
+    },
+    "TEXAR": {
+        "fullName": "Texarkana",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3239,
+            2595
+        ],
+        "unitCords": [
+            3303,
+            2595
+        ],
+        "adjacencyMap": {
+            "CHOCT": true,
+            "LROCK": true,
+            "SHREV": true,
+            "SMITH": true,
+            "TYLER": true
+        }
+    },
+    "TXPAN": {
+        "fullName": "Texas Panhandle",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2437,
+            2615
+        ],
+        "unitCords": [
+            2501,
+            2615
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "AUSTI": true,
+            "DALLA": true,
+            "LAWTO": true,
+            "REDCA": true,
+            "ROSWE": true,
+            "WESTX": true
+        }
+    },
+    "BIRMI": {
+        "fullName": "Birmingham",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4022,
+            2606
+        ],
+        "unitCords": [
+            4086,
+            2606
+        ],
+        "adjacencyMap": {
+            "ATLAN": true,
+            "HUNTS": true,
+            "MONTG": true,
+            "TUSCA": true,
+            "VALDO": true
+        }
+    },
+    "MACON": {
+        "fullName": "Macon",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4300,
+            2626
+        ],
+        "unitCords": [
+            4357,
+            2574
+        ],
+        "adjacencyMap": {
+            "ATHEN": true,
+            "ATLAN": true,
+            "AUGUS": true,
+            "GACPL": true,
+            "VALDO": true
+        }
+    },
+    "LASCR": {
+        "fullName": "Las Cruces",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1715,
+            2650
+        ],
+        "unitCords": [
+            1779,
+            2650
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "NTEAZ": true,
+            "ROSWE": true,
+            "TUCSO": true,
+            "WESTX": true
+        }
+    },
+    "ROSWE": {
+        "fullName": "Roswell",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2045,
+            2672
+        ],
+        "unitCords": [
+            2109,
+            2672
+        ],
+        "adjacencyMap": {
+            "ALBUQ": true,
+            "LASCR": true,
+            "TXPAN": true,
+            "WESTX": true
+        }
+    },
+    "GACPL": {
+        "fullName": "Georgia Coastal Plain",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4420,
+            2659
+        ],
+        "unitCords": [
+            4484,
+            2659
+        ],
+        "adjacencyMap": {
+            "AIKEN": true,
+            "AUGUS": true,
+            "CHARL": true,
+            "MACON": true,
+            "SAVAN": true,
+            "VALDO": true
+        }
+    },
+    "TUSCA": {
+        "fullName": "Tuscaloosa",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3862,
+            2682
+        ],
+        "unitCords": [
+            3926,
+            2682
+        ],
+        "adjacencyMap": {
+            "BIRMI": true,
+            "HUNTS": true,
+            "JACKS": true,
+            "MOBIL": true,
+            "MONTG": true
+        }
+    },
+    "DALLA": {
+        "fullName": "Dallas",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2873,
+            2720
+        ],
+        "unitCords": [
+            2937,
+            2720
+        ],
+        "adjacencyMap": {
+            "AUSTI": true,
+            "CHOCT": true,
+            "LAWTO": true,
+            "TXPAN": true,
+            "TYLER": true
+        }
+    },
+    "SHREV": {
+        "fullName": "Shreveport",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3335,
+            2753
+        ],
+        "unitCords": [
+            3399,
+            2753
+        ],
+        "adjacencyMap": {
+            "ALEXA": true,
+            "BEAUM": true,
+            "JACKS": true,
+            "LROCK": true,
+            "TEXAR": true,
+            "TUPEL": true,
+            "TYLER": true
+        }
+    },
+    "TYLER": {
+        "fullName": "Tyler",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3097,
+            2747
+        ],
+        "unitCords": [
+            3161,
+            2747
+        ],
+        "adjacencyMap": {
+            "AUSTI": true,
+            "BEAUM": true,
+            "CHOCT": true,
+            "DALLA": true,
+            "HUSTO": true,
+            "SHREV": true,
+            "TEXAR": true
+        }
+    },
+    "TUCSO": {
+        "fullName": "Tuscon",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            1353,
+            2762
+        ],
+        "unitCords": [
+            1417,
+            2762
+        ],
+        "adjacencyMap": {
+            "LAPAZ": true,
+            "LASCR": true,
+            "NTEAZ": true,
+            "PHOEN": true
+        }
+    },
+    "JACKS": {
+        "fullName": "Jackson",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3644,
+            2768
+        ],
+        "unitCords": [
+            3708,
+            2768
+        ],
+        "adjacencyMap": {
+            "ALEXA": true,
+            "BATON": true,
+            "BILOX": true,
+            "HUNTS": true,
+            "MOBIL": true,
+            "SHREV": true,
+            "TUPEL": true,
+            "TUSCA": true
+        }
+    },
+    "MONTG": {
+        "fullName": "Montgomery",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4060,
+            2782
+        ],
+        "unitCords": [
+            4124,
+            2782
+        ],
+        "adjacencyMap": {
+            "BIRMI": true,
+            "MOBIL": true,
+            "TALLA": true,
+            "TUSCA": true,
+            "VALDO": true
+        }
+    },
+    "SAVAN": {
+        "fullName": "Savannah",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                4621,
+                2736
+            ],
+            [
+                4616,
+                2756
+            ],
+            [
+                4604,
+                2835
+            ]
+        ],
+        "improvementCords": [
+            4534,
+            2765
+        ],
+        "unitCords": [
+            4550,
+            2707
+        ],
+        "adjacencyMap": {
+            "CHARL": true,
+            "GACPL": true,
+            "GAINE": true,
+            "JKSNV": true,
+            "VALDO": true
+        }
+    },
+    "VALDO": {
+        "fullName": "Valdosa",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4266,
+            2801
+        ],
+        "unitCords": [
+            4330,
+            2801
+        ],
+        "adjacencyMap": {
+            "ATLAN": true,
+            "BIRMI": true,
+            "GACPL": true,
+            "GAINE": true,
+            "MACON": true,
+            "MONTG": true,
+            "SAVAN": true,
+            "TALLA": true
+        }
+    },
+    "MOBIL": {
+        "fullName": "Mobile",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3882,
+            2855
+        ],
+        "unitCords": [
+            3946,
+            2855
+        ],
+        "adjacencyMap": {
+            "BILOX": true,
+            "JACKS": true,
+            "MONTG": true,
+            "TALLA": true,
+            "TUSCA": true
+        }
+    },
+    "ALEXA": {
+        "fullName": "Alexandria",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3340,
+            2893
+        ],
+        "unitCords": [
+            3404,
+            2893
+        ],
+        "adjacencyMap": {
+            "BEAUM": true,
+            "JACKS": true,
+            "LAFAY": true,
+            "SHREV": true
+        }
+    },
+    "BILOX": {
+        "fullName": "Biloxi",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3727,
+            2918
+        ],
+        "unitCords": [
+            3791,
+            2918
+        ],
+        "adjacencyMap": {
+            "BATON": true,
+            "JACKS": true,
+            "MOBIL": true
+        }
+    },
+    "JKSNV": {
+        "fullName": "Jacksonville",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4582,
+            2949
+        ],
+        "unitCords": [
+            4564,
+            2888
+        ],
+        "adjacencyMap": {
+            "GAINE": true,
+            "ORLAN": true,
+            "SAVAN": true
+        }
+    },
+    "TALLA": {
+        "fullName": "Tallahassee",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                4233,
+                3054
+            ]
+        ],
+        "improvementCords": [
+            4146,
+            2919
+        ],
+        "unitCords": [
+            4224,
+            2952
+        ],
+        "adjacencyMap": {
+            "GAINE": true,
+            "MOBIL": true,
+            "MONTG": true,
+            "VALDO": true
+        }
+    },
+    "GAINE": {
+        "fullName": "Gainesville",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4417,
+            2953
+        ],
+        "unitCords": [
+            4481,
+            2953
+        ],
+        "adjacencyMap": {
+            "JKSNV": true,
+            "ORLAN": true,
+            "SAVAN": true,
+            "TALLA": true,
+            "TAMPA": true,
+            "VALDO": true
+        }
+    },
+    "WESTX": {
+        "fullName": "Western Texas",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2313,
+            2975
+        ],
+        "unitCords": [
+            2377,
+            2975
+        ],
+        "adjacencyMap": {
+            "AUSTI": true,
+            "LASCR": true,
+            "ROSWE": true,
+            "SANAN": true,
+            "TXPAN": true
+        }
+    },
+    "AUSTI": {
+        "fullName": "Austin",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2821,
+            2972
+        ],
+        "unitCords": [
+            2885,
+            2972
+        ],
+        "adjacencyMap": {
+            "CORPU": true,
+            "DALLA": true,
+            "HUSTO": true,
+            "SANAN": true,
+            "TXPAN": true,
+            "TYLER": true,
+            "WESTX": true
+        }
+    },
+    "BATON": {
+        "fullName": "Baton Rouge",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": true,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3575,
+            2975
+        ],
+        "unitCords": [
+            3639,
+            2975
+        ],
+        "adjacencyMap": {
+            "BILOX": true,
+            "JACKS": true,
+            "LAFAY": true,
+            "NEWOR": true
+        }
+    },
+    "BEAUM": {
+        "fullName": "Beaumont",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3167,
+            2983
+        ],
+        "unitCords": [
+            3231,
+            2983
+        ],
+        "adjacencyMap": {
+            "ALEXA": true,
+            "HUSTO": true,
+            "LAFAY": true,
+            "SHREV": true,
+            "TYLER": true
+        }
+    },
+    "LAFAY": {
+        "fullName": "Lafayette",
+        "isEdgeOfMap": false,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": true,
+        "additionalRegionCords": [
+            [
+                3493,
+                3148
+            ]
+        ],
+        "improvementCords": [
+            3362,
+            3039
+        ],
+        "unitCords": [
+            3426,
+            3039
+        ],
+        "adjacencyMap": {
+            "ALEXA": true,
+            "BATON": true,
+            "BEAUM": true,
+            "NEWOR": true
+        }
+    },
+    "ORLAN": {
+        "fullName": "Orlando",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                4730,
+                3117
+            ],
+            [
+                4744,
+                3114
+            ]
+        ],
+        "improvementCords": [
+            4590,
+            3083
+        ],
+        "unitCords": [
+            4654,
+            3083
+        ],
+        "adjacencyMap": {
+            "GAINE": true,
+            "JKSNV": true,
+            "MIAMI": true,
+            "MYERS": true,
+            "TAMPA": true
+        }
+    },
+    "NEWOR": {
+        "fullName": "New Orleans",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            3593,
+            3096
+        ],
+        "unitCords": [
+            3654,
+            3079
+        ],
+        "adjacencyMap": {
+            "BATON": true,
+            "LAFAY": true
+        }
+    },
+    "HUSTO": {
+        "fullName": "Huston",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                3185,
+                3179
+            ],
+            [
+                3170,
+                3197
+            ]
+        ],
+        "improvementCords": [
+            3013,
+            3143
+        ],
+        "unitCords": [
+            3077,
+            3113
+        ],
+        "adjacencyMap": {
+            "AUSTI": true,
+            "BEAUM": true,
+            "CORPU": true,
+            "TYLER": true
+        }
+    },
+    "TAMPA": {
+        "fullName": "Tampa",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4526,
+            3155
+        ],
+        "unitCords": [
+            4543,
+            3220
+        ],
+        "adjacencyMap": {
+            "GAINE": true,
+            "MYERS": true,
+            "ORLAN": true
+        }
+    },
+    "SANAN": {
+        "fullName": "San Antonio",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2618,
+            3193
+        ],
+        "unitCords": [
+            2682,
+            3193
+        ],
+        "adjacencyMap": {
+            "AUSTI": true,
+            "CORPU": true,
+            "MCALN": true,
+            "WESTX": true
+        }
+    },
+    "CORPU": {
+        "fullName": "Corpus Christi",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                2982,
+                3329
+            ],
+            [
+                2952,
+                3347
+            ],
+            [
+                2938,
+                3361
+            ],
+            [
+                2894,
+                3434
+            ]
+        ],
+        "improvementCords": [
+            2826,
+            3310
+        ],
+        "unitCords": [
+            2878,
+            3250
+        ],
+        "adjacencyMap": {
+            "AUSTI": true,
+            "HUSTO": true,
+            "MCALN": true,
+            "SANAN": true
+        }
+    },
+    "MYERS": {
+        "fullName": "Fort Myers",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            4640,
+            3273
+        ],
+        "unitCords": [
+            4667,
+            3333
+        ],
+        "adjacencyMap": {
+            "MIAMI": true,
+            "ORLAN": true,
+            "TAMPA": true
+        }
+    },
+    "MIAMI": {
+        "fullName": "Miami",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [
+            [
+                4826,
+                3502
+            ],
+            [
+                4822,
+                3518
+            ]
+        ],
+        "improvementCords": [
+            4765,
+            3313
+        ],
+        "unitCords": [
+            4770,
+            3395
+        ],
+        "adjacencyMap": {
+            "MYERS": true,
+            "ORLAN": true
+        }
+    },
+    "MCALN": {
+        "fullName": "McAllen",
+        "isEdgeOfMap": true,
+        "hasRegionalCapital": false,
+        "isMagnified": false,
+        "randomStartAllowed": false,
+        "additionalRegionCords": [],
+        "improvementCords": [
+            2710,
+            3465
+        ],
+        "unitCords": [
+            2774,
+            3495
+        ],
+        "adjacencyMap": {
+            "CORPU": true,
+            "SANAN": true
+        }
+    }
+}

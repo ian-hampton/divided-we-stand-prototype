@@ -20,7 +20,7 @@
     "Boot Camp": {
         "Required Research": "Standing Army",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 9,
@@ -40,7 +40,7 @@
     "Capital": {
         "Required Research": null,
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Draw Damage": 1,
         "Combat Value": 9,
@@ -61,7 +61,7 @@
     "Central Bank": {
         "Required Research": "Central Banking System",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
@@ -83,7 +83,7 @@
     "City": {
         "Required Research": "City Resettlement",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
@@ -119,7 +119,7 @@
     "Colony": {
         "Required Research": null,
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
@@ -160,7 +160,7 @@
     "Crude Barrier": {
         "Required Research": "Basic Defenses",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 9,
@@ -194,7 +194,7 @@
     "Military Base": {
         "Required Research": "Military Bases",
         "Required Resource": null,
-        "Health": 10,
+        "Health": 12,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 5,
@@ -213,7 +213,7 @@
     "Military Outpost": {
         "Required Research": "Military Outposts",
         "Required Resource": null,
-        "Health": 10,
+        "Health": 12,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 7,
@@ -411,7 +411,7 @@
     "Missile Silo": {
         "Required Research": "Launch Codes",
         "Required Resource": null,
-        "Health": 5,
+        "Health": 6,
         "Victory Damage": 4,
         "Draw Damage": 2,
         "Combat Value": 7,
