@@ -15,7 +15,7 @@
         "Statistics": {
             "Player Count": 3,
             "Region Disputes": 0,
-            "Turns Ellapsed": 47,
+            "Game End Turn": 47,
             "Days Ellapsed": 65,
             "Game Started": "06/14/2020",
             "Game Ended": "08/18/2020"
@@ -63,7 +63,7 @@
         "Statistics": {
             "Player Count": 5,
             "Region Disputes": 0,
-            "Turns Ellapsed": 35,
+            "Game End Turn": 35,
             "Days Ellapsed": 63,
             "Game Started": "10/01/2020",
             "Game Ended": "12/02/2020"
@@ -127,7 +127,7 @@
         "Statistics": {
             "Player Count": 7,
             "Region Disputes": 0,
-            "Turns Ellapsed": 44,
+            "Game End Turn": 44,
             "Days Ellapsed": 80,
             "Game Started": "01/02/2021",
             "Game Ended": "03/23/2021"
@@ -207,7 +207,7 @@
         "Statistics": {
             "Player Count": 8,
             "Region Disputes": 3,
-            "Turns Ellapsed": 41,
+            "Game End Turn": 41,
             "Days Ellapsed": 97,
             "Game Started": "05/01/2021",
             "Game Ended": "08/06/2021"
@@ -295,7 +295,7 @@
         "Statistics": {
             "Player Count": 6,
             "Region Disputes": 0,
-            "Turns Ellapsed": 42,
+            "Game End Turn": 42,
             "Days Ellapsed": 130,
             "Game Started": "10/02/2021",
             "Game Ended": "02/09/2022"
@@ -367,7 +367,7 @@
         "Statistics": {
             "Player Count": 4,
             "Region Disputes": 3,
-            "Turns Ellapsed": 45,
+            "Game End Turn": 45,
             "Days Ellapsed": 113,
             "Game Started": "06/05/2022",
             "Game Ended": "07/24/2022"
@@ -423,7 +423,7 @@
         "Statistics": {
             "Player Count": 7,
             "Region Disputes": 7,
-            "Turns Ellapsed": 50,
+            "Game End Turn": 50,
             "Days Ellapsed": 137,
             "Game Started": "03/09/2022",
             "Game Ended": "07/24/2022"
@@ -503,7 +503,7 @@
         "Statistics": {
             "Player Count": 7,
             "Region Disputes": 9,
-            "Turns Ellapsed": 37,
+            "Game End Turn": 37,
             "Days Ellapsed": 75,
             "Game Started": "09/21/2022",
             "Game Ended": "12/05/2022"
@@ -583,7 +583,7 @@
         "Statistics": {
             "Player Count": 9,
             "Region Disputes": 4,
-            "Turns Ellapsed": 49,
+            "Game End Turn": 49,
             "Days Ellapsed": 130,
             "Game Started": "01/22/2023",
             "Game Ended": "06/01/2023"
@@ -679,7 +679,7 @@
         "Statistics": {
             "Player Count": "4",
             "Region Disputes": 0,
-            "Turns Ellapsed": 34,
+            "Game End Turn": 34,
             "Days Ellapsed": 35,
             "Game Started": "02/03/2024",
             "Game Ended": "03/09/2024"
@@ -735,7 +735,7 @@
         "Statistics": {
             "Player Count": 8,
             "Region Disputes": 1,
-            "Turns Ellapsed": 32,
+            "Game End Turn": 32,
             "Days Ellapsed": 73,
             "Game Started": "06/09/2024",
             "Game Ended": "08/21/2024"

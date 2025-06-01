@@ -225,8 +225,8 @@ def archived_games():
         filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
         if os.path.isfile(filepath):
             image_name_list.append(filename)
-        turn_number = game_data["Statistics"]["Turns Ellapsed"]
-        if game_data["Statistics"]["Turns Ellapsed"] % 4 != 0:
+        turn_number = game_data["Statistics"]["Game End Turn"]
+        if game_data["Statistics"]["Game End Turn"] % 4 != 0:
             filename = f"{turn_number}.png"
             filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
             if os.path.isfile(filepath):
