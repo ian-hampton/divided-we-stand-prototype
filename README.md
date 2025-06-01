@@ -32,7 +32,7 @@ This repository is a prototype! It is meant to be used by a game administrator t
 
 Ian Hampton
 
-Project Link: [https://github.com/ian-hampton/Divided-We-Stand](https://github.com/ian-hampton/Divided-We-Stand)
+Project Link: [https://github.com/ian-hampton/divided-we-stand-prototype](https://github.com/ian-hampton/divided-we-stand-prototype)
 
 
 ## Acknowledgments
