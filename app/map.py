@@ -51,7 +51,7 @@ class GameMaps:
 
             # color region using ownership
             fill_color = self._get_fill_color(nation_table, region)
-            if fill_color is not None:
+            if fill_color is not None and improvement.coords is not None:
                 if not region.is_magnified:
                     x = improvement.coords[0] + 25
                     y = improvement.coords[1] + 25
@@ -64,7 +64,7 @@ class GameMaps:
             # color region using resource
             if region.resource != "Empty":
                 fill_color = palette.resource_colors[region.resource]
-                if not region.is_magnified:
+                if not region.is_magnified and improvement.coords is not None:
                     x = improvement.coords[0] + 25
                     y = improvement.coords[1] + 25
                     coords = (x, y)
@@ -111,7 +111,7 @@ class GameMaps:
             improvement = Improvement(region_id, self.game_id)
             unit = Unit(region_id, self.game_id)
 
-            if region.fallout:
+            if region.fallout and improvement.coords is not None:
             
                 # place nuclear explosion
                 # TODO: make shadow blend properly
@@ -119,7 +119,7 @@ class GameMaps:
                 self.main_map.paste(self.nuke_img, improvement.coords, mask)
                 continue
         
-            if improvement.name is not None:
+            if improvement.name is not None and improvement.coords is not None:
                 
                 # place improvement on map
                 improvement_img = Image.open(f"{self.images_filepath}/improvements/{improvement.name.lower()}.png")
@@ -135,7 +135,7 @@ class GameMaps:
                     y = improvement.coords[1] + 52
                     self.main_map.paste(health_img, (x, y))
 
-            if unit.name is not None:
+            if unit.name is not None and unit.coords is not None:
             
                 # place unit image
                 nation = nation_table.get(str(region.owner_id))
