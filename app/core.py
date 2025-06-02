@@ -86,12 +86,12 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
     alliance_count = 0
     alliance_table = AllianceTable(game_id)
     alliance_report_dict = alliance_table.report(nation.name)
+
+    # get alliance count
     alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
     
-    # calculate limit
+    # get alliance limit
     alliance_limit = 2
-    if nation.gov == 'Republic':
-        alliance_limit += 1
     if 'Power Broker' in nation.completed_research:
         alliance_limit += 1
     if 'Improved Logistics' in nation.completed_research:

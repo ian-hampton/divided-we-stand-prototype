@@ -1225,13 +1225,8 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             # gain technology
             nation.action_log.append(f"Researched {action.research_name} for {cost} technology.")
             nation.add_tech(action.research_name)
-
-            # totalitarian bonus
-            totalitarian_discounts = {'Energy', 'Infrastructure'}
-            if nation.gov == 'Totalitarian' and research_data_dict[action.research_name]["Research Type"] in totalitarian_discounts:
-                nation.update_stockpile("Political Power", 2)
-                nation.action_log.append(f'Gained 2 political power for researching {action.research_name}.')
-
+            nation.award_research_bonus(action.research_name)
+            
         nation_table.save(nation)
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
@@ -1962,8 +1957,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
 
             # execute action
             nation.add_tech(research_name)
-            if nation.gov == "Totalitarian":
-                nation.update_stockpile("Political Power", 2)
+            nation.award_research_bonus(research_name)
             nation.action_log.append(f"Used Outsource Technology to research {research_name}.")
 
         # Event Military Reinforcements [Region ID #1],[Region ID #2]

@@ -1172,11 +1172,7 @@ def _gain_free_research(game_id: str, research_name: str, nation: Nation) -> boo
     
     # gain technology
     nation.add_tech(research_name)
-
-    # totalitarian bonus
-    totalitarian_discounts = {'Energy', 'Infrastructure'}
-    if nation.gov == 'Totalitarian' and tech_scenario_dict[research_name]["Research Type"] in totalitarian_discounts:
-        nation.update_stockpile("Political Power", 2)
+    nation.award_research_bonus(research_name)
 
     return True
 

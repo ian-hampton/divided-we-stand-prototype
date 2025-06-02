@@ -136,11 +136,11 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
         nation.gov = setup_data["gov_choice"]
         nation.fp = setup_data["fp_choice"]
         nation.chosen_vc_set = setup_data["vc_choice"]
-        nation.reset_income_rates()
         if nation.gov == "Technocracy":
             starting_list = random.sample(five_point_research_list, 3)
             for technology_name in starting_list:
                 nation.add_tech(technology_name)
+        nation.add_gov_tags()
         nation_table.save(nation)
 
     # update income in playerdata
