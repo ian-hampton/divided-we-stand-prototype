@@ -1416,8 +1416,6 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         # attempt to pay for region
         nation.update_stockpile("Dollars", -1 * region.purchase_cost)
         pp_cost = 0
-        if nation.gov == "Remnant":
-            pp_cost = 0.20
         nation.update_stockpile("Political Power", -1 * pp_cost)
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
             nation_table.reload()
@@ -1553,9 +1551,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
         # calculate build cost
         build_cost_dict = improvement_data_dict[action.improvement_name]["Build Costs"]
-        if nation.gov == "Remnant":
-            for key in build_cost_dict:
-                build_cost_dict[key] *= 0.9
+        nation.apply_build_discount(build_cost_dict)
 
         # pay for improvement
         costs_list = []

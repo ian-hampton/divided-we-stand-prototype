@@ -180,7 +180,8 @@ class Improvement:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
 
         # get modifer from remnant government
-        if nation.gov == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
+        capital_boost = any("Capital Boost" in tag_data for tag_data in nation.tags.values())
+        if capital_boost and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
             for resource_name in improvement_income_dict:
                 if resource_name == "Political Power" or resource_name == "Military Capacity":
                     # do not boost political power or military capacity gains

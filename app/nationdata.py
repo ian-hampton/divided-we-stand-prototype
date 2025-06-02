@@ -249,10 +249,15 @@ class Nation:
                     },
                     "Expire Turn": 99999
                 }
-                self.tags["Oligarchy"] = new_tag
+                self.tags["Totalitarian"] = new_tag
 
             case "Remnant":
-                pass
+                new_tag = {
+                    "Build Discount": 0.2,
+                    "Capital Boost": True,
+                    "Expire Turn": 99999
+                }
+                self.tags["Remnant"] = new_tag
 
             case "Protectorate":
                 pass
@@ -306,6 +311,18 @@ class Nation:
                 resource_amount: int = bonus_dict["Amount"]
                 self.update_stockpile(resource_name, resource_amount)
                 self.action_log.append(f"Gained {resource_amount} {resource_name} for researching {research_name}.")
+
+    def apply_build_discount(self, build_cost_dict: dict) -> None:
+
+        build_cost_rate = 1.0
+
+        for tag_name, tag_data in self.tags.items():
+            if "Build Discount" not in tag_data:
+                continue
+            build_cost_rate -= float(tag_data["Build Discount"])
+
+        for key in build_cost_dict:
+            build_cost_dict[key] *= build_cost_rate
 
     def update_trade_fee(self) -> None:
         """
