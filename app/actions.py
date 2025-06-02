@@ -1389,8 +1389,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         
         # attempt to pay for region
         nation.update_stockpile("Dollars", -1 * region.purchase_cost)
-        pp_cost = 0
-        nation.update_stockpile("Political Power", -1 * pp_cost)
+        nation.update_stockpile("Political Power", -1 * nation.region_claim_political_power_cost())
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
             nation_table.reload()
             nation = nation_table.get(action.id)

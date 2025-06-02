@@ -275,13 +275,28 @@ class Nation:
                     },
                     "Expire Turn": 99999
                 }
-                self.tags["Remnant"] = new_tag
+                self.tags["Protectorate"] = new_tag
 
             case "Military Junta":
-                pass
+                new_tag = {
+                    "Improvement Income Multiplier": {
+                        "Research Laboratory": {
+                            "Technology": -0.2
+                        },
+                        "Research Institute": {
+                            "Technology": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Military Junta"] = new_tag
 
             case "Crime Syndicate":
-                pass
+                new_tag = {
+                    "Region Claim Cost": 0.2,
+                    "Expire Turn": 99999
+                }
+                self.tags["Crime Syndicate"] = new_tag
 
     def update_victory_progress(self) -> None:
         """
@@ -398,6 +413,16 @@ class Nation:
                 adjustment += int(tag_data["Agenda Cost"])
         
         return adjustment
+
+    def region_claim_political_power_cost(self) -> float:
+
+        pp_cost = 0.0
+
+        for tag_data in self.tags.values():
+            if "Region Claim Cost" in tag_data:
+                pp_cost += float(tag_data["Region Claim Cost"])
+        
+        return pp_cost
 
     def export_action_log(self) -> None:
         """
