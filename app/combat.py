@@ -210,7 +210,7 @@ def unit_vs_improvement_standard(attacking_unit: Unit, defending_improvement: Im
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank':
         attacker_roll_modifier += 1
-    for tag, tag_data in attacker.tags:
+    for tag, tag_data in attacker.tags.items():
         if tag_data.get("Combat Roll Bonus") == defender.id:
             attacker_roll_modifier += 1
 
