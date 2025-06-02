@@ -265,6 +265,14 @@ class Nation:
                     "Basic Materials Rate": 20,
                     "Market Buy Modifier": 0.2,
                     "Market Sell Modifier": 0.2,
+                    "Improvement Income Multiplier": {
+                        "Settlement": {
+                            "Dollars": -0.2
+                        },
+                        "City": {
+                            "Dollars": -0.2
+                        }
+                    },
                     "Expire Turn": 99999
                 }
                 self.tags["Remnant"] = new_tag
