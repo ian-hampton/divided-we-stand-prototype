@@ -1144,33 +1144,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
                 continue
 
             # agenda cost adjustment
-            agenda_cost_adjustment = {
-                "Diplomacy": {
-                    "Diplomatic": -5,
-                    "Commercial": 0,
-                    "Isolationist": 5,
-                    "Imperialist": 0
-                },
-                "Economy": {
-                    "Diplomatic": 0,
-                    "Commercial": -5,
-                    "Isolationist": 0,
-                    "Imperialist": 5
-                },
-                "Security": {
-                    "Diplomatic": 0,
-                    "Commercial": 5,
-                    "Isolationist": -5,
-                    "Imperialist": 0,
-                },
-                "Warfare": {
-                    "Diplomatic": 5,
-                    "Commercial": 0,
-                    "Isolationist": 0,
-                    "Imperialist": -5,
-                }
-            }
-            cost += agenda_cost_adjustment[agenda_type][nation.fp]
+            cost += nation.calculate_agenda_cost_adjustment(action.research_name)
 
             # pay cost
             nation.update_stockpile("Political Power", -1 * cost)

@@ -255,6 +255,7 @@ class Nation:
                 new_tag = {
                     "Build Discount": 0.2,
                     "Capital Boost": True,
+                    "Agenda Cost": 5,
                     "Expire Turn": 99999
                 }
                 self.tags["Remnant"] = new_tag
@@ -298,6 +299,24 @@ class Nation:
 
         self.completed_research[technology_name] = True
 
+    def update_trade_fee(self) -> None:
+        """
+        Calculations the trade fee this nation has to pay.
+        """
+
+        # dollars : resources
+        trade_fee_list = ["1:5","1:4", "1:3", "1:2", "1:1", "2:1", "3:1"]
+        trade_fee_list = ["3:1", "2:1", "1:1", "1:2", "1:3", "1:4", "1:5"]
+        trade_index = 3
+
+        if "Improved Logistics" in self.completed_research:
+            trade_index += 1
+
+        for tag_name, tag_data in self.tags.items():
+            trade_index += tag_data.get("Trade Fee Modifier", 0)
+
+        self.trade_fee = trade_fee_list[trade_index]
+
     def award_research_bonus(self, research_name: str) -> None:
 
         research_scenario_dict = core.get_scenario_dict(self.game_id, "Technologies")
@@ -324,23 +343,47 @@ class Nation:
         for key in build_cost_dict:
             build_cost_dict[key] *= build_cost_rate
 
-    def update_trade_fee(self) -> None:
-        """
-        Calculations the trade fee this nation has to pay.
-        """
+    def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
 
-        # dollars : resources
-        trade_fee_list = ["1:5","1:4", "1:3", "1:2", "1:1", "2:1", "3:1"]
-        trade_fee_list = ["3:1", "2:1", "1:1", "1:2", "1:3", "1:4", "1:5"]
-        trade_index = 3
+        adjustment = 0
+        agenda_data_dict = core.get_scenario_dict(self.game_id, "Agendas")
+        agenda_type = agenda_data_dict[agenda_name]['Agenda Type']
 
-        if "Improved Logistics" in self.completed_research:
-            trade_index += 1
+        # cost adjustment from foreign policy
+        agenda_cost_adjustment = {
+            "Diplomacy": {
+                "Diplomatic": -5,
+                "Commercial": 0,
+                "Isolationist": 5,
+                "Imperialist": 0
+            },
+            "Economy": {
+                "Diplomatic": 0,
+                "Commercial": -5,
+                "Isolationist": 0,
+                "Imperialist": 5
+            },
+            "Security": {
+                "Diplomatic": 0,
+                "Commercial": 5,
+                "Isolationist": -5,
+                "Imperialist": 0,
+            },
+            "Warfare": {
+                "Diplomatic": 5,
+                "Commercial": 0,
+                "Isolationist": 0,
+                "Imperialist": -5,
+            }
+        }
+        adjustment += agenda_cost_adjustment[agenda_type][self.fp]
 
+        # cost adjustment from tags
         for tag_name, tag_data in self.tags.items():
-            trade_index += tag_data.get("Trade Fee Modifier", 0)
-
-        self.trade_fee = trade_fee_list[trade_index]
+            if "Agenda Cost" in tag_data:
+                adjustment += int(tag_data["Agenda Cost"])
+        
+        return adjustment
 
     def export_action_log(self) -> None:
         """
