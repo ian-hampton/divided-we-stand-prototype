@@ -2094,8 +2094,9 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         rate = 1.0
 
         # add discounts
-        if nation.gov == "Protectorate":
-            rate -= 0.2
+        for tag_name, tag_data in nation.tags.items():
+            if "Market Buy Modifier" in tag_data:
+                rate -= float(tag_data["Market Buy Modifier"])
         
         # event check
         if "Embargo" in nation.tags:
@@ -2130,6 +2131,11 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         nation = nation_table.get(action.id)
         price = float(data[action.resource_name]["Current Price"] * 0.5)
         rate = 1.0
+
+        # add discounts
+        for tag_name, tag_data in nation.tags.items():
+            if "Market Sell Modifier" in tag_data:
+                rate -= float(tag_data["Market Sell Modifier"])
 
         # event check
         if "Embargo" in nation.tags:

@@ -261,7 +261,13 @@ class Nation:
                 self.tags["Remnant"] = new_tag
 
             case "Protectorate":
-                pass
+                new_tag = {
+                    "Basic Materials Rate": 20,
+                    "Market Buy Modifier": 0.2,
+                    "Market Sell Modifier": 0.2,
+                    "Expire Turn": 99999
+                }
+                self.tags["Remnant"] = new_tag
 
             case "Military Junta":
                 pass
