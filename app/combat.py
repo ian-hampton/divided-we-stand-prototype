@@ -62,7 +62,7 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
         attacker_roll_modifier += 1
     if attacking_unit.name == "Main Battle Tank" and defending_unit.type == "Infantry":
         attacker_roll_modifier += 1
-    for tag, tag_data in attacker.tags.items():
+    for tag_data in attacker.tags.values():
         if tag_data.get("Combat Roll Bonus") == defender.id:
             attacker_roll_modifier += 1
 
@@ -78,7 +78,7 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
         defender_roll_modifier += 1
     if defending_unit.name == "Main Battle Tank" and attacking_unit.type == "Infantry":
         defender_roll_modifier += 1
-    for tag, tag_data in defender.tags.items():
+    for tag_data in defender.tags.values():
         if tag_data.get("Combat Roll Bonus") == attacker.id:
             defender_roll_modifier += 1
 
@@ -210,7 +210,7 @@ def unit_vs_improvement_standard(attacking_unit: Unit, defending_improvement: Im
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank':
         attacker_roll_modifier += 1
-    for tag, tag_data in attacker.tags.items():
+    for tag_data in attacker.tags.values():
         if tag_data.get("Combat Roll Bonus") == defender.id:
             attacker_roll_modifier += 1
 

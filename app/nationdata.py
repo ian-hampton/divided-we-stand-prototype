@@ -341,7 +341,7 @@ class Nation:
         if "Improved Logistics" in self.completed_research:
             trade_index += 1
 
-        for tag_name, tag_data in self.tags.items():
+        for tag_data in self.tags.values():
             trade_index += tag_data.get("Trade Fee Modifier", 0)
 
         self.trade_fee = trade_fee_list[trade_index]
@@ -350,7 +350,7 @@ class Nation:
 
         research_scenario_dict = core.get_scenario_dict(self.game_id, "Technologies")
 
-        for tag_name, tag_data in self.tags.items():
+        for tag_data in self.tags.values():
             if "Research Bonus" not in tag_data:
                 continue
             bonus_dict = tag_data["Research Bonus"]
@@ -363,11 +363,8 @@ class Nation:
     def apply_build_discount(self, build_cost_dict: dict) -> None:
 
         build_cost_rate = 1.0
-
-        for tag_name, tag_data in self.tags.items():
-            if "Build Discount" not in tag_data:
-                continue
-            build_cost_rate -= float(tag_data["Build Discount"])
+        for tag_data in self.tags.values():
+            build_cost_rate -= float(tag_data.get("Build Discount", 0))
 
         for key in build_cost_dict:
             build_cost_dict[key] *= build_cost_rate
@@ -408,19 +405,16 @@ class Nation:
         adjustment += agenda_cost_adjustment[agenda_type][self.fp]
 
         # cost adjustment from tags
-        for tag_name, tag_data in self.tags.items():
-            if "Agenda Cost" in tag_data:
-                adjustment += int(tag_data["Agenda Cost"])
+        for tag_data in self.tags.values():
+            adjustment += int(tag_data.get("Agenda Cost", 0))
         
         return adjustment
 
     def region_claim_political_power_cost(self) -> float:
 
         pp_cost = 0.0
-
         for tag_data in self.tags.values():
-            if "Region Claim Cost" in tag_data:
-                pp_cost += float(tag_data["Region Claim Cost"])
+            pp_cost += float(tag_data.get("Region Claim Cost"))
         
         return pp_cost
 
@@ -608,7 +602,7 @@ class Nation:
             raise Exception(f"Resource {resource_name} not recognized.")
         
         rate = self._resources[resource_name]["rate"]
-        for tag_name, tag_data in self.tags.items():
+        for tag_data in self.tags.values():
             rate += tag_data.get(f"{resource_name} Rate", 0)
 
         return rate

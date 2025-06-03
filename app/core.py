@@ -96,7 +96,7 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
         alliance_limit += 1
     if 'Improved Logistics' in nation.completed_research:
         alliance_limit += 1
-    for tag_name, tag_data in nation.tags.items():
+    for tag_data in nation.tags.values():
         alliance_limit += tag_data.get("Alliance Limit Modifier", 0)
 
     return alliance_count, alliance_limit

@@ -1121,12 +1121,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             continue
 
         # event check
-        event_check = True
-        for tag_name, tag_data in nation.tags.items():
-            if "No Agenda Research" in tag_data:
-                event_check = False
-                break
-        if not event_check:
+        if any("No Agenda Research" in tag_data for tag_data in nation.tags.values()):
             nation.action_log.append(f"Failed to research {action.research_name} due to an event penalty.")
             nation_table.save(nation)
             continue
@@ -2094,8 +2089,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
 
         # add discounts
         for tag_name, tag_data in nation.tags.items():
-            if "Market Buy Modifier" in tag_data:
-                rate -= float(tag_data["Market Buy Modifier"])
+            rate -= float(tag_data.get("Market Buy Modifier", 0))
         
         # event check
         if "Embargo" in nation.tags:
@@ -2133,8 +2127,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
 
         # add discounts
         for tag_name, tag_data in nation.tags.items():
-            if "Market Sell Modifier" in tag_data:
-                rate -= float(tag_data["Market Sell Modifier"])
+            rate -= float(tag_data.get("Market Sell Modifier", 0))
 
         # event check
         if "Embargo" in nation.tags:
@@ -2393,11 +2386,15 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
             continue
 
         # tag check
+        is_blocked = False
         for tag_name, tag_data in attacker_nation.tags.items():
             if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
-                attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-                nation_table.save(attacker_nation)
-                continue
+                is_blocked = True
+                break
+        if is_blocked:
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
+            nation_table.save(attacker_nation)
+            continue
 
         # validate war claims
         region_claims_list = []
