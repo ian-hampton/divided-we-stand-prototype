@@ -1002,23 +1002,27 @@ class NationTable:
 
 # tba - move everything below to a scenario file
 EASY_LIST = [
+    "Ambassador",
+    "Backstab",
     "Breakthrough",
-    "Diversified Economy",
-    "Energy Economy",
-    "Industrial Focus",
-    "Leading Defense",
-    "Major Exporter",
+    "Diverse Economy",
+    "Double Down",
+    "New Empire",
     "Reconstruction Effort",
-    "Secure Strategic Resources"
+    "Reliable Ally",
+    "Secure Strategic Resources",
+    "Threat Containment"
 ]
 NORMAL_LIST = [
-    "Backstab",
-    "Diversified Army",
+    "Energy Focus",
+    "Industrial Focus",
     "Hegemony",
-    "New Empire",
+    "Monopoly",
     "Nuclear Deterrent",
-    "Reliable Ally",
+    "Strong Research Agreement",
+    "Strong Trade Agreement",
     "Sphere of Influence",
+    "Underdog",
     "Warmonger"
 ]
 HARD_LIST = [
