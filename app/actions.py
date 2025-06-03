@@ -1144,33 +1144,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
                 continue
 
             # agenda cost adjustment
-            agenda_cost_adjustment = {
-                "Diplomacy": {
-                    "Diplomatic": -5,
-                    "Commercial": 0,
-                    "Isolationist": 5,
-                    "Imperialist": 0
-                },
-                "Economy": {
-                    "Diplomatic": 0,
-                    "Commercial": -5,
-                    "Isolationist": 0,
-                    "Imperialist": 5
-                },
-                "Security": {
-                    "Diplomatic": 0,
-                    "Commercial": 5,
-                    "Isolationist": -5,
-                    "Imperialist": 0,
-                },
-                "Warfare": {
-                    "Diplomatic": 5,
-                    "Commercial": 0,
-                    "Isolationist": 0,
-                    "Imperialist": -5,
-                }
-            }
-            cost += agenda_cost_adjustment[agenda_type][nation.fp]
+            cost += nation.calculate_agenda_cost_adjustment(action.research_name)
 
             # pay cost
             nation.update_stockpile("Political Power", -1 * cost)
@@ -1225,13 +1199,8 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             # gain technology
             nation.action_log.append(f"Researched {action.research_name} for {cost} technology.")
             nation.add_tech(action.research_name)
-
-            # totalitarian bonus
-            totalitarian_discounts = {'Energy', 'Infrastructure'}
-            if nation.gov == 'Totalitarian' and research_data_dict[action.research_name]["Research Type"] in totalitarian_discounts:
-                nation.update_stockpile("Political Power", 2)
-                nation.action_log.append(f'Gained 2 political power for researching {action.research_name}.')
-
+            nation.award_research_bonus(action.research_name)
+            
         nation_table.save(nation)
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
@@ -1420,10 +1389,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         
         # attempt to pay for region
         nation.update_stockpile("Dollars", -1 * region.purchase_cost)
-        pp_cost = 0
-        if nation.gov == "Remnant":
-            pp_cost = 0.20
-        nation.update_stockpile("Political Power", -1 * pp_cost)
+        nation.update_stockpile("Political Power", -1 * nation.region_claim_political_power_cost())
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
             nation_table.reload()
             nation = nation_table.get(action.id)
@@ -1558,9 +1524,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
         # calculate build cost
         build_cost_dict = improvement_data_dict[action.improvement_name]["Build Costs"]
-        if nation.gov == "Remnant":
-            for key in build_cost_dict:
-                build_cost_dict[key] *= 0.9
+        nation.apply_build_discount(build_cost_dict)
 
         # pay for improvement
         costs_list = []
@@ -1962,8 +1926,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
 
             # execute action
             nation.add_tech(research_name)
-            if nation.gov == "Totalitarian":
-                nation.update_stockpile("Political Power", 2)
+            nation.award_research_bonus(research_name)
             nation.action_log.append(f"Used Outsource Technology to research {research_name}.")
 
         # Event Military Reinforcements [Region ID #1],[Region ID #2]
@@ -2130,8 +2093,9 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         rate = 1.0
 
         # add discounts
-        if nation.gov == "Protectorate":
-            rate -= 0.2
+        for tag_name, tag_data in nation.tags.items():
+            if "Market Buy Modifier" in tag_data:
+                rate -= float(tag_data["Market Buy Modifier"])
         
         # event check
         if "Embargo" in nation.tags:
@@ -2166,6 +2130,11 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         nation = nation_table.get(action.id)
         price = float(data[action.resource_name]["Current Price"] * 0.5)
         rate = 1.0
+
+        # add discounts
+        for tag_name, tag_data in nation.tags.items():
+            if "Market Sell Modifier" in tag_data:
+                rate -= float(tag_data["Market Sell Modifier"])
 
         # event check
         if "Embargo" in nation.tags:
