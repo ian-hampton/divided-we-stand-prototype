@@ -124,54 +124,20 @@ def update_income(game_id: str) -> None:
             _update_text_dict(text_dict, nation.name, "Political Power", income_str)
         nation_table.save(nation)
 
-    # dollars from trade agreements
+    # alliance yields
     for alliance in alliance_table:
-        if not alliance.is_active or alliance.type != "Trade Agreement":
-            continue
-        total = 0.0
-        for ally_name in alliance.current_members:
-            nation = nation_table.get(ally_name)
-            total += nation.improvement_counts["City"]
-            total += nation.improvement_counts["Central Bank"]
-            total += nation.improvement_counts["Capital"]
-        if total == 0.0:
+        amount, resource_name = alliance.get_yield()
+        if amount == 0 or resource_name is None:
             continue
         for ally_name in alliance.current_members:
             nation = nation_table.get(ally_name)
-            trade_agreement_yield = total * 0.5
-            nation.update_gross_income("Dollars", trade_agreement_yield)
-            income_str = f'&Tab;+{trade_agreement_yield:.2f} from {alliance.name}.'
-            _update_text_dict(text_dict, nation.name, "Dollars", income_str)
+            if resource_name == "Military Capacity":
+                nation.update_max_mc(amount)
+            else:
+                nation.update_gross_income(resource_name, amount)
+            income_str = f'&Tab;+{amount:.2f} from {alliance.name}.'
+            _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation_table.save(nation)
-
-    # tech from research agreements
-    for alliance in alliance_table:
-        if not alliance.is_active or alliance.type != "Research Agreement":
-            continue
-        tech_set = set()
-        for ally_name in alliance.current_members:
-            nation = nation_table.get(ally_name)
-            ally_research_list = list(nation.completed_research.keys())
-            tech_set.update(ally_research_list)
-        if len(tech_set) == 0:
-            continue
-        for ally_name in alliance.current_members:
-            nation = nation_table.get(ally_name)
-            research_agreement_yield = len(tech_set) * 0.2
-            nation.update_gross_income("Technology", research_agreement_yield)
-            income_str = f'&Tab;+{research_agreement_yield:.2f} from {alliance.name}.'
-            _update_text_dict(text_dict, nation.name, "Technology", income_str)
-            nation_table.save(nation)
-
-    # military capacity from defense agreements
-    for nation in nation_table:
-        for alliance in alliance_table:
-            if alliance.is_active and nation.name in alliance.current_members and alliance.type == "Defense Agreement":
-                defense_agreement_yield = len(alliance.current_members)
-                nation.update_max_mc(defense_agreement_yield)
-                income_str = f'+{len(alliance.current_members)} from {alliance.name}.'
-                _update_text_dict(text_dict, nation.name, "Military Capacity", income_str)
-                nation_table.save(nation)
 
     # military capacity from other sources
     if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
