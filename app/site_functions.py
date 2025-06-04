@@ -131,16 +131,25 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
 
     # update nation data
     for nation_id, setup_data in contents_dict.items():
+        
         nation = nation_table.get(nation_id)
+        
+        # add basic data
         nation.name = setup_data["name_choice"]
         nation.gov = setup_data["gov_choice"]
         nation.fp = setup_data["fp_choice"]
-        nation.chosen_vc_set = setup_data["vc_choice"]
+        nation.add_gov_tags()
+        
+        # victory conditions data
+        nation.victory_conditions = copy.deepcopy(nation._sets[setup_data["vc_choice"]])
+        nation._satisfied = copy.deepcopy(nation._sets[setup_data["vc_choice"]])
+        
+        # technocracy bonus tech
         if nation.gov == "Technocracy":
             starting_list = random.sample(five_point_research_list, 3)
             for technology_name in starting_list:
                 nation.add_tech(technology_name)
-        nation.add_gov_tags()
+        
         nation_table.save(nation)
 
     # update income in playerdata
@@ -567,15 +576,13 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     player_information_dict['Status'] = nation.status
     
     # get victory condition data
-    nation.update_victory_progress()
     player_information_dict['Victory Conditions Data']['Conditions List'] = list(nation.victory_conditions.keys())
-    vc_colors = []
-    for entry in nation.victory_conditions.values():
+    player_information_dict['Victory Conditions Data']['Color List'] = list(nation.victory_conditions.values())
+    for i, status in player_information_dict['Victory Conditions Data']['Color List']:
         if entry:
-            vc_colors.append('#00ff00')
+           player_information_dict['Victory Conditions Data']['Color List'] = "#00ff00"
         else:
-            vc_colors.append('#ff0000')
-    player_information_dict['Victory Conditions Data']['Color List'] = vc_colors
+            player_information_dict['Victory Conditions Data']['Color List'] = "#ff0000"
 
     # resource data
     class_list = []

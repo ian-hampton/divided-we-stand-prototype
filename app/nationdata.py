@@ -30,9 +30,9 @@ class Nation:
         self.nuke_count: int = nation_data["missileStockpile"]["nuclearMissile"]
 
         self.score: int = nation_data["score"]
-        self.chosen_vc_set: str = nation_data["chosenVictorySet"]
+        self.victory_conditions: dict = nation_data["chosenVictorySet"]
         self._sets: dict = nation_data["victorySets"]
-        self.victory_conditions: dict = self._sets.get(self.chosen_vc_set)
+        self._satisfied: dict = nation_data["satisfiedVictorySet"]
 
         self.improvement_counts: dict = nation_data["improvementCounts"]
         self.unit_counts: dict = nation_data["unitCounts"]
@@ -102,7 +102,8 @@ class Nation:
                 "nuclearMissile": 0
             },
             "score": 0,
-            "chosenVictorySet": "N/A",
+            "chosenVictorySet": {},
+            "satisfiedVictorySet": {},
             "victorySets": vc_sets,
             "resources": {
                 "Dollars": {
@@ -301,130 +302,64 @@ class Nation:
 
     def update_victory_progress(self) -> None:
         """
-        Updates victory condition progress. Be sure to save the nation object in order to commit the update!
+        Updates victory condition progress.
         """
+        
+        # reset
+        self.score = 0
+        for name in self.victory_conditions.keys():
+            self.victory_conditions[name] = False
 
         # check each victory condition
-        self.score = 0
-        for name, is_completed in self.victory_conditions.keys():
+        for name in self.victory_conditions.keys():
             
             # do not check vcs that have already been permanently satisfied
-            if is_completed:
+            if self._satisfied[name]:
                 self.score += 1
                 continue
 
-            match name:
+            # map vc names to functions
+            name_to_func = {
+                "Ambassador": vc.ambassador,
+                "Backstab": vc.backstab,
+                "Breakthrough": vc.breakthrough,
+                "Diversified Economy": vc.breakthrough,
+                "Double Down": vc.double_down,
+                "New Empire": vc.new_empire,
+                "Reconstruction Effort": vc.reconstruction_effort,
+                "Reliable Ally": vc.reliable_ally,
+                "Secure Strategic Resources": vc.secure_strategic_resources,
+                "Threat Containment": vc.threat_containment,
+                "Energy Focus": vc.energy_focus,
+                "Industrial Focus": vc.industrial_focus,
+                "Hegemony": vc.hegemony,
+                "Monopoly": vc.monopoly,
+                "Nuclear Deterrent": vc.nuclear_deterrent,
+                "Strong Research Agreement": vc.strong_research_agreement,
+                "Strong Trade Agreement": vc.strong_trade_agreement,
+                "Sphere of Influence": vc.sphere_of_influence,
+                "Underdog": vc.underdog,
+                "Warmonger": vc.warmonger,
+                "Economic Domination": vc.economic_domination,
+                "Influence Through Trade": vc.influence_through_trade,
+                "Military Superpower": vc.military_superpower,
+                "Scientific Leader": vc.scientific_leader,
+                "Territorial Control": vc.territorial_control
+            }
+            
+            # check victory condition
+            if name in name_to_func:
+                if name_to_func[name](self):
+                    
+                    # mark victory condition as completed
+                    self.score += 1
+                    self.victory_conditions[name] = True
 
-                case "Ambassador":
-                    if vc.ambassador(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-
-                case "Backstab":
-                    if vc.backstab(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-                
-                case "Breakthrough":
-                    if vc.breakthrough(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-                
-                case "Diversified Economy":
-                    if vc.breakthrough(self):
-                        self.score += 1
-
-                case "Double Down":
-                    if vc.double_down(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-
-                case "New Empire":
-                    if vc.new_empire(self):
-                        self.score += 1
-
-                case "Reconstruction Effort":
-                    if vc.reconstruction_effort(self):
-                        self.score += 1
-
-                case "Reliable Ally":
-                    if vc.reliable_ally(self):
-                        self.score += 1
-                
-                case "Secure Strategic Resources":
-                    if vc.secure_strategic_resources(self):
-                        self.score += 1
-
-                case "Threat Containment":
-                    if vc.threat_containment(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-                
-                case "Energy Focus":
-                    if vc.energy_focus(self):
-                        self.score += 1
-
-                case "Industrial Focus":
-                    if vc.industrial_focus(self):
-                        self.score += 1
-                
-                case "Hegemony":
-                    if vc.hegemony(self):
-                        self.score += 1
-
-                case "Monopoly":
-                    if vc.monopoly(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-                
-                case "Nuclear Deterrent":
-                    if vc.nuclear_deterrent(self):
-                        self.score += 1
-                
-                case "Strong Research Agreement":
-                    if vc.strong_research_agreement(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-
-                case "Strong Trade Agreement":
-                    if vc.strong_trade_agreement(self):
-                        self.score += 1
-                        self.victory_conditions[name] = True
-
-                case "Sphere of Influence":
-                    if vc.sphere_of_influence(self):
-                        score += 1
-                        self.victory_conditions[name] = True
-                
-                case "Underdog":
-                    if vc.underdog(self):
-                        score += 1
-                        self.victory_conditions[name] = True
-
-                case "Warmonger":
-                    if vc.warmonger(self):
-                        score += 1
-                        self.victory_conditions[name] = True
-
-                case "Economic Domination":
-                    if vc.economic_domination(self):
-                        score += 1
-
-                case "Influence Through Trade":
-                    if vc.influence_through_trade(self):
-                        score += 1
-
-                case "Military Superpower":
-                    if vc.military_superpower(self):
-                        score += 1
-
-                case "Scientific Leader":
-                    if vc.scientific_leader(self):
-                        score += 1
-
-                case "Territorial Control":
-                    if vc.territorial_control(self):
-                        score += 1
+                    # mark victory condition as permanently satisfied if needed
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Threat Containment",
+                                    "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    if name in one_and_done:
+                        self._satisfied[name] = True
 
     def add_tech(self, technology_name: str) -> None:
         """
@@ -926,7 +861,8 @@ class NationTable:
                 "nuclearMissile": nation.nuke_count
             },
             "score": nation.score,
-            "chosenVictorySet": nation.chosen_vc_set,
+            "chosenVictorySet": nation.victory_conditions,
+            "satisfiedVictorySet": nation._satisfied,
             "victorySets": nation._sets,
             "resources": nation._resources,
             "statistics": {
