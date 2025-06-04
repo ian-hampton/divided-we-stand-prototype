@@ -367,6 +367,13 @@ def strong_research_agreement(nation: Nation) -> bool:
 
     # load game data
     GAME_ID = nation.game_id
+    alliance_table = AllianceTable(GAME_ID)
+
+    for alliance in alliance_table:
+        if nation.name in alliance.current_members and alliance.type == "Research Agreement":
+            amount, resource_name = alliance.get_yield()
+            if amount >= 8:
+                return True
 
     return False
 
@@ -374,6 +381,13 @@ def strong_trade_agreement(nation: Nation) -> bool:
 
     # load game data
     GAME_ID = nation.game_id
+    alliance_table = AllianceTable(GAME_ID)
+
+    for alliance in alliance_table:
+        if nation.name in alliance.current_members and alliance.type == "Trade Agreement":
+            amount, resource_name = alliance.get_yield()
+            if amount >= 24:
+                return True
 
     return False
 
