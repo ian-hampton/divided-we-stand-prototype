@@ -578,11 +578,11 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     # get victory condition data
     player_information_dict['Victory Conditions Data']['Conditions List'] = list(nation.victory_conditions.keys())
     player_information_dict['Victory Conditions Data']['Color List'] = list(nation.victory_conditions.values())
-    for i, status in player_information_dict['Victory Conditions Data']['Color List']:
+    for i, entry in enumerate(player_information_dict['Victory Conditions Data']['Color List']):
         if entry:
-           player_information_dict['Victory Conditions Data']['Color List'] = "#00ff00"
+           player_information_dict['Victory Conditions Data']['Color List'][i] = "#00ff00"
         else:
-            player_information_dict['Victory Conditions Data']['Color List'] = "#ff0000"
+            player_information_dict['Victory Conditions Data']['Color List'][i] = "#ff0000"
 
     # resource data
     class_list = []
