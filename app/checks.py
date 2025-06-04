@@ -138,13 +138,6 @@ def update_income(game_id: str) -> None:
             income_str = f'&Tab;+{amount:.2f} from {alliance.name}.'
             _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation_table.save(nation)
-
-    # military capacity from other sources
-    if "Threat Containment" in active_games_dict[game_id]["Active Events"]:
-        for nation in nation_table:
-            if active_games_dict[game_id]["Active Events"]["Threat Containment"]["Chosen Nation Name"] == nation.name:
-                nation.update_rate("Military Capacity", -20)
-                nation_table.save(nation)
         
     # apply income rate to gross income
     for nation in nation_table:
