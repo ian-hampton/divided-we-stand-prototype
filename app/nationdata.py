@@ -5,7 +5,6 @@ from typing import Union, Tuple, List
 
 from app import core
 from app.region import Region
-import app.victory_conditions as vc
 
 class Nation:
     
@@ -304,6 +303,8 @@ class Nation:
         """
         Updates victory condition progress.
         """
+
+        import app.victory_conditions as vc
         
         # reset
         self.score = 0
