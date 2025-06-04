@@ -1,10 +1,10 @@
 import json
 import random
 import os
+from typing import Union, Tuple, List
 
 from app import core
 from app.region import Region
-from typing import Union, Tuple, List
 
 class Nation:
     
@@ -29,9 +29,9 @@ class Nation:
         self.nuke_count: int = nation_data["missileStockpile"]["nuclearMissile"]
 
         self.score: int = nation_data["score"]
-        self.chosen_vc_set: str = nation_data["chosenVictorySet"]
+        self.victory_conditions: dict = nation_data["chosenVictorySet"]
         self._sets: dict = nation_data["victorySets"]
-        self.victory_conditions: dict = self._sets.get(self.chosen_vc_set)
+        self._satisfied: dict = nation_data["satisfiedVictorySet"]
 
         self.improvement_counts: dict = nation_data["improvementCounts"]
         self.unit_counts: dict = nation_data["unitCounts"]
@@ -101,7 +101,8 @@ class Nation:
                 "nuclearMissile": 0
             },
             "score": 0,
-            "chosenVictorySet": "N/A",
+            "chosenVictorySet": {},
+            "satisfiedVictorySet": {},
             "victorySets": vc_sets,
             "resources": {
                 "Dollars": {
@@ -300,15 +301,66 @@ class Nation:
 
     def update_victory_progress(self) -> None:
         """
-        Updates victory condition progress. Be sure to save the nation object in order to commit the update!
+        Updates victory condition progress.
         """
-        
-        from app import checks
-        current_turn_num = core.get_current_turn_num(self.game_id)
-        vc_results, score = checks.check_victory_conditions(self.game_id, int(self.id), current_turn_num)
 
-        self.victory_conditions = vc_results
-        self.score = score
+        import app.victory_conditions as vc
+        
+        # reset
+        self.score = 0
+        for name in self.victory_conditions.keys():
+            self.victory_conditions[name] = False
+
+        # check each victory condition
+        for name in self.victory_conditions.keys():
+            
+            # do not check vcs that have already been permanently satisfied
+            if self._satisfied[name]:
+                self.score += 1
+                continue
+
+            # map vc names to functions
+            name_to_func = {
+                "Ambassador": vc.ambassador,
+                "Backstab": vc.backstab,
+                "Breakthrough": vc.breakthrough,
+                "Diversified Economy": vc.breakthrough,
+                "Double Down": vc.double_down,
+                "New Empire": vc.new_empire,
+                "Reconstruction Effort": vc.reconstruction_effort,
+                "Reliable Ally": vc.reliable_ally,
+                "Secure Strategic Resources": vc.secure_strategic_resources,
+                "Threat Containment": vc.threat_containment,
+                "Energy Focus": vc.energy_focus,
+                "Industrial Focus": vc.industrial_focus,
+                "Hegemony": vc.hegemony,
+                "Monopoly": vc.monopoly,
+                "Nuclear Deterrent": vc.nuclear_deterrent,
+                "Strong Research Agreement": vc.strong_research_agreement,
+                "Strong Trade Agreement": vc.strong_trade_agreement,
+                "Sphere of Influence": vc.sphere_of_influence,
+                "Underdog": vc.underdog,
+                "Warmonger": vc.warmonger,
+                "Economic Domination": vc.economic_domination,
+                "Influence Through Trade": vc.influence_through_trade,
+                "Military Superpower": vc.military_superpower,
+                "Scientific Leader": vc.scientific_leader,
+                "Territorial Control": vc.territorial_control
+            }
+            
+            # check victory condition
+            if name in name_to_func:
+                if name_to_func[name](self):
+                    
+                    # mark victory condition as completed
+                    self.score += 1
+                    self.victory_conditions[name] = True
+
+                    # mark victory condition as permanently satisfied if needed
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Threat Containment",
+                                    "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    if name in one_and_done:
+                        self._satisfied[name] = True
 
     def add_tech(self, technology_name: str) -> None:
         """
@@ -810,7 +862,8 @@ class NationTable:
                 "nuclearMissile": nation.nuke_count
             },
             "score": nation.score,
-            "chosenVictorySet": nation.chosen_vc_set,
+            "chosenVictorySet": nation.victory_conditions,
+            "satisfiedVictorySet": nation._satisfied,
             "victorySets": nation._sets,
             "resources": nation._resources,
             "statistics": {
@@ -1002,23 +1055,27 @@ class NationTable:
 
 # tba - move everything below to a scenario file
 EASY_LIST = [
+    "Ambassador",
+    "Backstab",
     "Breakthrough",
-    "Diversified Economy",
-    "Energy Economy",
-    "Industrial Focus",
-    "Leading Defense",
-    "Major Exporter",
+    "Diverse Economy",
+    "Double Down",
+    "New Empire",
     "Reconstruction Effort",
-    "Secure Strategic Resources"
+    "Reliable Ally",
+    "Secure Strategic Resources",
+    "Threat Containment"
 ]
 NORMAL_LIST = [
-    "Backstab",
-    "Diversified Army",
+    "Energy Focus",
+    "Industrial Focus",
     "Hegemony",
-    "New Empire",
+    "Monopoly",
     "Nuclear Deterrent",
-    "Reliable Ally",
+    "Strong Research Agreement",
+    "Strong Trade Agreement",
     "Sphere of Influence",
+    "Underdog",
     "Warmonger"
 ]
 HARD_LIST = [

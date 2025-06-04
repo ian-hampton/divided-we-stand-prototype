@@ -305,6 +305,18 @@ class War:
 
         return main_attacker_id, main_defender_id
 
+    def is_on_same_side(self, nation_id_1: str, nation_id_2: str) -> bool:
+        
+        combatant_1 = self.get_combatant(nation_id_1)
+        combatant_2 = self.get_combatant(nation_id_2)
+
+        if "Attacker" in combatant_1.role and "Attacker" in combatant_2.role:
+            return True
+        elif "Defender" in combatant_1.role and "Defender" in combatant_2.role:
+            return True
+        
+        return False
+
     def add_missing_justifications(self) -> None:
         
         # get game data
