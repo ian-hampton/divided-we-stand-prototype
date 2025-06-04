@@ -304,18 +304,6 @@ class Nation:
         Updates victory condition progress. Be sure to save the nation object in order to commit the update!
         """
 
-        # get game info
-        nation_table = NationTable(self.game_id)
-        alliance_table = AllianceTable(game_id)
-        war_table = WarTable(game_id)
-        rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
-        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
-        tech_data_dict = core.get_scenario_dict(game_id, "Technologies")
-        agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
-        current_turn_num = core.get_current_turn_num(game_id)
-        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
-
         # check each victory condition
         self.score = 0
         for name, is_completed in self.victory_conditions.keys():
@@ -326,8 +314,6 @@ class Nation:
                 continue
 
             match name:
-
-                # easy victory conditions
 
                 case "Ambassador":
                     if vc.ambassador(self):
@@ -396,10 +382,14 @@ class Nation:
                         self.score += 1
                 
                 case "Strong Research Agreement":
-                    pass
+                    if vc.strong_research_agreement(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
 
                 case "Strong Trade Agreement":
-                    pass
+                    if vc.strong_trade_agreement(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
 
                 case "Sphere of Influence":
                     if vc.sphere_of_influence(self):
