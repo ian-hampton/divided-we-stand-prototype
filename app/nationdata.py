@@ -1,10 +1,11 @@
 import json
 import random
 import os
+from typing import Union, Tuple, List
 
 from app import core
 from app.region import Region
-from typing import Union, Tuple, List
+import app.victory_conditions as vc
 
 class Nation:
     
@@ -302,13 +303,204 @@ class Nation:
         """
         Updates victory condition progress. Be sure to save the nation object in order to commit the update!
         """
-        
-        from app import checks
-        current_turn_num = core.get_current_turn_num(self.game_id)
-        vc_results, score = checks.check_victory_conditions(self.game_id, int(self.id), current_turn_num)
 
-        self.victory_conditions = vc_results
-        self.score = score
+        # get game info
+        nation_table = NationTable(self.game_id)
+        alliance_table = AllianceTable(game_id)
+        war_table = WarTable(game_id)
+        rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
+        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+        tech_data_dict = core.get_scenario_dict(game_id, "Technologies")
+        agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
+        current_turn_num = core.get_current_turn_num(game_id)
+        with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+            regdata_dict = json.load(json_file)
+
+        # check each victory condition
+        self.score = 0
+        for name, is_completed in self.victory_conditions.keys():
+            
+            # do not check vcs that have already been permanently satisfied
+            if is_completed:
+                self.score += 1
+                continue
+
+            match name:
+
+                # easy victory conditions
+
+                case "Ambassador":
+                    if vc.ambassador(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
+
+                case "Backstab":
+                    if vc.backstab(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
+                
+                case "Breakthrough":
+                    if vc.breakthrough(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
+                
+                case "Diversified Economy":
+                    if vc.breakthrough(self):
+                        self.score += 1
+
+                case "Double Down":
+                    if vc.double_down(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
+
+                case "New Empire":
+                    if vc.new_empire(self):
+                        self.score += 1
+
+                case "Reconstruction Effort":
+                    if vc.reconstruction_effort(self):
+                        self.score += 1
+
+                case "Reliable Ally":
+                    if vc.reliable_ally(self):
+                        self.score += 1
+                
+                case "Secure Strategic Resources":
+                    if vc.secure_strategic_resources(self):
+                        self.score += 1
+
+                case "Threat Containment":
+                    if vc.threat_containment(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
+                
+                case "Energy Economy":
+                    # get gross income sums for each nation using gross income data
+                    sum_dict = {}
+                    for temp in nation_table:
+                        sum_dict[temp.name] = 0
+                        for resource_name in temp._resources:
+                            if resource_name in ["Coal", "Oil", "Energy"]:
+                                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
+                    # check if nation has the greatest sum
+                    nation_name_sum = sum_dict[nation.name]
+                    for temp_nation_name, sum in sum_dict.items():
+                        if temp_nation_name != nation.name and sum >= nation_name_sum:
+                            nation_name_sum = False
+                    if nation_name_sum:
+                        score += 1
+
+                case "Industrial Focus":
+                    # get gross income sums for each nation using gross income data
+                    sum_dict = {}
+                    for temp in nation_table:
+                        sum_dict[temp.name] = 0
+                        for resource_name in temp._resources:
+                            if resource_name in ["Basic Materials", "Common Metals"]:
+                                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
+                    # check if nation has the greatest sum
+                    nation_name_sum = sum_dict[nation.name]
+                    for temp_nation_name, sum in sum_dict.items():
+                        if temp_nation_name != nation.name and sum >= nation_name_sum:
+                            nation_name_sum = False
+                    if nation_name_sum:
+                        score += 1
+                
+                case "Leading Defense":
+                    # get gross improvement counts using improvement count list
+                    sum_dict = {}
+                    for temp in nation_table:
+                        sum_dict[temp.name] = 0
+                        sum_dict[temp.name] += temp.improvement_counts["Military Outpost"]
+                        sum_dict[temp.name] += temp.improvement_counts["Military Base"]
+                        sum_dict[temp.name] += temp.improvement_counts["Missile Defense System"]
+                        sum_dict[temp.name] += temp.improvement_counts["Missile Defense Network"]
+                    # check if nation has the greatest sum
+                    nation_name_sum = sum_dict[nation.name]
+                    for temp_nation_name, sum in sum_dict.items():
+                        if temp_nation_name != nation.name and sum >= nation_name_sum:
+                            nation_name_sum = False
+                    if nation_name_sum:
+                        score += 1
+
+                case "Major Exporter":
+                    export_count = 0
+                    for transaction in rmdata_all_transaction_list:
+                        if transaction[1] == nation.name and transaction[2] == "Sold":
+                            export_count += int(transaction[3])
+                    if export_count >= 150:
+                        score += 1
+                        vc_dict[victory_condition_1] = True    # vc is permanently fulfilled
+
+                case "Diversified Army":
+                    unit_types_found = 0
+                    for unit_type, count in nation.unit_counts.items():
+                        if count > 0:
+                            unit_types_found += 1
+                    if unit_types_found >= 5:
+                        score += 1
+
+                case "Hegemony":
+                    puppet_str = f"{nation.name} Puppet State"
+                    for temp in nation_table:
+                        if puppet_str == temp.status:
+                            score += 1
+                            break
+
+                case "Nuclear Deterrent":
+                    most_nukes_value = 0
+                    most_nukes_player_ids = []
+                    for temp in nation_table:
+                        if temp.nuke_count > most_nukes_value:
+                            most_nukes_value = temp.nuke_count
+                            most_nukes_player_ids = [temp.id]
+                        elif temp.nuke_count == most_nukes_value:
+                            most_nukes_player_ids.append(temp.id)
+                    if len(most_nukes_player_ids) == 1 and player_id in most_nukes_player_ids:
+                        score += 1
+
+                case "Sphere of Influence":
+                    agenda_count = 0
+                    for research_name in nation.completed_research:
+                        if research_name in agenda_data_dict:
+                            agenda_count += 1
+                    if agenda_count >= 8:
+                        score += 1
+                        vc_dict[victory_condition_2] = True    # vc is permanently fulfilled
+                        
+                case "Warmonger":
+                    count = 0
+                    for war in war_table:
+                        if war.outcome == "Attacker Victory" and war.get_role(nation.id) == "Main Attacker":
+                            count += 1
+                    if count >= 3:
+                        score += 1
+                        vc_dict[victory_condition_2] = True    # vc is permanently fulfilled
+
+                case "Economic Domination":
+                    first, second, third = nation_table.get_top_three("netIncome")
+                    if nation.name in first[0] and (first[1] > second[1]):
+                        score += 1
+
+                case "Influence Through Trade":
+                    first, second, third = nation_table.get_top_three("transactionCount")
+                    if nation.name in first[0] and (first[1] > second[1]):
+                        score += 1
+
+                case "Military Superpower":
+                    first, second, third = nation_table.get_top_three("militaryStrength")
+                    if nation.name in first[0] and (first[1] > second[1]):
+                        score += 1
+
+                case "Scientific Leader":
+                    first, second, third = nation_table.get_top_three("researchCount")
+                    if nation.name in first[0] and (first[1] > second[1]):
+                        score += 1
+
+                case "Territorial Control":
+                    first, second, third = nation_table.get_top_three("nationSize")
+                    if nation.name in first[0] and (first[1] > second[1]):
+                        score += 1
 
     def add_tech(self, technology_name: str) -> None:
         """
