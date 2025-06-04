@@ -374,132 +374,66 @@ class Nation:
                         self.score += 1
                         self.victory_conditions[name] = True
                 
-                case "Energy Economy":
-                    # get gross income sums for each nation using gross income data
-                    sum_dict = {}
-                    for temp in nation_table:
-                        sum_dict[temp.name] = 0
-                        for resource_name in temp._resources:
-                            if resource_name in ["Coal", "Oil", "Energy"]:
-                                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
-                    # check if nation has the greatest sum
-                    nation_name_sum = sum_dict[nation.name]
-                    for temp_nation_name, sum in sum_dict.items():
-                        if temp_nation_name != nation.name and sum >= nation_name_sum:
-                            nation_name_sum = False
-                    if nation_name_sum:
-                        score += 1
+                case "Energy Focus":
+                    if vc.energy_focus(self):
+                        self.score += 1
 
                 case "Industrial Focus":
-                    # get gross income sums for each nation using gross income data
-                    sum_dict = {}
-                    for temp in nation_table:
-                        sum_dict[temp.name] = 0
-                        for resource_name in temp._resources:
-                            if resource_name in ["Basic Materials", "Common Metals"]:
-                                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
-                    # check if nation has the greatest sum
-                    nation_name_sum = sum_dict[nation.name]
-                    for temp_nation_name, sum in sum_dict.items():
-                        if temp_nation_name != nation.name and sum >= nation_name_sum:
-                            nation_name_sum = False
-                    if nation_name_sum:
-                        score += 1
+                    if vc.industrial_focus(self):
+                        self.score += 1
                 
-                case "Leading Defense":
-                    # get gross improvement counts using improvement count list
-                    sum_dict = {}
-                    for temp in nation_table:
-                        sum_dict[temp.name] = 0
-                        sum_dict[temp.name] += temp.improvement_counts["Military Outpost"]
-                        sum_dict[temp.name] += temp.improvement_counts["Military Base"]
-                        sum_dict[temp.name] += temp.improvement_counts["Missile Defense System"]
-                        sum_dict[temp.name] += temp.improvement_counts["Missile Defense Network"]
-                    # check if nation has the greatest sum
-                    nation_name_sum = sum_dict[nation.name]
-                    for temp_nation_name, sum in sum_dict.items():
-                        if temp_nation_name != nation.name and sum >= nation_name_sum:
-                            nation_name_sum = False
-                    if nation_name_sum:
-                        score += 1
-
-                case "Major Exporter":
-                    export_count = 0
-                    for transaction in rmdata_all_transaction_list:
-                        if transaction[1] == nation.name and transaction[2] == "Sold":
-                            export_count += int(transaction[3])
-                    if export_count >= 150:
-                        score += 1
-                        vc_dict[victory_condition_1] = True    # vc is permanently fulfilled
-
-                case "Diversified Army":
-                    unit_types_found = 0
-                    for unit_type, count in nation.unit_counts.items():
-                        if count > 0:
-                            unit_types_found += 1
-                    if unit_types_found >= 5:
-                        score += 1
-
                 case "Hegemony":
-                    puppet_str = f"{nation.name} Puppet State"
-                    for temp in nation_table:
-                        if puppet_str == temp.status:
-                            score += 1
-                            break
+                    if vc.hegemony(self):
+                        self.score += 1
 
+                case "Monopoly":
+                    if vc.monopoly(self):
+                        self.score += 1
+                        self.victory_conditions[name] = True
+                
                 case "Nuclear Deterrent":
-                    most_nukes_value = 0
-                    most_nukes_player_ids = []
-                    for temp in nation_table:
-                        if temp.nuke_count > most_nukes_value:
-                            most_nukes_value = temp.nuke_count
-                            most_nukes_player_ids = [temp.id]
-                        elif temp.nuke_count == most_nukes_value:
-                            most_nukes_player_ids.append(temp.id)
-                    if len(most_nukes_player_ids) == 1 and player_id in most_nukes_player_ids:
-                        score += 1
+                    if vc.nuclear_deterrent(self):
+                        self.score += 1
+                
+                case "Strong Research Agreement":
+                    pass
+
+                case "Strong Trade Agreement":
+                    pass
 
                 case "Sphere of Influence":
-                    agenda_count = 0
-                    for research_name in nation.completed_research:
-                        if research_name in agenda_data_dict:
-                            agenda_count += 1
-                    if agenda_count >= 8:
+                    if vc.sphere_of_influence(self):
                         score += 1
-                        vc_dict[victory_condition_2] = True    # vc is permanently fulfilled
-                        
+                        self.victory_conditions[name] = True
+                
+                case "Underdog":
+                    if vc.underdog(self):
+                        score += 1
+                        self.victory_conditions[name] = True
+
                 case "Warmonger":
-                    count = 0
-                    for war in war_table:
-                        if war.outcome == "Attacker Victory" and war.get_role(nation.id) == "Main Attacker":
-                            count += 1
-                    if count >= 3:
+                    if vc.warmonger(self):
                         score += 1
-                        vc_dict[victory_condition_2] = True    # vc is permanently fulfilled
+                        self.victory_conditions[name] = True
 
                 case "Economic Domination":
-                    first, second, third = nation_table.get_top_three("netIncome")
-                    if nation.name in first[0] and (first[1] > second[1]):
+                    if vc.economic_domination(self):
                         score += 1
 
                 case "Influence Through Trade":
-                    first, second, third = nation_table.get_top_three("transactionCount")
-                    if nation.name in first[0] and (first[1] > second[1]):
+                    if vc.influence_through_trade(self):
                         score += 1
 
                 case "Military Superpower":
-                    first, second, third = nation_table.get_top_three("militaryStrength")
-                    if nation.name in first[0] and (first[1] > second[1]):
+                    if vc.military_superpower(self):
                         score += 1
 
                 case "Scientific Leader":
-                    first, second, third = nation_table.get_top_three("researchCount")
-                    if nation.name in first[0] and (first[1] > second[1]):
+                    if vc.scientific_leader(self):
                         score += 1
 
                 case "Territorial Control":
-                    first, second, third = nation_table.get_top_three("nationSize")
-                    if nation.name in first[0] and (first[1] > second[1]):
+                    if vc.territorial_control(self):
                         score += 1
 
     def add_tech(self, technology_name: str) -> None:
