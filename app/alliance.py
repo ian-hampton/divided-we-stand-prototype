@@ -97,6 +97,7 @@ class Alliance:
 
         from app.nationdata import NationTable
         nation_table = NationTable(self.game_id)
+        agenda_data_dict = core.get_scenario_dict(self.game_id, "Agendas")
 
         if not self.is_active:
             return 0.0, None
@@ -122,7 +123,12 @@ class Alliance:
                     ally_research_list = list(nation.completed_research.keys())
                     tech_set.update(ally_research_list)
 
-                return len(tech_set) * 0.2, "Technology"
+                tech_set_filtered = set()
+                for research_name in tech_set:
+                    if research_name not in agenda_data_dict:
+                        tech_set_filtered.add(research_name)
+
+                return len(tech_set_filtered) * 0.2, "Technology"
 
             case "Defense Pact":
                 
