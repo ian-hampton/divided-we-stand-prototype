@@ -2065,6 +2065,12 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
     # tba - grab this from scenario files
     data = {
+        "Food": {
+            "Base Price": 3,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
         "Technology": {
             "Base Price": 5,
             "Current Price": 0,
@@ -2084,7 +2090,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             "Sold": 0
         },
         "Basic Materials": {
-            "Base Price": 5,
+            "Base Price": 3,
             "Current Price": 0,
             "Bought": 0,
             "Sold": 0

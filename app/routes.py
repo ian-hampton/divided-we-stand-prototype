@@ -878,6 +878,12 @@ def resource_market(full_game_id):
 
     # tba - grab this from scenario files
     data = {
+        "Food": {
+            "Base Price": 3,
+            "Current Price": 0,
+            "Bought": 0,
+            "Sold": 0
+        },
         "Technology": {
             "Base Price": 5,
             "Current Price": 0,
@@ -897,7 +903,7 @@ def resource_market(full_game_id):
             "Sold": 0
         },
         "Basic Materials": {
-            "Base Price": 5,
+            "Base Price": 3,
             "Current Price": 0,
             "Bought": 0,
             "Sold": 0
