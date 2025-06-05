@@ -201,6 +201,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions_dict = {
         "AllianceCreateAction": [],
         "AllianceJoinAction": [],
+        "AllianceKickAction": [],
         "AllianceLeaveAction": [],
         "ClaimAction": [],
         "CrimeSyndicateAction": [],
@@ -241,6 +242,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"], actions_dict["WhitePeaceAction"])
     actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
     actions.resolve_alliance_leave_actions(game_id, actions_dict["AllianceLeaveAction"])
+    actions.resolve_alliance_kick_actions(game_id, actions_dict["AllianceKickAction"])
     actions.resolve_alliance_create_actions(game_id, actions_dict["AllianceCreateAction"])
     actions.resolve_alliance_join_actions(game_id, actions_dict["AllianceJoinAction"])
     actions.resolve_claim_actions(game_id, actions_dict["ClaimAction"])

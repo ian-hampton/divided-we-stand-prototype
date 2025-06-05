@@ -1,6 +1,7 @@
 import csv
 import json
 import random
+from collections import defaultdict
 
 from app import core
 from app.nationdata import Nation
@@ -66,6 +67,36 @@ class AllianceJoinAction:
             return False
         
         return True
+
+class AllianceKickAction:
+
+    def __init__(self, game_id: str, nation_id: str, action_str: str):
+
+        self.id = nation_id
+        self.game_id = game_id
+        self.action_str = action_str
+        nation_table = NationTable(self.game_id)
+        alliance_table = AllianceTable(self.game_id)
+        
+        self.target_nation = None
+        for nation in nation_table:
+            if nation.name.lower() in action_str.lower():
+                self.target_nation = nation.name
+                break
+
+        self.alliance_name = None
+        for alliance in alliance_table:
+            if alliance.name.lower() in action_str.lower():
+                self.alliance_name = alliance.name
+                break
+
+    def __str__(self):
+        return f"[AllianceKickAction] Alliance Kick {self.target_nation} {self.alliance_name} ({self.id})"
+    
+    def is_valid(self) -> bool:
+        if self.target_nation is None or self.alliance_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
 
 class AllianceLeaveAction:
 
@@ -643,6 +674,7 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
     actions = {
         "Alliance Create": AllianceCreateAction,
         "Alliance Join": AllianceJoinAction,
+        "Alliance Kick": AllianceKickAction,
         "Alliance Leave": AllianceLeaveAction,
         "Claim": ClaimAction,
         "Steal": CrimeSyndicateAction,
@@ -1217,6 +1249,47 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
         notifications.append(f"{nation.name} has left the {alliance.name}.", 7)
         nation.action_log.append(f"Left {action.alliance_name}.")
         nation_table.save(nation)
+
+def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
+    
+    # get game data
+    nation_table = NationTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
+
+    # execute actions
+    kick_actions_tally = defaultdict(lambda: defaultdict(dict))
+    for action in actions_list:
+        nation = nation_table.get(action.id)
+        alliance = alliance_table.get(action.alliance_name)
+
+        # check that nation is in alliance
+        if action.target_nation not in alliance.current_members:
+            nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. You are not in the alliance.")
+            nation_table.save(nation)
+            continue
+
+        # check that target nation is in alliance
+        if action.target_nation not in alliance.current_members:
+            nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. Target nation is not in the alliance.")
+            nation_table.save(nation)
+            continue
+
+        # add kick action to tally
+        kick_actions_tally[alliance.name][action.target_nation] += 1
+        nation.action_log.append(f"Voted to kick {action.target_nation} from {action.alliance_name}.")
+        nation_table.save(nation)
+
+    # check tally
+    for alliance_name, kick_tally in kick_actions_tally.items():
+        for target_nation_name, votes in kick_tally.items():
+            alliance = alliance_table.get(alliance_name)
+
+            # kick player from alliance if vote is unanimous
+            if votes >= len(alliance.current_members) - 1:
+                alliance.remove_member(target_nation_name)
+                alliance_table.save(alliance)
+                notifications.append(f"{action.target_nation} has been kicked from {action.alliance_name}!", 7)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
     
