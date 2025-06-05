@@ -165,6 +165,15 @@ class War:
                     f"{main_attacker.name} Invasion of {main_defender.name}",
                     f"{main_attacker.name} Conquest of {main_defender.name}",
                 ]
+
+            case "Containment":
+                names = [
+                    f"{main_attacker.name} - {main_defender.name} Conflict",
+                    f"{main_attacker.name} - {main_defender.name} War",
+                    f"{main_attacker.name} - {main_defender.name} Containment War",
+                    f"{main_attacker.name} - {main_defender.name} Ideological War",
+                    f"{main_attacker.name} - {main_defender.name} War of Ideology",
+                ]
             
             case "Independence":
                 names = [
@@ -203,9 +212,10 @@ class War:
     def _resolve_war_justification(self, nation_id: str):
 
         from app.improvement import Improvement
+        nation_table = NationTable(self.game_id)
+        current_turn_num = core.get_current_turn_num(self.game_id)
         
         # get winner data
-        nation_table = NationTable(self.game_id)
         winner_nation = nation_table.get(nation_id)
         winner_combatant_data = self.get_combatant(nation_id)
 
@@ -238,6 +248,16 @@ class War:
             case "Subjugation":
                 looser_nation = nation_table.get(winner_combatant_data.target)
                 looser_nation.status = f"Puppet State of {winner_nation.name}"
+                nation_table.save(looser_nation)
+
+            case "Containment":
+                looser_nation = nation_table.get(winner_combatant_data.target)
+                new_tag = {
+                    "Military Capacity Rate": -50,
+                    "No Agenda Research": True,
+                    "Expire Turn": current_turn_num + 9
+                }
+                looser_nation.tags[f"{self.name} Containment"] = new_tag
                 nation_table.save(looser_nation)
 
             case "Independence":

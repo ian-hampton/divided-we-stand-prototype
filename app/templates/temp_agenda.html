@@ -110,7 +110,9 @@ h3 {
                         <td class="cost" style="color: {{ complement_color }};padding-right: 5px">{{ tech_cost }}</td>
                     </tr>
                     <tr height=45% style="background-color: {{ complement_color }}">
+                        {% autoescape false %}
                         <td class="desc" colspan=2 style="padding-left: 5px;padding-right: 5px;">{{ tech_dict["Description"] }}</td>
+                        {% endautoescape %}
                     </tr>
                     <tr height=5%>
                         <td></td>

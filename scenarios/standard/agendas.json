@@ -1,33 +1,33 @@
 {
-    "Peace Accords": {
+    "Common Ground": {
         "Agenda Type": "Cooperative",
         "Prerequisite": null,
         "Cost": 15,
-        "Description": "New Alliance: Non-Aggression Pact.",
+        "Description": "New Alliance: Non-Aggression Pact.<br>New Alliance: Defense Pact.",
         "Location": "A0",
-        "Modifiers": {}
-    },
-    "Defensive Agreements": {
-        "Agenda Type": "Cooperative",
-        "Prerequisite": "Peace Accords",
-        "Cost": 15,
-        "Description": "New Alliance: Defense Pact.",
-        "Location": "A1",
         "Modifiers": {}
     },
     "Power Broker": {
         "Agenda Type": "Cooperative",
-        "Prerequisite": "Defensive Agreements",
+        "Prerequisite": "Common Ground",
         "Cost": 15,
-        "Description": "+1 alliance capacity. Gain an additional +0.25 political power per turn from alliances.",
-        "Location": "A2",
+        "Description": "+1 alliance capacity. Gain +0.25 political power per turn from each alliance you are a member of.",
+        "Location": "A1",
         "Modifiers": {}
     },
-    "With Open Arms": {
+    "Ideological Wars": {
         "Agenda Type": "Cooperative",
         "Prerequisite": "Power Broker",
         "Cost": 15,
-        "Description": "Other nations no longer need the required agenda to join alliances that you have founded.",
+        "Description": "New War Justification: Containment.",
+        "Location": "A2",
+        "Modifiers": {}
+    },
+    "Alliance Centralization": {
+        "Agenda Type": "Cooperative",
+        "Prerequisite": "Ideological Wars",
+        "Cost": 15,
+        "Description": "Your nation earns 50% more from alliance bonuses. You cannot be kicked from alliances you have founded.",
         "Location": "A3",
         "Modifiers": {}
     },
@@ -103,7 +103,7 @@
         "Agenda Type": "Security",
         "Prerequisite": null,
         "Cost": 15,
-        "Description": "+2 military capacity from Capital improvements. +1 to all combat rolls for all defensive improvements.",
+        "Description": "+2 military capacity from Capital improvements.<br>+1 to all combat rolls for all defensive improvements.",
         "Location": "C0",
         "Modifiers": {
             "Capital": {

@@ -131,6 +131,8 @@ def update_income(game_id: str) -> None:
             continue
         for ally_name in alliance.current_members:
             nation = nation_table.get(ally_name)
+            if "Alliance Centralization" in nation.completed_research:
+                amount = round(amount * 1.5, 2)
             if resource_name == "Military Capacity":
                 nation.update_max_mc(amount)
             else:

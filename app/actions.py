@@ -1261,6 +1261,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
     kick_actions_tally = defaultdict(lambda: defaultdict(dict))
     for action in actions_list:
         nation = nation_table.get(action.id)
+        target_nation = nation_table.get(action.target_nation)
         alliance = alliance_table.get(action.alliance_name)
 
         # check that nation is in alliance
@@ -1272,6 +1273,12 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
         # check that target nation is in alliance
         if action.target_nation not in alliance.current_members:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. Target nation is not in the alliance.")
+            nation_table.save(nation)
+            continue
+
+        # cannot kick target nation if founder and alliance centralization
+        if action.target_nation in alliance.founding_members and "Alliance Centralization" in target_nation.completed_research:
+            nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. Target nation is a founder of the alliance.")
             nation_table.save(nation)
             continue
 
@@ -1308,17 +1315,14 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
         # tba - tie this to scenario files
         research_check_success = True
         match action.alliance_type:
-            case 'Non-Aggression Pact':
-                if 'Peace Accords' not in nation.completed_research:
+            case "Non-Aggression Pact" | "Defense Pact":
+                if "Common Ground" not in nation.completed_research:
+                   research_check_success = False
+            case "Trade Agreement":
+                if "Trade Routes" not in nation.completed_research:
                    research_check_success = False 
-            case 'Defense Pact':
-                if 'Defensive Agreements' not in nation.completed_research:
-                   research_check_success = False 
-            case 'Trade Agreement':
-                if 'Trade Routes' not in nation.completed_research:
-                   research_check_success = False 
-            case 'Research Agreement':
-                if 'Research Exchange' not in nation.completed_research:
+            case "Research Agreement":
+                if "Research Exchange" not in nation.completed_research:
                    research_check_success = False 
         if not research_check_success:
             nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have the required agenda.")
@@ -1383,25 +1387,22 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
         # tba - tie this to scenario data
         research_check_success = False
         match alliance.type:
-            case 'Non-Aggression Pact':
-                if 'Peace Accords' in nation.completed_research:
-                    research_check_success = True
-            case 'Defense Pact':
-                if 'Defensive Agreements' in nation.completed_research:
-                    research_check_success = True
-            case 'Trade Agreement':
-                if 'Trade Routes' in nation.completed_research:
-                    research_check_success = True
-            case 'Research Agreement':
-                if 'Research Exchange' in nation.completed_research:
-                    research_check_success = True
+            case "Non-Aggression Pact" | "Defense Pact":
+                if "Common Ground" not in nation.completed_research:
+                   research_check_success = False
+            case "Trade Agreement":
+                if "Trade Routes" not in nation.completed_research:
+                   research_check_success = False 
+            case "Research Agreement":
+                if "Research Exchange" not in nation.completed_research:
+                   research_check_success = False 
         if not research_check_success:
             nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have the required agenda.")
             nation_table.save(nation)
             continue
 
         # check alliance capacity
-        if alliance.type != 'Non-Aggression Pact':
+        if alliance.type != "Non-Aggression Pact":
             alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have enough alliance capacity.")
@@ -2411,9 +2412,9 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
             case "Animosity" | "Border Skirmish":
                 valid_war_justification = True
             case "Conquest":
-                if "Early Expansion" in attacker_nation.completed_research:
+                if "Ideological Wars" in attacker_nation.completed_research:
                     valid_war_justification = True
-            case "Annexation":
+            case "Containment":
                 if "New Empire" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Independence":
