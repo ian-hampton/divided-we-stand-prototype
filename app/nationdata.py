@@ -106,7 +106,7 @@ class Nation:
             "victorySets": vc_sets,
             "resources": {
                 "Dollars": {
-                    "stored": "10.00",
+                    "stored": "5.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
                     "max": 100,
