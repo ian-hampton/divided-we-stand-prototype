@@ -39,7 +39,7 @@
         "Location": "B0",
         "Modifiers": {}
     },
-    "Research Exchange": {
+    "Technology Exchange": {
         "Agenda Type": "Economic",
         "Prerequisite": "Trade Routes",
         "Cost": 15,
@@ -49,9 +49,9 @@
     },
     "Improved Logistics": {
         "Agenda Type": "Economic",
-        "Prerequisite": "Research Exchange",
+        "Prerequisite": "Technology Exchange",
         "Cost": 15,
-        "Description": "Your nation's trade fee is lowered to 1:3. +1 alliance capacity.",
+        "Description": "Your nation's trade fee is lowered to 1:3.<br>Buying resources from the Resource Market is 20% cheaper.",
         "Location": "B2",
         "Modifiers": {}
     },

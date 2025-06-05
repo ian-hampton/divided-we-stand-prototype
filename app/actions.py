@@ -1322,7 +1322,7 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
                 if "Trade Routes" not in nation.completed_research:
                    research_check_success = False 
             case "Research Agreement":
-                if "Research Exchange" not in nation.completed_research:
+                if "Technology Exchange" not in nation.completed_research:
                    research_check_success = False 
         if not research_check_success:
             nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have the required agenda.")
@@ -1394,7 +1394,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
                 if "Trade Routes" not in nation.completed_research:
                    research_check_success = False 
             case "Research Agreement":
-                if "Research Exchange" not in nation.completed_research:
+                if "Technology Exchange" not in nation.completed_research:
                    research_check_success = False 
         if not research_check_success:
             nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have the required agenda.")
@@ -2166,16 +2166,18 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         nation = nation_table.get(action.id)
         price = data[action.resource_name]["Current Price"]
         rate = 1.0
-
-        # add discounts
-        for tag_name, tag_data in nation.tags.items():
-            rate -= float(tag_data.get("Market Buy Modifier", 0))
         
-        # event check
+        # embargo event check
         if "Embargo" in nation.tags:
             nation.action_log.append(f"Failed to buy {action.quantity} {action.resource_name}. Your nation is currently under an embargo.")
             nation_table.save(nation)
             continue
+
+        # add discounts
+        for tag_name, tag_data in nation.tags.items():
+            rate -= float(tag_data.get("Market Buy Modifier", 0))
+        if "Improved Logistics" in nation.completed_research:
+            rate -= 0.2
         if "Foreign Investment" in nation.tags:
             rate -= 0.2
 
@@ -2205,15 +2207,15 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         price = float(data[action.resource_name]["Current Price"] * 0.5)
         rate = 1.0
 
-        # add discounts
-        for tag_name, tag_data in nation.tags.items():
-            rate -= float(tag_data.get("Market Sell Modifier", 0))
-
-        # event check
+        # embargo event check
         if "Embargo" in nation.tags:
             nation.action_log.append(f"Failed to sell {action.quantity} {action.resource_name}. Your nation is currently under an embargo.")
             nation_table.save(nation)
             continue
+
+        # add discounts
+        for tag_name, tag_data in nation.tags.items():
+            rate -= float(tag_data.get("Market Sell Modifier", 0))
 
         # remove resources from stockpile
         nation.update_stockpile(action.resource_name, -1 * action.quantity)
