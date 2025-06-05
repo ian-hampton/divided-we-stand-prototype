@@ -126,6 +126,13 @@ class Nation:
                     "max": 50,
                     "rate": 100
                 },
+                "Food": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
                 "Coal": {
                     "stored": "0.00",
                     "income": "0.00",
