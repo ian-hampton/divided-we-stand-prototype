@@ -1,6 +1,6 @@
 {
     "Peace Accords": {
-        "Agenda Type": "Diplomacy",
+        "Agenda Type": "Cooperative",
         "Prerequisite": null,
         "Cost": 15,
         "Description": "New Alliance: Non-Aggression Pact.",
@@ -8,7 +8,7 @@
         "Modifiers": {}
     },
     "Defensive Agreements": {
-        "Agenda Type": "Diplomacy",
+        "Agenda Type": "Cooperative",
         "Prerequisite": "Peace Accords",
         "Cost": 15,
         "Description": "New Alliance: Defense Pact.",
@@ -16,7 +16,7 @@
         "Modifiers": {}
     },
     "Power Broker": {
-        "Agenda Type": "Diplomacy",
+        "Agenda Type": "Cooperative",
         "Prerequisite": "Defensive Agreements",
         "Cost": 15,
         "Description": "+1 alliance capacity. Gain an additional +0.25 political power per turn from alliances.",
@@ -24,7 +24,7 @@
         "Modifiers": {}
     },
     "With Open Arms": {
-        "Agenda Type": "Diplomacy",
+        "Agenda Type": "Cooperative",
         "Prerequisite": "Power Broker",
         "Cost": 15,
         "Description": "Other nations no longer need the required agenda to join alliances that you have founded.",
@@ -32,7 +32,7 @@
         "Modifiers": {}
     },
     "Trade Routes": {
-        "Agenda Type": "Economy",
+        "Agenda Type": "Economic",
         "Prerequisite": null,
         "Cost": 15,
         "Description": "New Alliance: Trade Agreement.",
@@ -40,7 +40,7 @@
         "Modifiers": {}
     },
     "Research Exchange": {
-        "Agenda Type": "Economy",
+        "Agenda Type": "Economic",
         "Prerequisite": "Trade Routes",
         "Cost": 15,
         "Description": "New Alliance: Research Agreement.",
@@ -48,7 +48,7 @@
         "Modifiers": {}
     },
     "Improved Logistics": {
-        "Agenda Type": "Economy",
+        "Agenda Type": "Economic",
         "Prerequisite": "Research Exchange",
         "Cost": 15,
         "Description": "Your nation's trade fee is lowered to 1:3. +1 alliance capacity.",
@@ -56,7 +56,7 @@
         "Modifiers": {}
     },
     "Efficient Bureaucracy": {
-        "Agenda Type": "Economy",
+        "Agenda Type": "Economic",
         "Prerequisite": "Improved Logistics",
         "Cost": 15,
         "Description": "All dollars upkeep costs for improvements in your nation are reduced by 50%.",

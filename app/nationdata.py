@@ -436,13 +436,13 @@ class Nation:
 
         # cost adjustment from foreign policy
         agenda_cost_adjustment = {
-            "Diplomacy": {
+            "Cooperative": {
                 "Diplomatic": -5,
                 "Commercial": 0,
                 "Isolationist": 5,
                 "Imperialist": 0
             },
-            "Economy": {
+            "Economic": {
                 "Diplomatic": 0,
                 "Commercial": -5,
                 "Isolationist": 0,
