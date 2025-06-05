@@ -119,7 +119,7 @@ class Nation:
                     "max": 50,
                     "rate": 100
                 },
-                "Technology": {
+                "Research": {
                     "stored": "0.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
@@ -282,10 +282,10 @@ class Nation:
                 new_tag = {
                     "Improvement Income Multiplier": {
                         "Research Laboratory": {
-                            "Technology": -0.2
+                            "Research": -0.2
                         },
                         "Research Institute": {
-                            "Technology": -0.2
+                            "Research": -0.2
                         }
                     },
                     "Expire Turn": 99999

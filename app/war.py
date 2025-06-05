@@ -231,7 +231,7 @@ class War:
             case "Animosity":
                 looser_nation = nation_table.get(winner_combatant_data.target)
                 winner_nation.update_stockpile("Political Power", 10)
-                winner_nation.update_stockpile("Technology", 10)
+                winner_nation.update_stockpile("Research", 10)
                 looser_nation.update_stockpile("Political Power", 0, overwrite=True)
                 nation_table.save(looser_nation)
 
@@ -465,7 +465,7 @@ class War:
             del attacker_nation.tags["Foreign Interference"]
             if outcome == "Attacker Victory":
                 attacker_nation.update_stockpile("Dollars", 50)
-                attacker_nation.update_stockpile("Technology", 20)
+                attacker_nation.update_stockpile("Research", 20)
                 attacker_nation.update_stockpile("Advanced Metals", 10)
             nation_table.save(attacker_nation)
 

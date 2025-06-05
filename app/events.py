@@ -569,7 +569,7 @@ def handle_current_event(game_id: str) -> None:
                     region_improvement.set_improvement("Missile Silo")
                     nation.nuke_count += 3
                 elif decision == "Scuttle":
-                    nation.update_stockpile("Technology", 15)
+                    nation.update_stockpile("Research", 15)
                 nation_table.save(nation)
                 notifications.append(f"{nation.name} chose to {decision.lower()} the old military installation.", 2)
             # save event

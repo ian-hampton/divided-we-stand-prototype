@@ -884,7 +884,7 @@ def resource_market(full_game_id):
             "Bought": 0,
             "Sold": 0
         },
-        "Technology": {
+        "Research": {
             "Base Price": 5,
             "Current Price": 0,
             "Bought": 0,

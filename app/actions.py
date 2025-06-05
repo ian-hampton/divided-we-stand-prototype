@@ -821,7 +821,7 @@ def _check_resource(resource_name: str) -> str | None:
     resources = {
         "Dollars",
         "Political Power",
-        "Technology",
+        "Research",
         "Coal",
         "Oil",
         "Basic Materials",
@@ -832,7 +832,7 @@ def _check_resource(resource_name: str) -> str | None:
     }
 
     resource_errors = {
-        "tech": "Technology",
+        "tech": "Research",
         "basic material": "Basic Materials",
         "common metal": "Common Metals",
         "advanced metal": "Advanced Metals",
@@ -1215,8 +1215,8 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             if multiplier != 1.0:
                 cost *= multiplier
                 cost = int(cost)
-            nation.update_stockpile("Technology", -1 * cost)
-            if float(nation.get_stockpile("Technology")) < 0:
+            nation.update_stockpile("Research", -1 * cost)
+            if float(nation.get_stockpile("Research")) < 0:
                 nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to research {action.research_name}. Not enough technology.")
@@ -1802,8 +1802,8 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             # pay for action
             event_action_data = action.action_str.split(" ")
             count = int(event_action_data[-1])
-            nation.update_stockpile("Technology", -1 * count)
-            if float(nation.get_stockpile("Technology")) < 0:
+            nation.update_stockpile("Research", -1 * count)
+            if float(nation.get_stockpile("Research")) < 0:
                 nation_table.reload()
                 nation = nation_table.get(action.id)
                 nation.action_log.append(f"Failed to spend {count} technology on Cure Research. Insufficient technology.")
@@ -2071,7 +2071,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             "Bought": 0,
             "Sold": 0
         },
-        "Technology": {
+        "Research": {
             "Base Price": 5,
             "Current Price": 0,
             "Bought": 0,

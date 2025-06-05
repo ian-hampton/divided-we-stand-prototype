@@ -128,7 +128,7 @@ class Alliance:
                     if research_name not in agenda_data_dict:
                         tech_set_filtered.add(research_name)
 
-                return len(tech_set_filtered) * 0.2, "Technology"
+                return len(tech_set_filtered) * 0.2, "Research"
 
             case "Defense Pact":
                 

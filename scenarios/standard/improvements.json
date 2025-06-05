@@ -49,7 +49,7 @@
         "Income": {
             "Dollars": 5,
             "Political Power": 1,
-            "Technology": 2
+            "Research": 2
         },
         "Abilities": [
             "Can exploit the resource present in its region once the sufficient technology is researched, providing +1 of that resource.",
@@ -128,7 +128,7 @@
         "Income": {
             "Dollars": 10,
             "Political Power": 0.25,
-            "Technology": 1
+            "Research": 1
         },
         "Abilities": [],
         "Upkeep": {
@@ -378,7 +378,7 @@
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {
-            "Technology": 5
+            "Research": 5
         },
         "Abilities": [],
         "Upkeep": {
@@ -400,7 +400,7 @@
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {
-            "Technology": 1
+            "Research": 1
         },
         "Abilities": [],
         "Upkeep": {},
