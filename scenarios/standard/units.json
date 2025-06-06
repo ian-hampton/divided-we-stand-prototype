@@ -11,7 +11,7 @@
         "Movement": 1,
         "Abilities": [],
         "Upkeep": {
-            "Dollars": 0.25
+            "Food": 0.25
         },
         "Build Costs": {
             "Dollars": 5,
@@ -32,7 +32,7 @@
             "All of your units that are adjacent to one of your Artillery units gain +1 victory damage and +1 draw damage. If multiple Artillery are adjacent, this bonus does not stack."
         ],
         "Upkeep": {
-            "Dollars": 0.5
+            "Food": 0.5
         },
         "Build Costs": {
             "Dollars": 10,
@@ -53,7 +53,7 @@
             "All of your Tank-type units that are adjacent to one of your Mechanized Infantry units gain +1 to all combat rolls. If multiple Mechanized Infantry are adjacent, this bonus does not stack."
         ],
         "Upkeep": {
-            "Dollars": 0.5
+            "Food": 0.5
         },
         "Build Costs": {
             "Dollars": 10,
@@ -75,7 +75,7 @@
             "Always heals during the bonus phase regardless of its positioning."
         ],
         "Upkeep": {
-            "Dollars": 1
+            "Food": 1
         },
         "Build Costs": {
             "Dollars": 15,
