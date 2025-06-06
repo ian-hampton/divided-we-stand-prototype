@@ -2480,7 +2480,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
                 if "Ideological Wars" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Containment":
-                if "New Empire" in attacker_nation.completed_research:
+                if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
                     valid_war_justification = True
             case "Independence":
                 if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
@@ -2569,6 +2569,8 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
 def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
 
+    #TODO: write functions so that this isn't all copy pasted
+
     # get game data
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
@@ -2632,7 +2634,7 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
                 if "Ideological Wars" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Containment":
-                if "New Empire" in attacker_nation.completed_research:
+                if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
                     valid_war_justification = True
             case "Independence":
                 if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
