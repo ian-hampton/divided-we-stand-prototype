@@ -99,28 +99,20 @@
         "Location": "C0",
         "Modifiers": {}
     },
-    "Nuclear Power": {
+    "Solar Panels": {
         "Research Type": "Energy",
         "Prerequisite": "Wind Turbines",
         "Cost": 10,
-        "Description": "New Improvement: Nuclear Power Plant.",
-        "Location": "C1",
-        "Modifiers": {}
-    },
-    "Solar Panels": {
-        "Research Type": "Energy",
-        "Prerequisite": "Nuclear Power",
-        "Cost": 15,
         "Description": "New Improvement: Solar Farm.",
-        "Location": "C2",
+        "Location": "C1",
         "Modifiers": {}
     },
     "Green Energy Subsidies": {
         "Research Type": "Energy",
         "Prerequisite": "Solar Panels",
-        "Cost": 20,
-        "Description": "+1 green energy from Wind Farm and Solar Farm improvements, but each one costs -1 dollars per turn in upkeep.",
-        "Location": "C3",
+        "Cost": 15,
+        "Description": "+1 green energy from Wind Farm and Solar Farm improvements, but each costs -1 dollars per turn in upkeep.",
+        "Location": "C2",
         "Modifiers": {
             "Wind Farm": {
                 "Dollars": {
@@ -139,6 +131,14 @@
                 }
             }
         }
+    },
+    "Nuclear Power": {
+        "Research Type": "Energy",
+        "Prerequisite": "Green Energy Subsidies",
+        "Cost": 20,
+        "Description": "New Improvement: Nuclear Power Plant.",
+        "Location": "C3",
+        "Modifiers": {}
     },
     "City Resettlement": {
         "Research Type": "Infrastructure",
