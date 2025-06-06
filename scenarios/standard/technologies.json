@@ -187,7 +187,7 @@
             }
         }
     },
-    "Surface Mining": {
+    "Metal Extraction": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
@@ -195,12 +195,36 @@
         "Location": "B0",
         "Modifiers": {}
     },
+    "Metallurgy": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Metal Extraction",
+        "Cost": 10,
+        "Description": "New Improvement: Advanced Metals Mine.",
+        "Location": "B1",
+        "Modifiers": {}
+    },
+    "Uranium Mining": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Metallurgy",
+        "Cost": 15,
+        "Description": "New Improvement: Uranium Mine.",
+        "Location": "B2",
+        "Modifiers": {}
+    },
+    "Rare Earth Mining": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Uranium Extraction",
+        "Cost": 20,
+        "Description": "New Improvement: Rare Earth Elements Mine.",
+        "Location": "B3",
+        "Modifiers": {}
+    },
     "Industrial Advancements": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "Surface Mining",
+        "Prerequisite": null,
         "Cost": 10,
         "Description": "+1 basic materials from Industrial Zone improvements.",
-        "Location": "B1",
+        "Location": "C0",
         "Modifiers": {
             "Industrial Zone": {
                 "Basic Materials": {
@@ -209,12 +233,12 @@
             }
         }
     },
-    "Underground Mining": {
+    "Tailings Reprocessing": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Industrial Advancements",
-        "Cost": 15,
+        "Cost": 20,
         "Description": "+1 common metals from Common Metals Mine improvements.",
-        "Location": "B2",
+        "Location": "C1",
         "Modifiers": {
             "Common Metals Mine": {
                 "Common Metals": {
@@ -223,34 +247,27 @@
             }
         }
     },
-    "Metallurgy": {
+    "Intensive Agriculture": {
         "Research Type": "Infrastructure",
-        "Prerequisite": null,
-        "Cost": 5,
-        "Description": "New Improvement: Advanced Metals Mine.",
-        "Location": "C0",
-        "Modifiers": {}
-    },
-    "Uranium Extraction": {
-        "Research Type": "Infrastructure",
-        "Prerequisite": "Metallurgy",
-        "Cost": 10,
-        "Description": "New Improvement: Uranium Mine.",
-        "Location": "C1",
-        "Modifiers": {}
-    },
-    "Rare Earth Mining": {
-        "Research Type": "Infrastructure",
-        "Prerequisite": "Uranium Extraction",
-        "Cost": 15,
-        "Description": "New Improvement: Rare Earth Elements Mine.",
+        "Prerequisite": "Tailings Reprocessing",
+        "Cost": 30,
+        "Description": "+2 food from Farm improvements, but each Farm costs -0.5 energy per turn in upkeep.",
         "Location": "C2",
-        "Modifiers": {}
+        "Modifiers": {
+            "Farm": {
+                "Food": {
+                    "Income": 2
+                },
+                "Energy": {
+                    "Upkeep": 0.5
+                }
+            }
+        }
     },
     "Resource Enrichment": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "Rare Earth Mining",
-        "Cost": 20,
+        "Prerequisite": "Intensive Agriculture",
+        "Cost": 40,
         "Description": "+1 advanced metals from Advanced Metals Mine improvements. +1 uranium from Uranium Mine improvements.",
         "Location": "C3",
         "Modifiers": {

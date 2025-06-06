@@ -143,7 +143,7 @@
         }
     },
     "Common Metals Mine": {
-        "Required Research": "Surface Mining",
+        "Required Research": "Metal Extraction",
         "Required Resource": "Common Metals",
         "Health": 99,
         "Victory Damage": 99,
@@ -296,7 +296,7 @@
         }
     },
     "Uranium Mine": {
-        "Required Research": "Uranium Extraction",
+        "Required Research": "Uranium Mining",
         "Required Resource": "Uranium",
         "Health": 99,
         "Victory Damage": 99,
@@ -314,7 +314,7 @@
         }
     },
     "Rare Earth Elements Mine": {
-        "Required Research": "REE Mining",
+        "Required Research": "Rare Earth Mining",
         "Required Resource": "Rare Earth Elements",
         "Health": 99,
         "Victory Damage": 99,

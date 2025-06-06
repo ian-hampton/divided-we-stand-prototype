@@ -233,16 +233,16 @@ class Improvement:
                 case "Basic Materials":
                     improvement_income_dict[region.resource]["Income"] += 1
                 case "Common Metals":
-                    if 'Surface Mining' in nation.completed_research:
+                    if 'Metal Extraction' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Advanced Metals":
                     if 'Metallurgy' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Uranium":
-                    if 'Uranium Extraction' in nation.completed_research:
+                    if 'Uranium Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Rare Earth Elements":
-                    if 'REE Mining' in nation.completed_research:
+                    if 'Rare Earth Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
         
         # calculate final income
