@@ -403,7 +403,7 @@
             "May launch up to three Standard Missiles or one Nuclear Missile per turn."
         ],
         "Upkeep": {
-            "Energy": 2
+            "Energy": 1
         },
         "Build Costs": {
             "Common Metals": 10
