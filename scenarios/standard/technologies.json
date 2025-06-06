@@ -140,20 +140,28 @@
         "Location": "C3",
         "Modifiers": {}
     },
-    "City Resettlement": {
+    "Resettlement": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: City",
+        "Description": "New Improvement: Farm<br>New Improvement: Settlement",
         "Location": "A0",
+        "Modifiers": {}
+    },
+    "Urbanization": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Resettlement",
+        "Cost": 10,
+        "Description": "New Improvement: City",
+        "Location": "A1",
         "Modifiers": {}
     },
     "Power Grid Restoration": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "City Resettlement",
-        "Cost": 10,
-        "Description": "+2 dollars from City improvements, but each City costs -1 Coal/Oil/Green Energy per turn in upkeep.",
-        "Location": "A1",
+        "Prerequisite": "Urbanization",
+        "Cost": 15,
+        "Description": "+2 dollars from City improvements, but each City costs -1 energy per turn in upkeep.",
+        "Location": "A2",
         "Modifiers": {
             "City": {
                 "Dollars": {
@@ -165,12 +173,12 @@
             }
         }
     },
-    "Central Banking System": {
+    "Monetary Authority": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Power Grid Restoration",
-        "Cost": 15,
-        "Description": "New Improvement: Central Bank. +2 dollars from City improvements.",
-        "Location": "A2",
+        "Cost": 20,
+        "Description": "New Improvement: Central Bank.<br>+1 dollars from City improvements.",
+        "Location": "A3",
         "Modifiers": {
             "City": {
                 "Dollars": {

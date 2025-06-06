@@ -59,7 +59,7 @@
         "Build Costs": {}
     },
     "Central Bank": {
-        "Required Research": "Central Banking System",
+        "Required Research": "Monetary Authority",
         "Required Resource": null,
         "Health": 9,
         "Victory Damage": 2,
@@ -81,7 +81,7 @@
         }
     },
     "City": {
-        "Required Research": "City Resettlement",
+        "Required Research": "Urbanization",
         "Required Resource": null,
         "Health": 6,
         "Victory Damage": 2,
