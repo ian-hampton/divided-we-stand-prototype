@@ -194,7 +194,7 @@ def update_income(game_id: str) -> None:
         # calculate player upkeep costs
         # tba - check if there is even a need to calculate unit and improvement upkeep seperately anymore
         player_upkeep_costs_dict = {}
-        upkeep_resources = ["Dollars", "Oil", "Uranium", "Energy"]
+        upkeep_resources = ["Dollars", "Food", "Oil", "Uranium", "Energy"]
         for resource_name in upkeep_resources:
             inner_dict = {
                 "From Units": core.calculate_upkeep(resource_name, upkeep_dict[nation.name], nation.unit_counts),
@@ -367,6 +367,7 @@ def resolve_resource_shortages(game_id: str) -> None:
         _resolve_shortage("Coal", upkeep_dict, nation, notifications, game_id)
         _resolve_shortage("Energy", upkeep_dict, nation, notifications, game_id)
         _resolve_shortage("Uranium", upkeep_dict, nation, notifications, game_id)
+        _resolve_shortage("Food", upkeep_dict, nation, notifications, game_id)
         _resolve_shortage("Dollars", upkeep_dict, nation, notifications, game_id)
     
         # update nation data

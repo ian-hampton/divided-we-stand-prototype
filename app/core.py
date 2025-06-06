@@ -221,6 +221,10 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
                 "Upkeep": 0,
                 "Upkeep Multiplier": 1
             },
+            "Food": {
+                "Upkeep": 0,
+                "Upkeep Multiplier": 1
+            },
             "Energy": {
                 "Upkeep": 0,
                 "Upkeep Multiplier": 1
