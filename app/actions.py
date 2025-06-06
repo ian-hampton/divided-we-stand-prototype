@@ -1716,7 +1716,7 @@ def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAct
         
         # pay for missile(s)
         if action.missile_type == "Standard Missile":
-            nation.update_stockpile("Common Metals", -5 * action.quantity)
+            nation.update_stockpile("Common Metals", -3 * action.quantity)
             if float(nation.get_stockpile("Common Metals")) < 0:
                 nation_table.reload()
                 nation = nation_table.get(action.id)
