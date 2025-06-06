@@ -368,10 +368,11 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     target_region = Region(target_region_id, game_id)
     target_region_improvement = Improvement(target_region_id, game_id)
+    target_region_unit = Unit(target_region_id, game_id)
 
     defender_name = None
-    # tba - get priority for missile defense from game files
-    # tba - get defensive capabilities from game files
+    # TODO - get priority for missile defense from game files
+    # TODO - get defensive capabilities from game files
 
     # check for MDS
     if target_region_improvement.name == "Missile Defense System":
@@ -386,7 +387,11 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
                 break
 
     # check for anti-air unit
-    # tba
+    if target_region_unit.name == "Anti-Air":
+        defender_name = "Anti-Air"
+    else:
+        if target_region.check_for_adjacent_unit({"Anti-Air"}, target_region.owner_id):
+            defender_name = "Anti-Air"
 
     # last resort - check for local defense
     if defender_name is None and "Local Missile Defense" in target_nation.completed_research:
