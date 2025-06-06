@@ -216,7 +216,7 @@
         }
     },
     "Fort": {
-        "Required Research": "Military Outposts",
+        "Required Research": "Fortifications",
         "Required Resource": null,
         "Health": 9,
         "Victory Damage": 3,

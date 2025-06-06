@@ -465,51 +465,51 @@
             }
         }
     },
-    "Basic Defenses": {
+    "Trench Warfare": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: Crude Barrier.",
+        "Description": "New Improvement: Trench",
         "Location": "A0",
         "Modifiers": {}
     },
-    "Military Outposts": {
+    "Fortifications": {
         "Research Type": "Defense",
-        "Prerequisite": "Basic Defenses",
+        "Prerequisite": "Trench Warfare",
         "Cost": 10,
-        "Description": "New Improvement: Military Outpost.",
+        "Description": "New Improvement: Fort",
         "Location": "A1",
         "Modifiers": {}
     },
     "Military Bases": {
         "Research Type": "Defense",
-        "Prerequisite": "Military Outposts",
+        "Prerequisite": "Fortifications",
         "Cost": 15,
-        "Description": "New Improvement: Military Base.",
+        "Description": "New Improvement: Military Base",
         "Location": "A2",
         "Modifiers": {}
     },
-    "Missile Defense System": {
+    "Self-Propelled Air Defense": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: Missile Defense System.",
+        "Description": "New Unit: Anti-Air",
         "Location": "B0",
         "Modifiers": {}
     },
     "Local Missile Defense": {
         "Research Type": "Defense",
-        "Prerequisite": "Missile Defense System",
+        "Prerequisite": "Self-Propelled Air Defense",
         "Cost": 10,
         "Description": "Your defensive improvements will attempt to shoot down Standard Missiles aimed at the region they are located in. Uses that improvement's hit value (without modifiers).",
         "Location": "B1",
         "Modifiers": {}
     },
-    "Missile Defense Network": {
+    "Missile Defense System": {
         "Research Type": "Defense",
         "Prerequisite": "Local Missile Defense",
         "Cost": 15,
-        "Description": "New Improvement: Missile Defense Network.",
+        "Description": "New Improvement: Missile Defense System",
         "Location": "B2",
         "Modifiers": {}
     },
@@ -517,7 +517,7 @@
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: Surveillance Center.",
+        "Description": "New Improvement: Surveillance Center",
         "Location": "C0",
         "Modifiers": {}
     },
