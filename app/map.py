@@ -12,8 +12,8 @@ from app.nationdata import NationTable
 
 
 MAP_OPACITY = 0.75
-DO_NOT_SPAWN = {"Capital", "Colony", "Military Base", "Missile Defense Network", "Missile Silo",
-                "Research Institute", "Surveillance Center", "Nuclear Power Plant"}
+DO_NOT_SPAWN = {"Capital", "City", "Colony", "Military Base", "Missile Defense System", "Missile Silo",
+                "Nuclear Power Plant", "Research Institute", "Solar Farm", "Surveillance Center"}
 
 class GameMaps:
     
@@ -181,7 +181,6 @@ class GameMaps:
         """
         
         # get game data
-        nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
             regdata_dict = json.load(json_file)
@@ -195,7 +194,7 @@ class GameMaps:
         
         # place improvements randomly
         count = 0
-        placement_quota = 2 * len(nation_table)
+        placement_quota = int(len(regdata_dict) * 0.1)
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
@@ -204,10 +203,6 @@ class GameMaps:
             
             # improvement cannot be spawned in a region already taken
             if random_region_improvement.name != None:
-                continue
-           
-            # no uranium mines and ree mines may spawn randomly at the start of the game
-            if random_region.resource == 'Rare Earth Elements':
                 continue
             
             # there cannot be other improvements within a radius of two regions
@@ -221,33 +216,52 @@ class GameMaps:
                 continue
             
             # place improvement
-            count += 1
             match random_region.resource:
-                case 'Coal':
-                    random_region_improvement.set_improvement('Coal Mine')
-                case 'Oil':
-                    random_region_improvement.set_improvement('Oil Well')
-                case 'Basic Materials':
-                    random_region_improvement.set_improvement('Industrial Zone')
-                case 'Common Metals':
-                    random_region_improvement.set_improvement('Common Metals Mine')
-                case 'Advanced Metals':
-                    random_region_improvement.set_improvement('Advanced Metals Mine')
-                case 'Uranium':
-                    random_region_improvement.set_improvement('Uranium Mine')
+                
+                case "Coal":
+                    # always spawn coal mine on region with coal
+                    random_region_improvement.set_improvement("Coal Mine")
+                
+                case "Oil":
+                    # always spawn oil well on region with oil
+                    random_region_improvement.set_improvement("Oil Well")
+                
+                case "Basic Materials":
+                    # always spawn industrial zone on region with basic materials
+                    random_region_improvement.set_improvement("Industrial Zone")
+                
+                case "Common Metals":
+                    # always spawn cmm on region with common metals
+                    random_region_improvement.set_improvement("Common Metals Mine")
+                
+                case "Advanced Metals":
+                    # never spawn am mines
+                    continue
+                
+                case "Uranium":
+                    # never spawn uranium mines
+                    continue
+
+                case "Rare Earth Elements":
+                    # never spawn ree mines
+                    continue
+                
                 case _:
+                    # determine if random improvement or capital will spawn
                     capital_roll = 0
                     if random_region.is_significant:
                         capital_roll = random.randint(1, 6)
-                    if capital_roll <= 2:
-                        improvement_name = random.sample(improvement_candidates_list, 1)[0]
-                        improvement_health = improvement_data_dict[improvement_name]["Health"]
-                        if improvement_health == 99:
-                            random_region_improvement.set_improvement(improvement_name)
-                        else:
-                            random_region_improvement.set_improvement(improvement_name, 1)
+                    if capital_roll >= 5:
+                        random_region_improvement.set_improvement("City", 1)
                     else:
-                        random_region_improvement.set_improvement('Capital', 1)
+                        improvement_name = random.sample(improvement_candidates_list, 1)[0]
+                    # add health bar if needed
+                    if improvement_data_dict[improvement_name]["Health"] == 99:
+                        random_region_improvement.set_improvement(improvement_name)
+                    else:
+                        random_region_improvement.set_improvement(improvement_name, 1)
+            
+            count += 1
 
     def populate_resource_map(self) -> None:
         """
