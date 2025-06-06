@@ -157,20 +157,22 @@
             "Dollars": 5
         }
     },
-    "Crude Barrier": {
-        "Required Research": "Basic Defenses",
+    "Farm": {
+        "Required Research": "Resettlement",
         "Required Resource": null,
-        "Health": 6,
-        "Victory Damage": 4,
-        "Draw Damage": 2,
-        "Combat Value": 9,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
-        "Income": {},
+        "Income": {
+            "Food": 3
+        },
         "Abilities": [],
         "Upkeep": {},
         "Build Costs": {
-            "Basic Materials": 5
+            "Dollars": 5
         }
     },
     "Industrial Zone": {
@@ -408,6 +410,24 @@
             "Basic Materials": 5
         }
     },
+    "Trench": {
+        "Required Research": "Trench Warfare",
+        "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
+        "Abilities": [
+            "All of your Infantry-type units located within a region with a Trench improvement will receive 1 less damage from enemy attacks."
+        ],
+        "Upkeep": {},
+        "Build Costs": {
+            "Basic Materials": 5
+        }
+    },
     "Missile Silo": {
         "Required Research": "Launch Codes",
         "Required Resource": null,
@@ -426,6 +446,26 @@
         },
         "Build Costs": {
             "Common Metals": 10
+        }
+    },
+    "Settlement": {
+        "Required Research": "Resettlement",
+        "Required Resource": null,
+        "Health": 3,
+        "Victory Damage": 2,
+        "Combat Value": 9,
+        "Draw Damage": 1,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {
+            "Dollars": 3
+        },
+        "Abilities": [],
+        "Upkeep": {
+            "Food": 0.5
+        },
+        "Build Costs": {
+            "Basic Materials": 10
         }
     },
     "Solar Farm": {
