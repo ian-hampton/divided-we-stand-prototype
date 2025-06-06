@@ -489,7 +489,7 @@
         "Location": "A2",
         "Modifiers": {}
     },
-    "Self-Propelled Air Defense": {
+    "Air Defense": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
@@ -499,7 +499,7 @@
     },
     "Local Missile Defense": {
         "Research Type": "Defense",
-        "Prerequisite": "Self-Propelled Air Defense",
+        "Prerequisite": "Air Defense",
         "Cost": 10,
         "Description": "Your defensive improvements will attempt to shoot down Standard Missiles aimed at the region they are located in. Uses that improvement's hit value (without modifiers).",
         "Location": "B1",

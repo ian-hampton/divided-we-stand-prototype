@@ -165,5 +165,26 @@
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
         }
+    },
+    "Anti-Air": {
+        "Required Research": "Air Defense",
+        "Unit Type": "Infantry",
+        "Abbreviation": "AA",
+        "Point Value": 2,
+        "Health": 6,
+        "Victory Damage": 2,
+        "Draw Damage": 1,
+        "Combat Value": 9,
+        "Movement": 1,
+        "Abilities": [
+            "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions. Upon a successful interception, the incoming missile is destroyed and causes no damage."
+        ],
+        "Upkeep": {
+            "Food": 0.25
+        },
+        "Build Costs": {
+            "Dollars": 10,
+            "Common Metals": 10
+        }
     }
 }
