@@ -841,13 +841,13 @@ def improvements_ref(full_game_id):
         # assign color
         # to do - make a function that assigns color based on improvement's required tech
         match improvement_name:
-            case 'Boot Camp' | 'Crude Barrier' | 'Military Base' | 'Military Outpost' | 'Missile Defense Network' | 'Missile Defense System' | 'Missile Silo':
+            case 'Boot Camp' | 'Military Base' | 'Military Outpost' | 'Missile Defense Network' | 'Missile Defense System' | 'Missile Silo' | 'Trench':
                 improvement_data["stat_color"] = "stat-red"
-            case 'Coal Mine' | 'Nuclear Power Plant' | 'Oil Refinery' | 'Oil Well' | 'Solar Farm' | 'Wind Farm' | 'Strip Mine':
+            case 'Coal Mine' | 'Nuclear Power Plant' | 'Oil Well' | 'Solar Farm' | 'Wind Farm':
                 improvement_data["stat_color"] = "stat-yellow"
             case 'Advanced Metals Mine' | 'Common Metals Mine' | 'Industrial Zone' | 'Uranium Mine' | 'Rare Earth Elements Mine':
                 improvement_data["stat_color"] = "stat-grey"
-            case 'Capital' | 'Central Bank' | 'City' | 'Research Institute' | 'Research Laboratory':
+            case 'Capital' | 'Central Bank' | 'City' | 'Farm' | 'Research Institute' | 'Research Laboratory' | 'Settlement':
                 improvement_data["stat_color"] = "stat-blue"
             case _:
                 improvement_data["stat_color"] = "stat-grey"

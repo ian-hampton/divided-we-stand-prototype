@@ -407,7 +407,7 @@
         "Research Type": "Military",
         "Prerequisite": "Draft",
         "Cost": 15,
-        "Description": "+0.5 military capacity from all defensive improvements except Boot Camps and Capitals.",
+        "Description": "+0.5 military capacity from all improvements with health except Boot Camps and Capitals.",
         "Location": "D2",
         "Modifiers": {
             "Central Bank": {
@@ -425,17 +425,17 @@
                     "Income": 0.5
                 }
             },
-            "Crude Barrier": {
-                "Military Capacity": {
-                    "Income": 0.5
-                }
-            },
             "Military Outpost": {
                 "Military Capacity": {
                     "Income": 0.5
                 }
             },
             "Military Base": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
+            },
+            "Settlement": {
                 "Military Capacity": {
                     "Income": 0.5
                 }

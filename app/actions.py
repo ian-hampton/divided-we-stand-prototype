@@ -811,7 +811,6 @@ def _check_improvement_name(game_id: str, improvement_name: str) -> str | None:
         "bank": "Central Bank",
         "cmm": "Common Metals Mine",
         "common metal mine": "Common Metals Mine",
-        "barrier":"Crude Barrier",
         "iz": "Industrial Zone",
         "inz": "Industrial Zone",
         "idz": "Industrial Zone",

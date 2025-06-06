@@ -294,28 +294,6 @@
             "Advanced Metals": 10
         }
     },
-    "Oil Refinery": {
-        "Required Research": "Oil Refinement",
-        "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
-        "Income": {
-            "Oil": 2
-        },
-        "Abilities": [
-            "Can only be built in a ratio of one for every two Oil Wells owned."
-        ],
-        "Upkeep": {
-            "Dollars": 2
-        },
-        "Build Costs": {
-            "Common Metals": 10
-        }
-    },
     "Oil Well": {
         "Required Research": "Oil Drilling",
         "Required Resource": "Oil",
@@ -485,27 +463,6 @@
         "Build Costs": {
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
-        }
-    },
-    "Strip Mine": {
-        "Required Research": "Strip Mining",
-        "Required Resource": "Coal",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
-        "Income": {
-            "Coal": 4,
-            "Common Metals": 2
-        },
-        "Abilities": [
-            "After eight turns, the strip mine will be scuttled and the coal in the region completely drained."
-        ],
-        "Upkeep": {},
-        "Build Costs": {
-            "Dollars": 25
         }
     },
     "Surveillance Center": {

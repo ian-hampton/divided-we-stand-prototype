@@ -339,19 +339,6 @@ def countdown(game_id: str) -> None:
     nation_table = NationTable(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
-
-    # resolve strip mines
-    for region_id in regdata_dict:
-        region_improvement = Improvement(region_id, game_id)
-        if region_improvement.name == "Strip Mine":
-            nation = nation_table.get(str(region_improvement.owner_id))
-            region_improvement.decrease_timer()
-            if region_improvement.turn_timer <= 0:
-                nation.improvement_counts[region_improvement.name] -= 1
-                nation_table.save(nation)
-                region_improvement.clear()
-                region = Region(region_id, game_id)
-                region.set_resource("Empty")
     
     # resolve nuked regions
     for region_id in regdata_dict:

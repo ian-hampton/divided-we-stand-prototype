@@ -102,10 +102,6 @@ class Improvement:
             self.health = improvement_data_dict[improvement_name]["Health"]
         else:
             self.health = health
-        if self.name == 'Strip Mine' and 'Open Pit Mining' in player_research:
-            self.set_turn_timer(4)
-        elif self.name == 'Strip Mine':
-            self.set_turn_timer(8)
         if self.name == 'Surveillance Center':
             pass
         
