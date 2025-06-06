@@ -181,6 +181,7 @@ class GameMaps:
         """
         
         # get game data
+        nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
             regdata_dict = json.load(json_file)
@@ -194,7 +195,7 @@ class GameMaps:
         
         # place improvements randomly
         count = 0
-        placement_quota = int(len(regdata_dict) * 0.1)
+        placement_quota = int(len(regdata_dict) * 0.1) - len(nation_table)
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
