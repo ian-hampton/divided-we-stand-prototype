@@ -24,24 +24,16 @@
             }
         }
     },
-    "Strip Mining": {
+    "Open Pit Mining": {
         "Research Type": "Energy",
         "Prerequisite": "Coal Subsidies",
         "Cost": 15,
-        "Description": "New Improvement: Strip Mine.",
+        "Description": "+1 coal from Coal Mine improvements.",
         "Location": "A2",
-        "Modifiers": {}
-    },
-    "Open Pit Mining": {
-        "Research Type": "Energy",
-        "Prerequisite": "Strip Mining",
-        "Cost": 20,
-        "Description": "+2 coal from Strip Mine improvements, but Strip Mine improvements last for only 4 turns.",
-        "Location": "A3",
         "Modifiers": {
-            "Strip Mine": {
+            "Coal Mine": {
                 "Coal": {
-                    "Income": 2
+                    "Income": 1
                 }
             }
         }
@@ -71,17 +63,23 @@
             }
         }
     },
-    "Oil Refinement": {
+    "Natural Gas Processing": {
         "Research Type": "Energy",
         "Prerequisite": "Oil Subsidies",
         "Cost": 15,
-        "Description": "New Improvement: Oil Refinery.",
+        "Description": "+1 energy from Oil Well improvements.",
         "Location": "B2",
-        "Modifiers": {}
+        "Modifiers": {
+            "Oil Well": {
+                "Energy": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Fracking": {
         "Research Type": "Energy",
-        "Prerequisite": "Oil Refinement",
+        "Prerequisite": "Natural Gas Processing",
         "Cost": 20,
         "Description": "+1 oil from Oil Well improvements.",
         "Location": "B3",

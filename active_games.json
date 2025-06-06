@@ -1,28 +1,29 @@
 {
     "game1": {
-        "Game Name": "Open Game Slot",
-        "Game #": 0,
-        "Game Active": false,
+        "Game Name": "test",
+        "Game #": 13,
+        "Game Active": true,
         "Information": {
-            "Version": "TBD",
-            "Scenario": "TBD",
-            "Map": "TBD",
-            "Victory Conditions": "TBD",
-            "Fog of War": "TBD",
-            "Turn Length": "TBD",
-            "Accelerated Schedule": "TBD",
-            "Deadlines on Weekends": "TBD"
+            "Version": "Development",
+            "Scenario": "Standard",
+            "Map": "United States 3.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": "Disabled",
+            "Turn Length": "48 hours",
+            "Accelerated Schedule": "Enabled",
+            "Deadlines on Weekends": "Enabled"
         },
         "Statistics": {
-            "Player Count": "0",
+            "Player Count": "4",
             "Region Disputes": 0,
-            "Current Turn": "Turn N/A",
+            "Current Turn": "1",
             "Days Ellapsed": 0,
-            "Game Started": "TBD"
+            "Game Started": "06/05/2025"
         },
         "Inactive Events": [],
         "Active Events": {},
-        "Current Event": {}
+        "Current Event": {},
+        "Steal Action Record": {}
     },
     "game2": {
         "Game Name": "Open Game Slot",
