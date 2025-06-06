@@ -580,24 +580,16 @@ class WarAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
-        nation_table = NationTable(self.game_id)
-        misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
-        war_justification_list = list(misc_scenario_dict["warJustifications"].keys())
+        words = action_str.strip().lower().split()
 
-        self.target_nation = None
-        for nation in nation_table:
-            if nation.name.lower() in action_str.lower():
-                self.target_nation = nation.name
-                break
+        nnei = words.index("using")
+        wjsi = words.index("using") + 1
 
-        self.war_justification = None
-        for war_justification in war_justification_list:
-            if war_justification.lower() in action_str.lower():
-                self.war_justification = war_justification
-                break
+        self.target_nation = " ".join(words[1:nnei]) if len(words) > 4 else None
+        self.war_justification = " ".join(words[wjsi:]) if len(words) > 4 else None
 
     def __str__(self):
-        return f"[WarAction] War {self.target_nation} {self.war_justification} ({self.id})"
+        return f"[WarAction] War {self.target_nation} using {self.war_justification} ({self.id})"
 
     def is_valid(self) -> bool:
         
@@ -605,6 +597,57 @@ class WarAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
+        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
+            return False
+        
+        self.war_justification = _check_war_justification(self.game_id, self.war_justification)
+        if self.war_justification is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war justification.""")
+            return False
+        
+        return True
+
+class WarJoinAction:
+
+    def __init__(self, game_id: str, nation_id: str, action_str: str):
+
+        self.id = nation_id
+        self.game_id = game_id
+        self.action_str = action_str
+        words = action_str.strip().lower().split()
+
+        wnei = words.index("as")
+        wjsi = words.index("using") + 1
+
+        self.war_name = " ".join(words[2:wnei]) if len(words) > 7 else None
+        self.side = words[wnei + 1].title() if len(words) > 7 else None
+        self.war_justification = " ".join(words[wjsi:]) if len(words) > 7 else None
+
+    def __str__(self):
+        return f"[WarJoinAction] War Join {self.war_name} as {self.side} using ({self.id})"
+    
+    def is_valid(self) -> bool:
+
+        if self.war_name is None or self.side is None or self.war_justification is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.war_name = _check_war_name(self.game_id, self.war_name)
+        if self.war_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war name.""")
+            return False
+        
+        if self.side not in ["Attacker", "Defender"]:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Expecting "Attacker" or "Defender" for war side.""")
+            return False
+        
+        self.war_justification = _check_war_justification(self.game_id, self.war_justification)
+        if self.war_justification is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war justification.""")
+            return False
+    
         return True
 
 class WhitePeaceAction:
@@ -893,6 +936,26 @@ def _check_unit(game_id: str, unit_str: str) -> str | None:
     for unit_name, unit_data in unit_scenario_dict.items():
         if unit_data["Abbreviation"] == unit_str.upper():
             return unit_name
+        
+    return None
+
+def _check_war_name(game_id: str, war_name_str: str) -> str | None:
+
+    war_table = WarTable(game_id)
+    for war in war_table:
+        if war_name_str.lower() == war.name.lower():
+            return war.name
+        
+    return None
+
+def _check_war_justification(game_id: str, war_justification_str: str) -> str | None:
+
+    misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
+    war_justification_list = list(misc_scenario_dict["warJustifications"].keys())
+    
+    for war_justification in war_justification_list:
+        if war_justification.lower() == war_justification_str.lower():
+            return war_justification
         
     return None
 
@@ -2503,6 +2566,20 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
         notifications.append(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
         nation_table.save(attacker_nation)
+
+def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
+
+    # get game data
+    nation_table = NationTable(game_id)
+    war_table = WarTable(game_id)
+    alliance_table = AllianceTable(game_id)
+    notifications = Notifications(game_id)
+
+    # execute actions
+    for action in actions_list:
+
+        war = war_table.get(action.war_name)
+        attacker_nation = nation_table.get(action.id)
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
     

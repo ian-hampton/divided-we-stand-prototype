@@ -219,6 +219,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         "UnitDisbandAction": [],
         "UnitMoveAction": [],
         "WarAction": [],
+        "WarJoinAction": [],
         "WhitePeaceAction": []
     }
 
@@ -258,6 +259,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
     actions.resolve_unit_deployment_actions(game_id, actions_dict["UnitDeployAction"])
     actions.resolve_war_actions(game_id, actions_dict["WarAction"])
+    actions.resolve_war_join_actions(game_id, actions_dict["WarJoinAction"])
     actions.resolve_missile_launch_actions(game_id, actions_dict["MissileLaunchAction"])
     actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
 

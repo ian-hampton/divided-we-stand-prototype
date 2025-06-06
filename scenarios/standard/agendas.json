@@ -149,7 +149,7 @@
         "Agenda Type": "Warfare",
         "Prerequisite": "Superior Training",
         "Cost": 15,
-        "Description": "New War Justification: Conquest.",
+        "Description": "New War Justification: Conquest. Your nation may join any ongoing war on either side, if you have permission from a main combatant and obey all other normal war restrictions.",
         "Location": "D1",
         "Modifiers": {}
     },
