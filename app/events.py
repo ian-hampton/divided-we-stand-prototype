@@ -591,7 +591,7 @@ def handle_current_event(game_id: str) -> None:
                 nation_table.save(nation)
             # add tag
             new_tag = {}
-            new_tag["Technology Rate"] = -20
+            new_tag["Research Rate"] = -20
             new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             victim_nation.tags["Security Breach"] = new_tag
             nation_table.save(victim_nation)

@@ -232,7 +232,7 @@ class Nation:
 
             case "Technocracy":
                 new_tag = {
-                    "Technology Rate": 20,
+                    "Research Rate": 20,
                     "Expire Turn": 99999
                 }
                 self.tags["Technocracy"] = new_tag
