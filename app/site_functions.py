@@ -123,11 +123,16 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     # get game files
     nation_table = NationTable(game_id)
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
     five_point_research_list = []
     for key in research_data_dict:
         tech = research_data_dict[key]
         if tech["Cost"] == 5:
             five_point_research_list.append(key)
+    if active_games_dict[game_id]["Information"]["Fog of War"] == "Disabled":
+        del five_point_research_list["Surveillance Operations"]
 
     # update nation data
     for nation_id, setup_data in contents_dict.items():
@@ -156,9 +161,6 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     checks.update_income(game_id)
     nation_table.reload()
     nation_table.update_records()
-    
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
     # update game_settings
     active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
