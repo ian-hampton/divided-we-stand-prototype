@@ -473,7 +473,7 @@ class Nation:
 
         pp_cost = 0.0
         for tag_data in self.tags.values():
-            pp_cost += float(tag_data.get("Region Claim Cost"))
+            pp_cost += float(tag_data.get("Region Claim Cost", 0))
         
         return pp_cost
 
