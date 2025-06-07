@@ -113,7 +113,7 @@ class Nation:
                     "rate": 100
                 },
                 "Political Power": {
-                    "stored": "0.00",
+                    "stored": "1.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
                     "max": 50,
