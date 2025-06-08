@@ -2208,7 +2208,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     elif "Market Recession" in active_games_dict[game_id]["Active Events"]:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 0.5
-            data[resource_name]["Current Price"] = round(new_price, 0.5)
+            data[resource_name]["Current Price"] = round(new_price, 2)
 
     # create market results dict
     market_results = {}
