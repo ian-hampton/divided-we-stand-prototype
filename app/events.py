@@ -440,7 +440,7 @@ def handle_current_event(game_id: str) -> None:
             for nation_id, decision in decision_dict.items():
                 nation = nation_table.get(nation_id)
                 if decision == "Find the Perpetrator":
-                    nation.update_stockpile("Polticial Power", 5)
+                    nation.update_stockpile("Political Power", 5)
                     active_games_dict[game_id]["Inactive Events"].append(event_name)
                 elif decision == "Find a Scapegoat":
                     while True:
