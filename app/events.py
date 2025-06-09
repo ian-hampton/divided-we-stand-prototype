@@ -1200,7 +1200,7 @@ def _get_votes_nation(voting_nation_ids: list, nation_table: NationTable) -> dic
             # validate vote
             if vote_count > float(nation.get_stockpile("Political Power")):
                 continue
-            if target_name not in nation_table._name_to_id:
+            if target_name.lower() not in nation_table._name_to_id:
                 continue
             
             # add votes
