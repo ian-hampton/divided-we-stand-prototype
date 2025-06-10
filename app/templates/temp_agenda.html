@@ -77,10 +77,10 @@ h3 {
         
         <div class="tree-header">
             <h2>{{ tree_name }}</h2>
-            {% if tree_name == "Diplomacy Agendas" %}
+            {% if tree_name == "Cooperative Agendas" %}
                 <h3 style="color: #30FF3F">-5 Diplomatic</h3>
                 <h3 style="color: #F31010">+5 Isolationist</h3>
-            {% elif tree_name == "Economy Agendas" %}
+            {% elif tree_name == "Economic Agendas" %}
                 <h3 style="color: #30FF3F">-5 Commercial</h3>
                 <h3 style="color: #F31010">+5 Imperialist</h3>
             {% elif tree_name == "Security Agendas" %}
@@ -110,7 +110,9 @@ h3 {
                         <td class="cost" style="color: {{ complement_color }};padding-right: 5px">{{ tech_cost }}</td>
                     </tr>
                     <tr height=45% style="background-color: {{ complement_color }}">
+                        {% autoescape false %}
                         <td class="desc" colspan=2 style="padding-left: 5px;padding-right: 5px;">{{ tech_dict["Description"] }}</td>
+                        {% endautoescape %}
                     </tr>
                     <tr height=5%>
                         <td></td>

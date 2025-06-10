@@ -440,7 +440,7 @@ def handle_current_event(game_id: str) -> None:
             for nation_id, decision in decision_dict.items():
                 nation = nation_table.get(nation_id)
                 if decision == "Find the Perpetrator":
-                    nation.update_stockpile("Polticial Power", 5)
+                    nation.update_stockpile("Political Power", 5)
                     active_games_dict[game_id]["Inactive Events"].append(event_name)
                 elif decision == "Find a Scapegoat":
                     while True:
@@ -569,7 +569,7 @@ def handle_current_event(game_id: str) -> None:
                     region_improvement.set_improvement("Missile Silo")
                     nation.nuke_count += 3
                 elif decision == "Scuttle":
-                    nation.update_stockpile("Technology", 15)
+                    nation.update_stockpile("Research", 15)
                 nation_table.save(nation)
                 notifications.append(f"{nation.name} chose to {decision.lower()} the old military installation.", 2)
             # save event
@@ -591,7 +591,7 @@ def handle_current_event(game_id: str) -> None:
                 nation_table.save(nation)
             # add tag
             new_tag = {}
-            new_tag["Technology Rate"] = -20
+            new_tag["Research Rate"] = -20
             new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
             victim_nation.tags["Security Breach"] = new_tag
             nation_table.save(victim_nation)
@@ -1055,41 +1055,54 @@ def resolve_active_events(game_id: str, turn_status: str, actions_dict: dict[str
                         del active_games_dict[game_id]['Active Events'][event_name]
                         active_games_dict[game_id]["Inactive Events"].append(event_name)
                         notifications.append(f"{event_name} event has ended.", 2)
-
-    # filter out events that have expired
-    active_events_filtered = {}
-    if turn_status == "After Actions":
-        for event_name, event_data in active_games_dict[game_id]["Active Events"].items():
-            
-            # event has expired - end it
-            if isinstance(event_data, int):
-                expire_turn = event_data
-                if current_turn_num >= expire_turn:
-                    notifications.append(f"{event_name} event has ended.", 2)
-                    if event_name == "Foreign Invasion":
-                        foreign_invasion_nation = nation_table.get("99")
-                        _foreign_invasion_end(game_id, foreign_invasion_nation)
-                        nation_table.save(foreign_invasion_nation)
-                    continue
-            else:
-                expire_turn = event_data["Expiration"]
-                if current_turn_num >= expire_turn:
-                    notifications.append(f"{event_name} event has ended.", 2)
-                    continue
-            
-            # event still active - make notification
-            active_events_filtered[event_name] = event_data
-            if EVENT_DICT[event_name]["Duration"] != 99999 and isinstance(event_data, int):
-                notifications.append(f"{event_name} will end on turn {event_data}.", 2)
-            else:
-                notifications.append(f"{event_name} event is active.", 2)
-    
-        active_games_dict[game_id]["Active Events"] = active_events_filtered
     
     # save active games
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
-   
+
+def filter_events(game_id: str) -> None:
+    """
+    Generates event notifications and closes events that have expired.
+    """
+    
+    nation_table = NationTable(game_id)
+    notifications = Notifications(game_id)
+    current_turn_num = core.get_current_turn_num(game_id)
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+    # filter out events that have expired
+    active_events_filtered = {}
+    for event_name, event_data in active_games_dict[game_id]["Active Events"].items():
+        
+        # event has expired - end it
+        if isinstance(event_data, int):
+            expire_turn = event_data
+            if current_turn_num >= expire_turn:
+                notifications.append(f"{event_name} event has ended.", 2)
+                if event_name == "Foreign Invasion":
+                    foreign_invasion_nation = nation_table.get("99")
+                    _foreign_invasion_end(game_id, foreign_invasion_nation)
+                    nation_table.save(foreign_invasion_nation)
+                continue
+        else:
+            expire_turn = event_data["Expiration"]
+            if current_turn_num >= expire_turn:
+                notifications.append(f"{event_name} event has ended.", 2)
+                continue
+        
+        # event still active - make notification
+        active_events_filtered[event_name] = event_data
+        if isinstance(event_data, int) and EVENT_DICT[event_name]["Duration"] != 99999:
+            notifications.append(f"{event_name} will end on turn {event_data}.", 2)
+        else:
+            notifications.append(f"{event_name} event is active.", 2)
+    
+    # save active games
+    active_games_dict[game_id]["Active Events"] = active_events_filtered
+    with open('active_games.json', 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
+
 def _is_valid(game_id: str, event_conditions: dict, already_chosen_events: set) -> bool:
     """
     Checks if an event is elligable to be selected this turn.
@@ -1172,11 +1185,7 @@ def _gain_free_research(game_id: str, research_name: str, nation: Nation) -> boo
     
     # gain technology
     nation.add_tech(research_name)
-
-    # totalitarian bonus
-    totalitarian_discounts = {'Energy', 'Infrastructure'}
-    if nation.gov == 'Totalitarian' and tech_scenario_dict[research_name]["Research Type"] in totalitarian_discounts:
-        nation.update_stockpile("Political Power", 2)
+    nation.award_research_bonus(research_name)
 
     return True
 
@@ -1204,7 +1213,7 @@ def _get_votes_nation(voting_nation_ids: list, nation_table: NationTable) -> dic
             # validate vote
             if vote_count > float(nation.get_stockpile("Political Power")):
                 continue
-            if target_name not in nation_table._name_to_id:
+            if target_name.lower() not in nation_table._name_to_id:
                 continue
             
             # add votes

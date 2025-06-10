@@ -21,7 +21,7 @@
         "Required Research": "Standing Army",
         "Required Resource": null,
         "Health": 6,
-        "Victory Damage": 3,
+        "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 9,
         "Standard Missile Defense": 99,
@@ -40,16 +40,16 @@
     "Capital": {
         "Required Research": null,
         "Required Resource": null,
-        "Health": 6,
-        "Victory Damage": 3,
+        "Health": 12,
+        "Victory Damage": 2,
         "Draw Damage": 1,
-        "Combat Value": 9,
+        "Combat Value": 7,
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {
             "Dollars": 5,
             "Political Power": 1,
-            "Technology": 2
+            "Research": 2
         },
         "Abilities": [
             "Can exploit the resource present in its region once the sufficient technology is researched, providing +1 of that resource.",
@@ -59,11 +59,11 @@
         "Build Costs": {}
     },
     "Central Bank": {
-        "Required Research": "Central Banking System",
+        "Required Research": "Monetary Authority",
         "Required Resource": null,
-        "Health": 6,
-        "Victory Damage": 3,
-        "Combat Value": 9,
+        "Health": 9,
+        "Victory Damage": 2,
+        "Combat Value": 7,
         "Draw Damage": 1,
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
@@ -76,26 +76,29 @@
             "Energy": 1
         },
         "Build Costs": {
-            "Basic Materials": 5,
+            "Basic Materials": 15,
             "Common Metals": 10
         }
     },
     "City": {
-        "Required Research": "City Resettlement",
+        "Required Research": "Urbanization",
         "Required Resource": null,
         "Health": 6,
-        "Victory Damage": 3,
-        "Combat Value": 9,
+        "Victory Damage": 2,
+        "Combat Value": 7,
         "Draw Damage": 1,
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {
-            "Dollars": 3
+            "Dollars": 5
         },
         "Abilities": [],
-        "Upkeep": {},
+        "Upkeep": {
+            "Food": 1
+        },
         "Build Costs": {
-            "Basic Materials": 10
+            "Basic Materials": 10,
+            "Common Metals": 5
         }
     },
     "Coal Mine": {
@@ -128,7 +131,7 @@
         "Income": {
             "Dollars": 10,
             "Political Power": 0.25,
-            "Technology": 1
+            "Research": 1
         },
         "Abilities": [],
         "Upkeep": {
@@ -140,7 +143,7 @@
         }
     },
     "Common Metals Mine": {
-        "Required Research": "Surface Mining",
+        "Required Research": "Metal Extraction",
         "Required Resource": "Common Metals",
         "Health": 99,
         "Victory Damage": 99,
@@ -157,20 +160,22 @@
             "Dollars": 5
         }
     },
-    "Crude Barrier": {
-        "Required Research": "Basic Defenses",
+    "Farm": {
+        "Required Research": "Resettlement",
         "Required Resource": null,
-        "Health": 6,
-        "Victory Damage": 4,
-        "Draw Damage": 2,
-        "Combat Value": 9,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
-        "Income": {},
+        "Income": {
+            "Food": 3
+        },
         "Abilities": [],
         "Upkeep": {},
         "Build Costs": {
-            "Basic Materials": 5
+            "Dollars": 5
         }
     },
     "Industrial Zone": {
@@ -195,7 +200,7 @@
         "Required Research": "Military Bases",
         "Required Resource": null,
         "Health": 12,
-        "Victory Damage": 4,
+        "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 5,
         "Standard Missile Defense": 99,
@@ -206,15 +211,15 @@
             "Energy": 2
         },
         "Build Costs": {
-            "Common Metals": 5,
+            "Basic Materials": 10,
             "Advanced Metals": 5
         }
     },
-    "Military Outpost": {
-        "Required Research": "Military Outposts",
+    "Fort": {
+        "Required Research": "Fortifications",
         "Required Resource": null,
-        "Health": 12,
-        "Victory Damage": 4,
+        "Health": 9,
+        "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 7,
         "Standard Missile Defense": 99,
@@ -225,17 +230,17 @@
             "Energy": 1
         },
         "Build Costs": {
-            "Basic Materials": 5,
+            "Basic Materials": 10,
             "Common Metals": 5
         }
     },
-    "Missile Defense Network": {
-        "Required Research": "Missile Defense Network",
+    "Missile Defense System": {
+        "Required Research": "Missile Defense System",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
+        "Health": 9,
+        "Victory Damage": 3,
+        "Draw Damage": 2,
+        "Combat Value": 7,
         "Standard Missile Defense": 3,
         "Nuclear Missile Defense": 6,
         "Income": {},
@@ -247,28 +252,8 @@
         },
         "Build Costs": {
             "Common Metals": 10,
-            "Advanced Metals": 5,
+            "Advanced Metals": 3,
             "Rare Earth Elements": 1
-        }
-    },
-    "Missile Defense System": {
-        "Required Research": "Missile Defense System",
-        "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 6,
-        "Nuclear Missile Defense": 99,
-        "Income": {},
-        "Abilities": [
-            "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions. Upon a successful interception, the incoming missile is destroyed and causes no damage."
-        ],
-        "Upkeep": {
-            "Energy": 1
-        },
-        "Build Costs": {
-            "Common Metals": 10
         }
     },
     "Nuclear Power Plant": {
@@ -292,28 +277,6 @@
             "Advanced Metals": 10
         }
     },
-    "Oil Refinery": {
-        "Required Research": "Oil Refinement",
-        "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
-        "Income": {
-            "Oil": 2
-        },
-        "Abilities": [
-            "Can only be built in a ratio of one for every two Oil Wells owned."
-        ],
-        "Upkeep": {
-            "Dollars": 2
-        },
-        "Build Costs": {
-            "Common Metals": 10
-        }
-    },
     "Oil Well": {
         "Required Research": "Oil Drilling",
         "Required Resource": "Oil",
@@ -333,7 +296,7 @@
         }
     },
     "Uranium Mine": {
-        "Required Research": "Uranium Extraction",
+        "Required Research": "Uranium Mining",
         "Required Resource": "Uranium",
         "Health": 99,
         "Victory Damage": 99,
@@ -351,7 +314,7 @@
         }
     },
     "Rare Earth Elements Mine": {
-        "Required Research": "REE Mining",
+        "Required Research": "Rare Earth Mining",
         "Required Resource": "Rare Earth Elements",
         "Health": 99,
         "Victory Damage": 99,
@@ -378,7 +341,7 @@
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {
-            "Technology": 5
+            "Research": 5
         },
         "Abilities": [],
         "Upkeep": {
@@ -386,8 +349,8 @@
             "Energy": 1
         },
         "Build Costs": {
-            "Basic Materials": 5,
-            "Common Metals": 10
+            "Basic Materials": 10,
+            "Common Metals": 15
         }
     },
     "Research Laboratory": {
@@ -400,9 +363,27 @@
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {
-            "Technology": 1
+            "Research": 1
         },
         "Abilities": [],
+        "Upkeep": {},
+        "Build Costs": {
+            "Basic Materials": 5
+        }
+    },
+    "Trench": {
+        "Required Research": "Trench Warfare",
+        "Required Resource": null,
+        "Health": 99,
+        "Victory Damage": 99,
+        "Draw Damage": 99,
+        "Combat Value": 99,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {},
+        "Abilities": [
+            "All of your Infantry-type units located within a region with a Trench improvement will receive 1 less damage from enemy attacks."
+        ],
         "Upkeep": {},
         "Build Costs": {
             "Basic Materials": 5
@@ -412,9 +393,9 @@
         "Required Research": "Launch Codes",
         "Required Resource": null,
         "Health": 6,
-        "Victory Damage": 4,
-        "Draw Damage": 2,
-        "Combat Value": 7,
+        "Victory Damage": 2,
+        "Draw Damage": 1,
+        "Combat Value": 9,
         "Standard Missile Defense": 99,
         "Nuclear Missile Defense": 99,
         "Income": {},
@@ -422,10 +403,30 @@
             "May launch up to three Standard Missiles or one Nuclear Missile per turn."
         ],
         "Upkeep": {
-            "Energy": 2
+            "Energy": 1
         },
         "Build Costs": {
             "Common Metals": 10
+        }
+    },
+    "Settlement": {
+        "Required Research": "Resettlement",
+        "Required Resource": null,
+        "Health": 3,
+        "Victory Damage": 2,
+        "Combat Value": 9,
+        "Draw Damage": 1,
+        "Standard Missile Defense": 99,
+        "Nuclear Missile Defense": 99,
+        "Income": {
+            "Dollars": 3
+        },
+        "Abilities": [],
+        "Upkeep": {
+            "Food": 0.5
+        },
+        "Build Costs": {
+            "Basic Materials": 10
         }
     },
     "Solar Farm": {
@@ -443,29 +444,8 @@
         "Abilities": [],
         "Upkeep": {},
         "Build Costs": {
-            "Advanced Metals": 5,
+            "Common Metals": 5,
             "Rare Earth Elements": 1
-        }
-    },
-    "Strip Mine": {
-        "Required Research": "Strip Mining",
-        "Required Resource": "Coal",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
-        "Income": {
-            "Coal": 4,
-            "Common Metals": 2
-        },
-        "Abilities": [
-            "After eight turns, the strip mine will be scuttled and the coal in the region completely drained."
-        ],
-        "Upkeep": {},
-        "Build Costs": {
-            "Dollars": 25
         }
     },
     "Surveillance Center": {

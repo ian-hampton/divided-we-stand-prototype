@@ -86,17 +86,17 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
     alliance_count = 0
     alliance_table = AllianceTable(game_id)
     alliance_report_dict = alliance_table.report(nation.name)
+
+    # get alliance count
     alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
     
-    # calculate limit
+    # get alliance limit
     alliance_limit = 2
-    if nation.gov == 'Republic':
-        alliance_limit += 1
     if 'Power Broker' in nation.completed_research:
         alliance_limit += 1
     if 'Improved Logistics' in nation.completed_research:
         alliance_limit += 1
-    for tag_name, tag_data in nation.tags.items():
+    for tag_data in nation.tags.values():
         alliance_limit += tag_data.get("Alliance Limit Modifier", 0)
 
     return alliance_count, alliance_limit
@@ -201,7 +201,7 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
             continue
         
         upkeep_dict[improvement_name] = {}
-        for resource_name in ["Dollars", "Energy", "Coal", "Oil", "Uranium"]:  # tba - pull list from scenario files
+        for resource_name in ["Dollars", "Food", "Energy", "Coal", "Oil", "Uranium"]:  # tba - pull list from scenario files
             upkeep_dict[improvement_name][resource_name] = {
                 "Upkeep": 0,
                 "Upkeep Multiplier": 1
@@ -216,28 +216,12 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         if nation.unit_counts[unit_name] == 0:
             continue
         
-        upkeep_dict[unit_name] = {
-            "Dollars": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Energy": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Coal": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Oil": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Uranium": {
+        upkeep_dict[unit_name] = {}
+        for resource_name in ["Dollars", "Food", "Energy", "Coal", "Oil", "Uranium"]:  # tba - pull list from scenario files
+            upkeep_dict[unit_name][resource_name] = {
                 "Upkeep": 0,
                 "Upkeep Multiplier": 1
             }
-        }
 
         for resource_name in unit_data["Upkeep"]:
             upkeep_dict[unit_name][resource_name]["Upkeep"] = unit_data["Upkeep"][resource_name]
@@ -364,29 +348,30 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     target_region = Region(target_region_id, game_id)
     target_region_improvement = Improvement(target_region_id, game_id)
+    target_region_unit = Unit(target_region_id, game_id)
 
     defender_name = None
-    # tba - get priority for missile defense from game files
-    # tba - get defensive capabilities from game files
+    # TODO - get priority for missile defense from game files
+    # TODO - get defensive capabilities from game files
 
-    # check for MDN
-    if target_region_improvement.name == "Missile Defense Network":
-        defender_name = "Missile Defense Network"
+    # check for MDS
+    if target_region_improvement.name == "Missile Defense System":
+        defender_name = "Missile Defense System"
     else:
         missile_defense_network_candidates_list = target_region.get_regions_in_radius(2)
         for select_region_id in missile_defense_network_candidates_list:
             select_region = Region(select_region_id, game_id)
             select_region_improvement = Improvement(select_region_id, game_id)
-            if select_region_improvement.name == "Missile Defense Network" and select_region.owner_id == target_region.owner_id:
-                defender_name = "Missile Defense Network"
+            if select_region_improvement.name == "Missile Defense System" and select_region.owner_id == target_region.owner_id:
+                defender_name = "Missile Defense System"
                 break
 
-    # check for MDS
-    if defender_name is None and missile_type == "Standard Missile":
-        if target_region_improvement.name == "Missile Defense System":
-            defender_name = "Missile Defense System"
-        elif target_region.check_for_adjacent_improvement({"Missile Defense System"}):
-            defender_name = "Missile Defense System"
+    # check for anti-air unit
+    if target_region_unit.name == "Anti-Air":
+        defender_name = "Anti-Air"
+    else:
+        if target_region.check_for_adjacent_unit({"Anti-Air"}, target_region.owner_id):
+            defender_name = "Anti-Air"
 
     # last resort - check for local defense
     if defender_name is None and "Local Missile Defense" in target_nation.completed_research:

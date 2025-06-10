@@ -90,6 +90,52 @@ class Alliance:
 
         self.former_members[nation_name] = current_turn_num
 
+    def get_yield(self) -> Tuple[float, str | None]:
+        """
+        Calculates the yield of this alliance.
+        """
+
+        from app.nationdata import NationTable
+        nation_table = NationTable(self.game_id)
+        agenda_data_dict = core.get_scenario_dict(self.game_id, "Agendas")
+
+        if not self.is_active:
+            return 0.0, None
+
+        match self.type:
+            
+            case "Trade Agreement":
+                
+                total = 0.0
+                for ally_name in self.current_members:
+                    nation = nation_table.get(ally_name)
+                    total += nation.improvement_counts["City"]
+                    total += nation.improvement_counts["Central Bank"]
+                    total += nation.improvement_counts["Capital"]
+                
+                return total * 0.5, "Dollars"
+
+            case "Research Agreement":
+                
+                tech_set = set()
+                for ally_name in self.current_members:
+                    nation = nation_table.get(ally_name)
+                    ally_research_list = list(nation.completed_research.keys())
+                    tech_set.update(ally_research_list)
+
+                tech_set_filtered = set()
+                for research_name in tech_set:
+                    if research_name not in agenda_data_dict:
+                        tech_set_filtered.add(research_name)
+
+                return len(tech_set_filtered) * 0.2, "Research"
+
+            case "Defense Pact":
+                
+                return len(self.current_members), "Military Capacity"
+
+        return 0.0, None
+
     def end(self) -> None:
         """
         Retires an alliance.

@@ -33,11 +33,19 @@
     <div class="top-break"> <b>Unit Type:</b> {{ unit_data["Unit Type"] }}</div>
 
     <div class="top-break"> <b>Required Technology:</b> {{ unit_data["Required Research"] }} </div>
-
+    
+    <!-- Abilities -->
     {% for ability in unit_data["Abilities"] %}
         <div class="top-break"> {{ability}} </div>
     {% endfor %}
 
+    <!-- Missile Interception -->
+    <!-- This is hard coded for now, too bad. -->
+    {% if unit_name == 'Anti-Air' %}
+        <div class="top-break"> <b>Standard Missile Defense:</b> 6+ </div>
+    {% endif %}
+
+    <!-- Build Costs -->
     {% set ns = namespace(foo=True) %}
     {% for resource, cost in unit_data["Build Costs"].items() %}
         {% if cost != 0 and ns.foo %} 

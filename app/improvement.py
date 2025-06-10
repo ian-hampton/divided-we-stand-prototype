@@ -102,10 +102,6 @@ class Improvement:
             self.health = improvement_data_dict[improvement_name]["Health"]
         else:
             self.health = health
-        if self.name == 'Strip Mine' and 'Open Pit Mining' in player_research:
-            self.set_turn_timer(4)
-        elif self.name == 'Strip Mine':
-            self.set_turn_timer(8)
         if self.name == 'Surveillance Center':
             pass
         
@@ -180,7 +176,8 @@ class Improvement:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
 
         # get modifer from remnant government
-        if nation.gov == "Remnant" and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
+        capital_boost = any("Capital Boost" in tag_data for tag_data in nation.tags.values())
+        if capital_boost and region.check_for_adjacent_improvement(improvement_names = {'Capital'}):
             for resource_name in improvement_income_dict:
                 if resource_name == "Political Power" or resource_name == "Military Capacity":
                     # do not boost political power or military capacity gains
@@ -236,16 +233,16 @@ class Improvement:
                 case "Basic Materials":
                     improvement_income_dict[region.resource]["Income"] += 1
                 case "Common Metals":
-                    if 'Surface Mining' in nation.completed_research:
+                    if 'Metal Extraction' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Advanced Metals":
                     if 'Metallurgy' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Uranium":
-                    if 'Uranium Extraction' in nation.completed_research:
+                    if 'Uranium Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
                 case "Rare Earth Elements":
-                    if 'REE Mining' in nation.completed_research:
+                    if 'Rare Earth Mining' in nation.completed_research:
                         improvement_income_dict[region.resource]["Income"] += 1
         
         # calculate final income

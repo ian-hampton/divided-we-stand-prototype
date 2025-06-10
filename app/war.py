@@ -165,6 +165,15 @@ class War:
                     f"{main_attacker.name} Invasion of {main_defender.name}",
                     f"{main_attacker.name} Conquest of {main_defender.name}",
                 ]
+
+            case "Containment":
+                names = [
+                    f"{main_attacker.name} - {main_defender.name} Conflict",
+                    f"{main_attacker.name} - {main_defender.name} War",
+                    f"{main_attacker.name} - {main_defender.name} Containment War",
+                    f"{main_attacker.name} - {main_defender.name} Ideological War",
+                    f"{main_attacker.name} - {main_defender.name} War of Ideology",
+                ]
             
             case "Independence":
                 names = [
@@ -203,9 +212,10 @@ class War:
     def _resolve_war_justification(self, nation_id: str):
 
         from app.improvement import Improvement
+        nation_table = NationTable(self.game_id)
+        current_turn_num = core.get_current_turn_num(self.game_id)
         
         # get winner data
-        nation_table = NationTable(self.game_id)
         winner_nation = nation_table.get(nation_id)
         winner_combatant_data = self.get_combatant(nation_id)
 
@@ -231,13 +241,23 @@ class War:
             case "Animosity":
                 looser_nation = nation_table.get(winner_combatant_data.target)
                 winner_nation.update_stockpile("Political Power", 10)
-                winner_nation.update_stockpile("Technology", 10)
+                winner_nation.update_stockpile("Research", 10)
                 looser_nation.update_stockpile("Political Power", 0, overwrite=True)
                 nation_table.save(looser_nation)
 
             case "Subjugation":
                 looser_nation = nation_table.get(winner_combatant_data.target)
                 looser_nation.status = f"Puppet State of {winner_nation.name}"
+                nation_table.save(looser_nation)
+
+            case "Containment":
+                looser_nation = nation_table.get(winner_combatant_data.target)
+                new_tag = {
+                    "Military Capacity Rate": -50,
+                    "No Agenda Research": True,
+                    "Expire Turn": current_turn_num + 9
+                }
+                looser_nation.tags[f"{self.name} Containment"] = new_tag
                 nation_table.save(looser_nation)
 
             case "Independence":
@@ -304,6 +324,18 @@ class War:
                 main_defender_id = nation_id
 
         return main_attacker_id, main_defender_id
+
+    def is_on_same_side(self, nation_id_1: str, nation_id_2: str) -> bool:
+        
+        combatant_1 = self.get_combatant(nation_id_1)
+        combatant_2 = self.get_combatant(nation_id_2)
+
+        if "Attacker" in combatant_1.role and "Attacker" in combatant_2.role:
+            return True
+        elif "Defender" in combatant_1.role and "Defender" in combatant_2.role:
+            return True
+        
+        return False
 
     def add_missing_justifications(self) -> None:
         
@@ -453,7 +485,7 @@ class War:
             del attacker_nation.tags["Foreign Interference"]
             if outcome == "Attacker Victory":
                 attacker_nation.update_stockpile("Dollars", 50)
-                attacker_nation.update_stockpile("Technology", 20)
+                attacker_nation.update_stockpile("Research", 20)
                 attacker_nation.update_stockpile("Advanced Metals", 10)
             nation_table.save(attacker_nation)
 

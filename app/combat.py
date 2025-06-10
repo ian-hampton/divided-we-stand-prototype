@@ -36,6 +36,7 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
     GAME_ID = attacking_unit.game_id
     attacker_region = Region(attacking_unit.region_id, GAME_ID)
     defender_region = Region(defending_unit.region_id, GAME_ID)
+    defender_improvement = Improvement(defending_unit.region_id, GAME_ID)
 
     # get nation data
     nation_table = NationTable(GAME_ID)
@@ -62,7 +63,7 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
         attacker_roll_modifier += 1
     if attacking_unit.name == "Main Battle Tank" and defending_unit.type == "Infantry":
         attacker_roll_modifier += 1
-    for tag, tag_data in attacker.tags.items():
+    for tag_data in attacker.tags.values():
         if tag_data.get("Combat Roll Bonus") == defender.id:
             attacker_roll_modifier += 1
 
@@ -78,20 +79,23 @@ def unit_vs_unit_standard(attacking_unit: Unit, defending_unit: Unit) -> None:
         defender_roll_modifier += 1
     if defending_unit.name == "Main Battle Tank" and attacking_unit.type == "Infantry":
         defender_roll_modifier += 1
-    for tag, tag_data in defender.tags.items():
+    for tag_data in defender.tags.values():
         if tag_data.get("Combat Roll Bonus") == attacker.id:
             defender_roll_modifier += 1
 
     # calculate attacker damage modifier
     attacker_damage_modifier = 0
     if attacker_region.check_for_adjacent_unit({"Artillery"}, attacking_unit.owner_id):
-        war.log.append(f"    {attacker.name} {attacking_unit.name} has artillery support!")
+        war.log.append(f"    Attacking unit has artillery support!")
         attacker_damage_modifier += 1
+    if defender_improvement.name == "Trench":
+        war.log.append(f"    Defending unit is entrenched!")
+        attacker_damage_modifier -= 1
 
     # calculate defender damage modifier
     defender_damage_modifier = 0
     if defender_region.check_for_adjacent_unit({"Artillery"}, defending_unit.owner_id):
-        war.log.append(f"    {defender.name} {defending_unit.name} has artillery support!")
+        war.log.append(f"    Defending unit has artillery support!")
         defender_damage_modifier += 1
 
     # execute combat
@@ -210,7 +214,7 @@ def unit_vs_improvement_standard(attacking_unit: Unit, defending_improvement: Im
         attacker_roll_modifier += 1
     if attacking_unit.name == 'Main Battle Tank':
         attacker_roll_modifier += 1
-    for tag, tag_data in attacker.tags:
+    for tag_data in attacker.tags.values():
         if tag_data.get("Combat Roll Bonus") == defender.id:
             attacker_roll_modifier += 1
 
@@ -222,7 +226,7 @@ def unit_vs_improvement_standard(attacking_unit: Unit, defending_improvement: Im
     # calculate attacker damage modifier
     attacker_damage_modifier = 0
     if attacker_region.check_for_adjacent_unit({"Artillery"}, attacking_unit.owner_id):
-        war.log.append(f"    {attacker.name} {attacking_unit.name} has artillery support!")
+        war.log.append(f"    Attacking unit has artillery support!")
         attacker_damage_modifier += 1
     
     # calculate defender damage modifier

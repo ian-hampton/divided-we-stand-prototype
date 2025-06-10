@@ -1,10 +1,10 @@
 import json
 import random
 import os
+from typing import Union, Tuple, List
 
 from app import core
 from app.region import Region
-from typing import Union, Tuple, List
 
 class Nation:
     
@@ -29,9 +29,9 @@ class Nation:
         self.nuke_count: int = nation_data["missileStockpile"]["nuclearMissile"]
 
         self.score: int = nation_data["score"]
-        self.chosen_vc_set: str = nation_data["chosenVictorySet"]
+        self.victory_conditions: dict = nation_data["chosenVictorySet"]
         self._sets: dict = nation_data["victorySets"]
-        self.victory_conditions: dict = self._sets.get(self.chosen_vc_set)
+        self._satisfied: dict = nation_data["satisfiedVictorySet"]
 
         self.improvement_counts: dict = nation_data["improvementCounts"]
         self.unit_counts: dict = nation_data["unitCounts"]
@@ -81,15 +81,12 @@ class Nation:
             Nation: A new nation.
         """
 
-        vc_sets = Nation._generate_vc_sets(2)
+        # get game data
         improvement_dict = core.get_scenario_dict(game_id, "Improvements")
         unit_dict = core.get_scenario_dict(game_id, "Units")
-        improvement_cache = {}
-        for key in improvement_dict:
-            improvement_cache[key] = 0
-        unit_cache = {}
-        for key in unit_dict:
-            unit_cache[key] = 0
+
+        # generate victory condition sets
+        vc_sets = Nation._generate_vc_sets(2)
 
         nation_data = {
             "nationName": "N/A",
@@ -104,24 +101,32 @@ class Nation:
                 "nuclearMissile": 0
             },
             "score": 0,
-            "chosenVictorySet": "N/A",
+            "chosenVictorySet": {},
+            "satisfiedVictorySet": {},
             "victorySets": vc_sets,
             "resources": {
                 "Dollars": {
-                    "stored": "10.00",
+                    "stored": "5.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
                     "max": 100,
                     "rate": 100
                 },
                 "Political Power": {
+                    "stored": "1.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Research": {
                     "stored": "0.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
                     "max": 50,
                     "rate": 100
                 },
-                "Technology": {
+                "Food": {
                     "stored": "0.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
@@ -201,8 +206,8 @@ class Nation:
                 "researchCount": [],
                 "transactionCount": []
             },
-            "improvementCounts": improvement_cache,
-            "unitCounts": unit_cache,
+            "improvementCounts": {key: 0 for key in improvement_dict},
+            "unitCounts": {key: 0 for key in unit_dict},
             "unlockedTechs": {},
             "incomeDetails": [],
             "tags": {},
@@ -211,17 +216,158 @@ class Nation:
 
         return Nation(nation_id, nation_data, game_id)
 
-    def update_victory_progress(self) -> None:
+    def add_gov_tags(self) -> None:
         """
-        Updates victory condition progress. Be sure to save the nation object in order to commit the update!
+        Adds tags to nation that are associated with its government bonuses. Should only be called during game setup.
         """
         
-        from app import checks
-        current_turn_num = core.get_current_turn_num(self.game_id)
-        vc_results, score = checks.check_victory_conditions(self.game_id, int(self.id), current_turn_num)
+        match self.gov:
 
-        self.victory_conditions = vc_results
-        self.score = score
+            case "Republic":
+                new_tag = {
+                    "Alliance Limit Modifier": 1,
+                    "Expire Turn": 99999
+                }
+                self.tags["Republic"] = new_tag
+
+            case "Technocracy":
+                new_tag = {
+                    "Research Rate": 20,
+                    "Expire Turn": 99999
+                }
+                self.tags["Technocracy"] = new_tag
+
+            case "Oligarchy":
+                new_tag = {
+                    "Dollars Rate": 20,
+                    "Coal Rate": 20,
+                    "Oil Rate": 20,
+                    "Energy Rate": 20,
+                    "Expire Turn": 99999
+                }
+                self.tags["Oligarchy"] = new_tag
+
+            case "Totalitarian":
+                new_tag = {
+                    "Military Capacity Rate": 20,
+                    "Research Bonus": {
+                        "Amount": 2,
+                        "Resource": "Political Power",
+                        "Categories": ["Energy", "Infrastructure"]
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Totalitarian"] = new_tag
+
+            case "Remnant":
+                new_tag = {
+                    "Build Discount": 0.2,
+                    "Capital Boost": True,
+                    "Agenda Cost": 5,
+                    "Expire Turn": 99999
+                }
+                self.tags["Remnant"] = new_tag
+
+            case "Protectorate":
+                new_tag = {
+                    "Basic Materials Rate": 20,
+                    "Market Buy Modifier": 0.2,
+                    "Market Sell Modifier": 0.2,
+                    "Improvement Income Multiplier": {
+                        "Settlement": {
+                            "Dollars": -0.2
+                        },
+                        "City": {
+                            "Dollars": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Protectorate"] = new_tag
+
+            case "Military Junta":
+                new_tag = {
+                    "Improvement Income Multiplier": {
+                        "Research Laboratory": {
+                            "Research": -0.2
+                        },
+                        "Research Institute": {
+                            "Research": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Military Junta"] = new_tag
+
+            case "Crime Syndicate":
+                new_tag = {
+                    "Region Claim Cost": 0.2,
+                    "Expire Turn": 99999
+                }
+                self.tags["Crime Syndicate"] = new_tag
+
+    def update_victory_progress(self) -> None:
+        """
+        Updates victory condition progress.
+        """
+
+        import app.victory_conditions as vc
+        
+        # reset
+        self.score = 0
+        for name in self.victory_conditions.keys():
+            self.victory_conditions[name] = False
+
+        # check each victory condition
+        for name in self.victory_conditions.keys():
+            
+            # do not check vcs that have already been permanently satisfied
+            if self._satisfied[name]:
+                self.score += 1
+                continue
+
+            # map vc names to functions
+            name_to_func = {
+                "Ambassador": vc.ambassador,
+                "Backstab": vc.backstab,
+                "Breakthrough": vc.breakthrough,
+                "Diversified Economy": vc.breakthrough,
+                "Double Down": vc.double_down,
+                "New Empire": vc.new_empire,
+                "Reconstruction Effort": vc.reconstruction_effort,
+                "Reliable Ally": vc.reliable_ally,
+                "Secure Strategic Resources": vc.secure_strategic_resources,
+                "Threat Containment": vc.threat_containment,
+                "Energy Focus": vc.energy_focus,
+                "Industrial Focus": vc.industrial_focus,
+                "Hegemony": vc.hegemony,
+                "Monopoly": vc.monopoly,
+                "Nuclear Deterrent": vc.nuclear_deterrent,
+                "Strong Research Agreement": vc.strong_research_agreement,
+                "Strong Trade Agreement": vc.strong_trade_agreement,
+                "Sphere of Influence": vc.sphere_of_influence,
+                "Underdog": vc.underdog,
+                "Warmonger": vc.warmonger,
+                "Economic Domination": vc.economic_domination,
+                "Influence Through Trade": vc.influence_through_trade,
+                "Military Superpower": vc.military_superpower,
+                "Scientific Leader": vc.scientific_leader,
+                "Territorial Control": vc.territorial_control
+            }
+            
+            # check victory condition
+            if name in name_to_func:
+                if name_to_func[name](self):
+                    
+                    # mark victory condition as completed
+                    self.score += 1
+                    self.victory_conditions[name] = True
+
+                    # mark victory condition as permanently satisfied if needed
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Threat Containment",
+                                    "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    if name in one_and_done:
+                        self._satisfied[name] = True
 
     def add_tech(self, technology_name: str) -> None:
         """
@@ -254,10 +400,82 @@ class Nation:
         if "Improved Logistics" in self.completed_research:
             trade_index += 1
 
-        for tag_name, tag_data in self.tags.items():
+        for tag_data in self.tags.values():
             trade_index += tag_data.get("Trade Fee Modifier", 0)
 
         self.trade_fee = trade_fee_list[trade_index]
+
+    def award_research_bonus(self, research_name: str) -> None:
+
+        research_scenario_dict = core.get_scenario_dict(self.game_id, "Technologies")
+
+        for tag_data in self.tags.values():
+            if "Research Bonus" not in tag_data:
+                continue
+            bonus_dict = tag_data["Research Bonus"]
+            if research_scenario_dict[research_name]["Research Type"] in bonus_dict["Categories"]:
+                resource_name: str = bonus_dict["Resource"]
+                resource_amount: int = bonus_dict["Amount"]
+                self.update_stockpile(resource_name, resource_amount)
+                self.action_log.append(f"Gained {resource_amount} {resource_name} for researching {research_name}.")
+
+    def apply_build_discount(self, build_cost_dict: dict) -> None:
+
+        build_cost_rate = 1.0
+        for tag_data in self.tags.values():
+            build_cost_rate -= float(tag_data.get("Build Discount", 0))
+
+        for key in build_cost_dict:
+            build_cost_dict[key] *= build_cost_rate
+
+    def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
+
+        adjustment = 0
+        agenda_data_dict = core.get_scenario_dict(self.game_id, "Agendas")
+        agenda_type = agenda_data_dict[agenda_name]['Agenda Type']
+
+        # cost adjustment from foreign policy
+        agenda_cost_adjustment = {
+            "Cooperative": {
+                "Diplomatic": -5,
+                "Commercial": 0,
+                "Isolationist": 5,
+                "Imperialist": 0
+            },
+            "Economic": {
+                "Diplomatic": 0,
+                "Commercial": -5,
+                "Isolationist": 0,
+                "Imperialist": 5
+            },
+            "Security": {
+                "Diplomatic": 0,
+                "Commercial": 5,
+                "Isolationist": -5,
+                "Imperialist": 0,
+            },
+            "Warfare": {
+                "Diplomatic": 5,
+                "Commercial": 0,
+                "Isolationist": 0,
+                "Imperialist": -5,
+            }
+        }
+        adjustment += agenda_cost_adjustment[agenda_type][self.fp]
+
+        # cost adjustment from tags
+        for tag_data in self.tags.values():
+            adjustment += int(tag_data.get("Agenda Cost", 0))
+        
+        return adjustment
+
+    def region_claim_political_power_cost(self) -> float:
+
+        pp_cost = 0.0
+        for tag_data in self.tags.values():
+            pp_cost += float(tag_data.get("Region Claim Cost", 0))
+        
+        return pp_cost
 
     def export_action_log(self) -> None:
         """
@@ -443,7 +661,7 @@ class Nation:
             raise Exception(f"Resource {resource_name} not recognized.")
         
         rate = self._resources[resource_name]["rate"]
-        for tag_name, tag_data in self.tags.items():
+        for tag_data in self.tags.values():
             rate += tag_data.get(f"{resource_name} Rate", 0)
 
         return rate
@@ -471,18 +689,6 @@ class Nation:
             self._resources[resource_name]["rate"] = amount
         else:
             self._resources[resource_name]["rate"] += amount
-
-    def reset_income_rates(self) -> None:
-        """
-        Sets income rates based on government choice. Called at the start of the game.
-
-        Returns:
-            None
-        """
-
-        for resource_name in self._resources:
-            amount = INCOME_RATES[self.gov][resource_name]
-            self.update_rate(resource_name, amount, overwrite = True)
 
     def get_used_mc(self) -> float:
         """
@@ -663,7 +869,8 @@ class NationTable:
                 "nuclearMissile": nation.nuke_count
             },
             "score": nation.score,
-            "chosenVictorySet": nation.chosen_vc_set,
+            "chosenVictorySet": nation.victory_conditions,
+            "satisfiedVictorySet": nation._satisfied,
             "victorySets": nation._sets,
             "resources": nation._resources,
             "statistics": {
@@ -855,23 +1062,27 @@ class NationTable:
 
 # tba - move everything below to a scenario file
 EASY_LIST = [
+    "Ambassador",
+    "Backstab",
     "Breakthrough",
-    "Diversified Economy",
-    "Energy Economy",
-    "Industrial Focus",
-    "Leading Defense",
-    "Major Exporter",
+    "Diverse Economy",
+    "Double Down",
+    "New Empire",
     "Reconstruction Effort",
-    "Secure Strategic Resources"
+    "Reliable Ally",
+    "Secure Strategic Resources",
+    "Threat Containment"
 ]
 NORMAL_LIST = [
-    "Backstab",
-    "Diversified Army",
+    "Energy Focus",
+    "Industrial Focus",
     "Hegemony",
-    "New Empire",
+    "Monopoly",
     "Nuclear Deterrent",
-    "Reliable Ally",
+    "Strong Research Agreement",
+    "Strong Trade Agreement",
     "Sphere of Influence",
+    "Underdog",
     "Warmonger"
 ]
 HARD_LIST = [
@@ -881,117 +1092,3 @@ HARD_LIST = [
     "Scientific Leader",
     "Territorial Control"
 ]
-INCOME_RATES = {
-    "Republic": {
-        "Dollars": 100,
-        "Political Power": 100,
-        "Technology": 100,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    },
-    "Technocracy": {
-        "Dollars": 100,
-        "Political Power": 100,
-        "Technology": 100,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    },
-    "Oligarchy": {
-        "Dollars": 120,
-        "Political Power": 100,
-        "Technology": 100,
-        "Coal": 120,
-        "Oil": 120,
-        "Energy": 120,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    },
-    "Totalitarian": {
-        "Dollars": 100,
-        "Political Power": 100,
-        "Technology": 100,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 120
-    },
-    "Remnant": {
-        "Dollars": 100,
-        "Political Power": 100,
-        "Technology": 100,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    },
-    "Protectorate": {
-        "Dollars": 100,
-        "Political Power": 80,
-        "Technology": 100,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    },
-    "Military Junta": {
-        "Dollars": 100,
-        "Political Power": 100,
-        "Technology": 80,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    },
-    "Crime Syndicate": {
-        "Dollars": 80,
-        "Political Power": 100,
-        "Technology": 100,
-        "Coal": 100,
-        "Oil": 100,
-        "Energy": 100,
-        "Basic Materials": 100,
-        "Common Metals": 100,
-        "Advanced Metals": 100,
-        "Uranium": 100,
-        "Rare Earth Elements": 100,
-        "Military Capacity": 100
-    }
-}

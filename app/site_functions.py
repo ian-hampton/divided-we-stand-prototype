@@ -123,33 +123,44 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     # get game files
     nation_table = NationTable(game_id)
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    with open('active_games.json', 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
     five_point_research_list = []
     for key in research_data_dict:
         tech = research_data_dict[key]
         if tech["Cost"] == 5:
             five_point_research_list.append(key)
+    if active_games_dict[game_id]["Information"]["Fog of War"] == "Disabled":
+        del five_point_research_list["Surveillance Operations"]
 
     # update nation data
     for nation_id, setup_data in contents_dict.items():
+        
         nation = nation_table.get(nation_id)
+        
+        # add basic data
         nation.name = setup_data["name_choice"]
         nation.gov = setup_data["gov_choice"]
         nation.fp = setup_data["fp_choice"]
-        nation.chosen_vc_set = setup_data["vc_choice"]
-        nation.reset_income_rates()
+        nation.add_gov_tags()
+        
+        # victory conditions data
+        nation.victory_conditions = copy.deepcopy(nation._sets[setup_data["vc_choice"]])
+        nation._satisfied = copy.deepcopy(nation._sets[setup_data["vc_choice"]])
+        
+        # technocracy bonus tech
         if nation.gov == "Technocracy":
             starting_list = random.sample(five_point_research_list, 3)
             for technology_name in starting_list:
                 nation.add_tech(technology_name)
+        
         nation_table.save(nation)
 
     # update income in playerdata
     checks.update_income(game_id)
     nation_table.reload()
     nation_table.update_records()
-    
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
     # update game_settings
     active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
@@ -192,6 +203,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions_dict = {
         "AllianceCreateAction": [],
         "AllianceJoinAction": [],
+        "AllianceKickAction": [],
         "AllianceLeaveAction": [],
         "ClaimAction": [],
         "CrimeSyndicateAction": [],
@@ -209,6 +221,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         "UnitDisbandAction": [],
         "UnitMoveAction": [],
         "WarAction": [],
+        "WarJoinAction": [],
         "WhitePeaceAction": []
     }
 
@@ -232,6 +245,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"], actions_dict["WhitePeaceAction"])
     actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
     actions.resolve_alliance_leave_actions(game_id, actions_dict["AllianceLeaveAction"])
+    actions.resolve_alliance_kick_actions(game_id, actions_dict["AllianceKickAction"])
     actions.resolve_alliance_create_actions(game_id, actions_dict["AllianceCreateAction"])
     actions.resolve_alliance_join_actions(game_id, actions_dict["AllianceJoinAction"])
     actions.resolve_claim_actions(game_id, actions_dict["ClaimAction"])
@@ -247,6 +261,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
     actions.resolve_unit_deployment_actions(game_id, actions_dict["UnitDeployAction"])
     actions.resolve_war_actions(game_id, actions_dict["WarAction"])
+    actions.resolve_war_join_actions(game_id, actions_dict["WarJoinAction"])
     actions.resolve_missile_launch_actions(game_id, actions_dict["MissileLaunchAction"])
     actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
 
@@ -292,10 +307,12 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             notifications.append('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
             events.trigger_event(game_id)
-            pass
 
     # update active game records
     core.update_turn_num(game_id)
+    events.filter_events(game_id)
+    nation_table.reload()
+    nation_table.check_tags()
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
@@ -318,8 +335,6 @@ def run_end_of_turn_checks(game_id: str) -> None:
     """
 
     nation_table = NationTable(game_id)
-
-    nation_table.check_tags()
 
     checks.prune_alliances(game_id)
     checks.update_income(game_id)
@@ -567,15 +582,13 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     player_information_dict['Status'] = nation.status
     
     # get victory condition data
-    nation.update_victory_progress()
     player_information_dict['Victory Conditions Data']['Conditions List'] = list(nation.victory_conditions.keys())
-    vc_colors = []
-    for entry in nation.victory_conditions.values():
+    player_information_dict['Victory Conditions Data']['Color List'] = list(nation.victory_conditions.values())
+    for i, entry in enumerate(player_information_dict['Victory Conditions Data']['Color List']):
         if entry:
-            vc_colors.append('#00ff00')
+           player_information_dict['Victory Conditions Data']['Color List'][i] = "#00ff00"
         else:
-            vc_colors.append('#ff0000')
-    player_information_dict['Victory Conditions Data']['Color List'] = vc_colors
+            player_information_dict['Victory Conditions Data']['Color List'][i] = "#ff0000"
 
     # resource data
     class_list = []

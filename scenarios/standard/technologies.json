@@ -24,24 +24,16 @@
             }
         }
     },
-    "Strip Mining": {
+    "Open Pit Mining": {
         "Research Type": "Energy",
         "Prerequisite": "Coal Subsidies",
         "Cost": 15,
-        "Description": "New Improvement: Strip Mine.",
+        "Description": "+1 coal from Coal Mine improvements.",
         "Location": "A2",
-        "Modifiers": {}
-    },
-    "Open Pit Mining": {
-        "Research Type": "Energy",
-        "Prerequisite": "Strip Mining",
-        "Cost": 20,
-        "Description": "+2 coal from Strip Mine improvements, but Strip Mine improvements last for only 4 turns.",
-        "Location": "A3",
         "Modifiers": {
-            "Strip Mine": {
+            "Coal Mine": {
                 "Coal": {
-                    "Income": 2
+                    "Income": 1
                 }
             }
         }
@@ -71,17 +63,23 @@
             }
         }
     },
-    "Oil Refinement": {
+    "Natural Gas Processing": {
         "Research Type": "Energy",
         "Prerequisite": "Oil Subsidies",
         "Cost": 15,
-        "Description": "New Improvement: Oil Refinery.",
+        "Description": "+1 energy from Oil Well improvements.",
         "Location": "B2",
-        "Modifiers": {}
+        "Modifiers": {
+            "Oil Well": {
+                "Energy": {
+                    "Income": 1
+                }
+            }
+        }
     },
     "Fracking": {
         "Research Type": "Energy",
-        "Prerequisite": "Oil Refinement",
+        "Prerequisite": "Natural Gas Processing",
         "Cost": 20,
         "Description": "+1 oil from Oil Well improvements.",
         "Location": "B3",
@@ -101,28 +99,20 @@
         "Location": "C0",
         "Modifiers": {}
     },
-    "Nuclear Power": {
+    "Solar Panels": {
         "Research Type": "Energy",
         "Prerequisite": "Wind Turbines",
         "Cost": 10,
-        "Description": "New Improvement: Nuclear Power Plant.",
-        "Location": "C1",
-        "Modifiers": {}
-    },
-    "Solar Panels": {
-        "Research Type": "Energy",
-        "Prerequisite": "Nuclear Power",
-        "Cost": 15,
         "Description": "New Improvement: Solar Farm.",
-        "Location": "C2",
+        "Location": "C1",
         "Modifiers": {}
     },
     "Green Energy Subsidies": {
         "Research Type": "Energy",
         "Prerequisite": "Solar Panels",
-        "Cost": 20,
-        "Description": "+1 green energy from Wind Farm and Solar Farm improvements, but each one costs -1 dollars per turn in upkeep.",
-        "Location": "C3",
+        "Cost": 15,
+        "Description": "+1 green energy from Wind Farm and Solar Farm improvements, but each costs -1 dollars per turn in upkeep.",
+        "Location": "C2",
         "Modifiers": {
             "Wind Farm": {
                 "Dollars": {
@@ -142,20 +132,36 @@
             }
         }
     },
-    "City Resettlement": {
+    "Nuclear Power": {
+        "Research Type": "Energy",
+        "Prerequisite": "Green Energy Subsidies",
+        "Cost": 20,
+        "Description": "New Improvement: Nuclear Power Plant.",
+        "Location": "C3",
+        "Modifiers": {}
+    },
+    "Resettlement": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: City",
+        "Description": "New Improvement: Farm<br>New Improvement: Settlement",
         "Location": "A0",
+        "Modifiers": {}
+    },
+    "Urbanization": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Resettlement",
+        "Cost": 10,
+        "Description": "New Improvement: City",
+        "Location": "A1",
         "Modifiers": {}
     },
     "Power Grid Restoration": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "City Resettlement",
-        "Cost": 10,
-        "Description": "+2 dollars from City improvements, but each City costs -1 Coal/Oil/Green Energy per turn in upkeep.",
-        "Location": "A1",
+        "Prerequisite": "Urbanization",
+        "Cost": 15,
+        "Description": "+2 dollars from City improvements, but each City costs -1 energy per turn in upkeep.",
+        "Location": "A2",
         "Modifiers": {
             "City": {
                 "Dollars": {
@@ -167,12 +173,12 @@
             }
         }
     },
-    "Central Banking System": {
+    "Monetary Authority": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Power Grid Restoration",
-        "Cost": 15,
-        "Description": "New Improvement: Central Bank. +2 dollars from City improvements.",
-        "Location": "A2",
+        "Cost": 20,
+        "Description": "New Improvement: Central Bank.<br>+1 dollars from City improvements.",
+        "Location": "A3",
         "Modifiers": {
             "City": {
                 "Dollars": {
@@ -181,7 +187,7 @@
             }
         }
     },
-    "Surface Mining": {
+    "Metal Extraction": {
         "Research Type": "Infrastructure",
         "Prerequisite": null,
         "Cost": 5,
@@ -189,12 +195,36 @@
         "Location": "B0",
         "Modifiers": {}
     },
+    "Metallurgy": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Metal Extraction",
+        "Cost": 10,
+        "Description": "New Improvement: Advanced Metals Mine.",
+        "Location": "B1",
+        "Modifiers": {}
+    },
+    "Uranium Mining": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Metallurgy",
+        "Cost": 15,
+        "Description": "New Improvement: Uranium Mine.",
+        "Location": "B2",
+        "Modifiers": {}
+    },
+    "Rare Earth Mining": {
+        "Research Type": "Infrastructure",
+        "Prerequisite": "Uranium Extraction",
+        "Cost": 20,
+        "Description": "New Improvement: Rare Earth Elements Mine.",
+        "Location": "B3",
+        "Modifiers": {}
+    },
     "Industrial Advancements": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "Surface Mining",
+        "Prerequisite": null,
         "Cost": 10,
         "Description": "+1 basic materials from Industrial Zone improvements.",
-        "Location": "B1",
+        "Location": "C0",
         "Modifiers": {
             "Industrial Zone": {
                 "Basic Materials": {
@@ -203,12 +233,12 @@
             }
         }
     },
-    "Underground Mining": {
+    "Tailings Reprocessing": {
         "Research Type": "Infrastructure",
         "Prerequisite": "Industrial Advancements",
-        "Cost": 15,
+        "Cost": 20,
         "Description": "+1 common metals from Common Metals Mine improvements.",
-        "Location": "B2",
+        "Location": "C1",
         "Modifiers": {
             "Common Metals Mine": {
                 "Common Metals": {
@@ -217,34 +247,27 @@
             }
         }
     },
-    "Metallurgy": {
+    "Intensive Agriculture": {
         "Research Type": "Infrastructure",
-        "Prerequisite": null,
-        "Cost": 5,
-        "Description": "New Improvement: Advanced Metals Mine.",
-        "Location": "C0",
-        "Modifiers": {}
-    },
-    "Uranium Extraction": {
-        "Research Type": "Infrastructure",
-        "Prerequisite": "Metallurgy",
-        "Cost": 10,
-        "Description": "New Improvement: Uranium Mine.",
-        "Location": "C1",
-        "Modifiers": {}
-    },
-    "Rare Earth Mining": {
-        "Research Type": "Infrastructure",
-        "Prerequisite": "Uranium Extraction",
-        "Cost": 15,
-        "Description": "New Improvement: Rare Earth Elements Mine.",
+        "Prerequisite": "Tailings Reprocessing",
+        "Cost": 30,
+        "Description": "+2 food from Farm improvements, but each Farm costs -0.5 energy per turn in upkeep.",
         "Location": "C2",
-        "Modifiers": {}
+        "Modifiers": {
+            "Farm": {
+                "Food": {
+                    "Income": 2
+                },
+                "Energy": {
+                    "Upkeep": 0.5
+                }
+            }
+        }
     },
     "Resource Enrichment": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "Rare Earth Mining",
-        "Cost": 20,
+        "Prerequisite": "Intensive Agriculture",
+        "Cost": 40,
         "Description": "+1 advanced metals from Advanced Metals Mine improvements. +1 uranium from Uranium Mine improvements.",
         "Location": "C3",
         "Modifiers": {
@@ -279,7 +302,7 @@
                 "Dollars": {
                     "Upkeep": 2
                 },
-                "Technology": {
+                "Research": {
                     "Income": 1
                 }
             }
@@ -407,7 +430,7 @@
         "Research Type": "Military",
         "Prerequisite": "Draft",
         "Cost": 15,
-        "Description": "+0.5 military capacity from all defensive improvements except Boot Camps and Capitals.",
+        "Description": "+0.5 military capacity from all improvements with health except Boot Camps and Capitals.",
         "Location": "D2",
         "Modifiers": {
             "Central Bank": {
@@ -425,11 +448,6 @@
                     "Income": 0.5
                 }
             },
-            "Crude Barrier": {
-                "Military Capacity": {
-                    "Income": 0.5
-                }
-            },
             "Military Outpost": {
                 "Military Capacity": {
                     "Income": 0.5
@@ -439,54 +457,59 @@
                 "Military Capacity": {
                     "Income": 0.5
                 }
+            },
+            "Settlement": {
+                "Military Capacity": {
+                    "Income": 0.5
+                }
             }
         }
     },
-    "Basic Defenses": {
+    "Trench Warfare": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: Crude Barrier.",
+        "Description": "New Improvement: Trench",
         "Location": "A0",
         "Modifiers": {}
     },
-    "Military Outposts": {
+    "Fortifications": {
         "Research Type": "Defense",
-        "Prerequisite": "Basic Defenses",
+        "Prerequisite": "Trench Warfare",
         "Cost": 10,
-        "Description": "New Improvement: Military Outpost.",
+        "Description": "New Improvement: Fort",
         "Location": "A1",
         "Modifiers": {}
     },
     "Military Bases": {
         "Research Type": "Defense",
-        "Prerequisite": "Military Outposts",
+        "Prerequisite": "Fortifications",
         "Cost": 15,
-        "Description": "New Improvement: Military Base.",
+        "Description": "New Improvement: Military Base",
         "Location": "A2",
         "Modifiers": {}
     },
-    "Missile Defense System": {
+    "Air Defense": {
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: Missile Defense System.",
+        "Description": "New Unit: Anti-Air",
         "Location": "B0",
         "Modifiers": {}
     },
     "Local Missile Defense": {
         "Research Type": "Defense",
-        "Prerequisite": "Missile Defense System",
+        "Prerequisite": "Air Defense",
         "Cost": 10,
         "Description": "Your defensive improvements will attempt to shoot down Standard Missiles aimed at the region they are located in. Uses that improvement's hit value (without modifiers).",
         "Location": "B1",
         "Modifiers": {}
     },
-    "Missile Defense Network": {
+    "Missile Defense System": {
         "Research Type": "Defense",
         "Prerequisite": "Local Missile Defense",
         "Cost": 15,
-        "Description": "New Improvement: Missile Defense Network.",
+        "Description": "New Improvement: Missile Defense System",
         "Location": "B2",
         "Modifiers": {}
     },
@@ -494,7 +517,7 @@
         "Research Type": "Defense",
         "Prerequisite": null,
         "Cost": 5,
-        "Description": "New Improvement: Surveillance Center.",
+        "Description": "New Improvement: Surveillance Center",
         "Location": "C0",
         "Modifiers": {}
     },
