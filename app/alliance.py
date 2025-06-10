@@ -109,6 +109,7 @@ class Alliance:
                 total = 0.0
                 for ally_name in self.current_members:
                     nation = nation_table.get(ally_name)
+                    total += nation.improvement_counts["Settlement"]
                     total += nation.improvement_counts["City"]
                     total += nation.improvement_counts["Central Bank"]
                     total += nation.improvement_counts["Capital"]
