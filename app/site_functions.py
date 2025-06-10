@@ -307,7 +307,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             notifications.append('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
             events.trigger_event(game_id)
-            pass
 
     # update active game records
     core.update_turn_num(game_id)
