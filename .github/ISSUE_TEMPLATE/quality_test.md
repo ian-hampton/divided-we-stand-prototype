@@ -1,7 +1,7 @@
 ---
 name: Quality Test Template
 about: Checklist for testing site functions and player actions.
-title: [QA Test - [Update Name]]
+title: QA Test - [Update Name]
 labels: []
 assignees: ''
 
