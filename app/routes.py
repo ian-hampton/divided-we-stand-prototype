@@ -818,6 +818,8 @@ def units_ref(full_game_id):
             unit_dict[unit_name]["stat_color"] = "stat-red"
         elif "Tank" in unit_name:
             unit_dict[unit_name]["stat_color"] = "stat-purple"
+        elif "Air" in unit_name:
+            unit_dict[unit_name]["stat_color"] = "stat-yellow"
 
     return render_template('temp_units.html', page_title = page_title, dict = unit_dict)
 
@@ -969,7 +971,7 @@ def resource_market(full_game_id):
     elif "Market Recession" in active_games_dict[full_game_id]["Active Events"]:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 0.5
-            data[resource_name]["Current Price"] = round(new_price, 0.5)
+            data[resource_name]["Current Price"] = round(new_price, 2)
 
     # format price strings
     for resource_name in data:

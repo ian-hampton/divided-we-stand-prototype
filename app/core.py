@@ -201,7 +201,7 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
             continue
         
         upkeep_dict[improvement_name] = {}
-        for resource_name in ["Dollars", "Energy", "Coal", "Oil", "Uranium"]:  # tba - pull list from scenario files
+        for resource_name in ["Dollars", "Food", "Energy", "Coal", "Oil", "Uranium"]:  # tba - pull list from scenario files
             upkeep_dict[improvement_name][resource_name] = {
                 "Upkeep": 0,
                 "Upkeep Multiplier": 1
@@ -216,32 +216,12 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         if nation.unit_counts[unit_name] == 0:
             continue
         
-        upkeep_dict[unit_name] = {
-            "Dollars": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Food": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Energy": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Coal": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Oil": {
-                "Upkeep": 0,
-                "Upkeep Multiplier": 1
-            },
-            "Uranium": {
+        upkeep_dict[unit_name] = {}
+        for resource_name in ["Dollars", "Food", "Energy", "Coal", "Oil", "Uranium"]:  # tba - pull list from scenario files
+            upkeep_dict[unit_name][resource_name] = {
                 "Upkeep": 0,
                 "Upkeep Multiplier": 1
             }
-        }
 
         for resource_name in unit_data["Upkeep"]:
             upkeep_dict[unit_name][resource_name]["Upkeep"] = unit_data["Upkeep"][resource_name]

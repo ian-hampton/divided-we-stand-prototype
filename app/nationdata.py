@@ -113,7 +113,7 @@ class Nation:
                     "rate": 100
                 },
                 "Political Power": {
-                    "stored": "0.00",
+                    "stored": "1.00",
                     "income": "0.00",
                     "grossIncome": "0.00",
                     "max": 50,
@@ -232,7 +232,7 @@ class Nation:
 
             case "Technocracy":
                 new_tag = {
-                    "Technology Rate": 20,
+                    "Research Rate": 20,
                     "Expire Turn": 99999
                 }
                 self.tags["Technocracy"] = new_tag
@@ -473,7 +473,7 @@ class Nation:
 
         pp_cost = 0.0
         for tag_data in self.tags.values():
-            pp_cost += float(tag_data.get("Region Claim Cost"))
+            pp_cost += float(tag_data.get("Region Claim Cost", 0))
         
         return pp_cost
 
