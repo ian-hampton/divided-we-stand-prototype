@@ -94,9 +94,12 @@ class AllianceKickAction:
         return f"[AllianceKickAction] Alliance Kick {self.target_nation} {self.alliance_name} ({self.id})"
     
     def is_valid(self) -> bool:
+        
         if self.target_nation is None or self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
+        
+        return True
 
 class AllianceLeaveAction:
 
@@ -1317,7 +1320,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
     notifications = Notifications(game_id)
 
     # execute actions
-    kick_actions_tally = defaultdict(lambda: defaultdict(dict))
+    kick_actions_tally = defaultdict(lambda: defaultdict(int))
     for action in actions_list:
         nation = nation_table.get(action.id)
         target_nation = nation_table.get(action.target_nation)
