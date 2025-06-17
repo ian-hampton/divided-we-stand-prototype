@@ -132,7 +132,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
         if tech["Cost"] == 5:
             five_point_research_list.append(key)
     if active_games_dict[game_id]["Information"]["Fog of War"] == "Disabled":
-        del five_point_research_list["Surveillance Operations"]
+        five_point_research_list.remove("Surveillance Operations")
 
     # update nation data
     for nation_id, setup_data in contents_dict.items():
