@@ -69,19 +69,19 @@
                 {% set score = nation_data["score"] %}
                 <div class="row">
                     {% if score >= 1 %}
-                        <div class="cell-short" style="width:34%; background-color:{{color}}">{{ nation_name }}</div>
+                        <div class="cell-short" style="width:34%; background-color:{{color}};">{{ nation_name }}</div>
                     {% else %}
-                        <div class="cell-short" style="width: 34%">{{ nation_name }}</div>
+                        <div class="cell-short" style="width:34%;">{{ nation_name }}</div>
                     {% endif %}
                     {% if score >= 2 %}
-                        <div class="cell-short" style="width: 33%; background-color:{{color}}"></div>
+                        <div class="cell-short" style="width:33%; background-color:{{color}}"></div>
                     {% else %}
-                        <div class="cell-short" style="width: 33%"></div>
+                        <div class="cell-short" style="width:33%"></div>
                     {% endif %}
                     {% if score >= 3 %}
-                        <div class="cell-short-right" style="width: 33%; background-color:{{color}}">{{ nation_data["score"] }}</div>
+                        <div class="cell-short-right" style="width:33%; background-color:{{color}}">{{ nation_data["score"] }}</div>
                     {% else %}
-                        <div class="cell-short-right" style="width: 33%">{{ nation_data["score"] }}</div>
+                        <div class="cell-short-right" style="width:33%">{{ nation_data["score"] }}</div>
                     {% endif %}
                 </div>
             {% endfor %}

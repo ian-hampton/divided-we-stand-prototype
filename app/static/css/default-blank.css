@@ -63,6 +63,7 @@ body {
     width: 100%;
     display: flex;
     flex-direction: row;
+    overflow-x: visible;
 }
 .box .cell-bold {
     padding: 8px;
@@ -117,6 +118,8 @@ body {
     text-align: left;
     border-bottom: 1px solid rgba(42, 42, 42, 0.7);
     font-size: 18px;
+    white-space: nowrap;
+    overflow-x: visible;
 }
 .box .cell-short-right {
     padding: 8px;
