@@ -614,7 +614,7 @@ def handle_current_event(game_id: str) -> None:
                 nation = nation_table.get(nation_id)
                 if decision == "Accept":
                     new_tag = {}
-                    new_tag["Expire Turn"] = current_turn_num + EVENT_DICT[event_name]["Duration"] + 1
+                    new_tag["Expire Turn"] = 99999
                     nation.tags["Observer Status"] = new_tag
                 elif decision == "Decline":
                     valid_research = False
@@ -1516,7 +1516,7 @@ EVENT_DICT = {
     "Observer Status Invitation": {
         "Type": "Standard Event",
         "Resolution": "Delayed Option",
-        "Duration": 8,
+        "Duration": 0,
         "Conditions": {}
     },
     "Peacetime Rewards": {

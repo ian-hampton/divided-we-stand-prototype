@@ -120,7 +120,7 @@ def update_income(game_id: str) -> None:
     for nation in nation_table:
         if "Observer Status" in nation.tags:
             nation.update_gross_income("Political Power", 0.5)
-            income_str = f"+{0.5:.2f} from Observer Status"
+            income_str = f"&Tab;+{0.5:.2f} from Observer Status"
             _update_text_dict(text_dict, nation.name, "Political Power", income_str)
         nation_table.save(nation)
 
