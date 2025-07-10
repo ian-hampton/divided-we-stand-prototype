@@ -268,24 +268,23 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # oppertunity to resolve active events
     events.resolve_active_events(game_id, "After Actions", actions_dict)
 
-    # export logs
+    # export action logs
     nation_table = NationTable(game_id)
     for nation in nation_table:
         nation.export_action_log()
         nation.action_log = []
         nation_table.save(nation)
+    
+    # update wars
     war_table = WarTable(game_id)
     war_table.export_all_logs()
+    war_table.add_warscore_from_occupations()
+    war_table.update_totals()
 
     # end of turn checks
     print("Resolving end of turn updates...")
-    war_table.add_warscore_from_occupations()
-    war_table.update_totals()
-    checks.total_occupation_forced_surrender(game_id)
-    checks.war_score_forced_surrender(game_id)
-    checks.countdown(game_id)
+    checks.countdown(game_id)    # TODO: replace this function with something better
     run_end_of_turn_checks(game_id)
-    checks.gain_income(game_id)
     checks.gain_market_income(game_id, market_results)
 
     # update victory progress and check if player has won the game
@@ -329,15 +328,21 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     maps = GameMaps(game_id)
     maps.update_all()
 
-def run_end_of_turn_checks(game_id: str) -> None:
+def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
     Executes end of turn checks and updates.
     """
 
     nation_table = NationTable(game_id)
 
-    checks.prune_alliances(game_id)
+    if not event_phase:
+        checks.total_occupation_forced_surrender(game_id)
+        checks.war_score_forced_surrender(game_id)
+        checks.prune_alliances(game_id)
+    
     checks.update_income(game_id)
+    if not event_phase:
+        checks.gain_income(game_id)
     checks.resolve_resource_shortages(game_id)
     checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)

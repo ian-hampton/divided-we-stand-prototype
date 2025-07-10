@@ -1260,6 +1260,6 @@ def event_resolution():
     full_game_id = request.form.get('full_game_id')
     
     events.handle_current_event(full_game_id)
-    site_functions.run_end_of_turn_checks(full_game_id)
+    site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
 
     return redirect(f'/{full_game_id}')
