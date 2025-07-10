@@ -1093,7 +1093,14 @@ def announcements(full_game_id):
         standings = nation_table.get_top_three(record)
         standings_filtered = []
         for entry in standings:
+            # add html span tag
             nation_name = palette.color_nation_names(entry[0], full_game_id)
+            # truncate nation name if over 30 chars
+            start_index = nation_name.find('>') + 1
+            end_index = nation_name.find('</span>')
+            if end_index - start_index > 30:
+                nation_name = nation_name[0:start_index+31] + nation_name[end_index:]
+            # format standing
             if record == "netIncome":
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
