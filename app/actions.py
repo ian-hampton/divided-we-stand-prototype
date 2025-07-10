@@ -864,6 +864,7 @@ def _check_resource(resource_name: str) -> str | None:
         "Dollars",
         "Political Power",
         "Research",
+        "Food"
         "Coal",
         "Oil",
         "Basic Materials",
