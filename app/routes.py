@@ -32,7 +32,7 @@ def main_function():
 def games():
     
     # read game files
-    with open('player_records.json', 'r') as json_file:
+    with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -118,7 +118,7 @@ def create_game():
 
     # get username list
     username_list = []
-    with open('player_records.json', 'r') as json_file:
+    with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
@@ -262,7 +262,7 @@ def archived_games():
 def leaderboard():
     
     leaderboard_data = []
-    with open('leaderboard.csv', 'r') as file:
+    with open("playerdata/leaderboard.csv", 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if row != []:
@@ -282,7 +282,7 @@ def leaderboard():
         profile_ids.append(profile_id)
         entry[0] = f"""<a href="profile/{profile_id}">{entry[0]}</a>"""
     
-    with open('leaderboard_records.json', 'r') as json_file:
+    with open("playerdata/leaderboard_records.json", 'r') as json_file:
         leaderboard_records_dict = json.load(json_file)
     
     return render_template('temp_leaderboard_new.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_records_dict = leaderboard_records_dict)
@@ -381,7 +381,7 @@ def generate_profile_route(profile_id):
         reliability = int(reliability)
         reliability = f'{reliability}%'
         return render_template('temp_profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
-with open('player_records.json', 'r') as json_file:
+with open('playerdata/player_records.json', 'r') as json_file:
     player_records_dict = json.load(json_file)
 profile_id_list = list(player_records_dict.keys())
 for profile_id in profile_id_list:
