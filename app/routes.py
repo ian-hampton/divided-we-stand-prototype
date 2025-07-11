@@ -196,66 +196,31 @@ def create_game():
 @main.route('/archived_games')
 def archived_games():
     
-    with open('game_records.json', 'r') as json_file:
+    with open("game_records.json", 'r') as json_file:
         game_records_dict = json.load(json_file)
     
-    #take information from game_record_dict
-    ongoing_list = []
-    for game_name, game_data in game_records_dict.items():
+    for game_id, game_data in game_records_dict.items():
         
-        if game_data["Statistics"]["Game Ended"] == "Present":
-            ongoing_list.append(game_name)
-            continue
-        
-        #get playerdata
+        # get playerdata
         archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
-            game_data["Winner String"] = f'{victors_str} Victory!'
+            game_data["Winner String"] = f"{victors_str} Victory!"
         elif len(players_who_won_list) > 1:
-            victors_str = ' & '.join(players_who_won_list)
-            game_data["Winner String"] = f'{victors_str} Victory!'
+            victors_str = " & ".join(players_who_won_list)
+            game_data["Winner String"] = f"{victors_str} Victory!"
         elif len(players_who_won_list) == 0:
-            game_data["Winner String"] = 'Draw!'
+            game_data["Winner String"] = "Draw!"
         game_data["Playerdata Masterlist"] = archived_player_data_list
 
-        #get game images
-        image_name_list = []
-        filename = "graphic.png"
-        filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
-        if os.path.isfile(filepath):
-            image_name_list.append(filename)
+        # get game image
         turn_number = game_data["Statistics"]["Game End Turn"]
-        if game_data["Statistics"]["Game End Turn"] % 4 != 0:
-            filename = f"{turn_number}.png"
-            filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
-            if os.path.isfile(filepath):
-                image_name_list.append(filename)
-            while turn_number % 4 != 0:
-                turn_number -= 1
-        while turn_number >= 0:
-            filename = f"{turn_number}.png"
-            filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
-            if os.path.isfile(filepath):
-                image_name_list.append(filename)
-            turn_number -= 4
-        game_data["Slideshow Images"] = image_name_list
+        game_data["image_url"] = f"{game_id}/{turn_number}.png"
     
-    #display games from newest to oldest
-    game_records_dict = dict(sorted(game_records_dict.items(), key=lambda item: item[1]['Game #'], reverse=True))
-
-    #hide ongoing games
-    for game_name in ongoing_list:
-        del game_records_dict[game_name]
-
-    #get gameid list (needed for slideshows)
-    game_id_list = []
-    for game_name, game_data in game_records_dict.items():
-        game_id_list.append(game_data["Game ID"])
-    game_id_list.reverse()
-    slide_index_list = [1] * len(game_id_list)
+    # display games from newest to oldest
+    game_records_dict = dict(sorted(game_records_dict.items(), key=lambda item: item[1]["Number"], reverse=True))
     
-    return render_template('temp_archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
+    return render_template("temp_archive.html", dict = game_records_dict)
 
 # LEADERBOARD PAGE
 @main.route('/leaderboard')
