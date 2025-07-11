@@ -1,7 +1,7 @@
 {
-    "Alpha": {
-        "Game ID": "qSNQClOWRJwRwccPtSGV",
-        "Game #": 1,
+    "URVRAYhJJlFbktOvMjtV": {
+        "Name": "Alpha",
+        "Number": 1,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -47,9 +47,9 @@
             }
         }
     },
-    "Bravo": {
-        "Game ID": "nLsefQYKStAlAngJKzCN",
-        "Game #": 2,
+    "lXaHPVDndBmfDsgsLCvA": {
+        "Name": "Bravo",
+        "Number": 2,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -111,9 +111,9 @@
             }
         }
     },
-    "Charlie": {
-        "Game ID": "RYeggypebzegsHSWdrql",
-        "Game #": 3,
+    "jObpwHivZhEKxGsByKTJ": {
+        "Name": "Charlie",
+        "Number": 3,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -191,9 +191,9 @@
             }
         }
     },
-    "Delta": {
-        "Game ID": "NWvKllpBdfvllSvBcUMF",
-        "Game #": 4,
+    "PISFvUqLBXcTgqcNqJKD": {
+        "Name": "Delta",
+        "Number": 4,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -279,9 +279,9 @@
             }
         }
     },
-    "Echo": {
-        "Game ID": "AvTkNMRkjIZXAXjVpJGb",
-        "Game #": 5,
+    "CkrQEuJESDgAqKbxpCuJ": {
+        "Name": "Echo",
+        "Number": 5,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -351,9 +351,9 @@
             }
         }
     },
-    "Foxtrot": {
-        "Game ID": "KwQvMSAzknEmGNFBZrmA",
-        "Game #": 6,
+    "pJyLGYdaLBfKToubMWUf": {
+        "Name": "Foxtrot",
+        "Number": 6,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -407,9 +407,9 @@
             }
         }
     },
-    "Golf": {
-        "Game ID": "hdUrBSNbJdIuEvVANqEn",
-        "Game #": 7,
+    "WdJjRHPcqKIvBHeqRpJB": {
+        "Name": "Golf",
+        "Number": 7,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -487,9 +487,9 @@
             }
         }
     },
-    "Hotel": {
-        "Game ID": "aPiJFqnrnvUiLhgsllVO",
-        "Game #": 8,
+    "DWPyMcRplsxTTaCmTHeS": {
+        "Name": "Hotel",
+        "Number": 8,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -567,9 +567,9 @@
             }
         }
     },
-    "India": {
-        "Game ID": "iNFGnbJydzfkmyZwgBwe",
-        "Game #": 9,
+    "MkQqcnLXGtEjiCIYhvCh": {
+        "Name": "India",
+        "Number": 9,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -663,9 +663,9 @@
             }
         }
     },
-    "Test Game": {
-        "Game ID": "XwSUiwmEAfZUzDGXfEGj",
-        "Game #": 10,
+    "IhWiWbEaJNhMqxggtJpN": {
+        "Name": "Test Game",
+        "Number": 10,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -719,9 +719,9 @@
             }
         }
     },
-    "Genisys": {
-        "Game ID": "maSTSlhYOQjYTjHPtPhA",
-        "Game #": 11,
+    "efcVoaEmKstgNWMeajGB": {
+        "Name": "Genisys",
+        "Number": 11,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
@@ -807,9 +807,9 @@
             }
         }
     },
-    "Return To China": {
-        "Game ID": "temp",
-        "Game #": 12,
+    "XAwTWmaOrxNZKboRdLfm": {
+        "Name": "Return To China",
+        "Number": 12,
         "Information": {
             "Victory Conditions": "Randomized Sets",
             "Map": "China 2.0",
