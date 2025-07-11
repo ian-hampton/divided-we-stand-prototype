@@ -2276,9 +2276,9 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             nation_table.save(nation)
             continue
 
-        # add discounts
+        # add increases
         for tag_name, tag_data in nation.tags.items():
-            rate -= float(tag_data.get("Market Sell Modifier", 0))
+            rate += float(tag_data.get("Market Sell Modifier", 0))
 
         # remove resources from stockpile
         nation.update_stockpile(action.resource_name, -1 * action.quantity)
