@@ -296,7 +296,7 @@ def generate_profile_route(profile_id):
         with open('game_records.json', 'r') as json_file:
             game_records_dict = json.load(json_file)
         leaderboard_list = []
-        with open('leaderboard.csv', 'r') as file:
+        with open('playerdata/leaderboard.csv', 'r') as file:
             reader = csv.reader(file)
             for row in reader:
                 leaderboard_list.append(row)
