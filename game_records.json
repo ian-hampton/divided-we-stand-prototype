@@ -742,7 +742,7 @@
         },
         "Player Data": {
             "001": {
-                "Nation Name": "Allied States Of America",
+                "Nation Name": "Allied States of America",
                 "Color": "#b30000",
                 "Government": "Oligarchy",
                 "Foreign Policy": "Commercial",
@@ -766,7 +766,7 @@
                 "Victory": 0
             },
             "007": {
-                "Nation Name": "Threads Of Azj-Kahet",
+                "Nation Name": "Threads of Azj-Kahet",
                 "Color": "#5a009d",
                 "Government": "Remnant",
                 "Foreign Policy": "Imperialist",
@@ -836,7 +836,7 @@
                 "Victory": 0
             },
             "002": {
-                "Nation Name": "Plutarchs Of Elonia",
+                "Nation Name": "Plutarchs of Elonia",
                 "Color": "#ff974e",
                 "Government": "Oligarchy",
                 "Foreign Policy": "Commercial",
@@ -860,7 +860,7 @@
                 "Victory": 0
             },
             "009": {
-                "Nation Name": "People'S Republic Of Sardinia",
+                "Nation Name": "People's Republic of Sardinia",
                 "Color": "#003b84",
                 "Government": "Republic",
                 "Foreign Policy": "Imperialist",
@@ -876,7 +876,7 @@
                 "Victory": 0
             },
             "011": {
-                "Nation Name": "Joj",
+                "Nation Name": "JoJ",
                 "Color": "#b654ff",
                 "Government": "Crime Syndicate",
                 "Foreign Policy": "Commercial",
@@ -884,7 +884,7 @@
                 "Victory": 0
             },
             "013": {
-                "Nation Name": "The People'S United States Of China",
+                "Nation Name": "The People's United States of China",
                 "Color": "#603913",
                 "Government": "Technocracy",
                 "Foreign Policy": "Commercial",
