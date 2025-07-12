@@ -374,12 +374,13 @@ def resolve_win(game_id: str) -> None:
     with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
-    # add game data to game archive
+    # copy game data to game archive
     game_records_dict[game_id] = copy.deepcopy(active_games_dict[game_id])
     del game_records_dict[game_id]["Inactive Events"]
     del game_records_dict[game_id]["Active Events"]
     del game_records_dict[game_id]["Current Event"]
-    game_records_dict[game_id]["Game ID"] = "TBA"
+    
+    # datetime calculations for game archive entry
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
     game_records_dict[game_id]["Statistics"]["Game Ended"] = current_date_string
@@ -389,7 +390,7 @@ def resolve_win(game_id: str) -> None:
     date_difference = current_date_obj - start_date_obj
     game_records_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
     
-    # add player data from game to game archive
+    # add player data game archive entry
     player_data_dict = {}
     for nation in nation_table:
         player_data_entry_dict = {
