@@ -364,31 +364,30 @@ def resolve_win(game_id: str) -> None:
     # load game data
     nation_table = NationTable(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
-    with open('active_games.json', 'r') as json_file:
+    with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
-    with open('game_records.json', 'r') as json_file:
+    with open("game_records.json", 'r') as json_file:
         game_records_dict = json.load(json_file)
-    game_name = active_games_dict[game_id]["Game Name"]
 
     # update active games
     active_games_dict[game_id]["Game Active"] = False
-    with open('active_games.json', 'w') as json_file:
+    with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
     
     # add game data to game archive
-    game_records_dict[game_name] = copy.deepcopy(active_games_dict[game_id])
-    del game_records_dict[game_name]["Inactive Events"]
-    del game_records_dict[game_name]["Active Events"]
-    del game_records_dict[game_name]["Current Event"]
-    game_records_dict[game_name]["Game ID"] = "TBA"
+    game_records_dict[game_id] = copy.deepcopy(active_games_dict[game_id])
+    del game_records_dict[game_id]["Inactive Events"]
+    del game_records_dict[game_id]["Active Events"]
+    del game_records_dict[game_id]["Current Event"]
+    game_records_dict[game_id]["Game ID"] = "TBA"
     current_date = datetime.today().date()
     current_date_string = current_date.strftime("%m/%d/%Y")
-    game_records_dict[game_name]["Statistics"]["Game Ended"] = current_date_string
-    game_records_dict[game_name]["Statistics"]["Game End Turn"] = current_turn_num
+    game_records_dict[game_id]["Statistics"]["Game Ended"] = current_date_string
+    game_records_dict[game_id]["Statistics"]["Game End Turn"] = current_turn_num
     current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-    start_date_obj = datetime.strptime(game_records_dict[game_name]["Statistics"]["Game Started"], "%m/%d/%Y")
+    start_date_obj = datetime.strptime(game_records_dict[game_id]["Statistics"]["Game Started"], "%m/%d/%Y")
     date_difference = current_date_obj - start_date_obj
-    game_records_dict[game_name]["Statistics"]["Days Ellapsed"] = date_difference.days
+    game_records_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
     
     # add player data from game to game archive
     player_data_dict = {}
@@ -404,10 +403,10 @@ def resolve_win(game_id: str) -> None:
         if nation.score == 3:
             player_data_entry_dict["Victory"] = 1
         player_data_dict[nation.player_id] = player_data_entry_dict
-    game_records_dict[game_name]["Player Data"] = player_data_dict
+    game_records_dict[game_id]["Player Data"] = player_data_dict
 
     # save game data
-    with open('game_records.json', 'w') as json_file:
+    with open("game_records.json", 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
 def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> None:
@@ -415,7 +414,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     Backend code for creating the files for a new game.
 
     Params:
-        game_id (str): A valid game_id to be used for the new game.
+        game_id (str): A new game_id to be used for the new game. 20 characters, randomly generated.
         form_data_dict (dict): Dictionary of data gathered from the turn resolution HTML form.
         user_id_list (list): A list of all the user ids of players participating in the game.
 
@@ -423,30 +422,23 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         None
     """
 
-    # open game record files
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     with open('game_records.json', 'r') as json_file:
         game_records_dict = json.load(json_file)
-
-    # datetime stuff
+    
+    GAME_VERSION = "Development"
     current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    game_version = "Development"
-
-    # generate game id
-    # to be added
-
-    # erase old game files
-    erase_game(game_id)
+    os.makedirs(f"gamedata/{game_id}/images")
+    os.makedirs(f"gamedata/{game_id}/logs")
     
     # update active_games
     active_games_dict[game_id] = {
-        "Game Name": form_data_dict["Game Name"],
-        "Game #": len(game_records_dict) + 1,
+        "Name": form_data_dict["Game Name"],
+        "Number": len(game_records_dict) + len(active_games_dict) + 1,
         "Game Active": True,
         "Information": {
-            "Version": game_version,
+            "Version": GAME_VERSION,
             "Scenario": form_data_dict["Scenario"],
             "Map": form_data_dict["Map"],
             "Victory Conditions": form_data_dict["Victory Conditions"],
@@ -460,7 +452,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
             "Region Disputes": 0,
             "Current Turn": "Starting Region Selection in Progress",
             "Days Ellapsed": 0,
-            "Game Started": current_date_string
+            "Game Started": current_date.strftime("%m/%d/%Y")
         },
         "Inactive Events": [],
         "Active Events": {},
@@ -471,17 +463,19 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
 
     # copy starting map images
     map_str = core.get_map_str(game_id)
-    files_destination = f'gamedata/{game_id}'
-    starting_map_images = ['resourcemap', 'controlmap']
-    for map_filename in starting_map_images:
-        shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
-        shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/{map_filename}.png")
-    
-    # create regdata.json
+    files_destination = f"gamedata/{game_id}"
+    shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
+    shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/resourcemap.png")
+    shutil.copy(f"app/static/images/map_images/{map_str}/{map_str}.png", f"{files_destination}/images")
+    shutil.move(f"{files_destination}/images/{map_str}.png", f"gamedata/{game_id}/images/controlmap.png")
+
     with open(f'maps/{map_str}/graph.json', 'r') as json_file:
         graph_dict = json.load(json_file)
+    
+    # create regdata.json
     regdata_dict = {}
     for region_id in graph_dict:
+        
         regdata_dict[region_id] = {
             "regionData": {
                 "ownerID": 0,
@@ -501,23 +495,13 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
                 "ownerID": 0
             }
         }
-        if form_data_dict["Scenario"] == 'Standard':
+        
+        if form_data_dict["Scenario"] == "Standard":
             regdata_dict[region_id]["regionData"]["infection"] = 0
             regdata_dict[region_id]["regionData"]["quarantine"] = False
-    with open(f'gamedata/{game_id}/regdata.json', 'w') as json_file:
+    
+    with open(f"gamedata/{game_id}/regdata.json", 'w') as json_file:
         json.dump(regdata_dict, json_file, indent=4)
-
-    # create rmdata file
-    rmdata_filepath = f'{files_destination}/rmdata.csv'
-    with open(rmdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.rmdata_header)
-
-    # create trucedata.csv
-    # to do - store in gamedata.json and create truce class?
-    with open(f'gamedata/{game_id}/trucedata.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.trucedata_header)
 
     # create gamedata.json
     gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
@@ -536,14 +520,16 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     for i, user_id in enumerate(user_id_list):
         nation_table.create(i + 1, user_id)
 
-def erase_game(game_id: str) -> None:
-    """
-    Erases all the game files of a given game.
-    Note: This does not erase anything from the game_records.json file.
-    """
-    shutil.rmtree(f'gamedata/{game_id}')
-    os.makedirs(f'gamedata/{game_id}/images')
-    os.makedirs(f'gamedata/{game_id}/logs')
+    # create rmdata file
+    rmdata_filepath = f'{files_destination}/rmdata.csv'
+    with open(rmdata_filepath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.rmdata_header)
+
+    # create trucedata.csv
+    with open(f"gamedata/{game_id}/trucedata.csv", 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(core.trucedata_header)
 
 
 # MISC SITE FUNCTIONS

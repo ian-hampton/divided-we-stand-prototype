@@ -5,6 +5,9 @@ from datetime import datetime
 import json
 import os
 import uuid
+import string
+import random
+import shutil
 
 from app import site_functions
 from app import core
@@ -49,7 +52,7 @@ def games():
 
             case "Starting Region Selection in Progress":
                 # get title and game link
-                game_name = game_data["Game Name"]
+                game_name = game_data["Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
                 # get status
                 game_data["Status"] = current_turn
@@ -67,7 +70,7 @@ def games():
 
             case "Nation Setup in Progress":
                 # get title and game link
-                game_name = game_data["Game Name"]
+                game_name = game_data["Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
                 # get status
                 game_data["Status"] = current_turn
@@ -83,7 +86,7 @@ def games():
 
             case _:
                 # get title and game link
-                game_name = game_data["Game Name"]
+                game_name = game_data["Name"]
                 game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
                 # get status
                 if game_data["Game Active"]:
@@ -98,7 +101,7 @@ def games():
         game_data["Playerdata Masterlist"] = refined_player_data
         game_data["image_url"] = image_url
     
-    return render_template('temp_games.html', dict = active_games_dict, full_game_id = game_id)
+    return render_template('temp_games.html', dict = active_games_dict)
 
 # SETTINGS PAGE
 @main.route('/settings')
@@ -144,53 +147,18 @@ def create_game():
 
     # erase all active games override
     if form_data_dict["Game Name"] == "5EQM8Z5VoLxvxqeP1GAu":
-        
-        active_games = [key for key, value in active_games_dict.items() if value.get("Game Active")]
-        for active_game_id in active_games:
-            active_games_dict[active_game_id] = {
-                "Game Name": "Open Game Slot",
-                "Game #": 0,
-                "Game Active": False,
-                "Information": {
-                    "Version": "TBD",
-                    "Scenario": "TBD",
-                    "Map": "TBD",
-                    "Victory Conditions": "TBD",
-                    "Fog of War": "TBD",
-                    "Turn Length": "TBD",
-                    "Accelerated Schedule": "TBD",
-                    "Deadlines on Weekends": "TBD"
-                },
-                "Statistics": {
-                    "Player Count": "0",
-                    "Region Disputes": 0,
-                    "Current Turn": "Turn N/A",
-                    "Days Ellapsed": 0,
-                    "Game Started": "TBD",
-                },
-                "Inactive Events": [],
-                "Active Events": {},
-                "Current Event": {}
-            }
-            site_functions.erase_game(active_game_id)
-        
-        with open('active_games.json', 'w') as json_file:
+        shutil.rmtree(f"gamedata")
+        os.makedirs(f"gamedata")
+        active_games_dict = {}
+        with open("active_games.json", 'w') as json_file:
             json.dump(active_games_dict, json_file, indent=4)
-
         return redirect(f'/games')
 
-    # check if a game slot is available
-    full_game_id = None
-    for select_game_id, value in active_games_dict.items():
-        if not value.get("Game Active"):
-            full_game_id = select_game_id
-            break
-    if full_game_id != None:
-        site_functions.create_new_game(full_game_id, form_data_dict, profile_ids_list)
-        return redirect(f'/games')
-    else:
-        print("Error: No inactive game found to overwrite.")
-        quit()
+    # create game files
+    game_id = ''.join(random.choices(string.ascii_letters, k=20))
+    site_functions.create_new_game(game_id, form_data_dict, profile_ids_list)
+    
+    return redirect(f'/games')
 
 # GAMES ARCHIVE PAGE
 @main.route('/archived_games')
