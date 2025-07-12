@@ -293,23 +293,21 @@ def generate_profile_route(profile_id):
         first_game = ''
         latest_game = ''
         draws = 0
-        for game_name, game_data in game_records_dict.items():
-            if "Test Game" in game_name:
-                continue
+        for game_data in game_records_dict.values():
             players_who_won = []
             players_who_lost = []
             for select_profile_id, player_data in game_data.get("Player Data", {}).items():
                 if player_data.get("Victory") == 0:
                     players_who_lost.append(select_profile_id)
-                    if profile_id in players_who_lost and len(players_who_lost) == len(game_records_dict[game_name]["Player Data"]):
+                    if profile_id in players_who_lost and len(players_who_lost) == len(game_data["Player Data"]):
                         draws += 1
                 else:
                     players_who_won.append(select_profile_id)
             if profile_id in players_who_lost or profile_id in players_who_won:
                 game_starts.append(game_data['Statistics']["Game Started"])
                 game_ends.append(game_data['Statistics']["Game Ended"])
-                government_choice = game_records_dict[game_name]["Player Data"][profile_id]["Government"]
-                foreign_policy_choice = game_records_dict[game_name]["Player Data"][profile_id]["Foreign Policy"]
+                government_choice = game_data["Player Data"][profile_id]["Government"]
+                foreign_policy_choice = game_data["Player Data"][profile_id]["Foreign Policy"]
                 governments_played[government_choice] += 1
                 foreign_policies_played[foreign_policy_choice] += 1
         first_game = game_starts.pop(0)
