@@ -431,22 +431,11 @@ def game_load(full_game_id):
             return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
 
 # GENERATE NATION SHEET PAGES
-def generate_player_route(full_game_id, player_id):
-    route_name = f'player_route_{uuid.uuid4().hex}'
-    @main.route(f'/{full_game_id}/player{player_id}', endpoint=route_name)
-    def player_route():
-        page_title = f'Player #{player_id} Nation Sheet'
-        current_turn_num = core.get_current_turn_num(full_game_id)
-        player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
-        return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
-
-# GENERATION PROCEDURE
-game_ids = ['game1', 'game2']
-map_names = ['mainmap', 'resourcemap', 'controlmap']
-player_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-for full_game_id in game_ids:
-    for player_id in player_ids:
-        generate_player_route(full_game_id, player_id)
+@main.route('/<full_game_id>/player<int:player_id>')
+def player_route(full_game_id, player_id):
+    page_title = f"Player #{player_id} Nation Sheet"
+    player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
+    return render_template("temp_nation_sheet.html", page_title = page_title, player_information_dict = player_information_dict)
 
 # WARS PAGE
 @main.route('/<full_game_id>/wars')
