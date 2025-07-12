@@ -330,7 +330,7 @@ def game_load(full_game_id):
     nation_table = NationTable(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game1_title = active_games_dict[full_game_id]["Game Name"]
+    game1_title = active_games_dict[full_game_id]["Name"]
     game1_turn = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
     game1_active_bool = active_games_dict[full_game_id]["Game Active"]
     game1_extendedtitle = f"Divided We Stand - {game1_title}" 
@@ -458,7 +458,7 @@ def wars(full_game_id):
     current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} Wars List'
     
     # read wars
@@ -602,7 +602,7 @@ def technologies(full_game_id):
     nation_table = NationTable(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Technology Trees'
     scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
 
@@ -673,7 +673,7 @@ def agendas(full_game_id):
     nation_table = NationTable(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Political Agendas'
     scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
 
@@ -734,7 +734,7 @@ def units_ref(full_game_id):
     # read the contents of active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Unit Reference'
     
     # get unit dict
@@ -761,7 +761,7 @@ def improvements_ref(full_game_id):
     # read the contents of active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Improvement Reference'
     
     # get unit dict
@@ -806,7 +806,7 @@ def resource_market(full_game_id):
     current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Resource Market'
 
     # tba - grab this from scenario files
@@ -926,7 +926,7 @@ def announcements(full_game_id):
         active_games_dict = json.load(json_file)
 
     # read the contents of active_games.json
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Announcements Page'
     current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
     accelerated_schedule_str = active_games_dict[full_game_id]["Information"]["Accelerated Schedule"]
@@ -1063,7 +1063,7 @@ def alliances(full_game_id):
 
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
+    game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Alliance Page'
 
     nation_table = NationTable(full_game_id)
