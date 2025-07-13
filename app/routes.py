@@ -8,6 +8,7 @@ import uuid
 import string
 import random
 import shutil
+from collections import defaultdict
 
 from app import site_functions
 from app import core
@@ -106,9 +107,14 @@ def games():
 # SETTINGS PAGE
 @main.route('/settings')
 def settings():
+
+    with open("playerdata/player_records.json", 'r') as json_file:
+        player_records_dict = json.load(json_file)
+    
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
+
     return render_template('temp_settings.html', username_list = username_list)
 
 # SETTINGS PAGE - Create Game Procedure
@@ -121,10 +127,12 @@ def create_game():
 
     # get username list
     username_list = []
+    profile_id_list = []
     with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
+        profile_id_list.append(profile_id)
     
     # get values from settings form
     form_data_dict = {
@@ -201,6 +209,9 @@ def leaderboard():
             if row != []:
                 leaderboard_data.append(row)
     
+    with open("playerdata/player_records.json", 'r') as json_file:
+        player_records_dict = json.load(json_file)
+    
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
@@ -220,103 +231,84 @@ def leaderboard():
     
     return render_template('temp_leaderboard_new.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_records_dict = leaderboard_records_dict)
 
-# CREATE PROFILE PAGES
-def generate_profile_route(profile_id):
-    route_name = f'profile_route_{uuid.uuid4().hex}'
-    @main.route(f'/profile/{profile_id}', endpoint=route_name)
-    def load_profile():
-        #read needed files
-        with open('game_records.json', 'r') as json_file:
-            game_records_dict = json.load(json_file)
-        leaderboard_list = []
-        with open('playerdata/leaderboard.csv', 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                leaderboard_list.append(row)
-        #get data from player_records.json
-        username = player_records_dict[profile_id]["Username"]
-        joined = player_records_dict[profile_id]["Join Date"]
-        resignations = player_records_dict[profile_id]["Resignations"]
-        #get data from game_records.json
-        game_starts = []
-        game_ends = []
-        governments_played = {
-            'Republic': 0,
-            'Technocracy': 0,
-            'Oligarchy': 0,
-            'Totalitarian': 0,
-            'Remnant': 0,
-            'Protectorate': 0,
-            'Military Junta': 0,
-            'Crime Syndicate': 0,
-            'Plutocracy': 0,
-            'United States Remnant': 0,
-        }
-        foreign_policies_played = {
-            'Diplomatic': 0,
-            'Commercial': 0,
-            'Isolationist': 0,
-            'Imperialist': 0,
-        }
-        first_game = ''
-        latest_game = ''
-        draws = 0
-        for game_data in game_records_dict.values():
-            players_who_won = []
-            players_who_lost = []
-            for select_profile_id, player_data in game_data.get("Player Data", {}).items():
-                if player_data.get("Victory") == 0:
-                    players_who_lost.append(select_profile_id)
-                    if profile_id in players_who_lost and len(players_who_lost) == len(game_data["Player Data"]):
-                        draws += 1
-                else:
-                    players_who_won.append(select_profile_id)
-            if profile_id in players_who_lost or profile_id in players_who_won:
-                game_starts.append(game_data['Statistics']["Game Started"])
-                game_ends.append(game_data['Statistics']["Game Ended"])
-                government_choice = game_data["Player Data"][profile_id]["Government"]
-                foreign_policy_choice = game_data["Player Data"][profile_id]["Foreign Policy"]
-                governments_played[government_choice] += 1
-                foreign_policies_played[foreign_policy_choice] += 1
-        first_game = game_starts.pop(0)
-        latest_game = game_ends.pop(0)
-        for date_str in game_starts:
-            date_obj_leading = datetime.strptime(first_game, "%m/%d/%Y")
-            data_obj_contender = datetime.strptime(date_str, "%m/%d/%Y")
-            if data_obj_contender < date_obj_leading:
-                first_game = date_str
-        for date_str in game_ends:
-            date_obj_leading = datetime.strptime(latest_game, "%m/%d/%Y")
-            data_obj_contender = datetime.strptime(date_str, "%m/%d/%Y")
-            if data_obj_contender > date_obj_leading:
-                latest_game = date_str
-        favorite_gov_score = max(governments_played.values())
-        favorite_govs = [key for key, value in governments_played.items() if value == favorite_gov_score]
-        favorite_gov = "/".join(favorite_govs)
-        favorite_fp_score = max(foreign_policies_played.values())
-        favorite_fps = [key for key, value in foreign_policies_played.items() if value == favorite_fp_score]
-        favorite_fp = "/".join(favorite_fps)
-        #get data from leaderboard.csv
-        for index, entry in enumerate(leaderboard_list):
-            if entry[0] == username:
-                rank = index + 1
-                wins = entry[1]
-                score = entry[2]
-                average = entry[3]
-                games = entry[4]
-                break
-        losses = int(games) - int(wins) - int(draws)
-        reliability = (float(games) - float(resignations)) / float(games)
-        reliability = round(reliability, 2)
-        reliability = reliability * 100
-        reliability = int(reliability)
-        reliability = f'{reliability}%'
-        return render_template('temp_profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
-with open('playerdata/player_records.json', 'r') as json_file:
-    player_records_dict = json.load(json_file)
-profile_id_list = list(player_records_dict.keys())
-for profile_id in profile_id_list:
-    generate_profile_route(profile_id)
+# PROFILE PAGES
+@main.route('/profile/<profile_id>')
+def profile_route(profile_id):
+
+    with open("playerdata/player_records.json", 'r') as json_file:
+        player_records_dict = json.load(json_file)
+    with open("game_records.json", 'r') as json_file:
+        game_records_dict = json.load(json_file)
+
+    profile = {
+        "username": player_records_dict[profile_id]["Username"],
+        "dateJoined": player_records_dict[profile_id]["Join Date"],
+        "resignations": player_records_dict[profile_id]["Resignations"],
+        "firstGame": None,
+        "lastGame": None,
+        "favoriteGov": None,
+        "favoriteFP": None,
+        "rank": 0,
+        "totalWins": 0,
+        "totalDraws": 0,
+        "totalLosses": 0,
+        "totalScore": 0,
+        "averageScore": 0,
+        "totalGames": 0,
+        "reliability": 0
+    }
+
+    with open("playerdata/leaderboard.csv", 'r') as file:
+        reader = csv.reader(file)
+        for i, row in enumerate(reader):
+            if row[0] == profile["username"]:
+                profile["rank"] = i + 1
+                profile["totalWins"] = row[1]
+                profile["totalScore"] = row[2]
+                profile["averageScore"] = row[3]
+                profile["totalGames"] = int(row[4])
+    
+    game_starts = defaultdict(int)
+    game_ends = defaultdict(int)
+    governments_played = defaultdict(int)
+    foreign_policies_played = defaultdict(int)
+    
+    for game_id, game_data in game_records_dict.items():
+
+        if profile_id not in game_data["Player Data"]:
+            continue
+        
+        players_who_lost = set()
+        for select_profile_id, player_data in game_data["Player Data"].items():
+            if not player_data["Victory"]:
+                players_who_lost.add(select_profile_id)
+        
+        if len(players_who_lost) == len(game_data["Player Data"]):
+            profile["totalDraws"] += 1
+        elif not game_data["Player Data"][profile_id]["Victory"]:
+            profile["totalLosses"] += 1
+    
+    for game_id, game_data in game_records_dict.items():
+        
+        if profile_id not in game_data["Player Data"]:
+            continue
+
+        game_starts[game_id] = datetime.strptime(game_data["Statistics"]["Game Started"], "%m/%d/%Y")
+        game_ends[game_id] = datetime.strptime(game_data["Statistics"]["Game Ended"], "%m/%d/%Y")
+        
+        government_choice = game_data["Player Data"][profile_id]["Government"]
+        foreign_policy_choice = game_data["Player Data"][profile_id]["Foreign Policy"]
+        governments_played[government_choice] += 1
+        foreign_policies_played[foreign_policy_choice] += 1
+
+    profile["firstGame"] = game_starts[min(game_starts, key=game_starts.get)]
+    profile["lastGame"] = game_ends[max(game_ends, key=game_ends.get)]
+    profile["favoriteGov"] = governments_played[max(governments_played, key=governments_played.get)]
+    profile["favoriteFP"] = foreign_policies_played[max(foreign_policies_played, key=foreign_policies_played.get)]
+
+    profile["reliability"] = int((profile["totalGames"] - profile["resignations"]) / profile["totalGames"] * 100)
+
+    return render_template('temp_profile.html', dict = profile)
 
 
 # GAME PAGES

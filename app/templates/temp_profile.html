@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-<title>Profile for {{ username }}</title>
+<title>Profile for {{ dict["username"] }}</title>
 
 <style>
 body {
@@ -62,7 +62,7 @@ hr {
 
 <body>
 <div class="top">
-    <p id="title">{{ username }}</p>
+    <p id="title">{{ dict["username"] }}</p>
     <a class="home" href="/"><img src="{{ url_for('static', filename='images/home.png') }}" align=right style="width:50px;"></a>
 </div>
 <div class="main">
@@ -73,36 +73,36 @@ hr {
             <th width="60%">Game Statistics</th>
         </tr>
         <tr>
-            <td>Joined: {{ joined }}</td>
-            <td>Wins: {{ wins }}</td>
+            <td>Joined: {{ dict["dateJoined"] }}</td>
+            <td>Wins: {{ dict["totalWins"] }}</td>
         </tr>
         <tr>
-            <td>First Played: {{ first_game }}</td>
-            <td>Draws: {{ draws }}</td> 
+            <td>First Played: {{ dict["firstGame"] }}</td>
+            <td>Draws: {{ dict["totalDraws"] }}</td> 
         </tr>
         <tr>
-            <td>Last Played: {{ latest_game }}</td>
-            <td>Losses: {{ losses }}</td>
+            <td>Last Played: {{ dict["lastGame"] }}</td>
+            <td>Losses: {{ dict["totalLosses"] }}</td>
         </tr>
         <tr>
-            <td>Reliability: {{ reliability }}</td>
-            <td>Total Games: {{ games }}</td>
+            <td>Reliability: {{ dict["reliability"] }}%</td>
+            <td>Total Games: {{ dict["totalGames"] }}</td>
         </tr>
         <tr>
-            <td>Rank: {{ rank }}</td>
-            <td>Total Score: {{ score }}</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>Average Score: {{ average }}</td>
+            <td>Rank: {{ dict["rank"] }}</td>
+            <td>Total Score: {{ dict["totalScore"] }}</td>
         </tr>
         <tr>
             <td></td>
-            <td>Favorite Government: {{ favorite_gov }}</td>
+            <td>Average Score: {{ dict["averageScore"] }}</td>
         </tr>
         <tr>
             <td></td>
-            <td>Favorite Foreign Policy: {{ favorite_fp }}</td>
+            <td>Favorite Government: {{ dict["favoriteGov"] }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Favorite Foreign Policy: {{ dict["favoriteFP"] }}</td>
         </tr>
         <tr class="ghost">
             <td></td>
