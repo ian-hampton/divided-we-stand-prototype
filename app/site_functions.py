@@ -432,8 +432,17 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     current_date = datetime.today().date()
     os.makedirs(f"gamedata/{game_id}/images")
     os.makedirs(f"gamedata/{game_id}/logs")
+
+    # cleanup - completed games are to be removed from active games upon creating new game
+    active_games_dict_filtered = {}
+    for temp_game_id, temp_game_data in active_games_dict.items():
+        if temp_game_data["Game Active"]:
+            active_games_dict_filtered[temp_game_id] = temp_game_data
+        else:
+            shutil.rmtree(f"gamedata/{temp_game_id}")
+    active_games_dict = active_games_dict_filtered
     
-    # update active_games
+    # add new game to active games
     active_games_dict[game_id] = {
         "Name": form_data_dict["Game Name"],
         "Number": len(game_records_dict) + len(active_games_dict) + 1,
