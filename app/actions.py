@@ -22,11 +22,14 @@ class AllianceCreateAction:
         self.action_str = action_str
         words = action_str.strip().split()
 
-        self.alliance_type = " ".join(words[2:4]) if len(words) > 4 else None
-        self.alliance_name = " ".join(words[4:]) if len(words) > 4 else None
+        index1 = words.index("as")
+        index2 = words.index("as") + 1
+
+        self.alliance_name = " ".join(words[2:index1]) if len(words) > 5 else None
+        self.alliance_type = " ".join(words[index2:]) if len(words) > 5 else None
     
     def __str__(self):
-        return f"[AllianceCreateAction] Alliance Join {self.alliance_type} {self.alliance_name} ({self.id})"
+        return f"[AllianceCreateAction] Alliance Create {self.alliance_name} as {self.alliance_type} ({self.id})"
     
     def is_valid(self) -> bool:
         
@@ -75,28 +78,31 @@ class AllianceKickAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
-        nation_table = NationTable(self.game_id)
-        alliance_table = AllianceTable(self.game_id)
-        
-        self.target_nation = None
-        for nation in nation_table:
-            if nation.name.lower() in action_str.lower():
-                self.target_nation = nation.name
-                break
+        words = action_str.strip().lower().split()
 
-        self.alliance_name = None
-        for alliance in alliance_table:
-            if alliance.name.lower() in action_str.lower():
-                self.alliance_name = alliance.name
-                break
+        index1 = words.index("from")
+        index2 = words.index("from") + 1
+
+        self.target_nation = " ".join(words[2:index1]) if len(words) > 5 else None
+        self.alliance_name = " ".join(words[index2:]) if len(words) > 5 else None
 
     def __str__(self):
-        return f"[AllianceKickAction] Alliance Kick {self.target_nation} {self.alliance_name} ({self.id})"
+        return f"[AllianceKickAction] Alliance Kick {self.target_nation} from {self.alliance_name} ({self.id})"
     
     def is_valid(self) -> bool:
         
         if self.target_nation is None or self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
+            return False
+        
+        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        if self.target_nation is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
+            return False
+        
+        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        if self.alliance_name is None:
+            print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
         
         return True
