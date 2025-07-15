@@ -138,7 +138,7 @@ class GameMaps:
             if unit.name is not None and unit.coords is not None:
             
                 # place unit image
-                nation = nation_table.get(str(region.owner_id))
+                nation = nation_table.get(str(unit.owner_id))
                 fill_color = palette.hex_to_tup(nation.color, alpha=True)
                 unit_img = Image.open(self.filepath_unit_back).convert("RGBA")
                 ImageDraw.floodfill(unit_img, (1, 1), fill_color, border=(0, 0, 0, 255))

@@ -37,8 +37,8 @@ class Nation:
         self.unit_counts: dict = nation_data["unitCounts"]
         self.regions_owned: int = nation_data["statistics"]["regionsOwned"]
         self.regions_occupied: int = nation_data["statistics"]["regionsOccupied"]
-        self.resources_given: int = nation_data["statistics"]["resourcesGiven"]
-        self.resources_received: int = nation_data["statistics"]["resourcesReceived"]
+        self.resources_given: float = nation_data["statistics"]["resourcesGiven"]
+        self.resources_received: float = nation_data["statistics"]["resourcesReceived"]
 
         self._resources: dict = nation_data["resources"]
         self._records: dict = nation_data["records"]
