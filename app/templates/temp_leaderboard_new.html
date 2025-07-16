@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html>
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+<link rel="shortestcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/default-blank.css') }}">
@@ -49,16 +49,16 @@ a {
 
             <div class="top">Leaderboard</div>
             
-            <div class="row">
-                <div class="cell-bold" style="width: 30%">Player</div>
-                <div class="cell-bold" style="width: 17.5%">Games Won</div>
-                <div class="cell-bold" style="width: 17.5%">Total Score</div>
-                <div class="cell-bold" style="width: 17.5%">Average Score</div>
-                <div class="cell-bold" style="width: 17.5%">Games Played</div>
+            <div class="row hasline">
+                <div class="cell bold" style="width: 30%">Player</div>
+                <div class="cell bold" style="width: 17.5%">Games Won</div>
+                <div class="cell bold" style="width: 17.5%">Total Score</div>
+                <div class="cell bold" style="width: 17.5%">Average Score</div>
+                <div class="cell bold" style="width: 17.5%">Games Played</div>
             </div>
             
             {% for row in leaderboard_data %}
-                <div class="row">
+                <div class="row hasline">
                     <div class="cell" style="width: 30%"> {% autoescape false %} {{ row[0] }} {% endautoescape %} </div>
                     <div class="cell" style="width: 17.5%"> {{ row[1] }} </div>
                     <div class="cell" style="width: 17.5%"> {{ row[2] }} </div>
@@ -82,42 +82,42 @@ a {
 
             {% for key, value in leaderboard_records_dict.items() %}
                 {% if loop.index <= 7 %}
-                    <div class="section">
+                    <div class="record-section">
                         <div class="row-spaced">
-                            <div class="cell-left"> <b>{{ key }}</b> </div>
-                            <div class="cell-right"> {{ leaderboard_records_dict[key]["Value"] }} </div>
+                            <div class="cell shortest left"> <b>{{ key }}</b> </div>
+                            <div class="cell shortest right"> {{ leaderboard_records_dict[key]["Value"] }} </div>
                         </div>
                         <div class="row-spaced">
-                            <div class="cell-left"> {{ value["Player Name"] }} as {{ value["Nation Name"] }} </div>
-                            <div class="cell-right"> {{ value["Game Name"] }} </div>
+                            <div class="cell shortest left" style="padding-top:0px"> {{ value["Player Name"] }} as {{ value["Nation Name"] }} </div>
+                            <div class="cell shortest right" style="padding-top:0px"> {{ value["Game Name"] }} </div>
                         </div>
                     </div>
                 {% endif %}
             {% endfor %}
-            <div class="section">
+            <div class="record-section">
                 <div class="row-spaced">
-                    <div class="cell-left"> <b>Longest Alliance</b> </div>
-                    <div class="cell-right"> {{ leaderboard_records_dict["Longest Alliance"]["Value"] }} </div>
+                    <div class="cell shortest left"> <b>Longest Alliance</b> </div>
+                    <div class="cell shortest right"> {{ leaderboard_records_dict["Longest Alliance"]["Value"] }} </div>
                 </div>
                 <div class="row-spaced">
-                    <div class="cell-left"> {{ leaderboard_records_dict["Longest Alliance"]["Player Name"] }} </div>
-                    <div class="cell-right"> {{ leaderboard_records_dict["Longest Alliance"]["Game Name"] }} </div>
+                    <div class="cell shortest left"> {{ leaderboard_records_dict["Longest Alliance"]["Player Name"] }} </div>
+                    <div class="cell shortest right"> {{ leaderboard_records_dict["Longest Alliance"]["Game Name"] }} </div>
                 </div>
                 <div class="row-spaced">
-                    <div class="cell-left"> {{ leaderboard_records_dict["Longest Alliance"]["Alliance Name"] }} </div>
+                    <div class="cell shortest left"> {{ leaderboard_records_dict["Longest Alliance"]["Alliance Name"] }} </div>
                 </div>
             </div>
-            <div class="section">
+            <div class="record-section">
                 <div class="row-spaced">
-                    <div class="cell-left"> <b>Longest War</b> </div>
-                    <div class="cell-right"> {{ leaderboard_records_dict["Longest War"]["Value"] }} </div>
+                    <div class="cell shortest left"> <b>Longest War</b> </div>
+                    <div class="cell shortest right"> {{ leaderboard_records_dict["Longest War"]["Value"] }} </div>
                 </div>
                 <div class="row-spaced">
-                    <div class="cell-left"> {{ leaderboard_records_dict["Longest War"]["Player Name"] }} </div>
-                    <div class="cell-right"> {{ leaderboard_records_dict["Longest War"]["Game Name"] }} </div>
+                    <div class="cell shortest left"> {{ leaderboard_records_dict["Longest War"]["Player Name"] }} </div>
+                    <div class="cell shortest right"> {{ leaderboard_records_dict["Longest War"]["Game Name"] }} </div>
                 </div>
                 <div class="row-spaced">
-                    <div class="cell-left"> {{ leaderboard_records_dict["Longest War"]["War Name"] }} </div>
+                    <div class="cell shortest left"> {{ leaderboard_records_dict["Longest War"]["War Name"] }} </div>
                 </div>
             </div>
 
@@ -128,10 +128,10 @@ a {
 
             <div class="top">Game Records</div>
             {% for key, value in leaderboard_records_dict["Game Records"].items() %}
-                <div class="section">
+                <div class="record-section">
                     <div class="row-spaced">
-                        <div class="cell-left"> <b>{{ key }}</b> </div>
-                        <div class="cell-right"> {{ value["Value"] }} - {{ value["Game Name"] }} </div>
+                        <div class="cell shortest left"> <b>{{ key }}</b> </div>
+                        <div class="cell shortest right"> {{ value["Value"] }} - {{ value["Game Name"] }} </div>
                     </div>
                 </div>
             {% endfor %}

@@ -34,6 +34,7 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .flex-container {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -55,7 +56,6 @@ body {
     padding: 8px;
     text-align: left;
     background-color: rgba(42, 42, 42, 0.7);
-    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
     font-size: 28px;
     font-weight: bold;
 }
@@ -63,37 +63,6 @@ body {
     width: 100%;
     display: flex;
     flex-direction: row;
-    overflow-x: visible;
-}
-.box .cell-bold {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
-    font-size: 18px;
-    font-weight: bold;
-}
-.box .cell {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
-    font-size: 18px;
-}
-.box .cell-small {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
-    font-size: 14px;
-}
-.box .cell-centered {
-    padding: 8px;
-    text-align: center;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
-    font-size: 18px;
-}
-.box .section {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.7);
 }
 .box .row-spaced {
     width: 100%;
@@ -101,31 +70,49 @@ body {
     flex-direction: row;
     justify-content: space-between;
 }
-.box .cell-left {
+.box .cell {
+    padding: 8px;
     text-align: left;
     font-size: 18px;
-    padding-left: 8px;
 }
-.box .cell-right {
-    text-align: right;
-    font-size: 18px;
-    padding-right: 8px;
+
+.box .bold {
+    font-weight: bold;
 }
-.box .cell-short {
+.box .short {
     padding: 8px;
     padding-top: 4px;
     padding-bottom: 4px;
-    text-align: left;
+}
+.box .shortest {
+    padding: 8px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.box .small {
+    font-size: 14px;
+}
+.box .hasline {
     border-bottom: 1px solid rgba(42, 42, 42, 0.7);
-    font-size: 18px;
+}
+.box .overflow {
+    flex: 1 1 0%;
+    min-width: 0;
     white-space: nowrap;
     overflow-x: visible;
 }
-.box .cell-short-right {
-    padding: 8px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+.box .left {
+    text-align: left;
+}
+.box .center {
+    text-align: center;
+}
+.box .right {
     text-align: right;
+}
+
+.box .record-section {
+    padding-top: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(42, 42, 42, 0.7);
-    font-size: 18px;
 }

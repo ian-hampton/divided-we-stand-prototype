@@ -1061,7 +1061,7 @@ def resolve_trade_actions(game_id: str) -> None:
                 nation2.update_stockpile(resource_name, amount)
                 nation1.resources_given += abs(amount)
                 # pay trade fee
-                nation1.update_stockpile("Dollars", abs(amount) * nation1_fee)
+                nation1.update_stockpile("Dollars", -1 * abs(amount) * nation1_fee)
             
             elif amount < 0:
                 # negative amount -> nation 1
@@ -1069,7 +1069,7 @@ def resolve_trade_actions(game_id: str) -> None:
                 nation2.update_stockpile(resource_name, amount)
                 nation2.resources_given += abs(amount)
                 # pay trade fee
-                nation2.update_stockpile("Dollars", abs(amount) * nation2_fee)
+                nation2.update_stockpile("Dollars", -1 * abs(amount) * nation2_fee)
 
             # validate transaction
             if float(nation1.get_stockpile("Dollars")) < 0 or float(nation2.get_stockpile("Dollars")) < 0:
@@ -1454,7 +1454,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
 
         # required research check
         # tba - tie this to scenario data
-        research_check_success = False
+        research_check_success = True
         match alliance.type:
             case "Non-Aggression Pact" | "Defense Pact":
                 if "Common Ground" not in nation.completed_research:
@@ -2282,9 +2282,9 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             nation_table.save(nation)
             continue
 
-        # add discounts
+        # add increases
         for tag_name, tag_data in nation.tags.items():
-            rate -= float(tag_data.get("Market Sell Modifier", 0))
+            rate += float(tag_data.get("Market Sell Modifier", 0))
 
         # remove resources from stockpile
         nation.update_stockpile(action.resource_name, -1 * action.quantity)
