@@ -45,21 +45,21 @@
 
             <div class="top">Market Prices</div>
 
-            <div class="row">
-                <div class="cell-bold" style="width: 30%">Resource</div>
-                <div class="cell-bold" style="width: 17.5%">Current Price</div>
-                <div class="cell-bold" style="width: 17.5%">Base Price</div>
-                <div class="cell-bold" style="width: 17.5%">Bought</div>
-                <div class="cell-bold" style="width: 17.5%">Sold</div>
+            <div class="row hasline">
+                <div class="cell bold" style="flex: 3 1 0%;">Resource</div>
+                <div class="cell bold" style="flex: 2 1 0%;">Current Price</div>
+                <div class="cell bold" style="flex: 2 1 0%;">Base Price</div>
+                <div class="cell bold" style="flex: 2 1 0%;">Bought</div>
+                <div class="cell bold" style="flex: 2 1 0%;">Sold</div>
             </div>
 
             {% for resource_name, resource_data in prices_dict.items() %}
-                <div class="row">
-                    <div class="cell" style="width: 30%">{{ resource_name }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Current Price"] }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Base Price"] }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Bought"] }}</div>
-                    <div class="cell" style="width: 17.5%">{{ resource_data["Sold"] }}</div>
+                <div class="row hasline">
+                    <div class="cell" style="flex: 3 1 0%;">{{ resource_name }}</div>
+                    <div class="cell" style="flex: 2 1 0%;">{{ resource_data["Current Price"] }}</div>
+                    <div class="cell" style="flex: 2 1 0%;">{{ resource_data["Base Price"] }}</div>
+                    <div class="cell" style="flex: 2 1 0%;">{{ resource_data["Bought"] }}</div>
+                    <div class="cell" style="flex: 2 1 0%;">{{ resource_data["Sold"] }}</div>
                 </div>
             {% endfor %}
 
@@ -92,20 +92,20 @@
 
             <div class="top">Transaction Log</div>
 
-            <div class="row">
-                <div class="cell-bold" style="width: 20%">Turn</div>
-                <div class="cell-bold" style="width: 30%">Nation</div>
-                <div class="cell-bold" style="width: 20%">Action</div>
-                <div class="cell-bold" style="width: 30%">Resource</div>
+            <div class="row hasline">
+                <div class="cell bold" style="flex: 1 1 0%;">Turn</div>
+                <div class="cell bold" style="flex: 3 1 0%;">Nation</div>
+                <div class="cell bold" style="flex: 2 1 0%;">Action</div>
+                <div class="cell bold" style="flex: 2 1 0%;">Resource</div>
             </div>
 
             {% if records_flag %}
                 {% for record in records_list %}
                     <div class="row">
-                        <div class="cell" style="width: 20%">{{ record[0] }}</div>
-                        <div class="cell" style="width: 30%">{{ record[1] }}</div>
-                        <div class="cell" style="width: 20%">{{ record[2] }}</div>
-                        <div class="cell" style="width: 30%">{{ record[3] }} {{ record[4] }}</div>
+                        <div class="cell hasline" style="flex: 1 1 0%;">{{ record[0] }}</div>
+                        <div class="cell overflow hasline" style="flex: 3 1 0%;">{{ record[1] }}</div>
+                        <div class="cell hasline" style="flex: 2 1 0%;">{{ record[2] }}</div>
+                        <div class="cell hasline" style="flex: 2 1 0%;">{{ record[3] }} {{ record[4] }}</div>
                     </div>
                 {% endfor %}
             {% else %}

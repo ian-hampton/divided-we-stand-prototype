@@ -50,7 +50,7 @@
         <div class="box" id="left-1">
 
             <div class="row">
-                <div class="cell-centered" style="width: 100%; padding-top:25px; padding-bottom:25px">
+                <div class="cell center" style="width: 100%; padding-top:25px; padding-bottom:25px">
                     <b style="font-size: 36px">Divided We Stand</b>
                     <br><b style="font-size: 24px">"{{ game_name }}"</b>
                     <br>{{ date_output }}
@@ -65,32 +65,34 @@
             <div class="top">Victory Progress</div>
 
             {% for nation_name, nation_data in scoreboard_dict.items() %}
+                
+                {% set ns = namespace(left_color='', center_color='', right_color='') %}
                 {% set color = nation_data["color"] + '7F' %}
                 {% set score = nation_data["score"] %}
-                <div class="row">
-                    {% if score >= 1 %}
-                        <div class="cell-short" style="width:34%; background-color:{{color}};">{{ nation_name }}</div>
-                    {% else %}
-                        <div class="cell-short" style="width:34%;">{{ nation_name }}</div>
-                    {% endif %}
-                    {% if score >= 2 %}
-                        <div class="cell-short" style="width:33%; background-color:{{color}}"></div>
-                    {% else %}
-                        <div class="cell-short" style="width:33%"></div>
-                    {% endif %}
-                    {% if score >= 3 %}
-                        <div class="cell-short-right" style="width:33%; background-color:{{color}}">{{ nation_data["score"] }}</div>
-                    {% else %}
-                        <div class="cell-short-right" style="width:33%">{{ nation_data["score"] }}</div>
-                    {% endif %}
+
+                {% if score >= 1 %}
+                    {% set ns.left_color = 'background-color:' ~ color ~ ';' %}
+                {% endif %}
+                {% if score >= 2 %}
+                    {% set ns.center_color = 'background-color:' ~ color ~ ';' %}
+                {% endif %}
+                {% if score >= 3 %}
+                    {% set ns.right_color = 'background-color:' ~ color ~ ';' %}
+                {% endif %}
+
+                <div class="row hasline">
+                    <div class="cell overflow short left" style="{{ ns.left_color }}">{{ nation_name }}</div>
+                    <div class="cell overflow short center" style="{{ ns.center_color }}"></div>
+                    <div class="cell overflow short right" style="{{ ns.right_color }}">{{ score }}</div>
                 </div>
+                
             {% endfor %}
 
             {% set total_rows = 10 %}
             {% set current_rows = scoreboard_dict | length %}
             {% for i in range(current_rows, total_rows) %}
-                <div class="row">
-                    <div class="cell-short" style="width: 100%; visibility: hidden"> Blank </div>
+                <div class="row hasline">
+                    <div class="cell short" style="width:100%; visibility:hidden"> Blank </div>
                 </div>
             {% endfor %}
 
@@ -102,8 +104,8 @@
 
             <div class="top">Statistics</div>
 
-            <div class="row" style=" height: calc(100% - 49px)">
-                <div class="cell" style="width: 100%;">{{ statistics_string }}</div>
+            <div class="row" style="height:calc(100% - 49px)">
+                <div class="cell" style="width:100%;">{{ statistics_string }}</div>
             </div>
 
         </div>
@@ -121,8 +123,8 @@
 
             <div class="top">Diplomacy</div>
 
-            <div class="row" style="height: calc(100% - 49px)">
-                <div class="cell-small" style="width: 100%">{{ diplomacy_string }}</div>
+            <div class="row" style="height:calc(100% - 49px)">
+                <div class="cell small" style="width:100%">{{ diplomacy_string }}</div>
             </div>
 
         </div>
@@ -132,8 +134,8 @@
 
             <div class="top">Notifications</div>
 
-            <div class="row" style="height: calc(100% - 49px)">
-                <div class="cell-small" style="width: 100%">{{ notifications_string }}</div>
+            <div class="row" style="height:calc(100% - 49px)">
+                <div class="cell small" style="width:100%">{{ notifications_string }}</div>
             </div>
 
         </div>
@@ -150,9 +152,9 @@
         <div class="box">
             <div class="top">{{ record_name }}</div>
             {% for standing in record_data %}
-            <div class="row">
-                <div class="cell-short" style="width:auto; flex-grow:1;">{{ standing[0] }}</div>
-                <div class="cell-short-right" style="width:max-content">{{ standing[1] }}</div>
+            <div class="row hasline">
+                <div class="cell short" style="width:auto; flex-grow:1;">{{ standing[0] }}</div>
+                <div class="cell short right" style="width:max-content">{{ standing[1] }}</div>
             </div>
             {% endfor %}
         </div>
