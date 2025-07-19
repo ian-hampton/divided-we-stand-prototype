@@ -353,8 +353,9 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         nation.update_trade_fee()
         nation_table.save(nation)
 
-    nation_table.update_records()
-    nation_table.add_leaderboard_bonuses()
+    if not event_phase:
+        nation_table.update_records()
+        nation_table.add_leaderboard_bonuses()
 
 def resolve_win(game_id: str) -> None:
     """
