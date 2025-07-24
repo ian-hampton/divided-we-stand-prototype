@@ -256,6 +256,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_event_actions(game_id, actions_dict["EventAction"])
     market_results = actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"], actions_dict["MarketBuyAction"], actions_dict["MarketSellAction"])
 
+    # update income step
+    checks.update_income(game_id)
+
     # resolve private actions
     print("Resolving private actions...")
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
