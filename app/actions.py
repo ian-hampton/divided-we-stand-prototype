@@ -2976,7 +2976,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
         print(f"{i + 1}. {nation.name}")
 
     # execute actions
-    for action in actions_list:
+    for action in ordered_actions_list:
         while action.target_region_ids != []:
             
             target_region_id = action.target_region_ids.pop()
