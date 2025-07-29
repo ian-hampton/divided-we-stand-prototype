@@ -256,6 +256,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_event_actions(game_id, actions_dict["EventAction"])
     market_results = actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"], actions_dict["MarketBuyAction"], actions_dict["MarketSellAction"])
 
+    # update income step
+    checks.update_income(game_id)
+
     # resolve private actions
     print("Resolving private actions...")
     actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
@@ -353,8 +356,9 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         nation.update_trade_fee()
         nation_table.save(nation)
 
-    nation_table.update_records()
-    nation_table.add_leaderboard_bonuses()
+    if not event_phase:
+        nation_table.update_records()
+        nation_table.add_leaderboard_bonuses()
 
 def resolve_win(game_id: str) -> None:
     """
