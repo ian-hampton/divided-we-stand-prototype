@@ -1,0 +1,33 @@
+{
+    "easy": [
+        "Ambassador",
+        "Backstab",
+        "Breakthrough",
+        "Diverse Economy",
+        "Double Down",
+        "New Empire",
+        "Reconstruction Effort",
+        "Reliable Ally",
+        "Secure Strategic Resources",
+        "Threat Containment"
+    ],
+    "medium": [
+        "Energy Focus",
+        "Industrial Focus",
+        "Hegemony",
+        "Monopoly",
+        "Nuclear Deterrent",
+        "Strong Research Agreement",
+        "Strong Trade Agreement",
+        "Sphere of Influence",
+        "Underdog",
+        "Warmonger"
+    ],
+    "hard": [
+        "Economic Domination",
+        "Influence Through Trade",
+        "Military Superpower",
+        "Scientific Leader",
+        "Territorial Control"
+    ]
+}

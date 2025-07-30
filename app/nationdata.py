@@ -43,27 +43,33 @@ class Nation:
         self._resources: dict = nation_data["resources"]
         self._records: dict = nation_data["records"]
 
-    def _generate_vc_sets(count: int) -> dict:
+    def _generate_vc_sets(game_id: str, count: int) -> dict:
         """
         Generates victory condition sets for a player.
 
         Params:
+            game_id (str): Game ID string.
             count (int): Number of sets to generate.
 
         Returns:
             dict: Nested dictionary of victory coonditions.
         """
 
+        victory_conditions = core.get_scenario_dict(game_id, "victory")
+        easy_list = victory_conditions["easy"]
+        medium_list = victory_conditions["medium"]
+        hard_List = victory_conditions["hard"]
+
         vc_sets = {}
-        random_easys = random.sample(EASY_LIST, len(EASY_LIST))
-        random_normals = random.sample(NORMAL_LIST, len(NORMAL_LIST))
-        random_hards = random.sample(HARD_LIST, len(HARD_LIST))
+        random_easys = random.sample(easy_list, len(easy_list))
+        random_mediums = random.sample(medium_list, len(medium_list))
+        random_hards = random.sample(hard_List, len(hard_List))
 
         for i in range(count):
             name = f"set{i+1}"
             vc_sets[name] = {}
             vc_sets[name][random_easys.pop()] = False
-            vc_sets[name][random_normals.pop()] = False
+            vc_sets[name][random_mediums.pop()] = False
             vc_sets[name][random_hards.pop()] = False
 
         return vc_sets
@@ -86,7 +92,7 @@ class Nation:
         unit_dict = core.get_scenario_dict(game_id, "Units")
 
         # generate victory condition sets
-        vc_sets = Nation._generate_vc_sets(2)
+        vc_sets = Nation._generate_vc_sets(game_id, 2)
 
         nation_data = {
             "nationName": "N/A",
@@ -1059,36 +1065,3 @@ class NationTable:
             
             nation.tags = tags_filtered
             self.save(nation)
-
-# tba - move everything below to a scenario file
-EASY_LIST = [
-    "Ambassador",
-    "Backstab",
-    "Breakthrough",
-    "Diverse Economy",
-    "Double Down",
-    "New Empire",
-    "Reconstruction Effort",
-    "Reliable Ally",
-    "Secure Strategic Resources",
-    "Threat Containment"
-]
-NORMAL_LIST = [
-    "Energy Focus",
-    "Industrial Focus",
-    "Hegemony",
-    "Monopoly",
-    "Nuclear Deterrent",
-    "Strong Research Agreement",
-    "Strong Trade Agreement",
-    "Sphere of Influence",
-    "Underdog",
-    "Warmonger"
-]
-HARD_LIST = [
-    "Economic Domination",
-    "Influence Through Trade",
-    "Military Superpower",
-    "Scientific Leader",
-    "Territorial Control"
-]
