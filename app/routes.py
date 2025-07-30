@@ -791,62 +791,7 @@ def resource_market(full_game_id):
     page_title = f'{game_name} - Resource Market'
 
     # tba - grab this from scenario files
-    data = {
-        "Food": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Research": {
-            "Base Price": 5,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Coal": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Oil": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Basic Materials": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Common Metals": {
-            "Base Price": 5,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Advanced Metals": {
-            "Base Price": 10,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Uranium": {
-            "Base Price": 10,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Rare Earth Elements": {
-            "Base Price": 20,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-    }
+    data = core.get_scenario_dict(full_game_id, "market")
     
     # get resource market records
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'

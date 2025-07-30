@@ -2133,63 +2133,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
 
     rmdata_update_list = []
     steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
-    # tba - grab this from scenario files
-    data = {
-        "Food": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Research": {
-            "Base Price": 5,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Coal": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Oil": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Basic Materials": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Common Metals": {
-            "Base Price": 5,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Advanced Metals": {
-            "Base Price": 10,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Uranium": {
-            "Base Price": 10,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Rare Earth Elements": {
-            "Base Price": 20,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-    }
+    data = core.get_scenario_dict(game_id, "market")
 
     # sum up recent transactions
     rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
