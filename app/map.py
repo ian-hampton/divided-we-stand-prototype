@@ -25,7 +25,7 @@ class GameMaps:
         self.map_str = core.get_map_str(self.game_id)
         self.turn_num: any = core.get_current_turn_num(self.game_id)    # TODO: game state needs to be tracked independently instead of relying on current turn #
         with open(f"maps/{self.map_str}/config.json", 'r') as json_file:
-            self.map_config_dict = json.load(json_file)
+            self.map_config: dict = json.load(json_file)
 
     def update_all(self) -> None:
         """
@@ -269,9 +269,15 @@ class GameMaps:
         Assigns a resource to each map region. Should only be called at the start of the game.
         """
         
+        # get resource data for map
+        with open('active_games.json', 'r') as json_file:
+            active_games_dict = json.load(json_file)
+        scenario_name: str = active_games_dict[self.game_id]["Information"]["Scenario"].lower()
+        map_resources: dict = self.map_config["mapResources"][scenario_name]
+        
         # create resource list
         resource_list = []
-        for resource, resource_count in self.map_config_dict["resourceCounts"].items():
+        for resource, resource_count in map_resources.items():
             resource_list += [resource] * resource_count
         resource_list = random.sample(resource_list, len(resource_list))
 
