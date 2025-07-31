@@ -770,8 +770,8 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
 
 def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
     
-    misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
-    alliance_types = set(misc_scenario_dict["allianceTypes"].keys())
+    alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
+    alliance_types = set(alliance_scenario_dict.keys())
 
     if alliance_type.title() in alliance_types:
         return alliance_type.title()
@@ -904,8 +904,7 @@ def _check_resource(resource_name: str) -> str | None:
 
 def _check_missile(game_id: str, missile_type: str) -> str | None:
     
-    misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
-    missile_types = set(misc_scenario_dict["missiles"].keys())
+    missile_scenario_dict = core.get_scenario_dict(game_id, "missiles")
 
     missile_errors = {
         "missile": "Standard Missile",
@@ -916,7 +915,7 @@ def _check_missile(game_id: str, missile_type: str) -> str | None:
         "nuclear missiles": "Nuclear Missile"
     }
 
-    if missile_type.title() in missile_types:
+    if missile_type.title() in missile_scenario_dict:
         return missile_type.title()
         
     return missile_errors.get(missile_type.lower())
@@ -957,10 +956,9 @@ def _check_war_name(game_id: str, war_name_str: str) -> str | None:
 
 def _check_war_justification(game_id: str, war_justification_str: str) -> str | None:
 
-    misc_scenario_dict = core.get_scenario_dict(game_id, "Misc")
-    war_justification_list = list(misc_scenario_dict["warJustifications"].keys())
+    justification_scenario_dict = core.get_scenario_dict(game_id, "justifications")
     
-    for war_justification in war_justification_list:
+    for war_justification in justification_scenario_dict:
         if war_justification.lower() == war_justification_str.lower():
             return war_justification
         

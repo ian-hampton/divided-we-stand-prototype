@@ -995,8 +995,7 @@ def alliances(full_game_id):
     nation_table = NationTable(full_game_id)
     alliance_table = AllianceTable(full_game_id)
     alliance_dict = alliance_table.data
-    misc_data_dict = core.get_scenario_dict(full_game_id, "Misc")
-    alliance_type_dict = misc_data_dict["allianceTypes"]
+    alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
 
     alliance_dict_filtered = {}
     for alliance_name, alliance_data in alliance_dict.items():
@@ -1023,11 +1022,11 @@ def alliances(full_game_id):
                 alliance_data["currentMembersFormatted"][nation_name]["nationColor"] = color
             
             # adds alliance color
-            alliance_data["color"] = palette.str_to_hex(alliance_type_dict[alliance_data["allianceType"]]["colorTheme"])
+            alliance_data["color"] = palette.str_to_hex(alliance_scenario_dict[alliance_data["allianceType"]]["colorTheme"])
 
             alliance_dict_filtered[alliance_name] = alliance_data
 
-    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_type_dict, page_title = page_title)
+    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_scenario_dict, page_title = page_title)
 
 # MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
