@@ -620,11 +620,11 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     player_information_dict['Alliance Data']['Name List'] = list(misc_data_dict["allianceTypes"].keys())
     alliance_colors = []
     alliance_data = [False, False, False, False]
-    if 'Defensive Agreements' in nation.completed_research:
+    if 'Common Ground' in nation.completed_research:
         alliance_data[0] = True
-    if 'Peace Accords' in nation.completed_research:
+    if 'Common Ground' in nation.completed_research:
         alliance_data[1] = True
-    if 'Research Exchange' in nation.completed_research:
+    if 'Technology Exchange' in nation.completed_research:
         alliance_data[2] = True
     if 'Trade Routes' in nation.completed_research:
         alliance_data[3] = True

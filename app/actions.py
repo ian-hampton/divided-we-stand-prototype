@@ -1,3 +1,4 @@
+import copy
 import csv
 import json
 import random
@@ -594,8 +595,8 @@ class WarAction:
         nnei = words.index("using")
         wjsi = words.index("using") + 1
 
-        self.target_nation = " ".join(words[1:nnei]) if len(words) > 4 else None
-        self.war_justification = " ".join(words[wjsi:]) if len(words) > 4 else None
+        self.target_nation = " ".join(words[1:nnei]) if len(words) > 3 else None
+        self.war_justification = " ".join(words[wjsi:]) if len(words) > 3 else None
 
     def __str__(self):
         return f"[WarAction] War {self.target_nation} using {self.war_justification} ({self.id})"
@@ -1661,7 +1662,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             continue
 
         # calculate build cost
-        build_cost_dict = improvement_data_dict[action.improvement_name]["Build Costs"]
+        build_cost_dict = copy.deepcopy(improvement_data_dict[action.improvement_name]["Build Costs"])
         nation.apply_build_discount(build_cost_dict)
 
         # pay for improvement
@@ -2423,7 +2424,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             continue
 
         # calculate deployment cost
-        build_cost_dict = unit_scenario_dict[action.unit_name]["Build Costs"]
+        build_cost_dict = copy.deepcopy(unit_scenario_dict[action.unit_name]["Build Costs"])
         if nation.gov == 'Military Junta':
             for key in build_cost_dict:
                 build_cost_dict[key] *= 0.8
@@ -2483,7 +2484,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
             case "Animosity" | "Border Skirmish":
                 valid_war_justification = True
             case "Conquest":
-                if "Ideological Wars" in attacker_nation.completed_research:
+                if "Early Expansion" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Containment":
                 if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
@@ -2637,7 +2638,7 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             case "Animosity" | "Border Skirmish":
                 valid_war_justification = True
             case "Conquest":
-                if "Ideological Wars" in attacker_nation.completed_research:
+                if "Early Expansion" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Containment":
                 if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
