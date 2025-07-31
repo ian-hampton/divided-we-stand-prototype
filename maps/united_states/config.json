@@ -1,12 +1,14 @@
 {
-    "resourceCounts": {
-        "Coal": 16,
-        "Oil": 16,
-        "Basic Materials": 48,
-        "Common Metals": 32,
-        "Advanced Metals": 10,
-        "Uranium": 10,
-        "Rare Earth Elements": 5,
-        "Empty": 83
+    "mapResources": {
+        "standard": {
+            "Coal": 16,
+            "Oil": 16,
+            "Basic Materials": 48,
+            "Common Metals": 32,
+            "Advanced Metals": 10,
+            "Uranium": 10,
+            "Rare Earth Elements": 5,
+            "Empty": 83
+        }
     }
 }
