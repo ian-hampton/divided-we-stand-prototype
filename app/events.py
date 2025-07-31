@@ -167,7 +167,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Diplomatic Summit":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Foreign Aid":
             # select nations that will benefit from this event
@@ -189,7 +193,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Foreign Interference":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Lost Nuclear Weapons":
             # select victim
@@ -218,7 +226,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Observer Status Invitation":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Peacetime Rewards":
             effected_player_ids = []
@@ -261,7 +273,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Shifting Attitudes":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "United Nations Peacekeeping Mandate":
             # resolve event now
@@ -285,27 +301,51 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
         
         case "Embargo":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Humiliation":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Foreign Investment":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Nominate Mediator":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Shared Fate":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Threat Containment":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
         case "Foreign Invasion":
             
@@ -395,7 +435,11 @@ def initiate_event(game_id: str, chosen_event: str, active_games_dict: dict) -> 
 
         case "Faustian Bargain":
             notifications.append(f"New Event: {chosen_event}!", 2)
-            active_games_dict = _save_as_standard_delayed_event(game_id, chosen_event, active_games_dict, nation_table)
+            effected_player_ids = []
+            for i in range(1, len(nation_table) + 1):
+                effected_player_ids.append(str(i))
+            # save to current event key
+            active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
 def handle_current_event(game_id: str) -> None:
     """
@@ -1156,17 +1200,6 @@ def _is_valid(game_id: str, event_conditions: dict, already_chosen_events: set) 
                         return False
                     
     return True
-
-def _save_as_standard_delayed_event(game_id: str, chosen_event: str, active_games_dict: dict, nation_table: NationTable) -> None:
-    """
-    Updates active_games_dict with a new current event. Used for all events in which there is a pending option / vote effecting all players.
-    """
-
-    effected_player_ids = []
-    for i in range(1, len(nation_table) + 1):
-        effected_player_ids.append(str(i))
-    # save to Current Event key to be activated later
-    active_games_dict[game_id]["Current Event"][chosen_event] = effected_player_ids
 
 def _gain_free_research(game_id: str, research_name: str, nation: Nation) -> bool:
     """
