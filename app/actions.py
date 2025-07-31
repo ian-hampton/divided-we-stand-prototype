@@ -1,3 +1,4 @@
+import copy
 import csv
 import json
 import random
@@ -1655,7 +1656,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             continue
 
         # calculate build cost
-        build_cost_dict = improvement_data_dict[action.improvement_name]["Build Costs"]
+        build_cost_dict = copy.deepcopy(improvement_data_dict[action.improvement_name]["Build Costs"])
         nation.apply_build_discount(build_cost_dict)
 
         # pay for improvement
@@ -2417,7 +2418,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             continue
 
         # calculate deployment cost
-        build_cost_dict = unit_scenario_dict[action.unit_name]["Build Costs"]
+        build_cost_dict = copy.deepcopy(unit_scenario_dict[action.unit_name]["Build Costs"])
         if nation.gov == 'Military Junta':
             for key in build_cost_dict:
                 build_cost_dict[key] *= 0.8
