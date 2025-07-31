@@ -588,8 +588,8 @@ class WarAction:
         nnei = words.index("using")
         wjsi = words.index("using") + 1
 
-        self.target_nation = " ".join(words[1:nnei]) if len(words) > 4 else None
-        self.war_justification = " ".join(words[wjsi:]) if len(words) > 4 else None
+        self.target_nation = " ".join(words[1:nnei]) if len(words) > 3 else None
+        self.war_justification = " ".join(words[wjsi:]) if len(words) > 3 else None
 
     def __str__(self):
         return f"[WarAction] War {self.target_nation} using {self.war_justification} ({self.id})"
@@ -2477,7 +2477,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
             case "Animosity" | "Border Skirmish":
                 valid_war_justification = True
             case "Conquest":
-                if "Ideological Wars" in attacker_nation.completed_research:
+                if "Early Expansion" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Containment":
                 if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
@@ -2631,7 +2631,7 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             case "Animosity" | "Border Skirmish":
                 valid_war_justification = True
             case "Conquest":
-                if "Ideological Wars" in attacker_nation.completed_research:
+                if "Early Expansion" in attacker_nation.completed_research:
                     valid_war_justification = True
             case "Containment":
                 if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
