@@ -15,9 +15,10 @@ def trigger_event(game_id: str) -> None:
         None
     """
 
-    # load event data and events module based on scenario
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
+    
+    # load event data and events module based on scenario
     event_scenario_dict = core.get_scenario_dict(game_id, "events")
     scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
     events = importlib.import_module(f"scenarios.{scenario}.events")
@@ -47,7 +48,34 @@ def trigger_event(game_id: str) -> None:
         case "Inactive":
             active_games_dict["Inactive Events"].append(event_name)
 
-    # save changes to active games    
+    with open("active_games.json", 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
+
+def resolve_current_event(game_id: str) -> None:
+    
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    
+    # load events module based on scenario
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    # load event
+    event_data = active_games_dict["Current Event"]
+    event_name = event_data["Name"]
+    event = events.load_event(game_id, event_name, temp = True)
+
+    # resolve current event
+    event.resolve()
+    active_games_dict["Current Event"] = {}
+
+    # save event
+    match event.state:
+        case "Active":
+            active_games_dict["Active Events"][event_name] = event.export()
+        case "Inactive":
+            active_games_dict["Inactive Events"].append(event_name)
+
     with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 

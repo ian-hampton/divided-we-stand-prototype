@@ -18,7 +18,7 @@ class Event:
         self.candidates: list = event_data.get("Candidates", [])
         self.targets: list = event_data.get("Targets", [])
         self.expire_turn: int = event_data.get("Expiration", -1)
-        self.state = None
+        self.state: str = ""
 
         # load game data
         if not temp:
@@ -52,6 +52,22 @@ class Event:
             "Targets": self.targets,
             "Expiration": self.expire_turn
         }
+    
+    def _collect_basic_decisions(self) -> dict:
+        """
+        Simple function to collect decisions from players in the terminal.
+        """
+
+        decision_dict = {}
+        for player_id in self.targets:
+            nation = self.nation_table.get(player_id)
+            while True:
+                decision = input(f"Enter {nation.name} decision: ")
+                if decision in self.choices:
+                    break
+            decision_dict[player_id] = decision
+        
+        return decision_dict
 
 class Assassination(Event):
     
@@ -69,7 +85,36 @@ class Assassination(Event):
         self.state = "Current"
 
     def resolve(self):
-        pass
+        
+        self.choices = ["Find the Perpetrator", "Find a Scapegoat"]
+        print(f"Available Options: {" or ".join(self.choices)}")
+        decision_dict = self._collect_basic_decisions()
+
+        for nation_id, decision in decision_dict.items():
+            
+            nation = self.nation_table.get(nation_id)
+            
+            if decision == "Find the Perpetrator":
+                nation.update_stockpile("Political Power", 5)
+                self.state = "Inactive"
+            
+            elif decision == "Find a Scapegoat":
+                while True:
+                    scapegoat_nation_name = input("Enter the nation name to scapegoat: ")
+                    try:
+                        scapegoat = self.nation_table.get(scapegoat_nation_name)
+                        break
+                    except:
+                        print("Unrecognized nation name, try again.")
+                new_tag = {
+                    "Combat Roll Bonus": scapegoat.id,
+                    "Expire Turn": self.current_turn_num + self.duration + 1
+                }
+                nation.tags["Assassination Scapegoat"] = new_tag
+                self.state = "Active"
+                self.duration = self.current_turn_num + self.duration + 1
+
+        self.nation_table.save(nation)
     
     def has_conditions_met(self) -> bool:
         return True
