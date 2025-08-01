@@ -35,8 +35,21 @@ def trigger_event(game_id: str) -> None:
     # initiate random event
     event_name = random.choice(event_list)
     print(f"Triggering {event_name} event...")
-    event = events.load_event(game_id, event_name)
+    event = events.load_event(game_id, event_name, new=True)
     event.activate()
+
+    # save event
+    match event.state:
+        case "Current":
+            active_games_dict["Current Event"] = event.export()
+        case "Active":
+            active_games_dict["Active Events"][event_name] = event.export()
+        case "Inactive":
+            active_games_dict["Inactive Events"].append(event_name)
+
+    # save changes to active games    
+    with open("active_games.json", 'w') as json_file:
+        json.dump(active_games_dict, json_file, indent=4)
 
 def resolve_active_events():
     pass

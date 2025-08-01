@@ -1,4 +1,5 @@
 import json
+import random
 
 from app import core
 from app.nationdata import NationTable
@@ -11,10 +12,18 @@ class Event:
     def __init__(self, game_id: str, event_data: dict, *, temp = False):
 
         # load event data
+        self.name: str = event_data["Name"]
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
         self.candidates: list = event_data.get("Candidates", [])
+        self.targets: list = event_data.get("Targets", [])
         self.expire_turn: int = event_data.get("Expiration", -1)
+        self.state = None
+
+        # event states
+        # "Current"     event is pending input from players
+        # "Active"      event is ongoing but does not require attention from players
+        # "Inactive"    event is completed and is ready to be archived
         
         # load game data (should not be loaded if the event is being checked for conditions or expiration)
         if not temp:
@@ -476,7 +485,7 @@ class FaustianBargain(Event):
         
         return True
 
-def load_event(game_id: str, event_name: str) -> any:
+def load_event(game_id: str, event_name: str, new=False) -> any:
     """
     Creates an event object based on the event name.
 
@@ -520,7 +529,10 @@ def load_event(game_id: str, event_name: str) -> any:
 
     if event_name in events:
         event_scenario_dict = core.get_scenario_dict(game_id, "events")
-        return events[event_name](game_id, event_scenario_dict[event_name])
+        event_data = event_scenario_dict[event_name]
+        if new:
+            event_data["Name"] = event_name
+        return events[event_name](game_id, event_data)
     else:
         raise Exception(f"Error: {event_name} event not recognized.")
     
