@@ -20,12 +20,7 @@ class Event:
         self.expire_turn: int = event_data.get("Expiration", -1)
         self.state = None
 
-        # event states
-        # "Current"     event is pending input from players
-        # "Active"      event is ongoing but does not require attention from players
-        # "Inactive"    event is completed and is ready to be archived
-        
-        # load game data (should not be loaded if the event is being checked for conditions or expiration)
+        # load game data
         if not temp:
             self.game_id = game_id
             self.nation_table = NationTable(self.game_id)
@@ -36,6 +31,16 @@ class Event:
                 self.active_games_dict = json.load(json_file)
             with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
                 self.regdata_dict = json.load(json_file)
+
+        # GAME DATA NOTES
+        #  - be sure to set temp to true if the event is only being loaded to check for conditions or expiration
+        #  - you will need to explicitly save changes to NationTable, WarTable, etc inside the event class methods!
+        #  - do not save any changes to active_games.json, they will be lost!
+
+        # EVENT STATES
+        #  "Current"     event is pending input from players
+        #  "Active"      event is ongoing but does not require attention from players
+        #  "Inactive"    event is completed and is ready to be archived
 
     def export(self) -> dict:
         
@@ -62,6 +67,9 @@ class Assassination(Event):
         self.notifications.append(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
 
         self.state = "Current"
+
+    def resolve(self):
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
