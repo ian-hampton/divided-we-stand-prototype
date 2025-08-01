@@ -237,7 +237,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     checks.prompt_for_missing_war_justifications(game_id)
     
     # oppertunity to resolve active events
-    events.resolve_active_events(game_id, "Before Actions", actions_dict)
+    events.resolve_active_events()
     
     # resolve public actions
     actions.resolve_trade_actions(game_id)
@@ -269,7 +269,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
 
     # oppertunity to resolve active events
-    events.resolve_active_events(game_id, "After Actions", actions_dict)
+    events.resolve_active_events()
 
     # export action logs
     nation_table = NationTable(game_id)
@@ -312,7 +312,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # update active game records
     core.update_turn_num(game_id)
-    events.filter_events(game_id)
+    events.filter_events()
     nation_table.reload()
     nation_table.check_tags()
     with open('active_games.json', 'r') as json_file:

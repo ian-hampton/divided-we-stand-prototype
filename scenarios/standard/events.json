@@ -1,0 +1,170 @@
+{
+    "Assassination": {
+        "Type": "Standard Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Corruption Scandal": {
+        "Type": "Standard Event",
+        "Duration": 8,
+        "Conditions": {
+            "No Record Tie": "netIncome"
+        }
+    },
+    "Coup": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "First Event": false
+        }
+    },
+    "Decaying Infrastructure": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "First Event": false
+        }
+    },
+    "Desertion": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "Ongoing War Minimum": 1
+        }
+    },
+    "Diplomatic Summit": {
+        "Type": "Standard Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Foreign Aid": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {}
+    },
+    "Foreign Interference": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "First Event": false
+        }
+    },
+    "Lost Nuclear Weapons": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {}
+    },
+    "Security Breach": {
+        "Type": "Standard Event",
+        "Duration": 4,
+        "Conditions": {
+            "No Record Tie": "researchCount"
+        }
+    },
+    "Market Inflation": {
+        "Type": "Standard Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Market Recession": {
+        "Type": "Standard Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Observer Status Invitation": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {}
+    },
+    "Peacetime Rewards": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "At Peace For 12 Turns Minimum": 1
+        }
+    },
+    "Power Plant Meltdown": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "Global Count Minimum": {
+                "Nuclear Power Plant": 1
+            }
+        }
+    },
+    "Shifting Attitudes": {
+        "Type": "Standard Event",
+        "Duration": 4,
+        "Conditions": {
+            "First Event": false
+        }
+    },
+    "United Nations Peacekeeping Mandate": {
+        "Type": "Standard Event",
+        "Duration": 0,
+        "Conditions": {
+            "Ongoing War Minimum": 3
+        }
+    },
+    "Widespread Civil Disorder": {
+        "Type": "Standard Event",
+        "Duration": 8,
+        "Conditions": {
+            "First Event": false
+        }
+    },
+    "Embargo": {
+        "Type": "Voting Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Humiliation": {
+        "Type": "Voting Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Foreign Investment": {
+        "Type": "Voting Event",
+        "Duration": 16,
+        "Conditions": {}
+    },
+    "Nominate Mediator": {
+        "Type": "Voting Event",
+        "Duration": 16,
+        "Conditions": {}
+    },
+    "Shared Fate": {
+        "Type": "Voting Event",
+        "Duration": 99999,
+        "Conditions": {}
+    },
+    "Threat Containment": {
+        "Type": "Voting Event",
+        "Duration": 8,
+        "Conditions": {}
+    },
+    "Foreign Invasion": {
+        "Type": "Major Event",
+        "Duration": 20,
+        "Conditions": {
+            "First Event": false,
+            "No Major Event": true
+        }
+    },
+    "Pandemic": {
+        "Type": "Major Event",
+        "Duration": 99999,
+        "Conditions": {
+            "First Event": false,
+            "No Major Event": true
+        }
+    },
+    "Faustian Bargain": {
+        "Type": "Major Event",
+        "Duration": 99999,
+        "Conditions": {
+            "First Event": false,
+            "No Major Event": true
+        }
+    }
+}
