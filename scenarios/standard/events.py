@@ -3,18 +3,33 @@ import json
 from app import core
 from app.nationdata import NationTable
 from app.war import WarTable
+from app.notifications import Notifications
 
 
 class Event:
 
-    def __init__(self, game_id: str, event_data: dict):
+    def __init__(self, game_id: str, event_data: dict, *, temp = False):
 
-        self.game_id = game_id
-        
+        # load event data
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
         self.candidates = []
         self.expire_turn = -1
+
+        # load game data (not loaded for initial conditions checking)
+        if not temp:
+            self.game_id = game_id
+            self.nation_table = NationTable(self.game_id)
+            self.war_table = WarTable(self.game_id)
+            self.notifications = Notifications(self.game_id)
+            self.current_turn_num = core.get_current_turn_num(self.game_id)
+            with open("active_games.json", 'r') as json_file:
+                self.active_games_dict = json.load(json_file)
+
+    def save(self):
+        
+        with open("active_games.json", 'w') as json_file:
+            json.dump(self.active_games_dict, json_file, indent=4)
 
 class Assassination(Event):
     
@@ -393,6 +408,14 @@ class FaustianBargain(Event):
 
 def load_event(game_id: str, event_name: str) -> any:
     """
+    Creates an event object based on the event name.
+
+    Params:
+        game_id (str): Game ID string.
+        event_name (str): Event name string.
+
+    Returns:
+        any: An event object corresponding to the event name, or raises an exception if none found.
     """
 
     events = {
