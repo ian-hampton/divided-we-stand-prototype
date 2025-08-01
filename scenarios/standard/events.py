@@ -25,6 +25,8 @@ class Event:
             self.current_turn_num = core.get_current_turn_num(self.game_id)
             with open("active_games.json", 'r') as json_file:
                 self.active_games_dict = json.load(json_file)
+            with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
+                self.regdata_dict = json.load(json_file)
 
     def save(self):
         
@@ -40,7 +42,6 @@ class Assassination(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class CorruptionScandal(Event):
@@ -112,7 +113,6 @@ class DiplomaticSummit(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class ForeignAid(Event):
@@ -124,7 +124,6 @@ class ForeignAid(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class ForeignInterference(Event):
@@ -151,7 +150,6 @@ class LostNuclearWeapons(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class SecurityBreach(Event):
@@ -178,7 +176,6 @@ class MarketInflation(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class MarketRecession(Event):
@@ -190,7 +187,6 @@ class MarketRecession(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class ObserverStatusInvitation(Event):
@@ -202,7 +198,6 @@ class ObserverStatusInvitation(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class PeacetimeRewards(Event):
@@ -289,7 +284,6 @@ class Embargo(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class Humiliation(Event):
@@ -301,7 +295,6 @@ class Humiliation(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class ForeignInvestment(Event):
@@ -313,7 +306,6 @@ class ForeignInvestment(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class NominateMediator(Event):
@@ -325,7 +317,6 @@ class NominateMediator(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class SharedFate(Event):
@@ -337,7 +328,6 @@ class SharedFate(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class ThreatContainment(Event):
@@ -349,7 +339,6 @@ class ThreatContainment(Event):
         pass
     
     def has_conditions_met(self) -> bool:
-        
         return True
 
 class ForeignInvasion(Event):
