@@ -20,10 +20,9 @@ class Event:
         self.name: str = event_data["Name"]
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
-        self.candidates: list = event_data.get("Candidates", [])
         self.targets: list = event_data.get("Targets", [])
         self.expire_turn: int = event_data.get("Expiration", -1)
-        self.state: str = ""
+        self.state = -1
 
         # load game data
         if not temp:
@@ -53,7 +52,6 @@ class Event:
             "Name": self.name,
             "Type": self.type,
             "Duration": self.duration,
-            "Candidates": self.candidates,
             "Targets": self.targets,
             "Expiration": self.expire_turn
         }
@@ -196,7 +194,7 @@ class Assassination(Event):
 
         self.notifications.append(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
 
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
         
@@ -210,7 +208,7 @@ class Assassination(Event):
             
             if decision == "Find the Perpetrator":
                 nation.update_stockpile("Political Power", 5)
-                self.state = "Inactive"
+                self.state = 0
             
             elif decision == "Find a Scapegoat":
                 while True:
@@ -225,7 +223,7 @@ class Assassination(Event):
                     "Expire Turn": self.current_turn_num + self.duration + 1
                 }
                 nation.tags["Assassination Scapegoat"] = new_tag
-                self.state = "Active"
+                self.state = 1
                 self.duration = self.current_turn_num + self.duration + 1
 
         self.nation_table.save(nation)
@@ -254,7 +252,7 @@ class CorruptionScandal(Event):
         
         self.nation_table.save(victim_nation)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -286,7 +284,7 @@ class Coup(Event):
         self.nation_table.save(victim_nation)
         self.notifications.append(f"{victim_nation_name}'s {old_government} government has been defeated by a coup. A new {new_government} government has taken power.", 2)
 
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -319,7 +317,7 @@ class DecayingInfrastructure(Event):
                     self.notifications.append(f"{nation.name} {region_improvement.name} in {region_id} has decayed.", 2)
                     region_improvement.clear()
 
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -371,7 +369,7 @@ class Desertion(Event):
                 self.notifications.append(f"{nation.name} {region_unit.name} {region_id} has deserted.", 2)
                 region_unit.clear()
         
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -388,10 +386,10 @@ class DiplomaticSummit(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -418,7 +416,7 @@ class DiplomaticSummit(Event):
             self.nation_table.save(nation)
         
         if len(summit_attendance_list) < 2:
-            self.state = "Inactive"
+            self.state = 0
             return
 
         for nation_id in summit_attendance_list:
@@ -431,7 +429,7 @@ class DiplomaticSummit(Event):
             nation.tags["Summit"] = new_tag
             self.nation_table.save(nation)
         
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -458,7 +456,7 @@ class ForeignAid(Event):
                 nation.update_stockpile("Dollars", amount)
                 self.notifications.append(f"{nation_name} has received {amount} dollars worth of foreign aid.", 2)
 
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
         return True
@@ -471,10 +469,10 @@ class ForeignInterference(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -512,7 +510,7 @@ class ForeignInterference(Event):
             self.nation_table.save(nation)
 
         actions.resolve_war_actions(self.game_id, war_actions)
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -534,7 +532,7 @@ class LostNuclearWeapons(Event):
 
         self.notifications.append(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
 
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
         
@@ -564,7 +562,7 @@ class LostNuclearWeapons(Event):
             self.nation_table.save(nation)
             self.notifications.append(f"{nation.name} chose to {decision.lower()} the old military installation.", 2)
         
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
         return True
@@ -582,7 +580,7 @@ class SecurityBreach(Event):
 
         self.notifications.append(f"{victim_nation_name} has suffered a {self.name}!", 2)
 
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -610,7 +608,7 @@ class SecurityBreach(Event):
         victim_nation.tags["Security Breach"] = new_tag
         self.nation_table.save(victim_nation)
         
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -626,7 +624,7 @@ class MarketInflation(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -638,7 +636,7 @@ class MarketRecession(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -652,10 +650,10 @@ class ObserverStatusInvitation(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
         
@@ -681,7 +679,7 @@ class ObserverStatusInvitation(Event):
             
             self.nation_table.save(nation)
         
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
         return True
@@ -703,7 +701,7 @@ class PeacetimeRewards(Event):
         self.notifications.append(f"New Event: {self.name}!", 2)
         self.notifications.append(f"Receiving reward: {nations_receiving_award_str}.", 2)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
         
@@ -715,7 +713,7 @@ class PeacetimeRewards(Event):
                 valid_research = self._gain_free_research(research_name, nation)
             self.nation_table.save(nation)
 
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -754,7 +752,7 @@ class PowerPlantMeltdown(Event):
         self.nation_table.save(nation)
         self.notifications.append(f"The {nation.name} Nuclear Power Plant in {meltdown_region_id} has melted down!", 2)
         
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -771,10 +769,10 @@ class ShiftingAttitudes(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -803,7 +801,7 @@ class ShiftingAttitudes(Event):
             
             self.nation_table.save(nation)
         
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -824,7 +822,7 @@ class UnitedNationsPeacekeepingMandate(Event):
                 war.end_conflict("White Peace")
                 self.notifications.append(f"{war.name} has ended with a white peace due to United Nations Peacekeeping Mandate.", 2)
 
-        self.state = "Inactive"
+        self.state = 0
 
     def has_conditions_met(self) -> bool:
 
@@ -849,7 +847,7 @@ class WidespreadCivilDisorder(Event):
             nation.tags["Civil Disorder"] = new_tag
             self.nation_table.save(nation)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -867,10 +865,10 @@ class Embargo(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -880,7 +878,7 @@ class Embargo(Event):
 
         if nation_name is None:
             self.notifications.append(f"Vote tied. No nation has been embargoed.", 2)
-            self.state = "Inactive"
+            self.state = 0
             return
         
         nation = self.nation_table.get(nation_name)
@@ -892,7 +890,7 @@ class Embargo(Event):
         
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 2)
         
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1     
 
     def has_conditions_met(self) -> bool:
@@ -906,10 +904,10 @@ class Humiliation(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -919,7 +917,7 @@ class Humiliation(Event):
 
         if nation_name is None:
             self.notifications.append(f"Vote tied. No nation has been humiliated.", 2)
-            self.state = "Inactive"
+            self.state = 0
             return
 
         nation = self.nation_table.get(nation_name)
@@ -932,7 +930,7 @@ class Humiliation(Event):
         
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 2)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -946,10 +944,10 @@ class ForeignInvestment(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -959,7 +957,7 @@ class ForeignInvestment(Event):
 
         if nation_name is None:
             self.notifications.append(f"Vote tied. No nation will recieve the foreign investment.", 2)
-            self.state = "Inactive"
+            self.state = 0
             return
 
         nation = self.nation_table.get(nation_name)
@@ -971,7 +969,7 @@ class ForeignInvestment(Event):
         
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 2)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -985,10 +983,10 @@ class NominateMediator(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -998,7 +996,7 @@ class NominateMediator(Event):
 
         if nation_name is None:
             self.notifications.append(f"Vote tied. No nation has been elected Mediator.", 2)
-            self.state = "Inactive"
+            self.state = 0
             return
 
         nation = self.nation_table.get(nation_name)
@@ -1012,7 +1010,7 @@ class NominateMediator(Event):
 
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 2)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -1026,10 +1024,10 @@ class SharedFate(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -1040,7 +1038,7 @@ class SharedFate(Event):
 
         if option_name is None:
             self.notifications.append(f"Vote tied. No option was resolved.", 2)
-            self.state = "Inactive"
+            self.state = 0
             return
 
         if option_name == "Cooperation":
@@ -1067,7 +1065,7 @@ class SharedFate(Event):
                 self.nation_table.save(nation)
             self.notifications.append(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 2)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -1081,10 +1079,10 @@ class ThreatContainment(Event):
     def activate(self):
         
         self.notifications.append(f"New Event: {self.name}!", 2)
-        for i in range(1, len(self.nation_table) + 1):
-            self.targets.append(str(i))
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
         
-        self.state = "Current"
+        self.state = 2
 
     def resolve(self):
 
@@ -1094,7 +1092,7 @@ class ThreatContainment(Event):
 
         if nation_name is None:
             self.notifications.append(f"Vote tied. No nation has been sanctioned.", 2)
-            self.state = "Inactive"
+            self.state = 0
             return
         
         nation = self.nation_table.get(nation_name)
@@ -1108,7 +1106,7 @@ class ThreatContainment(Event):
 
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 2)
 
-        self.state = "Active"
+        self.state = 1
         self.duration = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:

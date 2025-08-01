@@ -41,11 +41,11 @@ def trigger_event(game_id: str) -> None:
 
     # save event
     match event.state:
-        case "Current":
+        case 2:
             active_games_dict["Current Event"] = event.export()
-        case "Active":
+        case 1:
             active_games_dict["Active Events"][event_name] = event.export()
-        case "Inactive":
+        case 0:
             active_games_dict["Inactive Events"].append(event_name)
 
     with open("active_games.json", 'w') as json_file:
@@ -71,9 +71,9 @@ def resolve_current_event(game_id: str) -> None:
 
     # save event
     match event.state:
-        case "Active":
+        case 1:
             active_games_dict["Active Events"][event_name] = event.export()
-        case "Inactive":
+        case 0:
             active_games_dict["Inactive Events"].append(event_name)
 
     with open("active_games.json", 'w') as json_file:
