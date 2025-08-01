@@ -13,10 +13,10 @@ class Event:
         # load event data
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
-        self.candidates = []
-        self.expire_turn = -1
-
-        # load game data (not loaded for initial conditions checking)
+        self.candidates: list = event_data.get("Candidates", [])
+        self.expire_turn: int = event_data.get("Expiration", -1)
+        
+        # load game data (should not be loaded if the event is being checked for conditions or expiration)
         if not temp:
             self.game_id = game_id
             self.nation_table = NationTable(self.game_id)
@@ -28,17 +28,15 @@ class Event:
             with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
                 self.regdata_dict = json.load(json_file)
 
-    def save(self):
-        
-        with open("active_games.json", 'w') as json_file:
-            json.dump(self.active_games_dict, json_file, indent=4)
-
 class Assassination(Event):
     
     def __init__(self, game_id: str, event_data: dict):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -50,6 +48,9 @@ class CorruptionScandal(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -66,6 +67,9 @@ class Coup(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
 
@@ -80,6 +84,9 @@ class DecayingInfrastructure(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -96,6 +103,9 @@ class Desertion(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
 
@@ -111,6 +121,9 @@ class DiplomaticSummit(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -122,6 +135,9 @@ class ForeignAid(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -132,6 +148,9 @@ class ForeignInterference(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -148,6 +167,9 @@ class LostNuclearWeapons(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -158,6 +180,9 @@ class SecurityBreach(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -174,6 +199,9 @@ class MarketInflation(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -184,6 +212,9 @@ class MarketRecession(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -196,6 +227,9 @@ class ObserverStatusInvitation(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -206,6 +240,9 @@ class PeacetimeRewards(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -222,6 +259,9 @@ class PowerPlantMeltdown(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
 
@@ -236,6 +276,9 @@ class ShiftingAttitudes(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -252,6 +295,9 @@ class UnitedNationsPeacekeepingMandate(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
 
@@ -266,6 +312,9 @@ class WidespreadCivilDisorder(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -282,6 +331,9 @@ class Embargo(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -292,6 +344,9 @@ class Humiliation(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -304,6 +359,9 @@ class ForeignInvestment(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -314,6 +372,9 @@ class NominateMediator(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -326,6 +387,9 @@ class SharedFate(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -337,6 +401,9 @@ class ThreatContainment(Event):
 
     def activate(self):
         pass
+
+    def export(self) -> dict:
+        pass
     
     def has_conditions_met(self) -> bool:
         return True
@@ -347,6 +414,9 @@ class ForeignInvasion(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -363,8 +433,16 @@ class Pandemic(Event):
     
     def __init__(self, game_id: str, event_data: dict):
         Event.__init__(self, game_id, event_data)
+        self.intensify: int = event_data.get("Intensify Value", -1)
+        self.spread: int = event_data.get("Spread Value", -1)
+        self.cure_current: int = event_data.get("Completed Cure Research", -1)
+        self.cure_threshold: int = event_data.get("Needed Cure Research", -1)
+        self.closed_borders: list = event_data.get("Closed Borders List", [])
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
@@ -383,6 +461,9 @@ class FaustianBargain(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
+        pass
+
+    def export(self) -> dict:
         pass
     
     def has_conditions_met(self) -> bool:
