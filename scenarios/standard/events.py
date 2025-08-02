@@ -61,10 +61,10 @@ class Event:
             "Expiration": self.expire_turn
         }
     
-    def run_before(self):
+    def run_before(self, actions_dict: dict[str, list]) -> None:
         pass
 
-    def run_after(self):
+    def run_after(self) -> None:
         pass
     
     def _gain_free_research(self, research_name: str, nation: Nation) -> bool:

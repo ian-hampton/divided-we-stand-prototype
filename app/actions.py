@@ -1,5 +1,6 @@
 import copy
 import csv
+import importlib
 import json
 import random
 from collections import defaultdict
@@ -707,10 +708,10 @@ def validate_action(game_id: str, nation_id: str, action_str: str) -> any:
 
         if action.is_valid():
             return action
-        else:
-            action_str = input("Re-enter action or hit enter to skip: ")
-            if action_str == "":
-                return
+        
+        action_str = input("Re-enter action or hit enter to skip: ")
+        if action_str == "":
+            return
 
 def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
     """
@@ -753,20 +754,30 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         if action_str == "":
             return
         
-        words = action_str.strip().split()
-        action_key = words[0].title()
-        if action_key == "Alliance" and len(words) >= 2:
-            action_key = f"{words[0].title()} {words[1].title()}"
-        if action_key == "White" and len(words) >= 2:
-            action_key = f"{words[0].title()} {words[1].title()}"
+        action_key = _get_action_key(game_id, action_str)
         
         if action_key in actions:
             return actions[action_key](game_id, nation_id, action_str)
-        else:
-            print(f"""Action "{action_str}" submitted by player {nation_id} is invalid. Unrecognized action type.""")
-            action_str = input("Re-enter action or hit enter to skip: ")
-            if action_str == "":
-                return
+        
+        print(f"""Action "{action_str}" submitted by player {nation_id} is invalid. Unrecognized action type.""")
+        action_str = input("Re-enter action or hit enter to skip: ")
+
+def _get_action_key(game_id: str, action_str: str) -> str:
+
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    
+    words = action_str.strip().split()
+    action_key = words[0].title()
+    if action_key == "Alliance" and len(words) >= 2:
+        return f"{words[0].title()} {words[1].title()}"
+    elif action_key == "White" and len(words) >= 2:
+        return f"{words[0].title()} {words[1].title()}"
+
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    extra_actions = importlib.import_module(f"scenarios.{scenario}.actions")
+
+    return action_key
 
 def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
     
