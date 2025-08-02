@@ -1227,6 +1227,97 @@ class ForeignInvasion(Event):
         foreign_nation.unit_counts[unit_name] += 1
         self.nation_table.save(foreign_nation)
 
+    def _foreign_invasion_calculate_target_region(self, adjacency_list: list, destination_dict: dict) -> tuple:
+        """
+        Function that contains Foreign Invasion attack logic.
+        Designed to find path of least resistance but has no care for the health of its own units.
+        """
+        
+        target_region_id = None
+        target_region_health = 0
+        target_region_priority = -1
+
+        while adjacency_list != []:
+
+            # get random adjacent region
+            index = random.randrange(len(adjacency_list))
+            adjacent_region_id = adjacency_list.pop(index)
+
+            # get data from region
+            region = Region(adjacent_region_id, self.game_id)
+            region_improvement = Improvement(adjacent_region_id, self.game_id)
+            region_unit = Unit(adjacent_region_id, self.game_id)
+            candidate_region_priority = 0
+            candidate_region_health = 0
+            
+            # increase priority based on control data
+            # occupied friendly is the highest priority
+            if region.owner_id == 99 and region.occupier_id != 0:
+                candidate_region_priority += 10
+            # unoccupied unclaimed region
+            elif region.owner_id == 0 and region.occupier_id != 99:
+                candidate_region_priority += 4
+            # occupied unclaimed region
+            elif region.owner_id == 0:
+                candidate_region_priority += 2
+            # friendly unoccupied region
+            elif region.owner_id == 99:
+                candidate_region_priority += 0
+            # unoccupied enemy region
+            elif region.owner_id != 99 and region.occupier_id != 99:
+                candidate_region_priority += 8
+            # occupied enemy region
+            elif region.owner_id != 99:
+                candidate_region_priority += 6
+            
+            # increase priority by one if there is a hostile unit
+            if region_unit.name != None and region_unit.owner_id != 0:
+                candidate_region_priority += 1
+
+            # try to prevent units from tripping over each other on unclaimed regions and friendly unoccupied regions
+            if adjacent_region_id in destination_dict and (candidate_region_priority == 0 or candidate_region_priority == 2 or candidate_region_priority == 4):
+                continue
+            
+            # calculate region health
+            if region_improvement.name != None and region_improvement.health != 99 and region.owner_id != 99 and region.occupier_id != 99:
+                candidate_region_health += region_improvement.health
+            if region_unit.name != None and region_unit.owner_id != 0:
+                candidate_region_health += region_unit.health
+            
+            #check if candidate region is an easier or higher priority target
+            if candidate_region_priority > target_region_priority:
+                target_region_id = adjacent_region_id
+                target_region_health = candidate_region_health
+                target_region_priority = candidate_region_priority
+            elif candidate_region_priority == target_region_priority and candidate_region_health < target_region_health:
+                target_region_id = adjacent_region_id
+                target_region_health = candidate_region_health
+                target_region_priority = candidate_region_priority
+        
+        return target_region_id, target_region_priority
+
+    def _foreign_invasion_end(self, foreign_invasion_nation: Nation):
+    
+        for region_id in self.regdata_dict:
+            
+            region = Region(region_id, self.game_id)
+            region_unit = Unit(region_id, self.game_id)
+            
+            if region.owner_id == 99:
+                region.set_owner_id(0)
+                region.set_occupier_id(0)
+            elif region.occupier_id == 99:
+                region.set_occupier_id(0)
+            
+            if region_unit.owner_id == 99:
+                foreign_invasion_nation.unit_counts[region_unit.name] -= 1
+                region_unit.clear()
+
+            war = self.war_table.get("Foreign Invasion")
+            war.end = self.current_turn_num
+            war.outcome = "White Peace"
+            self.war_table.save(war)
+
 class Pandemic(Event):
     
     def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
