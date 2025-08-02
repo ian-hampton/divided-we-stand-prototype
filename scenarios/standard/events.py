@@ -17,10 +17,10 @@ from app import palette
 
 class Event:
 
-    def __init__(self, game_id: str, event_data: dict, *, temp = False):
+    def __init__(self, game_id: str, event_name: str, event_data: dict, *, temp = False):
 
         # load event data
-        self.name: str = event_data["Name"]
+        self.name: str = event_name
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
         self.targets: list = event_data.get("Targets", [])
@@ -187,8 +187,8 @@ class Event:
 
 class Assassination(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
 
@@ -237,8 +237,8 @@ class Assassination(Event):
 
 class CorruptionScandal(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -268,8 +268,8 @@ class CorruptionScandal(Event):
 
 class Coup(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -299,8 +299,8 @@ class Coup(Event):
 
 class DecayingInfrastructure(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -332,8 +332,8 @@ class DecayingInfrastructure(Event):
 
 class Desertion(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -384,8 +384,8 @@ class Desertion(Event):
 
 class DiplomaticSummit(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -441,8 +441,8 @@ class DiplomaticSummit(Event):
 
 class ForeignAid(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -467,8 +467,8 @@ class ForeignAid(Event):
 
 class ForeignInterference(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -525,8 +525,8 @@ class ForeignInterference(Event):
 
 class LostNuclearWeapons(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
 
@@ -573,8 +573,8 @@ class LostNuclearWeapons(Event):
 
 class SecurityBreach(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
 
@@ -624,8 +624,8 @@ class SecurityBreach(Event):
 
 class MarketInflation(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         self.state = 1
@@ -636,8 +636,8 @@ class MarketInflation(Event):
 
 class MarketRecession(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         self.state = 1
@@ -648,8 +648,8 @@ class MarketRecession(Event):
 
 class ObserverStatusInvitation(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -690,8 +690,8 @@ class ObserverStatusInvitation(Event):
 
 class PeacetimeRewards(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -728,8 +728,8 @@ class PeacetimeRewards(Event):
 
 class PowerPlantMeltdown(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -767,8 +767,8 @@ class PowerPlantMeltdown(Event):
 
 class ShiftingAttitudes(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -816,8 +816,8 @@ class ShiftingAttitudes(Event):
 
 class UnitedNationsPeacekeepingMandate(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
 
@@ -837,8 +837,8 @@ class UnitedNationsPeacekeepingMandate(Event):
 
 class WidespreadCivilDisorder(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
 
@@ -863,8 +863,8 @@ class WidespreadCivilDisorder(Event):
 
 class Embargo(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -902,8 +902,8 @@ class Embargo(Event):
 
 class Humiliation(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -942,8 +942,8 @@ class Humiliation(Event):
 
 class ForeignInvestment(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -981,8 +981,8 @@ class ForeignInvestment(Event):
 
 class NominateMediator(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -1022,8 +1022,8 @@ class NominateMediator(Event):
 
 class SharedFate(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -1077,8 +1077,8 @@ class SharedFate(Event):
 
 class ThreatContainment(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -1118,8 +1118,8 @@ class ThreatContainment(Event):
 
 class ForeignInvasion(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -1172,6 +1172,12 @@ class ForeignInvasion(Event):
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
 
+    def run_before(self) -> None:
+        pass
+
+    def run_after(self) -> None:
+        pass
+
     def has_conditions_met(self) -> bool:
 
         if _is_first_event(self.game_id):
@@ -1223,8 +1229,8 @@ class ForeignInvasion(Event):
 
 class Pandemic(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
         self.intensify: int = event_data.get("Intensify Value", -1)
         self.spread: int = event_data.get("Spread Value", -1)
         self.cure_current: int = event_data.get("Completed Cure Research", -1)
@@ -1247,6 +1253,9 @@ class Pandemic(Event):
         
         self.state = 1
         self.expire_turn = 99999
+
+    def run_after(self) -> None:
+        pass
 
     def export(self) -> dict:
         
@@ -1275,8 +1284,8 @@ class Pandemic(Event):
 
 class FaustianBargain(Event):
     
-    def __init__(self, game_id: str, event_data: dict):
-        Event.__init__(self, game_id, event_data)
+    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
+        Event.__init__(self, game_id, event_name, event_data, temp)
 
     def activate(self):
         
@@ -1330,6 +1339,9 @@ class FaustianBargain(Event):
         self.state = 1
         self.duration = 99999
 
+    def run_after(self) -> None:
+        pass
+
     def has_conditions_met(self) -> bool:
 
         if _is_first_event(self.game_id):
@@ -1340,13 +1352,15 @@ class FaustianBargain(Event):
         
         return True
 
-def load_event(game_id: str, event_name: str, new=False) -> any:
+def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=False) -> any:
     """
     Creates an event object based on the event name.
 
     Params:
         game_id (str): Game ID string.
         event_name (str): Event name string.
+        event_data (dict | None): Event data.
+        temp (bool): If set to True, the event object will not load any game data.
 
     Returns:
         any: An event object corresponding to the event name, or raises an exception if none found.
@@ -1382,14 +1396,15 @@ def load_event(game_id: str, event_name: str, new=False) -> any:
         "Faustian Bargain": FaustianBargain
     }
 
-    if event_name in events:
+    if event_name not in events:
+        raise Exception(f"Error: {event_name} event not recognized.")
+
+    if event_data is None:
         event_scenario_dict = core.get_scenario_dict(game_id, "events")
         event_data = event_scenario_dict[event_name]
-        if new:
-            event_data["Name"] = event_name
-        return events[event_name](game_id, event_data)
-    else:
-        raise Exception(f"Error: {event_name} event not recognized.")
+
+    return events[event_name](game_id, event_name, event_data, temp)
+        
     
 def _is_first_event(game_id: str) -> bool:
 
