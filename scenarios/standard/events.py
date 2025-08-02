@@ -1219,6 +1219,7 @@ class ForeignInvasion(Event):
             self._foreign_invasion_end(foreign_invasion_nation)
             self.nation_table.save(foreign_invasion_nation)
             self.state = 0
+            return
         
         # Foreign Invasion ends if no unoccupied reinforcement regions
         invasion_unoccupied_count = 0
@@ -1230,6 +1231,7 @@ class ForeignInvasion(Event):
             self._foreign_invasion_end(self.game_id, foreign_invasion_nation)
             self.nation_table.save(foreign_invasion_nation)
             self.state = 0
+            return
 
         self.state = 1
 
@@ -1403,7 +1405,93 @@ class Pandemic(Event):
         self.expire_turn = 99999
 
     def run_after(self) -> None:
-        pass
+        
+        if self.cure_current >= self.cure_threshold:
+            
+            # run pandemic decline procedure
+            for region_id in self.regdata_dict:
+                region = Region(region_id, self.game_id)
+                region.add_infection(-1)
+
+        else:
+
+            # conduct intensify rolls
+            for region_id in self.regdata_dict:
+                region = Region(region_id, self.game_id)
+                if region.infection() > 0 and region.infection() < 10:
+                    # intensify check
+                    intensify_roll = random.randint(1, 10)
+                    if intensify_roll < self.intensify:
+                        continue
+                    # intensify more if near capital or city
+                    if region.check_for_adjacent_improvement(improvement_names = {'Capital', 'City'}):
+                        region.add_infection(2)
+                    else:
+                        region.add_infection(1)
+
+            # get a list of regions infected before spreading starts
+            infected_regions = []
+            for region_id in self.regdata_dict:
+                region = Region(region_id, self.game_id)
+                if region.infection() > 0:
+                    infected_regions.append(region_id)
+
+            # conduct spread roles
+            for region_id in infected_regions:
+                region = Region(region_id, self.game_id)
+                if region.infection() == 0:
+                    continue
+                for adjacent_region_id in region.adjacent_regions:
+                    adjacent_region = Region(adjacent_region_id, self.game_id)
+                    adjacent_owner_id = adjacent_region.owner_id
+                    # spread only to regions that are not yet infected
+                    if adjacent_region.infection() != 0:
+                        continue
+                    spread_roll = random.randint(1, 20)
+                    # spread attempt
+                    if region.is_quarantined() or (region.owner_id != adjacent_owner_id and adjacent_owner_id in self.closed_borders):
+                        if spread_roll == 20:
+                            adjacent_region.add_infection(1)
+                    else:
+                        if spread_roll >= self.spread:
+                            adjacent_region.add_infection(1)
+
+        # sum up total infection scores
+        infection_scores = [0] * len(self.nation_table)
+        for region_id in self.regdata_dict:
+            region = Region(region_id, self.game_id)
+            owner_id = region.owner_id
+            if owner_id != 0 and owner_id <= len(infection_scores):
+                infection_scores[owner_id - 1] += region.infection()
+
+        # check if pandemic has been eradicated
+        infection_total = sum(infection_scores)
+        if infection_total == 0:
+            for region_id in self.regdata_dict:
+                region = Region(region_id, self.game_id)
+                if region.is_quarantined():
+                    region.set_quarantine(False)
+            self.notifications.append("The pandemic has been eradicated!", 2)
+            self.state = 0
+            return
+        
+        # print diplomacy log messages
+        cure_percentage = float(self.cure_current / self.cure_threshold)
+        cure_percentage = round(cure_percentage, 2)
+        if infection_total != 0:
+            if cure_percentage >= 0.5:
+                self.notifications.append(f"Pandemic intensify value: {self.intensify}", 2)
+                self.notifications.append(f"Pandemic spread value: {self.spread}", 2)
+            if cure_percentage >= 0.75:
+                for nation in self.nation_table:
+                    score = infection_scores[int(nation.id) - 1]
+                    self.notifications.append(f"{nation.name} pandemic infection score: {score}", 2)
+            if cure_percentage < 1:
+                self.notifications.append(f"Pandemic cure research progress: {self.cure_current}/{self.cure_threshold}", 2)
+            else:
+                self.notifications.append(f"Pandemic cure research has been completed! The pandemic is now in decline.", 2)
+
+        self.state = 1
 
     def export(self) -> dict:
         
