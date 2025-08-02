@@ -1576,7 +1576,21 @@ class FaustianBargain(Event):
         self.duration = 99999
 
     def run_after(self) -> None:
-        pass
+        
+        # identify collaborator
+        for nation in self.nation_table:
+            if "Faustian Bargain" in nation.tags:
+                break
+        
+        # check if collaborator has been defeated (no capital)
+        if nation.improvement_counts["Capital"] == 0:
+            del nation.tags["Faustian Bargain"]
+            self.nation_table.save(nation)
+            self.state = 0
+            self.notifications.append(f"{self.name} event has ended.", 2)
+            return
+
+        self.state = 1
 
     def has_conditions_met(self) -> bool:
 
