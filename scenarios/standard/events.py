@@ -60,6 +60,12 @@ class Event:
             "Expiration": self.expire_turn
         }
     
+    def run_before(self):
+        pass
+
+    def run_after(self):
+        pass
+    
     def _gain_free_research(self, research_name: str, nation: Nation) -> bool:
         """
         Returns updated playerdata_List and a bool that is True if the research was valid, False otherwise.
@@ -1172,11 +1178,60 @@ class ForeignInvasion(Event):
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
 
-    def run_before(self) -> None:
-        pass
+    def run_before(self, actions_dict: dict[str, list]) -> None:
+        
+        # generate movement actions
+        destination_dict = {}
+        for region_id in self.regdata_dict:
+            region = Region(region_id, self.game_id)
+            region_unit = Unit(region_id, self.game_id)
+            if region_unit.name is None or region_unit.owner_id != 99:
+                continue
+            ending_region_id, priority = self._foreign_invasion_calculate_target_region(list(region.adjacent_regions.keys()), destination_dict)
+            destination_dict[ending_region_id] = priority
+            if ending_region_id is None:
+                continue
+            # foreign invasion always moves each unit one region at a time
+            movement_action_str = f"Move {region_id}-{ending_region_id}"
+            actions_dict["UnitMoveAction"].append(actions.UnitMoveAction(self.game_id, "99", movement_action_str))
+        
+        # generate deployment actions
+        if self.current_turn_num % 4 == 0:
+            self.notifications.append("The Foreign Invasion has received reinforcements.", 2)
+            for region_id in self.regdata_dict:
+                region = Region(region_id, self.game_id)
+                if region.owner_id == 99 and region.occupier_id == 0:
+                    unit_name = self._foreign_invasion_determine_unit()
+                    deploy_action_str = f"Deploy {unit_name} {region_id}"
+                    actions_dict["UnitDeployAction"].append(actions.UnitDeployAction(self.game_id, "99", deploy_action_str))
+
+        self.state = 1
 
     def run_after(self) -> None:
-        pass
+        
+        foreign_invasion_nation = self.nation_table.get("99")
+                    
+        # Foreign Invasion ends if no remaining units
+        invasion_unit_count = 0
+        for unit_name, count in foreign_invasion_nation.unit_counts.items():
+            invasion_unit_count += count
+        if invasion_unit_count == 0:
+            self._foreign_invasion_end(foreign_invasion_nation)
+            self.nation_table.save(foreign_invasion_nation)
+            self.state = 0
+        
+        # Foreign Invasion ends if no unoccupied reinforcement regions
+        invasion_unoccupied_count = 0
+        for region_id in self.regdata_dict:
+            region = Region(region_id, self.game_id)
+            if region.owner_id == 99 and region.occupier_id == 0:
+                invasion_unoccupied_count += 1
+        if invasion_unoccupied_count == 0:
+            self._foreign_invasion_end(self.game_id, foreign_invasion_nation)
+            self.nation_table.save(foreign_invasion_nation)
+            self.state = 0
+
+        self.state = 1
 
     def has_conditions_met(self) -> bool:
 
@@ -1232,6 +1287,8 @@ class ForeignInvasion(Event):
         Function that contains Foreign Invasion attack logic.
         Designed to find path of least resistance but has no care for the health of its own units.
         """
+
+        # TODO: make movement smarter as it currently can only "see" one region away so the invasion is stumbling around blind
         
         target_region_id = None
         target_region_health = 0

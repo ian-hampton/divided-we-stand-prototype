@@ -79,7 +79,7 @@ def resolve_current_event(game_id: str) -> None:
     with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-def resolve_active_events(game_id: str, run_before_actions: bool):
+def resolve_active_events(game_id: str, actions_dict=None):
     
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -91,10 +91,9 @@ def resolve_active_events(game_id: str, run_before_actions: bool):
 
         event = events.load_event(game_id, event_name, event_data, temp = True)
 
-        if run_before_actions and hasattr(event, 'run_before') and callable(event.run_before):
-            event.run_before()
-        
-        if run_before_actions and hasattr(event, 'run_after') and callable(event.run_after):
+        if actions_dict is not None:
+            event.run_before(actions_dict)
+        else:
             event.run_after()
 
         match event.state:
