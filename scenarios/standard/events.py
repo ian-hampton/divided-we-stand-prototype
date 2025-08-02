@@ -5,11 +5,14 @@ from app import core
 from app import actions
 from app.nationdata import Nation
 from app.nationdata import NationTable
+from app.alliance import Alliance
+from app.alliance import AllianceTable
 from app.war import WarTable
 from app.notifications import Notifications
 from app.region import Region
 from app.improvement import Improvement
 from app.unit import Unit
+from app import palette
 
 
 class Event:
@@ -28,6 +31,7 @@ class Event:
         if not temp:
             self.game_id = game_id
             self.nation_table = NationTable(self.game_id)
+            self.alliance_table = AllianceTable(self.game_id)
             self.war_table = WarTable(self.game_id)
             self.notifications = Notifications(self.game_id)
             self.current_turn_num = core.get_current_turn_num(self.game_id)
@@ -42,9 +46,9 @@ class Event:
         #  - do not save any changes to active_games.json, they will be lost!
 
         # EVENT STATES
-        #  "Current"     event is pending input from players
-        #  "Active"      event is ongoing but does not require attention from players
-        #  "Inactive"    event is completed and is ready to be archived
+        #  2  event is pending input from players
+        #  1  event is active and does not require attention from players
+        #  0  event is completed and ready to be archived
 
     def export(self) -> dict:
         
@@ -224,7 +228,7 @@ class Assassination(Event):
                 }
                 nation.tags["Assassination Scapegoat"] = new_tag
                 self.state = 1
-                self.duration = self.current_turn_num + self.duration + 1
+                self.expire_turn = self.current_turn_num + self.duration + 1
 
         self.nation_table.save(nation)
     
@@ -253,7 +257,7 @@ class CorruptionScandal(Event):
         self.nation_table.save(victim_nation)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -430,7 +434,7 @@ class DiplomaticSummit(Event):
             self.nation_table.save(nation)
         
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -609,7 +613,7 @@ class SecurityBreach(Event):
         self.nation_table.save(victim_nation)
         
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -625,7 +629,7 @@ class MarketInflation(Event):
 
     def activate(self):
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -637,7 +641,7 @@ class MarketRecession(Event):
 
     def activate(self):
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -848,7 +852,7 @@ class WidespreadCivilDisorder(Event):
             self.nation_table.save(nation)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -891,7 +895,7 @@ class Embargo(Event):
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 2)
         
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1     
+        self.expire_turn = self.current_turn_num + self.duration + 1     
 
     def has_conditions_met(self) -> bool:
         return True
@@ -931,7 +935,7 @@ class Humiliation(Event):
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 2)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1 
+        self.expire_turn = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
         return True
@@ -970,7 +974,7 @@ class ForeignInvestment(Event):
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 2)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1 
+        self.expire_turn = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
         return True
@@ -1011,7 +1015,7 @@ class NominateMediator(Event):
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 2)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1 
+        self.expire_turn = self.current_turn_num + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
         return True
@@ -1066,7 +1070,7 @@ class SharedFate(Event):
             self.notifications.append(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 2)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1 
+        self.duration = 99999
 
     def has_conditions_met(self) -> bool:
         return True
@@ -1107,7 +1111,7 @@ class ThreatContainment(Event):
         self.notifications.append(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 2)
 
         self.state = 1
-        self.duration = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -1118,7 +1122,55 @@ class ForeignInvasion(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
-        pass
+        
+        self.notifications.append(f"New Event: {self.name}!", 2)
+
+        region_id_list = list(self.regdata_dict.keys())
+        invasion_point_id = None
+
+        while True:
+            
+            invasion_point_id = random.choice(region_id_list)
+            region = Region(invasion_point_id, self.game_id)
+            region_improvement = Improvement(invasion_point_id, self.game_id)
+            
+            is_near_capital = any(Improvement(adj_id, self.game_id).name == "Capital" for adj_id in region.adjacent_regions)
+            if region.is_edge and region_improvement.name != "Capital" and not is_near_capital:
+                break
+        
+        color_candidates = list(palette.normal_to_occupied.keys())
+        for nation in self.nation_table:
+            color_candidates.remove(nation.color)
+
+        self.nation_table.create("99", "NULL")
+        foreign_invasion_nation = self.nation_table.get("99")
+        foreign_invasion_nation.color = random.choice(color_candidates)
+        foreign_invasion_nation.name = "Foreign Adversary"
+        foreign_invasion_nation.gov = "Foreign Nation"
+        foreign_invasion_nation.fp = "Hostile"
+        self.nation_table.save(foreign_invasion_nation)
+
+        # note - all war justifications are set to null because this is not a conventional war
+        war = self.war_table.create("99", "1", "NULL", [])
+        for nation in self.nation_table:
+            if nation.id == "1":
+                combatant = war.get_combatant(nation.id)
+                combatant.justification = "NULL"
+                war.save_combatant(combatant)
+            else:
+                combatant = war.add_combatant(nation, "Secondary Defender", "N/A")
+                combatant.justification = "NULL"
+                war.save_combatant(combatant)
+        self.war_table.save(war)
+
+        unit_name = self._foreign_invasion_determine_unit()
+        invasion_point = Region(invasion_point_id, self.game_id)
+        self._foreign_invasion_initial_spawn(invasion_point_id, unit_name)
+        for adj_id in invasion_point.adjacent_regions:
+            self._foreign_invasion_initial_spawn(adj_id, unit_name)
+        
+        self.state = 1
+        self.expire_turn = self.current_turn_num + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -1129,6 +1181,45 @@ class ForeignInvasion(Event):
             return False
         
         return True
+    
+    def _foreign_invasion_determine_unit(self) -> str:
+
+        if self.current_turn_num >= 40:
+            return "Main Battle Tank"
+        elif self.current_turn_num >= 32:
+            return "Special Forces"
+        elif self.current_turn_num >= 24:
+            return "Mechanized Infantry"
+        
+        return "Infantry"
+    
+    def _foreign_invasion_initial_spawn(self, region_id: str, unit_name: str) -> None:
+
+        region = Region(region_id, self.game_id)
+        region_improvement = Improvement(region_id, self.game_id)
+        region_unit = Unit(region_id, self.game_id)
+
+        if region_unit.name is not None:
+            # remove old unit
+            temp = self.nation_table.get(str(region_unit.owner_id))
+            temp.unit_counts[region_unit.name] -= 1
+            region_unit.clear()
+            self.nation_table.save(temp)
+
+        if region_improvement.name is not None:
+            # remove old improvement
+            temp = self.nation_table.get(str(region_improvement.owner_id))
+            temp.improvement_counts[region_improvement.name] -= 1
+            region_improvement.clear()
+            self.nation_table.save(temp)
+
+        region.set_owner_id(99)
+        region.set_occupier_id(0)
+        region_unit.set_unit(self.unit_name, 99)
+
+        foreign_nation = self.nation_table.get("99")
+        foreign_nation.unit_counts[unit_name] += 1
+        self.nation_table.save(foreign_nation)
 
 class Pandemic(Event):
     
@@ -1141,10 +1232,36 @@ class Pandemic(Event):
         self.closed_borders: list = event_data.get("Closed Borders List", [])
 
     def activate(self):
-        pass
+        
+        self.notifications.append(f"New Event: {self.name}!", 2)
+            
+        self.intensify = random.randint(3, 9)
+        self.spread = random.randint(3, 9)
+        self.cure_current = 0
+        self.cure_threshold = len(self.nation_table) * 50
+        self.closed_borders = []
+        origin_region_id = random.choice(list(self.regdata_dict.keys()))
+        
+        region = Region(origin_region_id, self.game_id)
+        region.add_infection()
+        
+        self.state = 1
+        self.expire_turn = 99999
 
     def export(self) -> dict:
-        pass
+        
+        return {
+            "Name": self.name,
+            "Type": self.type,
+            "Duration": self.duration,
+            "Targets": self.targets,
+            "Expiration": self.expire_turn,
+            "Intensify Value": self.intensify,
+            "Spread Value": self.spread,
+            "Completed Cure Research": self.cure_current,
+            "Needed Cure Research": self.cure_threshold,
+            "Closed Borders List": self.closed_borders
+        }
 
     def has_conditions_met(self) -> bool:
 
@@ -1162,7 +1279,56 @@ class FaustianBargain(Event):
         Event.__init__(self, game_id, event_data)
 
     def activate(self):
-        pass
+        
+        self.notifications.append(f"New Event: {self.name}!", 2)
+        for nation in self.nation_table:
+            self.targets.append(nation.id)
+        
+        self.state = 2
+
+    def resolve(self):
+
+        candidates_list = []
+        
+        self.choices = ["Accept", "Decline"]
+        print(f"Available Options: {" or ".join(self.choices)}")
+        decision_dict = self._collect_basic_decisions()
+
+        for player_id, choice in decision_dict.items():
+            nation = self.nation_table.get(player_id)
+            if choice == "Accept" and nation.improvement_counts["Capital"] > 0:
+                candidates_list.append(player_id)
+            else:
+                nation.update_stockpile("Political Power", 5)
+            self.nation_table.save(nation)
+
+        if len(candidates_list) == 0:
+            self.notifications.append("No nation took the Faustian Bargain. collaborate with the foreign nation.", 2)
+            self.state = 0
+            return
+        
+        random.shuffle(candidates_list)
+        nation_id = candidates_list.pop()
+        nation = self.nation_table.get(nation_id)
+
+        new_tag = {
+            "Expire Turn": 99999,
+            "No Agenda Research": True
+        }
+        for resource_name in nation._resources:
+            if resource_name not in ["Political Power", "Military Capacity"]:
+                new_tag[f"{resource_name} Rate"] = 20
+        nation.tags["Faustian Bargain"] = new_tag
+        self.nation_table.save(nation)
+
+        for alliance in self.alliance_table:
+            if nation.name in alliance.current_members:
+                alliance.remove_member(nation.name)
+
+        self.notifications.append(f"{nation.name} took the Faustian Bargain and will collaborate with the foreign nation.", 2)
+
+        self.state = 1
+        self.duration = 99999
 
     def has_conditions_met(self) -> bool:
 
