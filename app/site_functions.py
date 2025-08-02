@@ -312,7 +312,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # update active game records
     core.update_turn_num(game_id)
-    events.filter_events()
+    events.filter_events(game_id)
     nation_table.reload()
     nation_table.check_tags()
     with open('active_games.json', 'r') as json_file:

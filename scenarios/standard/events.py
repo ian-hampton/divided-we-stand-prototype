@@ -1216,8 +1216,7 @@ class ForeignInvasion(Event):
         for unit_name, count in foreign_invasion_nation.unit_counts.items():
             invasion_unit_count += count
         if invasion_unit_count == 0:
-            self._foreign_invasion_end(foreign_invasion_nation)
-            self.nation_table.save(foreign_invasion_nation)
+            self._foreign_invasion_end()
             self.state = 0
             return
         
@@ -1228,8 +1227,7 @@ class ForeignInvasion(Event):
             if region.owner_id == 99 and region.occupier_id == 0:
                 invasion_unoccupied_count += 1
         if invasion_unoccupied_count == 0:
-            self._foreign_invasion_end(self.game_id, foreign_invasion_nation)
-            self.nation_table.save(foreign_invasion_nation)
+            self._foreign_invasion_end()
             self.state = 0
             return
 
@@ -1355,7 +1353,9 @@ class ForeignInvasion(Event):
         
         return target_region_id, target_region_priority
 
-    def _foreign_invasion_end(self, foreign_invasion_nation: Nation):
+    def _foreign_invasion_end(self):
+
+        foreign_invasion_nation = self.nation_table.get("99")
     
         for region_id in self.regdata_dict:
             
@@ -1376,6 +1376,8 @@ class ForeignInvasion(Event):
             war.end = self.current_turn_num
             war.outcome = "White Peace"
             self.war_table.save(war)
+
+        self.nation_table.save(foreign_invasion_nation)
 
 class Pandemic(Event):
     
@@ -1654,7 +1656,6 @@ def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=F
         event_data = event_scenario_dict[event_name]
 
     return events[event_name](game_id, event_name, event_data, temp)
-        
     
 def _is_first_event(game_id: str) -> bool:
 
