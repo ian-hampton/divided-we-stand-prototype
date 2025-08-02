@@ -2952,7 +2952,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
                 continue
 
             # target region checks
-            if target_region.owner_id == 0:
+            if target_region.owner_id == 0 and action.id != "99":
                 nation.action_log.append(f"Failed to move {target_region_unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
                 nation_table.save(nation)
                 continue

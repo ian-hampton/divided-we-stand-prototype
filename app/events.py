@@ -35,7 +35,7 @@ def trigger_event(game_id: str) -> None:
         event_list_filtered.append(event_name)
 
     # initiate random event
-    event_name = random.choice(event_list)
+    event_name = random.choice(event_list_filtered)
     print(f"Triggering {event_name} event...")
     event = events.load_event(game_id, event_name, event_data=None)
     event.activate()
