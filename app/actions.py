@@ -576,7 +576,7 @@ class UnitMoveAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad starting region id.""")
             return False
         
-        for i, region_id in enumerate(self.target_region_ids):
+        for region_id in self.target_region_ids:
             region_id = _check_region_id(self.game_id, region_id)
             if region_id is None:
                 print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad destination region id: {region_id}.""")
@@ -754,30 +754,39 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         if action_str == "":
             return
         
-        action_key = _get_action_key(game_id, action_str)
+        action_key = _get_action_key(action_str)
         
         if action_key in actions:
             return actions[action_key](game_id, nation_id, action_str)
         
+        scenario_action = _check_scenario_actions(game_id, nation_id, action_str)
+        if scenario_action is not None:
+            return scenario_action
+        
         print(f"""Action "{action_str}" submitted by player {nation_id} is invalid. Unrecognized action type.""")
         action_str = input("Re-enter action or hit enter to skip: ")
 
-def _get_action_key(game_id: str, action_str: str) -> str:
-
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+def _get_action_key(action_str: str) -> str:
     
     words = action_str.strip().split()
     action_key = words[0].title()
+
     if action_key == "Alliance" and len(words) >= 2:
         return f"{words[0].title()} {words[1].title()}"
     elif action_key == "White" and len(words) >= 2:
-        return f"{words[0].title()} {words[1].title()}"
-
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    extra_actions = importlib.import_module(f"scenarios.{scenario}.actions")
+        return "White Peace"
 
     return action_key
+
+def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> any:
+
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    scenario_actions = importlib.import_module(f"scenarios.{scenario}.actions")
+
+    return scenario_actions._create_action(game_id, nation_id, action_str)
 
 def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
     
@@ -1824,7 +1833,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
 
         nation = nation_table.get(action.id)
 
-        # "Event Host Peace Talks [ID]"
+        # "Host Peace Talks [Truce ID]"
         if "Host Peace Talks" in action.action_str:
 
             # mediator check
@@ -1870,7 +1879,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
                     nation.action_log.append(f"Used Host Peace Talks on Truce #{truce[0]}.")
                     break
         
-        # "Event Cure Research [Count]"
+        # "Cure Research [Count]"
         elif "Cure Research" in action.action_str:
             
             # required event check
@@ -1895,7 +1904,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             active_games_dict[game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
             nation.action_log.append(f"Used Cure Research to spend {count} technology in exchange for {research_amount} cure progress.")
 
-        # "Event Fundraise [Count]"
+        # "Fundraise [Count]"
         elif "Fundraise" in action.action_str:
             
             # required event check
@@ -1920,7 +1929,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             active_games_dict[game_id]['Active Events']["Pandemic"]["Completed Cure Research"] += research_amount
             nation.action_log.append(f"Used Fundraise to spend {count} dollars in exchange for {research_amount} cure progress.")
 
-        # "Event Inspect [Region ID]"
+        # "Inspect [Region ID]"
         elif "Inspect" in action.action_str:
             
             # required event check
@@ -1944,7 +1953,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             region = Region(region_id, game_id)
             nation.action_log.append(f"Used Inspect action for 5 dollars. Region {region_id} has an infection score of {region.infection()}.")
 
-        # "Event Create Quarantine [Region ID]"
+        # "Quarantine Create [Region ID]"
         elif "Create Quarantine" in action.action_str:
             
             # required event check
@@ -1968,7 +1977,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             region.set_quarantine()
             nation.action_log.append(f"Quarantined {region_id} for 1 political power.")
 
-        # "Event End Quarantine [Region ID]"
+        # "Quarantine End [Region ID]"
         elif "End Quarantine" in action.action_str:
             
             # required event check
@@ -1992,7 +2001,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             region.set_quarantine(False)
             nation.action_log.append(f"Ended quarantine in {region_id} for 1 political power.")
 
-        # "Event Open Borders"
+        # "Open Borders"
         elif "Open Borders" in action.action_str:
             
             # required event check
@@ -2014,7 +2023,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             active_games_dict[game_id]['Active Events']["Pandemic"]["Closed Borders List"].remove(nation.id)
             nation.action_log.append("Spent 10 political power to Open Borders.")
 
-        # "Event Close Borders"
+        # "Close Borders"
         elif "Close Borders" in action.action_str:
             
             # required event check
@@ -2036,7 +2045,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             active_games_dict[game_id]['Active Events']["Pandemic"]["Closed Borders List"].append(nation.id)
             nation.action_log.append("Spent 10 political power to Close Borders.")
 
-        # Event Outsource Technology [Research Name]
+        # Outsource Technology [Research Name]
         elif "Outsource Technology" in action.action_str:
             
             # collaborator check
@@ -2077,7 +2086,7 @@ def resolve_event_actions(game_id: str, actions_list: list[EventAction]) -> None
             nation.award_research_bonus(research_name)
             nation.action_log.append(f"Used Outsource Technology to research {research_name}.")
 
-        # Event Military Reinforcements [Region ID #1],[Region ID #2]
+        # Military Reinforcements [Region ID #1] [Region ID #2]
         elif "Military Reinforcements" in action.action_str:
             
             # collaborator check
