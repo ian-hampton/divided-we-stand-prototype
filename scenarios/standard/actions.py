@@ -352,10 +352,13 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 
     nation_table = NationTable(game_id)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        return
 
     event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
@@ -389,10 +392,13 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
 def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
 
     nation_table = NationTable(game_id)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        return
 
     event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
@@ -449,7 +455,7 @@ def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegio
         region = Region(action.target_region, game_id)
         nation.action_log.append(f"Used Inspect action for 5 dollars. Region {action.target_region} has an infection score of {region.infection()}.")
 
-    nation_table.save(nation)
+        nation_table.save(nation)
 
 def resolve_quarantine_create_actions(game_id: str, actions_list: list[QuarantineCreateAction]) -> None:
 
@@ -512,10 +518,13 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
 def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
 
     nation_table = NationTable(game_id)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        return
 
     event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
@@ -549,10 +558,13 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
 def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
 
     nation_table = NationTable(game_id)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        return
 
     event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)

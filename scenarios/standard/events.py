@@ -62,10 +62,10 @@ class Event:
         }
     
     def run_before(self, actions_dict: dict[str, list]) -> None:
-        pass
+        self.state = 1
 
     def run_after(self) -> None:
-        pass
+        self.state = 1
     
     def _gain_free_research(self, research_name: str, nation: Nation) -> bool:
         """
