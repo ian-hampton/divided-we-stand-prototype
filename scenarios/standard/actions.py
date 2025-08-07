@@ -5,6 +5,7 @@ class HostPeaceTalksAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Nominate Mediator"
         words = action_str.strip().split()
 
         self.truce_id = words[3].upper() if len(words) == 4 else None
@@ -24,6 +25,7 @@ class CureResearchAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
         words = action_str.strip().split()
 
         self.amount = int(words[2]) if len(words) == 3 else None
@@ -43,6 +45,7 @@ class CureFundraiseAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
         words = action_str.strip().split()
 
         self.amount = int(words[2]) if len(words) == 3 else None
@@ -62,6 +65,7 @@ class InspectRegionAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
         words = action_str.strip().split()
 
         self.target_region = words[1].upper() if len(words) == 2 else None
@@ -88,6 +92,7 @@ class QuarantineCreateAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
         words = action_str.strip().split()
 
         self.target_region = words[2].upper() if len(words) == 3 else None
@@ -114,6 +119,7 @@ class QuarantineEndAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
         words = action_str.strip().split()
 
         self.target_region = words[2].upper() if len(words) == 3 else None
@@ -140,6 +146,7 @@ class BordersOpenAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
 
     def is_valid(self) -> bool:
 
@@ -155,6 +162,7 @@ class BordersCloseAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Pandemic"
 
     def is_valid(self) -> bool:
 
@@ -173,6 +181,7 @@ class OutsourceTechnologyAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Faustian Bargain"
         words = action_str.strip().split()
 
         self.research_name = " ".join(words[2:]) if len(words) > 2 else None
@@ -199,6 +208,7 @@ class MilitaryReinforcementsAction:
         self.id = nation_id
         self.game_id = game_id
         self.action_str = action_str
+        self.event_name = "Faustian Bargain"
         words = action_str.strip().split()
 
         self.target_region_ids = [region_id.upper() for region_id in words[2:]] if len(words) > 2 else None
