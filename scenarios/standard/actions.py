@@ -1,3 +1,5 @@
+import json
+
 class HostPeaceTalksAction:
 
     def __init__(self, game_id: str, nation_id: str, action_str: str):
@@ -276,3 +278,76 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         return actions[action_key](game_id, nation_id, action_str)
     
     return None
+
+def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
+    
+    resolve_peace_talk_actions(game_id, actions_dict.get("Host Peace Talks", []))
+    resolve_cure_research_actions(game_id, actions_dict.get("Cure Research", []))
+    resolve_cure_fundraise_actions(game_id, actions_dict.get("Cure Fundraise", []))
+    resolve_inspect_region_actions(game_id, actions_dict.get("Inspect", []))
+    resolve_quarantine_create_actions(game_id, actions_dict.get("Quarantine Create", []))
+    resolve_quarantine_end_actions(game_id, actions_dict.get("Quarantine End", []))
+    resolve_open_borders_actions(game_id, actions_dict.get("Open Borders", []))
+    resolve_close_borders_actions(game_id, actions_dict.get("Close Borders", []))
+    resolve_outsource_technology_actions(game_id, actions_dict.get("Outsource Technology", []))
+    resolve_military_reinforcements_actions(game_id, actions_dict.get("Military Reinforcements", []))
+
+def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegionAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_quarantine_create_actions(game_id: str, actions_list: list[QuarantineCreateAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEndAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_outsource_technology_actions(game_id: str, actions_list: list[OutsourceTechnologyAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+
+def resolve_military_reinforcements_actions(game_id: str, actions_list: list[MilitaryReinforcementsAction]) -> None:
+
+    # get game data
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)

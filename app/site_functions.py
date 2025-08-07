@@ -4,8 +4,10 @@ import random
 import shutil
 import os
 import copy
+import importlib
 from datetime import datetime
 from operator import itemgetter
+from collections import defaultdict
 
 from app import core
 from app import palette
@@ -196,42 +198,26 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
     
-    notifications = Notifications(game_id)
-    notifications.clear()
+    # get game data
     current_turn_num = core.get_current_turn_num(game_id)
-    
-    actions_dict = {
-        "AllianceCreateAction": [],
-        "AllianceJoinAction": [],
-        "AllianceKickAction": [],
-        "AllianceLeaveAction": [],
-        "ClaimAction": [],
-        "CrimeSyndicateAction": [],
-        "EventAction": [],
-        "ImprovementBuildAction": [],
-        "ImprovementRemoveAction": [],
-        "MarketBuyAction": [],
-        "MarketSellAction": [],
-        "MissileMakeAction": [],
-        "MissileLaunchAction": [],
-        "RepublicAction": [],
-        "ResearchAction": [],
-        "SurrenderAction": [],
-        "UnitDeployAction": [],
-        "UnitDisbandAction": [],
-        "UnitMoveAction": [],
-        "WarAction": [],
-        "WarJoinAction": [],
-        "WhitePeaceAction": []
-    }
+    with open("active_games.json", 'r') as json_file:
+        active_games_dict = json.load(json_file)
+    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
+    scenario_actions = importlib.import_module(f"scenarios.{scenario}.actions")
 
-    # sort actions
+    # sort and validate actions
+    actions_dict = defaultdict(list)
     for nation_id, actions_list in contents_dict.items():
         for action_str in actions_list:
             action = actions.validate_action(game_id, nation_id, action_str)
-            if action is not None:
-                class_name = type(action).__name__
-                actions_dict[class_name].append(action)
+            if action is None:
+                continue
+            class_name = type(action).__name__
+            actions_dict[class_name].append(action)
+
+    # clear notifications
+    notifications = Notifications(game_id)
+    notifications.clear()
 
     # prompt for missing war justifications
     checks.prompt_for_missing_war_justifications(game_id)
@@ -242,31 +228,33 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # resolve public actions
     actions.resolve_trade_actions(game_id)
     print("Resolving public actions...")
-    actions.resolve_peace_actions(game_id, actions_dict["SurrenderAction"], actions_dict["WhitePeaceAction"])
-    actions.resolve_research_actions(game_id, actions_dict["ResearchAction"])
-    actions.resolve_alliance_leave_actions(game_id, actions_dict["AllianceLeaveAction"])
-    actions.resolve_alliance_kick_actions(game_id, actions_dict["AllianceKickAction"])
-    actions.resolve_alliance_create_actions(game_id, actions_dict["AllianceCreateAction"])
-    actions.resolve_alliance_join_actions(game_id, actions_dict["AllianceJoinAction"])
-    actions.resolve_claim_actions(game_id, actions_dict["ClaimAction"])
-    actions.resolve_improvement_remove_actions(game_id, actions_dict["ImprovementRemoveAction"])
-    actions.resolve_improvement_build_actions(game_id, actions_dict["ImprovementBuildAction"])
-    actions.resolve_missile_make_actions(game_id, actions_dict["MissileMakeAction"])
-    actions.resolve_government_actions(game_id, actions_dict["RepublicAction"])
-    actions.resolve_event_actions(game_id, actions_dict["EventAction"])
-    market_results = actions.resolve_market_actions(game_id, actions_dict["CrimeSyndicateAction"], actions_dict["MarketBuyAction"], actions_dict["MarketSellAction"])
+    actions.resolve_peace_actions(game_id, actions_dict.get("SurrenderAction", []), actions_dict.get("WhitePeaceAction", []))
+    actions.resolve_research_actions(game_id, actions_dict.get("ResearchAction", []))
+    actions.resolve_alliance_leave_actions(game_id, actions_dict.get("AllianceLeaveAction", []))
+    actions.resolve_alliance_kick_actions(game_id, actions_dict.get("AllianceKickAction", []))
+    actions.resolve_alliance_create_actions(game_id, actions_dict.get("AllianceCreateAction", []))
+    actions.resolve_alliance_join_actions(game_id, actions_dict.get("AllianceJoinAction", []))
+    actions.resolve_claim_actions(game_id, actions_dict.get("ClaimAction", []))
+    actions.resolve_improvement_remove_actions(game_id, actions_dict.get("ImprovementRemoveAction", []))
+    actions.resolve_improvement_build_actions(game_id, actions_dict.get("ImprovementBuildAction", []))
+    actions.resolve_missile_make_actions(game_id, actions_dict.get("MissileMakeAction", []))
+    actions.resolve_government_actions(game_id, actions_dict.get("RepublicAction", []))
+    market_results = actions.resolve_market_actions(game_id, actions_dict.get("CrimeSyndicateAction", []), actions_dict.get("MarketBuyAction", []), actions_dict.get("MarketSellAction", []))
 
     # update income step
     checks.update_income(game_id)
 
+    # resolve event actions
+    scenario_actions.resolve_event_actions(game_id, actions_dict)
+
     # resolve private actions
     print("Resolving private actions...")
-    actions.resolve_unit_disband_actions(game_id, actions_dict["UnitDisbandAction"])
-    actions.resolve_unit_deployment_actions(game_id, actions_dict["UnitDeployAction"])
-    actions.resolve_war_actions(game_id, actions_dict["WarAction"])
-    actions.resolve_war_join_actions(game_id, actions_dict["WarJoinAction"])
-    actions.resolve_missile_launch_actions(game_id, actions_dict["MissileLaunchAction"])
-    actions.resolve_unit_move_actions(game_id, actions_dict["UnitMoveAction"])
+    actions.resolve_unit_disband_actions(game_id, actions_dict.get("UnitDisbandAction", []))
+    actions.resolve_unit_deployment_actions(game_id, actions_dict.get("UnitDeployAction", []))
+    actions.resolve_war_actions(game_id, actions_dict.get("WarAction", []))
+    actions.resolve_war_join_actions(game_id, actions_dict.get("WarJoinAction", []))
+    actions.resolve_missile_launch_actions(game_id, actions_dict.get("MissileLaunchAction", []))
+    actions.resolve_unit_move_actions(game_id, actions_dict.get("UnitMoveAction", []))
 
     # oppertunity to resolve active events
     events.resolve_active_events(game_id)
