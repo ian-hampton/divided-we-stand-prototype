@@ -1389,7 +1389,7 @@ class Pandemic(Event):
         self.intensify: int = event_data.get("Intensify Value", -1)
         self.spread: int = event_data.get("Spread Value", -1)
         self.cure_current: int = event_data.get("Completed Cure Research", -1)
-        self.cure_threshold: int = event_data.get("Needed Cure Research", -1)
+        self.cure_threshold: int = event_data.get("Needed Cure Research", 99999)
         self.closed_borders: list = event_data.get("Closed Borders List", [])
 
     def activate(self):
@@ -1462,15 +1462,17 @@ class Pandemic(Event):
                             adjacent_region.add_infection(1)
 
         # sum up total infection scores
+        unowned_infection = 0
         infection_scores = [0] * len(self.nation_table)
         for region_id in self.regdata_dict:
             region = Region(region_id, self.game_id)
             owner_id = region.owner_id
             if owner_id != 0 and owner_id <= len(infection_scores):
                 infection_scores[owner_id - 1] += region.infection()
-
+            else:
+                unowned_infection += region.infection()
         # check if pandemic has been eradicated
-        infection_total = sum(infection_scores)
+        infection_total = sum(infection_scores) + unowned_infection
         if infection_total == 0:
             for region_id in self.regdata_dict:
                 region = Region(region_id, self.game_id)

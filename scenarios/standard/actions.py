@@ -245,54 +245,39 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         An action class or None if no match found.
     """
 
-    words = action_str.strip().split()
-    action_key = words[0].title()
-
-    if action_key == "Host" and len(words) >= 3:
-        action_key = "Host Peace Talks"
-    elif action_key == "Cure" and len(words) >= 2:
-        action_key = f"{words[0].title()} {words[1].title()}"
-    elif action_key == "Quarantine" and len(words) >= 2:
-        action_key = f"{words[0].title()} {words[1].title()}"
-    elif action_key == "Open" and len(words) >= 2:
-        action_key = "Open Borders"
-    elif action_key == "Close" and len(words) >= 2:
-        action_key = "Close Borders"
-    elif action_key == "Outsource" and len(words) >= 2:
-        action_key = "Outsource Technology"
-    elif action_key == "Military" and len(words) >= 2:
-        action_key = "Military Reinforcements"
-
     actions = {
-        "Host Peace Talks": HostPeaceTalksAction,
-        "Cure Research": CureResearchAction,
-        "Cure Fundraise": CureFundraiseAction,
-        "Inspect": InspectRegionAction,
-        "Quarantine Create": QuarantineCreateAction,
-        "Quarantine End": QuarantineEndAction,
-        "Open Borders": BordersOpenAction,
-        "Close Borders": BordersCloseAction,
-        "Outsource Technology": OutsourceTechnologyAction,
-        "Military Reinforcements": MilitaryReinforcementsAction
+        "host peace talks": HostPeaceTalksAction,
+        "cure research": CureResearchAction,
+        "cure fundraise": CureFundraiseAction,
+        "inspect": InspectRegionAction,
+        "quarantine create": QuarantineCreateAction,
+        "quarantine end": QuarantineEndAction,
+        "open borders": BordersOpenAction,
+        "close borders": BordersCloseAction,
+        "outsource technology": OutsourceTechnologyAction,
+        "military reinforcements": MilitaryReinforcementsAction
     }
 
-    if action_key in actions:
-        return actions[action_key](game_id, nation_id, action_str)
+    action_str = action_str.strip().lower()
+
+    for action_key in sorted(actions.keys(), key=len, reverse=True):
+        if action_str.startswith(action_key):
+            return actions[action_key](game_id, nation_id, action_str)
     
     return None
 
 def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
     
-    resolve_peace_talk_actions(game_id, actions_dict.get("Host Peace Talks", []))
-    resolve_cure_research_actions(game_id, actions_dict.get("Cure Research", []))
-    resolve_cure_fundraise_actions(game_id, actions_dict.get("Cure Fundraise", []))
-    resolve_inspect_region_actions(game_id, actions_dict.get("Inspect", []))
-    resolve_quarantine_create_actions(game_id, actions_dict.get("Quarantine Create", []))
-    resolve_quarantine_end_actions(game_id, actions_dict.get("Quarantine End", []))
-    resolve_open_borders_actions(game_id, actions_dict.get("Open Borders", []))
-    resolve_close_borders_actions(game_id, actions_dict.get("Close Borders", []))
-    resolve_outsource_technology_actions(game_id, actions_dict.get("Outsource Technology", []))
-    resolve_military_reinforcements_actions(game_id, actions_dict.get("Military Reinforcements", []))
+    resolve_peace_talk_actions(game_id, actions_dict.get("HostPeaceTalksAction", []))
+    resolve_cure_research_actions(game_id, actions_dict.get("CureResearchAction", []))
+    resolve_cure_fundraise_actions(game_id, actions_dict.get("CureFundraiseAction", []))
+    resolve_inspect_region_actions(game_id, actions_dict.get("InspectRegionAction", []))
+    resolve_quarantine_create_actions(game_id, actions_dict.get("QuarantineCreateAction", []))
+    resolve_quarantine_end_actions(game_id, actions_dict.get("QuarantineEndAction", []))
+    resolve_open_borders_actions(game_id, actions_dict.get("BordersOpenAction", []))
+    resolve_close_borders_actions(game_id, actions_dict.get("BordersCloseAction", []))
+    resolve_outsource_technology_actions(game_id, actions_dict.get("OutsourceTechnologyAction", []))
+    resolve_military_reinforcements_actions(game_id, actions_dict.get("MilitaryReinforcementsAction", []))
 
 def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
 

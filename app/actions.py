@@ -726,57 +726,46 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
     """
 
     actions = {
-        "Alliance Create": AllianceCreateAction,
-        "Alliance Join": AllianceJoinAction,
-        "Alliance Kick": AllianceKickAction,
-        "Alliance Leave": AllianceLeaveAction,
-        "Claim": ClaimAction,
-        "Steal": CrimeSyndicateAction,
-        "Event": EventAction,
-        "Build": ImprovementBuildAction,
-        "Remove": ImprovementRemoveAction,
-        "Buy": MarketBuyAction,
-        "Sell": MarketSellAction,
-        "Make": MissileMakeAction,
-        "Launch": MissileLaunchAction,
-        "Republic": RepublicAction,
-        "Research": ResearchAction,
-        "Surrender": SurrenderAction,
-        "Deploy": UnitDeployAction,
-        "Disband": UnitDisbandAction,
-        "Move": UnitMoveAction,
-        "War": WarAction,
-        "White Peace": WhitePeaceAction
+        "alliance create": AllianceCreateAction,
+        "alliance join": AllianceJoinAction,
+        "alliance kick": AllianceKickAction,
+        "alliance leave": AllianceLeaveAction,
+        "claim": ClaimAction,
+        "steal": CrimeSyndicateAction,
+        "event": EventAction,
+        "build": ImprovementBuildAction,
+        "remove": ImprovementRemoveAction,
+        "buy": MarketBuyAction,
+        "sell": MarketSellAction,
+        "make": MissileMakeAction,
+        "launch": MissileLaunchAction,
+        "republic": RepublicAction,
+        "research": ResearchAction,
+        "surrender": SurrenderAction,
+        "deploy": UnitDeployAction,
+        "disband": UnitDisbandAction,
+        "move": UnitMoveAction,
+        "war": WarAction,
+        "white peace": WhitePeaceAction
     }
+
+    action_str = action_str.strip().lower()
 
     while True:
 
         if action_str == "":
             return
         
-        action_key = _get_action_key(action_str)
-        
-        if action_key in actions:
-            return actions[action_key](game_id, nation_id, action_str)
+        for action_key in sorted(actions.keys(), key=len, reverse=True):
+            if action_str.startswith(action_key):
+                return actions[action_key](game_id, nation_id, action_str)
         
         scenario_action = _check_scenario_actions(game_id, nation_id, action_str)
         if scenario_action is not None:
             return scenario_action
         
-        print(f"""Action "{action_str}" submitted by player {nation_id} is invalid. Unrecognized action type.""")
+        print(f"Action \"{action_str}\" submitted by player {nation_id} is invalid. Unrecognized action type.")
         action_str = input("Re-enter action or hit enter to skip: ")
-
-def _get_action_key(action_str: str) -> str:
-    
-    words = action_str.strip().split()
-    action_key = words[0].title()
-
-    if action_key == "Alliance" and len(words) >= 2:
-        return f"{words[0].title()} {words[1].title()}"
-    elif action_key == "White" and len(words) >= 2:
-        return "White Peace"
-
-    return action_key
 
 def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> any:
 
