@@ -891,13 +891,13 @@ def announcements(full_game_id):
     # get all ongoing truces
     for truce in trucedata_list:
         truce_participants_list = []
-        for i in range(1, len(truce)):
+        for i in range(1, len(truce) - 1):
             truce_status = ast.literal_eval(truce[i])
             if truce_status:
-                nation = nation_table.get(str(i - 1))
+                nation = nation_table.get(str(i))
                 truce_participants_list.append(nation.name)
         truce_name = ' - '.join(truce_participants_list)
-        truce_end_turn = int(len(truce))
+        truce_end_turn = int(truce[len(truce) - 1])
         if truce_end_turn > current_turn_num:
             diplomacy_list.append(f"{truce_name} truce until turn {truce_end_turn}.")
         if truce_end_turn == current_turn_num:
@@ -1122,7 +1122,7 @@ def event_resolution():
     
     full_game_id = request.form.get('full_game_id')
     
-    events.handle_current_event(full_game_id)
+    events.resolve_current_event(full_game_id)
     site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
 
     return redirect(f'/{full_game_id}')

@@ -44,3 +44,4 @@ app/static/line-chart.png
 app/static/clipboards.png
 app/static/handshake.png
 /.vscode
+/scenarios/standard/__pycache__
