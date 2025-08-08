@@ -107,7 +107,7 @@ class Region:
                 return True
         return False
     
-    def check_for_adjacent_unit(self, unit_names: set, desired_id: int) -> bool:
+    def check_for_adjacent_unit(self, unit_names: set, desired_id: str) -> bool:
         for region_id in self.graph.adjacent_regions:
             adjacent_region = Region(region_id)
             if adjacent_region.unit.name is None:
@@ -142,7 +142,7 @@ class Region:
             if (
                 current_region.data.owner_id == self.unit.owner_id    # region must be owned by the unit owner
                 and current_region.unit.name is None                  # region must not have another unit in it
-                and current_region.data.occupier_id == 0              # region must not be occupied by another nation
+                and current_region.data.occupier_id == "0"            # region must not be occupied by another nation
             ):
                 return current_region_id
             
@@ -152,7 +152,7 @@ class Region:
 
         return None
 
-    def add_claim(self, player_id: int) -> None:
+    def add_claim(self, player_id: str) -> None:
         """
         Adds player id to claim list. Used for region claim public action.
         """
@@ -181,40 +181,40 @@ class Region:
             return True
 
         # you may move into unoccupied regions owned by an enemy
-        if war_table.get_war_name(str(self.data.owner_id), str(other_player_id)) is not None and self.data.occupier_id == 0:
+        if war_table.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id == "0":
             return True
         
         # you may move into occupied regions owned by an enemy in two cases
-        elif war_table.get_war_name(str(self.data.owner_id), str(other_player_id)) is not None and self.data.occupier_id != 0:
+        elif war_table.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id != "0":
             # you are the occupier
             if self.data.occupier_id == other_player_id:
                 return True
             # you are also at war with the occupier
-            if war_table.get_war_name(str(self.data.owner_id), str(other_player_id)) is not None:
+            if war_table.get_war_name(self.data.owner_id, other_player_id) is not None:
                 return True
             
         # foreign invasion may move into unclaimed regions
-        if self.data.owner_id == 0 and other_player_id == 99:
+        if self.data.owner_id == "0" and other_player_id == "99":
             return True
                 
         return False
 
-    def improvement_is_hostile(self, other_player_id: int) -> bool:
+    def improvement_is_hostile(self, other_player_id: str) -> bool:
 
         # regions without an improvement cannot have a hostile improvement
         if self.improvement.name is None:
             return False
 
         # improvements with no health can never be hostile
-        if self.improvement.health in [0, 99]:
+        if self.improvement.health in ["0", "99"]:
             return False
 
-        if self.data.owner_id == other_player_id and self.data.occupier_id == 0:
+        if self.data.owner_id == other_player_id and self.data.occupier_id == "0":
             # defensive improvements in a region that is owned by you and is unoccupied is never hostile
             return False
         elif self.data.owner_id != other_player_id:
             # defensive improvements in a region you don't own are not hostile if you already occupy the region
-            if other_player_id != 0 and self.data.occupier_id == other_player_id:
+            if other_player_id != "0" and self.data.occupier_id == other_player_id:
                 return False
         
         return False
@@ -253,10 +253,10 @@ class Region:
             and not target_region.unit.is_hostile(self.unit.owner_id)
             and not target_region.improvement_is_hostile(self.unit.owner_id)):
             
-            unit_owner_id = copy.deepcopy(self.owner_id)
+            unit_owner_id = copy.deepcopy(self.unit.owner_id)
             self._execute_move(target_region)
 
-            if target_region.improvement_is_hostile(self.unit.owner_id) and target_region.improvement.name != "Capital":
+            if target_region.improvement_is_hostile(unit_owner_id) and target_region.improvement.name != "Capital":
 
                 nation_table = NationTable(self.game_id)
                 war_table = WarTable(self.game_id)
@@ -394,8 +394,8 @@ class RegionData:
 
         self._regdata = d
     
-        self._owner_id: int = d["ownerID"]
-        self._occupier_id: int = d["occupierID"]
+        self._owner_id: str = d["ownerID"]
+        self._occupier_id: str = d["occupierID"]
         self._purchase_cost: int = d["purchaseCost"]
         self._resource: str = d["regionResource"]
         self._fallout: int = d["nukeTurns"]
@@ -407,7 +407,7 @@ class RegionData:
         return self._owner_id
     
     @owner_id.setter
-    def owner_id(self, new_id: int):
+    def owner_id(self, new_id: str):
         self._owner_id = new_id
         self._regdata["ownerID"] = new_id
     
@@ -416,7 +416,7 @@ class RegionData:
         return self._occupier_id
     
     @occupier_id.setter
-    def occupier_id(self, new_id: int):
+    def occupier_id(self, new_id: str):
         self._occupier_id = new_id
         self._regdata["occupierID"] = new_id
     
@@ -559,7 +559,7 @@ class UnitData:
 
         self._name: str = d["name"]
         self._health: int = d["health"]
-        self._owner_id: int = d["ownerID"]
+        self._owner_id: str = d["ownerID"]
         self.coords: list = graphdata["unitCords"]
 
         self._load_attributes_from_game_files()
@@ -587,7 +587,7 @@ class UnitData:
         return self._owner_id
     
     @owner_id.setter
-    def owner_id(self, new_id: int):
+    def owner_id(self, new_id: str):
         self._owner_id = new_id
         self._unitdata["ownerID"] = new_id
 
@@ -619,16 +619,16 @@ class UnitData:
     def clear(self) -> None:
         self.name = None
         self.health = 99
-        self.owner_id = 0
+        self.owner_id = "0"
         self._load_attributes_from_game_files()
 
-    def is_hostile(self, other_player_id: int) -> bool:
+    def is_hostile(self, other_player_id: str) -> bool:
 
         from app.war import WarTable
         war_table = WarTable(Regions.game_id)
 
         # if no unit return False
-        if self.owner_id == 0 or other_player_id == 0:
+        if self.owner_id == "0" or other_player_id == "0":
             return False
 
         # if player_ids are the same than return False
@@ -636,11 +636,11 @@ class UnitData:
             return False
         
         # if other_player_id = 99 return True (defending unit is controlled by event)
-        if other_player_id == 99:
+        if other_player_id == "99":
             return True
         
         # check if at war
-        if war_table.get_war_name(str(self.owner_id), str(other_player_id)) is not None:
+        if war_table.get_war_name(self.owner_id, other_player_id) is not None:
             return True
         
         return False
