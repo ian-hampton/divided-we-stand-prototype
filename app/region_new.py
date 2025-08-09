@@ -515,15 +515,19 @@ class ImprovementData:
         
         data_dict = core.get_scenario_dict(Regions.game_id, "Improvements")
         if self.name is not None:
+            self.victory_damage = data_dict[self.name]["Victory Damage"]
+            self.draw_damage = data_dict[self.name]["Draw Damage"]
             self.max_health = data_dict[self.name]["Health"]
             self.hit_value = data_dict[self.name]["Combat Value"]
             self.missile_defense = data_dict[self.name]["Standard Missile Defense"]
             self.nuke_defense = data_dict[self.name]["Nuclear Missile Defense"]
         else:
-            self.max_health = None
-            self.hit_value = None
-            self.missile_defense = None
-            self.nuke_defense = None
+            self.victory_damage: int = None
+            self.draw_damage: int = None
+            self.max_health: int = None
+            self.hit_value: int = None
+            self.missile_defense: int = None
+            self.nuke_defense: int = None
 
     def set(self, improvement_name: str, starting_health=0) -> None:
         self.clear()
@@ -589,12 +593,16 @@ class UnitData:
     
         data_dict = core.get_scenario_dict(Regions.game_id, "Units")
         if self.name is not None:
-            self.type = data_dict[self.name]["Unit Type"]
-            self.max_health = data_dict[self.name]["Health"]
-            self.hit_value = data_dict[self.name]["Combat Value"]
-            self.value = data_dict[self.name]["Point Value"]
+            self.type: str = data_dict[self.name]["Unit Type"]
+            self.victory_damage: int = data_dict[self.name]["Victory Damage"]
+            self.draw_damage: int = data_dict[self.name]["Draw Damage"]
+            self.max_health: int = data_dict[self.name]["Health"]
+            self.hit_value: int = data_dict[self.name]["Combat Value"]
+            self.value: int = data_dict[self.name]["Point Value"]
         else:
             self.type = None
+            self.victory_damage = None
+            self.draw_damage = None
             self.max_health = None
             self.hit_value = None
             self.value = None

@@ -90,20 +90,14 @@ def unit_vs_unit_standard(attacker_region: Region, defender_region: Region) -> N
         battle_str += " Draw!"
     war.log.append(battle_str)
 
-    # resolve outcome
-    # TODO: add this to region class
-    unit_data_dict = core.get_scenario_dict(GAME_ID, "Units")
+    # apply damage
     if outcome == 1:
-        attacker_damage = unit_data_dict[attacker_region.unit.name]["Victory Damage"]
-        defender_region.unit.health -= attacker_damage + attacker_damage_modifier
+        defender_region.unit.health -= attacker_region.unit.victory_damage + attacker_damage_modifier
     elif outcome == 2:
-        defender_damage = unit_data_dict[defender_region.unit.name]["Victory Damage"]
-        attacker_region.unit.health -= defender_damage + defender_damage_modifier
+        attacker_region.unit.health -= defender_region.unit.victory_damage + defender_damage_modifier
     else:
-        attacker_damage = unit_data_dict[attacker_region.unit.name]["Draw Damage"]
-        defender_damage = unit_data_dict[defender_region.unit.name]["Draw Damage"]
-        defender_region.unit.health -= attacker_damage + attacker_damage_modifier
-        attacker_region.unit.health -= defender_damage + defender_damage_modifier
+        defender_region.unit.health -= attacker_region.unit.draw_damage + attacker_damage_modifier
+        attacker_region.unit.health -= defender_region.unit.draw_damage + defender_damage_modifier
     
     # remove attacking unit if defeated
     if attacker_region.unit.health <= 0:
@@ -199,21 +193,14 @@ def unit_vs_improvement_standard(attacker_region: Region, defender_region: Regio
         battle_str += " Draw!"
     war.log.append(battle_str)
 
-    # resolve outcome
-    # TODO: add much of this to region class
-    unit_data_dict = core.get_scenario_dict(GAME_ID, "Units")
-    improvement_data_dict = core.get_scenario_dict(GAME_ID, "Improvements")
+    # apply damage
     if outcome == 1:
-        attacker_damage = unit_data_dict[attacker_region.unit.name]["Victory Damage"]
-        defender_region.improvement.health -= attacker_damage + attacker_damage_modifier
+        defender_region.improvement.health -= attacker_region.unit.victory_damage + attacker_damage_modifier
     elif outcome == 2:
-        defender_damage = improvement_data_dict[defender_region.improvement.name]["Victory Damage"]
-        attacker_region.unit.health -= defender_damage + defender_damage_modifier
+        attacker_region.unit.health -= defender_region.improvement.victory_damage + defender_damage_modifier
     else:
-        attacker_damage = unit_data_dict[attacker_region.unit.name]["Draw Damage"]
-        defender_damage = improvement_data_dict[defender_region.improvement.name]["Draw Damage"]
-        defender_region.improvement.health -= attacker_damage + attacker_damage_modifier
-        attacker_region.unit.health -= defender_damage + defender_damage_modifier
+        defender_region.improvement.health -= attacker_region.unit.draw_damage + attacker_damage_modifier
+        attacker_region.unit.health -= defender_region.improvement.draw_damage + defender_damage_modifier
     
     # remove attacking unit if defeated
     if attacker_region.unit.health <= 0:
