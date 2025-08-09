@@ -154,7 +154,7 @@ class ClaimAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_region = _check_region_id(self.game_id, self.target_region)
+        self.target_region = _check_region_id(self.target_region)
         if self.target_region is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
             return False
@@ -229,7 +229,7 @@ class ImprovementBuildAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad improvement name.""")
             return False
         
-        self.target_region = _check_region_id(self.game_id, self.target_region)
+        self.target_region = _check_region_id(self.target_region)
         if self.target_region is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
             return False
@@ -256,7 +256,7 @@ class ImprovementRemoveAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_region = _check_region_id(self.game_id, self.target_region)
+        self.target_region = _check_region_id(self.target_region)
         if self.target_region is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
             return False
@@ -388,7 +388,7 @@ class MissileLaunchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
         
-        self.target_region = _check_region_id(self.game_id, self.target_region)
+        self.target_region = _check_region_id(self.target_region)
         if self.target_region is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
             return False
@@ -502,7 +502,7 @@ class UnitDeployAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad unit name.""")
             return False
 
-        self.target_region = _check_region_id(self.game_id, self.target_region)
+        self.target_region = _check_region_id(self.target_region)
         if self.target_region is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
             return False
@@ -529,7 +529,7 @@ class UnitDisbandAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_region = _check_region_id(self.game_id, self.target_region)
+        self.target_region = _check_region_id(self.target_region)
         if self.target_region is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad target region id.""")
             return False
@@ -569,13 +569,13 @@ class UnitMoveAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.current_region_id = _check_region_id(self.game_id, self.current_region_id)
+        self.current_region_id = _check_region_id(self.current_region_id)
         if self.current_region_id is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad starting region id.""")
             return False
         
         for region_id in self.target_region_ids:
-            region_id = _check_region_id(self.game_id, region_id)
+            region_id = _check_region_id(region_id)
             if region_id is None:
                 print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad destination region id: {region_id}.""")
                 return False
@@ -795,12 +795,11 @@ def _check_alliance_name(game_id: str, alliance_name: str) -> str | None:
         
     return None
 
-def _check_region_id(game_id: str, region_id: str) -> str | None:
-
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
-
-    if region_id in regdata_dict:
+def _check_region_id(region_id: str) -> str | None:
+    
+    from app.region_new import Regions
+    
+    if region_id in Regions:
         return region_id
     
     return None
@@ -976,10 +975,10 @@ def resolve_trade_actions(game_id: str) -> None:
     Resolves trade actions between players via CLI.
     """
 
+    from app.region_new import Regions
+
     nation_table = NationTable(game_id)
     notifications = Notifications(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
     trade_action = input("Are there any trade actions this turn? (Y/n) ")
 
@@ -1038,7 +1037,7 @@ def resolve_trade_actions(game_id: str) -> None:
                 nation_region_trades_list = nation_region_trades_str.split(',')
                 invalid_region_given = False
                 for region_id in nation_region_trades_list:
-                    if region_id not in regdata_dict:
+                    if region_id not in Regions:
                         invalid_region_given = True
                         print(f"{region_id} is invalid. Please try again.")
                         break
@@ -1051,7 +1050,7 @@ def resolve_trade_actions(game_id: str) -> None:
                 nation_region_trades_list = nation_region_trades_str.split(',')
                 invalid_region_given = False
                 for region_id in nation_region_trades_list:
-                    if region_id not in regdata_dict:
+                    if region_id not in Regions:
                         invalid_region_given = True
                         print(f"{region_id} is invalid. Please try again.")
                         break

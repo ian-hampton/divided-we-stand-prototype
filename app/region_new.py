@@ -3,21 +3,32 @@ import json
 import os
 from collections import deque
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, Iterator
 
 from app import core
 from app.nationdata import Nation
-from app.nationdata import NationTable
+
+class RegionsMeta(type):
+    
+    def __contains__(cls, region_id: str):
+        return cls._graph is not None and region_id in cls._graph
+
+    def __iter__(cls) -> Iterator["Region"]:
+        for region_id in cls._graph:
+            yield Region(region_id)
+
+    def __len__(cls):
+        return len(cls._graph) if cls._graph else 0
 
 @dataclass
-class Regions:
+class Regions(metaclass=RegionsMeta):
 
     game_id: ClassVar[str] = None
     _data: ClassVar[dict[str, dict]] = None
     _graph: ClassVar[dict[str, dict]] = None
 
     @classmethod
-    def load(cls, game_id: str):
+    def load(cls, game_id: str) -> None:
         cls.game_id = game_id
         regdata_filepath = f"gamedata/{Regions.game_id}/regdata.json"
         graph_filepath = f"maps/{core.get_map_str(Regions.game_id)}/graph.json"
@@ -31,7 +42,7 @@ class Regions:
             cls._graph = json.load(f)
     
     @classmethod
-    def save(cls):
+    def save(cls) -> None:
         if cls._data is None:
             raise RuntimeError("Error: Regions data not loaded.")
         
@@ -41,9 +52,8 @@ class Regions:
             json.dump(cls._data, json_file, indent=4)
     
     @classmethod
-    def __iter__(cls):
-        for region_id in cls._graph:
-            yield Region(region_id)
+    def ids(cls) -> list:
+        return list(cls._graph.keys())
 
 class Region:
 
@@ -225,6 +235,7 @@ class Region:
         """
 
         from app import combat
+        from app.nationdata import NationTable
         from app.war import WarTable
 
         combat_occured = False

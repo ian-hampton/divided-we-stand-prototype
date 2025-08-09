@@ -21,6 +21,8 @@ class Event:
         self.game_id = game_id
         self.state = -1
 
+        
+
         # load event data
         self.name: str = event_name
         self.type: str = event_data["Type"]
@@ -37,8 +39,6 @@ class Event:
             self.current_turn_num = core.get_current_turn_num(self.game_id)
             with open("active_games.json", 'r') as json_file:
                 self.active_games_dict = json.load(json_file)
-            with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-                self.regdata_dict = json.load(json_file)
 
         # GAME DATA NOTES
         #  - be sure to set temp to true if the event is only being loaded to check for conditions or expiration
@@ -309,6 +309,8 @@ class DecayingInfrastructure(Event):
         Event.__init__(self, game_id, event_name, event_data, temp=temp)
 
     def activate(self):
+
+        from app.region_new import Regions
         
         top_three = self.nation_table.get_top_three("nationSize")
         top_three_ids = set()
@@ -316,15 +318,14 @@ class DecayingInfrastructure(Event):
             temp = self.nation_table.get(nation_name)
             top_three_ids.add(temp.id)
 
-        for region_id in self.regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             if region.data.owner_id in top_three_ids and region.improvement.name is not None and region.improvement.name != "Capital":
                 decay_roll = random.randint(1, 10)
                 if decay_roll >= 9:
                     nation = self.nation_table.get(region.data.owner_id)
                     nation.improvement_counts[region.improvement.name] -= 1
                     self.nation_table.save(nation)
-                    self.notifications.append(f"{nation.name} {region.improvement.name} in {region_id} has decayed.", 2)
+                    self.notifications.append(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 2)
                     region.improvement.clear()
 
         self.state = 0
@@ -342,6 +343,8 @@ class Desertion(Event):
         Event.__init__(self, game_id, event_name, event_data, temp=temp)
 
     def activate(self):
+
+        from app.region_new import Regions
         
         # retrieve lowest warscore for each nation
         lowest_warscore_dict = {}
@@ -367,7 +370,7 @@ class Desertion(Event):
         self.targets = list(filtered_dict.keys())
         
         # check all regions owned by targets
-        for region_id in self.regdata_dict:
+        for region_id in Regions:
             region = Region(region_id)
             if region.unit.owner_id not in self.targets:
                 continue

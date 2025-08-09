@@ -41,8 +41,6 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     # get game files
     Regions.load(game_id)
     nation_table = NationTable(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
     # update nation colors
     for nation_id, setup_data in contents_dict.items():
@@ -56,7 +54,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     random_assignment_list = []
     for nation_id, setup_data in contents_dict.items():
         region_id = setup_data["start"]
-        if region_id is None or region_id not in regdata_dict:
+        if region_id is None or region_id not in Regions:
             random_assignment_list.append(nation_id)
             continue
         starting_region = Region(region_id)
@@ -72,7 +70,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         while True:
             # randomly select a region
             conflict_detected = False
-            region_id_list = list(regdata_dict.keys()) 
+            region_id_list = Regions.ids()
             random_region_id = random.sample(region_id_list, 1)[0]
             random_region = Region(random_region_id)
             # if region not allowed restart loop

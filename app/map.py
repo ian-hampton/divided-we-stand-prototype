@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app import core
 from app import palette
-from app.region_new import Region
+from app.region_new import Region, Regions
 from app.nationdata import NationTable
 
 
@@ -36,15 +36,12 @@ class GameMaps:
         nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
-        with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
-            regdata_dict = json.load(json_file)
 
         # initialize map images
         self._init_images()
 
         # color regions
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
 
             # color region using ownership
             fill_color = self._get_fill_color(nation_table, region)
@@ -79,8 +76,7 @@ class GameMaps:
         # add magnified boxes
         magnified_img = Image.open(self.filepath_magnified)
         self.main_map = Image.alpha_composite(self.main_map, magnified_img)
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
 
             # skip non-magnified or unclaimed
             fill_color = self._get_fill_color(nation_table, region)
@@ -102,8 +98,7 @@ class GameMaps:
         self.control_map = Image.alpha_composite(self.control_map, text_img)
 
         # place units and improvements
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
 
             if region.data.fallout and region.graph.improvement_coordinates is not None:
             
@@ -177,9 +172,7 @@ class GameMaps:
         # get game data
         nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
-        with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
-            regdata_dict = json.load(json_file)
-        region_id_list = list(regdata_dict.keys())
+        region_id_list = Regions.ids()
         
         # get list of improvements that can spawn
         improvement_candidates_list = []
@@ -189,7 +182,7 @@ class GameMaps:
         
         # place improvements randomly
         count = 0
-        placement_quota = int(len(regdata_dict) * 0.1) - len(nation_table)
+        placement_quota = int(len(Regions) * 0.1) - len(nation_table)
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
@@ -275,10 +268,7 @@ class GameMaps:
         resource_list = random.sample(resource_list, len(resource_list))
 
         # update regdata.json
-        with open(f"gamedata/{self.game_id}/regdata.json", 'r') as json_file:
-            regdata_dict = json.load(json_file)
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             region.data.resource = resource_list.pop()
 
     def _init_images(self) -> None:

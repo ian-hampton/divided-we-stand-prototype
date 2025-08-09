@@ -5,8 +5,6 @@ import random
 import copy
 from typing import Union, Tuple, List
 
-from app.region_new import Region
-from app.alliance import AllianceTable
 from app.nationdata import Nation
 from app.nationdata import NationTable
 
@@ -79,6 +77,8 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
             int: Alliance count.
             int: Alliance limit.
     """
+
+    from app.alliance import AllianceTable
     
     # get alliance data
     alliance_count = 0
@@ -309,8 +309,7 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
 
 def validate_war_claims(game_id: str, war_justification: str, region_claims_list: list) -> bool:
 
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
+    from app.region_new import Regions
 
     # get war justification info
     if war_justification == 'Border Skirmish':
@@ -326,7 +325,7 @@ def validate_war_claims(game_id: str, war_justification: str, region_claims_list
     total = 0
     for i, region_id in enumerate(region_claims_list):
         
-        if region_id not in regdata_dict:
+        if region_id not in Regions:
             return -1
         
         if i + 1 > max_claims:
@@ -343,6 +342,7 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
     """
     
     # get game data
+    from app.region_new import Region
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     target_region = Region(target_region_id)
 
@@ -381,12 +381,10 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
 
 def withdraw_units(game_id: str):
 
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
+    for region in Regions:
         
         # a unit can only be present in another nation without occupation if a war just ended 
         if region.unit.name is not None and region.unit.owner_id != region.data.owner_id and region.data.occupier_id == "0":
@@ -490,15 +488,13 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     Searches for a specific improvement and removes it.
     """
 
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
+    from app.region_new import Region, Regions
     
     # find all regions belonging to a player with target improvement
     candidate_region_ids = []
-    for region_id in regdata_dict:
-        region = Region(region_id)
+    for region in Regions:
         if region.improvement.name == target_improvement and region.data.owner_id == int(player_id):
-            candidate_region_ids.append(region_id)
+            candidate_region_ids.append(region.region_id)
 
     # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
@@ -513,17 +509,15 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     Randomly destroys one unit of a given type belonging to a specific player.
     """
 
+    from app.region_new import Region, Regions
     unit_scenario_dict = get_scenario_dict(game_id, "Units")
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
     # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []
     if desired_unit_name in unit_scenario_dict:
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
-                candidate_region_ids.append(region_id)
+                candidate_region_ids.append(region.region_id)
 
     # randomly select one of the candidate regions
     # there should always be at least one candidate region because we have already checked that the target unit exists

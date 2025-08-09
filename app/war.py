@@ -422,7 +422,7 @@ class War:
 
     def end_conflict(self, outcome: str) -> None:
 
-        from app.region_new import Region
+        from app.region_new import Region, Regions
         
         # get game data
         nation_table = NationTable(self.game_id)
@@ -467,10 +467,7 @@ class War:
         self.outcome = outcome
 
         # end occupations
-        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             if region.data.owner_id in self.combatants and region.data.occupier_id in self.combatants:
                 region.data.occupier_id = "0"
 
@@ -744,13 +741,10 @@ class WarTable:
         Adds warscore from occupied regions.
         """
 
-        from app.region_new import Region
+        from app.region_new import Region, Regions
         nation_table = NationTable(self.game_id)
-        with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
-            regdata_dict = json.load(json_file)
 
-        for region_id in regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             
             if region.data.occupier_id not in ["0", "99"]:
 

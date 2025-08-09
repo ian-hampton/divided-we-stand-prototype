@@ -5,7 +5,6 @@ import random
 import datetime
 
 from app import core
-from app.region_new import Region
 from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
@@ -24,10 +23,9 @@ def update_income(game_id: str) -> None:
     """
     
     # get game data
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    with open(f"gamedata/{game_id}/regdata.json", 'r') as json_file:
-        regdata_dict = json.load(json_file)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -57,8 +55,7 @@ def update_income(game_id: str) -> None:
     ### calculate gross income ###
 
     # add income from regions
-    for region_id in regdata_dict:
-        region = Region(region_id)
+    for region in Regions:
         # skip if region is unowned
         if region.data.owner_id in ["0", "99"]:
             continue
@@ -332,12 +329,10 @@ def countdown(game_id: str) -> None:
     Resolves improvements/units that have countdowns associated with them.
     """
 
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
+    from app.region_new import Region, Regions
     
     # resolve nuked regions
-    for region_id in regdata_dict:
-        region = Region(region_id)
+    for region in Regions:
         if region.data.fallout != 0:
             region.data.fallout -= 1
 
@@ -453,13 +448,11 @@ def bonus_phase_heals(game_id: str) -> None:
     Heals all units and defensive improvements by 2 health.
     """
     
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
-    with open(f"gamedata/{game_id}/regdata.json", 'r') as json_file:
-        regdata_dict = json.load(json_file)
     
-    for region_id in regdata_dict:
-        region = Region(region_id)
+    for region in Regions:
         
         if region.data.owner_id not in ["0", "99"]:
 
@@ -518,16 +511,14 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     """
     
     # get game data
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
     notifications = Notifications(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
     # check all regions for occupation
     non_occupied_found_list = [False] * len(nation_table)
-    for region_id in regdata_dict:
-        region = Region(region_id)
+    for region in Regions:
         if region.data.owner_id != "0" and region.data.owner_id != "99" and region.data.occupier_id == "0":
             non_occupied_found_list[int(region.data.owner_id) - 1] = True
     
