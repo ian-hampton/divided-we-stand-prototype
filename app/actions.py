@@ -6,14 +6,12 @@ import random
 from collections import defaultdict
 
 from app import core
+from app.region_new import Region
 from app.nationdata import Nation
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
 from app.notifications import Notifications
-from app.region import Region
-from app.improvement import Improvement
-from app.unit import Unit
 
 class AllianceCreateAction:
 
@@ -1092,25 +1090,23 @@ def resolve_trade_actions(game_id: str) -> None:
             
             for region_id in trade_deal["Nation1RegionsCeded"]:
                 
-                region = Region(region_id, game_id)
-                region_improvement = Improvement(region_id, game_id)
+                region = Region(region_id)
 
-                if region_improvement.name is not None:
-                    nation1.improvement_counts[region_improvement.name] -= 1
-                    nation2.improvement_counts[region_improvement.name] += 1
+                if region.improvement.name is not None:
+                    nation1.improvement_counts[region.improvement.name] -= 1
+                    nation2.improvement_counts[region.improvement.name] += 1
 
-                region.set_owner_id(nation2.id)
+                region.data.owner_id = nation2.id
             
             for region_id in trade_deal["Nation2RegionsCeded"]:
                 
-                region = Region(region_id, game_id)
-                region_improvement = Improvement(region_id, game_id)
+                region = Region(region_id)
 
-                if region_improvement.name is not None:
-                    nation1.improvement_counts[region_improvement.name] += 1
-                    nation2.improvement_counts[region_improvement.name] -= 1
+                if region.improvement.name is not None:
+                    nation1.improvement_counts[region.improvement.name] += 1
+                    nation2.improvement_counts[region.improvement.name] -= 1
 
-                region.set_owner_id(nation1.id)
+                region.data.owner_id = nation1.id
 
         # save changes
         if trade_valid:
@@ -1516,10 +1512,10 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     region_queue: list[Region] = []
     for action in actions_list:
         nation = nation_table.get(action.id)
-        region = Region(action.target_region, game_id)
+        region = Region(action.target_region)
 
         # ownership check
-        if region.owner_id != 0:
+        if region.data.owner_id != "0":
             nation.action_log.append(f"Failed to claim {action.target_region}. This region is already owned by another nation.")
             nation_table.save(nation)
             continue
@@ -1534,7 +1530,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         # to be added
         
         # attempt to pay for region
-        nation.update_stockpile("Dollars", -1 * region.purchase_cost)
+        nation.update_stockpile("Dollars", -1 * region.data.purchase_cost)
         nation.update_stockpile("Political Power", -1 * nation.region_claim_political_power_cost())
         if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
             nation_table.reload()
@@ -1564,19 +1560,18 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             # region purchase successful
             player_id = region.claim_list[0]
             nation = nation_table.get(player_id)
-            region.set_owner_id(int(player_id))
+            region.data.owner_id = player_id
             # update improvement count if needed
-            region_improvement = Improvement(region.region_id, game_id)
-            if region_improvement.name is not None:
-                nation.improvement_counts[region_improvement.name] += 1
+            if region.improvement.name is not None:
+                nation.improvement_counts[region.improvement.name] += 1
             # update nation data
-            nation.action_log.append(f"Claimed region {region.region_id} for {region.purchase_cost} dollars.")
+            nation.action_log.append(f"Claimed region {region.region_id} for {region.data.purchase_cost} dollars.")
             nation_table.save(nation)
         
         else:
 
             # region is disputed
-            region.increase_purchase_cost()
+            region.data.purchase_cost += 5
             active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
             for player_id in region.claim_list:
                 nation = nation_table.get(player_id)
@@ -1594,25 +1589,24 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
 
     for action in actions_list:
         nation = nation_table.get(action.id)
-        region = Region(action.target_region, game_id)
-        region_improvement = Improvement(action.target_region, game_id)
+        region = Region(action.target_region)
 
         # ownership check
-        if str(region.owner_id) != action.id or region.occupier_id != 0:
-            nation.action_log.append(f"Failed to remove {region_improvement.name} in region {action.target_region}. You do not own or control this region.")
+        if region.data.owner_id != action.id or region.data.occupier_id != "0":
+            nation.action_log.append(f"Failed to remove {region.improvement.name} in region {action.target_region}. You do not own or control this region.")
             nation_table.save(nation)
             continue
 
         # capital check
-        if region_improvement.name == "Capital":
-            nation.action_log.append(f"Failed to remove {region_improvement.name} in region {action.target_region}. You cannot remove a Capital improvement.")
+        if region.improvement.name == "Capital":
+            nation.action_log.append(f"Failed to remove {region.improvement.name} in region {action.target_region}. You cannot remove a Capital improvement.")
             nation_table.save(nation)
             continue
 
         # remove improvement
-        if region_improvement.name is not None:
-            nation.improvement_counts[region_improvement.name] -= 1
-        region_improvement.clear()
+        if region.improvement.name is not None:
+            nation.improvement_counts[region.improvement.name] -= 1
+        region.improvement.clear()
         nation.action_log.append(f"Removed improvement in region {action.target_region}.")
 
         # update nation data
@@ -1627,17 +1621,16 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
     # execute actions
     for action in actions_list:
         nation = nation_table.get(action.id)
-        region = Region(action.target_region, game_id)
-        region_improvement = Improvement(action.target_region, game_id)
+        region = Region(action.target_region)
 
         # ownership check
-        if str(region.owner_id) != action.id or region.occupier_id != 0:
+        if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not own or control this region.")
             nation_table.save(nation)
             continue
 
         # capital check
-        if region_improvement.name == "Capital":
+        if region.improvement.name == "Capital":
             nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
             nation_table.save(nation)
             continue
@@ -1651,13 +1644,13 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
         # required region resource check
         required_resource = improvement_data_dict[action.improvement_name]["Required Resource"]
-        if required_resource is not None and required_resource != region.resource:
+        if required_resource is not None and required_resource != region.data.resource:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. The region does not have the resource required for this improvement.")
             nation_table.save(nation)
             continue
 
         # nuke check
-        if region.fallout != 0:
+        if region.data.fallout != 0:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Region cannot support an improvement due to nuclear missile detonation.")
             nation_table.save(nation)
             continue
@@ -1669,7 +1662,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             continue
 
         # calculate build cost
-        build_cost_dict = copy.deepcopy(improvement_data_dict[action.improvement_name]["Build Costs"])
+        build_cost_dict: dict = copy.deepcopy(improvement_data_dict[action.improvement_name]["Build Costs"])
         nation.apply_build_discount(build_cost_dict)
 
         # pay for improvement
@@ -1697,18 +1690,12 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
         nation.action_log.append(f"Built {action.improvement_name} in region {action.target_region} for {costs_str}.")
 
         # place improvement
-        if region_improvement.name is not None:
-            nation.improvement_counts[region_improvement.name] -= 1
-            mc = improvement_data_dict[action.improvement_name]["Income"].get("Military Capacity")
-            if mc is not None:
-                nation.update_max_mc(-1 * mc)
-        region_improvement.set_improvement(action.improvement_name, player_research=nation.completed_research)
+        if region.improvement.name is not None:
+            nation.improvement_counts[region.improvement.name] -= 1
+        region.improvement.set(action.improvement_name)
         
         # update nation data
         nation.improvement_counts[action.improvement_name] += 1
-        mc = improvement_data_dict[action.improvement_name]["Income"].get("Military Capacity")
-        if mc is not None:
-            nation.update_max_mc(mc)
         nation_table.save(nation)
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
@@ -2001,23 +1988,22 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
 
     for action in actions_list:
         nation = nation_table.get(action.id)
-        region_unit = Unit(action.target_region, game_id)
+        region = Region(action.target_region)
 
         # ownership check
-        if str(region_unit.owner_id) != action.id:
-            nation.action_log.append(f"Failed to disband {region_unit.name} in region {action.target_region}. You do not own this unit.")
+        if str(region.unit.owner_id) != action.id:
+            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own this unit.")
             nation_table.save(nation)
             continue
 
         # remove unit
-        if region_unit.name is not None:
-            nation.unit_counts[region_unit.name] -= 1
+        if region.unit.name is not None:
+            nation.unit_counts[region.unit.name] -= 1
             nation.update_used_mc(-1)
-        region_unit.clear()
+        region.unit.clear()
         
         # update nation data
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
-        nation.update_used_mc(1)
         nation_table.save(nation)
 
 def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
@@ -2028,12 +2014,11 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
 
     # execute actions
     for action in actions_list:
-        region = Region(action.target_region, game_id)
-        region_unit = Unit(action.target_region, game_id)
+        region = Region(action.target_region)
         nation = nation_table.get(action.id)
 
         # ownership check
-        if str(region.owner_id) != action.id or region.occupier_id != 0:
+        if str(region.data.owner_id) != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not control this region.")
             nation_table.save(nation)
             continue
@@ -2051,7 +2036,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             continue
 
         # calculate deployment cost
-        build_cost_dict = copy.deepcopy(unit_scenario_dict[action.unit_name]["Build Costs"])
+        build_cost_dict: dict = copy.deepcopy(unit_scenario_dict[action.unit_name]["Build Costs"])
         if nation.gov == 'Military Junta':
             for key in build_cost_dict:
                 build_cost_dict[key] *= 0.8
@@ -2081,13 +2066,13 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
 
         # deploy unit
-        if region_unit.name is not None:
-            nation.unit_counts[region_unit.name] -= 1
+        if region.unit.name is not None:
+            nation.unit_counts[region.unit.name] -= 1
             nation.update_used_mc(-1)
-        region_unit.set_unit(action.unit_name, int(action.id))
+        region.unit.set(action.unit_name, action.id)
 
         # update nation data
-        nation.unit_counts[region_unit.name] += 1
+        nation.unit_counts[region.unit.name] += 1
         nation.update_used_mc(1)
         nation_table.save(nation)
 
@@ -2353,9 +2338,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
     # execute actions
     for action in actions_list:
         nation = nation_table.get(action.id)
-        target_region = Region(action.target_region, game_id)
-        target_region_improvement = Improvement(action.target_region, game_id)
-        target_region_unit = Unit(action.target_region, game_id)
+        target_region = Region(action.target_region)
 
         # check if player actually has a missile to launch
         has_missile = True
@@ -2370,20 +2353,20 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
 
         # check if target region is valid
         is_valid_target = True
-        if nation.id != str(target_region.owner_id):
+        if nation.id != str(target_region.data.owner_id):
             engagement_type = 1
-            if war_table.get_war_name(nation.id, str(target_region.owner_id)) is None:
+            if war_table.get_war_name(nation.id, target_region.data.owner_id) is None:
                 # cannot nuke a foreign region if it is owned by a nation you are not at war with
                 is_valid_target = False
-            if target_region.occupier_id != 0 and war_table.get_war_name(nation.id, str(target_region.occupier_id)) is None:
+            if target_region.data.occupier_id != "0" and war_table.get_war_name(nation.id, target_region.data.occupier_id) is None:
                 # cannot nuke a hostile nation's region if it is occupied by a non-hostile nation
                 is_valid_target = False
-            if target_region_unit.name is not None and war_table.get_war_name(nation.id, str(target_region_unit.owner_id)) is None:
+            if target_region.unit.name is not None and war_table.get_war_name(nation.id, target_region.unit.owner_id) is None:
                 # cannot nuke a hostile nation's region if a non-hostile unit is present
                 is_valid_target = False
-        elif nation.id == str(target_region.owner_id):
+        elif nation.id == str(target_region.data.owner_id):
             engagement_type = 2
-            if target_region.occupier_id == 0 or war_table.get_war_name(nation.id, str(target_region.occupier_id)) is None:
+            if target_region.data.occupier_id == "0" or war_table.get_war_name(nation.id, target_region.data.occupier_id) is None:
                 # only allowed to strike your own region if it is occupied by a hostile nation
                 is_valid_target = False
         if not is_valid_target:
@@ -2402,14 +2385,14 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
             continue
 
         # identify conflict
-        if engagement_type == 1 and target_region.occupier_id == 0:
+        if engagement_type == 1 and target_region.data.occupier_id == "0":
             # missile strike on hostile territory owned by the same hostile
-            target_nation = nation_table.get(str(target_region.owner_id))
-            war_name = war_table.get_war_name(nation.id, str(target_region.owner_id))
+            target_nation = nation_table.get(str(target_region.data.owner_id))
+            war_name = war_table.get_war_name(nation.id, str(target_region.data.owner_id))
         else:
             # any other situation
-            target_nation = nation_table.get(str(target_region.occupier_id))
-            war_name = war_table.get_war_name(nation.id, str(target_region.occupier_id))
+            target_nation = nation_table.get(str(target_region.data.occupier_id))
+            war_name = war_table.get_war_name(nation.id, str(target_region.data.occupier_id))
 
         # get combatants
         war = war_table.get(war_name)
@@ -2462,7 +2445,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
             attacking_combatant.launched_missiles += 1
 
             # improvement damage
-            if target_region_improvement.name is not None and target_region_improvement.health != 99:
+            if target_region.improvement.name is not None and target_region.improvement.health != 99:
 
                 # initial roll against improvement
                 missile_did_something = True
@@ -2472,28 +2455,26 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                 if accuracy_roll > 3:
                 
                     # apply damage
-                    target_region_improvement.health -= 1
-                    if target_region_improvement.health > 0:
+                    target_region.improvement.health -= 1
+                    if target_region.improvement.health > 0:
                         # improvement survived
-                        war.log.append(f"    Missile struck {target_region_improvement.name} in {target_region.region_id} and dealt 1 damage.")
-                        target_region_improvement._save_changes()
+                        war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.region_id} and dealt 1 damage.")
                     else:
                         # improvement destroyed
                         war.attacker_destroyed_improvements += war.warscore_destroy_improvement
-                        if target_region_improvement.name != 'Capital':
+                        if target_region.improvement.name != 'Capital':
                             attacking_combatant.destroyed_improvements += 1
                             defending_combatant.lost_improvements += 1
-                            war.log.append(f"    Missile struck {target_region_improvement.name} in {target_region.region_id} and dealt 1 damage. Improvement destroyed!")
-                            target_nation.improvement_counts[target_region_improvement.name] -= 1
-                            target_region_improvement.clear()
+                            war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.region_id} and dealt 1 damage. Improvement destroyed!")
+                            target_nation.improvement_counts[target_region.improvement.name] -= 1
+                            target_region.improvement.clear()
                         else:
                             war.log.append(f"    Missile struck Capital in {target_region.region_id} and dealt 1 damage. Improvement devastated!")
-                            target_region_improvement._save_changes()
                 
                 else:
-                    war.log.append(f"    Missile missed {target_region_improvement.name}.")
+                    war.log.append(f"    Missile missed {target_region.improvement.name}.")
 
-            elif target_region_improvement.name is not None and target_region_improvement.health == 99:
+            elif target_region.improvement.name is not None and target_region.improvement.health == 99:
                 
                 # initial roll against improvement
                 missile_did_something = True
@@ -2506,15 +2487,15 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                     war.attacker_destroyed_improvements += war.warscore_destroy_improvement
                     attacking_combatant.destroyed_improvements += 1
                     defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region_improvement.name} in {target_region.region_id}!")
-                    target_nation.improvement_counts[target_region_improvement.name] -= 1
-                    target_region_improvement.clear()
+                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.region_id}!")
+                    target_nation.improvement_counts[target_region.improvement.name] -= 1
+                    target_region.improvement.clear()
                 
                 else:
-                    war.log.append(f"    Missile missed {target_region_improvement.name}.")
+                    war.log.append(f"    Missile missed {target_region.improvement.name}.")
 
             # unit damage
-            if target_region_unit.name != None:
+            if target_region.unit.name != None:
 
                 # initial roll against unit
                 missile_did_something = True
@@ -2524,54 +2505,52 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                 if accuracy_roll > 3:
                     
                     # apply damage
-                    target_region_unit.health -= 1
-                    if target_region_unit.health > 0:
+                    target_region.unit.health -= 1
+                    if target_region.unit.health > 0:
                         # unit survived
-                        war.log.append(f"    Missile struck {target_region_unit.name} in {target_region.region_id} and dealt 1 damage.")
-                        target_region_unit._save_changes()
+                        war.log.append(f"    Missile struck {target_region.unit.name} in {target_region.region_id} and dealt 1 damage.")
                     else:
                         # unit destroyed
-                        war.attacker_destroyed_units += target_region_unit.value    # amount of warscore earned depends on unit value
+                        war.attacker_destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
                         attacking_combatant.destroyed_units += 1
                         defending_combatant.lost_units += 1
-                        war.log.append(f"    Missile destroyed {target_region_unit.name} in {target_region.region_id}!")
-                        target_nation.unit_counts[target_region_unit.name] -= 1
-                        target_region_unit.clear()
+                        war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.region_id}!")
+                        target_nation.unit_counts[target_region.unit.name] -= 1
+                        target_region.unit.clear()
                 
                 else:
-                    war.log.append(f"    Missile missed {target_region_unit.name}.")
+                    war.log.append(f"    Missile missed {target_region.unit.name}.")
 
         elif action.missile_type == 'Nuclear Missile':
             
             attacking_combatant.launched_nukes += 1
             war.attacker_nuclear_strikes += war.warscore_nuclear_strike
-            if target_region_improvement.name != 'Capital':
+            if target_region.improvement.name != 'Capital':
                 target_region.set_fallout()
 
             # destroy improvement if present
-            if target_region_improvement.name is not None:
+            if target_region.improvement.name is not None:
                 missile_did_something = True
                 war.attacker_destroyed_improvements += war.warscore_destroy_improvement
-                if target_region_improvement.name != 'Capital':
+                if target_region.improvement.name != 'Capital':
                     attacking_combatant.destroyed_improvements += 1
                     defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region_improvement.name} in {target_region.region_id}!")
-                    target_nation.improvement_counts[target_region_improvement.name] -= 1
-                    target_region_improvement.clear()
+                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.region_id}!")
+                    target_nation.improvement_counts[target_region.improvement.name] -= 1
+                    target_region.improvement.clear()
                 else:
                     war.log.append(f"    Missile devastated Capital in {target_region.region_id}!")
-                    target_region_improvement.health = 0
-                    target_region_improvement._save_changes()
+                    target_region.improvement.health = 0
 
             # destroy unit if present
-            if target_region_unit.name != None:
+            if target_region.unit.name != None:
                 missile_did_something = True
-                war.attacker_destroyed_units += target_region_unit.value    # amount of warscore earned depends on unit value
+                war.attacker_destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
                 attacking_combatant.destroyed_units += 1
                 defending_combatant.lost_units += 1
-                war.log.append(f"    Missile destroyed {target_region_unit.name} in {target_region.region_id}!")
-                target_nation.unit_counts[target_region_unit.name] -= 1
-                target_region_unit.clear()
+                war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.region_id}!")
+                target_nation.unit_counts[target_region.unit.name] -= 1
+                target_region.unit.clear()
 
         # message for if missile hit nothing despite reaching its target
         if not missile_did_something:
@@ -2617,44 +2596,42 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
             nation = nation_table.get(action.id)
 
             # load current region objects
-            current_region = Region(action.current_region_id, game_id)
-            current_region_unit = Unit(action.current_region_id, game_id)
+            current_region = Region(action.current_region_id)
 
             # load target region objects
-            target_region = Region(target_region_id, game_id)
-            target_region_unit = Unit(target_region_id, game_id)
+            target_region = Region(target_region_id)
 
             # current region checks
-            if current_region_unit.name == None or action.id != str(current_region_unit.owner_id):
+            if current_region.unit.name == None or action.id != current_region.unit.owner_id:
                 nation.action_log.append(f"Failed to perform a move action from {action.current_region_id}. You do not control a unit there.")
                 nation_table.save(nation)
                 continue
-            if target_region_id not in current_region.adjacent_regions:
-                nation.action_log.append(f"Failed to move {current_region_unit.name} {action.current_region_id} - {target_region_id}. Target region not adjacent to current region.")
+            if target_region_id not in current_region.graph.adjacent_regions:
+                nation.action_log.append(f"Failed to move {current_region.unit.name} {action.current_region_id} - {target_region_id}. Target region not adjacent to current region.")
                 nation_table.save(nation)
                 continue
             if target_region_id == action.current_region_id:
                 continue
 
             # target region checks
-            if target_region.owner_id == 0 and action.id != "99":
-                nation.action_log.append(f"Failed to move {target_region_unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
+            if target_region.data.owner_id == "0" and action.id != "99":
+                nation.action_log.append(f"Failed to move {target_region.unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
                 nation_table.save(nation)
                 continue
 
             # illegal move check
-            if target_region_unit.name != None and not target_region_unit.is_hostile(current_region_unit.owner_id):
-                nation.action_log.append(f"Failed to move {current_region_unit.name} {action.current_region_id} - {target_region_id}. A friendly unit is present in the target region.")
+            if target_region.unit.name != None and not target_region.unit.is_hostile(current_region.unit.owner_id):
+                nation.action_log.append(f"Failed to move {current_region.unit.name} {action.current_region_id} - {target_region_id}. A friendly unit is present in the target region.")
                 nation_table.save(nation)
                 continue
-            if not target_region.is_valid_move(current_region_unit.owner_id):
-                nation.action_log.append(f"Failed to move {current_region_unit.name} {action.current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.")
+            if not target_region.is_valid_move(current_region.unit.owner_id):
+                nation.action_log.append(f"Failed to move {current_region.unit.name} {action.current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.")
                 nation_table.save(nation)
                 continue
 
             # execute movement order
-            unit_name = current_region_unit.name
-            movement_success = current_region_unit.move(target_region)
+            unit_name = current_region.unit.name
+            movement_success = current_region.move_unit(target_region)
             nation_table.reload()
             nation = nation_table.get(action.id)
             if movement_success:

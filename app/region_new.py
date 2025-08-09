@@ -5,14 +5,14 @@ from collections import deque
 from dataclasses import dataclass
 from typing import ClassVar
 
-import core
+from app import core
 from app.nationdata import Nation
 from app.nationdata import NationTable
 
 @dataclass
 class Regions:
 
-    game_id: ClassVar[str]
+    game_id: ClassVar[str] = None
     _data: ClassVar[dict[str, dict]] = None
     _graph: ClassVar[dict[str, dict]] = None
 
@@ -58,14 +58,8 @@ class Region:
         self.claim_list = []
         self.data = RegionData(Regions._data[self.region_id]["regionData"])
         self.graph = GraphData(Regions._graph[self.region_id])
-        self.improvement = ImprovementData(
-            Regions._data[self.region_id]["improvementData"],
-            self.graph
-        )
-        self.unit = UnitData(
-            Regions._data[self.region_id]["unitData"],
-            self.graph
-        )
+        self.improvement = ImprovementData(Regions._data[self.region_id]["improvementData"])
+        self.unit = UnitData(Regions._data[self.region_id]["unitData"])
 
     def __eq__(self, other):
         if isinstance(other, Region):
@@ -469,23 +463,25 @@ class GraphData:
         
     def __init__(self, d: dict):
 
+        self.full_name: str = d["fullName"]
         self.is_edge: bool = d["isEdgeOfMap"]
         self.is_significant: bool = d["hasRegionalCapital"]
         self.is_magnified: bool = d["isMagnified"]
         self.is_start: bool = d["randomStartAllowed"]
-        self.additional_region_coordinates: list = d["additionalRegionCords"]
         self.adjacent_regions: dict = d["adjacencyMap"]
+        self.additional_region_coordinates: list = d["additionalRegionCords"]
+        self.improvement_coordinates: list = d["improvementCords"]
+        self.unit_coordinates: list = d["unitCords"]
 
 class ImprovementData:
     
-    def __init__(self, d: dict, graphdata: dict):
+    def __init__(self, d: dict):
 
         self._impdata = d
 
         self._name: str = d["name"]
         self._health: int = d["health"]
         self._countdown: int = d["turnTimer"]
-        self.coords: list = graphdata["improvementCords"]
 
         self._load_attributes_from_game_files()
 
@@ -553,14 +549,13 @@ class ImprovementData:
 
 class UnitData:
     
-    def __init__(self, d: dict, graphdata: dict):
+    def __init__(self, d: dict):
 
         self._unitdata = d
 
         self._name: str = d["name"]
         self._health: int = d["health"]
         self._owner_id: str = d["ownerID"]
-        self.coords: list = graphdata["unitCords"]
 
         self._load_attributes_from_game_files()
 
@@ -605,11 +600,12 @@ class UnitData:
             self.hit_value = None
             self.value = None
 
-    def set(self, unit_name: str, starting_health=0) -> None:
+    def set(self, unit_name: str, owner_id: str) -> None:
         self.clear()
         self.name = unit_name
+        self.owner_id = owner_id
         self._load_attributes_from_game_files()
-        self.health = self.max_health if starting_health == 0 else starting_health
+        self.health = self.max_health
 
     def heal(self, amount: int) -> None:
         self.health += amount

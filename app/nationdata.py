@@ -4,7 +4,6 @@ import os
 from typing import Union, Tuple, List
 
 from app import core
-from app.region import Region
 
 class Nation:
     
@@ -74,12 +73,12 @@ class Nation:
 
         return vc_sets
 
-    def build(nation_id: int, player_id: int, game_id: str) -> "Nation":
+    def build(nation_id: str, player_id: int, game_id: str) -> "Nation":
         """
         Creates a new Nation instance from scratch when called by NationTable factory method.
 
         Params:
-            nation_id (int): ID of nation.
+            nation_id (str): ID of nation.
             player_id (int): ID of player controlling this nation.
             game_id (str): Game ID string.
 
@@ -812,12 +811,12 @@ class NationTable:
         for nation in self:
             self._name_to_id[nation.name.lower()] = nation.id
 
-    def create(self, nation_id: int, player_id: int) -> Nation:
+    def create(self, nation_id: str, player_id: int) -> Nation:
         """
         Factory method to create new Nation instance.
 
         Params:
-            nation_id (int): ID of nation.
+            nation_id (str): ID of nation.
             player_id (int): ID of player controlling this nation.
 
         Returns:
@@ -894,7 +893,7 @@ class NationTable:
             "actionLog": nation.action_log
         }
 
-        self.data[nation.id] = nation_data
+        self.data[str(nation.id)] = nation_data
 
         gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
         with open(gamedata_filepath, 'r') as json_file:

@@ -11,9 +11,8 @@ from collections import defaultdict
 
 from app import core
 from app import palette
-from app.region import Region
-from app.improvement import Improvement
-from app.unit import Unit
+from app.region_new import Region
+from app.region_new import Regions
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
@@ -40,6 +39,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     """
 
     # get game files
+    Regions.load(game_id)
     nation_table = NationTable(game_id)
     with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
         regdata_dict = json.load(json_file)
@@ -59,10 +59,9 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         if region_id is None or region_id not in regdata_dict:
             random_assignment_list.append(nation_id)
             continue
-        starting_region = Region(region_id, game_id)
-        starting_region_improvement = Improvement(region_id, game_id)
-        starting_region.set_owner_id(int(nation_id))
-        starting_region_improvement.set_improvement("Capital")
+        starting_region = Region(region_id)
+        starting_region.data.owner_id = nation_id
+        starting_region.improvement.set("Capital")
         nation = nation_table.get(nation_id)
         nation.improvement_counts["Capital"] += 1
         nation_table.save(nation)
@@ -75,23 +74,22 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
             conflict_detected = False
             region_id_list = list(regdata_dict.keys()) 
             random_region_id = random.sample(region_id_list, 1)[0]
-            random_region = Region(random_region_id, game_id)
+            random_region = Region(random_region_id)
             # if region not allowed restart loop
-            if not random_region.is_start:
+            if not random_region.graph.is_start:
                 continue
             # check if there is a player within three regions
             regions_in_radius = random_region.get_regions_in_radius(3)
             for candidate_region_id in regions_in_radius:
-                candidate_region = Region(candidate_region_id, game_id)
+                candidate_region = Region(candidate_region_id)
                 # if player found restart loop
-                if candidate_region.owner_id != 0:
+                if candidate_region.data.owner_id != "0":
                     conflict_detected = True
                     break
             # if no player found place player
             if conflict_detected == False:
-                random_region.set_owner_id(int(random_assignment_player_id))
-                random_region_improvement = Improvement(random_region_id, game_id)
-                random_region_improvement.set_improvement("Capital")
+                random_region.data.owner_id = random_assignment_player_id
+                random_region.improvement.set("Capital")
                 nation = nation_table.get(random_assignment_player_id)
                 nation.improvement_counts["Capital"] += 1
                 nation_table.save(nation)
@@ -109,6 +107,9 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     maps.populate_resource_map()
     maps.populate_main_map()
     maps.update_all()
+
+    # save
+    Regions.save()
 
 def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
@@ -199,6 +200,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     
     # get game data
+    Regions.load(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -318,6 +320,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # update game maps
     maps = GameMaps(game_id)
     maps.update_all()
+
+    # save
+    Regions.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
@@ -480,8 +485,8 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         
         regdata_dict[region_id] = {
             "regionData": {
-                "ownerID": 0,
-                "occupierID": 0,
+                "ownerID": "0",
+                "occupierID": "0",
                 "purchaseCost": 5,
                 "regionResource": "Empty",
                 "nukeTurns": 0,
@@ -494,7 +499,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
             "unitData": {
                 "name": None,
                 "health": 99,
-                "ownerID": 0
+                "ownerID": "0"
             }
         }
         
@@ -520,7 +525,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     # create nationdata
     nation_table = NationTable(game_id)
     for i, user_id in enumerate(user_id_list):
-        nation_table.create(i + 1, user_id)
+        nation_table.create(str(i + 1), user_id)
 
     # create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'

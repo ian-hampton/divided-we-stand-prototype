@@ -3,7 +3,6 @@ import os
 import random
 
 from app import core
-from app.region import Region
 from app.nationdata import Nation
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
@@ -211,7 +210,7 @@ class War:
     
     def _resolve_war_justification(self, nation_id: str):
 
-        from app.improvement import Improvement
+        from app.region_new import Region
         nation_table = NationTable(self.game_id)
         current_turn_num = core.get_current_turn_num(self.game_id)
         
@@ -223,20 +222,19 @@ class War:
 
             case "Border Skirmish" | "Conquest":
                 for region_id, original_owner_id in winner_combatant_data.claims.items():
-                    region = Region(region_id, self.game_id)
-                    region_improvement = Improvement(region_id, self.game_id)
+                    region = Region(region_id)
                     
-                    if str(region.owner_id) != original_owner_id:
+                    if str(region.data.owner_id) != original_owner_id:
                         continue
                         
-                    if region_improvement.name is not None:
+                    if region.improvement.name is not None:
                         looser_nation = nation_table.get(original_owner_id)
-                        looser_nation.improvement_counts[region_improvement.name] -= 1
-                        winner_nation.improvement_counts[region_improvement.name] += 1
+                        looser_nation.improvement_counts[region.improvement.name] -= 1
+                        winner_nation.improvement_counts[region.improvement.name] += 1
                         nation_table.save(looser_nation)
                     
-                    region.set_owner_id(int(winner_nation.id))
-                    region.set_occupier_id(0)
+                    region.data.owner_id = winner_nation.id
+                    region.data.occupier_id = "0"
                         
             case "Animosity":
                 looser_nation = nation_table.get(winner_combatant_data.target)
@@ -423,6 +421,8 @@ class War:
         return attacker_threshold, defender_threshold
 
     def end_conflict(self, outcome: str) -> None:
+
+        from app.region_new import Region
         
         # get game data
         nation_table = NationTable(self.game_id)
@@ -470,9 +470,9 @@ class War:
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
         for region_id in regdata_dict:
-            region = Region(region_id, self.game_id)
-            if str(region.owner_id) in self.combatants and str(region.occupier_id) in self.combatants:
-                region.set_occupier_id(0)
+            region = Region(region_id)
+            if region.data.owner_id in self.combatants and region.data.occupier_id in self.combatants:
+                region.data.occupier_id = "0"
 
         # withdraw units
         core.withdraw_units(self.game_id)
@@ -518,13 +518,13 @@ class WarTable:
     
     def _claim_pairs(self, war_claims: list) -> dict:
 
-        from app.region import Region
+        from app.region_new import Region
 
         pairs = {}
         
         for region_id in war_claims:
-            region = Region(region_id, self.game_id)
-            pairs[region_id] = str(region.owner_id)
+            region = Region(region_id)
+            pairs[region_id] = region.data.owner_id
 
         return pairs
 
@@ -744,20 +744,20 @@ class WarTable:
         Adds warscore from occupied regions.
         """
 
-        from app.region import Region
+        from app.region_new import Region
         nation_table = NationTable(self.game_id)
         with open(f'gamedata/{self.game_id}/regdata.json', 'r') as json_file:
             regdata_dict = json.load(json_file)
 
         for region_id in regdata_dict:
-            region = Region(region_id, self.game_id)
+            region = Region(region_id)
             
-            if region.occupier_id not in [0, 99]:
+            if region.data.occupier_id not in ["0", "99"]:
 
-                war_name = self.get_war_name(str(region.owner_id), str(region.occupier_id))
+                war_name = self.get_war_name(region.data.owner_id, region.data.occupier_id)
                 war = self.get(war_name)
-                occupier_war_role = war.get_role(str(region.occupier_id))
-                occupier_nation = nation_table.get(str(region.occupier_id))
+                occupier_war_role = war.get_role(region.data.occupier_id)
+                occupier_nation = nation_table.get(region.data.occupier_id)
 
                 score = war.warscore_occupation
                 if "Scorched Earth" in occupier_nation.completed_research:

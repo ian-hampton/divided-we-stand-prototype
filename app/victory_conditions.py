@@ -7,7 +7,6 @@ from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
 
-
 # easy
 
 def ambassador(nation: Nation) -> bool:
