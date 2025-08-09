@@ -52,10 +52,9 @@ class Region:
         if Regions.game_id is None:
             raise RuntimeError("Error: Error: Regions data not loaded.")
 
-        self.game_id = Regions.game_id
-
         self.region_id = region_id
         self.claim_list = []
+        self.game_id = Regions.game_id
         self.data = RegionData(Regions._data[self.region_id]["regionData"])
         self.graph = GraphData(Regions._graph[self.region_id])
         self.improvement = ImprovementData(Regions._data[self.region_id]["improvementData"])
@@ -284,7 +283,7 @@ class Region:
                 target_region.improvement.clear()
         
     def _execute_move(self, target_region: "Region") -> None:
-        target_region.unit.transfer(self.unit)
+        target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
         self.unit.clear()
 
     def calculate_yield(self, nation: Nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
@@ -600,12 +599,12 @@ class UnitData:
             self.hit_value = None
             self.value = None
 
-    def set(self, unit_name: str, owner_id: str) -> None:
+    def set(self, unit_name: str, owner_id: str, starting_health=0) -> None:
         self.clear()
         self.name = unit_name
         self.owner_id = owner_id
         self._load_attributes_from_game_files()
-        self.health = self.max_health
+        self.health = self.max_health if starting_health == 0 else starting_health
 
     def heal(self, amount: int) -> None:
         self.health += amount
@@ -640,11 +639,3 @@ class UnitData:
             return True
         
         return False
-    
-    def transfer(self, other_unit_data: "UnitData") -> None:
-        data = copy.deepcopy(other_unit_data)
-        self.unitdata = data._unitdata
-        self.name = data.name
-        self.health = data.health
-        self.owner_id = data.owner_id
-        self._load_attributes_from_game_files()
