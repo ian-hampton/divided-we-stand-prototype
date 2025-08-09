@@ -3,14 +3,12 @@ import json
 import importlib
 
 from app import core
+from app.region_new import Region
 from app.nationdata import Nation
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
 from app.notifications import Notifications
-from app.region import Region
-from app.improvement import Improvement
-from app.unit import Unit
 
 class HostPeaceTalksAction:
 
@@ -437,8 +435,8 @@ def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegio
             nation_table.save(nation)
             continue
 
-        region = Region(action.target_region, game_id)
-        nation.action_log.append(f"Used Inspect action for 5 dollars. Region {action.target_region} has an infection score of {region.infection()}.")
+        region = Region(action.target_region)
+        nation.action_log.append(f"Used Inspect action for 5 dollars. Region {action.target_region} has an infection score of {region.data.infection}.")
 
         nation_table.save(nation)
 
@@ -465,8 +463,8 @@ def resolve_quarantine_create_actions(game_id: str, actions_list: list[Quarantin
             nation_table.save(nation)
             continue
 
-        region = Region(action.target_region, game_id)
-        region.set_quarantine()
+        region = Region(action.target_region)
+        region.data.quarantine = True
         nation.action_log.append(f"Quarantined {action.target_region} for 1 political power.")
 
         nation_table.save(nation)
@@ -494,8 +492,8 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
             nation_table.save(nation)
             continue
 
-        region = Region(action.target_region, game_id)
-        region.set_quarantine(False)
+        region = Region(action.target_region)
+        region.data.quarantine = False
         nation.action_log.append(f"Ended quarantine {action.target_region} for 1 political power.")
 
         nation_table.save(nation)
@@ -648,22 +646,21 @@ def resolve_military_reinforcements_actions(game_id: str, actions_list: list[Mil
         # execute action
         for region_id in action.target_region_ids:
             
-            region = Region(region_id, game_id)
-            region_unit = Unit(region_id, game_id)
+            region = Region(region_id)
             
-            if region.owner_id != int(action.id):
+            if region.data.owner_id != action.id:
                 nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. You do not own that region.")
                 nation_table.save(nation)
                 continue
             
-            if region_unit.owner_id != int(action.id):
+            if region.unit.owner_id != action.id:
                 nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. A hostile unit is present.")
                 nation_table.save(nation)
                 continue
             
-            if region_unit.name is not None:
-                nation.unit_counts[region_unit.name] -= 1
-            region_unit.set_unit("Mechanized Infantry", int(action.id))
+            if region.unit.name is not None:
+                nation.unit_counts[region.unit.name] -= 1
+            region.unit.set("Mechanized Infantry", action.id)
             nation.unit_counts["Mechanized Infantry"] += 1
             nation.action_log.append(f"Used Military Reinforcements to deploy Mechanized Infantry {region_id}.")
 

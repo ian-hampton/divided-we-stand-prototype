@@ -5,10 +5,6 @@ import random
 import copy
 from typing import Union, Tuple, List
 
-from app.region import Region
-from app.improvement import Improvement
-from app.unit import Unit
-from app.alliance import AllianceTable
 from app.nationdata import Nation
 from app.nationdata import NationTable
 
@@ -81,6 +77,8 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
             int: Alliance count.
             int: Alliance limit.
     """
+
+    from app.alliance import AllianceTable
     
     # get alliance data
     alliance_count = 0
@@ -311,8 +309,7 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
 
 def validate_war_claims(game_id: str, war_justification: str, region_claims_list: list) -> bool:
 
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
+    from app.region_new import Regions
 
     # get war justification info
     if war_justification == 'Border Skirmish':
@@ -328,7 +325,7 @@ def validate_war_claims(game_id: str, war_justification: str, region_claims_list
     total = 0
     for i, region_id in enumerate(region_claims_list):
         
-        if region_id not in regdata_dict:
+        if region_id not in Regions:
             return -1
         
         if i + 1 > max_claims:
@@ -345,65 +342,63 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
     """
     
     # get game data
+    from app.region_new import Region
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    target_region = Region(target_region_id, game_id)
-    target_region_improvement = Improvement(target_region_id, game_id)
-    target_region_unit = Unit(target_region_id, game_id)
+    target_region = Region(target_region_id)
 
     defender_name = None
     # TODO - get priority for missile defense from game files
     # TODO - get defensive capabilities from game files
 
     # check for MDS
-    if target_region_improvement.name == "Missile Defense System":
+    if target_region.improvement.name == "Missile Defense System":
         defender_name = "Missile Defense System"
     else:
         missile_defense_network_candidates_list = target_region.get_regions_in_radius(2)
         for select_region_id in missile_defense_network_candidates_list:
-            select_region = Region(select_region_id, game_id)
-            select_region_improvement = Improvement(select_region_id, game_id)
-            if select_region_improvement.name == "Missile Defense System" and select_region.owner_id == target_region.owner_id:
+            select_region = Region(select_region_id)
+            if select_region.improvement.name == "Missile Defense System" and select_region.data.owner_id == target_region.data.owner_id:
                 defender_name = "Missile Defense System"
                 break
+    
+    if missile_type != "Standard Missile":
+        return defender_name
 
     # check for anti-air unit
-    if target_region_unit.name == "Anti-Air":
+    if target_region.unit.name == "Anti-Air":
         defender_name = "Anti-Air"
     else:
-        if target_region.check_for_adjacent_unit({"Anti-Air"}, target_region.owner_id):
+        if target_region.check_for_adjacent_unit({"Anti-Air"}, target_region.data.owner_id):
             defender_name = "Anti-Air"
 
     # last resort - check for local defense
     if defender_name is None and "Local Missile Defense" in target_nation.completed_research:
-        if target_region_improvement is not None and target_region_improvement.health != 0:
-            if target_region_improvement.missile_defense != 99:
-                defender_name = target_region_improvement.name
+        if target_region.improvement is not None and target_region.improvement.health != 0:
+            if target_region.improvement.missile_defense != "99":
+                defender_name = target_region.improvement.name
 
     return defender_name
 
 def withdraw_units(game_id: str):
 
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_unit = Unit(region_id, game_id)
+    for region in Regions:
         
         # a unit can only be present in another nation without occupation if a war just ended 
-        if region_unit.name is not None and region_unit.owner_id != region.owner_id and region.occupier_id == 0:
+        if region.unit.name is not None and region.unit.owner_id != region.data.owner_id and region.data.occupier_id == "0":
             
-            nation = nation_table.get(str(region_unit.owner_id))
+            nation = nation_table.get(region.unit.owner_id)
             target_id = region.find_suitable_region()
             
             if target_id is not None:
-                nation.action_log.append(f"Withdrew {region_unit.name} {region_unit.region_id} to {target_id}.")
-                region_unit.move(Region(target_id, game_id), withdraw=True)
+                nation.action_log.append(f"Withdrew {region.unit.name} {region.region_id} to {target_id}.")
+                region.move_unit(Region(target_id), withdraw=True)
             else:
-                nation.action_log.append(f"Failed to withdraw {region_unit.name} {region_unit.region_id}. Unit disbanded!")
-                nation.unit_counts[region_unit.name] -= 1
-                region_unit.clear()
+                nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.region_id}. Unit disbanded!")
+                nation.unit_counts[region.unit.name] -= 1
+                region.unit.clear()
             
             nation_table.save(nation)
 
@@ -493,22 +488,19 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     Searches for a specific improvement and removes it.
     """
 
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
+    from app.region_new import Region, Regions
     
     # find all regions belonging to a player with target improvement
     candidate_region_ids = []
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_improvement = Improvement(region_id, game_id)
-        if region_improvement.name == target_improvement and region.owner_id == int(player_id):
-            candidate_region_ids.append(region_id)
+    for region in Regions:
+        if region.improvement.name == target_improvement and region.data.owner_id == int(player_id):
+            candidate_region_ids.append(region.region_id)
 
     # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    target_region_improvement = Improvement(chosen_region_id, game_id)
-    target_region_improvement.clear()
+    target_region = Region(chosen_region_id)
+    target_region.improvement.clear()
     
     return chosen_region_id
 
@@ -517,25 +509,23 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     Randomly destroys one unit of a given type belonging to a specific player.
     """
 
+    from app.region_new import Region, Regions
     unit_scenario_dict = get_scenario_dict(game_id, "Units")
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
     # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []
     if desired_unit_name in unit_scenario_dict:
-        for region_id in regdata_dict:
-            region_unit = Unit(region_id, game_id)
-            if (desired_unit_name == 'ANY' or region_unit.name == desired_unit_name) and region_unit.owner_id == int(player_id):
-                candidate_region_ids.append(region_id)
+        for region in Regions:
+            if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
+                candidate_region_ids.append(region.region_id)
 
     # randomly select one of the candidate regions
     # there should always be at least one candidate region because we have already checked that the target unit exists
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    target_region_unit = Unit(chosen_region_id, game_id)
-    victim = copy.deepcopy(target_region_unit.name)
-    target_region_unit.clear()
+    target_region = Region(chosen_region_id)
+    victim = copy.deepcopy(target_region.unit.name)
+    target_region.unit.clear()
 
     return chosen_region_id, victim
 

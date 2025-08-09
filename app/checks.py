@@ -5,9 +5,6 @@ import random
 import datetime
 
 from app import core
-from app.region import Region
-from app.improvement import Improvement
-from app.unit import Unit
 from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
@@ -26,10 +23,9 @@ def update_income(game_id: str) -> None:
     """
     
     # get game data
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    with open(f"gamedata/{game_id}/regdata.json", 'r') as json_file:
-        regdata_dict = json.load(json_file)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -59,31 +55,28 @@ def update_income(game_id: str) -> None:
     ### calculate gross income ###
 
     # add income from regions
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_improvement = Improvement(region_id, game_id)
-        region_unit = Unit(region_id, game_id)
+    for region in Regions:
         # skip if region is unowned
-        if region.owner_id in [0, 99]:
+        if region.data.owner_id in ["0", "99"]:
             continue
         # update statistics
-        nation = nation_table.get(region.owner_id)
+        nation = nation_table.get(region.data.owner_id)
         nation.regions_owned += 1
-        if region.occupier_id != 0:
+        if region.data.occupier_id != "0":
             nation.regions_occupied += 1
         nation_table.save(nation)
         # skip if region is empty
-        if region_improvement.name is None and region_unit.name is None:
+        if region.improvement.name is None and region.unit.name is None:
             continue
         # add improvement yields
-        if region_improvement.name is not None and region_improvement.health != 0 and region.occupier_id == 0:
-            if region_improvement.name[-1] != 'y':
-                plural_improvement_name = f'{region_improvement.name}s'
+        if region.improvement.name is not None and region.improvement.health != 0 and region.data.occupier_id == "0":
+            if region.improvement.name[-1] != 'y':
+                plural_improvement_name = f"{region.improvement.name}s"
             else:
-                plural_improvement_name = f'{region_improvement.name[:-1]}ies'
-            nation = nation_table.get(region.owner_id)
-            improvement_income_dict = yield_dict[nation.name][region_improvement.name]
-            improvement_yield_dict = region_improvement.calculate_yield(nation, improvement_income_dict, active_games_dict)
+                plural_improvement_name = f"{region.improvement.name[:-1]}ies"
+            nation = nation_table.get(region.data.owner_id)
+            improvement_income_dict = yield_dict[nation.name][region.improvement.name]
+            improvement_yield_dict = region.calculate_yield(nation, improvement_income_dict, active_games_dict)
             for resource_name, amount_gained in improvement_yield_dict.items():
                 if amount_gained != 0:
                     nation.update_gross_income(resource_name, amount_gained)
@@ -91,8 +84,8 @@ def update_income(game_id: str) -> None:
                     _update_text_dict(text_dict, nation.name, resource_name, income_str)
                     nation_table.save(nation)
         # add unit military capacity cost
-        if region_unit.name is not None:
-            nation = nation_table.get(region_unit.owner_id)
+        if region.unit.name is not None:
+            nation = nation_table.get(region.unit.owner_id)
             nation.update_used_mc(1.00)
             if nation.gov == "Military Junta":
                 nation.update_gross_income("Political Power", 0.1)
@@ -336,15 +329,12 @@ def countdown(game_id: str) -> None:
     Resolves improvements/units that have countdowns associated with them.
     """
 
-    nation_table = NationTable(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
+    from app.region_new import Region, Regions
     
     # resolve nuked regions
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        if region.fallout != 0:
-            region.decrease_fallout()
+    for region in Regions:
+        if region.data.fallout != 0:
+            region.data.fallout -= 1
 
 def resolve_resource_shortages(game_id: str) -> None:
     """
@@ -458,49 +448,45 @@ def bonus_phase_heals(game_id: str) -> None:
     Heals all units and defensive improvements by 2 health.
     """
     
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
-    with open(f"gamedata/{game_id}/regdata.json", 'r') as json_file:
-        regdata_dict = json.load(json_file)
     
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        region_improvement = Improvement(region_id, game_id)
-        region_unit = Unit(region_id, game_id)
+    for region in Regions:
         
-        if region_improvement.owner_id not in [0, 99]:
+        if region.data.owner_id not in ["0", "99"]:
 
-            nation_improvement = nation_table.get(str(region_improvement.owner_id))
+            nation_improvement = nation_table.get(region.data.owner_id)
 
             # heal improvement
-            if region.owner_id != 0 and region_improvement.name != None and region_improvement.health != 99:
-                region_improvement.heal(2)
-                if nation_improvement.id != 0 and "Peacetime Recovery" in nation_improvement.completed_research and war_table.is_at_peace(nation_improvement.id):
-                    region_improvement.heal(100)
+            if region.data.owner_id != "0" and region.improvement.name != None and region.improvement.health != 99:
+                region.improvement.heal(2)
+                if nation_improvement.id != "0" and "Peacetime Recovery" in nation_improvement.completed_research and war_table.is_at_peace(nation_improvement.id):
+                    region.improvement.heal(100)
         
-        if region_unit.name != None and region_unit.owner_id not in [0, 99]:
+        if region.unit.name is not None and region.unit.owner_id not in ["0", "99"]:
             
-            nation_unit = nation_table.get(str(region_unit.owner_id))
+            nation_unit = nation_table.get(region.unit.owner_id)
             heal_allowed = False
 
             # check if unit is allowed to heal
-            if region_unit.name == "Special Forces":
+            if region.unit.name == "Special Forces":
                 heal_allowed = True
             elif "Scorched Earth" in nation_unit.completed_research:
                 heal_allowed = True
-            elif region.owner_id == region_unit.owner_id:
+            elif region.data.owner_id == region.unit.owner_id:
                 heal_allowed = True
             else:
-                for adjacent_region_id in region.adjacent_regions:
-                    adjacent_region_unit = Unit(adjacent_region_id, game_id)
-                    if adjacent_region_unit.owner_id == region_unit.owner_id:
+                for adjacent_region_id in region.graph.adjacent_regions:
+                    adjacent_region = Region(adjacent_region_id)
+                    if adjacent_region.unit.owner_id == region.unit.owner_id:
                         heal_allowed = True
 
             # heal unit
             if heal_allowed:
-                region_unit.heal(2)
-                if nation_unit.id != 0 and "Peacetime Recovery" in nation_unit.completed_research and war_table.is_at_peace(nation_unit.id):
-                    region_unit.heal(100)
+                region.unit.heal(2)
+                if nation_unit.id != "0" and "Peacetime Recovery" in nation_unit.completed_research and war_table.is_at_peace(nation_unit.id):
+                    region.unit.heal(100)
 
 def prompt_for_missing_war_justifications(game_id: str) -> None:
     """
@@ -525,19 +511,16 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     """
     
     # get game data
+    from app.region_new import Region, Regions
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
     notifications = Notifications(game_id)
-    with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-        regdata_dict = json.load(json_file)
 
     # check all regions for occupation
     non_occupied_found_list = [False] * len(nation_table)
-    for region_id in regdata_dict:
-        region = Region(region_id, game_id)
-        owner_id = region.owner_id
-        if owner_id != 0 and owner_id != 99 and region.occupier_id == 0:
-            non_occupied_found_list[owner_id - 1] = True
+    for region in Regions:
+        if region.data.owner_id != "0" and region.data.owner_id != "99" and region.data.occupier_id == "0":
+            non_occupied_found_list[int(region.data.owner_id) - 1] = True
     
     # if no unoccupied region found for a player force surrender if main combatant
     for index, region_found in enumerate(non_occupied_found_list):

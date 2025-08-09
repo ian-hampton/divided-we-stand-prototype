@@ -36,7 +36,7 @@ with open(f"gamedata/{GAME_ID}/regdata.json", 'r') as json_file:
     regdata_dict = json.load(json_file)
 for region_id in regdata_dict.keys():
     region = Region(region_id, GAME_ID)
-    region.owner_id = 1
+    region.data.owner_id = 1
     region._save_changes()
 for region_id in regdata_dict.keys():
     improvement = Improvement(region_id, GAME_ID)

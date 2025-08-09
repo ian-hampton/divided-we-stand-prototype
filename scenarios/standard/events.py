@@ -3,15 +3,14 @@ import random
 
 from app import core
 from app import actions
+from app.region_new import Region
 from app.nationdata import Nation
 from app.nationdata import NationTable
 from app.alliance import Alliance
 from app.alliance import AllianceTable
 from app.war import WarTable
 from app.notifications import Notifications
-from app.region import Region
-from app.improvement import Improvement
-from app.unit import Unit
+
 from app import palette
 
 
@@ -21,6 +20,8 @@ class Event:
 
         self.game_id = game_id
         self.state = -1
+
+        
 
         # load event data
         self.name: str = event_name
@@ -38,8 +39,6 @@ class Event:
             self.current_turn_num = core.get_current_turn_num(self.game_id)
             with open("active_games.json", 'r') as json_file:
                 self.active_games_dict = json.load(json_file)
-            with open(f'gamedata/{game_id}/regdata.json', 'r') as json_file:
-                self.regdata_dict = json.load(json_file)
 
         # GAME DATA NOTES
         #  - be sure to set temp to true if the event is only being loaded to check for conditions or expiration
@@ -310,6 +309,8 @@ class DecayingInfrastructure(Event):
         Event.__init__(self, game_id, event_name, event_data, temp=temp)
 
     def activate(self):
+
+        from app.region_new import Regions
         
         top_three = self.nation_table.get_top_three("nationSize")
         top_three_ids = set()
@@ -317,16 +318,15 @@ class DecayingInfrastructure(Event):
             temp = self.nation_table.get(nation_name)
             top_three_ids.add(temp.id)
 
-        for region_id in self.regdata_dict:
-            region_improvement = Improvement(region_id, self.game_id)
-            if str(region_improvement.owner_id) in top_three_ids and region_improvement.name is not None and region_improvement.name != "Capital":
+        for region in Regions:
+            if region.data.owner_id in top_three_ids and region.improvement.name is not None and region.improvement.name != "Capital":
                 decay_roll = random.randint(1, 10)
                 if decay_roll >= 9:
-                    nation = self.nation_table.get(str(region_improvement.owner_id))
-                    nation.improvement_counts[region_improvement.name] -= 1
+                    nation = self.nation_table.get(region.data.owner_id)
+                    nation.improvement_counts[region.improvement.name] -= 1
                     self.nation_table.save(nation)
-                    self.notifications.append(f"{nation.name} {region_improvement.name} in {region_id} has decayed.", 2)
-                    region_improvement.clear()
+                    self.notifications.append(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 2)
+                    region.improvement.clear()
 
         self.state = 0
 
@@ -343,6 +343,8 @@ class Desertion(Event):
         Event.__init__(self, game_id, event_name, event_data, temp=temp)
 
     def activate(self):
+
+        from app.region_new import Regions
         
         # retrieve lowest warscore for each nation
         lowest_warscore_dict = {}
@@ -368,17 +370,17 @@ class Desertion(Event):
         self.targets = list(filtered_dict.keys())
         
         # check all regions owned by targets
-        for region_id in self.regdata_dict:
-            region_unit = Unit(region_id, self.game_id)
-            if region_unit.owner_id not in self.targets:
+        for region_id in Regions:
+            region = Region(region_id)
+            if region.unit.owner_id not in self.targets:
                 continue
             defection_roll = random.randint(1, 10)
             if defection_roll >= 9:
-                nation = self.nation_table.get(str(region_unit.owner_id))
-                nation.unit_counts[region_unit.name] -= 1
+                nation = self.nation_table.get(region.unit.owner_id)
+                nation.unit_counts[region.unit.name] -= 1
                 self.nation_table.save(nation)
-                self.notifications.append(f"{nation.name} {region_unit.name} {region_id} has deserted.", 2)
-                region_unit.clear()
+                self.notifications.append(f"{nation.name} {region.unit.name} {region_id} has deserted.", 2)
+                region.unit.clear()
         
         self.state = 0
 
@@ -563,8 +565,8 @@ class LostNuclearWeapons(Event):
                     if silo_location_id in self.regdata_dict:
                         valid_region_id = True
                 nation.improvement_counts["Missile Silo"] += 1
-                region_improvement = Improvement(valid_region_id, self.game_id)
-                region_improvement.set_improvement("Missile Silo")
+                region = Region(valid_region_id)
+                region.improvement.set("Missile Silo")
                 nation.nuke_count += 3
             
             elif decision == "Scuttle":
@@ -741,23 +743,21 @@ class PowerPlantMeltdown(Event):
     def activate(self):
         
         for region_id in self.regdata_dict:
-            region_improvement = Improvement(region_id, self.game_id)
-            if region_improvement.name == "Nuclear Power Plant":
+            region = Region(region_id)
+            if region.improvement.name == "Nuclear Power Plant":
                 self.targets.append(region_id)
         random.shuffle(self.targets)
         meltdown_region_id = self.targets.pop()
 
         nation = self.nation_table.get(str(meltdown_region_id))
-        region = Region(meltdown_region_id, self.game_id)
-        region_improvement = Improvement(meltdown_region_id, self.game_id)
-        region_unit = Unit(meltdown_region_id, self.game_id)
+        region = Region(meltdown_region_id)
 
         nation.improvement_counts["Nuclear Power Plant"] -= 1
-        region_improvement.clear()
-        if region_unit.name is not None:
-            nation.unit_counts[region_unit.name] -= 1
-            region_unit.clear()
-        region.set_fallout(99999)
+        region.improvement.clear()
+        if region.unit.name is not None:
+            nation.unit_counts[region.unit.name] -= 1
+            region.unit.clear()
+        region.data.fallout = 99999
         nation.update_stockpile("Political Power", 0, overwrite=True)
         
         self.nation_table.save(nation)
@@ -1138,11 +1138,9 @@ class ForeignInvasion(Event):
         while True:
             
             invasion_point_id = random.choice(region_id_list)
-            region = Region(invasion_point_id, self.game_id)
-            region_improvement = Improvement(invasion_point_id, self.game_id)
-            
-            is_near_capital = any(Improvement(adj_id, self.game_id).name == "Capital" for adj_id in region.adjacent_regions)
-            if region.is_edge and region_improvement.name != "Capital" and not is_near_capital:
+            region = Region(invasion_point_id)
+            is_near_capital = any(Region(adj_id).improvement.name == "Capital" for adj_id in region.graph.adjacent_regions)
+            if region.graph.is_edge and region.improvement.name != "Capital" and not is_near_capital:
                 break
         
         color_candidates = list(palette.normal_to_occupied.keys())
@@ -1171,9 +1169,9 @@ class ForeignInvasion(Event):
         self.war_table.save(war)
 
         unit_name = self._foreign_invasion_determine_unit()
-        invasion_point = Region(invasion_point_id, self.game_id)
+        invasion_point = Region(invasion_point_id, self.game_id)    #!!!
         self._foreign_invasion_initial_spawn(invasion_point_id, unit_name)
-        for adj_id in invasion_point.adjacent_regions:
+        for adj_id in invasion_point.graph.adjacent_regions:
             self._foreign_invasion_initial_spawn(adj_id, unit_name)
         
         self.state = 1
@@ -1184,11 +1182,10 @@ class ForeignInvasion(Event):
         # generate movement actions
         destination_dict = {}
         for region_id in self.regdata_dict:
-            region = Region(region_id, self.game_id)
-            region_unit = Unit(region_id, self.game_id)
-            if region_unit.name is None or region_unit.owner_id != 99:
+            region = Region(region_id)
+            if region.unit.name is None or region.unit.owner_id != "99":
                 continue
-            ending_region_id, priority = self._foreign_invasion_calculate_target_region(list(region.adjacent_regions.keys()), destination_dict)
+            ending_region_id, priority = self._foreign_invasion_calculate_target_region(list(region.graph.adjacent_regions.keys()), destination_dict)
             destination_dict[ending_region_id] = priority
             if ending_region_id is None:
                 continue
@@ -1200,8 +1197,8 @@ class ForeignInvasion(Event):
         if self.current_turn_num % 4 == 0:
             self.notifications.append("The Foreign Invasion has received reinforcements.", 2)
             for region_id in self.regdata_dict:
-                region = Region(region_id, self.game_id)
-                if region.owner_id == 99 and region.occupier_id == 0:
+                region = Region(region_id)
+                if region.data.owner_id == "99" and region.data.occupier_id == "0":
                     unit_name = self._foreign_invasion_determine_unit()
                     deploy_action_str = f"Deploy {unit_name} {region_id}"
                     actions_dict["UnitDeployAction"].append(actions.UnitDeployAction(self.game_id, "99", deploy_action_str))
@@ -1224,8 +1221,8 @@ class ForeignInvasion(Event):
         # Foreign Invasion ends if no unoccupied reinforcement regions
         invasion_unoccupied_count = 0
         for region_id in self.regdata_dict:
-            region = Region(region_id, self.game_id)
-            if region.owner_id == 99 and region.occupier_id == 0:
+            region = Region(region_id)#!!!
+            if region.data.owner_id == "99" and region.data.occupier_id == "0":
                 invasion_unoccupied_count += 1
         if invasion_unoccupied_count == 0:
             self._foreign_invasion_end()
@@ -1257,29 +1254,27 @@ class ForeignInvasion(Event):
     
     def _foreign_invasion_initial_spawn(self, region_id: str, unit_name: str) -> None:
 
-        region = Region(region_id, self.game_id)
-        region_improvement = Improvement(region_id, self.game_id)
-        region_unit = Unit(region_id, self.game_id)
+        region = Region(region_id)
 
-        if region_unit.name is not None:
+        if region.unit.name is not None:
             # remove old unit
-            if region_unit.owner_id != 0:
-                temp = self.nation_table.get(str(region_unit.owner_id))
-                temp.unit_counts[region_unit.name] -= 1
+            if region.unit.owner_id != "0":
+                temp = self.nation_table.get(region.unit.owner_id)
+                temp.unit_counts[region.unit.name] -= 1
                 self.nation_table.save(temp)
-            region_unit.clear()
+            region.unit.clear()
 
-        if region_improvement.name is not None:
+        if region.improvement.name is not None:
             # remove old improvement
-            if region_improvement.owner_id != 0:
-                temp = self.nation_table.get(str(region_improvement.owner_id))
-                temp.improvement_counts[region_improvement.name] -= 1
+            if region.improvement.owner_id != "0":
+                temp = self.nation_table.get(region.data.owner_id)
+                temp.improvement_counts[region.improvement.name] -= 1
                 self.nation_table.save(temp)
-            region_improvement.clear()
+            region.improvement.clear()
 
-        region.set_owner_id(99)
-        region.set_occupier_id(0)
-        region_unit.set_unit(unit_name, 99)
+        region.data.owner_id = "99"
+        region.data.occupier_id = "0"
+        region.unit.set(unit_name, "99")
 
         foreign_nation = self.nation_table.get("99")
         foreign_nation.unit_counts[unit_name] += 1
@@ -1304,34 +1299,32 @@ class ForeignInvasion(Event):
             adjacent_region_id = adjacency_list.pop(index)
 
             # get data from region
-            region = Region(adjacent_region_id, self.game_id)
-            region_improvement = Improvement(adjacent_region_id, self.game_id)
-            region_unit = Unit(adjacent_region_id, self.game_id)
+            region = Region(adjacent_region_id)
             candidate_region_priority = 0
             candidate_region_health = 0
             
             # increase priority based on control data
             # occupied friendly is the highest priority
-            if region.owner_id == 99 and region.occupier_id != 0:
+            if region.data.owner_id == "99" and region.data.occupier_id != "0":
                 candidate_region_priority += 10
             # unoccupied unclaimed region
-            elif region.owner_id == 0 and region.occupier_id != 99:
+            elif region.data.owner_id == "0" and region.data.occupier_id != "99":
                 candidate_region_priority += 4
             # occupied unclaimed region
-            elif region.owner_id == 0:
+            elif region.data.owner_id == "0":
                 candidate_region_priority += 2
             # friendly unoccupied region
-            elif region.owner_id == 99:
+            elif region.data.owner_id == "99":
                 candidate_region_priority += 0
             # unoccupied enemy region
-            elif region.owner_id != 99 and region.occupier_id != 99:
+            elif region.data.owner_id != "99" and region.data.occupier_id != "99":
                 candidate_region_priority += 8
             # occupied enemy region
-            elif region.owner_id != 99:
+            elif region.data.owner_id != "99":
                 candidate_region_priority += 6
             
             # increase priority by one if there is a hostile unit
-            if region_unit.name != None and region_unit.owner_id != 0:
+            if region.unit.name != None and region.unit.owner_id != "0":
                 candidate_region_priority += 1
 
             # try to prevent units from tripping over each other on unclaimed regions and friendly unoccupied regions
@@ -1339,10 +1332,10 @@ class ForeignInvasion(Event):
                 continue
             
             # calculate region health
-            if region_improvement.name != None and region_improvement.health != 99 and region.owner_id != 99 and region.occupier_id != 99:
-                candidate_region_health += region_improvement.health
-            if region_unit.name != None and region_unit.owner_id != 0:
-                candidate_region_health += region_unit.health
+            if region.improvement.name != None and region.improvement.health != "99" and region.data.owner_id != "99" and region.data.occupier_id != "99":
+                candidate_region_health += region.improvement.health
+            if region.unit.name != None and region.unit.owner_id != "0":
+                candidate_region_health += region.unit.health
             
             #check if candidate region is an easier or higher priority target
             if candidate_region_priority > target_region_priority:
@@ -1362,18 +1355,17 @@ class ForeignInvasion(Event):
     
         for region_id in self.regdata_dict:
             
-            region = Region(region_id, self.game_id)
-            region_unit = Unit(region_id, self.game_id)
+            region = Region(region_id)
             
-            if region.owner_id == 99:
-                region.set_owner_id(0)
-                region.set_occupier_id(0)
-            elif region.occupier_id == 99:
-                region.set_occupier_id(0)
+            if region.data.owner_id == "99":
+                region.data.owner_id = "0"
+                region.data.occupier_id = "0"
+            elif region.data.occupier_id == "99":
+                region.data.occupier_id = "0"
             
-            if region_unit.owner_id == 99:
-                foreign_invasion_nation.unit_counts[region_unit.name] -= 1
-                region_unit.clear()
+            if region.unit.owner_id == "99":
+                foreign_invasion_nation.unit_counts[region.unit.name] -= 1
+                region.unit.clear()
 
             war = self.war_table.get("Foreign Invasion")
             war.end = self.current_turn_num
@@ -1403,8 +1395,8 @@ class Pandemic(Event):
         self.closed_borders = []
         origin_region_id = random.choice(list(self.regdata_dict.keys()))
         
-        region = Region(origin_region_id, self.game_id)
-        region.add_infection()
+        region = Region(origin_region_id)
+        region.data.infection += 1
         
         self.state = 1
         self.expire_turn = 99999
@@ -1415,69 +1407,67 @@ class Pandemic(Event):
             
             # run pandemic decline procedure
             for region_id in self.regdata_dict:
-                region = Region(region_id, self.game_id)
+                region = Region(region_id)
                 region.add_infection(-1)
 
         else:
 
             # conduct intensify rolls
             for region_id in self.regdata_dict:
-                region = Region(region_id, self.game_id)
-                if region.infection() > 0 and region.infection() < 10:
+                region = Region(region_id)
+                if region.data.infection > 0 and region.data.infection < 10:
                     # intensify check
                     intensify_roll = random.randint(1, 10)
                     if intensify_roll < self.intensify:
                         continue
                     # intensify more if near capital or city
                     if region.check_for_adjacent_improvement(improvement_names = {'Capital', 'City'}):
-                        region.add_infection(2)
+                        region.data.infection += 2
                     else:
-                        region.add_infection(1)
+                        region.data.infection += 1
 
             # get a list of regions infected before spreading starts
             infected_regions = []
             for region_id in self.regdata_dict:
-                region = Region(region_id, self.game_id)
-                if region.infection() > 0:
+                region = Region(region_id)
+                if region.data.infection > 0:
                     infected_regions.append(region_id)
 
             # conduct spread roles
             for region_id in infected_regions:
-                region = Region(region_id, self.game_id)
-                if region.infection() == 0:
+                region = Region(region_id)
+                if region.data.infection == 0:
                     continue
-                for adjacent_region_id in region.adjacent_regions:
-                    adjacent_region = Region(adjacent_region_id, self.game_id)
-                    adjacent_owner_id = adjacent_region.owner_id
+                for adjacent_region_id in region.graph.adjacent_regions:
+                    adjacent_region = Region(adjacent_region_id)
+                    adjacent_owner_id = adjacent_region.data.owner_id
                     # spread only to regions that are not yet infected
-                    if adjacent_region.infection() != 0:
+                    if adjacent_region.data.infection != 0:
                         continue
                     spread_roll = random.randint(1, 20)
                     # spread attempt
-                    if region.is_quarantined() or (region.owner_id != adjacent_owner_id and adjacent_owner_id in self.closed_borders):
+                    if not region.data.quarantine or (region.data.owner_id != adjacent_owner_id and adjacent_owner_id in self.closed_borders):
                         if spread_roll == 20:
-                            adjacent_region.add_infection(1)
+                            adjacent_region.data.infection += 1
                     else:
                         if spread_roll >= self.spread:
-                            adjacent_region.add_infection(1)
+                            adjacent_region.data.infection += 1
 
         # sum up total infection scores
         unowned_infection = 0
         infection_scores = [0] * len(self.nation_table)
         for region_id in self.regdata_dict:
-            region = Region(region_id, self.game_id)
-            owner_id = region.owner_id
-            if owner_id != 0 and owner_id <= len(infection_scores):
-                infection_scores[owner_id - 1] += region.infection()
+            region = Region(region_id)
+            if region.data.owner_id != "0" and region.data.owner_id <= len(infection_scores):
+                infection_scores[int(region.data.owner_id) - 1] += region.data.infection
             else:
-                unowned_infection += region.infection()
+                unowned_infection += region.data.infection
         # check if pandemic has been eradicated
         infection_total = sum(infection_scores) + unowned_infection
         if infection_total == 0:
             for region_id in self.regdata_dict:
-                region = Region(region_id, self.game_id)
-                if region.is_quarantined():
-                    region.set_quarantine(False)
+                region = Region(region_id)
+                region.data.quarantine = False
             self.notifications.append("The pandemic has been eradicated!", 2)
             self.state = 0
             return
