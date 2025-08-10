@@ -978,7 +978,6 @@ def resolve_trade_actions(game_id: str) -> None:
     from app.region_new import Regions
 
     nation_table = NationTable(game_id)
-    notifications = Notifications(game_id)
 
     trade_action = input("Are there any trade actions this turn? (Y/n) ")
 
@@ -1111,7 +1110,7 @@ def resolve_trade_actions(game_id: str) -> None:
         if trade_valid:
             nation_table.save(nation1)
             nation_table.save(nation2)
-            notifications.append(f'{nation1.name} traded with {nation2.name}.', 9)
+            Notifications.add(f'{nation1.name} traded with {nation2.name}.', 9)
         else:
             print(f'Trade between {nation1.name} and {nation2.name} failed. Insufficient resources.')
 
@@ -1122,7 +1121,6 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
     # get game data
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
-    notifications = Notifications(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
 
     # execute surrender actions
@@ -1150,8 +1148,8 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         # end war
         war.end_conflict(outcome)
         war_table.save(war)
-        notifications.append(f"{surrendering_nation.name} surrendered to {winning_nation.name}.", 4)
-        notifications.append(f"{war_name} has ended.", 4)
+        Notifications.add(f"{surrendering_nation.name} surrendered to {winning_nation.name}.", 4)
+        Notifications.add(f"{war_name} has ended.", 4)
 
     # execute white peace actions
     white_peace_dict = {}
@@ -1177,7 +1175,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
             war = war_table.get(war_name)
             war.end_conflict("White Peace")
             war_table.save(war)
-            notifications.append(f'{war_name} has ended with a white peace.', 4)
+            Notifications.add(f'{war_name} has ended with a white peace.', 4)
 
 def _peace_action_valid(war_table: WarTable, nation_table: NationTable, surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
 
@@ -1307,7 +1305,6 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
     # get game data
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
 
     # process actions
     for action in actions_list:
@@ -1318,7 +1315,7 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
         # remove player from alliance
         alliance.remove_member(nation.name)
         alliance_table.save(alliance)
-        notifications.append(f"{nation.name} has left the {alliance.name}.", 7)
+        Notifications.add(f"{nation.name} has left the {alliance.name}.", 7)
         nation.action_log.append(f"Left {action.alliance_name}.")
         nation_table.save(nation)
 
@@ -1327,7 +1324,6 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
     # get game data
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
 
     # execute actions
     kick_actions_tally = defaultdict(lambda: defaultdict(int))
@@ -1368,14 +1364,13 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
             if votes >= len(alliance.current_members) - 1:
                 alliance.remove_member(target_nation_name)
                 alliance_table.save(alliance)
-                notifications.append(f"{action.target_nation} has been kicked from {action.alliance_name}!", 7)
+                Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 7)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
     
     # get game data
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
 
     # process actions
     alliance_creation_dict = {}
@@ -1429,7 +1424,7 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
         if len(alliance_data["members"]) > 1:
             # alliance creation success
             alliance = alliance_table.create(alliance_name, alliance_data["type"], alliance_data["members"])
-            notifications.append(f"{alliance.name} has formed.", 7)
+            Notifications.add(f"{alliance.name} has formed.", 7)
             for nation_name in alliance_data["members"]:
                 # update log
                 nation = nation_table.get(nation_name)
@@ -1447,7 +1442,6 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
     # get game data
     nation_table = NationTable(game_id)
     alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
 
     # process actions
     for action in actions_list:
@@ -1496,7 +1490,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
         # add player to the alliance
         alliance.add_member(nation.name)
         alliance_table.save(alliance)
-        notifications.append(f"{nation.name} has joined the {alliance.name}.", 7)
+        Notifications.add(f"{nation.name} has joined the {alliance.name}.", 7)
         nation.action_log.append(f"Joined {alliance.name}.")
         nation_table.save(nation)
 
@@ -1756,7 +1750,6 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
     
     # get game data
     nation_table = NationTable(game_id)
-    notifications = Notifications(game_id)
 
     # execute republic actions
     for action in actions_list:
@@ -1788,13 +1781,12 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
         nation.action_log.append(f"Used Republic government action to boost {action.resource_name} income.")
         nation_table.save(nation)
 
-        notifications.append(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 8)
+        Notifications.add(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 8)
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
     
     # get game data
     nation_table = NationTable(game_id)
-    notifications = Notifications(game_id)
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     current_turn_num = core.get_current_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
@@ -1968,7 +1960,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             market_results[nation_name][entry] -= stolen_amount
             nation.action_log.append(f"{syndicate_nation.name} stole {stolen_amount} {entry} from you! ({int(modifier * 100)}%)")
         
-        notifications.append(f"{syndicate_nation.name} stole from {nation.name}.", 8)
+        Notifications.add(f"{syndicate_nation.name} stole from {nation.name}.", 8)
 
     # update rmdata.csv
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
@@ -2081,7 +2073,6 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
     alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
 
     # execute actions
     for action in actions_list:
@@ -2181,7 +2172,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
         # resolve action
         war_name = war_table.create(attacker_nation.id, defender_nation.id, action.war_justification, region_claims_list)
-        notifications.append(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
+        Notifications.add(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
         nation_table.save(attacker_nation)
 
@@ -2193,7 +2184,6 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
     alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
 
     # execute actions
     for action in actions_list:
@@ -2314,7 +2304,7 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             continue
 
         ### save ###
-        notifications.append(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 3)
+        Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 3)
         nation_table.save(attacker_nation)
         combatant.claims = region_claims_list
         war.save_combatant(combatant)

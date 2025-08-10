@@ -11,12 +11,11 @@ from collections import defaultdict
 
 from app import core
 from app import palette
-from app.region_new import Region
-from app.region_new import Regions
+from app.region_new import Region, Regions
+from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.alliance import AllianceTable
 from app.war import WarTable
-from app.notifications import Notifications
 from app.map import GameMaps
 from app import actions
 from app import checks
@@ -199,6 +198,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     
     # get game data
     Regions.load(game_id)
+    Notifications.initialize(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -214,10 +214,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
                 continue
             class_name = type(action).__name__
             actions_dict[class_name].append(action)
-
-    # clear notifications
-    notifications = Notifications(game_id)
-    notifications.clear()
 
     # prompt for missing war justifications
     checks.prompt_for_missing_war_justifications(game_id)
@@ -294,7 +290,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         # bonus phase
         if current_turn_num % 4 == 0:
             checks.bonus_phase_heals(game_id)
-            notifications.append('All units and defensive improvements have regained 2 health.', 1)
+            Notifications.add('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
             events.trigger_event(game_id)
 
@@ -321,6 +317,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # save
     Regions.save()
+    Notifications.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
@@ -513,8 +510,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     gamedata_dict = {
         "alliances": {},
         "nations": {},
-        "notifications": {},
-        "victoryConditions": {},
+        "notifications": [],
         "wars": {}
     }
     with open(gamedata_filepath, 'w') as json_file:

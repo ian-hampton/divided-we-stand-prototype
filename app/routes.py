@@ -842,10 +842,10 @@ def resource_market(full_game_id):
 def announcements(full_game_id):
 
     # get game data
+    from app.notifications import Notifications
     nation_table = NationTable(full_game_id)
     alliance_table = AllianceTable(full_game_id)
     war_table = WarTable(full_game_id)
-    notifications = Notifications(full_game_id)
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     trucedata_list = core.read_file(trucedata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
@@ -910,8 +910,8 @@ def announcements(full_game_id):
     # Build Notifications String
     notifications_list = []
     q = PriorityQueue()
-    for string, priority in notifications:
-        q.put((priority, string))
+    for notification in Notifications:
+        q.put(notification)
     while not q.empty():
         ntf = q.get()
         notifications_list.append(ntf[1])
