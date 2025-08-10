@@ -841,8 +841,10 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
-    # get game data
     from app.notifications import Notifications
+
+    # get game data
+    Notifications.initialize(full_game_id)
     nation_table = NationTable(full_game_id)
     alliance_table = AllianceTable(full_game_id)
     war_table = WarTable(full_game_id)
