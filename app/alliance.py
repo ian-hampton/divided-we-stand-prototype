@@ -94,13 +94,13 @@ class Alliance:
 
         self._data = Alliances._data[alliance_name]
 
-        self._name = alliance_name
-        self._type = self._data["allianceType"]
-        self._turn_created = self._data["turnCreated"]
-        self._turn_ended = self._data["turnEnded"]
-        self._current_members = self._data["currentMembers"]
-        self._founding_members = self._data["foundingMembers"]
-        self._former_members = self._data["formerMembers"]
+        self.name = alliance_name
+        self._type: str = self._data["allianceType"]
+        self._turn_created: int = self._data["turnCreated"]
+        self._turn_ended: int = self._data["turnEnded"]
+        self._current_members: dict = self._data["currentMembers"]
+        self._founding_members: dict = self._data["foundingMembers"]
+        self._former_members: dict = self._data["formerMembers"]
 
         if self._turn_ended == 0:
             self.is_active: bool = True
@@ -108,12 +108,62 @@ class Alliance:
         else:
             self.is_active: bool = False
             self.age: int = self._turn_ended - self._turn_created
+    
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def turn_created(self):
+        return self._turn_created
+
+    @property
+    def turn_ended(self):
+        return self._turn_ended
+
+    @property
+    def current_members(self):
+        return self._current_members
+
+    @property
+    def founding_members(self):
+        return self._founding_members
+
+    @property
+    def former_members(self):
+        return self._former_members
+    
+    @type.setter
+    def type(self, alliance_type: str):
+        self._type = alliance_type
+        self._data["allianceType"] = alliance_type
+    
+    @turn_created.setter
+    def turn_created(self, turn: int):
+        self._turn_created = turn
+        self._data["turnCreated"] = turn
+
+    @turn_ended.setter
+    def turn_ended(self, turn: int):
+        self._turn_ended = turn
+        self._data["turnEnded"] = turn
 
     def add_member(self, nation_name: str) -> None:
-        pass
+        
+        if nation_name in self.former_members:
+            del self._former_members[nation_name]
+            self._data["formerMembers"] = self._former_members
+        
+        self._current_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
+        self._data["currentMembers"] = self._current_members
 
     def remove_member(self, nation_name: str) -> None:
-        pass
+        
+        del self._current_members[nation_name]
+        self._data["currentMembers"] = self._current_members
+
+        self._former_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
+        self._data["formerMembers"] = self._former_members
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         pass
