@@ -166,7 +166,73 @@ class Alliance:
         self._data["formerMembers"] = self._former_members
 
     def calculate_yield(self) -> Tuple[float, str | None]:
-        pass
+        
+        from app.nationdata import NationTable
+        nation_table = NationTable(Alliances.game_id)
+        agenda_data_dict = core.get_scenario_dict(Alliances.game_id, "Agendas")
+
+        if not self.is_active:
+            return 0.0, None
+
+        match self.type:
+            
+            case "Trade Agreement":
+                
+                total = 0.0
+                for ally_name in self.current_members:
+                    nation = nation_table.get(ally_name)
+                    total += nation.improvement_counts["Settlement"]
+                    total += nation.improvement_counts["City"]
+                    total += nation.improvement_counts["Central Bank"]
+                    total += nation.improvement_counts["Capital"]
+                
+                return total * 0.5, "Dollars"
+
+            case "Research Agreement":
+                
+                tech_set = set()
+                for ally_name in self.current_members:
+                    nation = nation_table.get(ally_name)
+                    ally_research_list = list(nation.completed_research.keys())
+                    tech_set.update(ally_research_list)
+
+                tech_set_filtered = set()
+                for research_name in tech_set:
+                    if research_name not in agenda_data_dict:
+                        tech_set_filtered.add(research_name)
+
+                return len(tech_set_filtered) * 0.2, "Research"
+
+            case "Defense Pact":
+                
+                return len(self.current_members), "Military Capacity"
+
+        return 0.0, None
 
     def end(self) -> None:
-        pass
+        
+        from app.nationdata import NationTable
+        nation_table = NationTable(Alliances.game_id)
+        current_turn_num = core.get_current_turn_num(Alliances.game_id)
+
+        # add truce periods
+        for nation1_name in self.current_members:
+            for nation2_name in self.current_members:
+                
+                if nation1_name == nation2_name:
+                    continue
+
+                nation1 = nation_table.get(nation1_name)
+                nation2 = nation_table.get(nation2_name)
+                
+                signatories_list = [False] * len(nation_table)
+                signatories_list[int(nation1.id) - 1] = True
+                signatories_list[int(nation2.id) - 1] = True
+                core.add_truce_period(Alliances.game_id, signatories_list, 2)
+
+        # dissolve alliance
+        names = list(self.current_members.keys())
+        for nation_name in names:
+            self.remove_member(nation_name)
+        self.current_members = {}
+        self.turn_ended = current_turn_num
