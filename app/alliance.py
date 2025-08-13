@@ -74,19 +74,64 @@ class Alliances(metaclass=AlliancesMeta):
     
     @classmethod
     def are_allied(cls, nation_name_1: str, nation_name_2: str) -> bool:
-        pass
+        for alliance in cls:
+            if (alliance.is_active
+                and nation_name_1 in alliance.current_members
+                and nation_name_2 in alliance.current_members):
+                return True
+        return False
 
     @classmethod
     def former_ally_truce(cls, nation_name_1: str, nation_name_2: str) -> bool:
-        pass
+        
+        current_turn_num = core.get_current_turn_num(cls.game_id)
+
+        for alliance in cls:
+            
+            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
+                if current_turn_num - alliance.former_members[nation_name_1] <= 2:
+                    return True
+                
+            elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
+                if current_turn_num - alliance.former_members[nation_name_2] <= 2:
+                    return True
+
+        return False
 
     @classmethod
     def allies(cls, nation_name: str, type_to_search = "ALL") -> list:
-        pass
+        
+        from app.nationdata import NationTable
+        nation_table = NationTable(cls.game_id)
+
+        allies_set = set()
+        for alliance in cls:
+            if alliance.is_active and nation_name in alliance.current_members:
+                if type_to_search != "ALL" and type_to_search != alliance.type:
+                    continue
+                for alliance_member_name in alliance.current_members:
+                    if alliance_member_name != nation_name:
+                        allies_set.add(alliance_member_name)
+
+        allies_list = []
+        for nation_name in allies_set:
+            nation = nation_table.get(nation_name)
+            allies_list.append(nation.id)
+
+        return allies_list
 
     @classmethod
     def longest_alliance(cls) -> Tuple[str, int]:
-        pass
+        
+        longest_alliance_name = None
+        longest_alliance_duration = -1
+
+        for alliance in cls:
+            if alliance.age > longest_alliance_duration:
+                longest_alliance_name = alliance.name
+                longest_alliance_duration = alliance.age
+
+        return longest_alliance_name, longest_alliance_duration
 
 class Alliance:
     
