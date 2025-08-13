@@ -146,13 +146,6 @@ class Alliance:
         self._current_members: dict = self._data["currentMembers"]
         self._founding_members: dict = self._data["foundingMembers"]
         self._former_members: dict = self._data["formerMembers"]
-
-        if self._turn_ended == 0:
-            self.is_active: bool = True
-            self.age: int = core.get_current_turn_num(Alliances.game_id) - self._turn_created
-        else:
-            self.is_active: bool = False
-            self.age: int = self._turn_ended - self._turn_created
     
     @property
     def type(self):
@@ -178,6 +171,17 @@ class Alliance:
     def former_members(self):
         return self._former_members
     
+    @property
+    def is_active(self):
+       return True if self.turn_ended == 0 else False
+
+    @property
+    def age(self):
+        if self._turn_ended == 0:
+           return core.get_current_turn_num(Alliances.game_id) - self.turn_created
+        else:
+           return self.turn_ended - self.turn_created
+
     @type.setter
     def type(self, alliance_type: str):
         self._type = alliance_type
