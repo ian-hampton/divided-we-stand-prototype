@@ -5,7 +5,6 @@ import random
 from app import core
 from app.nationdata import Nation
 from app.nationdata import NationTable
-from app.alliance import AllianceTable
 
 class Combatant:
     
@@ -539,8 +538,8 @@ class WarTable:
     def create(self, main_attacker_id: str, main_defender_id: str, war_justification: str, war_claims = []) -> War:
 
         # get game data
+        from app.alliance import Alliances
         nation_table = NationTable(self.game_id)
-        alliance_table = AllianceTable(self.game_id)
 
         # create war
         war_id = str(len(self) + 1)
@@ -566,15 +565,15 @@ class WarTable:
             if (
                 self.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
                 and not core.check_for_truce(self.game_id, main_defender.id, ally.id)    # ally cannot have truce with defender
-                and not alliance_table.are_allied(main_defender.name, ally.name)         # ally cannot be allied with defender
-                and not alliance_table.former_ally_truce(main_defender.name, ally.name)  # ally cannot be recently allied with defender
+                and not Alliances.are_allied(main_defender.name, ally.name)              # ally cannot be allied with defender
+                and not Alliances.former_ally_truce(main_defender.name, ally.name)       # ally cannot be recently allied with defender
             ):
                 combatant = new_war.add_combatant(ally, "Secondary Attacker", "TBD")
 
         # call in main defender allies
         # possible allies: puppet states, defensive pacts, overlord
         puppet_states = core.get_subjects(self.game_id, main_defender.name, "Puppet State")
-        defense_allies = alliance_table.get_allies(main_defender.name, "Defense Pact")
+        defense_allies = Alliances.allies(main_defender.name, "Defense Pact")
         ally_player_ids = set(puppet_states) | set(defense_allies)
         if main_defender.status != "Independent Nation":
             for nation in nation_table:
@@ -585,8 +584,8 @@ class WarTable:
             if (
                 self.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
                 and not core.check_for_truce(self.game_id, main_attacker.id, ally.id)    # ally cannot have truce with attacker
-                and not alliance_table.are_allied(main_attacker.name, ally.name)         # ally cannot be allied with attacker
-                and not alliance_table.former_ally_truce(main_attacker.name, ally.name)  # ally cannot be recently allied with attacker
+                and not Alliances.are_allied(main_attacker.name, ally.name)              # ally cannot be allied with attacker
+                and not Alliances.former_ally_truce(main_attacker.name, ally.name)       # ally cannot be recently allied with attacker
             ):
                 combatant = new_war.add_combatant(ally, "Secondary Defender", "TBD")
         

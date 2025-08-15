@@ -3,6 +3,7 @@ import csv
 import json
 import random
 import copy
+from collections import defaultdict
 from typing import Union, Tuple, List
 
 from app.nationdata import Nation
@@ -78,17 +79,14 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
             int: Alliance limit.
     """
 
-    from app.alliance import AllianceTable
-    
-    # get alliance data
-    alliance_count = 0
-    alliance_table = AllianceTable(game_id)
-    alliance_report_dict = alliance_table.report(nation.name)
+    from app.alliance import Alliances
 
-    # get alliance count
-    alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
+    totals = defaultdict(int)
+    for alliance in Alliances:
+        if alliance.is_active and nation.name in alliance:
+            totals[alliance.type] += 1
+    alliance_count = totals["Total"] - totals["Non-Aggression Pact"]
     
-    # get alliance limit
     alliance_limit = 2
     if 'Power Broker' in nation.completed_research:
         alliance_limit += 1

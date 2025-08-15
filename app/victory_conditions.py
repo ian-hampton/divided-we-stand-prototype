@@ -4,20 +4,17 @@ from collections import defaultdict
 from app import core
 from app.nationdata import Nation
 from app.nationdata import NationTable
-from app.alliance import AllianceTable
 from app.war import WarTable
 
 # easy
 
 def ambassador(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
     
     # count alliances
     alliances_found = defaultdict(int)
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if nation.name in alliance.founding_members and alliance.type != "Non-Aggression Pact":
             alliances_found[alliance.type] += 1
     
@@ -30,10 +27,10 @@ def ambassador(nation: Nation) -> bool:
 
 def backstab(nation: Nation) -> bool:
 
-    # load game data
+    from app.alliance import Alliances
+
     GAME_ID = nation.game_id
     nation_table = NationTable(GAME_ID)
-    alliance_table = AllianceTable(GAME_ID)
     war_table = WarTable(GAME_ID)
 
     # get set of all nations defeated in war
@@ -73,7 +70,7 @@ def backstab(nation: Nation) -> bool:
     # get set of all former allies
     current_allies = set()
     former_allies = set()
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if alliance.is_active and nation.name in alliance.current_members:
             for ally_name in alliance.current_members:
                 current_allies.add(ally_name)
@@ -201,13 +198,11 @@ def reconstruction_effort(nation: Nation) -> bool:
 
 def reliable_ally(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
 
-    longest_alliance_name, duration = alliance_table.get_longest_alliance()
+    longest_alliance_name, duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
-        longest_alliance = alliance_table.get(longest_alliance_name)
+        longest_alliance = Alliances.get(longest_alliance_name)
         if nation.name in longest_alliance.founding_members:
             return True
         
@@ -364,13 +359,11 @@ def nuclear_deterrent(nation: Nation) -> bool:
 
 def strong_research_agreement(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Research Agreement":
-            amount, resource_name = alliance.get_yield()
+            amount, resource_name = alliance.calculate_yield()
             if amount >= 8:
                 return True
 
@@ -378,13 +371,11 @@ def strong_research_agreement(nation: Nation) -> bool:
 
 def strong_trade_agreement(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Trade Agreement":
-            amount, resource_name = alliance.get_yield()
+            amount, resource_name = alliance.calculate_yield()
             if amount >= 24:
                 return True
 

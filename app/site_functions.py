@@ -11,10 +11,10 @@ from collections import defaultdict
 
 from app import core
 from app import palette
+from app.alliance import Alliances
 from app.region_new import Region, Regions
 from app.notifications import Notifications
 from app.nationdata import NationTable
-from app.alliance import AllianceTable
 from app.war import WarTable
 from app.map import GameMaps
 from app import actions
@@ -121,6 +121,8 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
 
     # get game files
+    Alliances.load(game_id)
+    Regions.load(game_id)
     nation_table = NationTable(game_id)
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
     with open('active_games.json', 'r') as json_file:
@@ -197,6 +199,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     
     # get game data
+    Alliances.load(game_id)
     Regions.load(game_id)
     Notifications.initialize(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
@@ -316,6 +319,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     maps.update_all()
 
     # save
+    Alliances.save()
     Regions.save()
     Notifications.save()
 
@@ -550,9 +554,9 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     '''
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
     nation = nation_table.get(player_id)
-    alliance_table = AllianceTable(game_id)
     war_table = WarTable(game_id)
     alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
 
@@ -638,7 +642,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         elif war_table.get_war_name(player_id, temp.id) is not None:
             relation_colors[i] = '#ff0000'
             relations_status_list[i] = "At War"
-        elif alliance_table.are_allied(nation.name, temp.name):
+        elif Alliances.are_allied(nation.name, temp.name):
             relation_colors[i] = '#3c78d8'
             relations_status_list[i] = "Allied"
         else:

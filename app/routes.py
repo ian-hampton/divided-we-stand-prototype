@@ -15,7 +15,6 @@ from app import core
 from app import events
 from app import palette
 from app.notifications import Notifications
-from app.alliance import AllianceTable
 from app.nationdata import NationTable
 from app.war import WarTable
 
@@ -841,12 +840,13 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
+    from app.alliance import Alliances
     from app.notifications import Notifications
 
     # get game data
+    Alliances.load(full_game_id)
     Notifications.initialize(full_game_id)
     nation_table = NationTable(full_game_id)
-    alliance_table = AllianceTable(full_game_id)
     war_table = WarTable(full_game_id)
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     trucedata_list = core.read_file(trucedata_filepath, 1)
@@ -923,8 +923,8 @@ def announcements(full_game_id):
 
     # Build Statistics String
     statistics_list = []
-    statistics_list.append(f"Total alliances: {len(alliance_table)}")
-    longest_alliance_name, longest_alliance_duration = alliance_table.get_longest_alliance()
+    statistics_list.append(f"Total alliances: {len(Alliances)}")
+    longest_alliance_name, longest_alliance_duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
         statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
     else:
@@ -989,44 +989,49 @@ def announcements(full_game_id):
 @main.route('/<full_game_id>/alliances')
 def alliances(full_game_id):
 
+    from app.alliance import Alliances
+    
+    Alliances.load(full_game_id)
+    nation_table = NationTable(full_game_id)
+    alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Alliance Page'
 
-    nation_table = NationTable(full_game_id)
-    alliance_table = AllianceTable(full_game_id)
-    alliance_dict = alliance_table.data
-    alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
-
     alliance_dict_filtered = {}
-    for alliance_name, alliance_data in alliance_dict.items():
-        if alliance_data["turnEnded"] == 0:
-            
-            # adds alliance establishment string
-            turn_started = alliance_data["turnCreated"]
-            season, year = core.date_from_turn_num(turn_started)
-            date_str = f"{season} {year} (Turn {turn_started})"
-            alliance_data["turnCreated"] = date_str
+    
+    for alliance in Alliances:
+        
+        if not alliance.is_active:
+            continue
 
-            # add color to nation names
-            alliance_data["currentMembersFormatted"] = {}
-            for nation_name, turn_joined in alliance_data["currentMembers"].items():
-                nation = nation_table.get(nation_name)
-                bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
-                if nation.color in bad_primary_colors_set:
-                    color = palette.normal_to_occupied[nation.color]
-                else:
-                    color = nation.color
-                # add to new dict
-                alliance_data["currentMembersFormatted"][nation_name] = {}
-                alliance_data["currentMembersFormatted"][nation_name]["turnJoined"] = turn_joined
-                alliance_data["currentMembersFormatted"][nation_name]["nationColor"] = color
-            
-            # adds alliance color
-            alliance_data["color"] = palette.str_to_hex(alliance_scenario_dict[alliance_data["allianceType"]]["colorTheme"])
+        alliance_data = {
+            "allianceType": alliance.type,
+            "foundingMembers": alliance.founding_members,
+            "currentMembersFormatted": {}
+        }
 
-            alliance_dict_filtered[alliance_name] = alliance_data
+        turn_started = alliance_data["turnCreated"]
+        season, year = core.date_from_turn_num(turn_started)
+        date_str = f"{season} {year} (Turn {turn_started})"
+        alliance_data["turnCreated"] = date_str
+
+        for nation_name, turn_joined in alliance.current_members.items():
+            nation = nation_table.get(nation_name)
+            bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+            if nation.color in bad_primary_colors_set:
+                color = palette.normal_to_occupied[nation.color]
+            else:
+                color = nation.color
+            alliance_data["currentMembersFormatted"][nation_name] = {
+                "turnJoined": turn_joined,
+                "nationColor": color
+            }
+
+        alliance_data["color"] = palette.str_to_hex(alliance_scenario_dict[alliance.type]["colorTheme"])
+
+        alliance_dict_filtered[alliance.name] = alliance_data
 
     return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_scenario_dict, page_title = page_title)
 

@@ -5,10 +5,8 @@ from app import core
 from app import actions
 from app.region_new import Region
 from app.notifications import Notifications
-from app.nationdata import Nation
-from app.nationdata import NationTable
-from app.alliance import Alliance
-from app.alliance import AllianceTable
+from app.nationdata import Nation, NationTable
+from app.alliance import Alliance, Alliances
 from app.war import WarTable
 
 from app import palette
@@ -33,7 +31,6 @@ class Event:
         # load game data
         if not temp:
             self.nation_table = NationTable(self.game_id)
-            self.alliance_table = AllianceTable(self.game_id)
             self.war_table = WarTable(self.game_id)
             self.current_turn_num = core.get_current_turn_num(self.game_id)
             with open("active_games.json", 'r') as json_file:
@@ -1562,7 +1559,7 @@ class FaustianBargain(Event):
         nation.tags["Faustian Bargain"] = new_tag
         self.nation_table.save(nation)
 
-        for alliance in self.alliance_table:
+        for alliance in Alliances:
             if nation.name in alliance.current_members:
                 alliance.remove_member(nation.name)
 

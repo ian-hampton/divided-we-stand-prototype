@@ -7,9 +7,7 @@ from collections import defaultdict
 
 from app import core
 from app.region_new import Region
-from app.nationdata import Nation
-from app.nationdata import NationTable
-from app.alliance import AllianceTable
+from app.nationdata import Nation, NationTable
 from app.war import WarTable
 from app.notifications import Notifications
 
@@ -787,9 +785,9 @@ def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
 
 def _check_alliance_name(game_id: str, alliance_name: str) -> str | None:
     
-    alliance_table = AllianceTable(game_id)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if alliance.name.lower() == alliance_name.lower():
             return alliance.name
         
@@ -1206,8 +1204,8 @@ def _peace_action_valid(war_table: WarTable, nation_table: NationTable, surrende
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
     agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
 
@@ -1269,7 +1267,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
             # technology cost adjustment
             multiplier = 1.0
-            for alliance in alliance_table:
+            for alliance in Alliances:
                 if alliance.is_active and nation.name in alliance.current_members and alliance.type == "Research Agreement":
                     for ally_name in alliance.current_members:
                         ally_nation = nation_table.get(ally_name)
@@ -1303,18 +1301,17 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
 
     # process actions
     for action in actions_list:
 
         nation = nation_table.get(action.id)
-        alliance = alliance_table.get(action.alliance_name)
+        alliance = Alliances.get(action.alliance_name)
 
         # remove player from alliance
         alliance.remove_member(nation.name)
-        alliance_table.save(alliance)
         Notifications.add(f"{nation.name} has left the {alliance.name}.", 7)
         nation.action_log.append(f"Left {action.alliance_name}.")
         nation_table.save(nation)
@@ -1322,15 +1319,15 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
 def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
 
     # execute actions
     kick_actions_tally = defaultdict(lambda: defaultdict(int))
     for action in actions_list:
         nation = nation_table.get(action.id)
         target_nation = nation_table.get(action.target_nation)
-        alliance = alliance_table.get(action.alliance_name)
+        alliance = Alliances.get(action.alliance_name)
 
         # check that nation is in alliance
         if action.target_nation not in alliance.current_members:
@@ -1358,19 +1355,18 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
     # check tally
     for alliance_name, kick_tally in kick_actions_tally.items():
         for target_nation_name, votes in kick_tally.items():
-            alliance = alliance_table.get(alliance_name)
+            alliance = Alliances.get(alliance_name)
 
             # kick player from alliance if vote is unanimous
             if votes >= len(alliance.current_members) - 1:
                 alliance.remove_member(target_nation_name)
-                alliance_table.save(alliance)
                 Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 7)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
 
     # process actions
     alliance_creation_dict = {}
@@ -1404,12 +1400,6 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
                 nation_table.save(nation)
                 continue
 
-        # check that an alliance with this name does not already exist
-        if action.alliance_name in alliance_table.data:
-            nation.action_log.append(f"Failed to form {action.alliance_name} alliance. An alliance with that name has already been created.")
-            nation_table.save(nation)
-            continue
-
         # update alliance_creation_dict
         if action.alliance_name in alliance_creation_dict:
             alliance_creation_dict[action.alliance_name]["members"].append(nation.name)
@@ -1423,8 +1413,8 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
     for alliance_name, alliance_data in alliance_creation_dict.items():
         if len(alliance_data["members"]) > 1:
             # alliance creation success
-            alliance = alliance_table.create(alliance_name, alliance_data["type"], alliance_data["members"])
-            Notifications.add(f"{alliance.name} has formed.", 7)
+            Alliances.create(alliance_name, alliance_data["type"], alliance_data["members"])
+            Notifications.add(f"{alliance_name} has formed.", 7)
             for nation_name in alliance_data["members"]:
                 # update log
                 nation = nation_table.get(nation_name)
@@ -1440,14 +1430,14 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
 
     # process actions
     for action in actions_list:
         
         nation = nation_table.get(action.id)
-        alliance = alliance_table.get(action.alliance_name)
+        alliance = Alliances.get(action.alliance_name)
 
         # required research check
         # tba - tie this to scenario data
@@ -1489,7 +1479,6 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
 
         # add player to the alliance
         alliance.add_member(nation.name)
-        alliance_table.save(alliance)
         Notifications.add(f"{nation.name} has joined the {alliance.name}.", 7)
         nation.action_log.append(f"Joined {alliance.name}.")
         nation_table.save(nation)
@@ -2070,9 +2059,9 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
-    alliance_table = AllianceTable(game_id)
 
     # execute actions
     for action in actions_list:
@@ -2128,13 +2117,13 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
             continue
 
         # alliance check
-        if alliance_table.are_allied(attacker_nation.name, defender_nation.name):
+        if Alliances.are_allied(attacker_nation.name, defender_nation.name):
             attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
             nation_table.save(attacker_nation)
             continue
 
         # alliance truce check
-        if alliance_table.former_ally_truce(attacker_nation.name, defender_nation.name):
+        if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
             attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
             nation_table.save(attacker_nation)
             continue
@@ -2181,9 +2170,9 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
     #TODO: write functions so that this isn't all copy pasted
 
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
     war_table = WarTable(game_id)
-    alliance_table = AllianceTable(game_id)
 
     # execute actions
     for action in actions_list:
@@ -2281,13 +2270,13 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             continue
 
         # alliance check
-        if alliance_table.are_allied(attacker_nation.name, defender_nation.name):
+        if Alliances.are_allied(attacker_nation.name, defender_nation.name):
             attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
             nation_table.save(attacker_nation)
             continue
 
         # alliance truce check
-        if alliance_table.former_ally_truce(attacker_nation.name, defender_nation.name):
+        if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
             attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
             nation_table.save(attacker_nation)
             continue

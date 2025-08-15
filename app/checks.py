@@ -8,7 +8,6 @@ from app import core
 from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
-from app.alliance import AllianceTable
 from app.war import WarTable
 
 def update_income(game_id: str) -> None:
@@ -23,9 +22,9 @@ def update_income(game_id: str) -> None:
     """
     
     # get game data
-    from app.region_new import Region, Regions
+    from app.alliance import Alliances
+    from app.region_new import Regions
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -118,8 +117,8 @@ def update_income(game_id: str) -> None:
         nation_table.save(nation)
 
     # alliance yields
-    for alliance in alliance_table:
-        amount, resource_name = alliance.get_yield()
+    for alliance in Alliances:
+        amount, resource_name = alliance.calculate_yield()
         if amount == 0 or resource_name is None:
             continue
         for ally_name in alliance.current_members:
@@ -130,7 +129,7 @@ def update_income(game_id: str) -> None:
                 nation.update_max_mc(amount)
             else:
                 nation.update_gross_income(resource_name, amount)
-            income_str = f'&Tab;+{amount:.2f} from {alliance.name}.'
+            income_str = f"&Tab;+{amount:.2f} from {alliance.name}."
             _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation_table.save(nation)
         
@@ -143,10 +142,10 @@ def update_income(game_id: str) -> None:
             final_total = round(final_total, 2)
             rate_diff = round(final_total - total, 2)
             if rate_diff > 0:
-                income_str = f'&Tab;+{rate_diff:.2f} from income rate.'
+                income_str = f"&Tab;+{rate_diff:.2f} from income rate."
                 _update_text_dict(text_dict, nation.name, resource_name, income_str)
             elif rate_diff < 0:
-                income_str = f'&Tab;{rate_diff:.2f} from income rate.'
+                income_str = f"&Tab;{rate_diff:.2f} from income rate."
                 _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation.update_gross_income(resource_name, final_total, overwrite=True)
         nation_table.save(nation)
@@ -590,12 +589,11 @@ def prune_alliances(game_id: str) -> None:
         game_id (str): Game ID string.
     """
 
-    alliance_table = AllianceTable(game_id)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if alliance.is_active and len(alliance.current_members) < 2:
             alliance.end()
-            alliance_table.save(alliance)
             Notifications.add(f"{alliance.name} has dissolved.", 7)
 
 def gain_market_income(game_id: str, market_results: str) -> None:
