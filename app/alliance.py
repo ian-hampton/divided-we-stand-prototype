@@ -25,12 +25,13 @@ class Alliances(metaclass=AlliancesMeta):
         
         cls.game_id = game_id
         gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
-        
         if not os.path.exists(gamedata_filepath):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Alliances class.")
         
         with open(gamedata_filepath, 'r') as f:
-            cls._data = json.load(f)
+            gamedata_dict = json.load(f)
+
+        cls._data = gamedata_dict["alliances"]
 
     @classmethod
     def save(cls) -> None:
@@ -143,9 +144,9 @@ class Alliance:
         self._type: str = self._data["allianceType"]
         self._turn_created: int = self._data["turnCreated"]
         self._turn_ended: int = self._data["turnEnded"]
-        self._current_members: dict = self._data["currentMembers"]
-        self._founding_members: dict = self._data["foundingMembers"]
-        self._former_members: dict = self._data["formerMembers"]
+        self._current_members: dict[str, int] = self._data["currentMembers"]
+        self._founding_members: dict[str, int] = self._data["foundingMembers"]
+        self._former_members: dict[str, int] = self._data["formerMembers"]
     
     @property
     def type(self):
