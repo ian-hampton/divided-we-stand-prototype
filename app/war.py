@@ -1,101 +1,76 @@
 import json
 import os
 import random
+from dataclasses import dataclass
+from typing import ClassVar, Iterator, Tuple
 
 from app import core
-from app.nationdata import Nation
-from app.nationdata import NationTable
+from app.nationdata import Nation, NationTable
 
-class Combatant:
+class WarsMeta(type):
     
-    def __init__(self, combatant_id: str, combatant_data: dict, war_id: str):
-        
-        self.war_id = war_id
+    def __iter__(cls) -> Iterator["War"]:
+        for war_name in cls._data:
+            yield War(war_name)
 
-        self.id = combatant_id
-        self.name: str = combatant_data["name"]
-        self.role: str = combatant_data["role"]
-        self.justification: str = combatant_data["justification"]
-        self.target: str = combatant_data["targetID"]
-        self.claims: dict = combatant_data["claims"]
+    def __len__(cls):
+        return len(cls._data)
 
-        # combatant war stats
-        self.battles_won : int = combatant_data["statistics"]["battlesWon"]
-        self.battles_lost : int = combatant_data["statistics"]["battlesLost"]
-        self.destroyed_units : int = combatant_data["statistics"]["enemyUnitsDestroyed"]
-        self.destroyed_improvements : int = combatant_data["statistics"]["enemyImprovementsDestroyed"]
-        self.lost_units : int = combatant_data["statistics"]["friendlyUnitsDestroyed"]
-        self.lost_improvements : int = combatant_data["statistics"]["friendlyImprovementsDestroyed"]
-        self.launched_missiles : int = combatant_data["statistics"]["missilesLaunched"]
-        self.launched_nukes : int = combatant_data["statistics"]["nukesLaunched"]
-
-    def _build(nation: Nation, role: str, target_id: str, war_id: str):
-
-        combatant_data = {
-            "name": nation.name,
-            "role": role,
-            "justification": "TBD",
-            "targetID": target_id,
-            "claims": {},
-            "statistics": {
-                "battlesWon": 0,
-                "battlesLost": 0,
-                "enemyUnitsDestroyed": 0,
-                "enemyImprovementsDestroyed": 0,
-                "friendlyUnitsDestroyed": 0,
-                "friendlyImprovementsDestroyed": 0,
-                "missilesLaunched": 0,
-                "nukesLaunched": 0
-            }
-        }
-
-        return Combatant(nation.id, combatant_data, war_id)
-
-class War:
+@dataclass
+class Wars(metaclass=WarsMeta):
     
-    def __init__(self, war_id: str, war_data: dict, game_id: str):
+    game_id: ClassVar[str] = None
+    _data: ClassVar[dict[str, dict]] = None
+
+    @classmethod
+    def load(cls, game_id: str) -> None:
+
+        cls.game_id = game_id
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        if not os.path.exists(gamedata_filepath):
+            raise FileNotFoundError(f"Error: Unable to locate required game files for Alliances class.")
         
-        self.game_id = game_id
+        with open(gamedata_filepath, 'r') as f:
+            gamedata_dict = json.load(f)
 
-        self.id = war_id
-        self.name: str = war_data["name"]
-        self.start: int = war_data["start"]
-        self.end: int = war_data["end"]
-        self.outcome: str = war_data["outcome"]
-        self.log: list = war_data["warLog"]
-        self.combatants: dict = war_data["combatants"]
+        cls._data = gamedata_dict["wars"]
 
-        # warscore rewards
-        self.warscore_victory = 1
-        self.warscore_occupation = 2
-        self.warscore_destroy_improvement = 2
-        self.warscore_capital_capture = 20
-        self.warscore_nuclear_strike = 5
+        cls.WARSCORE_FROM_VICTORY = 1
+        cls.WARSCORE_FROM_OCCUPATION = 2
+        cls.WARSCORE_FROM_DESTROY_IMPROVEMENT = 2
+        cls.WARSCORE_FROM_CAPITAL_CAPTURE = 20
+        cls.WARSCORE_FROM_NUCLEAR_STRIKE = 5
 
-        # attacker warscore records
-        self.attacker_total: int = war_data["attackerWarScore"]["total"]
-        self.attacker_occupation: int = war_data["attackerWarScore"]["occupation"]
-        self.attacker_victories: int = war_data["attackerWarScore"]["combatVictories"]
-        self.attacker_destroyed_units: int = war_data["attackerWarScore"]["enemyUnitsDestroyed"]
-        self.attacker_destroyed_improvements: int = war_data["attackerWarScore"]["enemyImprovementsDestroyed"]
-        self.attacker_captures: int = war_data["attackerWarScore"]["capitalCaptures"]
-        self.attacker_nuclear_strikes: int = war_data["attackerWarScore"]["nukedEnemyRegions"]
+    @classmethod
+    def save(cls) -> None:
+        
+        if cls._data is None:
+            raise RuntimeError("Error: Wars has not been loaded.")
+        
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        with open(gamedata_filepath, 'r') as json_file:
+            gamedata_dict = json.load(json_file)
 
-        # defender warscore records
-        self.defender_total: int = war_data["defenderWarScore"]["total"]
-        self.defender_occupation: int = war_data["defenderWarScore"]["occupation"]
-        self.defender_victories: int = war_data["defenderWarScore"]["combatVictories"]
-        self.defender_destroyed_units: int = war_data["defenderWarScore"]["enemyUnitsDestroyed"]
-        self.defender_destroyed_improvements: int = war_data["defenderWarScore"]["enemyImprovementsDestroyed"]
-        self.defender_captures: int = war_data["defenderWarScore"]["capitalCaptures"]
-        self.defender_nuclear_strikes: int = war_data["defenderWarScore"]["nukedEnemyRegions"]
+        gamedata_dict["wars"] = cls._data
+        with open(gamedata_filepath, 'w') as json_file:
+            json.dump(gamedata_dict, json_file, indent=4)
 
-    def build(game_id: str, war_id: str, main_attacker: Nation, main_defender: Nation, war_justification: str) -> "War":
+    @classmethod
+    def names(cls) -> list:
+        return list(cls._data.keys())
 
-        current_turn_num = core.get_current_turn_num(game_id)
+    @classmethod
+    def create(cls, main_attacker_id: str, main_defender_id: str, war_justification: str, war_claims = []) -> None:
+        
+        from app.alliance import Alliances
+        nation_table = NationTable(cls.game_id)
+        main_attacker = nation_table.get(main_attacker_id)
+        main_defender = nation_table.get(main_defender_id)
+        current_turn_num = core.get_current_turn_num(cls.game_id)
 
-        war_data = {
-            "name": War._generate_war_name(game_id, main_attacker, main_defender, war_justification),
+        # create new war
+        war_name = cls._generate_war_name(main_attacker, main_defender, war_justification)
+        new_war_data = {
             "start": current_turn_num,
             "end": 0,
             "outcome": "TBD",
@@ -120,26 +95,103 @@ class War:
             },
             "warLog": []
         }
+        cls._data[war_name] = new_war_data
+        new_war = cls.get(new_war)
 
-        return War(war_id, war_data, game_id)
+        # add main attacker
+        combatant = new_war.add_combatant(main_attacker, "Main Attacker", main_defender.id)
+        combatant.justification = war_justification
+        combatant.claims = cls._claim_pairs(war_claims)
 
-    def _generate_war_name(game_id: str, main_attacker: Nation, main_defender: Nation, war_justification: str) -> str:
-        """
-        Generates a unique war name.
+        # add main defender
+        combatant = new_war.add_combatant(main_defender, "Main Defender", "TBD")
 
-        Params:
-            game_id (str): Game ID string.
-            main_attacker_name (str): nation name of main attacker
-            main_defender_name (str): nation name of main defender
-            war_justification (str): war justification of main attacker
+        # call in main attacker allies
+        # possible allies: puppet states
+        puppet_states = core.get_subjects(cls.game_id, main_attacker.name, "Puppet State")
+        possible_allies = set(puppet_states)
+        for ally_id in possible_allies:
+            ally = nation_table.get(ally_id)
+            if (cls.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
+                and not core.check_for_truce(cls.game_id, main_defender.id, ally.id)    # ally cannot have truce with defender
+                and not Alliances.are_allied(main_defender.name, ally.name)             # ally cannot be allied with defender
+                and not Alliances.former_ally_truce(main_defender.name, ally.name)):    # ally cannot be recently allied with defender
+                combatant = new_war.add_combatant(ally, "Secondary Attacker", "TBD")
 
-        Returns:
-            war_name (str): generated war name
-        """
+        # call in main defender allies
+        # possible allies: puppet states, defensive pacts, overlord
+        puppet_states = core.get_subjects(cls.game_id, main_defender.name, "Puppet State")
+        defense_allies = Alliances.allies(main_defender.name, "Defense Pact")
+        ally_player_ids = set(puppet_states) | set(defense_allies)
+        if main_defender.status != "Independent Nation":
+            for nation in nation_table:
+                if nation.name in main_defender.status:
+                    ally_player_ids.add(nation.id)
+        for ally_id in possible_allies:
+            ally = nation_table.get(ally_id)
+            if (cls.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
+                and not core.check_for_truce(cls.game_id, main_attacker.id, ally.id)    # ally cannot have truce with attacker
+                and not Alliances.are_allied(main_attacker.name, ally.name)             # ally cannot be allied with attacker
+                and not Alliances.former_ally_truce(main_attacker.name, ally.name)):    # ally cannot be recently allied with attacker
+                combatant = new_war.add_combatant(ally, "Secondary Defender", "TBD")
 
-        # get game data
-        war_table = WarTable(game_id)
+    @classmethod
+    def get(cls, war_name: str) -> "War":
+        if war_name in cls._data:
+            return War(war_name)
+        return None
 
+    @classmethod
+    def get_war_name(cls, nation1_id: str, nation2_id: str) -> str | None:
+        
+        if nation1_id == nation2_id:
+            return None
+
+        for war in cls:
+            if war.outcome == "TBD" and nation1_id in war.combatants and nation2_id in war.combatants:
+                return war.name
+            
+        return None
+
+    @classmethod
+    def is_at_peace(cls, nation_id: str) -> bool:
+        pass
+
+    @classmethod
+    def at_peace_for_x(cls, nation_id: str) -> int:
+        pass
+
+    @classmethod
+    def total_units_lost(cls) -> int:
+        pass
+
+    @classmethod
+    def total_improvements_lost(cls) -> int:
+        pass
+
+    @classmethod
+    def total_missiles_launched(cls) -> int:
+        pass
+
+    @classmethod
+    def find_longest_war(cls) -> tuple:
+        pass
+
+    @classmethod
+    def add_warscore_from_occupations(cls) -> None:
+        pass
+
+    @classmethod
+    def update_totals(cls) -> None:
+        pass
+
+    @classmethod
+    def export_all_logs(cls) -> None:
+        pass
+
+    @classmethod
+    def _generate_war_name(cls, main_attacker: Nation, main_defender: Nation, war_justification: str) -> str:
+        
         match war_justification:
             
             case "Animosity":
@@ -197,7 +249,7 @@ class War:
         while True:
             
             war_name = random.sample(names, 1)[0]
-            war_name_set = set(war_table._name_to_id.keys())
+            war_name_set = set(cls.names())
             
             while war_name in war_name_set:
                 attempts += 1
@@ -206,313 +258,9 @@ class War:
                     break
             
             return war_name
-    
-    def _resolve_war_justification(self, nation_id: str):
 
-        from app.region_new import Region
-        nation_table = NationTable(self.game_id)
-        current_turn_num = core.get_current_turn_num(self.game_id)
-        
-        # get winner data
-        winner_nation = nation_table.get(nation_id)
-        winner_combatant_data = self.get_combatant(nation_id)
-
-        match winner_combatant_data.justification:
-
-            case "Border Skirmish" | "Conquest":
-                for region_id, original_owner_id in winner_combatant_data.claims.items():
-                    region = Region(region_id)
-                    
-                    if str(region.data.owner_id) != original_owner_id:
-                        continue
-                        
-                    if region.improvement.name is not None:
-                        looser_nation = nation_table.get(original_owner_id)
-                        looser_nation.improvement_counts[region.improvement.name] -= 1
-                        winner_nation.improvement_counts[region.improvement.name] += 1
-                        nation_table.save(looser_nation)
-                    
-                    region.data.owner_id = winner_nation.id
-                    region.data.occupier_id = "0"
-                        
-            case "Animosity":
-                looser_nation = nation_table.get(winner_combatant_data.target)
-                winner_nation.update_stockpile("Political Power", 10)
-                winner_nation.update_stockpile("Research", 10)
-                looser_nation.update_stockpile("Political Power", 0, overwrite=True)
-                nation_table.save(looser_nation)
-
-            case "Subjugation":
-                looser_nation = nation_table.get(winner_combatant_data.target)
-                looser_nation.status = f"Puppet State of {winner_nation.name}"
-                nation_table.save(looser_nation)
-
-            case "Containment":
-                looser_nation = nation_table.get(winner_combatant_data.target)
-                new_tag = {
-                    "Military Capacity Rate": -50,
-                    "No Agenda Research": True,
-                    "Expire Turn": current_turn_num + 9
-                }
-                looser_nation.tags[f"{self.name} Containment"] = new_tag
-                nation_table.save(looser_nation)
-
-            case "Independence":
-                looser_nation = nation_table.get(winner_combatant_data.target)
-                looser_nation.status = "Independent Nation"
-                nation_table.save(looser_nation)
-
-        nation_table.save(winner_nation)
-
-    def add_combatant(self, nation: Nation, role: str, target_id: str) -> Combatant:
-        
-        combatant = Combatant._build(nation, role, target_id, self.id)
-        self.save_combatant(combatant)
-
-        return combatant
-
-    def get_combatant(self, nation_id: str) -> Combatant:
-
-        if nation_id in self.combatants:
-            return Combatant(nation_id, self.combatants[nation_id], self.id)
-        
-        raise Exception(f"Failed to retrieve combatant {nation_id} in war {self.id}.")
-
-    def save_combatant(self, combatant: Combatant) -> None:
-        
-        combatant_data = {
-            "name": combatant.name,
-            "role": combatant.role,
-            "justification": combatant.justification,
-            "targetID": combatant.target,
-            "claims": combatant.claims,
-            "statistics": {
-                "battlesWon": combatant.battles_won,
-                "battlesLost": combatant.battles_lost,
-                "enemyUnitsDestroyed": combatant.destroyed_units,
-                "enemyImprovementsDestroyed": combatant.destroyed_improvements,
-                "friendlyUnitsDestroyed": combatant.lost_units,
-                "friendlyImprovementsDestroyed": combatant.lost_improvements,
-                "missilesLaunched": combatant.launched_missiles,
-                "nukesLaunched": combatant.launched_nukes
-            }
-        }
-
-        self.combatants[combatant.id] = combatant_data
-
-    def get_role(self, nation_id: str) -> str:
-        
-        if nation_id in self.combatants:
-            combatant = self.get_combatant(nation_id)
-            return combatant.role
-        
-        return None
-
-    def get_main_combatant_ids(self) -> tuple:
-
-        main_attacker_id = ""
-        main_defender_id = ""
-
-        for nation_id in self.combatants:
-            combatant = self.get_combatant(nation_id)
-            if combatant.role == "Main Attacker":
-                main_attacker_id = nation_id
-            elif combatant.role == "Main Defender":
-                main_defender_id = nation_id
-
-        return main_attacker_id, main_defender_id
-
-    def is_on_same_side(self, nation_id_1: str, nation_id_2: str) -> bool:
-        
-        combatant_1 = self.get_combatant(nation_id_1)
-        combatant_2 = self.get_combatant(nation_id_2)
-
-        if "Attacker" in combatant_1.role and "Attacker" in combatant_2.role:
-            return True
-        elif "Defender" in combatant_1.role and "Defender" in combatant_2.role:
-            return True
-        
-        return False
-
-    def add_missing_justifications(self) -> None:
-        
-        # get game data
-        nation_table = NationTable(self.game_id)
-
-        # check all combatants
-        for combatant_id in self.combatants:
-            combatant = self.get_combatant(combatant_id)
-            combatant_nation = nation_table.get(combatant_id)
-
-            if combatant.justification == "TBD":
-                
-                war_justification = input(f"Please enter {combatant.name} war justification for {self.name} or enter SKIP to postpone: ")
-                if war_justification == "SKIP":
-                    continue
-
-                # process war claims
-                region_claims_list = []
-                if war_justification in ["Border Skirmish", "Conquest"]:
-
-                    combatant.target = "N/A"
-                    
-                    # get claims and calculate political power cost
-                    claim_cost = -1
-                    while claim_cost == -1:
-                        region_claims_str = input(f"List the regions that {combatant.name} is claiming using {war_justification}: ")
-                        region_claims_list = region_claims_str.split(',')
-                        claim_cost = core.validate_war_claims(self.game_id, war_justification, region_claims_list)
-
-                    # pay political power cost
-                    combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
-                    if float(combatant_nation.get_stockpile("Political Power")) < 0:
-                        nation_table.reload()
-                        combatant_nation = nation_table.get(combatant_id)
-                        combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
-                        nation_table.save(combatant_nation)
-                        continue
-                
-                # OR handle war justification that does not seize territory
-                else:
-                    
-                    # get target id
-                    target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {war_justification}: ")
-                    combatant.target = str(target_id)
-                
-                # update information
-                combatant.justification = war_justification
-                combatant.claims = region_claims_list
-                self.save_combatant(combatant)
-
-    def calculate_score_threshold(self) -> tuple:
-        
-        nation_table = NationTable(self.game_id)
-
-        # initial win threshold is a 100 point difference
-        attacker_threshold = 100
-        defender_threshold = 100
-
-        # check for unyielding and crime syndicate
-        for combatant_id in self.combatants:
-            combatant = self.get_combatant(combatant_id)
-            combatant_nation = nation_table.get(combatant_id)
-            
-            # add modifiers to defender threshold
-            if combatant.role == "Main Attacker" and defender_threshold == 100:
-                if combatant_nation.gov == "Crime Syndicate":
-                    defender_threshold = None
-                elif "Unyielding" in combatant_nation.completed_research:
-                    defender_threshold += 50
-            
-            # add modifiers to attacker threshold
-            elif combatant.role == "Main Defender" and attacker_threshold == 100:
-                if combatant_nation.gov == "Crime Syndicate":
-                    attacker_threshold = None
-                elif "Unyielding" in combatant_nation.completed_research:
-                    attacker_threshold += 50
-
-        # if not crime syndicate compute remaining threshold
-        if attacker_threshold is not None:
-            attacker_threshold += self.defender_total
-        if defender_threshold is not None:
-            defender_threshold += self.attacker_total
-
-        return attacker_threshold, defender_threshold
-
-    def end_conflict(self, outcome: str) -> None:
-
-        from app.region_new import Region, Regions
-        
-        # get game data
-        nation_table = NationTable(self.game_id)
-        current_turn_num = core.get_current_turn_num(self.game_id)
-        
-        # resolve war justifications
-        truce_length = 4
-        match outcome:
-            
-            case "Attacker Victory":
-                for combatant_id in self.combatants:
-                    combatant = self.get_combatant(combatant_id)
-                    if "Attacker" in combatant.role:
-                        self._resolve_war_justification(combatant_id)
-                    if "Main Attacker" == combatant.role and combatant.justification not in ["Animosity", "Border Skirmish"]:
-                        truce_length = 8
-
-            case "Defender Victory":
-                for combatant_id in self.combatants:
-                    combatant = self.get_combatant(combatant_id)
-                    if "Defender" in combatant.role:
-                        self._resolve_war_justification(combatant_id)
-                    if "Main Defender" == combatant.role and combatant.justification not in ["Animosity", "Border Skirmish"]:
-                        truce_length = 8
-        
-        # add truce periods
-        for combatant_id in self.combatants:
-            attacker = self.get_combatant(combatant_id)
-            if 'Attacker' not in attacker.role:
-                continue
-            signatories_list = [False] * len(nation_table)
-            for temp_id in self.combatants:
-                defender = self.get_combatant(temp_id)
-                if temp_id == combatant_id or 'Defender' not in defender.role:
-                    continue
-                signatories_list[int(attacker.id) - 1] = True
-                signatories_list[int(defender.id) - 1] = True
-                core.add_truce_period(self.game_id, signatories_list, truce_length)
-
-        # update war
-        self.end = current_turn_num
-        self.outcome = outcome
-
-        # end occupations
-        for region in Regions:
-            if region.data.owner_id in self.combatants and region.data.occupier_id in self.combatants:
-                region.data.occupier_id = "0"
-
-        # withdraw units
-        core.withdraw_units(self.game_id)
-
-        # resolve foreign interference tag if applicable (event)
-        attacker_id, defender_id = self.get_main_combatant_ids()
-        attacker_nation = nation_table.get(attacker_id)
-        defender_nation = nation_table.get(defender_id)
-        if "Foreign Interference" in attacker_nation.tags and attacker_nation.tags["Foreign Interference"]["Foreign Interference Target"] == defender_nation.name:
-            del attacker_nation.tags["Foreign Interference"]
-            if outcome == "Attacker Victory":
-                attacker_nation.update_stockpile("Dollars", 50)
-                attacker_nation.update_stockpile("Research", 20)
-                attacker_nation.update_stockpile("Advanced Metals", 10)
-            nation_table.save(attacker_nation)
-
-class WarTable:
-    
-    def __init__(self, game_id: str):
-
-        gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
-        
-        if os.path.exists(gamedata_filepath):
-            self.game_id: str = game_id
-            self.reload()
-        else:
-            raise FileNotFoundError(f"Error: Unable to locate {gamedata_filepath} during nation class initialization.")
-
-    def __len__(self):
-        return len(self.data)
-
-    def __iter__(self):
-        for war_id, war_data in self.data.items():
-            yield War(war_id, war_data, self.game_id)
-
-    def _get_id_from_name(self, war_name: str) -> str | None:
-        
-        for temp in self._name_to_id:
-            if war_name.lower() == temp.lower():
-                return self._name_to_id[temp]
-        
-        return None
-    
-    def _claim_pairs(self, war_claims: list) -> dict:
+    @classmethod
+    def _claim_pairs(cls, war_claims: list) -> dict:
 
         from app.region_new import Region
 
@@ -524,285 +272,263 @@ class WarTable:
 
         return pairs
 
-    def reload(self) -> None:
-        
-        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
-        with open(gamedata_filepath, 'r') as json_file:
-            gamedata_dict = json.load(json_file)
-        
-        self.data: dict = gamedata_dict["wars"]
-        self._name_to_id = {}
-        for war in self:
-            self._name_to_id[war.name.lower()] = war.id
+class War:
 
-    def create(self, main_attacker_id: str, main_defender_id: str, war_justification: str, war_claims = []) -> War:
-
-        # get game data
-        from app.alliance import Alliances
-        nation_table = NationTable(self.game_id)
-
-        # create war
-        war_id = str(len(self) + 1)
-        main_attacker = nation_table.get(main_attacker_id)
-        main_defender = nation_table.get(main_defender_id)
-        new_war: War = War.build(self.game_id, war_id, main_attacker, main_defender, war_justification)
-
-        # add main attacker
-        combatant = new_war.add_combatant(main_attacker, "Main Attacker", main_defender.id)
-        combatant.justification = war_justification
-        combatant.claims = self._claim_pairs(war_claims)
-        new_war.save_combatant(combatant)
-
-        # add main defender
-        combatant = new_war.add_combatant(main_defender, "Main Defender", "TBD")
-
-        # call in main attacker allies
-        # possible allies: puppet states
-        puppet_states = core.get_subjects(self.game_id, main_attacker.name, "Puppet State")
-        possible_allies = set(puppet_states)
-        for ally_id in possible_allies:
-            ally = nation_table.get(ally_id)
-            if (
-                self.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
-                and not core.check_for_truce(self.game_id, main_defender.id, ally.id)    # ally cannot have truce with defender
-                and not Alliances.are_allied(main_defender.name, ally.name)              # ally cannot be allied with defender
-                and not Alliances.former_ally_truce(main_defender.name, ally.name)       # ally cannot be recently allied with defender
-            ):
-                combatant = new_war.add_combatant(ally, "Secondary Attacker", "TBD")
-
-        # call in main defender allies
-        # possible allies: puppet states, defensive pacts, overlord
-        puppet_states = core.get_subjects(self.game_id, main_defender.name, "Puppet State")
-        defense_allies = Alliances.allies(main_defender.name, "Defense Pact")
-        ally_player_ids = set(puppet_states) | set(defense_allies)
-        if main_defender.status != "Independent Nation":
-            for nation in nation_table:
-                if nation.name in main_defender.status:
-                    ally_player_ids.add(nation.id)
-        for ally_id in possible_allies:
-            ally = nation_table.get(ally_id)
-            if (
-                self.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
-                and not core.check_for_truce(self.game_id, main_attacker.id, ally.id)    # ally cannot have truce with attacker
-                and not Alliances.are_allied(main_attacker.name, ally.name)              # ally cannot be allied with attacker
-                and not Alliances.former_ally_truce(main_attacker.name, ally.name)       # ally cannot be recently allied with attacker
-            ):
-                combatant = new_war.add_combatant(ally, "Secondary Defender", "TBD")
-        
-        self.save(new_war)
-        return new_war
+    def __init__(self, war_name: str):
     
-    def save(self, war: War) -> None:
+        self._data = Wars._data[war_name]
         
-        war_data = {
-            "name": war.name,
-            "start": war.start,
-            "end": war.end,
-            "outcome": war.outcome,
-            "combatants": war.combatants,
-            "attackerWarScore": {
-                "total": war.attacker_total,
-                "occupation": war.attacker_occupation,
-                "combatVictories": war.attacker_victories,
-                "enemyUnitsDestroyed": war.attacker_destroyed_units,
-                "enemyImprovementsDestroyed": war.attacker_destroyed_improvements,
-                "capitalCaptures": war.attacker_captures,
-                "nukedEnemyRegions": war.attacker_nuclear_strikes
-            },
-            "defenderWarScore": {
-                "total": war.defender_total,
-                "occupation": war.defender_occupation,
-                "combatVictories": war.defender_victories,
-                "enemyUnitsDestroyed": war.defender_destroyed_units,
-                "enemyImprovementsDestroyed": war.defender_destroyed_improvements,
-                "capitalCaptures": war.defender_captures,
-                "nukedEnemyRegions": war.defender_nuclear_strikes
-            },
-            "warLog": war.log
+        self.name = war_name
+        self.combatants: dict = self._data["combatants"]
+        self.attackers = WarScoreData(self._data["attackerWarScore"])
+        self.defenders = WarScoreData(self._data["defenderWarScore"])
+        self.log: list = self._data["warLog"]
+        self._start: int = self._data["start"]
+        self._end: int = self._data["end"]
+        self._outcome: str = self._data["outcome"]
+
+    @property
+    def start(self):
+        return self._start
+
+    @property
+    def end(self):
+        return self._end
+    
+    @property
+    def outcome(self):
+        return self._outcome
+
+    @end.setter
+    def end(self, turn: int):
+        self._end = turn
+        self._data["end"] = turn
+
+    @outcome.setter
+    def outcome(self, outcome_str: str):
+        self._outcome = outcome_str
+        self._data["outcome"] = outcome_str
+
+    def add_combatant(self, nation: Nation, role: str, target_id: str) -> None:
+        
+        combatant_data = {
+            "id": nation.id,
+            "role": role,
+            "justification": "TBD",
+            "targetID": target_id,
+            "claims": {},
+            "battlesWon": 0,
+            "battlesLost": 0,
+            "enemyUnitsDestroyed": 0,
+            "enemyImprovementsDestroyed": 0,
+            "friendlyUnitsDestroyed": 0,
+            "friendlyImprovementsDestroyed": 0,
+            "missilesLaunched": 0,
+            "nukesLaunched": 0
         }
 
-        self.data[war.id] = war_data
+        self.combatants[nation.id] = combatant_data
 
-        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
-        with open(gamedata_filepath, 'r') as json_file:
-            gamedata_dict = json.load(json_file)
-
-        gamedata_dict["wars"] = self.data
-        with open(gamedata_filepath, 'w') as json_file:
-            json.dump(gamedata_dict, json_file, indent=4)
-
-        self._name_to_id = {}
-        for war in self:
-            self._name_to_id[war.name.lower()] = war.id
-
-    def get(self, war_identifier: str) -> War:
-
-        war_id = str(war_identifier)
-
-        # check if war id was provided
-        if war_id in self.data:
-            return War(war_id, self.data[war_id], self.game_id)
+    def get_combatant(self, nation_id: str) -> "Combatant":
         
-        # check if war name was provided
-        war_id = self._get_id_from_name(war_identifier)
-        if war_id is not None:
-            return War(war_id, self.data[war_id], self.game_id)
-
-        raise Exception(f"Failed to retrieve war with identifier {war_identifier}.")
-
-    def get_war_name(self, nation1_id: str, nation2_id: str) -> str | None:
+        if nation_id in self.combatants:
+            return Combatant(self.combatants[nation_id])
         
-        if nation1_id == nation2_id:
-            return None
+        raise Exception(f"Failed to retrieve nation #{nation_id} combatant data in war {self.name}.")
 
-        for war in self:
-            if war.outcome == "TBD" and nation1_id in war.combatants and nation2_id in war.combatants:
-                return war.name
-            
-        return None
+    def get_role(self, nation_id: str) -> str:
+        pass
+
+    def get_main_combatant_ids(self) -> tuple:
+        pass
+
+    def is_on_same_side(self, nation_id_1: str, nation_id_2: str) -> bool:
+        pass
+
+    def add_missing_justifications(self) -> None:
+        pass
+
+    def calculate_score_threshold(self) -> tuple:
+        pass
+
+    def _resolve_war_justification(nation_id: str):
+        pass
+
+class WarScoreData:
     
-    def is_at_peace(self, nation_id: str) -> bool:
+    def __init__(self, d: dict):
 
-        for war in self:
-            if war.outcome == "TBD" and nation_id in war.combatants:
-                return False
-            
-        return True
+        self._data = d
+        self._total: int = d["total"]
+        self._occupation: int = d["occupation"]
+        self._victories: int = d["combatVictories"]
+        self._destroyed_units: int = d["enemyUnitsDestroyed"]
+        self._destroyed_improvements: int = d["enemyImprovementsDestroyed"]
+        self._captures: int = d["capitalCaptures"]
+        self._nuclear_strikes: int = d["nukedEnemyRegions"]
+
+    @property
+    def total(self):
+        return self._total
+
+    @property
+    def occupation(self):
+        return self._occupation
+
+    @property
+    def victories(self):
+        return self._victories
     
-    def at_peace_for_x(self, nation_id: str) -> int:
-        """
-        Returns number of turns a player has been at peace for. If 0, the player is actively at war.
-        """
+    @property
+    def destroyed_units(self):
+        return self._destroyed_units
 
-        current_turn_num = core.get_current_turn_num(self.game_id)
+    @property
+    def destroyed_improvements(self):
+        return self._destroyed_improvements
+    
+    @property
+    def captures(self):
+        return self._captures
 
-        last_at_war_turn = -1
-        for war in self:
-            if nation_id in war.combatants:
-                if war.outcome == "TBD":
-                    return 0
-                elif war.end > last_at_war_turn:
-                    last_at_war_turn = war.end
-        
-        return current_turn_num - last_at_war_turn
+    @property
+    def nuclear_strikes(self):
+        return self._nuclear_strikes
+    
+    @total.setter
+    def total(self, value: int):
+        self._total = value
+        self._data["total"] = value
 
-    def total_units_lost(self) -> int:
-        
-        total = 0
-        for war in self:
-            for combatant_id in war.combatants:
-                combatant = war.get_combatant(combatant_id)
-                total += combatant.lost_units
+    @occupation.setter
+    def occupation(self, value: int):
+        self._occupation = value
+        self._data["occupation"] = value
 
-        return total
+    @victories.setter
+    def victories(self, value: int):
+        self._victories = value
+        self._data["combatVictories"] = value
 
-    def total_improvements_lost(self) -> int:
-        
-        total = 0
-        for war in self:
-            for combatant_id in war.combatants:
-                combatant = war.get_combatant(combatant_id)
-                total += combatant.lost_improvements
+    @destroyed_units.setter
+    def destroyed_units(self, value: int):
+        self._destroyed_units = value
+        self._data["enemyUnitsDestroyed"] = value
 
-        return total
+    @destroyed_improvements.setter
+    def destroyed_improvements(self, value: int):
+        self._destroyed_improvements = value
+        self._data["enemyImprovementsDestroyed"] = value
 
-    def total_missiles_launched(self) -> int:
-        
-        total = 0
-        for war in self:
-            for combatant_id in war.combatants:
-                combatant = war.get_combatant(combatant_id)
-                total += combatant.launched_nukes
+    @captures.setter
+    def captures(self, value: int):
+        self._captures = value
+        self._data["capitalCaptures"] = value
 
-        return total
+    @nuclear_strikes.setter
+    def nuclear_strikes(self, value: int):
+        self._nuclear_strikes = value
+        self._data["nukedEnemyRegions"] = value
 
-    def find_longest_war(self) -> tuple:
-        
-        longest_name = None
-        longest_time = 0
-        current_turn_num = core.get_current_turn_num(self.game_id)
+class Combatant:
+    
+    def __init__(self, d: dict):
 
-        for war in self:
-            
-            if war.outcome == "TBD":
-                war_duration = current_turn_num - war.start
-            else:
-                war_duration = war.end - war.start
-            
-            if war_duration > longest_time:
-                longest_name = war.name
-                longest_time = war_duration
-        
-        return longest_name, longest_time
+        self._data = d
 
-    def add_warscore_from_occupations(self) -> None:
-        """
-        Adds warscore from occupied regions.
-        """
+        self.id: str = d["id"]
+        self.role: str = d["role"]
+        self.claims: dict = d["claims"]
+        self.target_id: str = d["targetID"]
+        self._justification: str = d["justification"]
+        self._battles_won: int = d["battlesWon"]
+        self._battles_lost: int = d["battlesLost"]
+        self._destroyed_units: int = d["enemyUnitsDestroyed"]
+        self._destroyed_improvements: int = d["enemyImprovementsDestroyed"]
+        self._lost_units: int = d["friendlyUnitsDestroyed"]
+        self._lost_improvements: int = d["friendlyImprovementsDestroyed"]
+        self._launched_missiles: int = d["missilesLaunched"]
+        self._launched_nukes: int = d["nukesLaunched"]
 
-        from app.region_new import Region, Regions
-        nation_table = NationTable(self.game_id)
+        # TODO: include attributes from Nation class (readonly)
 
-        for region in Regions:
-            
-            if region.data.occupier_id not in ["0", "99"]:
+    @property
+    def justification(self):
+        return self._justification
+    
+    @property
+    def battles_won(self):
+        return self._battles_won
 
-                war_name = self.get_war_name(region.data.owner_id, region.data.occupier_id)
-                war = self.get(war_name)
-                occupier_war_role = war.get_role(region.data.occupier_id)
-                occupier_nation = nation_table.get(region.data.occupier_id)
+    @property
+    def battles_lost(self):
+        return self._battles_lost
+    
+    @property
+    def destroyed_units(self):
+        return self._destroyed_units
+    
+    @property
+    def destroyed_improvements(self):
+        return self._destroyed_improvements
 
-                score = war.warscore_occupation
-                if "Scorched Earth" in occupier_nation.completed_research:
-                    score += 1
-                
-                if "Attacker" in occupier_war_role:
-                    war.attacker_occupation += score
-                else:
-                    war.defender_occupation += score
-                
-                self.save(war)
+    @property
+    def lost_units(self):
+        return self._lost_units
 
-    def update_totals(self) -> None:
+    @property
+    def lost_improvements(self):
+        return self._lost_improvements
 
-        for war in self:
-            if war.outcome == "TBD":
+    @property
+    def launched_missiles(self):
+        return self._launched_missiles
 
-                war.attacker_total = 0
-                war.attacker_total += war.attacker_occupation
-                war.attacker_total += war.attacker_victories
-                war.attacker_total += war.attacker_destroyed_units
-                war.attacker_total += war.attacker_destroyed_improvements
-                war.attacker_total += war.attacker_captures
-                war.attacker_total += war.attacker_nuclear_strikes
+    @property
+    def launched_nukes(self):
+        return self._launched_nukes
 
-                war.defender_total = 0
-                war.defender_total += war.defender_occupation
-                war.defender_total += war.defender_victories
-                war.defender_total += war.defender_destroyed_units
-                war.defender_total += war.defender_destroyed_improvements
-                war.defender_total += war.defender_captures
-                war.defender_total += war.defender_nuclear_strikes
+    @justification.setter
+    def justification(self, value: str):
+        self._justification = value
+        self._data["justification"] = value
 
-                self.save(war)
+    @battles_won.setter
+    def battles_won(self, value: int):
+        self._battles_won = value
+        self._data["battlesWon"] = value
 
-    def export_all_logs(self) -> None:
-        """
-        Saves all of the combat logs for ongoing wars as .txt files. Then wipes the logs.
-        """
-        
-        directory = f"gamedata/{self.game_id}/logs"
+    @battles_lost.setter
+    def battles_lost(self, value: int):
+        self._battles_lost = value
+        self._data["battlesLost"] = value
 
-        for war in self:
-            
-            if war.outcome == "TBD":
+    @destroyed_units.setter
+    def destroyed_units(self, value: int):
+        self._destroyed_units = value
+        self._data["enemyUnitsDestroyed"] = value
 
-                os.makedirs(directory, exist_ok=True)
-                filename = os.path.join(directory, f"{war.name}.txt")
-                
-                with open(filename, 'w') as file:
-                    for entry in war.log:
-                        file.write(entry + '\n')
-                
-                war.log = []
-                self.save(war)
+    @destroyed_improvements.setter
+    def destroyed_improvements(self, value: int):
+        self._destroyed_improvements = value
+        self._data["enemyImprovementsDestroyed"] = value
+
+    @lost_units.setter
+    def lost_units(self, value: int):
+        self._lost_units = value
+        self._data["friendlyUnitsDestroyed"] = value
+
+    @lost_improvements.setter
+    def lost_improvements(self, value: int):
+        self._lost_improvements = value
+        self._data["friendlyImprovementsDestroyed"] = value
+
+    @launched_missiles.setter
+    def launched_missiles(self, value: int):
+        self._launched_missiles = value
+        self._data["missilesLaunched"] = value
+
+    @launched_nukes.setter
+    def launched_nukes(self, value: int):
+        self._launched_nukes = value
+        self._data["nukesLaunched"] = value
