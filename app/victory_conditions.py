@@ -4,7 +4,6 @@ from collections import defaultdict
 from app import core
 from app.nationdata import Nation
 from app.nationdata import NationTable
-from app.war import WarTable
 
 # easy
 
@@ -28,14 +27,14 @@ def ambassador(nation: Nation) -> bool:
 def backstab(nation: Nation) -> bool:
 
     from app.alliance import Alliances
+    from app.war import Wars
 
     GAME_ID = nation.game_id
     nation_table = NationTable(GAME_ID)
-    war_table = WarTable(GAME_ID)
 
     # get set of all nations defeated in war
     nations_defeated = set()
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD" or nation.name not in war.combatants:
             # we do not care about wars player was not involved in
             continue
@@ -52,7 +51,7 @@ def backstab(nation: Nation) -> bool:
     
     # get set of all nations you lost a war to
     nations_lost_to = set()
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD" or nation.name not in war.combatants:
             # we do not care about wars player was not involved in
             continue
@@ -140,12 +139,11 @@ def diverse_economy(nation: Nation) -> bool:
 def double_down(nation: Nation) -> bool:
 
     # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     # count wars
     wars_found = defaultdict(int)
-    for war in war_table:
+    for war in Wars:
         
         if nation.id not in war.combatants:
             continue
@@ -219,12 +217,10 @@ def secure_strategic_resources(nation: Nation) -> bool:
 
 def threat_containment(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     # check if war won with specific war justification
-    for war in war_table:
+    for war in Wars:
 
         if nation.id not in war.combatants:
             continue
@@ -399,12 +395,10 @@ def sphere_of_influence(nation: Nation) -> bool:
 
 def underdog(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     # search for an underdog victory
-    for war in war_table:
+    for war in Wars:
 
         # skip wars player not involved in
         if nation.id not in war.combatants:
@@ -435,12 +429,10 @@ def underdog(nation: Nation) -> bool:
 
 def warmonger(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     count = 0
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "Attacker Victory" and war.get_role(nation.id) == "Main Attacker":
             count += 1
     

@@ -3,11 +3,11 @@ import random
 
 from app import core
 from app import actions
-from app.region_new import Region
+from app.alliance import Alliances
+from app.region_new import Region, Regions
 from app.notifications import Notifications
 from app.nationdata import Nation, NationTable
-from app.alliance import Alliance, Alliances
-from app.war import WarTable
+from app.war import Wars
 
 from app import palette
 
@@ -31,7 +31,6 @@ class Event:
         # load game data
         if not temp:
             self.nation_table = NationTable(self.game_id)
-            self.war_table = WarTable(self.game_id)
             self.current_turn_num = core.get_current_turn_num(self.game_id)
             with open("active_games.json", 'r') as json_file:
                 self.active_games_dict = json.load(json_file)
@@ -345,10 +344,10 @@ class Desertion(Event):
         # retrieve lowest warscore for each nation
         lowest_warscore_dict = {}
         for nation in self.nation_table:
-            if self.war_table.is_at_peace(nation.id):
+            if Wars.is_at_peace(nation.id):
                 continue
             lowest_warscore = 99999
-            for war in self.war_table:
+            for war in Wars:
                 if war.outcome != "TBD" or nation.id not in war.combatants:
                     continue
                 nation_combatant_data = war.get_combatant(nation.id)
@@ -558,7 +557,7 @@ class LostNuclearWeapons(Event):
                 while not valid_region_id:
                     silo_location_id = input("Enter region id for Missile Silo: ")
                     silo_location_id = silo_location_id.upper()
-                    if silo_location_id in self.regdata_dict:
+                    if silo_location_id in set(Regions.ids()):
                         valid_region_id = True
                 nation.improvement_counts["Missile Silo"] += 1
                 region = Region(valid_region_id)
@@ -702,7 +701,7 @@ class PeacetimeRewards(Event):
         
         names = []
         for nation in self.nation_table:
-            if self.war_table.at_peace_for_x(nation.id) >= 12:
+            if Wars.at_peace_for_x(nation.id) >= 12:
                 self.targets.append(nation.id)
                 names.append(nation.name)
         nations_receiving_award_str = ", ".join(names)
@@ -738,10 +737,9 @@ class PowerPlantMeltdown(Event):
 
     def activate(self):
         
-        for region_id in self.regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             if region.improvement.name == "Nuclear Power Plant":
-                self.targets.append(region_id)
+                self.targets.append(region.region_id)
         random.shuffle(self.targets)
         meltdown_region_id = self.targets.pop()
 
@@ -824,7 +822,7 @@ class UnitedNationsPeacekeepingMandate(Event):
 
     def activate(self):
 
-        for war in self.war_table:
+        for war in Wars:
             if war.outcome == "TBD":
                 war.end_conflict("White Peace")
                 Notifications.add(f"{war.name} has ended with a white peace due to United Nations Peacekeeping Mandate.", 2)
@@ -1128,7 +1126,7 @@ class ForeignInvasion(Event):
         
         Notifications.add(f"New Event: {self.name}!", 2)
 
-        region_id_list = list(self.regdata_dict.keys())
+        region_id_list = Regions.ids()
         invasion_point_id = None
 
         while True:
@@ -1152,17 +1150,16 @@ class ForeignInvasion(Event):
         self.nation_table.save(foreign_invasion_nation)
 
         # note - all war justifications are set to null because this is not a conventional war
-        war = self.war_table.create("99", "1", "NULL", [])
+        Wars.create("99", "1", "NULL", [])
+        war = Wars.get("Foreign Invasion")
         for nation in self.nation_table:
             if nation.id == "1":
                 combatant = war.get_combatant(nation.id)
                 combatant.justification = "NULL"
-                war.save_combatant(combatant)
             else:
-                combatant = war.add_combatant(nation, "Secondary Defender", "N/A")
+                war.add_combatant(nation, "Secondary Defender", "N/A")
+                combatant = war.get_combatant(nation.id)
                 combatant.justification = "NULL"
-                war.save_combatant(combatant)
-        self.war_table.save(war)
 
         unit_name = self._foreign_invasion_determine_unit()
         invasion_point = Region(invasion_point_id, self.game_id)    #!!!
@@ -1177,8 +1174,7 @@ class ForeignInvasion(Event):
         
         # generate movement actions
         destination_dict = {}
-        for region_id in self.regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             if region.unit.name is None or region.unit.owner_id != "99":
                 continue
             ending_region_id, priority = self._foreign_invasion_calculate_target_region(list(region.graph.adjacent_regions.keys()), destination_dict)
@@ -1186,17 +1182,16 @@ class ForeignInvasion(Event):
             if ending_region_id is None:
                 continue
             # foreign invasion always moves each unit one region at a time
-            movement_action_str = f"Move {region_id}-{ending_region_id}"
+            movement_action_str = f"Move {region.region_id}-{ending_region_id}"
             actions_dict["UnitMoveAction"].append(actions.UnitMoveAction(self.game_id, "99", movement_action_str))
         
         # generate deployment actions
         if self.current_turn_num % 4 == 0:
             Notifications.add("The Foreign Invasion has received reinforcements.", 2)
-            for region_id in self.regdata_dict:
-                region = Region(region_id)
+            for region in Regions:
                 if region.data.owner_id == "99" and region.data.occupier_id == "0":
                     unit_name = self._foreign_invasion_determine_unit()
-                    deploy_action_str = f"Deploy {unit_name} {region_id}"
+                    deploy_action_str = f"Deploy {unit_name} {region.region_id}"
                     actions_dict["UnitDeployAction"].append(actions.UnitDeployAction(self.game_id, "99", deploy_action_str))
 
         self.state = 1
@@ -1216,8 +1211,7 @@ class ForeignInvasion(Event):
         
         # Foreign Invasion ends if no unoccupied reinforcement regions
         invasion_unoccupied_count = 0
-        for region_id in self.regdata_dict:
-            region = Region(region_id)#!!!
+        for region in Regions:
             if region.data.owner_id == "99" and region.data.occupier_id == "0":
                 invasion_unoccupied_count += 1
         if invasion_unoccupied_count == 0:
@@ -1349,9 +1343,7 @@ class ForeignInvasion(Event):
 
         foreign_invasion_nation = self.nation_table.get("99")
     
-        for region_id in self.regdata_dict:
-            
-            region = Region(region_id)
+        for region in Regions:
             
             if region.data.owner_id == "99":
                 region.data.owner_id = "0"
@@ -1363,10 +1355,9 @@ class ForeignInvasion(Event):
                 foreign_invasion_nation.unit_counts[region.unit.name] -= 1
                 region.unit.clear()
 
-            war = self.war_table.get("Foreign Invasion")
+            war = Wars.get("Foreign Invasion")
             war.end = self.current_turn_num
             war.outcome = "White Peace"
-            self.war_table.save(war)
 
         self.nation_table.save(foreign_invasion_nation)
 
@@ -1389,7 +1380,7 @@ class Pandemic(Event):
         self.cure_current = 0
         self.cure_threshold = len(self.nation_table) * 50
         self.closed_borders = []
-        origin_region_id = random.choice(list(self.regdata_dict.keys()))
+        origin_region_id = random.choice(Regions.ids())
         
         region = Region(origin_region_id)
         region.data.infection += 1
@@ -1402,15 +1393,13 @@ class Pandemic(Event):
         if self.cure_current >= self.cure_threshold:
             
             # run pandemic decline procedure
-            for region_id in self.regdata_dict:
-                region = Region(region_id)
-                region.add_infection(-1)
+            for region in Regions:
+                region.data.infection -= 1
 
         else:
 
             # conduct intensify rolls
-            for region_id in self.regdata_dict:
-                region = Region(region_id)
+            for region in Regions:
                 if region.data.infection > 0 and region.data.infection < 10:
                     # intensify check
                     intensify_roll = random.randint(1, 10)
@@ -1424,10 +1413,9 @@ class Pandemic(Event):
 
             # get a list of regions infected before spreading starts
             infected_regions = []
-            for region_id in self.regdata_dict:
-                region = Region(region_id)
+            for region in Regions:
                 if region.data.infection > 0:
-                    infected_regions.append(region_id)
+                    infected_regions.append(region.region_id)
 
             # conduct spread roles
             for region_id in infected_regions:
@@ -1452,8 +1440,7 @@ class Pandemic(Event):
         # sum up total infection scores
         unowned_infection = 0
         infection_scores = [0] * len(self.nation_table)
-        for region_id in self.regdata_dict:
-            region = Region(region_id)
+        for region in Regions:
             if region.data.owner_id != "0" and region.data.owner_id <= len(infection_scores):
                 infection_scores[int(region.data.owner_id) - 1] += region.data.infection
             else:
@@ -1461,8 +1448,7 @@ class Pandemic(Event):
         # check if pandemic has been eradicated
         infection_total = sum(infection_scores) + unowned_infection
         if infection_total == 0:
-            for region_id in self.regdata_dict:
-                region = Region(region_id)
+            for region in Regions:
                 region.data.quarantine = False
             Notifications.add("The pandemic has been eradicated!", 2)
             self.state = 0
@@ -1686,10 +1672,10 @@ def _no_ranking_tie(game_id: str, ranking: str) -> bool:
 
 def _at_least_x_ongoing_wars(game_id: str, count: int) -> bool:
 
-    war_table = WarTable(game_id)
+    from app.war import Wars
     
     ongoing_war_count = 0
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD":
             ongoing_war_count += 1
     
@@ -1700,12 +1686,13 @@ def _at_least_x_ongoing_wars(game_id: str, count: int) -> bool:
 
 def _at_least_x_nations_at_peace_for_y_turns(game_id: str, nation_count: int, turn_count: int) -> bool:
     
+    from app.war import Wars
+    
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
     
     at_peace_count = 0
     for nation in nation_table:
-        if war_table.at_peace_for_x(nation.id) >= turn_count:
+        if Wars.at_peace_for_x(nation.id) >= turn_count:
             at_peace_count += 1
     
     if at_peace_count < nation_count:

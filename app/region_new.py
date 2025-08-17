@@ -176,24 +176,23 @@ class Region:
             bool: True if all checks pass. False otherwise.
         """
         
-        from app.war import WarTable
-        war_table = WarTable(self.game_id)
+        from app.war import Wars
 
         # you can always move into regions owned by you
         if self.data.owner_id == other_player_id:
             return True
 
         # you may move into unoccupied regions owned by an enemy
-        if war_table.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id == "0":
+        if Wars.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id == "0":
             return True
         
         # you may move into occupied regions owned by an enemy in two cases
-        elif war_table.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id != "0":
+        elif Wars.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id != "0":
             # you are the occupier
             if self.data.occupier_id == other_player_id:
                 return True
             # you are also at war with the occupier
-            if war_table.get_war_name(self.data.owner_id, other_player_id) is not None:
+            if Wars.get_war_name(self.data.owner_id, other_player_id) is not None:
                 return True
             
         # foreign invasion may move into unclaimed regions
@@ -236,7 +235,7 @@ class Region:
 
         from app import combat
         from app.nationdata import NationTable
-        from app.war import WarTable
+        from app.war import Wars
 
         combat_occured = False
 
@@ -263,18 +262,17 @@ class Region:
             if target_region.improvement_is_hostile(unit_owner_id) and target_region.improvement.name != "Capital":
 
                 nation_table = NationTable(self.game_id)
-                war_table = WarTable(self.game_id)
 
                 # load war and combatant data
                 attacking_nation = nation_table.get(str(unit_owner_id))
                 defending_nation = nation_table.get(str(target_region.data.owner_id))
-                war_name = war_table.get_war_name(attacking_nation.id, defending_nation.id)
-                war = war_table.get(war_name)
+                war_name = Wars.get_war_name(attacking_nation.id, defending_nation.id)
+                war = Wars.get(war_name)
                 attacking_nation_combatant_data = war.get_combatant(attacking_nation.id)
                 defending_nation_combatant_data = war.get_combatant(defending_nation.id)
                 
                 # award points and update stats
-                war.attacker_destroyed_improvements += war.warscore_destroy_improvement
+                war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
                 attacking_nation_combatant_data.destroyed_improvements += 1
                 defending_nation_combatant_data.lost_improvements += 1
                 
@@ -283,9 +281,6 @@ class Region:
                     war.log.append(f"    {defending_nation.name} {target_region.improvement.name} has been destroyed!")
                 else:
                     war.log.append(f"{attacking_nation.name} destroyed an undefended {defending_nation.name} {target_region.improvement.name}!")
-                war.save_combatant(attacking_nation_combatant_data)
-                war.save_combatant(defending_nation_combatant_data)
-                war_table.save(war)
 
                 # save nation data
                 nation_table.save(attacking_nation)
@@ -638,8 +633,7 @@ class UnitData:
 
     def is_hostile(self, other_player_id: str) -> bool:
 
-        from app.war import WarTable
-        war_table = WarTable(Regions.game_id)
+        from app.war import Wars
 
         # if no unit return False
         if self.owner_id == "0" or other_player_id == "0":
@@ -654,7 +648,7 @@ class UnitData:
             return True
         
         # check if at war
-        if war_table.get_war_name(self.owner_id, other_player_id) is not None:
+        if Wars.get_war_name(self.owner_id, other_player_id) is not None:
             return True
         
         return False

@@ -524,7 +524,7 @@ class War:
                 
                 # update information
                 combatant.justification = war_justification
-                combatant.claims = region_claims_list
+                combatant.claims = Wars._claim_pairs(region_claims_list)
 
     def calculate_score_threshold(self) -> tuple:
         

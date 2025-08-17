@@ -8,7 +8,6 @@ from app import core
 from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
-from app.war import WarTable
 
 def update_income(game_id: str) -> None:
     """
@@ -446,8 +445,8 @@ def bonus_phase_heals(game_id: str) -> None:
     """
     
     from app.region_new import Region, Regions
+    from app.war import Wars
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
     
     for region in Regions:
         
@@ -458,7 +457,7 @@ def bonus_phase_heals(game_id: str) -> None:
             # heal improvement
             if region.data.owner_id != "0" and region.improvement.name != None and region.improvement.health != 99:
                 region.improvement.heal(2)
-                if nation_improvement.id != "0" and "Peacetime Recovery" in nation_improvement.completed_research and war_table.is_at_peace(nation_improvement.id):
+                if nation_improvement.id != "0" and "Peacetime Recovery" in nation_improvement.completed_research and Wars.is_at_peace(nation_improvement.id):
                     region.improvement.heal(100)
         
         if region.unit.name is not None and region.unit.owner_id not in ["0", "99"]:
@@ -482,22 +481,17 @@ def bonus_phase_heals(game_id: str) -> None:
             # heal unit
             if heal_allowed:
                 region.unit.heal(2)
-                if nation_unit.id != "0" and "Peacetime Recovery" in nation_unit.completed_research and war_table.is_at_peace(nation_unit.id):
+                if nation_unit.id != "0" and "Peacetime Recovery" in nation_unit.completed_research and Wars.is_at_peace(nation_unit.id):
                     region.unit.heal(100)
 
 def prompt_for_missing_war_justifications(game_id: str) -> None:
     """
     Prompts in terminal when a war justification has not been entered for an ongoing war.
-
-    :param game_id: The full game_id of the active game.
     """
-
-    war_table = WarTable(game_id)
-
-    for war in war_table:
+    from app.war import Wars
+    for war in Wars:
         if war.outcome == "TBD":
             war.add_missing_justifications()
-            war_table.save(war)
 
 def total_occupation_forced_surrender(game_id: str) -> None:
     """
@@ -508,9 +502,9 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     """
     
     # get game data
-    from app.region_new import Region, Regions
+    from app.region_new import Regions
+    from app.war import Wars
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
 
     # check all regions for occupation
     non_occupied_found_list = [False] * len(nation_table)
@@ -526,7 +520,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
         if not region_found:
             
             # look for wars to surrender to
-            for war in war_table:
+            for war in Wars:
 
                 if war.outcome == "TBD" and looser_name in war.combatants and "Main" in war.get_role(str(looser_id)):
 
@@ -543,7 +537,6 @@ def total_occupation_forced_surrender(game_id: str) -> None:
                     war.end_conflict(outcome)
 
                     Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 4)
-                    war_table.save(war)
 
 def war_score_forced_surrender(game_id: str) -> None:
     """
@@ -554,10 +547,10 @@ def war_score_forced_surrender(game_id: str) -> None:
     """
 
     # get game data
+    from app.war import Wars
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
 
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD":
 
             # never force end the war caused by foreign invasion
@@ -569,17 +562,15 @@ def war_score_forced_surrender(game_id: str) -> None:
             attacker_nation = nation_table.get(attacker_id)
             defender_nation = nation_table.get(defender_id)
             
-            if attacker_threshold is not None and war.attacker_total >= attacker_threshold:
+            if attacker_threshold is not None and war.attackers.total >= attacker_threshold:
                 war.end_conflict("Attacker Victory")
                 Notifications.add(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 4)
                 Notifications.add(f"{war.name} has ended due to war score.", 4)
-                war_table.save(war)
 
-            elif defender_threshold is not None and war.defender_total >= defender_threshold:
+            elif defender_threshold is not None and war.defenders.total >= defender_threshold:
                 war.end_conflict("Defender Victory")
                 Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 4)
                 Notifications.add(f"{war.name} has ended due to war score.", 4)
-                war_table.save(war)
 
 def prune_alliances(game_id: str) -> None:
     """

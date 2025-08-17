@@ -14,8 +14,8 @@ from app import palette
 from app.alliance import Alliances
 from app.region_new import Region, Regions
 from app.notifications import Notifications
+from app.war import Wars
 from app.nationdata import NationTable
-from app.war import WarTable
 from app.map import GameMaps
 from app import actions
 from app import checks
@@ -202,6 +202,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     Alliances.load(game_id)
     Regions.load(game_id)
     Notifications.initialize(game_id)
+    Wars.load(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -266,10 +267,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         nation_table.save(nation)
     
     # update wars
-    war_table = WarTable(game_id)
-    war_table.export_all_logs()
-    war_table.add_warscore_from_occupations()
-    war_table.update_totals()
+    Wars.export_all_logs()
+    Wars.add_warscore_from_occupations()
+    Wars.update_totals()
 
     # end of turn checks
     print("Resolving end of turn updates...")
@@ -322,6 +322,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     Alliances.save()
     Regions.save()
     Notifications.save()
+    Wars.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
@@ -557,7 +558,6 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     from app.alliance import Alliances
     nation_table = NationTable(game_id)
     nation = nation_table.get(player_id)
-    war_table = WarTable(game_id)
     alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
 
     # build player info dict
@@ -639,7 +639,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         temp = nation_table.get(i + 1)
         if temp.name == nation.name:
             continue
-        elif war_table.get_war_name(player_id, temp.id) is not None:
+        elif Wars.get_war_name(player_id, temp.id) is not None:
             relation_colors[i] = '#ff0000'
             relations_status_list[i] = "At War"
         elif Alliances.are_allied(nation.name, temp.name):
