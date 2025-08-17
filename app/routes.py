@@ -15,9 +15,7 @@ from app import core
 from app import events
 from app import palette
 from app.notifications import Notifications
-from app.alliance import AllianceTable
 from app.nationdata import NationTable
-from app.war import WarTable
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -434,8 +432,8 @@ def player_route(full_game_id, player_id):
 def wars(full_game_id):
     
     # get game data
+    from app.war import Wars
     nation_table = NationTable(full_game_id)
-    war_table = WarTable(full_game_id)
     current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -444,7 +442,7 @@ def wars(full_game_id):
     
     # read wars
     results = {}
-    for war in war_table:
+    for war in Wars:
 
         inner_dict = {}
         
@@ -478,21 +476,21 @@ def wars(full_game_id):
                 war_status_bar = [white_color] * 1     # set bar entirely white
             case "TBD":
                 # color bar based on percentage
-                if war.attacker_total != 0 and war.defender_total == 0:
+                if war.attackers.total != 0 and war.defenders.total == 0:
                     war_status_bar = [attacker_color] * 1
-                elif war.attacker_total == 0 and war.defender_total != 0:
+                elif war.attackers.total == 0 and war.defenders.total != 0:
                     war_status_bar = [defender_color] * 1
-                elif war.attacker_total == 0 and war.defender_total == 0:
+                elif war.attackers.total == 0 and war.defenders.total == 0:
                     war_status_bar = [attacker_color] * 1
                     war_status_bar += [defender_color] * 1
                 else:
                     # calculate attacker value
-                    attacker_percent = float(war.attacker_total) / float(war.attacker_total + war.defender_total)
+                    attacker_percent = float(war.attackers.total) / float(war.attackers.total + war.defenders.total)
                     attacker_percent = round(attacker_percent, 2)
                     attacker_points = int(attacker_percent * 100)
                     attacker_steps = round(attacker_points / 5)
                     # calculate defender value
-                    defender_percent = float(war.defender_total) / float(war.attacker_total + war.defender_total)
+                    defender_percent = float(war.defenders.total) / float(war.attackers.total + war.defenders.total)
                     defender_percent = round(defender_percent, 2)
                     defender_points = int(defender_percent * 100)
                     defender_steps = round(defender_points / 5)
@@ -503,25 +501,25 @@ def wars(full_game_id):
 
         # get attacker warscore data
         copy = {
-            "Total War Score": war.attacker_total,
-            "From Occupation": war.attacker_occupation,
-            "From Combat Victories": war.attacker_victories,
-            "From Enemy Units Destroyed": war.attacker_destroyed_units,
-            "From Enemy Impr. Destroyed": war.attacker_destroyed_improvements,
-            "From Capital Captures": war.attacker_captures,
-            "From Nuclear Strikes": war.attacker_nuclear_strikes
+            "Total War Score": war.attackers.total,
+            "From Occupation": war.attackers.occupation,
+            "From Combat Victories": war.attackers.victories,
+            "From Enemy Units Destroyed": war.attackers.destroyed_units,
+            "From Enemy Impr. Destroyed": war.attackers.destroyed_improvements,
+            "From Capital Captures": war.attackers.captures,
+            "From Nuclear Strikes": war.attackers.nuclear_strikes
         }
         inner_dict["attackerWarScore"] = copy
         
         # get defender warscore data
         copy = {
-            "Total War Score": war.defender_total,
-            "From Occupation": war.defender_occupation,
-            "From Combat Victories": war.defender_victories,
-            "From Enemy Units Destroyed": war.defender_destroyed_units,
-            "From Enemy Impr. Destroyed": war.defender_destroyed_improvements,
-            "From Capital Captures": war.defender_captures,
-            "From Nuclear Strikes": war.defender_nuclear_strikes
+            "Total War Score": war.defenders.total,
+            "From Occupation": war.defenders.occupation,
+            "From Combat Victories": war.defenders.victories,
+            "From Enemy Units Destroyed": war.defenders.destroyed_units,
+            "From Enemy Impr. Destroyed": war.defenders.destroyed_improvements,
+            "From Capital Captures": war.defenders.captures,
+            "From Nuclear Strikes": war.defenders.nuclear_strikes
         }
         inner_dict["defenderWarScore"] = copy
 
@@ -548,7 +546,7 @@ def wars(full_game_id):
                     can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
                 inner_dict["canEndStr"] = can_end_str
                 # calculate forced end score
-                if war.attacker_total > war.defender_total:
+                if war.attackers.total > war.defenders.total:
                     if attacker_threshold is not None:
                         forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {attacker_threshold} </span> war score."""
                     else:
@@ -841,11 +839,15 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
+    from app.alliance import Alliances
+    from app.notifications import Notifications
+    from app.war import Wars
+
     # get game data
+    Alliances.load(full_game_id)
+    Notifications.initialize(full_game_id)
+    Wars.load(full_game_id)
     nation_table = NationTable(full_game_id)
-    alliance_table = AllianceTable(full_game_id)
-    war_table = WarTable(full_game_id)
-    notifications = Notifications(full_game_id)
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     trucedata_list = core.read_file(trucedata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
@@ -885,7 +887,7 @@ def announcements(full_game_id):
     elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
         diplomacy_list.append('Normal turn schedule is now in effect.')
     # get all ongoing wars
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD":
             diplomacy_list.append(f"{war.name} is ongoing.")
     # get all ongoing truces
@@ -910,8 +912,8 @@ def announcements(full_game_id):
     # Build Notifications String
     notifications_list = []
     q = PriorityQueue()
-    for string, priority in notifications:
-        q.put((priority, string))
+    for notification in Notifications:
+        q.put(notification)
     while not q.empty():
         ntf = q.get()
         notifications_list.append(ntf[1])
@@ -921,17 +923,17 @@ def announcements(full_game_id):
 
     # Build Statistics String
     statistics_list = []
-    statistics_list.append(f"Total alliances: {len(alliance_table)}")
-    longest_alliance_name, longest_alliance_duration = alliance_table.get_longest_alliance()
+    statistics_list.append(f"Total alliances: {len(Alliances)}")
+    longest_alliance_name, longest_alliance_duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
         statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
     else:
         statistics_list.append(f"Longest alliance: N/A")
-    statistics_list.append(f"Total wars: {len(war_table)}")
-    statistics_list.append(f"Units lost in war: {war_table.total_units_lost()}")
-    statistics_list.append(f"Improvements destroyed in war: {war_table.total_units_lost()}")
-    statistics_list.append(f"Nuclear Missiles launched: {war_table.total_missiles_launched()}")
-    war_name, war_duration = war_table.find_longest_war()
+    statistics_list.append(f"Total wars: {len(Wars)}")
+    statistics_list.append(f"Units lost in war: {Wars.total_units_lost()}")
+    statistics_list.append(f"Improvements destroyed in war: {Wars.total_units_lost()}")
+    statistics_list.append(f"Nuclear Missiles launched: {Wars.total_missiles_launched()}")
+    war_name, war_duration = Wars.find_longest_war()
     if war_name is not None:
         statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
     else:
@@ -987,44 +989,49 @@ def announcements(full_game_id):
 @main.route('/<full_game_id>/alliances')
 def alliances(full_game_id):
 
+    from app.alliance import Alliances
+    
+    Alliances.load(full_game_id)
+    nation_table = NationTable(full_game_id)
+    alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Alliance Page'
 
-    nation_table = NationTable(full_game_id)
-    alliance_table = AllianceTable(full_game_id)
-    alliance_dict = alliance_table.data
-    alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
-
     alliance_dict_filtered = {}
-    for alliance_name, alliance_data in alliance_dict.items():
-        if alliance_data["turnEnded"] == 0:
-            
-            # adds alliance establishment string
-            turn_started = alliance_data["turnCreated"]
-            season, year = core.date_from_turn_num(turn_started)
-            date_str = f"{season} {year} (Turn {turn_started})"
-            alliance_data["turnCreated"] = date_str
+    
+    for alliance in Alliances:
+        
+        if not alliance.is_active:
+            continue
 
-            # add color to nation names
-            alliance_data["currentMembersFormatted"] = {}
-            for nation_name, turn_joined in alliance_data["currentMembers"].items():
-                nation = nation_table.get(nation_name)
-                bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
-                if nation.color in bad_primary_colors_set:
-                    color = palette.normal_to_occupied[nation.color]
-                else:
-                    color = nation.color
-                # add to new dict
-                alliance_data["currentMembersFormatted"][nation_name] = {}
-                alliance_data["currentMembersFormatted"][nation_name]["turnJoined"] = turn_joined
-                alliance_data["currentMembersFormatted"][nation_name]["nationColor"] = color
-            
-            # adds alliance color
-            alliance_data["color"] = palette.str_to_hex(alliance_scenario_dict[alliance_data["allianceType"]]["colorTheme"])
+        alliance_data = {
+            "allianceType": alliance.type,
+            "foundingMembers": alliance.founding_members,
+            "currentMembersFormatted": {}
+        }
 
-            alliance_dict_filtered[alliance_name] = alliance_data
+        turn_started = alliance_data["turnCreated"]
+        season, year = core.date_from_turn_num(turn_started)
+        date_str = f"{season} {year} (Turn {turn_started})"
+        alliance_data["turnCreated"] = date_str
+
+        for nation_name, turn_joined in alliance.current_members.items():
+            nation = nation_table.get(nation_name)
+            bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+            if nation.color in bad_primary_colors_set:
+                color = palette.normal_to_occupied[nation.color]
+            else:
+                color = nation.color
+            alliance_data["currentMembersFormatted"][nation_name] = {
+                "turnJoined": turn_joined,
+                "nationColor": color
+            }
+
+        alliance_data["color"] = palette.str_to_hex(alliance_scenario_dict[alliance.type]["colorTheme"])
+
+        alliance_dict_filtered[alliance.name] = alliance_data
 
     return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_scenario_dict, page_title = page_title)
 

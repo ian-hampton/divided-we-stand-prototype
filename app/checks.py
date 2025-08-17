@@ -8,8 +8,6 @@ from app import core
 from app.notifications import Notifications
 from app.nationdata import NationTable
 from app.nationdata import Nation
-from app.alliance import AllianceTable
-from app.war import WarTable
 
 def update_income(game_id: str) -> None:
     """
@@ -23,9 +21,9 @@ def update_income(game_id: str) -> None:
     """
     
     # get game data
-    from app.region_new import Region, Regions
+    from app.alliance import Alliances
+    from app.region import Regions
     nation_table = NationTable(game_id)
-    alliance_table = AllianceTable(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -118,8 +116,8 @@ def update_income(game_id: str) -> None:
         nation_table.save(nation)
 
     # alliance yields
-    for alliance in alliance_table:
-        amount, resource_name = alliance.get_yield()
+    for alliance in Alliances:
+        amount, resource_name = alliance.calculate_yield()
         if amount == 0 or resource_name is None:
             continue
         for ally_name in alliance.current_members:
@@ -130,7 +128,7 @@ def update_income(game_id: str) -> None:
                 nation.update_max_mc(amount)
             else:
                 nation.update_gross_income(resource_name, amount)
-            income_str = f'&Tab;+{amount:.2f} from {alliance.name}.'
+            income_str = f"&Tab;+{amount:.2f} from {alliance.name}."
             _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation_table.save(nation)
         
@@ -143,10 +141,10 @@ def update_income(game_id: str) -> None:
             final_total = round(final_total, 2)
             rate_diff = round(final_total - total, 2)
             if rate_diff > 0:
-                income_str = f'&Tab;+{rate_diff:.2f} from income rate.'
+                income_str = f"&Tab;+{rate_diff:.2f} from income rate."
                 _update_text_dict(text_dict, nation.name, resource_name, income_str)
             elif rate_diff < 0:
-                income_str = f'&Tab;{rate_diff:.2f} from income rate.'
+                income_str = f"&Tab;{rate_diff:.2f} from income rate."
                 _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation.update_gross_income(resource_name, final_total, overwrite=True)
         nation_table.save(nation)
@@ -329,7 +327,7 @@ def countdown(game_id: str) -> None:
     Resolves improvements/units that have countdowns associated with them.
     """
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     
     # resolve nuked regions
     for region in Regions:
@@ -343,7 +341,6 @@ def resolve_resource_shortages(game_id: str) -> None:
 
     # get game info
     nation_table = NationTable(game_id)
-    notifications = Notifications(game_id)
 
     for nation in nation_table:
 
@@ -353,17 +350,17 @@ def resolve_resource_shortages(game_id: str) -> None:
         upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
 
         # handle shortages
-        _resolve_shortage("Oil", upkeep_dict, nation, notifications, game_id)
-        _resolve_shortage("Coal", upkeep_dict, nation, notifications, game_id)
-        _resolve_shortage("Energy", upkeep_dict, nation, notifications, game_id)
-        _resolve_shortage("Uranium", upkeep_dict, nation, notifications, game_id)
-        _resolve_shortage("Food", upkeep_dict, nation, notifications, game_id)
-        _resolve_shortage("Dollars", upkeep_dict, nation, notifications, game_id)
+        _resolve_shortage("Oil", upkeep_dict, nation, game_id)
+        _resolve_shortage("Coal", upkeep_dict, nation, game_id)
+        _resolve_shortage("Energy", upkeep_dict, nation, game_id)
+        _resolve_shortage("Uranium", upkeep_dict, nation, game_id)
+        _resolve_shortage("Food", upkeep_dict, nation, game_id)
+        _resolve_shortage("Dollars", upkeep_dict, nation, game_id)
     
         # update nation data
         nation_table.save(nation)
 
-def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, notifications: Notifications, game_id: str) -> None:
+def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, game_id: str) -> None:
     """
     Helper function for resolve_resource_shortages().
     """
@@ -397,7 +394,7 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, not
         else:
             region_id, victim = core.search_and_destroy_unit(game_id, nation.id, consumer_name)
             nation.unit_counts[consumer_name] -= 1
-        notifications.append(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 6)
+        Notifications.add(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 6)
         
         # update stockpile
         consumer_upkeep = upkeep_dict[consumer_name][resource_name]["Upkeep"] * upkeep_dict[consumer_name][resource_name]["Upkeep Multiplier"]
@@ -428,7 +425,6 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
     """
 
     nation_table = NationTable(game_id)
-    notifications = Notifications(game_id)
 
     for nation in nation_table:
         
@@ -438,7 +434,7 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
             region_id, victim = core.search_and_destroy_unit(game_id, nation.id, 'ANY')
             nation.update_used_mc(-1)
             nation.unit_counts[victim] -= 1
-            notifications.append(f'{nation.name} lost {victim} {region_id} due to insufficient military capacity.', 5)
+            Notifications.add(f'{nation.name} lost {victim} {region_id} due to insufficient military capacity.', 5)
 
         # update nation data
         nation_table.save(nation)
@@ -448,9 +444,9 @@ def bonus_phase_heals(game_id: str) -> None:
     Heals all units and defensive improvements by 2 health.
     """
     
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
+    from app.war import Wars
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
     
     for region in Regions:
         
@@ -461,7 +457,7 @@ def bonus_phase_heals(game_id: str) -> None:
             # heal improvement
             if region.data.owner_id != "0" and region.improvement.name != None and region.improvement.health != 99:
                 region.improvement.heal(2)
-                if nation_improvement.id != "0" and "Peacetime Recovery" in nation_improvement.completed_research and war_table.is_at_peace(nation_improvement.id):
+                if nation_improvement.id != "0" and "Peacetime Recovery" in nation_improvement.completed_research and Wars.is_at_peace(nation_improvement.id):
                     region.improvement.heal(100)
         
         if region.unit.name is not None and region.unit.owner_id not in ["0", "99"]:
@@ -485,22 +481,17 @@ def bonus_phase_heals(game_id: str) -> None:
             # heal unit
             if heal_allowed:
                 region.unit.heal(2)
-                if nation_unit.id != "0" and "Peacetime Recovery" in nation_unit.completed_research and war_table.is_at_peace(nation_unit.id):
+                if nation_unit.id != "0" and "Peacetime Recovery" in nation_unit.completed_research and Wars.is_at_peace(nation_unit.id):
                     region.unit.heal(100)
 
 def prompt_for_missing_war_justifications(game_id: str) -> None:
     """
     Prompts in terminal when a war justification has not been entered for an ongoing war.
-
-    :param game_id: The full game_id of the active game.
     """
-
-    war_table = WarTable(game_id)
-
-    for war in war_table:
+    from app.war import Wars
+    for war in Wars:
         if war.outcome == "TBD":
             war.add_missing_justifications()
-            war_table.save(war)
 
 def total_occupation_forced_surrender(game_id: str) -> None:
     """
@@ -511,10 +502,9 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     """
     
     # get game data
-    from app.region_new import Region, Regions
+    from app.region import Regions
+    from app.war import Wars
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
-    notifications = Notifications(game_id)
 
     # check all regions for occupation
     non_occupied_found_list = [False] * len(nation_table)
@@ -530,7 +520,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
         if not region_found:
             
             # look for wars to surrender to
-            for war in war_table:
+            for war in Wars:
 
                 if war.outcome == "TBD" and looser_name in war.combatants and "Main" in war.get_role(str(looser_id)):
 
@@ -546,8 +536,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
                         outcome = "Attacker Victory"
                     war.end_conflict(outcome)
 
-                    notifications.append(f"{war.name} has ended due to {looser_name} total occupation.", 4)
-                    war_table.save(war)
+                    Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 4)
 
 def war_score_forced_surrender(game_id: str) -> None:
     """
@@ -558,11 +547,10 @@ def war_score_forced_surrender(game_id: str) -> None:
     """
 
     # get game data
+    from app.war import Wars
     nation_table = NationTable(game_id)
-    war_table = WarTable(game_id)
-    notifications = Notifications(game_id)
 
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD":
 
             # never force end the war caused by foreign invasion
@@ -574,17 +562,15 @@ def war_score_forced_surrender(game_id: str) -> None:
             attacker_nation = nation_table.get(attacker_id)
             defender_nation = nation_table.get(defender_id)
             
-            if attacker_threshold is not None and war.attacker_total >= attacker_threshold:
+            if attacker_threshold is not None and war.attackers.total >= attacker_threshold:
                 war.end_conflict("Attacker Victory")
-                notifications.append(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 4)
-                notifications.append(f"{war.name} has ended due to war score.", 4)
-                war_table.save(war)
+                Notifications.add(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 4)
+                Notifications.add(f"{war.name} has ended due to war score.", 4)
 
-            elif defender_threshold is not None and war.defender_total >= defender_threshold:
+            elif defender_threshold is not None and war.defenders.total >= defender_threshold:
                 war.end_conflict("Defender Victory")
-                notifications.append(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 4)
-                notifications.append(f"{war.name} has ended due to war score.", 4)
-                war_table.save(war)
+                Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 4)
+                Notifications.add(f"{war.name} has ended due to war score.", 4)
 
 def prune_alliances(game_id: str) -> None:
     """
@@ -594,14 +580,12 @@ def prune_alliances(game_id: str) -> None:
         game_id (str): Game ID string.
     """
 
-    alliance_table = AllianceTable(game_id)
-    notifications = Notifications(game_id)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if alliance.is_active and len(alliance.current_members) < 2:
             alliance.end()
-            alliance_table.save(alliance)
-            notifications.append(f"{alliance.name} has dissolved.", 7)
+            Notifications.add(f"{alliance.name} has dissolved.", 7)
 
 def gain_market_income(game_id: str, market_results: str) -> None:
     """

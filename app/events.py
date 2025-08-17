@@ -112,7 +112,6 @@ def resolve_active_events(game_id: str, actions_dict=None):
 def filter_events(game_id: str):
     
     current_turn_num = core.get_current_turn_num(game_id)
-    notifications = Notifications(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -126,16 +125,16 @@ def filter_events(game_id: str):
         event = events.load_event(game_id, event_name, event_data)
 
         if current_turn_num >= event.expire_turn:
-            notifications.append(f"{event.name} event has ended.", 2)
+            Notifications.add(f"{event.name} event has ended.", 2)
             if event.name == "Foreign Invasion":
                 event._foreign_invasion_end()
             continue
 
         active_events_filtered[event.name] = event.export()
         if event.expire_turn != 99999:
-            notifications.append(f"{event.name} will end on turn {event.expire_turn}.", 2)
+            Notifications.add(f"{event.name} will end on turn {event.expire_turn}.", 2)
         else:
-            notifications.append(f"{event.name} event is active.", 2)
+            Notifications.add(f"{event.name} event is active.", 2)
 
     active_games_dict[game_id]["Active Events"] = active_events_filtered
     with open("active_games.json", 'w') as json_file:

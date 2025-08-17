@@ -3,6 +3,7 @@ import csv
 import json
 import random
 import copy
+from collections import defaultdict
 from typing import Union, Tuple, List
 
 from app.nationdata import Nation
@@ -78,17 +79,14 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
             int: Alliance limit.
     """
 
-    from app.alliance import AllianceTable
-    
-    # get alliance data
-    alliance_count = 0
-    alliance_table = AllianceTable(game_id)
-    alliance_report_dict = alliance_table.report(nation.name)
+    from app.alliance import Alliances
 
-    # get alliance count
-    alliance_count = alliance_report_dict["Total"] - alliance_report_dict["Non-Aggression Pact"]
+    totals = defaultdict(int)
+    for alliance in Alliances:
+        if alliance.is_active and nation.name in alliance:
+            totals[alliance.type] += 1
+    alliance_count = totals["Total"] - totals["Non-Aggression Pact"]
     
-    # get alliance limit
     alliance_limit = 2
     if 'Power Broker' in nation.completed_research:
         alliance_limit += 1
@@ -307,42 +305,13 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
         
     return False
 
-def validate_war_claims(game_id: str, war_justification: str, region_claims_list: list) -> bool:
-
-    from app.region_new import Regions
-
-    # get war justification info
-    if war_justification == 'Border Skirmish':
-        free_claims = 3
-        max_claims = 6
-        claim_cost = 5
-    elif war_justification == 'Conquest':
-        free_claims = 5
-        max_claims = 10
-        claim_cost = 3
-    
-    # check that all claims are valid
-    total = 0
-    for i, region_id in enumerate(region_claims_list):
-        
-        if region_id not in Regions:
-            return -1
-        
-        if i + 1 > max_claims:
-            return -1
-        
-        if i + 1 > free_claims:
-            total += claim_cost
-
-    return total
-
 def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
     """
     Identifies best missile defense to counter incoming missile. Returns None if not found.
     """
     
     # get game data
-    from app.region_new import Region
+    from app.region import Region
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     target_region = Region(target_region_id)
 
@@ -381,7 +350,7 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
 
 def withdraw_units(game_id: str):
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     nation_table = NationTable(game_id)
 
     for region in Regions:
@@ -488,7 +457,7 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     Searches for a specific improvement and removes it.
     """
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     
     # find all regions belonging to a player with target improvement
     candidate_region_ids = []
@@ -509,7 +478,7 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     Randomly destroys one unit of a given type belonging to a specific player.
     """
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     unit_scenario_dict = get_scenario_dict(game_id, "Units")
 
     # get list of regions with desired_unit_name owned by player_id

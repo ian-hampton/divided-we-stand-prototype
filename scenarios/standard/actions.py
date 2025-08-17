@@ -3,12 +3,10 @@ import json
 import importlib
 
 from app import core
-from app.region_new import Region
-from app.nationdata import Nation
-from app.nationdata import NationTable
-from app.alliance import AllianceTable
-from app.war import WarTable
+from app.region import Region
+from app.nationdata import Nation, NationTable
 from app.notifications import Notifications
+from app.war import Wars
 
 class HostPeaceTalksAction:
 

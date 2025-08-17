@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app import core
 from app import palette
-from app.region_new import Region, Regions
+from app.region import Region, Regions
 from app.nationdata import NationTable
 
 
@@ -235,13 +235,9 @@ class GameMaps:
                 
                 case _:
                     # determine if random improvement or capital will spawn
-                    capital_roll = 0
-                    if random_region.graph.is_significant:
-                        capital_roll = random.randint(1, 6)
-                    if capital_roll >= 5:
-                        random_region.improvement.set("City", 1)
-                    else:
-                        improvement_name = random.sample(improvement_candidates_list, 1)[0]
+                    improvement_name = random.sample(improvement_candidates_list, 1)[0]
+                    if random_region.graph.is_significant and random.randint(1, 10) > 5:
+                        improvement_name = "City"
                     # add health bar if needed
                     if improvement_data_dict[improvement_name]["Health"] == 99:
                         random_region.improvement.set(improvement_name)

@@ -11,12 +11,11 @@ from collections import defaultdict
 
 from app import core
 from app import palette
-from app.region_new import Region
-from app.region_new import Regions
-from app.nationdata import NationTable
-from app.alliance import AllianceTable
-from app.war import WarTable
+from app.alliance import Alliances
+from app.region import Region, Regions
 from app.notifications import Notifications
+from app.war import Wars
+from app.nationdata import NationTable
 from app.map import GameMaps
 from app import actions
 from app import checks
@@ -122,6 +121,8 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
 
     # get game files
+    Alliances.load(game_id)
+    Regions.load(game_id)
     nation_table = NationTable(game_id)
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
     with open('active_games.json', 'r') as json_file:
@@ -198,7 +199,10 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     
     # get game data
+    Alliances.load(game_id)
     Regions.load(game_id)
+    Notifications.initialize(game_id)
+    Wars.load(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -214,10 +218,6 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
                 continue
             class_name = type(action).__name__
             actions_dict[class_name].append(action)
-
-    # clear notifications
-    notifications = Notifications(game_id)
-    notifications.clear()
 
     # prompt for missing war justifications
     checks.prompt_for_missing_war_justifications(game_id)
@@ -267,10 +267,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         nation_table.save(nation)
     
     # update wars
-    war_table = WarTable(game_id)
-    war_table.export_all_logs()
-    war_table.add_warscore_from_occupations()
-    war_table.update_totals()
+    Wars.export_all_logs()
+    Wars.add_warscore_from_occupations()
+    Wars.update_totals()
 
     # end of turn checks
     print("Resolving end of turn updates...")
@@ -294,7 +293,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         # bonus phase
         if current_turn_num % 4 == 0:
             checks.bonus_phase_heals(game_id)
-            notifications.append('All units and defensive improvements have regained 2 health.', 1)
+            Notifications.add('All units and defensive improvements have regained 2 health.', 1)
         if current_turn_num % 8 == 0:
             events.trigger_event(game_id)
 
@@ -320,7 +319,10 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     maps.update_all()
 
     # save
+    Alliances.save()
     Regions.save()
+    Notifications.save()
+    Wars.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
@@ -513,8 +515,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     gamedata_dict = {
         "alliances": {},
         "nations": {},
-        "notifications": {},
-        "victoryConditions": {},
+        "notifications": [],
         "wars": {}
     }
     with open(gamedata_filepath, 'w') as json_file:
@@ -554,10 +555,9 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     '''
     
     # get game data
+    from app.alliance import Alliances
     nation_table = NationTable(game_id)
     nation = nation_table.get(player_id)
-    alliance_table = AllianceTable(game_id)
-    war_table = WarTable(game_id)
     alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
 
     # build player info dict
@@ -639,10 +639,10 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         temp = nation_table.get(i + 1)
         if temp.name == nation.name:
             continue
-        elif war_table.get_war_name(player_id, temp.id) is not None:
+        elif Wars.get_war_name(player_id, temp.id) is not None:
             relation_colors[i] = '#ff0000'
             relations_status_list[i] = "At War"
-        elif alliance_table.are_allied(nation.name, temp.name):
+        elif Alliances.are_allied(nation.name, temp.name):
             relation_colors[i] = '#3c78d8'
             relations_status_list[i] = "Allied"
         else:
