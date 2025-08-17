@@ -208,7 +208,7 @@ class Region:
             return False
 
         # improvements with no health can never be hostile
-        if self.improvement.health in ["0", "99"]:
+        if not self.improvement.has_health:
             return False
 
         if self.data.owner_id == other_player_id and self.data.occupier_id == "0":
@@ -516,6 +516,10 @@ class ImprovementData:
     def countdown(self, value: int):
         self._countdown = value
         self._impdata["turnTimer"] = value
+
+    @property
+    def has_health(self):
+        return True if self.health not in [0, 99] else False
 
     def _load_attributes_from_game_files(self) -> None:
         
