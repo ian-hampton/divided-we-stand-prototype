@@ -155,39 +155,147 @@ class Wars(metaclass=WarsMeta):
 
     @classmethod
     def is_at_peace(cls, nation_id: str) -> bool:
-        pass
+        for war in cls:
+            if war.outcome == "TBD" and nation_id in war.combatants:
+                return False
+        return True
 
     @classmethod
     def at_peace_for_x(cls, nation_id: str) -> int:
-        pass
+        
+        current_turn_num = core.get_current_turn_num(cls.game_id)
+
+        last_at_war_turn = -1
+        for war in cls:
+            if nation_id not in war.combatants:
+                continue
+            if war.outcome == "TBD":
+                return 0
+            elif war.end > last_at_war_turn:
+                last_at_war_turn = war.end
+        
+        return current_turn_num - last_at_war_turn
 
     @classmethod
     def total_units_lost(cls) -> int:
-        pass
+        
+        total = 0
+        for war in cls:
+            for combatant_id in war.combatants:
+                combatant = war.get_combatant(combatant_id)
+                total += combatant.lost_units
+
+        return total
 
     @classmethod
     def total_improvements_lost(cls) -> int:
-        pass
+        
+        total = 0
+        for war in cls:
+            for combatant_id in war.combatants:
+                combatant = war.get_combatant(combatant_id)
+                total += combatant.lost_improvements
+
+        return total
 
     @classmethod
     def total_missiles_launched(cls) -> int:
-        pass
+        
+        total = 0
+        for war in cls:
+            for combatant_id in war.combatants:
+                combatant = war.get_combatant(combatant_id)
+                total += combatant.launched_nukes
+
+        return total
 
     @classmethod
     def find_longest_war(cls) -> tuple:
-        pass
+
+        longest_name = None
+        longest_time = 0
+        current_turn_num = core.get_current_turn_num(cls.game_id)
+
+        for war in cls:
+            
+            if war.outcome == "TBD":
+                war_duration = current_turn_num - war.start
+            else:
+                war_duration = war.end - war.start
+            
+            if war_duration > longest_time:
+                longest_name = war.name
+                longest_time = war_duration
+        
+        return longest_name, longest_time
 
     @classmethod
     def add_warscore_from_occupations(cls) -> None:
-        pass
+        
+        from app.region_new import Regions
+        nation_table = NationTable(cls.game_id)
+
+        for region in Regions:
+            
+            if region.data.occupier_id in ["0", "99"]:
+                continue
+
+            war_name = cls.get_war_name(region.data.owner_id, region.data.occupier_id)
+            war = cls.get(war_name)
+            occupier_war_role = war.get_role(region.data.occupier_id)
+            occupier_nation = nation_table.get(region.data.occupier_id)
+
+            if "Scorched Earth" in occupier_nation.completed_research:
+                score += 1
+            
+            if "Attacker" in occupier_war_role:
+                war.attackers.occupation += cls.WARSCORE_FROM_OCCUPATION
+            else:
+                war.defenders.occupation += cls.WARSCORE_FROM_OCCUPATION
 
     @classmethod
     def update_totals(cls) -> None:
-        pass
+        
+        for war in cls:
+            
+            if war.outcome != "TBD":
+                continue
+
+            war.attackers.total = 0
+            war.attackers.total += war.attackers.occupation
+            war.attackers.total += war.attackers.victories
+            war.attackers.total += war.attackers.destroyed_units
+            war.attackers.total += war.attackers.destroyed_improvements
+            war.attackers.total += war.attackers.captures
+            war.attackers.total += war.attackers.nuclear_strikes
+
+            war.defenders.total = 0
+            war.defenders.total += war.defenders.occupation
+            war.defenders.total += war.defenders.victories
+            war.defenders.total += war.defenders.destroyed_units
+            war.defenders.total += war.defenders.destroyed_improvements
+            war.defenders.total += war.defenders.captures
+            war.defenders.total += war.defenders.nuclear_strikes
 
     @classmethod
     def export_all_logs(cls) -> None:
-        pass
+        
+        directory = f"gamedata/{cls.game_id}/logs"
+
+        for war in cls:
+            
+            if war.outcome != "TBD":
+                continue
+
+            os.makedirs(directory, exist_ok=True)
+            filename = os.path.join(directory, f"{war.name}.txt")
+            
+            with open(filename, 'w') as file:
+                for entry in war.log:
+                    file.write(entry + '\n')
+            
+            war.log = []
+            cls.save(war)
 
     @classmethod
     def _generate_war_name(cls, main_attacker: Nation, main_defender: Nation, war_justification: str) -> str:
