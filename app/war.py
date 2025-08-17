@@ -99,12 +99,13 @@ class Wars(metaclass=WarsMeta):
         new_war = cls.get(new_war)
 
         # add main attacker
-        combatant = new_war.add_combatant(main_attacker, "Main Attacker", main_defender.id)
+        new_war.add_combatant(main_attacker, "Main Attacker", main_defender.id)
+        combatant = cls.get(war_name)
         combatant.justification = war_justification
         combatant.claims = cls._claim_pairs(war_claims)
 
         # add main defender
-        combatant = new_war.add_combatant(main_defender, "Main Defender", "TBD")
+        new_war.add_combatant(main_defender, "Main Defender", "TBD")
 
         # call in main attacker allies
         # possible allies: puppet states
@@ -116,7 +117,7 @@ class Wars(metaclass=WarsMeta):
                 and not core.check_for_truce(cls.game_id, main_defender.id, ally.id)    # ally cannot have truce with defender
                 and not Alliances.are_allied(main_defender.name, ally.name)             # ally cannot be allied with defender
                 and not Alliances.former_ally_truce(main_defender.name, ally.name)):    # ally cannot be recently allied with defender
-                combatant = new_war.add_combatant(ally, "Secondary Attacker", "TBD")
+                new_war.add_combatant(ally, "Secondary Attacker", "TBD")
 
         # call in main defender allies
         # possible allies: puppet states, defensive pacts, overlord
@@ -133,7 +134,7 @@ class Wars(metaclass=WarsMeta):
                 and not core.check_for_truce(cls.game_id, main_attacker.id, ally.id)    # ally cannot have truce with attacker
                 and not Alliances.are_allied(main_attacker.name, ally.name)             # ally cannot be allied with attacker
                 and not Alliances.former_ally_truce(main_attacker.name, ally.name)):    # ally cannot be recently allied with attacker
-                combatant = new_war.add_combatant(ally, "Secondary Defender", "TBD")
+                new_war.add_combatant(ally, "Secondary Defender", "TBD")
 
     @classmethod
     def get(cls, war_name: str) -> "War":
