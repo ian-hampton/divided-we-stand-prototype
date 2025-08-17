@@ -2058,99 +2058,22 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
     
-    # get game data
-    from app.alliance import Alliances
     from app.war import Wars
     nation_table = NationTable(game_id)
 
-    # execute actions
     for action in actions_list:
 
         attacker_nation = nation_table.get(action.id)
         defender_nation = nation_table.get(action.target_nation)
 
-        # agenda check
-        valid_war_justification = False
-        match action.war_justification:
-            case "Animosity" | "Border Skirmish":
-                valid_war_justification = True
-            case "Conquest":
-                if "Early Expansion" in attacker_nation.completed_research:
-                    valid_war_justification = True
-            case "Containment":
-                if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
-                    valid_war_justification = True
-            case "Independence":
-                if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
-                    valid_war_justification = True
-            case "Subjugation":
-                if "Dominion" in attacker_nation.completed_research:
-                    valid_war_justification = True
-        if not valid_war_justification:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have the required agenda.")
-            nation_table.save(attacker_nation)
+        if not _war_action_valid(action, nation_table, attacker_nation, defender_nation):
             continue
 
-        # military capacity check
-        if attacker_nation.get_used_mc() == 0:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have any military units.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # independence check
-        if attacker_nation.status != "Independent Nation" and action.war_justification != "Independence":
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot declare war.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # existing war check
-        existing_war = Wars.get_war_name(attacker_nation.id, defender_nation.id)
-        if existing_war is not None:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You are already at war with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-        
-        # truce check
-        if core.check_for_truce(game_id, attacker_nation.id, defender_nation.id):
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have a truce with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # alliance check
-        if Alliances.are_allied(attacker_nation.name, defender_nation.name):
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # alliance truce check
-        if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # tag check
-        is_blocked = False
-        for tag_name, tag_data in attacker_nation.tags.items():
-            if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
-                is_blocked = True
-                break
-        if is_blocked:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # validate war claims
         region_claims_list = []
         if action.war_justification in ["Border Skirmish", "Conquest"]:
             
-            # get claims and calculate political power cost
-            claim_cost = -1
-            while claim_cost == -1:
-                region_claims_str = input(f"List the regions that {attacker_nation.name} is claiming using {action.war_justification}: ")
-                region_claims_list = region_claims_str.split(',')
-                claim_cost = core.validate_war_claims(game_id, action.war_justification, region_claims_list)
+            claim_cost = Wars.get_war_claims(attacker_nation.name, action.war_justification)
 
-            # pay political power cost
             attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
             if float(attacker_nation.get_stockpile("Political Power")) < 0:
                 nation_table.reload()
@@ -2159,7 +2082,6 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
                 nation_table.save(attacker_nation)
                 continue
 
-        # resolve action
         Wars.create(attacker_nation.id, defender_nation.id, action.war_justification, region_claims_list)
         Notifications.add(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
@@ -2167,27 +2089,19 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
 def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
 
-    #TODO: write functions so that this isn't all copy pasted
-
-    # get game data
-    from app.alliance import Alliances
     from app.war import Wars
     nation_table = NationTable(game_id)
 
-    # execute actions
     for action in actions_list:
 
         war = Wars.get(action.war_name)
         attacker_nation = nation_table.get(action.id)
 
-        # add combatant
         war.add_combatant(attacker_nation, f"Secondary {action.side}", action.war_justification)
         combatant = war.get_combatant(action.id)
-
-        ### process combatant (copied from add_missing_justifications) ###
+        region_claims_list = []
 
         # process war claims
-        region_claims_list = []
         if action.war_justification in ["Border Skirmish", "Conquest"]:
 
             combatant.target_id = "N/A"
@@ -2197,14 +2111,8 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             elif {action.side} == "Defender":
                 defender_nation = nation_table.get(main_defender_id)
             
-            # get claims and calculate political power cost
-            claim_cost = -1
-            while claim_cost == -1:
-                region_claims_str = input(f"List the regions that {combatant.name} is claiming using {action.war_justification}: ")
-                region_claims_list = region_claims_str.split(',')
-                claim_cost = core.validate_war_claims(game_id, action.war_justification, region_claims_list)
+            claim_cost = Wars.get_war_claims(combatant.name, action.war_justification)
 
-            # pay political power cost
             attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
             if float(attacker_nation.get_stockpile("Political Power")) < 0:
                 nation_table.reload()
@@ -2215,88 +2123,94 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
         
         # OR handle war justification that does not seize territory
         else:
-            
-            # get target id
             target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {action.war_justification}: ")
             combatant.target_id = str(target_id)
             defender_nation = nation_table.get(combatant.target_id)
 
-        ### check if combatant can actually join war (copied from resolve_war_actions) ###
-
-        # agenda check
-        valid_war_justification = False
-        match action.war_justification:
-            case "Animosity" | "Border Skirmish":
-                valid_war_justification = True
-            case "Conquest":
-                if "Early Expansion" in attacker_nation.completed_research:
-                    valid_war_justification = True
-            case "Containment":
-                if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
-                    valid_war_justification = True
-            case "Independence":
-                if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
-                    valid_war_justification = True
-            case "Subjugation":
-                if "Dominion" in attacker_nation.completed_research:
-                    valid_war_justification = True
-        if not valid_war_justification:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have the required agenda.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # military capacity check
-        if attacker_nation.get_used_mc() == 0:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have any military units.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # independence check
-        if attacker_nation.status != "Independent Nation" and action.war_justification != "Independence":
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot declare war.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # existing war check
-        existing_war = Wars.get_war_name(attacker_nation.id, defender_nation.id)
-        if existing_war is not None:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You are already at war with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-        
-        # truce check
-        if core.check_for_truce(game_id, attacker_nation.id, defender_nation.id):
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have a truce with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # alliance check
-        if Alliances.are_allied(attacker_nation.name, defender_nation.name):
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # alliance truce check
-        if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
-            nation_table.save(attacker_nation)
-            continue
-
-        # tag check
-        is_blocked = False
-        for tag_name, tag_data in attacker_nation.tags.items():
-            if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
-                is_blocked = True
-                break
-        if is_blocked:
-            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-            nation_table.save(attacker_nation)
+        if not _war_action_valid(action, nation_table, attacker_nation, defender_nation):
             continue
 
         ### save ###
         Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 3)
         nation_table.save(attacker_nation)
         combatant.claims = Wars._claim_pairs(region_claims_list)
+
+def _war_action_valid(action: WarAction | WarJoinAction, nation_table: NationTable, attacker_nation: Nation, defender_nation: Nation):
+    
+    from app.alliance import Alliances
+    from app.war import Wars
+
+    # agenda check
+    valid_war_justification = False
+    match action.war_justification:
+        case "Animosity" | "Border Skirmish":
+            valid_war_justification = True
+        case "Conquest":
+            if "Early Expansion" in attacker_nation.completed_research:
+                valid_war_justification = True
+        case "Containment":
+            if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
+                valid_war_justification = True
+        case "Independence":
+            if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
+                valid_war_justification = True
+        case "Subjugation":
+            if "Dominion" in attacker_nation.completed_research:
+                valid_war_justification = True
+    if not valid_war_justification:
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have the required agenda.")
+        nation_table.save(attacker_nation)
+        return False
+
+    # military capacity check
+    if attacker_nation.get_used_mc() == 0:
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have any military units.")
+        nation_table.save(attacker_nation)
+        return False
+
+    # independence check
+    if attacker_nation.status != "Independent Nation" and action.war_justification != "Independence":
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot declare war.")
+        nation_table.save(attacker_nation)
+        return False
+
+    # existing war check
+    existing_war = Wars.get_war_name(attacker_nation.id, defender_nation.id)
+    if existing_war is not None:
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You are already at war with this nation.")
+        nation_table.save(attacker_nation)
+        return False
+    
+    # truce check
+    if core.check_for_truce(Alliances.game_id, attacker_nation.id, defender_nation.id):
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have a truce with this nation.")
+        nation_table.save(attacker_nation)
+        return False
+
+    # alliance check
+    if Alliances.are_allied(attacker_nation.name, defender_nation.name):
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
+        nation_table.save(attacker_nation)
+        return False
+
+    # alliance truce check
+    if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
+        nation_table.save(attacker_nation)
+        return False
+
+    # tag check
+    is_blocked = False
+    for tag_name, tag_data in attacker_nation.tags.items():
+        if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
+            is_blocked = True
+            break
+    if is_blocked:
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
+        nation_table.save(attacker_nation)
+        return False
+
+    return True
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
     

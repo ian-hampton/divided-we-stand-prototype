@@ -155,6 +155,18 @@ class Wars(metaclass=WarsMeta):
         return None
 
     @classmethod
+    def get_war_claims(cls, nation_name: str, war_justification: str) -> int:
+        
+        claim_cost = -1
+        
+        while claim_cost == -1:
+            region_claims_str = input(f"List the regions that {nation_name} is claiming using {war_justification}: ")
+            region_claims_list = region_claims_str.split(',')
+            claim_cost = cls._validate_war_claims(war_justification, region_claims_list)
+        
+        return claim_cost 
+
+    @classmethod
     def is_at_peace(cls, nation_id: str) -> bool:
         for war in cls:
             if war.outcome == "TBD" and nation_id in war.combatants:
@@ -381,6 +393,40 @@ class Wars(metaclass=WarsMeta):
 
         return pairs
 
+    @classmethod
+    def _validate_war_claims(cls, war_justification: str, region_claims_list: list[str]) -> int:
+
+        from app.region import Regions
+
+        # get war justification info
+        # TODO move this to scenario files
+        if war_justification == 'Border Skirmish':
+            free_claims = 3
+            max_claims = 6
+            claim_cost = 5
+        elif war_justification == 'Conquest':
+            free_claims = 5
+            max_claims = 10
+            claim_cost = 3
+
+        total = 0
+        region_id_set = set(Regions.ids())
+        
+        # check that all claims are valid
+        total = 0
+        for i, region_id in enumerate(region_claims_list):
+            
+            if region_id not in region_id_set:
+                return -1
+            
+            if i + 1 > max_claims:
+                return -1
+            
+            if i + 1 > free_claims:
+                total += claim_cost
+
+        return total
+
 class War:
 
     def __init__(self, war_name: str):
@@ -479,52 +525,43 @@ class War:
 
     def add_missing_justifications(self) -> None:
         
-        # get game data
         nation_table = NationTable(Wars.game_id)
 
-        # check all combatants
         for combatant_id in self.combatants:
+            
             combatant = self.get_combatant(combatant_id)
             combatant_nation = nation_table.get(combatant_id)
+            region_claims_list = []
 
-            if combatant.justification == "TBD":
+            if combatant.justification != "TBD":
+                continue
                 
-                war_justification = input(f"Please enter {combatant.name} war justification for {self.name} or enter SKIP to postpone: ")
-                if war_justification == "SKIP":
+            war_justification = input(f"Please enter {combatant.name} war justification for {self.name} or enter SKIP to postpone: ")
+            if war_justification == "SKIP":
+                continue
+
+            # process war claims
+            if war_justification in ["Border Skirmish", "Conquest"]:
+
+                combatant.target_id = "N/A"
+                
+                claim_cost = Wars.get_war_claims(combatant.name, war_justification)
+
+                combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
+                if float(combatant_nation.get_stockpile("Political Power")) < 0:
+                    nation_table.reload()
+                    combatant_nation = nation_table.get(combatant_id)
+                    combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
+                    nation_table.save(combatant_nation)
                     continue
-
-                # process war claims
-                region_claims_list = []
-                if war_justification in ["Border Skirmish", "Conquest"]:
-
-                    combatant.target_id = "N/A"
-                    
-                    # get claims and calculate political power cost
-                    claim_cost = -1
-                    while claim_cost == -1:
-                        region_claims_str = input(f"List the regions that {combatant.name} is claiming using {war_justification}: ")
-                        region_claims_list = region_claims_str.split(',')
-                        claim_cost = core.validate_war_claims(Wars.game_id, war_justification, region_claims_list)
-
-                    # pay political power cost
-                    combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
-                    if float(combatant_nation.get_stockpile("Political Power")) < 0:
-                        nation_table.reload()
-                        combatant_nation = nation_table.get(combatant_id)
-                        combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
-                        nation_table.save(combatant_nation)
-                        continue
-                
-                # OR handle war justification that does not seize territory
-                else:
-                    
-                    # get target id
-                    target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {war_justification}: ")
-                    combatant.target_id = str(target_id)
-                
-                # update information
-                combatant.justification = war_justification
-                combatant.claims = Wars._claim_pairs(region_claims_list)
+            
+            # OR handle war justification that does not seize territory
+            else:
+                target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {war_justification}: ")
+                combatant.target_id = str(target_id)
+            
+            combatant.justification = war_justification
+            combatant.claims = Wars._claim_pairs(region_claims_list)
 
     def calculate_score_threshold(self) -> tuple:
         

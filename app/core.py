@@ -305,35 +305,6 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
         
     return False
 
-def validate_war_claims(game_id: str, war_justification: str, region_claims_list: list) -> bool:
-
-    from app.region import Regions
-
-    # get war justification info
-    if war_justification == 'Border Skirmish':
-        free_claims = 3
-        max_claims = 6
-        claim_cost = 5
-    elif war_justification == 'Conquest':
-        free_claims = 5
-        max_claims = 10
-        claim_cost = 3
-    
-    # check that all claims are valid
-    total = 0
-    for i, region_id in enumerate(region_claims_list):
-        
-        if region_id not in Regions:
-            return -1
-        
-        if i + 1 > max_claims:
-            return -1
-        
-        if i + 1 > free_claims:
-            total += claim_cost
-
-    return total
-
 def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
     """
     Identifies best missile defense to counter incoming missile. Returns None if not found.
