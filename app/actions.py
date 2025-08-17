@@ -6,7 +6,7 @@ import random
 from collections import defaultdict
 
 from app import core
-from app.region_new import Region
+from app.region import Region
 from app.nationdata import Nation, NationTable
 from app.notifications import Notifications
 
@@ -794,7 +794,7 @@ def _check_alliance_name(game_id: str, alliance_name: str) -> str | None:
 
 def _check_region_id(region_id: str) -> str | None:
     
-    from app.region_new import Regions
+    from app.region import Regions
     
     if region_id in Regions:
         return region_id
@@ -973,7 +973,7 @@ def resolve_trade_actions(game_id: str) -> None:
     Resolves trade actions between players via CLI.
     """
 
-    from app.region_new import Regions
+    from app.region import Regions
 
     nation_table = NationTable(game_id)
 

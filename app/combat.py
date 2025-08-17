@@ -3,7 +3,7 @@ import random
 from typing import Union, Tuple
 
 from app import core
-from app.region_new import Region
+from app.region import Region
 from app.nationdata import NationTable
 
 def unit_vs_unit(attacker_region: Region, defender_region: Region) -> None:

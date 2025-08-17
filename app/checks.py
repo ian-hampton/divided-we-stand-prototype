@@ -22,7 +22,7 @@ def update_income(game_id: str) -> None:
     
     # get game data
     from app.alliance import Alliances
-    from app.region_new import Regions
+    from app.region import Regions
     nation_table = NationTable(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -327,7 +327,7 @@ def countdown(game_id: str) -> None:
     Resolves improvements/units that have countdowns associated with them.
     """
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     
     # resolve nuked regions
     for region in Regions:
@@ -444,7 +444,7 @@ def bonus_phase_heals(game_id: str) -> None:
     Heals all units and defensive improvements by 2 health.
     """
     
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     from app.war import Wars
     nation_table = NationTable(game_id)
     
@@ -502,7 +502,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     """
     
     # get game data
-    from app.region_new import Regions
+    from app.region import Regions
     from app.war import Wars
     nation_table = NationTable(game_id)
 

@@ -4,7 +4,7 @@ import random
 from app import core
 from app import actions
 from app.alliance import Alliances
-from app.region_new import Region, Regions
+from app.region import Region, Regions
 from app.notifications import Notifications
 from app.nationdata import Nation, NationTable
 from app.war import Wars
@@ -305,7 +305,7 @@ class DecayingInfrastructure(Event):
 
     def activate(self):
 
-        from app.region_new import Regions
+        from app.region import Regions
         
         top_three = self.nation_table.get_top_three("nationSize")
         top_three_ids = set()
@@ -339,7 +339,7 @@ class Desertion(Event):
 
     def activate(self):
 
-        from app.region_new import Regions
+        from app.region import Regions
         
         # retrieve lowest warscore for each nation
         lowest_warscore_dict = {}

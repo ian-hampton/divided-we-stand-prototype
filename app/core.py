@@ -307,7 +307,7 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
 
 def validate_war_claims(game_id: str, war_justification: str, region_claims_list: list) -> bool:
 
-    from app.region_new import Regions
+    from app.region import Regions
 
     # get war justification info
     if war_justification == 'Border Skirmish':
@@ -340,7 +340,7 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
     """
     
     # get game data
-    from app.region_new import Region
+    from app.region import Region
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     target_region = Region(target_region_id)
 
@@ -379,7 +379,7 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
 
 def withdraw_units(game_id: str):
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     nation_table = NationTable(game_id)
 
     for region in Regions:
@@ -486,7 +486,7 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     Searches for a specific improvement and removes it.
     """
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     
     # find all regions belonging to a player with target improvement
     candidate_region_ids = []
@@ -507,7 +507,7 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     Randomly destroys one unit of a given type belonging to a specific player.
     """
 
-    from app.region_new import Region, Regions
+    from app.region import Region, Regions
     unit_scenario_dict = get_scenario_dict(game_id, "Units")
 
     # get list of regions with desired_unit_name owned by player_id

@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app import core
 from app import palette
-from app.region_new import Region, Regions
+from app.region import Region, Regions
 from app.nationdata import NationTable
 
 

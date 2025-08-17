@@ -233,7 +233,7 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def add_warscore_from_occupations(cls) -> None:
         
-        from app.region_new import Regions
+        from app.region import Regions
         nation_table = NationTable(cls.game_id)
 
         for region in Regions:
@@ -371,7 +371,7 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def _claim_pairs(cls, war_claims: list) -> dict:
 
-        from app.region_new import Region
+        from app.region import Region
 
         pairs = {}
         
@@ -564,7 +564,7 @@ class War:
     def end_conflict(self, outcome: str) -> None:
         
         # get game data
-        from app.region_new import Regions
+        from app.region import Regions
         nation_table = NationTable(Wars.game_id)
         current_turn_num = core.get_current_turn_num(Wars.game_id)
         
@@ -628,7 +628,7 @@ class War:
 
     def _resolve_war_justification(self, nation_id: str):
         
-        from app.region_new import Region
+        from app.region import Region
         nation_table = NationTable(Wars.game_id)
         current_turn_num = core.get_current_turn_num(Wars.game_id)
         

@@ -12,7 +12,7 @@ from collections import defaultdict
 from app import core
 from app import palette
 from app.alliance import Alliances
-from app.region_new import Region, Regions
+from app.region import Region, Regions
 from app.notifications import Notifications
 from app.war import Wars
 from app.nationdata import NationTable
