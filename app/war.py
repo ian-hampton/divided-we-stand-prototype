@@ -96,11 +96,11 @@ class Wars(metaclass=WarsMeta):
             "warLog": []
         }
         cls._data[war_name] = new_war_data
-        new_war = cls.get(new_war)
+        new_war = cls.get(war_name)
 
         # add main attacker
         new_war.add_combatant(main_attacker, "Main Attacker", main_defender.id)
-        combatant = cls.get(war_name)
+        combatant = new_war.get_combatant(main_attacker.id)
         combatant.justification = war_justification
         combatant.claims = cls._claim_pairs(war_claims)
 
