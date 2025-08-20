@@ -255,7 +255,7 @@ class Nation:
 
         self.id: str = nation_id
         self._name: str = self._data["nationName"]
-        self._player_id: int = self._data["playerID"]
+        self._player_id: str = self._data["playerID"]
         self._color: str = self._data["color"]
         self._gov: str = self._data["government"]
         self._fp: str = self._data["foreignPolicy"]
@@ -263,8 +263,8 @@ class Nation:
         self._trade_fee: str = self._data["tradeFee"]
         self._missile_count: int = self._data["standardMissileStockpile"]
         self._nuke_count: int = self._data["nuclearMissileStockpile"]
-        
         self._score: int = self._data["score"]
+
         self.victory_conditions: dict = self._data["chosenVictorySet"]
         self._sets: dict = self._data["victorySets"]
         self._satisfied: dict = self._data["satisfiedVictorySet"]
@@ -279,6 +279,96 @@ class Nation:
         self.stats = NationStatistics(self._data["statistics"])
         self._records: dict = self._data["records"]
         self._resources: dict = self._data["resources"]
+
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def player_id(self):
+        return self._player_id
+    
+    @property
+    def color(self):
+        return self._color
+    
+    @property
+    def gov(self):
+        return self._gov
+    
+    @property
+    def fp(self):
+        return self._fp
+    
+    @property
+    def status(self):
+        return self._status
+    
+    @property
+    def trade_fee(self):
+        return self._trade_fee
+    
+    @property
+    def missile_count(self):
+        return self._missile_count
+    
+    @property
+    def nuke_count(self):
+        return self._nuke_count
+    
+    @property
+    def score(self):
+        return self._score
+    
+    @name.setter
+    def name(self, value: str):
+        self._name = value
+        self._data["nationName"] = value
+
+    @player_id.setter
+    def player_id(self, value: str):
+        self._player_id = value
+        self._data["playerID"] = value
+
+    @color.setter
+    def color(self, value: str):
+        self._color = value
+        self._data["color"] = value
+
+    @gov.setter
+    def gov(self, value: str):
+        self._gov = value
+        self._data["government"] = value
+
+    @fp.setter
+    def fp(self, value: str):
+        self._fp = value
+        self._data["foreignPolicy"] = value
+
+    @status.setter
+    def status(self, value: str):
+        self._status = value
+        self._data["status"] = value
+
+    @trade_fee.setter
+    def trade_fee(self, value: str):
+        self._trade_fee = value
+        self._data["tradeFee"] = value
+
+    @missile_count.setter
+    def missile_count(self, value: int):
+        self._missile_count = value
+        self._data["standardMissileStockpile"] = value
+
+    @nuke_count.setter
+    def nuke_count(self, value: int):
+        self._nuke_count = value
+        self._data["nuclearMissileStockpile"] = value
+
+    @score.setter
+    def score(self, value: int):
+        self._score = value
+        self._data["score"] = value
 
 class NationStatistics:
 
