@@ -141,12 +141,12 @@ class Alliance:
         self._data = Alliances._data[alliance_name]
 
         self.name = alliance_name
+        self.current_members: dict[str, int] = self._data["currentMembers"]
+        self.founding_members: dict[str, int] = self._data["foundingMembers"]
+        self.former_members: dict[str, int] = self._data["formerMembers"]
         self._type: str = self._data["allianceType"]
         self._turn_created: int = self._data["turnCreated"]
         self._turn_ended: int = self._data["turnEnded"]
-        self._current_members: dict[str, int] = self._data["currentMembers"]
-        self._founding_members: dict[str, int] = self._data["foundingMembers"]
-        self._former_members: dict[str, int] = self._data["formerMembers"]
     
     @property
     def type(self):
@@ -159,18 +159,6 @@ class Alliance:
     @property
     def turn_ended(self):
         return self._turn_ended
-
-    @property
-    def current_members(self):
-        return self._current_members
-
-    @property
-    def founding_members(self):
-        return self._founding_members
-
-    @property
-    def former_members(self):
-        return self._former_members
     
     @property
     def is_active(self):
@@ -199,21 +187,13 @@ class Alliance:
         self._data["turnEnded"] = turn
 
     def add_member(self, nation_name: str) -> None:
-        
         if nation_name in self.former_members:
-            del self._former_members[nation_name]
-            self._data["formerMembers"] = self._former_members
-        
-        self._current_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
-        self._data["currentMembers"] = self._current_members
+            del self.former_members[nation_name]
+        self.current_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
 
     def remove_member(self, nation_name: str) -> None:
-        
-        del self._current_members[nation_name]
-        self._data["currentMembers"] = self._current_members
-
-        self._former_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
-        self._data["formerMembers"] = self._former_members
+        del self.current_members[nation_name]
+        self.former_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         
