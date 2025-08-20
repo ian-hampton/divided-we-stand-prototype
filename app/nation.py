@@ -207,23 +207,132 @@ class Nations(metaclass=NationsMeta):
     
     @classmethod
     def update_records(cls) -> None:
-        pass
+        
+        current_turn_num = core.get_current_turn_num(cls.game_id)
+        tech_data_dict = core.get_scenario_dict(cls.game_id, "Technologies")
+        rmdata_filepath = f"gamedata/{cls.game_id}/rmdata.csv"
+        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+
+        for nation in cls:
+
+            # update military strength
+            military_strength = 0
+            for unit_name, unit_count in nation.unit_counts.items():
+                military_strength += unit_count
+            nation._records["militaryStrength"].append(military_strength)
+
+            # update nation size
+            nation._records["nationSize"].append(nation.stats.regions_owned)
+
+            # update net income total
+            net_income_total = 0
+            for resource_name in nation._resources:
+                if resource_name == "Military Capacity":
+                    continue
+                income = float(nation.get_income(resource_name))
+                net_income_total += income
+            nation._records["netIncome"].append(f"{net_income_total:.2f}")
+
+            # update tech count
+            technology_count = 0
+            for technology_name in nation.completed_research:
+                if technology_name in tech_data_dict:
+                    technology_count += 1
+            nation._records["researchCount"].append(technology_count)
+
+            # update transaction count
+            transaction_count = 0
+            for transaction in rmdata_all_transaction_list:
+                if transaction[1] == nation.name:
+                    transaction_count += int(transaction[3])
+            transaction_count += nation.stats.resources_given
+            transaction_count += nation.stats.resources_received
+            nation._records["transactionCount"].append(transaction_count)
 
     @classmethod
     def get_top_three(cls, record_name: str) -> list[Tuple[str, float|int]]:
-        pass
+        
+        data = {}
+        for nation in cls:
+            if record_name == "netIncome":
+                data[nation.name] = float(nation._records[record_name][-1])
+            else:
+                data[nation.name] = nation._records[record_name][-1]
+
+        sorted_data = dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
+        top_three = list(sorted_data.items())[:3]
+        
+        return top_three
 
     @classmethod
     def get_lowest_in_record(cls, record_name: str) -> Tuple[str, float|int]:
-        pass
+        
+        data = {}
+        for nation in cls:
+            if record_name == "netIncome":
+                data[nation.name] = float(nation._records[record_name][-1])
+            else:
+                data[nation.name] = nation._records[record_name][-1]
+
+        return min(data.items(), key=lambda item: item[1])
 
     @classmethod
     def add_leaderboard_bonuses(cls):
-        pass
+        
+        # leaderboard bonuses only begin starting on turn 5
+        current_turn_num = core.get_current_turn_num(cls.game_id)
+        if current_turn_num < 5:
+            return
+
+        bonus = [1, 0.5, 0.25]
+        records = ["nationSize", "netIncome", "transactionCount", "militaryStrength", "researchCount"]
+        record_string = ["from nation size",
+                         "from economic strength",
+                         "from trade power",
+                         "from military strength",
+                         "from research progress"]
+        
+        for i, record_name in enumerate(records):
+            
+            top_three = cls.get_top_three(record_name)
+
+            valid = 2
+            if top_three[0][1] == top_three[1][1]:
+                valid = -1
+            elif top_three[1][1] == top_three[2][1]:
+                valid = 0
+
+            for j, entry in enumerate(top_three):
+                nation_name = entry[0]
+                score = entry[1]
+                
+                if j <= valid and score != 0:
+                    
+                    # add political power bonus to stockpile and income
+                    nation = cls.get(nation_name)
+                    nation.update_stockpile("Political Power", bonus[j])
+                    nation.update_income("Political Power", bonus[j])
+
+                    # add income string to income details
+                    pp_index = nation._find_pp_index()
+                    p1 = nation.income_details[:pp_index + 1]
+                    p2 = nation.income_details[pp_index + 1:]
+                    p1.append(f"&Tab;+{bonus[j]:.2f} {record_string[i]}")
+                    nation.income_details = p1 + p2
 
     @classmethod
     def check_tags(cls) -> None:
-        pass
+        
+        current_turn_num = core.get_current_turn_num(cls.game_id)
+        
+        for nation in cls:
+            
+            tags_filtered = {}
+            for tag_name, tag_data in nation.tags.items():
+                if tag_data["Expire Turn"] > current_turn_num:
+                    tags_filtered[tag_name] = tag_data
+            
+            nation.tags = tags_filtered
 
     @classmethod
     def _generate_vc_sets(cls, count: int) -> dict:
