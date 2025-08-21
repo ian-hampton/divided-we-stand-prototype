@@ -300,7 +300,7 @@ def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
         attacker_truce = ast.literal_eval(truce[int(nation1_id)])
         defender_truce = ast.literal_eval(truce[int(nation2_id)])
         
-        if attacker_truce and defender_truce and int(len(truce)) > current_turn_num:
+        if attacker_truce and defender_truce and truce[len(truce) - 1] > current_turn_num:
             return True
         
     return False
