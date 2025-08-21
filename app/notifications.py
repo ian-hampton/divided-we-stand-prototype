@@ -9,6 +9,7 @@ class NotificationsMeta(type):
         for notification in cls._data:
             yield notification
 
+@dataclass
 class Notifications(metaclass=NotificationsMeta):
 
     game_id: ClassVar[str] = None
