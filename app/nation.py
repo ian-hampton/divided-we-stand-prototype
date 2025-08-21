@@ -277,7 +277,7 @@ class Nations(metaclass=NationsMeta):
         return min(data.items(), key=lambda item: item[1])
 
     @classmethod
-    def add_leaderboard_bonuses(cls):
+    def add_leaderboard_bonuses(cls) -> None:
         
         # leaderboard bonuses only begin starting on turn 5
         current_turn_num = core.get_current_turn_num(cls.game_id)
@@ -478,6 +478,458 @@ class Nation:
     def score(self, value: int):
         self._score = value
         self._data["score"] = value
+
+    def add_gov_tags(self) -> None:
+        
+        match self.gov:
+
+            case "Republic":
+                new_tag = {
+                    "Alliance Limit Modifier": 1,
+                    "Expire Turn": 99999
+                }
+                self.tags["Republic"] = new_tag
+
+            case "Technocracy":
+                new_tag = {
+                    "Research Rate": 20,
+                    "Expire Turn": 99999
+                }
+                self.tags["Technocracy"] = new_tag
+
+            case "Oligarchy":
+                new_tag = {
+                    "Dollars Rate": 20,
+                    "Coal Rate": 20,
+                    "Oil Rate": 20,
+                    "Energy Rate": 20,
+                    "Expire Turn": 99999
+                }
+                self.tags["Oligarchy"] = new_tag
+
+            case "Totalitarian":
+                new_tag = {
+                    "Military Capacity Rate": 20,
+                    "Research Bonus": {
+                        "Amount": 2,
+                        "Resource": "Political Power",
+                        "Categories": ["Energy", "Infrastructure"]
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Totalitarian"] = new_tag
+
+            case "Remnant":
+                new_tag = {
+                    "Build Discount": 0.2,
+                    "Capital Boost": True,
+                    "Agenda Cost": 5,
+                    "Expire Turn": 99999
+                }
+                self.tags["Remnant"] = new_tag
+
+            case "Protectorate":
+                new_tag = {
+                    "Basic Materials Rate": 20,
+                    "Market Buy Modifier": 0.2,
+                    "Market Sell Modifier": 0.2,
+                    "Improvement Income Multiplier": {
+                        "Settlement": {
+                            "Dollars": -0.2
+                        },
+                        "City": {
+                            "Dollars": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Protectorate"] = new_tag
+
+            case "Military Junta":
+                new_tag = {
+                    "Improvement Income Multiplier": {
+                        "Research Laboratory": {
+                            "Research": -0.2
+                        },
+                        "Research Institute": {
+                            "Research": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Military Junta"] = new_tag
+
+            case "Crime Syndicate":
+                new_tag = {
+                    "Region Claim Cost": 0.2,
+                    "Expire Turn": 99999
+                }
+                self.tags["Crime Syndicate"] = new_tag
+
+    def update_victory_progress(self) -> None:
+        
+        import app.victory_conditions as vc
+        
+        self.score = 0
+        for name in self.victory_conditions.keys():
+            self.victory_conditions[name] = False
+
+        for name in self.victory_conditions.keys():
+            
+            # do not check vcs that have already been permanently satisfied
+            if self._satisfied[name]:
+                self.score += 1
+                continue
+
+            name_to_func = {
+                "Ambassador": vc.ambassador,
+                "Backstab": vc.backstab,
+                "Breakthrough": vc.breakthrough,
+                "Diversified Economy": vc.breakthrough,
+                "Double Down": vc.double_down,
+                "New Empire": vc.new_empire,
+                "Reconstruction Effort": vc.reconstruction_effort,
+                "Reliable Ally": vc.reliable_ally,
+                "Secure Strategic Resources": vc.secure_strategic_resources,
+                "Threat Containment": vc.threat_containment,
+                "Energy Focus": vc.energy_focus,
+                "Industrial Focus": vc.industrial_focus,
+                "Hegemony": vc.hegemony,
+                "Monopoly": vc.monopoly,
+                "Nuclear Deterrent": vc.nuclear_deterrent,
+                "Strong Research Agreement": vc.strong_research_agreement,
+                "Strong Trade Agreement": vc.strong_trade_agreement,
+                "Sphere of Influence": vc.sphere_of_influence,
+                "Underdog": vc.underdog,
+                "Warmonger": vc.warmonger,
+                "Economic Domination": vc.economic_domination,
+                "Influence Through Trade": vc.influence_through_trade,
+                "Military Superpower": vc.military_superpower,
+                "Scientific Leader": vc.scientific_leader,
+                "Territorial Control": vc.territorial_control
+            }
+            
+            if name in name_to_func:
+
+                if name_to_func[name](self):
+                    
+                    # mark victory condition as completed
+                    self.score += 1
+                    self.victory_conditions[name] = True
+
+                    # mark victory condition as permanently satisfied if needed
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Threat Containment",
+                                    "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    if name in one_and_done:
+                        self._satisfied[name] = True
+
+    def add_tech(self, technology_name: str) -> None:
+        
+        tech_dict = core.get_scenario_dict(Nations.game_id, "Technologies")
+        agenda_dict = core.get_scenario_dict(Nations.game_id, "Agendas")
+        if technology_name not in tech_dict and technology_name not in agenda_dict:
+            raise Exception(f"{technology_name} not recognized as an agenda/technology.")
+
+        self.completed_research[technology_name] = True
+
+    def update_trade_fee(self) -> None:
+        
+        trade_fee_list = ["3:1", "2:1", "1:1", "1:2", "1:3", "1:4", "1:5"]
+        trade_index = 3
+
+        if "Improved Logistics" in self.completed_research:
+            trade_index += 1
+
+        for tag_data in self.tags.values():
+            trade_index += tag_data.get("Trade Fee Modifier", 0)
+
+        self.trade_fee = trade_fee_list[trade_index]
+
+    def award_research_bonus(self, research_name: str) -> None:
+        
+        research_scenario_dict = core.get_scenario_dict(Nations.game_id, "Technologies")
+
+        for tag_data in self.tags.values():
+            
+            if "Research Bonus" not in tag_data:
+                continue
+            
+            bonus_dict = tag_data["Research Bonus"]
+            if research_scenario_dict[research_name]["Research Type"] in bonus_dict["Categories"]:
+                resource_name: str = bonus_dict["Resource"]
+                resource_amount: int = bonus_dict["Amount"]
+                self.update_stockpile(resource_name, resource_amount)
+                self.action_log.append(f"Gained {resource_amount} {resource_name} for researching {research_name}.")
+
+    def apply_build_discount(self, build_cost_dict: dict) -> None:
+        
+        build_cost_rate = 1.0
+        for tag_data in self.tags.values():
+            build_cost_rate -= float(tag_data.get("Build Discount", 0))
+
+        for key in build_cost_dict:
+            build_cost_dict[key] *= build_cost_rate
+
+    def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
+        
+        adjustment = 0
+        agenda_data_dict = core.get_scenario_dict(Nations.game_id, "Agendas")
+        agenda_type = agenda_data_dict[agenda_name]['Agenda Type']
+
+        # cost adjustment from foreign policy
+        agenda_cost_adjustment = {
+            "Cooperative": {
+                "Diplomatic": -5,
+                "Commercial": 0,
+                "Isolationist": 5,
+                "Imperialist": 0
+            },
+            "Economic": {
+                "Diplomatic": 0,
+                "Commercial": -5,
+                "Isolationist": 0,
+                "Imperialist": 5
+            },
+            "Security": {
+                "Diplomatic": 0,
+                "Commercial": 5,
+                "Isolationist": -5,
+                "Imperialist": 0,
+            },
+            "Warfare": {
+                "Diplomatic": 5,
+                "Commercial": 0,
+                "Isolationist": 0,
+                "Imperialist": -5,
+            }
+        }
+        adjustment += agenda_cost_adjustment[agenda_type][self.fp]
+
+        # cost adjustment from tags
+        for tag_data in self.tags.values():
+            adjustment += int(tag_data.get("Agenda Cost", 0))
+        
+        return adjustment
+
+    def region_claim_political_power_cost(self) -> float:
+        pp_cost = 0.0
+        for tag_data in self.tags.values():
+            pp_cost += float(tag_data.get("Region Claim Cost", 0))
+        return pp_cost
+
+    def export_action_log(self) -> None:
+        
+        log_file = f"gamedata/{self.game_id}/logs/nation{self.id}.txt"
+        log_dir = os.path.dirname(log_file)
+
+        os.makedirs(log_dir, exist_ok=True)
+        with open(log_file, 'w') as file:
+            for string in self.action_log:
+                file.write(string + '\n')
+
+    def get_stockpile(self, resource_name: str) -> str:
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        return self._resources[resource_name]["stored"]
+
+    def update_stockpile(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["stored"] = f"{amount:.2f}"
+            return
+        
+        stored = float(self._resources[resource_name]["stored"])
+        stored += amount
+        stored_max = int(self.get_max(resource_name))
+        if stored > stored_max:
+            stored = stored_max
+        self._resources[resource_name]["stored"] = f"{stored:.2f}"
+
+    def get_income(self, resource_name: str) -> str:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if resource_name == "Military Capacity":
+            return self.get_max_mc()
+
+        return self._resources[resource_name]["income"]
+
+    def update_income(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if resource_name == "Military Capacity":
+            return
+        
+        if overwrite:
+            self._resources[resource_name]["income"] = f"{amount:.2f}"
+            return
+
+        income = float(self._resources[resource_name]["income"])
+        income += amount
+        self._resources[resource_name]["income"] = f"{income:.2f}"
+
+    def get_gross_income(self, resource_name: str) -> str:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if resource_name == "Military Capacity":
+            return self.get_max_mc()
+
+        return self._resources[resource_name]["grossIncome"]
+
+    def update_gross_income(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if resource_name == "Military Capacity":
+            self.update_max_mc(amount, overwrite=overwrite)
+            return
+
+        if overwrite:
+            self._resources[resource_name]["grossIncome"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources[resource_name]["grossIncome"])
+        income += amount
+        self._resources[resource_name]["grossIncome"] = f"{income:.2f}"
+
+    def get_max(self, resource_name: str) -> int:
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        return self._resources[resource_name]["max"]
+
+    def update_max(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected an integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["max"] = f"{amount}"
+            return
+        
+        max = int(self._resources[resource_name]["max"])
+        max += amount
+        self._resources[resource_name]["max"] = f"{max}"
+
+    def update_stockpile_limits(self) -> None:
+        
+        for resource_name in self._resources:
+
+            if resource_name in ["Energy", "Military Capacity"]:
+                continue
+            
+            new_max = 50
+            cb_count = self.improvement_counts.get("Central Bank", 0)
+            new_max += cb_count * 20
+            
+            # dollars stockpile is always 50 more than other resources
+            if resource_name == "Dollars":
+                new_max += 50
+            
+            self.update_max(resource_name, int(new_max), overwrite=True)
+
+    def get_rate(self, resource_name: str) -> int:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        rate = self._resources[resource_name]["rate"]
+        for tag_data in self.tags.values():
+            rate += tag_data.get(f"{resource_name} Rate", 0)
+
+        return rate
+
+    def update_rate(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected an integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["rate"] = amount
+        else:
+            self._resources[resource_name]["rate"] += amount
+
+    def get_used_mc(self) -> float:
+        return float(self._resources["Military Capacity"]["used"])
+
+    def update_used_mc(self, amount: int | float, *, overwrite = False) -> None:
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources["Military Capacity"]["used"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources["Military Capacity"]["used"])
+        income += amount
+        self._resources["Military Capacity"]["used"] = f"{income:.2f}"
+
+    def get_max_mc(self) -> float:
+        
+        # do not enforce military capacity restrictions on foreign adversary
+        if self.name == "Foreign Adversary":
+            return 99999
+
+        return float(self._resources["Military Capacity"]["max"])
+
+    def update_max_mc(self, amount: int | float, *, overwrite = False) -> None:
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources["Military Capacity"]["max"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources["Military Capacity"]["max"])
+        income += amount
+        self._resources["Military Capacity"]["max"] = f"{income:.2f}"
+
+    def get_vc_list(self) -> list:
+        """
+        This function is a piece of garbage that exists only because I do not want to refactor the frontend right now.
+
+        Returns:
+            list: List of all victory conditions across all sets.
+        """
+        results = []
+        for key in self._sets["set1"]:
+            results.append(key)
+        for key in self._sets["set2"]:
+            results.append(key)
+        return results
+
+    def _find_pp_index(self) -> int:
+        """
+        Returns in index of where the political power log starts.
+        """
+        for i, str in enumerate(self.income_details):
+            if "Political Power" in str:
+                return i
 
 class NationStatistics:
 
