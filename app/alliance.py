@@ -140,9 +140,6 @@ class Alliance:
         self._data = Alliances._data[alliance_name]
 
         self.name = alliance_name
-        self.current_members: dict[str, int] = self._data["currentMembers"]
-        self.founding_members: dict[str, int] = self._data["foundingMembers"]
-        self.former_members: dict[str, int] = self._data["formerMembers"]
         self._type: str = self._data["allianceType"]
         self._turn_created: int = self._data["turnCreated"]
         self._turn_ended: int = self._data["turnEnded"]
@@ -170,6 +167,18 @@ class Alliance:
         else:
            return self.turn_ended - self.turn_created
 
+    @property
+    def current_members(self) -> dict[str, int]:
+        return self._data["currentMembers"]
+    
+    @property
+    def founding_members(self) -> dict[str, int]:
+        return self._data["foundingMembers"]
+    
+    @property
+    def former_members(self) -> dict[str, int]:
+        return self._data["formerMembers"]
+
     @type.setter
     def type(self, alliance_type: str):
         self._type = alliance_type
@@ -184,6 +193,18 @@ class Alliance:
     def turn_ended(self, turn: int):
         self._turn_ended = turn
         self._data["turnEnded"] = turn
+
+    @current_members.setter
+    def current_members(self, value: dict) -> None:
+        self._data["currentMembers"] = value
+
+    @founding_members.setter
+    def founding_members(self, value: dict) -> None:
+        self._data["foundingMembers"] = value
+
+    @former_members.setter
+    def former_members(self, value: dict) -> None:
+        self._data["formerMembers"] = value
 
     def add_member(self, nation_name: str) -> None:
         if nation_name in self.former_members:

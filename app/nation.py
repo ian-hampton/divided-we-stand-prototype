@@ -374,20 +374,7 @@ class Nation:
         self._nuke_count: int = self._data["nuclearMissileStockpile"]
         self._score: int = self._data["score"]
 
-        self.victory_conditions: dict = self._data["chosenVictorySet"]
-        self._sets: dict = self._data["victorySets"]
-        self._satisfied: dict = self._data["satisfiedVictorySet"]
-        
-        self.completed_research: dict = self._data["unlockedResearch"]
-        self.improvement_counts: dict = self._data["improvementCounts"]
-        self.unit_counts: dict = self._data["unitCounts"]
-        self.tags: dict = self._data["tags"]
-        self.action_log: list = self._data["actionLog"]
-
-        self.income_details: list = self._data["incomeDetails"]
         self.stats = NationStatistics(self._data["statistics"])
-        self._records: dict = self._data["records"]
-        self._resources: dict = self._data["resources"]
 
     @property
     def name(self):
@@ -429,6 +416,50 @@ class Nation:
     def score(self):
         return self._score
     
+    @property
+    def victory_conditions(self) -> dict:
+        return self._data["chosenVictorySet"]
+
+    @property
+    def completed_research(self) -> dict:
+        return self._data["unlockedResearch"]
+
+    @property
+    def improvement_counts(self) -> dict:
+        return self._data["improvementCounts"]
+
+    @property
+    def unit_counts(self) -> dict:
+        return self._data["unitCounts"]
+
+    @property
+    def tags(self) -> dict:
+        return self._data["tags"]
+
+    @property
+    def action_log(self) -> list:
+        return self._data["actionLog"]
+
+    @property
+    def income_details(self) -> list:
+        return self._data["incomeDetails"]
+    
+    @property
+    def _sets(self) -> dict:
+        return self._data["victorySets"]
+
+    @property
+    def _satisfied(self) -> dict:
+        return self._data["satisfiedVictorySet"]
+
+    @property
+    def _records(self) -> dict:
+        return self._data["records"]
+
+    @property
+    def _resources(self) -> dict:
+        return self._data["resources"]
+
     @name.setter
     def name(self, value: str):
         self._name = value
@@ -478,6 +509,50 @@ class Nation:
     def score(self, value: int):
         self._score = value
         self._data["score"] = value
+
+    @victory_conditions.setter
+    def victory_conditions(self, value: dict) -> None:
+        self._data["chosenVictorySet"] = value
+
+    @completed_research.setter
+    def completed_research(self, value: dict) -> None:
+        self._data["unlockedResearch"] = value
+
+    @improvement_counts.setter
+    def improvement_counts(self, value: dict) -> None:
+        self._data["improvementCounts"] = value
+
+    @unit_counts.setter
+    def unit_counts(self, value: dict) -> None:
+        self._data["unitCounts"] = value
+
+    @tags.setter
+    def tags(self, value: dict) -> None:
+        self._data["tags"] = value
+
+    @action_log.setter
+    def action_log(self, value: list) -> None:
+        self._data["actionLog"] = value
+
+    @income_details.setter
+    def income_details(self, value: list) -> None:
+        self._data["incomeDetails"] = value
+
+    @_sets.setter
+    def _sets(self, value: dict) -> None:
+        self._data["victorySets"] = value
+
+    @_satisfied.setter
+    def _satisfied(self, value: dict) -> None:
+        self._data["satisfiedVictorySet"] = value
+
+    @_records.setter
+    def _records(self, value: dict) -> None:
+        self._data["records"] = value
+
+    @_resources.setter
+    def _resources(self, value: dict) -> None:
+        self._data["resources"] = value
 
     def add_gov_tags(self) -> None:
         

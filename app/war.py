@@ -434,13 +434,12 @@ class War:
         self._data = Wars._data[war_name]
         
         self.name = war_name
-        self.combatants: dict = self._data["combatants"]
-        self.attackers = WarScoreData(self._data["attackerWarScore"])
-        self.defenders = WarScoreData(self._data["defenderWarScore"])
-        self.log: list = self._data["warLog"]
         self._start: int = self._data["start"]
         self._end: int = self._data["end"]
         self._outcome: str = self._data["outcome"]
+
+        self.attackers = WarScoreData(self._data["attackerWarScore"])
+        self.defenders = WarScoreData(self._data["defenderWarScore"])
 
     @property
     def start(self):
@@ -454,6 +453,14 @@ class War:
     def outcome(self):
         return self._outcome
 
+    @property
+    def combatants(self) -> dict:
+        return self._data["combatants"]
+    
+    @property
+    def log(self) -> list:
+        return self._data["warLog"]
+
     @end.setter
     def end(self, turn: int):
         self._end = turn
@@ -463,6 +470,14 @@ class War:
     def outcome(self, outcome_str: str):
         self._outcome = outcome_str
         self._data["outcome"] = outcome_str
+
+    @combatants.setter
+    def combatants(self, value: dict) -> None:
+        self._data["combatants"] = value
+
+    @log.setter
+    def log(self, value: list) -> None:
+        self._data["warLog"] = value
 
     def add_combatant(self, nation: Nation, role: str, target_id: str) -> None:
         
@@ -795,7 +810,6 @@ class Combatant:
 
         self.id: str = d["id"]
         self.role: str = d["role"]
-        self.claims: dict = d["claims"]
         self._target_id: str = d["targetID"]
         self._justification: str = d["justification"]
         self._battles_won: int = d["battlesWon"]
@@ -852,6 +866,10 @@ class Combatant:
     def launched_nukes(self):
         return self._launched_nukes
 
+    @property
+    def claims(self) -> dict:
+        return self._data["claims"]
+
     @justification.setter
     def justification(self, value: str):
         self._justification = value
@@ -901,3 +919,7 @@ class Combatant:
     def launched_nukes(self, value: int):
         self._launched_nukes = value
         self._data["nukesLaunched"] = value
+
+    @claims.setter
+    def claims(self, value: dict) -> None:
+        self._data["claims"] = value
