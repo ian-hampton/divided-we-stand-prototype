@@ -261,6 +261,7 @@ class Alliance:
     def end(self) -> None:
         
         from app.nation import Nations
+        from app.truce import Truces
         current_turn_num = core.get_current_turn_num(Alliances.game_id)
 
         # add truce periods
@@ -273,10 +274,8 @@ class Alliance:
                 nation1 = Nations.get(nation1_name)
                 nation2 = Nations.get(nation2_name)
                 
-                signatories_list = [False] * len(Nations)
-                signatories_list[int(nation1.id) - 1] = True
-                signatories_list[int(nation2.id) - 1] = True
-                core.add_truce_period(Alliances.game_id, signatories_list, 2)
+                signatories = [nation1.id, nation2.id]
+                Truces.create(signatories, 2)
 
         # dissolve alliance
         names = list(self.current_members.keys())

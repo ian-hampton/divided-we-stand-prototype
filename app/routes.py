@@ -848,15 +848,15 @@ def announcements(full_game_id):
     from app.alliance import Alliances
     from app.nation import Nations
     from app.notifications import Notifications
+    from app.truce import Truces
     from app.war import Wars
 
     # get game data
     Alliances.load(full_game_id)
     Nations.load(full_game_id)
     Notifications.initialize(full_game_id)
+    Truces.load(full_game_id)
     Wars.load(full_game_id)
-    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
-    trucedata_list = core.read_file(trucedata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
@@ -898,19 +898,11 @@ def announcements(full_game_id):
         if war.outcome == "TBD":
             diplomacy_list.append(f"{war.name} is ongoing.")
     # get all ongoing truces
-    for truce in trucedata_list:
-        truce_participants_list = []
-        for i in range(1, len(truce) - 1):
-            truce_status = ast.literal_eval(truce[i])
-            if truce_status:
-                nation = Nations.get(str(i))
-                truce_participants_list.append(nation.name)
-        truce_name = ' - '.join(truce_participants_list)
-        truce_end_turn = int(truce[len(truce) - 1])
-        if truce_end_turn > current_turn_num:
-            diplomacy_list.append(f"{truce_name} truce until turn {truce_end_turn}.")
-        if truce_end_turn == current_turn_num:
-            diplomacy_list.append(f'{truce_name} truce has expired.')
+    for truce in Truces:
+        if truce.end_turn > current_turn_num:
+            diplomacy_list.append(f"{str(truce)} truce until turn {truce.end_turn}.")
+        elif truce.end_turn == current_turn_num:
+            diplomacy_list.append(f"{str(truce)} truce has expired.")
     # format diplomacy string
     diplomacy_string = "<br>".join(diplomacy_list)
     diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
@@ -1142,6 +1134,7 @@ def event_resolution():
     from app.region import Regions
     from app.nation import Nations
     from app.notifications import Notifications
+    from app.truce import Truces
     from app.war import Wars
     
     game_id = request.form.get("full_game_id")
@@ -1150,6 +1143,7 @@ def event_resolution():
     Regions.load(game_id)
     Nations.load(game_id)
     Notifications.initialize(game_id)
+    Truces.load(game_id)
     Wars.load(game_id)
     
     events.resolve_current_event(game_id)
@@ -1159,6 +1153,7 @@ def event_resolution():
     Regions.save()
     Nations.save()
     Notifications.save()
+    Truces.save()
     Wars.save()
 
     return redirect(f"/{game_id}")

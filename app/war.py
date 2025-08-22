@@ -63,6 +63,7 @@ class Wars(metaclass=WarsMeta):
     def create(cls, main_attacker_id: str, main_defender_id: str, war_justification: str, war_claims = []) -> None:
         
         from app.alliance import Alliances
+        from app.truce import Truces
         from app.nation import Nations
         main_attacker = Nations.get(main_attacker_id)
         main_defender = Nations.get(main_defender_id)
@@ -112,9 +113,9 @@ class Wars(metaclass=WarsMeta):
         puppet_states = core.get_subjects(cls.game_id, main_attacker.name, "Puppet State")
         possible_allies = set(puppet_states)
         for ally_id in possible_allies:
-            ally = Nations.nation_table.get(ally_id)
+            ally = Nations.get(ally_id)
             if (cls.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
-                and not core.check_for_truce(cls.game_id, main_defender.id, ally.id)    # ally cannot have truce with defender
+                and not Truces.are_truced(main_defender.id, ally.id)                    # ally cannot have truce with defender
                 and not Alliances.are_allied(main_defender.name, ally.name)             # ally cannot be allied with defender
                 and not Alliances.former_ally_truce(main_defender.name, ally.name)):    # ally cannot be recently allied with defender
                 new_war.add_combatant(ally, "Secondary Attacker", "TBD")
@@ -131,7 +132,7 @@ class Wars(metaclass=WarsMeta):
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
             if (cls.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
-                and not core.check_for_truce(cls.game_id, main_attacker.id, ally.id)    # ally cannot have truce with attacker
+                and not Truces.are_truced(main_attacker.id, ally.id)                    # ally cannot have truce with attacker
                 and not Alliances.are_allied(main_attacker.name, ally.name)             # ally cannot be allied with attacker
                 and not Alliances.former_ally_truce(main_attacker.name, ally.name)):    # ally cannot be recently allied with attacker
                 new_war.add_combatant(ally, "Secondary Defender", "TBD")
@@ -615,6 +616,7 @@ class War:
         # get game data
         from app.nation import Nations
         from app.region import Regions
+        from app.truce import Truces
         current_turn_num = core.get_current_turn_num(Wars.game_id)
         
         # resolve war justifications
@@ -642,14 +644,12 @@ class War:
             attacker = self.get_combatant(combatant_id)
             if 'Attacker' not in attacker.role:
                 continue
-            signatories_list = [False] * len(Nations)
             for temp_id in self.combatants:
                 defender = self.get_combatant(temp_id)
                 if temp_id == combatant_id or 'Defender' not in defender.role:
                     continue
-                signatories_list[int(attacker.id) - 1] = True
-                signatories_list[int(defender.id) - 1] = True
-                core.add_truce_period(Wars.game_id, signatories_list, truce_length)
+                signatories = [attacker.id, defender.id]
+                Truces.create(signatories, truce_length)
 
         # update war
         self.end = current_turn_num

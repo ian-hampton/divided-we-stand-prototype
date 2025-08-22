@@ -15,6 +15,7 @@ from app.alliance import Alliances
 from app.region import Region, Regions
 from app.nation import Nations
 from app.notifications import Notifications
+from app.truce import Truces
 from app.war import Wars
 from app.map import GameMaps
 from app import actions
@@ -199,6 +200,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     Regions.load(game_id)
     Nations.load(game_id)
     Notifications.initialize(game_id)
+    Truces.load(game_id)
     Wars.load(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
@@ -315,6 +317,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     Regions.save()
     Nations.save()
     Notifications.save()
+    Truces.save()
     Wars.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
@@ -504,6 +507,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         "alliances": {},
         "nations": {},
         "notifications": [],
+        "truces": {},
         "wars": {}
     }
     with open(gamedata_filepath, 'w') as json_file:
@@ -520,11 +524,6 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     with open(rmdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.rmdata_header)
-
-    # create trucedata.csv
-    with open(f"gamedata/{game_id}/trucedata.csv", 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.trucedata_header)
 
 
 # MISC SITE FUNCTIONS

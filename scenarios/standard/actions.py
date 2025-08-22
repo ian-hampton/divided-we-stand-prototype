@@ -277,8 +277,7 @@ def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
 
 def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
 
-    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
-    trucedata_list = core.read_file(trucedata_filepath, 1)
+    from app.truce import Truces
     current_turn_num = core.get_current_turn_num(game_id)
 
     for action in actions_list:
@@ -289,23 +288,19 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
             nation.action_log.append(f"{action.action_str} failed. You are not the Mediator.")
             continue
 
-        for truce in trucedata_list:
-                
-            truce_id = str(truce[0])
-            mediator_in_truce = truce[int(action.id)]
-            truce_expire_turn = int(truce[len(truce)])
+        for truce in Truces:
 
-            if truce_id == action.truce_id:
+            if truce.id == action.truce_id:
                 
-                if truce_id in nation.tags["Mediator"]["Truces Extended"]:
+                if truce.id in nation.tags["Mediator"]["Truces Extended"]:
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Truce has already been extended.")
                     break
                 
-                if mediator_in_truce:
+                if action.id in truce.signatories:
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Mediator is involved in this truce.")
                     break
             
-                if current_turn_num >= truce_expire_turn:
+                if truce.end_turn <= current_turn_num:
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Truce has already expired.")
                     break
 
@@ -314,15 +309,10 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
                     break
 
                 nation.update_stockpile("Political Power", -5)
-                truce[len(truce)] = truce_expire_turn + 4
-                nation.tags["Mediator"]["Truces Extended"].append(truce_id)
+                truce.end_turn += 4
+                nation.tags["Mediator"]["Truces Extended"].append(truce.id)
                 nation.action_log.append(f"Used Host Peace Talks on Truce #{action.truce_id}.")
                 break
-
-    with open(trucedata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.trucedata_header)
-        writer.writerows(trucedata_list)
 
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 

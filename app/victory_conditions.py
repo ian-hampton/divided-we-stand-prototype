@@ -351,7 +351,7 @@ def strong_trade_agreement(nation: Nation) -> bool:
 def sphere_of_influence(nation: Nation) -> bool:
 
     # load game data
-    GAME_ID = nation.game_id
+    GAME_ID = Nations.game_id
     agenda_data_dict = core.get_scenario_dict(GAME_ID, "Agendas")
 
     agenda_count = 0

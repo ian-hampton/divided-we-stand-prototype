@@ -1941,6 +1941,7 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
 def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):
     
     from app.alliance import Alliances
+    from app.truce import Truces
     from app.war import Wars
 
     # agenda check
@@ -1982,7 +1983,7 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
         return False
     
     # truce check
-    if core.check_for_truce(Alliances.game_id, attacker_nation.id, defender_nation.id):
+    if Truces.are_truced(attacker_nation.id, defender_nation.id):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have a truce with this nation.")
         return False
 

@@ -269,40 +269,6 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
 # WAR SUB-FUNCTIONS
 ################################################################################
 
-def add_truce_period(game_id: str, signatories_list: list, truce_length: int) -> None:
-
-    # get game data
-    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
-    trucedata_list = read_file(trucedata_filepath, 0)
-    current_turn_num = get_current_turn_num(game_id)
-
-    # add truce
-    truce_id = len(trucedata_list)
-    signatories_list.insert(0, truce_id)
-    signatories_list.append(current_turn_num + truce_length + 1)
-    trucedata_list.append(signatories_list)
-
-    # update trucedata.csv
-    with open(trucedata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(trucedata_list)
-
-def check_for_truce(game_id: str, nation1_id: str, nation2_id: str) -> bool:
-    
-    trucedata_filepath = f'gamedata/{game_id}/trucedata.csv'
-    trucedata_list = read_file(trucedata_filepath, 1)
-    current_turn_num = get_current_turn_num(game_id)
-
-    for truce in trucedata_list:
-        
-        attacker_truce = ast.literal_eval(truce[int(nation1_id)])
-        defender_truce = ast.literal_eval(truce[int(nation2_id)])
-        
-        if attacker_truce and defender_truce and truce[len(truce) - 1] > current_turn_num:
-            return True
-        
-    return False
-
 def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
     """
     Identifies best missile defense to counter incoming missile. Returns None if not found.
@@ -517,4 +483,3 @@ def get_scenario_dict(game_id: str, filename: str) -> dict:
 ################################################################################
 
 rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]
-trucedata_header = ['Truce ID', 'Player #1', 'Player #2', 'Player #3', 'Player #4', 'Player #5', 'Player #6', 'Player #7', 'Player #8', 'Player #9', 'Player #10', 'Expire Turn #']    # not actually needed anymore
