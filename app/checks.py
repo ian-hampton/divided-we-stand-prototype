@@ -28,8 +28,8 @@ def update_income(game_id: str) -> None:
     # reset gross income and create dict for tracking income strings
     text_dict = {}
     for nation in Nations:
-        nation.regions_owned = 0
-        nation.regions_occupied = 0
+        nation.stats.regions_owned = 0
+        nation.stats.regions_occupied = 0
         text_dict[nation.name] = {}
         for resource_name in nation._resources:
             text_dict[nation.name][resource_name] = {}
@@ -38,7 +38,6 @@ def update_income(game_id: str) -> None:
                 nation.update_max_mc(0.00, overwrite=True)
             else:
                 nation.update_gross_income(resource_name, 0.00, overwrite=True)
-        Nations.save(nation)
 
     # create dicts for tracking improvement yields and upkeep costs
     yield_dict = {}
@@ -482,7 +481,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     
     # if no unoccupied region found for a player force surrender if main combatant
     for index, region_found in enumerate(non_occupied_found_list):
-        looser_id = index + 1
+        looser_id = str(index + 1)
         looser_name = Nations.get(looser_id).name
         
         if not region_found:

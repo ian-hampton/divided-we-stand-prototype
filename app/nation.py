@@ -719,7 +719,7 @@ class Nation:
 
     def export_action_log(self) -> None:
         
-        log_file = f"gamedata/{self.game_id}/logs/nation{self.id}.txt"
+        log_file = f"gamedata/{Nations.game_id}/logs/nation{self.id}.txt"
         log_dir = os.path.dirname(log_file)
 
         os.makedirs(log_dir, exist_ok=True)

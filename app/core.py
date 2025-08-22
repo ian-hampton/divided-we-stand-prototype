@@ -365,8 +365,6 @@ def withdraw_units(game_id: str):
                 nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.region_id}. Unit disbanded!")
                 nation.unit_counts[region.unit.name] -= 1
                 region.unit.clear()
-            
-            Nations.save(nation)
 
 
 # MISC SUB-FUNCTIONS

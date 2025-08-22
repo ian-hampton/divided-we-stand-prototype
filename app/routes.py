@@ -33,7 +33,6 @@ def games():
     
     # read game files
     from app.nation import Nations
-    Nations.load(game_id)
     with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
@@ -41,6 +40,8 @@ def games():
 
     # read active games
     for game_id, game_data in active_games_dict.items():
+
+        Nations.load(game_id)
         current_turn = game_data["Statistics"]["Current Turn"]
         if current_turn == "Turn N/A":
             continue

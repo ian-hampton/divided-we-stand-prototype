@@ -119,7 +119,6 @@ class Event:
                     vote_tally_dict[target_name] = vote_count
                 
                 nation.update_stockpile("Political Power", -1 * vote_count)
-                Nations.save(nation)
                 break
         
         return vote_tally_dict
@@ -155,7 +154,6 @@ class Event:
                     vote_tally_dict[option_name] = vote_count
                 
                 nation.update_stockpile("Political Power", -1 * vote_count)
-                Nations.save(nation)
                 break
         
         return vote_tally_dict
@@ -221,8 +219,6 @@ class Assassination(Event):
                 nation.tags["Assassination Scapegoat"] = new_tag
                 self.state = 1
                 self.expire_turn = self.current_turn_num + self.duration + 1
-
-        Nations.save(nation)
     
     def has_conditions_met(self) -> bool:
         return True
@@ -308,7 +304,6 @@ class DecayingInfrastructure(Event):
                 if decay_roll >= 9:
                     nation = Nations.get(region.data.owner_id)
                     nation.improvement_counts[region.improvement.name] -= 1
-                    Nations.save(nation)
                     Notifications.add(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 2)
                     region.improvement.clear()
 
@@ -360,7 +355,6 @@ class Desertion(Event):
             if defection_roll >= 9:
                 nation = Nations.get(region.unit.owner_id)
                 nation.unit_counts[region.unit.name] -= 1
-                Nations.save(nation)
                 Notifications.add(f"{nation.name} {region.unit.name} {region_id} has deserted.", 2)
                 region.unit.clear()
         
@@ -407,8 +401,6 @@ class DiplomaticSummit(Event):
                 while not valid_research:
                     research_name = input(f"Enter {nation.name} military technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
-            
-            Nations.save(nation)
         
         if len(summit_attendance_list) < 2:
             self.state = 0
@@ -422,7 +414,6 @@ class DiplomaticSummit(Event):
             for attendee_id in summit_attendance_list:
                 new_tag[f"Cannot Declare War On #{attendee_id}"] = True
             nation.tags["Summit"] = new_tag
-            Nations.save(nation)
         
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -501,8 +492,6 @@ class ForeignInterference(Event):
             
             elif decision == "Decline":
                 nation.update_stockpile("Political Power", 5)
-            
-            Nations.save(nation)
 
         actions.resolve_war_actions(self.game_id, war_actions)
         self.state = 0
@@ -554,7 +543,6 @@ class LostNuclearWeapons(Event):
             elif decision == "Scuttle":
                 nation.update_stockpile("Research", 15)
             
-            Nations.save(nation)
             Notifications.add(f"{nation.name} chose to {decision.lower()} the old military installation.", 2)
         
         self.state = 0
@@ -593,8 +581,6 @@ class SecurityBreach(Event):
                 if research_name not in victim_nation.completed_research:
                     continue
                 valid_research = self._gain_free_research(research_name, nation)
-            
-            Nations.save(nation)
 
         new_tag = {
             "Research Rate": -20,
@@ -671,8 +657,6 @@ class ObserverStatusInvitation(Event):
                 while not valid_research:
                     research_name = input(f"Enter {nation.name} military technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
-            
-            Nations.save(nation)
         
         self.state = 0
 
@@ -706,7 +690,6 @@ class PeacetimeRewards(Event):
             while not valid_research:
                 research_name = input(f"Enter {nation.name} technology decision: ")
                 valid_research = self._gain_free_research(research_name, nation)
-            Nations.save(nation)
 
         self.state = 0
 
@@ -739,9 +722,8 @@ class PowerPlantMeltdown(Event):
             nation.unit_counts[region.unit.name] -= 1
             region.unit.clear()
         region.data.fallout = 99999
-        nation.update_stockpile("Political Power", 0, overwrite=True)
         
-        Nations.save(nation)
+        nation.update_stockpile("Political Power", 0, overwrite=True)
         Notifications.add(f"The {nation.name} Nuclear Power Plant in {meltdown_region_id} has melted down!", 2)
         
         self.state = 0
@@ -790,8 +772,6 @@ class ShiftingAttitudes(Event):
                 while not valid_research:
                     research_name = input(f"Enter {nation.name} technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
-            
-            Nations.save(nation)
         
         self.state = 0
 
@@ -837,7 +817,6 @@ class WidespreadCivilDisorder(Event):
                 "Expire Turn": self.current_turn_num + self.duration + 1
             }
             nation.tags["Civil Disorder"] = new_tag
-            Nations.save(nation)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -878,7 +857,6 @@ class Embargo(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Embargo"] = new_tag
-        Nations.save(nation)
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 2)
         
@@ -918,7 +896,6 @@ class Humiliation(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Humiliation"] = new_tag
-        Nations.save(nation)
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 2)
 
@@ -958,7 +935,6 @@ class ForeignInvestment(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Foreign Investment"] = new_tag
-        Nations.save(nation)
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 2)
 
@@ -999,7 +975,6 @@ class NominateMediator(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Mediator"] = new_tag
-        Nations.save(nation)
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 2)
 
@@ -1041,7 +1016,6 @@ class SharedFate(Event):
                     "Expire Turn": 99999
                 }
                 nation.tags["Shared Fate"] = new_tag
-                Nations.save(nation)
             Notifications.add(f"Cooperation won in a {self.vote_tally.get("Cooperation")} - {self.vote_tally.get("Conflict")} decision.", 2)
 
         elif option_name == "Conflict":
@@ -1055,7 +1029,6 @@ class SharedFate(Event):
                     "Expire Turn": 99999
                 }
                 nation.tags["Shared Fate"] = new_tag
-                Nations.save(nation)
             Notifications.add(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 2)
 
         self.state = 1
@@ -1095,7 +1068,6 @@ class ThreatContainment(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Threat Containment"] = new_tag
-        Nations.save(nation)
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 2)
 
@@ -1512,7 +1484,6 @@ class FaustianBargain(Event):
                 candidates_list.append(player_id)
             else:
                 nation.update_stockpile("Political Power", 5)
-            Nations.save(nation)
 
         if len(candidates_list) == 0:
             Notifications.add("No nation took the Faustian Bargain. collaborate with the foreign nation.", 2)
@@ -1531,7 +1502,6 @@ class FaustianBargain(Event):
             if resource_name not in ["Political Power", "Military Capacity"]:
                 new_tag[f"{resource_name} Rate"] = 20
         nation.tags["Faustian Bargain"] = new_tag
-        Nations.save(nation)
 
         for alliance in Alliances:
             if nation.name in alliance.current_members:
@@ -1552,7 +1522,6 @@ class FaustianBargain(Event):
         # check if collaborator has been defeated (no capital)
         if nation.improvement_counts["Capital"] == 0:
             del nation.tags["Faustian Bargain"]
-            Nations.save(nation)
             self.state = 0
             Notifications.add(f"{self.name} event has ended.", 2)
             return

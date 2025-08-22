@@ -102,6 +102,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     maps.update_all()
 
     # save
+    Nations.save()
     Regions.save()
 
 def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
@@ -178,6 +179,8 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
 
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
+
+    Nations.save()
 
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
@@ -334,7 +337,6 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     for nation in Nations:
         nation.update_stockpile_limits()
         nation.update_trade_fee()
-        Nations.save(nation)
 
     if not event_phase:
         Nations.update_records()
@@ -541,7 +543,9 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         dict: player_information_dict.
     '''
     
-    # get game data
+    Alliances.load(game_id)
+    Nations.load(game_id)
+    Wars.load(game_id)
     nation = Nations.get(player_id)
     alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
 
@@ -621,7 +625,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     relation_colors = ['#000000'] * 10
     relations_status_list = ['-'] * 10
     for i in range(len(Nations)):
-        temp = Nations.get(i + 1)
+        temp = Nations.get(str(i + 1))
         if temp.name == nation.name:
             continue
         elif Wars.get_war_name(player_id, temp.id) is not None:
@@ -641,8 +645,8 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     player_information_dict['Relations Data']['Status List'] = relations_status_list
 
     # misc data
-    player_information_dict['Misc Info']['Owned Regions'] = f"Total Regions: {nation.regions_owned}"
-    player_information_dict['Misc Info']['Occupied Regions'] = f"Occupied Regions: {nation.regions_occupied}"
+    player_information_dict['Misc Info']['Owned Regions'] = f"Total Regions: {nation.stats.regions_owned}"
+    player_information_dict['Misc Info']['Occupied Regions'] = f"Occupied Regions: {nation.stats.regions_occupied}"
     if float(nation._records["netIncome"][-1]) >= 0:
         player_information_dict['Misc Info']['Net Income'] = f"Total Net Income: +{nation._records["netIncome"][-1]}"
     else:
