@@ -6,8 +6,7 @@ import copy
 from collections import defaultdict
 from typing import Union, Tuple, List
 
-from app.nationdata import Nation
-from app.nationdata import NationTable
+from app.nation import Nation, Nations
 
 
 # GAMEDATA HELPER FUNCTIONS
@@ -100,9 +99,8 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
 def get_subjects(game_id: str, overlord_name: str, subject_type: str) -> list:
 
     nation_id_list = []
-    nation_table = NationTable(game_id)
 
-    for nation in nation_table:
+    for nation in Nations:
         if overlord_name in nation.status and subject_type in nation.status:
             nation_id_list.append(nation.id)
     
@@ -351,14 +349,13 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
 def withdraw_units(game_id: str):
 
     from app.region import Region, Regions
-    nation_table = NationTable(game_id)
 
     for region in Regions:
         
         # a unit can only be present in another nation without occupation if a war just ended 
         if region.unit.name is not None and region.unit.owner_id != region.data.owner_id and region.data.occupier_id == "0":
             
-            nation = nation_table.get(region.unit.owner_id)
+            nation = Nations.get(region.unit.owner_id)
             target_id = region.find_suitable_region()
             
             if target_id is not None:
@@ -369,7 +366,7 @@ def withdraw_units(game_id: str):
                 nation.unit_counts[region.unit.name] -= 1
                 region.unit.clear()
             
-            nation_table.save(nation)
+            Nations.save(nation)
 
 
 # MISC SUB-FUNCTIONS

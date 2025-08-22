@@ -4,7 +4,7 @@ from typing import Union, Tuple
 
 from app import core
 from app.region import Region
-from app.nationdata import NationTable
+from app.nation import Nation, Nations
 
 def unit_vs_unit(attacker_region: Region, defender_region: Region) -> None:
 
@@ -13,10 +13,8 @@ def unit_vs_unit(attacker_region: Region, defender_region: Region) -> None:
 def unit_vs_unit_standard(attacker_region: Region, defender_region: Region) -> None:
 
     # get nation data
-    GAME_ID = attacker_region.game_id
-    nation_table = NationTable(GAME_ID)
-    attacker = nation_table.get(attacker_region.unit.owner_id)
-    defender = nation_table.get(defender_region.unit.owner_id)
+    attacker = Nations.get(attacker_region.unit.owner_id)
+    defender = Nations.get(defender_region.unit.owner_id)
 
     # get war data
     from app.war import Wars
@@ -105,7 +103,6 @@ def unit_vs_unit_standard(attacker_region: Region, defender_region: Region) -> N
         defender_cd.destroyed_units += 1
         war.log.append(f"    {attacker.name} {attacker_region.unit.name} has been lost!")
         attacker.unit_counts[attacker_region.unit.name] -= 1
-        nation_table.save(attacker)
         attacker_region.unit.clear()
     
     # remove defending unit if defeated
@@ -115,7 +112,6 @@ def unit_vs_unit_standard(attacker_region: Region, defender_region: Region) -> N
         defender_cd.lost_units += 1
         war.log.append(f"    {defender.name} {defender_region.unit.name} has been lost!")
         defender.unit_counts[defender_region.unit.name] -= 1
-        nation_table.save(defender)
         defender_region.unit.clear()
 
 def unit_vs_improvement(attacker_region: Region, defender_region: Region) -> None:
@@ -128,10 +124,8 @@ def unit_vs_improvement(attacker_region: Region, defender_region: Region) -> Non
 def unit_vs_improvement_standard(attacker_region: Region, defender_region: Region) -> None:
 
     # get nation data
-    GAME_ID = attacker_region.game_id
-    nation_table = NationTable(GAME_ID)
-    attacker = nation_table.get(attacker_region.unit.owner_id)
-    defender = nation_table.get(defender_region.data.owner_id)
+    attacker = Nations.get(attacker_region.unit.owner_id)
+    defender = Nations.get(defender_region.data.owner_id)
 
     # get information from wardata
     from app.war import Wars
@@ -203,7 +197,6 @@ def unit_vs_improvement_standard(attacker_region: Region, defender_region: Regio
         defender_cd.destroyed_units += 1
         war.log.append(f"    {attacker.name} {attacker_region.unit.name} has been lost!")
         attacker.unit_counts[attacker_region.unit.name] -= 1
-        nation_table.save(attacker)
         attacker_region.unit.clear()
     
     # remove defending improvement if defeated
@@ -214,7 +207,6 @@ def unit_vs_improvement_standard(attacker_region: Region, defender_region: Regio
             war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
             war.log.append(f"    {defender.name} {defender_region.improvement.name} has been destroyed!")
             defender.improvement_counts[defender_region.improvement.name] -= 1
-            nation_table.save(defender)
             defender_region.improvement.clear()
         else:
             war.attackers.captures += Wars.WARSCORE_FROM_CAPITAL_CAPTURE
@@ -234,10 +226,8 @@ def unit_vs_improvement_sf(attacker_region: Region, defender_region: Region) -> 
     """
 
     # get nation data
-    GAME_ID = attacker_region.game_id
-    nation_table = NationTable(GAME_ID)
-    attacker = nation_table.get(attacker_region.unit.owner_id)
-    defender = nation_table.get(defender_region.improvement.owner_id)
+    attacker = Nations.get(attacker_region.unit.owner_id)
+    defender = Nations.get(defender_region.data.owner_id)
 
     # get war data
     from app.war import Wars
@@ -261,7 +251,6 @@ def unit_vs_improvement_sf(attacker_region: Region, defender_region: Region) -> 
         war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
         war.log.append(f"    {defender.name} {defender_region.improvement.name} has been destroyed!")
         defender.improvement_counts[defender_region.improvement.name] -= 1
-        nation_table.save(defender)
         defender_region.improvement.clear()
     else:
         war.attackers.captures += Wars.WARSCORE_FROM_CAPITAL_CAPTURE

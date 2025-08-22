@@ -5,9 +5,8 @@ import random
 import datetime
 
 from app import core
+from app.nation import Nation, Nations
 from app.notifications import Notifications
-from app.nationdata import NationTable
-from app.nationdata import Nation
 
 def update_income(game_id: str) -> None:
     """
@@ -23,13 +22,12 @@ def update_income(game_id: str) -> None:
     # get game data
     from app.alliance import Alliances
     from app.region import Regions
-    nation_table = NationTable(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
     # reset gross income and create dict for tracking income strings
     text_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         nation.regions_owned = 0
         nation.regions_occupied = 0
         text_dict[nation.name] = {}
@@ -40,12 +38,12 @@ def update_income(game_id: str) -> None:
                 nation.update_max_mc(0.00, overwrite=True)
             else:
                 nation.update_gross_income(resource_name, 0.00, overwrite=True)
-        nation_table.save(nation)
+        Nations.save(nation)
 
     # create dicts for tracking improvement yields and upkeep costs
     yield_dict = {}
     upkeep_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         yield_dict[nation.name] = core.create_player_yield_dict(game_id, nation)
         upkeep_dict[nation.name] = core.create_player_upkeep_dict(game_id, nation)
 
@@ -58,11 +56,10 @@ def update_income(game_id: str) -> None:
         if region.data.owner_id in ["0", "99"]:
             continue
         # update statistics
-        nation = nation_table.get(region.data.owner_id)
-        nation.regions_owned += 1
+        nation = Nations.get(region.data.owner_id)
+        nation.stats.regions_owned += 1
         if region.data.occupier_id != "0":
-            nation.regions_occupied += 1
-        nation_table.save(nation)
+            nation.stats.regions_occupied += 1
         # skip if region is empty
         if region.improvement.name is None and region.unit.name is None:
             continue
@@ -72,7 +69,7 @@ def update_income(game_id: str) -> None:
                 plural_improvement_name = f"{region.improvement.name}s"
             else:
                 plural_improvement_name = f"{region.improvement.name[:-1]}ies"
-            nation = nation_table.get(region.data.owner_id)
+            nation = Nations.get(region.data.owner_id)
             improvement_income_dict = yield_dict[nation.name][region.improvement.name]
             improvement_yield_dict = region.calculate_yield(nation, improvement_income_dict, active_games_dict)
             for resource_name, amount_gained in improvement_yield_dict.items():
@@ -80,19 +77,17 @@ def update_income(game_id: str) -> None:
                     nation.update_gross_income(resource_name, amount_gained)
                     income_str = f'&Tab;+{amount_gained:.2f} from {plural_improvement_name}'
                     _update_text_dict(text_dict, nation.name, resource_name, income_str)
-                    nation_table.save(nation)
         # add unit military capacity cost
         if region.unit.name is not None:
-            nation = nation_table.get(region.unit.owner_id)
+            nation = Nations.get(region.unit.owner_id)
             nation.update_used_mc(1.00)
             if nation.gov == "Military Junta":
                 nation.update_gross_income("Political Power", 0.1)
                 income_str = "&Tab;+0.10 from Military Junta bonus."
                 _update_text_dict(text_dict, nation.name, "Political Power", income_str)
-                nation_table.save(nation)
 
     # political power income from alliances
-    for nation in nation_table:
+    for nation in Nations:
         alliance_income = 0
         alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
         if "Power Broker" in nation.completed_research:
@@ -105,15 +100,13 @@ def update_income(game_id: str) -> None:
         for i in range(alliance_count):
             income_str = f'&Tab;+{alliance_income:.2f} from alliances'
             _update_text_dict(text_dict, nation.name, "Political Power", income_str)
-        nation_table.save(nation)
 
     # political power from events
-    for nation in nation_table:
+    for nation in Nations:
         if "Observer Status" in nation.tags:
             nation.update_gross_income("Political Power", 0.5)
             income_str = f"&Tab;+{0.5:.2f} from Observer Status"
             _update_text_dict(text_dict, nation.name, "Political Power", income_str)
-        nation_table.save(nation)
 
     # alliance yields
     for alliance in Alliances:
@@ -121,7 +114,7 @@ def update_income(game_id: str) -> None:
         if amount == 0 or resource_name is None:
             continue
         for ally_name in alliance.current_members:
-            nation = nation_table.get(ally_name)
+            nation = Nations.get(ally_name)
             if "Alliance Centralization" in nation.completed_research:
                 amount = round(amount * 1.5, 2)
             if resource_name == "Military Capacity":
@@ -130,10 +123,9 @@ def update_income(game_id: str) -> None:
                 nation.update_gross_income(resource_name, amount)
             income_str = f"&Tab;+{amount:.2f} from {alliance.name}."
             _update_text_dict(text_dict, nation.name, resource_name, income_str)
-            nation_table.save(nation)
         
     # apply income rate to gross income
-    for nation in nation_table:
+    for nation in Nations:
         for resource_name in nation._resources:
             total = float(nation.get_gross_income(resource_name))
             rate = float(nation.get_rate(resource_name)) / 100
@@ -147,23 +139,21 @@ def update_income(game_id: str) -> None:
                 income_str = f"&Tab;{rate_diff:.2f} from income rate."
                 _update_text_dict(text_dict, nation.name, resource_name, income_str)
             nation.update_gross_income(resource_name, final_total, overwrite=True)
-        nation_table.save(nation)
     
 
     ### calculate net income ###
 
     # reset income
-    for nation in nation_table:
+    for nation in Nations:
         for resource_name in nation._resources:
             gross_income = float(nation.get_gross_income(resource_name))
             nation.update_income(resource_name, gross_income, overwrite=True)
-        nation_table.save(nation)
 
-    for nation in nation_table:
+    for nation in Nations:
         
         # account for puppet state dues
         if 'Puppet State' in nation.status:
-            for temp in nation_table:
+            for temp in Nations:
                 if temp in nation.status:
                     overlord = temp
                     break
@@ -180,10 +170,9 @@ def update_income(game_id: str) -> None:
                 overlord.update_income(resource_name, tax_amount)
                 income_str = f"&Tab;{tax_amount:.2f} from puppet state tribute."
                 _update_text_dict(text_dict, overlord.name, resource_name, income_str)
-                nation_table.save(overlord)
 
         # calculate player upkeep costs
-        # tba - check if there is even a need to calculate unit and improvement upkeep seperately anymore
+        # TODO - check if there is even a need to calculate unit and improvement upkeep seperately anymore
         player_upkeep_costs_dict = {}
         upkeep_resources = ["Dollars", "Food", "Oil", "Uranium", "Energy"]
         for resource_name in upkeep_resources:
@@ -234,14 +223,12 @@ def update_income(game_id: str) -> None:
         if energy_income < 0 and coal_reserves > 0:
             nation = _pay_energy(text_dict, nation, energy_income, "Oil", oil_reserves, income=False)
 
-        nation_table.save(nation)
-
 
     ### refine income strings ###
 
     # create strings for net incomes
     final_income_strings = {}
-    for nation in nation_table:
+    for nation in Nations:
         final_income_strings[nation.name] = {}
         for resource_name in nation._resources:
             str_list = []
@@ -253,7 +240,7 @@ def update_income(game_id: str) -> None:
             final_income_strings[nation.name][resource_name] = str_list
 
     # add counts
-    for nation in nation_table:
+    for nation in Nations:
         for resource_name in nation._resources:
             for income_string, count in text_dict[nation.name][resource_name].items():
                 if count > 1:
@@ -261,14 +248,13 @@ def update_income(game_id: str) -> None:
                 final_income_strings[nation.name][resource_name].append(income_string)
 
     # save income strings
-    for nation in nation_table:
+    for nation in Nations:
         resource_string_lists = final_income_strings[nation.name]
         temp = []
         for resource_name, string_list in resource_string_lists.items():
             if len(string_list) > 1 or resource_name in ["Dollars", "Political Power", "Research", "Military Capacity", "Energy"]:
                 temp += string_list
         nation.income_details = temp
-        nation_table.save(nation)
 
 def _update_text_dict(text_dict: dict, nation_name: str, resource_name: str, income_str: str) -> None:
     """
@@ -310,17 +296,13 @@ def _pay_energy(text_dict: dict, nation: Nation, energy_income: float, resouce_n
 
 def gain_income(game_id: str) -> None:
 
-    nation_table = NationTable(game_id)
-
-    for nation in nation_table:
+    for nation in Nations:
 
         for resource_name in nation._resources:
             if resource_name in ["Energy", "Military Capacity"]:
                 continue
             amount = float(nation.get_income(resource_name))
             nation.update_stockpile(resource_name, amount)
-
-        nation_table.save(nation)
 
 def countdown(game_id: str) -> None:
     """
@@ -339,26 +321,19 @@ def resolve_resource_shortages(game_id: str) -> None:
     Resolves resource shortages by pruning units and improvements that cost upkeep.
     """
 
-    # get game info
-    nation_table = NationTable(game_id)
-
-    for nation in nation_table:
+    for nation in Nations:
 
         if nation.name == "Foreign Invasion":
             continue
 
         upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
 
-        # handle shortages
         _resolve_shortage("Oil", upkeep_dict, nation, game_id)
         _resolve_shortage("Coal", upkeep_dict, nation, game_id)
         _resolve_shortage("Energy", upkeep_dict, nation, game_id)
         _resolve_shortage("Uranium", upkeep_dict, nation, game_id)
         _resolve_shortage("Food", upkeep_dict, nation, game_id)
         _resolve_shortage("Dollars", upkeep_dict, nation, game_id)
-    
-        # update nation data
-        nation_table.save(nation)
 
 def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, game_id: str) -> None:
     """
@@ -424,20 +399,15 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
     Resolves military capacity shortages for each player by removing units randomly.
     """
 
-    nation_table = NationTable(game_id)
-
-    for nation in nation_table:
+    for nation in Nations:
         
         while float(nation.get_used_mc()) > float(nation.get_max_mc()):
             
-            # disband a random unit
             region_id, victim = core.search_and_destroy_unit(game_id, nation.id, 'ANY')
             nation.update_used_mc(-1)
             nation.unit_counts[victim] -= 1
-            Notifications.add(f'{nation.name} lost {victim} {region_id} due to insufficient military capacity.', 5)
 
-        # update nation data
-        nation_table.save(nation)
+            Notifications.add(f"{nation.name} lost {victim} {region_id} due to insufficient military capacity.", 5)
 
 def bonus_phase_heals(game_id: str) -> None:
     """
@@ -446,13 +416,12 @@ def bonus_phase_heals(game_id: str) -> None:
     
     from app.region import Region, Regions
     from app.war import Wars
-    nation_table = NationTable(game_id)
     
     for region in Regions:
         
         if region.data.owner_id not in ["0", "99"]:
 
-            nation_improvement = nation_table.get(region.data.owner_id)
+            nation_improvement = Nations.get(region.data.owner_id)
 
             # heal improvement
             if region.data.owner_id != "0" and region.improvement.name != None and region.improvement.health != 99:
@@ -462,7 +431,7 @@ def bonus_phase_heals(game_id: str) -> None:
         
         if region.unit.name is not None and region.unit.owner_id not in ["0", "99"]:
             
-            nation_unit = nation_table.get(region.unit.owner_id)
+            nation_unit = Nations.get(region.unit.owner_id)
             heal_allowed = False
 
             # check if unit is allowed to heal
@@ -504,10 +473,9 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     # get game data
     from app.region import Regions
     from app.war import Wars
-    nation_table = NationTable(game_id)
 
     # check all regions for occupation
-    non_occupied_found_list = [False] * len(nation_table)
+    non_occupied_found_list = [False] * len(Nations)
     for region in Regions:
         if region.data.owner_id != "0" and region.data.owner_id != "99" and region.data.occupier_id == "0":
             non_occupied_found_list[int(region.data.owner_id) - 1] = True
@@ -515,7 +483,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
     # if no unoccupied region found for a player force surrender if main combatant
     for index, region_found in enumerate(non_occupied_found_list):
         looser_id = index + 1
-        looser_name = nation_table.get(looser_id).name
+        looser_name = Nations.get(looser_id).name
         
         if not region_found:
             
@@ -546,21 +514,18 @@ def war_score_forced_surrender(game_id: str) -> None:
         game_id (str): Game ID string.
     """
 
-    # get game data
     from app.war import Wars
-    nation_table = NationTable(game_id)
 
     for war in Wars:
         if war.outcome == "TBD":
 
-            # never force end the war caused by foreign invasion
             if war.name == "Foreign Invasion":
                 continue
         
             attacker_threshold, defender_threshold = war.calculate_score_threshold()
             attacker_id, defender_id = war.get_main_combatant_ids()
-            attacker_nation = nation_table.get(attacker_id)
-            defender_nation = nation_table.get(defender_id)
+            attacker_nation = Nations.get(attacker_id)
+            defender_nation = Nations.get(defender_id)
             
             if attacker_threshold is not None and war.attackers.total >= attacker_threshold:
                 war.end_conflict("Attacker Victory")
@@ -588,18 +553,9 @@ def prune_alliances(game_id: str) -> None:
             Notifications.add(f"{alliance.name} has dissolved.", 7)
 
 def gain_market_income(game_id: str, market_results: str) -> None:
-    """
-    Adds resources gained from market actions to a player's stockpile.
-    """
-    
-    # get game data
-    nation_table = NationTable(game_id)
-
-    # award income
     for nation_name, market_info in market_results.items():
-        nation = nation_table.get(nation_name)
+        nation = Nations.get(nation_name)
         for resource_name, amount in market_info.items():
             if resource_name == "Thieves":
                 continue
             nation.update_stockpile(resource_name, amount)
-        nation_table.save(nation)

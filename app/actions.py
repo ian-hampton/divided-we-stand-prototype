@@ -6,8 +6,8 @@ import random
 from collections import defaultdict
 
 from app import core
+from app.nation import Nation, Nations
 from app.region import Region
-from app.nationdata import Nation, NationTable
 from app.notifications import Notifications
 
 class AllianceCreateAction:
@@ -803,9 +803,9 @@ def _check_region_id(region_id: str) -> str | None:
 
 def _check_nation_name(game_id: str, nation_name: str) -> str | None:
 
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
-    for nation in nation_table:
+    for nation in Nations:
         if nation.name.lower() == nation_name.lower():
             return nation.name
         
@@ -973,9 +973,8 @@ def resolve_trade_actions(game_id: str) -> None:
     Resolves trade actions between players via CLI.
     """
 
+    from app.nation import Nations
     from app.region import Regions
-
-    nation_table = NationTable(game_id)
 
     trade_action = input("Are there any trade actions this turn? (Y/n) ")
 
@@ -985,8 +984,8 @@ def resolve_trade_actions(game_id: str) -> None:
         nation_name_1 = input("Enter 1st nation name: ")
         nation_name_2 = input("Enter 2nd nation name: ")
         try:
-            nation1 = nation_table.get(nation_name_1)
-            nation2 = nation_table.get(nation_name_2)
+            nation1 = Nations.get(nation_name_1)
+            nation2 = Nations.get(nation_name_2)
         except:
             print("Invalid nation name(s) were given. Please try again.")
             continue
@@ -1009,12 +1008,11 @@ def resolve_trade_actions(game_id: str) -> None:
         
         # create trade deal dict
         trade_valid = True
-        trade_deal = {
-            "Nation1RegionsCeded": [],
-            "Nation2RegionsCeded": []
-        }
+        trade_deal = {}
         for resource_name in trade_resources:
             trade_deal[resource_name] = 0.00
+        trade_deal["Nation1RegionsCeded"] = []
+        trade_deal["Nation2RegionsCeded"] = []
 
         # resource trade
         resource_trade = input("Will any resources be traded in this deal? (Y/n) ")
@@ -1061,7 +1059,7 @@ def resolve_trade_actions(game_id: str) -> None:
                 # positive amount -> nation 2
                 nation1.update_stockpile(resource_name, -1 * amount)
                 nation2.update_stockpile(resource_name, amount)
-                nation1.resources_given += abs(amount)
+                nation1.stats.resources_given += abs(amount)
                 # pay trade fee
                 nation1.update_stockpile("Dollars", -1 * abs(amount) * nation1_fee)
             
@@ -1069,7 +1067,7 @@ def resolve_trade_actions(game_id: str) -> None:
                 # negative amount -> nation 1
                 nation1.update_stockpile(resource_name, -1 * amount)
                 nation2.update_stockpile(resource_name, amount)
-                nation2.resources_given += abs(amount)
+                nation2.stats.resources_given += abs(amount)
                 # pay trade fee
                 nation2.update_stockpile("Dollars", -1 * abs(amount) * nation2_fee)
 
@@ -1106,8 +1104,6 @@ def resolve_trade_actions(game_id: str) -> None:
 
         # save changes
         if trade_valid:
-            nation_table.save(nation1)
-            nation_table.save(nation2)
             Notifications.add(f'{nation1.name} traded with {nation2.name}.', 9)
         else:
             print(f'Trade between {nation1.name} and {nation2.name} failed. Insufficient resources.')
@@ -1117,18 +1113,18 @@ def resolve_trade_actions(game_id: str) -> None:
 def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], white_peace_list: list[WhitePeaceAction]) -> None:
     
     # get game data
+    from app.nation import Nations
     from app.war import Wars
-    nation_table = NationTable(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
 
     # execute surrender actions
     for action in surrender_list:
         
-        surrendering_nation = nation_table.get(action.id)
-        winning_nation = nation_table.get(action.target_nation)
+        surrendering_nation = Nations.get(action.id)
+        winning_nation = Nations.get(action.target_nation)
 
        # check if peace is possible
-        if not _peace_action_valid(nation_table, surrendering_nation, winning_nation, current_turn_num):
+        if not _peace_action_valid(surrendering_nation, winning_nation, current_turn_num):
             continue
 
         # get war and war outcome
@@ -1140,9 +1136,6 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         else:
             outcome = "Attacker Victory"
 
-        # save nation data
-        nation_table.save(surrendering_nation)
-
         # end war
         war.end_conflict(outcome)
         Notifications.add(f"{surrendering_nation.name} surrendered to {winning_nation.name}.", 4)
@@ -1152,11 +1145,11 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
     white_peace_dict = {}
     for action in white_peace_list:
         
-        surrendering_nation = nation_table.get(action.id)
-        winning_nation = nation_table.get(action.target_nation)
+        surrendering_nation = Nations.get(action.id)
+        winning_nation = Nations.get(action.target_nation)
 
         # check if peace is possible
-        if not _peace_action_valid(nation_table, surrendering_nation, winning_nation, current_turn_num):
+        if not _peace_action_valid(surrendering_nation, winning_nation, current_turn_num):
             continue
 
         # add white peace request to white_peace_dict
@@ -1173,7 +1166,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
             war.end_conflict("White Peace")
             Notifications.add(f'{war_name} has ended with a white peace.', 4)
 
-def _peace_action_valid(nation_table: NationTable, surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
+def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
 
     from app.war import Wars
 
@@ -1181,7 +1174,6 @@ def _peace_action_valid(nation_table: NationTable, surrendering_nation: Nation, 
     war_name = Wars.get_war_name(surrendering_nation.id, winning_nation.id)
     if war_name is None:
         surrendering_nation.action_log.append(f"Failed to surrender to {winning_nation.name}. You are not at war with that nation.")
-        nation_table.save(surrendering_nation)
         return False
 
     # check that surrendee(?) has authority to surrender
@@ -1190,87 +1182,67 @@ def _peace_action_valid(nation_table: NationTable, surrendering_nation: Nation, 
     c2 = war.get_combatant(winning_nation.id)
     if 'Main' not in c1.role or 'Main' not in c2.role:
         surrendering_nation.action_log.append(f"Failed to surrender to {winning_nation.name}. You are not the main attacker/defender or {winning_nation.name} is not the main attacker/defender.")
-        nation_table.save(surrendering_nation)
         return False
 
     # check that it has been 4 turns since war began
     if current_turn_num - war.start < 4:
         surrendering_nation.action_log.append(f"Failed to surrender to {winning_nation.name}. At least four turns must pass before peace can be made.")
-        nation_table.save(surrendering_nation)
         return False
 
     return True
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
     
-    # get game data
     from app.alliance import Alliances
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
     agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
 
-    # execute actions
     for action in actions_list:
         
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
 
-        # duplication check
         if action.research_name in nation.completed_research:
             nation.action_log.append(f"Failed to research {action.research_name}. You have already researched this.")
-            nation_table.save(nation)
             continue
 
-        # event check
         if any("No Agenda Research" in tag_data for tag_data in nation.tags.values()):
             nation.action_log.append(f"Failed to research {action.research_name} due to an event penalty.")
-            nation_table.save(nation)
             continue
 
         if action.research_name in agenda_data_dict:
             
-            cost = agenda_data_dict[action.research_name]['Cost']
-            prereq = agenda_data_dict[action.research_name]['Prerequisite']
-            agenda_type = agenda_data_dict[action.research_name]['Agenda Type']
+            cost = agenda_data_dict[action.research_name]["Cost"]
+            prereq = agenda_data_dict[action.research_name]["Prerequisite"]
 
-            # prereq check
             if prereq != None and prereq not in nation.completed_research:
                 nation.action_log.append(f"Failed to research {action.research_name}. You do not have the prerequisite research.")
-                nation_table.save(nation)
                 continue
 
-            # agenda cost adjustment
             cost += nation.calculate_agenda_cost_adjustment(action.research_name)
 
-            # pay cost
-            nation.update_stockpile("Political Power", -1 * cost)
-            if float(nation.get_stockpile("Political Power")) < 0:
-                nation_table.reload()
-                nation = nation_table.get(action.id)
+            if float(nation.get_stockpile("Political Power")) - cost < 0:
                 nation.action_log.append(f"Failed to research {action.research_name}. Not enough political power.")
-                nation_table.save(nation)
                 continue
 
-            # gain agenda
+            nation.update_stockpile("Political Power", -1 * cost)
             nation.action_log.append(f"Researched {action.research_name} for {cost} political power.")
             nation.add_tech(action.research_name)
 
         else:
 
-            cost = research_data_dict[action.research_name]['Cost']
-            prereq = research_data_dict[action.research_name]['Prerequisite']
+            cost = research_data_dict[action.research_name]["Cost"]
+            prereq = research_data_dict[action.research_name]["Prerequisite"]
 
-            # prereq check
             if prereq != None and prereq not in nation.completed_research:
                 nation.action_log.append(f"Failed to research {action.research_name}. You do not have the prerequisite research.")
-                nation_table.save(nation)
                 continue
 
-            # technology cost adjustment
             multiplier = 1.0
             for alliance in Alliances:
                 if alliance.is_active and nation.name in alliance.current_members and alliance.type == "Research Agreement":
                     for ally_name in alliance.current_members:
-                        ally_nation = nation_table.get(ally_name)
+                        ally_nation = Nations.get(ally_name)
                         if ally_name == nation.name:
                             continue
                         if action.research_name in ally_nation.completed_research:
@@ -1278,104 +1250,80 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
                             break
             if multiplier < 0:
                 multiplier = 0.2
-
-            # pay cost
             if multiplier != 1.0:
                 cost *= multiplier
                 cost = int(cost)
-            nation.update_stockpile("Research", -1 * cost)
-            if float(nation.get_stockpile("Research")) < 0:
-                nation_table.reload()
-                nation = nation_table.get(action.id)
+
+            if float(nation.get_stockpile("Research")) - cost < 0:
                 nation.action_log.append(f"Failed to research {action.research_name}. Not enough technology.")
-                nation_table.save(nation)
                 continue
 
-            # gain technology
+            nation.update_stockpile("Research", -1 * cost)
             nation.action_log.append(f"Researched {action.research_name} for {cost} technology.")
             nation.add_tech(action.research_name)
             nation.award_research_bonus(action.research_name)
-            
-        nation_table.save(nation)
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
     
-    # get game data
     from app.alliance import Alliances
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
-    # process actions
     for action in actions_list:
 
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
         alliance = Alliances.get(action.alliance_name)
 
-        # remove player from alliance
         alliance.remove_member(nation.name)
         Notifications.add(f"{nation.name} has left the {alliance.name}.", 7)
         nation.action_log.append(f"Left {action.alliance_name}.")
-        nation_table.save(nation)
 
 def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
     
-    # get game data
     from app.alliance import Alliances
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
-    # execute actions
     kick_actions_tally = defaultdict(lambda: defaultdict(int))
+    
     for action in actions_list:
-        nation = nation_table.get(action.id)
-        target_nation = nation_table.get(action.target_nation)
+        
+        nation = Nations.get(action.id)
+        target_nation = Nations.get(action.target_nation)
         alliance = Alliances.get(action.alliance_name)
 
-        # check that nation is in alliance
         if action.target_nation not in alliance.current_members:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. You are not in the alliance.")
-            nation_table.save(nation)
             continue
 
-        # check that target nation is in alliance
         if action.target_nation not in alliance.current_members:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. Target nation is not in the alliance.")
-            nation_table.save(nation)
             continue
 
-        # cannot kick target nation if founder and alliance centralization
         if action.target_nation in alliance.founding_members and "Alliance Centralization" in target_nation.completed_research:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. Target nation is a founder of the alliance.")
-            nation_table.save(nation)
             continue
 
-        # add kick action to tally
         kick_actions_tally[alliance.name][action.target_nation] += 1
         nation.action_log.append(f"Voted to kick {action.target_nation} from {action.alliance_name}.")
-        nation_table.save(nation)
 
-    # check tally
     for alliance_name, kick_tally in kick_actions_tally.items():
         for target_nation_name, votes in kick_tally.items():
             alliance = Alliances.get(alliance_name)
-
-            # kick player from alliance if vote is unanimous
             if votes >= len(alliance.current_members) - 1:
                 alliance.remove_member(target_nation_name)
                 Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 7)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
     
-    # get game data
     from app.alliance import Alliances
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
-    # process actions
     alliance_creation_dict = {}
+    
     for action in actions_list:
 
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
 
-        # required research check
-        # tba - tie this to scenario files
+        # TODO - tie this to scenario files
         research_check_success = True
         match action.alliance_type:
             case "Non-Aggression Pact" | "Defense Pact":
@@ -1389,18 +1337,14 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
                    research_check_success = False 
         if not research_check_success:
             nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have the required agenda.")
-            nation_table.save(nation)
             continue
 
-        # check alliance capacity
         if action.alliance_type != 'Non-Aggression Pact':
             alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have enough alliance capacity.")
-                nation_table.save(nation)
                 continue
 
-        # update alliance_creation_dict
         if action.alliance_name in alliance_creation_dict:
             alliance_creation_dict[action.alliance_name]["members"].append(nation.name)
         else:
@@ -1409,38 +1353,33 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
             entry["members"] = [nation.name]
             alliance_creation_dict[action.alliance_name] = entry
         
-    # create the alliance if more than two founders
     for alliance_name, alliance_data in alliance_creation_dict.items():
-        if len(alliance_data["members"]) > 1:
-            # alliance creation success
+        
+        # alliance creation success
+        if len(alliance_data["members"]) >= 2:
             Alliances.create(alliance_name, alliance_data["type"], alliance_data["members"])
             Notifications.add(f"{alliance_name} has formed.", 7)
             for nation_name in alliance_data["members"]:
-                # update log
-                nation = nation_table.get(nation_name)
+                nation = Nations.get(nation_name)
                 nation.action_log.append(f"Successfully formed {action.alliance_name}.")
-                nation_table.save(nation)
-        else:
-            # alliance creation failed
-            nation_name = alliance_data["members"][0]
-            nation = nation_table.get(nation_name)
-            nation.action_log.append(f"Failed to form {action.alliance_name} alliance. Not enough players agreed to establish it.")
-            nation_table.save(nation)   
+            continue
+
+        # alliance creation failed
+        nation_name = alliance_data["members"][0]
+        nation = Nations.get(nation_name)
+        nation.action_log.append(f"Failed to form {action.alliance_name} alliance. Not enough players agreed to establish it.")
 
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
     
-    # get game data
     from app.alliance import Alliances
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
-    # process actions
     for action in actions_list:
         
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
         alliance = Alliances.get(action.alliance_name)
 
-        # required research check
-        # tba - tie this to scenario data
+        # TODO - tie this to scenario data
         research_check_success = True
         match alliance.type:
             case "Non-Aggression Pact" | "Defense Pact":
@@ -1454,74 +1393,56 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
                    research_check_success = False 
         if not research_check_success:
             nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have the required agenda.")
-            nation_table.save(nation)
             continue
 
-        # check alliance capacity
         if alliance.type != "Non-Aggression Pact":
             alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have enough alliance capacity.")
-                nation_table.save(nation)
                 continue
 
-        # check if puppet state
         if "Puppet State" in nation.status:
             nation.action_log.append(f"Failed to join {action.alliance_name} alliance. Puppet states cannot join alliances.")
-            nation_table.save(nation)
             continue
 
-        # check events
         if "Faustian Bargain" in nation.tags:
             nation.action_log.append(f"Failed to join {action.alliance_name} alliance. The collaborator cannot join alliances.")
-            nation_table.save(nation)
             continue
 
-        # add player to the alliance
         alliance.add_member(nation.name)
         Notifications.add(f"{nation.name} has joined the {alliance.name}.", 7)
         nation.action_log.append(f"Joined {alliance.name}.")
-        nation_table.save(nation)
 
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    # execute actions
     region_queue: list[Region] = []
+
     for action in actions_list:
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
         region = Region(action.target_region)
 
-        # ownership check
         if region.data.owner_id != "0":
             nation.action_log.append(f"Failed to claim {action.target_region}. This region is already owned by another nation.")
-            nation_table.save(nation)
             continue
 
-        # event check
         if "Civil Disorder" in nation.tags:
             nation.action_log.append(f"Failed to claim {action.target_region} due to the Widespread Civil Disorder event.")
-            nation_table.save(nation)
             continue
 
-        # adjacency check
-        # to be added
+        # TODO - add expansion rules checks
         
-        # attempt to pay for region
+        if (float(nation.get_stockpile("Dollars")) - region.data.purchase_cost < 0
+            or float(nation.get_stockpile("Political Power")) - nation.region_claim_political_power_cost() < 0):
+            nation.action_log.append(f"Failed to claim {action.target_region}. Insufficient resources.")
+            continue
+
         nation.update_stockpile("Dollars", -1 * region.data.purchase_cost)
         nation.update_stockpile("Political Power", -1 * nation.region_claim_political_power_cost())
-        if float(nation.get_stockpile("Dollars")) < 0 or float(nation.get_stockpile("Political Power")) < 0:
-            nation_table.reload()
-            nation = nation_table.get(action.id)
-            nation.action_log.append(f"Failed to claim {action.target_region}. Insufficient resources.")
-            nation_table.save(nation)
-            continue
 
-        # all checks passed add to region_queue
         if region not in region_queue:
             region.add_claim(action.id)
             region_queue.append(region)
@@ -1531,256 +1452,192 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             existing_region.add_claim(action.id)
             region_queue[index] = existing_region
 
-        # update nation data
-        nation_table.save(nation)
-
-    # resolve claims
     for region in region_queue:
 
+        # claim successful
         if len(region.claim_list) == 1:
-
-            # region purchase successful
             player_id = region.claim_list[0]
-            nation = nation_table.get(player_id)
+            nation = Nations.get(player_id)
             region.data.owner_id = player_id
-            # update improvement count if needed
             if region.improvement.name is not None:
                 nation.improvement_counts[region.improvement.name] += 1
-            # update nation data
             nation.action_log.append(f"Claimed region {region.region_id} for {region.data.purchase_cost} dollars.")
-            nation_table.save(nation)
-        
-        else:
 
-            # region is disputed
-            region.data.purchase_cost += 5
-            active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
-            for player_id in region.claim_list:
-                nation = nation_table.get(player_id)
-                nation.action_log.append(f"Failed to claim {region.region_id} due to a region dispute.")
-                nation_table.save(nation)
+        # region dispute
+        region.data.purchase_cost += 5
+        active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
+        for player_id in region.claim_list:
+            nation = Nations.get(player_id)
+            nation.action_log.append(f"Failed to claim {region.region_id} due to a region dispute.")
     
-    # update active games
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
     for action in actions_list:
-        nation = nation_table.get(action.id)
+        
+        nation = Nations.get(action.id)
         region = Region(action.target_region)
 
-        # ownership check
         if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to remove {region.improvement.name} in region {action.target_region}. You do not own or control this region.")
-            nation_table.save(nation)
             continue
 
-        # capital check
         if region.improvement.name == "Capital":
             nation.action_log.append(f"Failed to remove {region.improvement.name} in region {action.target_region}. You cannot remove a Capital improvement.")
-            nation_table.save(nation)
             continue
 
-        # remove improvement
         if region.improvement.name is not None:
             nation.improvement_counts[region.improvement.name] -= 1
         region.improvement.clear()
         nation.action_log.append(f"Removed improvement in region {action.target_region}.")
 
-        # update nation data
-        nation_table.save(nation)
-
 def resolve_improvement_build_actions(game_id: str, actions_list: list[ImprovementBuildAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
     improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
 
-    # execute actions
     for action in actions_list:
-        nation = nation_table.get(action.id)
+        
+        nation = Nations.get(action.id)
         region = Region(action.target_region)
 
-        # ownership check
         if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not own or control this region.")
-            nation_table.save(nation)
             continue
 
-        # capital check
         if region.improvement.name == "Capital":
             nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
-            nation_table.save(nation)
             continue
         
-        # required research check
         required_research = improvement_data_dict[action.improvement_name]["Required Research"]
         if required_research is not None and required_research not in nation.completed_research:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not have the required research.")
-            nation_table.save(nation)
             continue
 
-        # required region resource check
         required_resource = improvement_data_dict[action.improvement_name]["Required Resource"]
         if required_resource is not None and required_resource != region.data.resource:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. The region does not have the resource required for this improvement.")
-            nation_table.save(nation)
             continue
 
-        # nuke check
         if region.data.fallout != 0:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Region cannot support an improvement due to nuclear missile detonation.")
-            nation_table.save(nation)
             continue
 
-        # event check
         if action.improvement_name == "Colony" and "Faustian Bargain" not in nation.tags:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You are not the Collaborator.")
-            nation_table.save(nation)
             continue
 
-        # calculate build cost
         build_cost_dict: dict = copy.deepcopy(improvement_data_dict[action.improvement_name]["Build Costs"])
         nation.apply_build_discount(build_cost_dict)
 
-        # pay for improvement
-        costs_list = []
+        valid = True
         for resource_name, cost in build_cost_dict.items():
-            valid = True
-            costs_list.append(f"{cost} {resource_name.lower()}")
-            nation.update_stockpile(resource_name, -1 * cost)
-            if float(nation.get_stockpile(resource_name)) < 0:
+            if float(nation.get_stockpile(resource_name)) - cost < 0:
                 valid = False
                 break
         if not valid:
-            nation_table.reload()
-            nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. Insufficient resources.")
-            nation_table.save(nation)
             continue
 
-        # add cost log string
+        costs_list = []
+        for resource_name, cost in build_cost_dict.items():
+            costs_list.append(f"{cost} {resource_name.lower()}")
+            nation.update_stockpile(resource_name, -1 * cost)
+        
+        if region.improvement.name is not None:
+            nation.improvement_counts[region.improvement.name] -= 1
+        nation.improvement_counts[action.improvement_name] += 1
+        region.improvement.set(action.improvement_name)
+
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
         else:
             costs_str = ", ".join(costs_list)
             costs_str = " and ".join(costs_str.rsplit(", ", 1))
-        nation.action_log.append(f"Built {action.improvement_name} in region {action.target_region} for {costs_str}.")
-
-        # place improvement
-        if region.improvement.name is not None:
-            nation.improvement_counts[region.improvement.name] -= 1
-        region.improvement.set(action.improvement_name)
-        
-        # update nation data
-        nation.improvement_counts[action.improvement_name] += 1
-        nation_table.save(nation)
+        nation.action_log.append(f"Built {action.improvement_name} in region {action.target_region} for {costs_str}.")    
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
-    # tba - add missile data to scenario
+    from app.nation import Nations
+    # TODO - add missile data to scenario
 
-    # execute actions
     for action in actions_list:
 
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
 
-        # required technology check
         if action.missile_type == "Standard Missile" and "Missile Technology" not in nation.completed_research:
             nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Missile Technology technology.")
-            nation_table.save(nation)
             continue
         elif action.missile_type == "Nuclear Missile" and "Nuclear Warhead" not in nation.completed_research:
             nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Nuclear Warhead technology.")
-            nation_table.save(nation)
             continue
-        
-        # pay for missile(s)
-        if action.missile_type == "Standard Missile":
-            nation.update_stockpile("Common Metals", -3 * action.quantity)
-            if float(nation.get_stockpile("Common Metals")) < 0:
-                nation_table.reload()
-                nation = nation_table.get(action.id)
-                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
-                nation_table.save(nation)
-                continue
-        elif action.missile_type == "Nuclear Missile":
-            nation.update_stockpile("Advanced Metals", -2 * action.quantity)
-            nation.update_stockpile("Uranium", -2 * action.quantity)
-            nation.update_stockpile("Rare Earth Elements", -2 * action.quantity)
-            if (
-                float(nation.get_stockpile("Advanced Metals")) < 0
-                or float(nation.get_stockpile("Uranium")) < 0
-                or float(nation.get_stockpile("Rare Earth Elements")) < 0
-               ):
-                nation_table.reload()
-                nation = nation_table.get(action.id)
-                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
-                nation_table.save(nation)
-                continue
 
-        # execute action
         if action.missile_type == "Standard Missile":
+
+            cost = 3 * action.quantity
+            if float(nation.get_stockpile("Common Metals")) - cost < 0:
+                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
+                continue
+            
+            nation.update_stockpile("Common Metals", -1 * cost)
+
             nation.missile_count += action.quantity
+        
         elif action.missile_type == "Nuclear Missile":
+
+            cost = 2 * action.quantity
+            if (float(nation.get_stockpile("Advanced Metals")) - cost < 0
+                or float(nation.get_stockpile("Uranium")) - cost < 0
+                or float(nation.get_stockpile("Rare Earth Elements")) - cost < 0):
+                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
+                continue
+            
+            nation.update_stockpile("Advanced Metals", -1 * cost)
+            nation.update_stockpile("Uranium", -1 * cost)
+            nation.update_stockpile("Rare Earth Elements", -1 * cost)
+
             nation.nuke_count += action.quantity
 
-        # update nation data
         nation.action_log.append(f"Manufactured {action.quantity}x {action.missile_type}.")
-        nation_table.save(nation)
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
-    # execute republic actions
     for action in actions_list:
 
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
 
-        # government check
         if nation.gov != "Republic":
             nation.action_log.append(f"Failed to execute Republic government action. Your nation is not a Republic.")
-            nation_table.save(nation)
             continue
-
-        # pay for action
-        nation.update_stockpile("Political Power", -5)
-        if float(nation.get_stockpile("Political Power")) < 0:
-            nation_table.reload()
-            nation = nation_table.get(action.id)
+        
+        cost = 5
+        if float(nation.get_stockpile("Political Power")) - cost < 0:
             nation.action_log.append(f"Failed to execute Republic government action. Insufficient political power.")
-            nation_table.save(nation)
             continue
 
-        # add tag
-        new_tag = {}
-        new_tag[f"{action.resource_name} Rate"] = 20
-        new_tag["Expire Turn"] = 99999
+        nation.update_stockpile("Political Power", -1 * cost)
+
+        new_tag = {
+            f"{action.resource_name} Rate": 20,
+            "Expire Turn": 99999
+        }
         nation.tags["Republic Bonus"] = new_tag
-
-        # update nation data
         nation.action_log.append(f"Used Republic government action to boost {action.resource_name} income.")
-        nation_table.save(nation)
-
         Notifications.add(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 8)
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     current_turn_num = core.get_current_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    
 
     rmdata_update_list = []
     steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
@@ -1817,90 +1674,66 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
 
     # create market results dict
     market_results = {}
-    for nation in nation_table:
+    for nation in Nations:
         market_results[nation.name] = {}
         for resource_name in data:
             market_results[nation.name][resource_name] = 0
         market_results[nation.name]["Dollars"] = 0
         market_results[nation.name]["Thieves"] = []
 
-    # resolve market buying actions
     for action in buy_list:
         
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
         price = data[action.resource_name]["Current Price"]
         rate = 1.0
         
-        # embargo event check
         if "Embargo" in nation.tags:
             nation.action_log.append(f"Failed to buy {action.quantity} {action.resource_name}. Your nation is currently under an embargo.")
-            nation_table.save(nation)
             continue
 
-        # add discounts
         for tag_name, tag_data in nation.tags.items():
             rate -= float(tag_data.get("Market Buy Modifier", 0))
         if "Improved Logistics" in nation.completed_research:
             rate -= 0.2
-        if "Foreign Investment" in nation.tags:
-            rate -= 0.2
 
-        # pay for resource
         cost = round(action.quantity * price * rate, 2)
-        nation.update_stockpile("Dollars", -1 * cost)
-        if float(nation.get_stockpile("Dollars")) < 0:
-            nation_table.reload()
-            nation = nation_table.get(action.id)
+        if float(nation.get_stockpile("Dollars")) - cost < 0:
             nation.action_log.append(f"Failed to buy {action.quantity} {action.resource_name}. Insufficient dollars.")
-            nation_table.save(nation)
             continue
 
-        # update rmdata
+        nation.update_stockpile("Dollars", -1 * cost)
         new_entry = [current_turn_num, nation.name, 'Bought', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
-        # update nation data
         market_results[nation.name][action.resource_name] = action.quantity
         nation.action_log.append(f"Bought {action.quantity} {action.resource_name} from the resource market for {cost:.2f} dollars.")
-        nation_table.save(nation)
 
-    # resolve market selling actions
     for action in sell_list:
         
-        nation = nation_table.get(action.id)
+        nation = Nations.get(action.id)
         price = float(data[action.resource_name]["Current Price"] * 0.5)
         rate = 1.0
 
-        # embargo event check
         if "Embargo" in nation.tags:
             nation.action_log.append(f"Failed to sell {action.quantity} {action.resource_name}. Your nation is currently under an embargo.")
-            nation_table.save(nation)
             continue
 
-        # add increases
         for tag_name, tag_data in nation.tags.items():
             rate += float(tag_data.get("Market Sell Modifier", 0))
 
-        # remove resources from stockpile
-        nation.update_stockpile(action.resource_name, -1 * action.quantity)
-        if float(nation.get_stockpile(action.resource_name)) < 0:
-            nation_table.reload()
-            nation = nation_table.get(action.id)
+        if float(nation.get_stockpile(action.resource_name)) - action.quantity < 0:
             nation.action_log.append(f"Failed to sell {action.quantity} {action.resource_name}. Insufficient resources in stockpile.")
-            nation_table.save(nation)
             continue
 
-        # update rmdata
+        nation.update_stockpile(action.resource_name, -1 * action.quantity)
         new_entry = [current_turn_num, nation.name, 'Sold', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
-        # update nation data
         dollars_earned = round(action.quantity * price * rate, 2)
         market_results[nation.name]["Dollars"] += dollars_earned
         nation.action_log.append(f"Sold {action.quantity} {action.resource_name} to the resource market for {dollars_earned:.2f} dollars.")
-        nation_table.save(nation)
 
-    # process crime syndicate steal actions
+    # get crime syndicate steal actions
     for action in crime_list:
         for crime_action in crime_list:
             market_results[nation.name]["Thieves"].append(crime_action.id)
@@ -1908,9 +1741,8 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         thieves_list = nation_info["Thieves"]
         if len(thieves_list) != 1:
             for thief_id in thieves_list:
-                syndicate_nation = nation_table.get(thief_id)
+                syndicate_nation = Nations.get(thief_id)
                 syndicate_nation.action_log.append(f"Failed to steal from {crime_action.target_nation} due to other crime syndicate stealing attempts.")
-                nation_table.save(syndicate_nation)
             nation_info["Thieves"] = []
 
     # resolve crime syndicate steal actions
@@ -1920,9 +1752,8 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             continue
         thief_id = thieves_list[0]
             
-        # retrieve records
-        nation = nation_table.get(nation_name)
-        syndicate_nation = nation_table.get(thief_id)
+        nation = Nations.get(nation_name)
+        syndicate_nation = Nations.get(thief_id)
         nation_name_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Nation Name"]
         streak_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Streak"]
 
@@ -1963,81 +1794,71 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
 
 def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
 
     for action in actions_list:
-        nation = nation_table.get(action.id)
+        
+        nation = Nations.get(action.id)
         region = Region(action.target_region)
 
-        # ownership check
         if str(region.unit.owner_id) != action.id:
             nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own this unit.")
-            nation_table.save(nation)
             continue
 
-        # remove unit
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
             nation.update_used_mc(-1)
         region.unit.clear()
-        
-        # update nation data
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
-        nation_table.save(nation)
 
 def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
     unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
 
-    # execute actions
     for action in actions_list:
-        region = Region(action.target_region)
-        nation = nation_table.get(action.id)
 
-        # ownership check
+        region = Region(action.target_region)
+        nation = Nations.get(action.id)
+
         if str(region.data.owner_id) != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not control this region.")
-            nation_table.save(nation)
             continue
         
-        # required research check
         if unit_scenario_dict[action.unit_name]['Required Research'] not in nation.completed_research:
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not have the required research.")
-            nation_table.save(nation)
             continue
 
-        # capacity check
         if nation.get_used_mc() == nation.get_max_mc():
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. Insufficient military capacity.")
-            nation_table.save(nation)
             continue
 
-        # calculate deployment cost
         build_cost_dict: dict = copy.deepcopy(unit_scenario_dict[action.unit_name]["Build Costs"])
-        if nation.gov == 'Military Junta':
+        if nation.gov == "Military Junta":
             for key in build_cost_dict:
                 build_cost_dict[key] *= 0.8
 
-        # pay for unit
-        costs_list = []
+        valid = True
         for resource_name, cost in build_cost_dict.items():
-            valid = True
-            costs_list.append(f"{cost} {resource_name.lower()}")
-            nation.update_stockpile(resource_name, -1 * cost)
-            if float(nation.get_stockpile(resource_name)) < 0:
+            if float(nation.get_stockpile(resource_name)) - cost < 0:
                 valid = False
                 break
         if not valid:
-            nation_table.reload()
-            nation = nation_table.get(action.id)
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. Insufficient resources.")
-            nation_table.save(nation)
             continue
 
-        # add cost log string
+        costs_list = []
+        for resource_name, cost in build_cost_dict.items():
+            costs_list.append(f"{cost} {resource_name.lower()}")
+            nation.update_stockpile(resource_name, -1 * cost)
+
+        if region.unit.name is not None:
+            nation.unit_counts[region.unit.name] -= 1
+            nation.update_used_mc(-1)
+        nation.unit_counts[region.unit.name] += 1
+        nation.update_used_mc(1)
+        region.unit.set(action.unit_name, action.id)
+
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
         else:
@@ -2045,57 +1866,43 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             costs_str = " and ".join(costs_str.rsplit(", ", 1))
         nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
 
-        # deploy unit
-        if region.unit.name is not None:
-            nation.unit_counts[region.unit.name] -= 1
-            nation.update_used_mc(-1)
-        region.unit.set(action.unit_name, action.id)
-
-        # update nation data
-        nation.unit_counts[region.unit.name] += 1
-        nation.update_used_mc(1)
-        nation_table.save(nation)
-
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
     
+    from app.nation import Nations
     from app.war import Wars
-    nation_table = NationTable(game_id)
 
     for action in actions_list:
 
-        attacker_nation = nation_table.get(action.id)
-        defender_nation = nation_table.get(action.target_nation)
+        attacker_nation = Nations.get(action.id)
+        defender_nation = Nations.get(action.target_nation)
 
-        if not _war_action_valid(action, nation_table, attacker_nation, defender_nation):
+        if not _war_action_valid(action, attacker_nation, defender_nation):
             continue
 
         region_claims_list = []
+
         if action.war_justification in ["Border Skirmish", "Conquest"]:
             
             claim_cost = Wars.get_war_claims(attacker_nation.name, action.war_justification)
+            if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
+                attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
+                continue
 
             attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
-            if float(attacker_nation.get_stockpile("Political Power")) < 0:
-                nation_table.reload()
-                attacker_nation = nation_table.get(action.id)
-                attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
-                nation_table.save(attacker_nation)
-                continue
 
         Wars.create(attacker_nation.id, defender_nation.id, action.war_justification, region_claims_list)
         Notifications.add(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
-        nation_table.save(attacker_nation)
 
 def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
 
+    from app.nation import Nations
     from app.war import Wars
-    nation_table = NationTable(game_id)
 
     for action in actions_list:
 
         war = Wars.get(action.war_name)
-        attacker_nation = nation_table.get(action.id)
+        attacker_nation = Nations.get(action.id)
 
         war.add_combatant(attacker_nation, f"Secondary {action.side}", action.war_justification)
         combatant = war.get_combatant(action.id)
@@ -2107,40 +1914,37 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             combatant.target_id = "N/A"
             main_attacker_id, main_defender_id = war.get_main_combatant_ids()
             if {action.side} == "Attacker":
-                defender_nation = nation_table.get(main_attacker_id)
+                defender_nation = Nations.get(main_attacker_id)
             elif {action.side} == "Defender":
-                defender_nation = nation_table.get(main_defender_id)
+                defender_nation = Nations.get(main_defender_id)
             
             claim_cost = Wars.get_war_claims(combatant.name, action.war_justification)
+            if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
+                attacker_nation.action_log.append(f"Error: Not enough political power for war claims.")
+                continue
 
             attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
-            if float(attacker_nation.get_stockpile("Political Power")) < 0:
-                nation_table.reload()
-                attacker_nation = nation_table.get(combatant.id)
-                attacker_nation.action_log.append(f"Error: Not enough political power for war claims.")
-                nation_table.save(attacker_nation)
-                continue
         
         # OR handle war justification that does not seize territory
         else:
             target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {action.war_justification}: ")
-            combatant.target_id = str(target_id)
-            defender_nation = nation_table.get(combatant.target_id)
+            combatant.target_id = target_id
+            defender_nation = Nations.get(target_id)
 
-        if not _war_action_valid(action, nation_table, attacker_nation, defender_nation):
+        if not _war_action_valid(action, attacker_nation, defender_nation):
             continue
 
-        ### save ###
+        # save
         Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 3)
-        nation_table.save(attacker_nation)
         combatant.claims = Wars._claim_pairs(region_claims_list)
 
-def _war_action_valid(action: WarAction | WarJoinAction, nation_table: NationTable, attacker_nation: Nation, defender_nation: Nation):
+def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):
     
     from app.alliance import Alliances
     from app.war import Wars
 
     # agenda check
+    # TODO - move this data to a scenario file
     valid_war_justification = False
     match action.war_justification:
         case "Animosity" | "Border Skirmish":
@@ -2159,44 +1963,37 @@ def _war_action_valid(action: WarAction | WarJoinAction, nation_table: NationTab
                 valid_war_justification = True
     if not valid_war_justification:
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have the required agenda.")
-        nation_table.save(attacker_nation)
         return False
 
     # military capacity check
     if attacker_nation.get_used_mc() == 0:
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have any military units.")
-        nation_table.save(attacker_nation)
         return False
 
     # independence check
     if attacker_nation.status != "Independent Nation" and action.war_justification != "Independence":
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot declare war.")
-        nation_table.save(attacker_nation)
         return False
 
     # existing war check
     existing_war = Wars.get_war_name(attacker_nation.id, defender_nation.id)
     if existing_war is not None:
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You are already at war with this nation.")
-        nation_table.save(attacker_nation)
         return False
     
     # truce check
     if core.check_for_truce(Alliances.game_id, attacker_nation.id, defender_nation.id):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have a truce with this nation.")
-        nation_table.save(attacker_nation)
         return False
 
     # alliance check
     if Alliances.are_allied(attacker_nation.name, defender_nation.name):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
-        nation_table.save(attacker_nation)
         return False
 
     # alliance truce check
     if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
-        nation_table.save(attacker_nation)
         return False
 
     # tag check
@@ -2207,32 +2004,28 @@ def _war_action_valid(action: WarAction | WarJoinAction, nation_table: NationTab
             break
     if is_blocked:
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-        nation_table.save(attacker_nation)
         return False
 
     return True
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
-    
-    # get game data
+
+    from app.nation import Nations
     from app.war import Wars
-    nation_table = NationTable(game_id)
     improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
     unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
 
-    # calculate missile launch capacity
-    # note - this is calculated in advance of actions because missile launches are simultaneous
-    missiles_launched_list = [0] * len(nation_table)
-    launch_capacity_list = [0] * len(nation_table)
-    for nation in nation_table:
+    # missile launch capacity is calculated in advance of actions because missile launches are simultaneous
+    missiles_launched_list = [0] * len(Nations)
+    launch_capacity_list = [0] * len(Nations)
+    for nation in Nations:
         launch_capacity_list[int(nation.id) - 1] = nation.improvement_counts["Missile Silo"] * 3
 
-    # execute actions
     for action in actions_list:
-        nation = nation_table.get(action.id)
+        
+        nation = Nations.get(action.id)
         target_region = Region(action.target_region)
 
-        # check if player actually has a missile to launch
         has_missile = True
         if action.missile_type == "Standard Missile" and nation.missile_count == 0:
             has_missile = False
@@ -2240,10 +2033,8 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
             has_missile = False
         if not has_missile:
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. You do not have a {action.missile_type} in storage.")
-            nation_table.save(nation)
             continue
 
-        # check if target region is valid
         is_valid_target = True
         if nation.id != str(target_region.data.owner_id):
             engagement_type = 1
@@ -2263,27 +2054,24 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                 is_valid_target = False
         if not is_valid_target:
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Invalid target!")
-            nation_table.save(nation)
             continue
 
-        # launch capacity check
         if action.missile_type == "Standard Missile":
             capacity_cost = 1
         elif action.missile_type == "Nuclear Missile":
             capacity_cost = 3
         if missiles_launched_list[int(nation.id) - 1] + capacity_cost > launch_capacity_list[int(nation.id) - 1]:
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Insufficient launch capacity!")
-            nation_table.save(nation)
             continue
 
         # identify conflict
         if engagement_type == 1 and target_region.data.occupier_id == "0":
             # missile strike on hostile territory owned by the same hostile
-            target_nation = nation_table.get(str(target_region.data.owner_id))
+            target_nation = Nations.get(str(target_region.data.owner_id))
             war_name = Wars.get_war_name(nation.id, str(target_region.data.owner_id))
         else:
             # any other situation
-            target_nation = nation_table.get(str(target_region.data.occupier_id))
+            target_nation = Nations.get(str(target_region.data.occupier_id))
             war_name = Wars.get_war_name(nation.id, str(target_region.data.occupier_id))
 
         # get combatants
@@ -2327,7 +2115,6 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
 
         # end action if missile was destroyed
         if missile_intercepted:
-            nation_table.save(nation)
             continue
 
         # conduct missile strike
@@ -2447,14 +2234,9 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         if not missile_did_something:
             war.log.append(f"    Missile successfully struck {target_region.region_id} but did not damage anything of strategic value.")
 
-        # save nation data
-        nation_table.save(nation)
-        nation_table.save(target_nation)
-
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     
-    # get game data
-    nation_table = NationTable(game_id)
+    from app.nation import Nations
     current_turn_num = core.get_current_turn_num(game_id)
 
     # generate movement order for the turn
@@ -2473,30 +2255,24 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
     if len(players_moving_units) != 0: 
         print(f"Movement Order - Turn {current_turn_num}")
     for i, nation_id in enumerate(players_moving_units):
-        nation = nation_table.get(nation_id)
+        nation = Nations.get(nation_id)
         print(f"{i + 1}. {nation.name}")
 
-    # execute actions
     for action in ordered_actions_list:
+        
         while action.target_region_ids != []:
-            
             target_region_id = action.target_region_ids.pop()
-            nation = nation_table.get(action.id)
 
-            # load current region objects
+            nation = Nations.get(action.id)
             current_region = Region(action.current_region_id)
-
-            # load target region objects
             target_region = Region(target_region_id)
 
             # current region checks
             if current_region.unit.name == None or action.id != current_region.unit.owner_id:
                 nation.action_log.append(f"Failed to perform a move action from {action.current_region_id}. You do not control a unit there.")
-                nation_table.save(nation)
                 continue
             if target_region_id not in current_region.graph.adjacent_regions:
                 nation.action_log.append(f"Failed to move {current_region.unit.name} {action.current_region_id} - {target_region_id}. Target region not adjacent to current region.")
-                nation_table.save(nation)
                 continue
             if target_region_id == action.current_region_id:
                 continue
@@ -2504,27 +2280,22 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
             # target region checks
             if target_region.data.owner_id == "0" and action.id != "99":
                 nation.action_log.append(f"Failed to move {target_region.unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
-                nation_table.save(nation)
                 continue
 
-            # illegal move check
+            # friendly fire check
             if target_region.unit.name != None and not target_region.unit.is_hostile(current_region.unit.owner_id):
                 nation.action_log.append(f"Failed to move {current_region.unit.name} {action.current_region_id} - {target_region_id}. A friendly unit is present in the target region.")
-                nation_table.save(nation)
                 continue
             if not target_region.is_valid_move(current_region.unit.owner_id):
                 nation.action_log.append(f"Failed to move {current_region.unit.name} {action.current_region_id} - {target_region_id}. Region is controlled by a player that is not an enemy.")
-                nation_table.save(nation)
                 continue
 
-            # execute movement order
+            # execute movement
             unit_name = current_region.unit.name
             movement_success = current_region.move_unit(target_region)
-            nation_table.reload()
-            nation = nation_table.get(action.id)
+            nation = Nations.get(action.id)
             if movement_success:
                 nation.action_log.append(f"Successfully moved {unit_name} {action.current_region_id} - {target_region_id}.")
                 action.current_region_id = target_region_id
             else:
                 nation.action_log.append(f"Failed to complete move {unit_name} {action.current_region_id} - {target_region_id}. Check combat log for details.")
-            nation_table.save(nation)

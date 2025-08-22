@@ -13,9 +13,9 @@ from app import core
 from app import palette
 from app.alliance import Alliances
 from app.region import Region, Regions
+from app.nation import Nations
 from app.notifications import Notifications
 from app.war import Wars
-from app.nationdata import NationTable
 from app.map import GameMaps
 from app import actions
 from app import checks
@@ -39,15 +39,13 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
 
     # get game files
     Regions.load(game_id)
-    nation_table = NationTable(game_id)
+    Nations.load(game_id)
 
     # update nation colors
     for nation_id, setup_data in contents_dict.items():
         color_name = setup_data["color"]
-        nation = nation_table.get(nation_id)
-        player_color = palette.str_to_hex(color_name)
-        nation.color = player_color
-        nation_table.save(nation)
+        nation = Nations.get(nation_id)
+        nation.color = palette.str_to_hex(color_name)
 
     # place chosen starts
     random_assignment_list = []
@@ -59,9 +57,8 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         starting_region = Region(region_id)
         starting_region.data.owner_id = nation_id
         starting_region.improvement.set("Capital")
-        nation = nation_table.get(nation_id)
+        nation = Nations.get(nation_id)
         nation.improvement_counts["Capital"] += 1
-        nation_table.save(nation)
 
     # place random starts
     random.shuffle(random_assignment_list)
@@ -87,9 +84,8 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
             if conflict_detected == False:
                 random_region.data.owner_id = random_assignment_player_id
                 random_region.improvement.set("Capital")
-                nation = nation_table.get(random_assignment_player_id)
+                nation = Nations.get(random_assignment_player_id)
                 nation.improvement_counts["Capital"] += 1
-                nation_table.save(nation)
                 break
     
     # update active_games.json
@@ -122,8 +118,8 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
 
     # get game files
     Alliances.load(game_id)
+    Nations.load(game_id)
     Regions.load(game_id)
-    nation_table = NationTable(game_id)
     research_data_dict = core.get_scenario_dict(game_id, "Technologies")
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -139,7 +135,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     # update nation data
     for nation_id, setup_data in contents_dict.items():
         
-        nation = nation_table.get(nation_id)
+        nation = Nations.get(nation_id)
         
         # add basic data
         nation.name = setup_data["name_choice"]
@@ -156,13 +152,10 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
             starting_list = random.sample(five_point_research_list, 3)
             for technology_name in starting_list:
                 nation.add_tech(technology_name)
-        
-        nation_table.save(nation)
 
     # update income in playerdata
     checks.update_income(game_id)
-    nation_table.reload()
-    nation_table.update_records()
+    Nations.update_records()
 
     # update game_settings
     active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
@@ -172,9 +165,9 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
     
     # add crime syndicate tracking
-    # to do - move this somewhere else
+    # TODO - move this somewhere else
     steal_tracking_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         if nation.gov == 'Crime Syndicate':
             inner_dict = {
                 'Nation Name': None,
@@ -201,6 +194,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # get game data
     Alliances.load(game_id)
     Regions.load(game_id)
+    Nations.load(game_id)
     Notifications.initialize(game_id)
     Wars.load(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
@@ -260,11 +254,9 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     events.resolve_active_events(game_id)
 
     # export action logs
-    nation_table = NationTable(game_id)
-    for nation in nation_table:
+    for nation in Nations:
         nation.export_action_log()
         nation.action_log = []
-        nation_table.save(nation)
     
     # update wars
     Wars.export_all_logs()
@@ -279,12 +271,10 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # update victory progress and check if player has won the game
     player_has_won = False
-    nation_table.reload()
-    for nation in nation_table:
+    for nation in Nations:
         nation.update_victory_progress()
         if nation.score == 3:
             player_has_won = True
-        nation_table.save(nation)
 
     if player_has_won:
         # game end procedure
@@ -300,8 +290,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # update active game records
     core.update_turn_num(game_id)
     events.filter_events(game_id)
-    nation_table.reload()
-    nation_table.check_tags()
+    Nations.check_tags()
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
@@ -321,6 +310,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     # save
     Alliances.save()
     Regions.save()
+    Nations.save()
     Notifications.save()
     Wars.save()
 
@@ -328,8 +318,6 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
     Executes end of turn checks and updates.
     """
-
-    nation_table = NationTable(game_id)
 
     if not event_phase:
         checks.total_occupation_forced_surrender(game_id)
@@ -343,15 +331,14 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)
     
-    nation_table.reload()
-    for nation in nation_table:
+    for nation in Nations:
         nation.update_stockpile_limits()
         nation.update_trade_fee()
-        nation_table.save(nation)
+        Nations.save(nation)
 
     if not event_phase:
-        nation_table.update_records()
-        nation_table.add_leaderboard_bonuses()
+        Nations.update_records()
+        Nations.add_leaderboard_bonuses()
 
 def resolve_win(game_id: str) -> None:
     """
@@ -359,7 +346,6 @@ def resolve_win(game_id: str) -> None:
     """
 
     # load game data
-    nation_table = NationTable(game_id)
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -389,7 +375,7 @@ def resolve_win(game_id: str) -> None:
     
     # add player data game archive entry
     player_data_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         player_data_entry_dict = {
             "Nation Name": nation.name,
             "Color": nation.color,
@@ -522,9 +508,10 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         json.dump(gamedata_dict, json_file, indent=4)
 
     # create nationdata
-    nation_table = NationTable(game_id)
+    Nations.load(game_id)
     for i, user_id in enumerate(user_id_list):
-        nation_table.create(str(i + 1), user_id)
+        Nations.create(str(i + 1), user_id)
+    Nations.save()
 
     # create rmdata file
     rmdata_filepath = f'{files_destination}/rmdata.csv'
@@ -555,9 +542,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     '''
     
     # get game data
-    from app.alliance import Alliances
-    nation_table = NationTable(game_id)
-    nation = nation_table.get(player_id)
+    nation = Nations.get(player_id)
     alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
 
     # build player info dict
@@ -635,8 +620,8 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     nation_name_list = ['-'] * 10
     relation_colors = ['#000000'] * 10
     relations_status_list = ['-'] * 10
-    for i in range(len(nation_table)):
-        temp = nation_table.get(i + 1)
+    for i in range(len(Nations)):
+        temp = Nations.get(i + 1)
         if temp.name == nation.name:
             continue
         elif Wars.get_war_name(player_id, temp.id) is not None:
@@ -689,14 +674,13 @@ def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> 
     Creates list of nations that is shown alongside each game.
     """
 
-    nation_table = NationTable(game_id)
     with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
 
     data_a = []
     data_b = []
    
-    for nation in nation_table:
+    for nation in Nations:
         gov_fp_str = f"{nation.fp} - {nation.gov}"
         username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
         player_color = check_color_correction(nation.color)
