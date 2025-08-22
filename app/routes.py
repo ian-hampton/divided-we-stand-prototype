@@ -1133,14 +1133,32 @@ def turn_resolution():
 
 @main.route('/event_resolution', methods=['POST'])
 def event_resolution():
-    '''
+    """
     Handles current event and runs end of turn checks & updates when activated.
     Redirects back to selected game.
-    '''
-    
-    full_game_id = request.form.get('full_game_id')
-    
-    events.resolve_current_event(full_game_id)
-    site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
+    """
 
-    return redirect(f'/{full_game_id}')
+    from app.alliance import Alliances
+    from app.region import Regions
+    from app.nation import Nations
+    from app.notifications import Notifications
+    from app.war import Wars
+    
+    game_id = request.form.get("full_game_id")
+
+    Alliances.load(game_id)
+    Regions.load(game_id)
+    Nations.load(game_id)
+    Notifications.initialize(game_id)
+    Wars.load(game_id)
+    
+    events.resolve_current_event(game_id)
+    site_functions.run_end_of_turn_checks(game_id, event_phase=True)
+
+    Alliances.save()
+    Regions.save()
+    Nations.save()
+    Notifications.save()
+    Wars.save()
+
+    return redirect(f"/{game_id}")
