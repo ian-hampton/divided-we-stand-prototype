@@ -102,8 +102,7 @@ class Alliances(metaclass=AlliancesMeta):
     @classmethod
     def allies(cls, nation_name: str, type_to_search = "ALL") -> list:
         
-        from app.nationdata import NationTable
-        nation_table = NationTable(cls.game_id)
+        from app.nation import Nations
 
         allies_set = set()
         for alliance in cls:
@@ -116,7 +115,7 @@ class Alliances(metaclass=AlliancesMeta):
 
         allies_list = []
         for nation_name in allies_set:
-            nation = nation_table.get(nation_name)
+            nation = Nations.get(nation_name)
             allies_list.append(nation.id)
 
         return allies_list
@@ -141,9 +140,6 @@ class Alliance:
         self._data = Alliances._data[alliance_name]
 
         self.name = alliance_name
-        self.current_members: dict[str, int] = self._data["currentMembers"]
-        self.founding_members: dict[str, int] = self._data["foundingMembers"]
-        self.former_members: dict[str, int] = self._data["formerMembers"]
         self._type: str = self._data["allianceType"]
         self._turn_created: int = self._data["turnCreated"]
         self._turn_ended: int = self._data["turnEnded"]
@@ -171,6 +167,18 @@ class Alliance:
         else:
            return self.turn_ended - self.turn_created
 
+    @property
+    def current_members(self) -> dict[str, int]:
+        return self._data["currentMembers"]
+    
+    @property
+    def founding_members(self) -> dict[str, int]:
+        return self._data["foundingMembers"]
+    
+    @property
+    def former_members(self) -> dict[str, int]:
+        return self._data["formerMembers"]
+
     @type.setter
     def type(self, alliance_type: str):
         self._type = alliance_type
@@ -186,6 +194,18 @@ class Alliance:
         self._turn_ended = turn
         self._data["turnEnded"] = turn
 
+    @current_members.setter
+    def current_members(self, value: dict) -> None:
+        self._data["currentMembers"] = value
+
+    @founding_members.setter
+    def founding_members(self, value: dict) -> None:
+        self._data["foundingMembers"] = value
+
+    @former_members.setter
+    def former_members(self, value: dict) -> None:
+        self._data["formerMembers"] = value
+
     def add_member(self, nation_name: str) -> None:
         if nation_name in self.former_members:
             del self.former_members[nation_name]
@@ -197,8 +217,7 @@ class Alliance:
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         
-        from app.nationdata import NationTable
-        nation_table = NationTable(Alliances.game_id)
+        from app.nation import Nations
         agenda_data_dict = core.get_scenario_dict(Alliances.game_id, "Agendas")
 
         if not self.is_active:
@@ -210,7 +229,7 @@ class Alliance:
                 
                 total = 0.0
                 for ally_name in self.current_members:
-                    nation = nation_table.get(ally_name)
+                    nation = Nations.get(ally_name)
                     total += nation.improvement_counts["Settlement"]
                     total += nation.improvement_counts["City"]
                     total += nation.improvement_counts["Central Bank"]
@@ -222,7 +241,7 @@ class Alliance:
                 
                 tech_set = set()
                 for ally_name in self.current_members:
-                    nation = nation_table.get(ally_name)
+                    nation = Nations.get(ally_name)
                     ally_research_list = list(nation.completed_research.keys())
                     tech_set.update(ally_research_list)
 
@@ -241,8 +260,7 @@ class Alliance:
 
     def end(self) -> None:
         
-        from app.nationdata import NationTable
-        nation_table = NationTable(Alliances.game_id)
+        from app.nation import Nations
         current_turn_num = core.get_current_turn_num(Alliances.game_id)
 
         # add truce periods
@@ -252,10 +270,10 @@ class Alliance:
                 if nation1_name == nation2_name:
                     continue
 
-                nation1 = nation_table.get(nation1_name)
-                nation2 = nation_table.get(nation2_name)
+                nation1 = Nations.get(nation1_name)
+                nation2 = Nations.get(nation2_name)
                 
-                signatories_list = [False] * len(nation_table)
+                signatories_list = [False] * len(Nations)
                 signatories_list[int(nation1.id) - 1] = True
                 signatories_list[int(nation2.id) - 1] = True
                 core.add_truce_period(Alliances.game_id, signatories_list, 2)

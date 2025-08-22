@@ -1,5 +1,3 @@
-from app.nationdata import NationTable
-
 from PIL import ImageColor
 
 BAD_PRIMARY_COLORS = {"#603913", "#105500", "#8b2a1a"}
@@ -8,9 +6,12 @@ def color_nation_names(string: str, game_id: str):
     """
     Adds html span tags around all nation names in given string
     """
-    nation_table = NationTable(game_id)
+
+    from app.nation import Nations
+
     color_dict = {}
-    for nation in nation_table:
+
+    for nation in Nations:
         color_dict[nation.name] = nation.color
 
     for nation_name, color in color_dict.items():

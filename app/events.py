@@ -29,7 +29,7 @@ def trigger_event(game_id: str) -> None:
     already_chosen_events = set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
     event_list_filtered = []
     for event_name in event_list:
-        event = events.load_event(game_id, event_name, event_data=None, temp=True)
+        event = events.load_event(game_id, event_name, event_data=None)
         if event_name in already_chosen_events or not event.has_conditions_met():
             continue
         event_list_filtered.append(event_name)

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
 from app import core
-from app.nationdata import Nation
+from app.nation import Nation
 
 class RegionsMeta(type):
     
@@ -234,7 +234,7 @@ class Region:
         """
 
         from app import combat
-        from app.nationdata import NationTable
+        from app.nation import Nations
         from app.war import Wars
 
         combat_occured = False
@@ -261,11 +261,9 @@ class Region:
 
             if target_region.improvement_is_hostile(unit_owner_id) and target_region.improvement.name != "Capital":
 
-                nation_table = NationTable(self.game_id)
-
                 # load war and combatant data
-                attacking_nation = nation_table.get(str(unit_owner_id))
-                defending_nation = nation_table.get(str(target_region.data.owner_id))
+                attacking_nation = Nations.get(str(unit_owner_id))
+                defending_nation = Nations.get(str(target_region.data.owner_id))
                 war_name = Wars.get_war_name(attacking_nation.id, defending_nation.id)
                 war = Wars.get(war_name)
                 attacking_nation_combatant_data = war.get_combatant(attacking_nation.id)
@@ -281,9 +279,6 @@ class Region:
                     war.log.append(f"    {defending_nation.name} {target_region.improvement.name} has been destroyed!")
                 else:
                     war.log.append(f"{attacking_nation.name} destroyed an undefended {defending_nation.name} {target_region.improvement.name}!")
-
-                # save nation data
-                nation_table.save(attacking_nation)
 
                 # remove improvement
                 target_region.improvement.clear()

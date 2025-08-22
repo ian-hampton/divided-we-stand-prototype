@@ -6,8 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 from app import core
 from app import palette
 from app.region import Region, Regions
-from app.nationdata import NationTable
-
+from app.nation import Nation, Nations
 
 MAP_OPACITY = 0.75
 DO_NOT_SPAWN = {"Capital", "City", "Colony", "Military Base", "Missile Defense System", "Missile Silo",
@@ -33,7 +32,6 @@ class GameMaps:
         print("Updating game maps...")
         
         # get game data
-        nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
 
@@ -44,7 +42,7 @@ class GameMaps:
         for region in Regions:
 
             # color region using ownership
-            fill_color = self._get_fill_color(nation_table, region)
+            fill_color = self._get_fill_color(region)
             if fill_color is not None and region.graph.improvement_coordinates is not None:
                 if not region.graph.is_magnified:
                     x = region.graph.improvement_coordinates[0] + 25
@@ -79,7 +77,7 @@ class GameMaps:
         for region in Regions:
 
             # skip non-magnified or unclaimed
-            fill_color = self._get_fill_color(nation_table, region)
+            fill_color = self._get_fill_color(region)
             if not region.graph.is_magnified or fill_color is None:
                 continue
 
@@ -127,7 +125,7 @@ class GameMaps:
             if region.unit.name is not None and region.graph.unit_coordinates is not None:
             
                 # place unit image
-                nation = nation_table.get(region.unit.owner_id)
+                nation = Nations.get(region.unit.owner_id)
                 fill_color = palette.hex_to_tup(nation.color, alpha=True)
                 unit_img = Image.open(self.filepath_unit_back).convert("RGBA")
                 ImageDraw.floodfill(unit_img, (1, 1), fill_color, border=(0, 0, 0, 255))
@@ -170,7 +168,6 @@ class GameMaps:
         """
         
         # get game data
-        nation_table = NationTable(self.game_id)
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
         region_id_list = Regions.ids()
         
@@ -182,7 +179,7 @@ class GameMaps:
         
         # place improvements randomly
         count = 0
-        placement_quota = int(len(Regions) * 0.1) - len(nation_table)
+        placement_quota = int(len(Regions) * 0.1) - len(Nations)
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
@@ -284,15 +281,15 @@ class GameMaps:
         self.filepath_unit_symb_back = f"{self.images_filepath}/units/back_symb.png"
         self.nuke_img = Image.open(f"{self.images_filepath}/nuke.png")
 
-    def _get_fill_color(self, nation_table: NationTable, region: Region) -> tuple | None:
+    def _get_fill_color(self, region: Region) -> tuple | None:
         
         if region.data.occupier_id != "0":
-            nation = nation_table.get(str(region.data.occupier_id))
+            nation = Nations.get(str(region.data.occupier_id))
             fill_color = palette.normal_to_occupied[nation.color]
             return palette.hex_to_tup(fill_color, alpha=True)
         
         if region.data.owner_id != "0":
-            nation = nation_table.get(str(region.data.owner_id))
+            nation = Nations.get(str(region.data.owner_id))
             return palette.hex_to_tup(nation.color, alpha=True)
         
         return None

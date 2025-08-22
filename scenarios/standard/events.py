@@ -5,8 +5,8 @@ from app import core
 from app import actions
 from app.alliance import Alliances
 from app.region import Region, Regions
+from app.nation import Nation, Nations
 from app.notifications import Notifications
-from app.nationdata import Nation, NationTable
 from app.war import Wars
 
 from app import palette
@@ -14,36 +14,27 @@ from app import palette
 
 class Event:
 
-    def __init__(self, game_id: str, event_name: str, event_data: dict, *, temp = False):
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
 
         self.game_id = game_id
         self.state = -1
 
-        
-
-        # load event data
         self.name: str = event_name
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
         self.targets: list = event_data.get("Targets", [])
         self.expire_turn: int = event_data.get("Expiration", -1)
 
-        # load game data
-        if not temp:
-            self.nation_table = NationTable(self.game_id)
-            self.current_turn_num = core.get_current_turn_num(self.game_id)
-            with open("active_games.json", 'r') as json_file:
-                self.active_games_dict = json.load(json_file)
-
-        # GAME DATA NOTES
-        #  - be sure to set temp to true if the event is only being loaded to check for conditions or expiration
-        #  - you will need to explicitly save changes to NationTable, WarTable, etc inside the event class methods!
-        #  - do not save any changes to active_games.json, they will be lost!
+        self.current_turn_num = core.get_current_turn_num(self.game_id)
+        with open("active_games.json", 'r') as json_file:
+            self.active_games_dict = json.load(json_file)
 
         # EVENT STATES
         #  2  event is pending input from players
         #  1  event is active and does not require attention from players
         #  0  event is completed and ready to be archived
+    
+        # Do not save any changes to active_games.json, they will be lost!
 
     def export(self) -> dict:
         
@@ -89,7 +80,7 @@ class Event:
 
         decision_dict = {}
         for player_id in self.targets:
-            nation = self.nation_table.get(player_id)
+            nation = Nations.get(player_id)
             while True:
                 decision = input(f"Enter {nation.name} decision: ")
                 if decision in self.choices:
@@ -104,7 +95,7 @@ class Event:
     
         for nation_id in self.targets:
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             while True:
                 
@@ -119,7 +110,7 @@ class Event:
 
                 if vote_count > float(nation.get_stockpile("Political Power")):
                     continue
-                if target_name.lower() not in self.nation_table._name_to_id:
+                if target_name.lower() not in Nations._name_to_id:
                     continue
                 
                 if target_name in vote_tally_dict:
@@ -128,7 +119,6 @@ class Event:
                     vote_tally_dict[target_name] = vote_count
                 
                 nation.update_stockpile("Political Power", -1 * vote_count)
-                self.nation_table.save(nation)
                 break
         
         return vote_tally_dict
@@ -139,7 +129,7 @@ class Event:
         
         for nation_id in self.targets:
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             while True:
                 
@@ -164,7 +154,6 @@ class Event:
                     vote_tally_dict[option_name] = vote_count
                 
                 nation.update_stockpile("Political Power", -1 * vote_count)
-                self.nation_table.save(nation)
                 break
         
         return vote_tally_dict
@@ -188,13 +177,13 @@ class Event:
 
 class Assassination(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
-        victim_player_id = random.randint(1, len(self.nation_table)) 
-        victim_nation = self.nation_table.get(str(victim_player_id))
+        victim_player_id = random.randint(1, len(Nations)) 
+        victim_nation = Nations.get(str(victim_player_id))
         self.targets.append(victim_nation.id)
 
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
@@ -209,7 +198,7 @@ class Assassination(Event):
 
         for nation_id, decision in decision_dict.items():
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             if decision == "Find the Perpetrator":
                 nation.update_stockpile("Political Power", 5)
@@ -219,7 +208,7 @@ class Assassination(Event):
                 while True:
                     scapegoat_nation_name = input("Enter the nation name to scapegoat: ")
                     try:
-                        scapegoat = self.nation_table.get(scapegoat_nation_name)
+                        scapegoat = Nations.get(scapegoat_nation_name)
                         break
                     except:
                         print("Unrecognized nation name, try again.")
@@ -230,22 +219,20 @@ class Assassination(Event):
                 nation.tags["Assassination Scapegoat"] = new_tag
                 self.state = 1
                 self.expire_turn = self.current_turn_num + self.duration + 1
-
-        self.nation_table.save(nation)
     
     def has_conditions_met(self) -> bool:
         return True
 
 class CorruptionScandal(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
-        top_three_economy = self.nation_table.get_top_three("netIncome")
+        top_three_economy = Nations.get_top_three("netIncome")
         victim_nation_name = top_three_economy[0][0]
-        victim_nation = self.nation_table.get(victim_nation_name)
+        victim_nation = Nations.get(victim_nation_name)
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
 
         new_tag = {
@@ -255,7 +242,7 @@ class CorruptionScandal(Event):
         }
         victim_nation.tags["Corruption Scandal"] = new_tag
         
-        self.nation_table.save(victim_nation)
+        Nations.save(victim_nation)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -269,14 +256,14 @@ class CorruptionScandal(Event):
 
 class Coup(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
-        lowest_economy = self.nation_table.get_lowest_in_record("netIncome")
+        lowest_economy = Nations.get_lowest_in_record("netIncome")
         victim_nation_name = lowest_economy[0]
-        victim_nation = self.nation_table.get(victim_nation_name)
+        victim_nation = Nations.get(victim_nation_name)
 
         old_government = victim_nation.gov
         gov_list = ["Republic", "Technocracy", "Oligarchy", "Totalitarian", "Remnant", "Protectorate", "Military Junta", "Crime Syndicate"]
@@ -286,7 +273,7 @@ class Coup(Event):
         
         victim_nation.gov = new_government
         victim_nation.update_stockpile("Political Power", 0, overwrite=True)
-        self.nation_table.save(victim_nation)
+        Nations.save(victim_nation)
         Notifications.add(f"{victim_nation_name}'s {old_government} government has been defeated by a coup. A new {new_government} government has taken power.", 2)
 
         self.state = 0
@@ -300,26 +287,23 @@ class Coup(Event):
 
 class DecayingInfrastructure(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
-        from app.region import Regions
-        
-        top_three = self.nation_table.get_top_three("nationSize")
+        top_three = Nations.get_top_three("nationSize")
         top_three_ids = set()
         for nation_name, nation_size in top_three:
-            temp = self.nation_table.get(nation_name)
+            temp = Nations.get(nation_name)
             top_three_ids.add(temp.id)
 
         for region in Regions:
             if region.data.owner_id in top_three_ids and region.improvement.name is not None and region.improvement.name != "Capital":
                 decay_roll = random.randint(1, 10)
                 if decay_roll >= 9:
-                    nation = self.nation_table.get(region.data.owner_id)
+                    nation = Nations.get(region.data.owner_id)
                     nation.improvement_counts[region.improvement.name] -= 1
-                    self.nation_table.save(nation)
                     Notifications.add(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 2)
                     region.improvement.clear()
 
@@ -334,16 +318,14 @@ class DecayingInfrastructure(Event):
 
 class Desertion(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
-        from app.region import Regions
-        
         # retrieve lowest warscore for each nation
         lowest_warscore_dict = {}
-        for nation in self.nation_table:
+        for nation in Nations:
             if Wars.is_at_peace(nation.id):
                 continue
             lowest_warscore = 99999
@@ -371,9 +353,8 @@ class Desertion(Event):
                 continue
             defection_roll = random.randint(1, 10)
             if defection_roll >= 9:
-                nation = self.nation_table.get(region.unit.owner_id)
+                nation = Nations.get(region.unit.owner_id)
                 nation.unit_counts[region.unit.name] -= 1
-                self.nation_table.save(nation)
                 Notifications.add(f"{nation.name} {region.unit.name} {region_id} has deserted.", 2)
                 region.unit.clear()
         
@@ -388,13 +369,13 @@ class Desertion(Event):
 
 class DiplomaticSummit(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -409,7 +390,7 @@ class DiplomaticSummit(Event):
 
         for nation_id, decision in decision_dict.items():
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             if decision == "Attend":
                 nation.update_stockpile("Political Power", 5)
@@ -420,22 +401,19 @@ class DiplomaticSummit(Event):
                 while not valid_research:
                     research_name = input(f"Enter {nation.name} military technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
-            
-            self.nation_table.save(nation)
         
         if len(summit_attendance_list) < 2:
             self.state = 0
             return
 
         for nation_id in summit_attendance_list:
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             new_tag = {
                 "Expire Turn": self.current_turn_num + self.duration + 1
             }
             for attendee_id in summit_attendance_list:
                 new_tag[f"Cannot Declare War On #{attendee_id}"] = True
             nation.tags["Summit"] = new_tag
-            self.nation_table.save(nation)
         
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -445,19 +423,19 @@ class DiplomaticSummit(Event):
 
 class ForeignAid(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         for record_name in ["militaryStrength", "nationSize", "netIncome", "researchCount", "transactionCount"]:
-            top_three = self.nation_table.get_top_three(record_name)
+            top_three = Nations.get_top_three(record_name)
             for nation_name, score in top_three:
                 if score != 0 and nation_name not in self.targets:
                     self.targets.append(nation_name)
 
         for nation_name in self.targets:
-            nation = self.nation_table.get(nation_name)
+            nation = Nations.get(nation_name)
             count = nation.improvement_counts["Settlement"] + nation.improvement_counts["City"]
             if count > 0:
                 amount = count * 5
@@ -471,13 +449,13 @@ class ForeignAid(Event):
 
 class ForeignInterference(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -491,7 +469,7 @@ class ForeignInterference(Event):
         war_actions: list[actions.WarAction] = []
         for nation_id, decision in decision_dict.items():
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             if decision == "Accept":
                 action_valid = False
@@ -514,8 +492,6 @@ class ForeignInterference(Event):
             
             elif decision == "Decline":
                 nation.update_stockpile("Political Power", 5)
-            
-            self.nation_table.save(nation)
 
         actions.resolve_war_actions(self.game_id, war_actions)
         self.state = 0
@@ -529,13 +505,13 @@ class ForeignInterference(Event):
 
 class LostNuclearWeapons(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
-        victim_player_id = random.randint(1, len(self.nation_table)) 
-        victim_nation = self.nation_table.get(str(victim_player_id))
+        victim_player_id = random.randint(1, len(Nations)) 
+        victim_nation = Nations.get(str(victim_player_id))
         self.targets.append(victim_nation.id)
 
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
@@ -550,7 +526,7 @@ class LostNuclearWeapons(Event):
 
         for nation_id, decision in decision_dict.items():
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             if decision == "Claim":
                 valid_region_id = False
@@ -567,7 +543,6 @@ class LostNuclearWeapons(Event):
             elif decision == "Scuttle":
                 nation.update_stockpile("Research", 15)
             
-            self.nation_table.save(nation)
             Notifications.add(f"{nation.name} chose to {decision.lower()} the old military installation.", 2)
         
         self.state = 0
@@ -577,12 +552,12 @@ class LostNuclearWeapons(Event):
 
 class SecurityBreach(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
-        top_three = self.nation_table.get_top_three("researchCount")
+        top_three = Nations.get_top_three("researchCount")
         victim_nation_name = top_three[0][0]
         self.targets.append(victim_nation_name)
 
@@ -593,9 +568,9 @@ class SecurityBreach(Event):
     def resolve(self):
 
         victim_name = self.targets[0]
-        victim_nation = self.nation_table.get(victim_name)
+        victim_nation = Nations.get(victim_name)
 
-        for nation in self.nation_table:
+        for nation in Nations:
             
             if nation.name == victim_name:
                 continue
@@ -606,15 +581,13 @@ class SecurityBreach(Event):
                 if research_name not in victim_nation.completed_research:
                     continue
                 valid_research = self._gain_free_research(research_name, nation)
-            
-            self.nation_table.save(nation)
 
         new_tag = {
             "Research Rate": -20,
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         victim_nation.tags["Security Breach"] = new_tag
-        self.nation_table.save(victim_nation)
+        Nations.save(victim_nation)
         
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -628,8 +601,8 @@ class SecurityBreach(Event):
 
 class MarketInflation(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         self.state = 1
@@ -640,8 +613,8 @@ class MarketInflation(Event):
 
 class MarketRecession(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         self.state = 1
@@ -652,13 +625,13 @@ class MarketRecession(Event):
 
 class ObserverStatusInvitation(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -671,7 +644,7 @@ class ObserverStatusInvitation(Event):
 
         for nation_id, decision in decision_dict.items():
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             if decision == "Accept":
                 new_tag = {
@@ -684,8 +657,6 @@ class ObserverStatusInvitation(Event):
                 while not valid_research:
                     research_name = input(f"Enter {nation.name} military technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
-            
-            self.nation_table.save(nation)
         
         self.state = 0
 
@@ -694,13 +665,13 @@ class ObserverStatusInvitation(Event):
 
 class PeacetimeRewards(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         names = []
-        for nation in self.nation_table:
+        for nation in Nations:
             if Wars.at_peace_for_x(nation.id) >= 12:
                 self.targets.append(nation.id)
                 names.append(nation.name)
@@ -714,12 +685,11 @@ class PeacetimeRewards(Event):
     def resolve(self):
         
         for nation_id in self.targets:
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             valid_research = False
             while not valid_research:
                 research_name = input(f"Enter {nation.name} technology decision: ")
                 valid_research = self._gain_free_research(research_name, nation)
-            self.nation_table.save(nation)
 
         self.state = 0
 
@@ -732,8 +702,8 @@ class PeacetimeRewards(Event):
 
 class PowerPlantMeltdown(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
@@ -743,7 +713,7 @@ class PowerPlantMeltdown(Event):
         random.shuffle(self.targets)
         meltdown_region_id = self.targets.pop()
 
-        nation = self.nation_table.get(str(meltdown_region_id))
+        nation = Nations.get(str(meltdown_region_id))
         region = Region(meltdown_region_id)
 
         nation.improvement_counts["Nuclear Power Plant"] -= 1
@@ -752,9 +722,8 @@ class PowerPlantMeltdown(Event):
             nation.unit_counts[region.unit.name] -= 1
             region.unit.clear()
         region.data.fallout = 99999
-        nation.update_stockpile("Political Power", 0, overwrite=True)
         
-        self.nation_table.save(nation)
+        nation.update_stockpile("Political Power", 0, overwrite=True)
         Notifications.add(f"The {nation.name} Nuclear Power Plant in {meltdown_region_id} has melted down!", 2)
         
         self.state = 0
@@ -768,13 +737,13 @@ class PowerPlantMeltdown(Event):
 
 class ShiftingAttitudes(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -787,7 +756,7 @@ class ShiftingAttitudes(Event):
 
         for nation_id, decision in decision_dict.items():
             
-            nation = self.nation_table.get(nation_id)
+            nation = Nations.get(nation_id)
             
             if decision == "Change":
                 new_fp = input(f"Enter new foreign policy: ")
@@ -803,8 +772,6 @@ class ShiftingAttitudes(Event):
                 while not valid_research:
                     research_name = input(f"Enter {nation.name} technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
-            
-            self.nation_table.save(nation)
         
         self.state = 0
 
@@ -817,8 +784,8 @@ class ShiftingAttitudes(Event):
 
 class UnitedNationsPeacekeepingMandate(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
@@ -838,19 +805,18 @@ class UnitedNationsPeacekeepingMandate(Event):
 
 class WidespreadCivilDisorder(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
 
         Notifications.add(f"New Event: {self.name}!", 2)
 
-        for nation in self.nation_table:
+        for nation in Nations:
             new_tag = {
                 "Expire Turn": self.current_turn_num + self.duration + 1
             }
             nation.tags["Civil Disorder"] = new_tag
-            self.nation_table.save(nation)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -864,13 +830,13 @@ class WidespreadCivilDisorder(Event):
 
 class Embargo(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -886,12 +852,11 @@ class Embargo(Event):
             self.state = 0
             return
         
-        nation = self.nation_table.get(nation_name)
+        nation = Nations.get(nation_name)
         new_tag = {
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Embargo"] = new_tag
-        self.nation_table.save(nation)
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 2)
         
@@ -903,13 +868,13 @@ class Embargo(Event):
 
 class Humiliation(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -925,13 +890,12 @@ class Humiliation(Event):
             self.state = 0
             return
 
-        nation = self.nation_table.get(nation_name)
+        nation = Nations.get(nation_name)
         new_tag = {
             "No Agenda Research": True,
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Humiliation"] = new_tag
-        self.nation_table.save(nation)
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 2)
 
@@ -943,13 +907,13 @@ class Humiliation(Event):
 
 class ForeignInvestment(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -965,12 +929,12 @@ class ForeignInvestment(Event):
             self.state = 0
             return
 
-        nation = self.nation_table.get(nation_name)
+        nation = Nations.get(nation_name)
         new_tag = {
+            "Market Buy Modifier": 0.2,
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Foreign Investment"] = new_tag
-        self.nation_table.save(nation)
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 2)
 
@@ -982,13 +946,13 @@ class ForeignInvestment(Event):
 
 class NominateMediator(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -1004,14 +968,13 @@ class NominateMediator(Event):
             self.state = 0
             return
 
-        nation = self.nation_table.get(nation_name)
+        nation = Nations.get(nation_name)
         new_tag = {
             "Alliance Political Power Bonus": 0.25,
             "Truces Extended": [],
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Mediator"] = new_tag
-        self.nation_table.save(nation)
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 2)
 
@@ -1023,13 +986,13 @@ class NominateMediator(Event):
 
 class SharedFate(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -1047,17 +1010,16 @@ class SharedFate(Event):
             return
 
         if option_name == "Cooperation":
-            for nation in self.nation_table:
+            for nation in Nations:
                 new_tag = {
                     "Alliance Limit Modifier": 1,
                     "Expire Turn": 99999
                 }
                 nation.tags["Shared Fate"] = new_tag
-                self.nation_table.save(nation)
             Notifications.add(f"Cooperation won in a {self.vote_tally.get("Cooperation")} - {self.vote_tally.get("Conflict")} decision.", 2)
 
         elif option_name == "Conflict":
-            for nation in self.nation_table:
+            for nation in Nations:
                 new_tag = {
                     "Improvement Income": {
                         "Boot Camp": {
@@ -1067,7 +1029,6 @@ class SharedFate(Event):
                     "Expire Turn": 99999
                 }
                 nation.tags["Shared Fate"] = new_tag
-                self.nation_table.save(nation)
             Notifications.add(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 2)
 
         self.state = 1
@@ -1078,13 +1039,13 @@ class SharedFate(Event):
 
 class ThreatContainment(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -1100,14 +1061,13 @@ class ThreatContainment(Event):
             self.state = 0
             return
         
-        nation = self.nation_table.get(nation_name)
+        nation = Nations.get(nation_name)
         new_tag = {
             "Military Capacity Rate": -20,
             "Trade Fee Modifier": -1,
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         nation.tags["Threat Containment"] = new_tag
-        self.nation_table.save(nation)
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 2)
 
@@ -1119,8 +1079,8 @@ class ThreatContainment(Event):
 
 class ForeignInvasion(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
@@ -1138,21 +1098,21 @@ class ForeignInvasion(Event):
                 break
         
         color_candidates = list(palette.normal_to_occupied.keys())
-        for nation in self.nation_table:
+        for nation in Nations:
             color_candidates.remove(nation.color)
 
-        self.nation_table.create("99", "NULL")
-        foreign_invasion_nation = self.nation_table.get("99")
+        Nations.create("99", "NULL")
+        foreign_invasion_nation = Nations.get("99")
         foreign_invasion_nation.color = random.choice(color_candidates)
         foreign_invasion_nation.name = "Foreign Adversary"
         foreign_invasion_nation.gov = "Foreign Nation"
         foreign_invasion_nation.fp = "Hostile"
-        self.nation_table.save(foreign_invasion_nation)
+        Nations.save(foreign_invasion_nation)
 
         # note - all war justifications are set to null because this is not a conventional war
         Wars.create("99", "1", "NULL", [])
         war = Wars.get("Foreign Invasion")
-        for nation in self.nation_table:
+        for nation in Nations:
             if nation.id == "1":
                 combatant = war.get_combatant(nation.id)
                 combatant.justification = "NULL"
@@ -1198,7 +1158,7 @@ class ForeignInvasion(Event):
 
     def run_after(self) -> None:
         
-        foreign_invasion_nation = self.nation_table.get("99")
+        foreign_invasion_nation = Nations.get("99")
                     
         # Foreign Invasion ends if no remaining units
         invasion_unit_count = 0
@@ -1249,26 +1209,26 @@ class ForeignInvasion(Event):
         if region.unit.name is not None:
             # remove old unit
             if region.unit.owner_id != "0":
-                temp = self.nation_table.get(region.unit.owner_id)
+                temp = Nations.get(region.unit.owner_id)
                 temp.unit_counts[region.unit.name] -= 1
-                self.nation_table.save(temp)
+                Nations.save(temp)
             region.unit.clear()
 
         if region.improvement.name is not None:
             # remove old improvement
-            if region.improvement.owner_id != "0":
-                temp = self.nation_table.get(region.data.owner_id)
+            if region.data.owner_id != "0":
+                temp = Nations.get(region.data.owner_id)
                 temp.improvement_counts[region.improvement.name] -= 1
-                self.nation_table.save(temp)
+                Nations.save(temp)
             region.improvement.clear()
 
         region.data.owner_id = "99"
         region.data.occupier_id = "0"
         region.unit.set(unit_name, "99")
 
-        foreign_nation = self.nation_table.get("99")
+        foreign_nation = Nations.get("99")
         foreign_nation.unit_counts[unit_name] += 1
-        self.nation_table.save(foreign_nation)
+        Nations.save(foreign_nation)
 
     def _foreign_invasion_calculate_target_region(self, adjacency_list: list, destination_dict: dict) -> tuple:
         """
@@ -1341,7 +1301,7 @@ class ForeignInvasion(Event):
 
     def _foreign_invasion_end(self):
 
-        foreign_invasion_nation = self.nation_table.get("99")
+        foreign_invasion_nation = Nations.get("99")
     
         for region in Regions:
             
@@ -1359,12 +1319,12 @@ class ForeignInvasion(Event):
             war.end = self.current_turn_num
             war.outcome = "White Peace"
 
-        self.nation_table.save(foreign_invasion_nation)
+        Nations.save(foreign_invasion_nation)
 
 class Pandemic(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
         self.intensify: int = event_data.get("Intensify Value", -1)
         self.spread: int = event_data.get("Spread Value", -1)
         self.cure_current: int = event_data.get("Completed Cure Research", -1)
@@ -1378,7 +1338,7 @@ class Pandemic(Event):
         self.intensify = random.randint(3, 9)
         self.spread = random.randint(3, 9)
         self.cure_current = 0
-        self.cure_threshold = len(self.nation_table) * 50
+        self.cure_threshold = len(Nations) * 50
         self.closed_borders = []
         origin_region_id = random.choice(Regions.ids())
         
@@ -1439,7 +1399,7 @@ class Pandemic(Event):
 
         # sum up total infection scores
         unowned_infection = 0
-        infection_scores = [0] * len(self.nation_table)
+        infection_scores = [0] * len(Nations)
         for region in Regions:
             if region.data.owner_id != "0" and region.data.owner_id <= len(infection_scores):
                 infection_scores[int(region.data.owner_id) - 1] += region.data.infection
@@ -1462,7 +1422,7 @@ class Pandemic(Event):
                 Notifications.add(f"Pandemic intensify value: {self.intensify}", 2)
                 Notifications.add(f"Pandemic spread value: {self.spread}", 2)
             if cure_percentage >= 0.75:
-                for nation in self.nation_table:
+                for nation in Nations:
                     score = infection_scores[int(nation.id) - 1]
                     Notifications.add(f"{nation.name} pandemic infection score: {score}", 2)
             if cure_percentage < 1:
@@ -1499,13 +1459,13 @@ class Pandemic(Event):
 
 class FaustianBargain(Event):
     
-    def __init__(self, game_id: str, event_name: str, event_data: dict, temp: bool):
-        Event.__init__(self, game_id, event_name, event_data, temp=temp)
+    def __init__(self, game_id: str, event_name: str, event_data: dict):
+        Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
         
         Notifications.add(f"New Event: {self.name}!", 2)
-        for nation in self.nation_table:
+        for nation in Nations:
             self.targets.append(nation.id)
         
         self.state = 2
@@ -1519,12 +1479,11 @@ class FaustianBargain(Event):
         decision_dict = self._collect_basic_decisions()
 
         for player_id, choice in decision_dict.items():
-            nation = self.nation_table.get(player_id)
+            nation = Nations.get(player_id)
             if choice == "Accept" and nation.improvement_counts["Capital"] > 0:
                 candidates_list.append(player_id)
             else:
                 nation.update_stockpile("Political Power", 5)
-            self.nation_table.save(nation)
 
         if len(candidates_list) == 0:
             Notifications.add("No nation took the Faustian Bargain. collaborate with the foreign nation.", 2)
@@ -1533,7 +1492,7 @@ class FaustianBargain(Event):
         
         random.shuffle(candidates_list)
         nation_id = candidates_list.pop()
-        nation = self.nation_table.get(nation_id)
+        nation = Nations.get(nation_id)
 
         new_tag = {
             "Expire Turn": 99999,
@@ -1543,7 +1502,6 @@ class FaustianBargain(Event):
             if resource_name not in ["Political Power", "Military Capacity"]:
                 new_tag[f"{resource_name} Rate"] = 20
         nation.tags["Faustian Bargain"] = new_tag
-        self.nation_table.save(nation)
 
         for alliance in Alliances:
             if nation.name in alliance.current_members:
@@ -1557,14 +1515,13 @@ class FaustianBargain(Event):
     def run_after(self) -> None:
         
         # identify collaborator
-        for nation in self.nation_table:
+        for nation in Nations:
             if "Faustian Bargain" in nation.tags:
                 break
         
         # check if collaborator has been defeated (no capital)
         if nation.improvement_counts["Capital"] == 0:
             del nation.tags["Faustian Bargain"]
-            self.nation_table.save(nation)
             self.state = 0
             Notifications.add(f"{self.name} event has ended.", 2)
             return
@@ -1662,9 +1619,7 @@ def _no_major_events(game_id: str) -> bool:
 
 def _no_ranking_tie(game_id: str, ranking: str) -> bool:
 
-    nation_table = NationTable(game_id)
-    
-    top_three = nation_table.get_top_three(ranking)
+    top_three = Nations.get_top_three(ranking)
     if top_three[0][1] == top_three[1][1]:
         return False
     
@@ -1672,8 +1627,6 @@ def _no_ranking_tie(game_id: str, ranking: str) -> bool:
 
 def _at_least_x_ongoing_wars(game_id: str, count: int) -> bool:
 
-    from app.war import Wars
-    
     ongoing_war_count = 0
     for war in Wars:
         if war.outcome == "TBD":
@@ -1685,13 +1638,9 @@ def _at_least_x_ongoing_wars(game_id: str, count: int) -> bool:
     return True
 
 def _at_least_x_nations_at_peace_for_y_turns(game_id: str, nation_count: int, turn_count: int) -> bool:
-    
-    from app.war import Wars
-    
-    nation_table = NationTable(game_id)
-    
+
     at_peace_count = 0
-    for nation in nation_table:
+    for nation in Nations:
         if Wars.at_peace_for_x(nation.id) >= turn_count:
             at_peace_count += 1
     
@@ -1702,10 +1651,8 @@ def _at_least_x_nations_at_peace_for_y_turns(game_id: str, nation_count: int, tu
 
 def _global_count_of_x_improvement_at_least_y(game_id: str, improvement_name: str, count: int) -> bool:
 
-    nation_table = NationTable(game_id)
-    
     global_total = 0
-    for nation in nation_table:
+    for nation in Nations:
         global_total += nation.improvement_counts[improvement_name]
     
     if global_total < count:

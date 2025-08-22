@@ -14,8 +14,6 @@ from app import site_functions
 from app import core
 from app import events
 from app import palette
-from app.notifications import Notifications
-from app.nationdata import NationTable
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -34,6 +32,7 @@ def main_function():
 def games():
     
     # read game files
+    from app.nation import Nations
     with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     with open('active_games.json', 'r') as json_file:
@@ -41,11 +40,11 @@ def games():
 
     # read active games
     for game_id, game_data in active_games_dict.items():
+
+        Nations.load(game_id)
         current_turn = game_data["Statistics"]["Current Turn"]
         if current_turn == "Turn N/A":
             continue
-
-        nation_table = NationTable(game_id)
         
         match current_turn:
 
@@ -57,7 +56,7 @@ def games():
                 game_data["Status"] = current_turn
                 # get player information
                 refined_player_data = []
-                for nation in nation_table:
+                for nation in Nations:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
                     refined_player_data.append([nation.name, 0, 'TBD', username_str, '#ffffff', '#ffffff'])
@@ -75,7 +74,7 @@ def games():
                 game_data["Status"] = current_turn
                 # get player information
                 refined_player_data = []
-                for nation in nation_table:
+                for nation in Nations:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
                     player_color_2 = site_functions.check_color_correction(nation.color)
@@ -317,7 +316,8 @@ def profile_route(profile_id):
 def game_load(full_game_id):
     
     #read the contents of active_games.json
-    nation_table = NationTable(full_game_id)
+    from app.nation import Nations
+    Nations.load(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game1_title = active_games_dict[full_game_id]["Name"]
@@ -334,10 +334,10 @@ def game_load(full_game_id):
         with open('game_records.json', 'r') as json_file:
             game_records_dict = json.load(json_file)
         game_data = game_records_dict[game1_title]
-        largest_nation_tup = nation_table.get_top_three("Largest Nation")
-        strongest_economy_tup = nation_table.get_top_three("Most Income")
-        largest_military_tup = nation_table.get_top_three("Largest Military")
-        most_research_tup = nation_table.get_top_three("Most Technology")
+        largest_nation_tup = Nations.get_top_three("Largest Nation")
+        strongest_economy_tup = Nations.get_top_three("Most Income")
+        largest_military_tup = Nations.get_top_three("Largest Military")
+        most_research_tup = Nations.get_top_three("Most Technology")
         largest_nation_list = list(largest_nation_tup)
         strongest_economy_list = list(strongest_economy_tup)
         largest_military_list = list(largest_military_tup)
@@ -368,7 +368,7 @@ def game_load(full_game_id):
             form_key = "main.stage1_resolution"
             player_data = []
             
-            for nation in nation_table:
+            for nation in Nations:
                 p_id = f'p{nation.id}'
                 regioninput_id = f'regioninput_{p_id}'
                 colordropdown_id = f'colordropdown_{p_id}'
@@ -384,7 +384,7 @@ def game_load(full_game_id):
             form_key = "main.stage2_resolution"
             player_data = []
             
-            for nation in nation_table:
+            for nation in Nations:
                 p_id = f'p{nation.id}'
                 nameinput_id = f"nameinput_{p_id}"
                 govinput_id = f"govinput_{p_id}"
@@ -403,7 +403,7 @@ def game_load(full_game_id):
             main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
             player_data = []
 
-            for nation in nation_table:
+            for nation in Nations:
                 p_id = f'p{nation.id}'
                 public_actions_textarea_id = f"public_textarea_{p_id}"
                 private_actions_textarea_id = f"private_textarea_{p_id}"
@@ -432,8 +432,12 @@ def player_route(full_game_id, player_id):
 def wars(full_game_id):
     
     # get game data
+    from app.nation import Nations
+    from app.alliance import Alliances
     from app.war import Wars
-    nation_table = NationTable(full_game_id)
+    Nations.load(full_game_id)
+    Alliances.load(full_game_id)
+    Wars.load(full_game_id)
     current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -459,8 +463,8 @@ def wars(full_game_id):
         # get war score information
         attacker_threshold, defender_threshold = war.calculate_score_threshold()
         ma_id, md_id = war.get_main_combatant_ids()
-        main_attacker = nation_table.get(ma_id)
-        main_defender = nation_table.get(md_id)
+        main_attacker = Nations.get(ma_id)
+        main_defender = Nations.get(md_id)
 
         # implement a score bar using an html table >:)
         inner_dict["outcome"] = war.outcome
@@ -578,7 +582,8 @@ def wars(full_game_id):
 def technologies(full_game_id):
     
     # get game data
-    nation_table = NationTable(full_game_id)
+    from app.nation import Nations
+    Nations.load(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
@@ -626,8 +631,8 @@ def technologies(full_game_id):
 
     # add player research data
     for research_name in research_data_dict:
-        research_data_dict[research_name]["Player Research"] = [None] * len(nation_table)
-    for index, nation in enumerate(nation_table):
+        research_data_dict[research_name]["Player Research"] = [None] * len(Nations)
+    for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
             if research_name in research_data_dict:
                 research_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
@@ -649,7 +654,8 @@ def technologies(full_game_id):
 def agendas(full_game_id):
     
     # get game data
-    nation_table = NationTable(full_game_id)
+    from app.nation import Nations
+    Nations.load(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
@@ -690,8 +696,8 @@ def agendas(full_game_id):
 
     # add player research data
     for research_name in agenda_data_dict:
-        agenda_data_dict[research_name]["Player Research"] = [None] * len(nation_table)
-    for index, nation in enumerate(nation_table):
+        agenda_data_dict[research_name]["Player Research"] = [None] * len(Nations)
+    for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
             if research_name in agenda_data_dict:
                 agenda_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
@@ -840,14 +846,15 @@ def resource_market(full_game_id):
 def announcements(full_game_id):
 
     from app.alliance import Alliances
+    from app.nation import Nations
     from app.notifications import Notifications
     from app.war import Wars
 
     # get game data
     Alliances.load(full_game_id)
+    Nations.load(full_game_id)
     Notifications.initialize(full_game_id)
     Wars.load(full_game_id)
-    nation_table = NationTable(full_game_id)
     trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
     trucedata_list = core.read_file(trucedata_filepath, 1)
     with open('active_games.json', 'r') as json_file:
@@ -896,7 +903,7 @@ def announcements(full_game_id):
         for i in range(1, len(truce) - 1):
             truce_status = ast.literal_eval(truce[i])
             if truce_status:
-                nation = nation_table.get(str(i))
+                nation = Nations.get(str(i))
                 truce_participants_list.append(nation.name)
         truce_name = ' - '.join(truce_participants_list)
         truce_end_turn = int(truce[len(truce) - 1])
@@ -949,7 +956,7 @@ def announcements(full_game_id):
     records = ["nationSize", "netIncome", "transactionCount", "militaryStrength", "researchCount"]
     record_names = ["Largest Nation", "Most Income", "Most Transactions", "Largest Military", "Most Technology"]
     for i, record in enumerate(records):
-        standings = nation_table.get_top_three(record)
+        standings = Nations.get_top_three(record)
         standings_filtered = []
         for entry in standings:
             # add html span tag
@@ -969,7 +976,7 @@ def announcements(full_game_id):
     
     # update scoreboard
     scoreboard_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         inner_dict = {}
         inner_dict["color"] = nation.color
         inner_dict["score"] = nation.score
@@ -990,9 +997,10 @@ def announcements(full_game_id):
 def alliances(full_game_id):
 
     from app.alliance import Alliances
-    
+    from app.nation import Nations
+
     Alliances.load(full_game_id)
-    nation_table = NationTable(full_game_id)
+    Nations.load(full_game_id)
     alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
@@ -1018,7 +1026,7 @@ def alliances(full_game_id):
         alliance_data["turnCreated"] = date_str
 
         for nation_name, turn_joined in alliance.current_members.items():
-            nation = nation_table.get(nation_name)
+            nation = Nations.get(nation_name)
             bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
             if nation.color in bad_primary_colors_set:
                 color = palette.normal_to_occupied[nation.color]
@@ -1068,10 +1076,11 @@ def get_controlmap(full_game_id):
 def stage1_resolution():
     
     full_game_id = request.form.get('full_game_id')
-    nation_table = NationTable(full_game_id)
+    from app.nation import Nations
+    Nations.load(full_game_id)
 
     contents_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         contents_dict[nation.id] = {}
         contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
         contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
@@ -1084,10 +1093,11 @@ def stage1_resolution():
 def stage2_resolution():
 
     full_game_id = request.form.get('full_game_id')
-    nation_table = NationTable(full_game_id)
+    from app.nation import Nations
+    Nations.load(full_game_id)
 
     contents_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         contents_dict[nation.id] = {}
         contents_dict[nation.id]["name_choice"] = request.form.get(f"nameinput_p{nation.id}")
         contents_dict[nation.id]["gov_choice"] = request.form.get(f"govinput_p{nation.id}")
@@ -1102,10 +1112,11 @@ def stage2_resolution():
 def turn_resolution():
 
     full_game_id = request.form.get('full_game_id')
-    nation_table = NationTable(full_game_id)
+    from app.nation import Nations
+    Nations.load(full_game_id)
 
     contents_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         contents_dict[nation.id] = []
         public_str = request.form.get(f"public_textarea_p{nation.id}")
         private_str = request.form.get(f"private_textarea_p{nation.id}")
