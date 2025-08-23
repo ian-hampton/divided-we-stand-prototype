@@ -399,22 +399,18 @@ class Wars(metaclass=WarsMeta):
 
         from app.region import Regions
 
-        # get war justification info
-        # TODO move this to scenario files
-        if war_justification == 'Border Skirmish':
-            free_claims = 3
-            max_claims = 6
-            claim_cost = 5
-        elif war_justification == 'Conquest':
-            free_claims = 5
-            max_claims = 10
-            claim_cost = 3
+        region_id_set = set(Regions.ids())
+        justification_scenario_dict = core.get_scenario_dict(cls.game_id, "justifications")
+        justification_data = justification_scenario_dict[war_justification]
+
+        if "War Claims" not in justification_data:
+            return 0
 
         total = 0
-        region_id_set = set(Regions.ids())
-        
-        # check that all claims are valid
-        total = 0
+        max_claims: int = justification_data["War Claims"]["Max"]
+        free_claims: int = justification_data["War Claims"]["Free"]
+        claim_cost: int = justification_data["War Claims"]["Cost"]
+
         for i, region_id in enumerate(region_claims_list):
             
             if region_id not in region_id_set:
@@ -543,6 +539,8 @@ class War:
         
         from app.nation import Nations
 
+        justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
+
         for combatant_id in self.combatants:
             
             combatant = self.get_combatant(combatant_id)
@@ -556,8 +554,10 @@ class War:
             if war_justification == "SKIP":
                 continue
 
+            justification_data: dict = justification_scenario_dict[war_justification]
+
             # process war claims
-            if war_justification in ["Border Skirmish", "Conquest"]:
+            if justification_data.get("War Claims") is not None:
 
                 combatant.target_id = "N/A"
                 
@@ -613,11 +613,12 @@ class War:
 
     def end_conflict(self, outcome: str) -> None:
         
-        # get game data
         from app.nation import Nations
         from app.region import Regions
         from app.truce import Truces
+        
         current_turn_num = core.get_current_turn_num(Wars.game_id)
+        justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
         
         # resolve war justifications
         truce_length = 4
@@ -628,16 +629,18 @@ class War:
                     combatant = self.get_combatant(combatant_id)
                     if "Attacker" in combatant.role:
                         self._resolve_war_justification(combatant_id)
-                    if "Main Attacker" == combatant.role and combatant.justification not in ["Animosity", "Border Skirmish"]:
-                        truce_length = 8
+                    if "Main Attacker" == combatant.role:
+                        justification_data: dict = justification_scenario_dict[combatant.justification]
+                        truce_length = justification_data["Truce Duraton"]
 
             case "Defender Victory":
                 for combatant_id in self.combatants:
                     combatant = self.get_combatant(combatant_id)
                     if "Defender" in combatant.role:
                         self._resolve_war_justification(combatant_id)
-                    if "Main Defender" == combatant.role and combatant.justification not in ["Animosity", "Border Skirmish"]:
-                        truce_length = 8
+                    if "Main Defender" == combatant.role:
+                        justification_data: dict = justification_scenario_dict[combatant.justification]
+                        truce_length = justification_data["Truce Duraton"]
         
         # add truce periods
         for combatant_id in self.combatants:
@@ -679,52 +682,57 @@ class War:
         
         from app.nation import Nations
         from app.region import Region
-        current_turn_num = core.get_current_turn_num(Wars.game_id)
         
-        # get winner data
+        current_turn_num = core.get_current_turn_num(Wars.game_id)
+        justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
+        
         winner_nation = Nations.get(nation_id)
         winner_combatant_data = self.get_combatant(nation_id)
+        justification_data: dict = justification_scenario_dict[winner_combatant_data.justification]
 
-        match winner_combatant_data.justification:
-
-            case "Border Skirmish" | "Conquest":
-                for region_id, original_owner_id in winner_combatant_data.claims.items():
-                    region = Region(region_id)
+        if justification_data.get("War Claims") is not None:
+            for region_id, original_owner_id in winner_combatant_data.claims.items():
+                region = Region(region_id)
+                
+                # do not take over regions that have changed ownership since start of war
+                if str(region.data.owner_id) != original_owner_id:
+                    continue
                     
-                    if str(region.data.owner_id) != original_owner_id:
-                        continue
-                        
-                    if region.improvement.name is not None:
-                        looser_nation = Nations.get(original_owner_id)
-                        looser_nation.improvement_counts[region.improvement.name] -= 1
-                        winner_nation.improvement_counts[region.improvement.name] += 1
-                    
-                    region.data.owner_id = winner_nation.id
-                    region.data.occupier_id = "0"
-                        
-            case "Animosity":
-                looser_nation = Nations.get(winner_combatant_data.target_id)
-                winner_nation.update_stockpile("Political Power", 10)
-                winner_nation.update_stockpile("Research", 10)
-                looser_nation.update_stockpile("Political Power", 0, overwrite=True)
+                if region.improvement.name is not None:
+                    looser_nation = Nations.get(original_owner_id)
+                    looser_nation.improvement_counts[region.improvement.name] -= 1
+                    winner_nation.improvement_counts[region.improvement.name] += 1
+                
+                region.data.owner_id = winner_nation.id
+                region.data.occupier_id = "0"
 
-            case "Subjugation":
-                looser_nation = Nations.get(winner_combatant_data.target_id)
-                looser_nation.status = f"Puppet State of {winner_nation.name}"
+        stockpile_gains = justification_data.get("Winner Stockpile Gains", {})
+        for resource_name, amount in stockpile_gains:
+            winner_nation.update_stockpile(resource_name, amount)
 
-            case "Containment":
-                looser_nation = Nations.get(winner_combatant_data.target_id)
-                new_tag = {
-                    "Military Capacity Rate": -50,
-                    "No Agenda Research": True,
-                    "Expire Turn": current_turn_num + 9
-                }
-                looser_nation.tags[f"{self.name} Containment"] = new_tag
+        stockpile_gains = justification_data.get("Looser Stockpile Gains", {})
+        for resource_name, amount in stockpile_gains:
+            looser_nation = Nations.get(winner_combatant_data.target_id)
+            looser_nation.update_stockpile(resource_name, amount)
 
-            case "Independence":
-                looser_nation = Nations.get(winner_combatant_data.target_id)
-                looser_nation.status = "Independent Nation"
-                Nations.save(looser_nation)
+        penalties = justification_data.get("Looser Penalties")
+        if penalties is not None:
+            looser_nation = Nations.get(winner_combatant_data.target_id)
+            penalties["Expire Turn"] = current_turn_num + justification_data["Looser Penalty Duration"] + 1
+            looser_nation.tags[f"Defeated by {winner_nation} in {self.name}"] = penalties
+
+        if justification_data.get("Winner Becomes Independent") is not None:
+            winner_nation.status = "Independent Nation"
+
+        if justification_data.get("Looser Releases All Puppet States") is not None:
+            looser_nation = Nations.get(winner_combatant_data.target_id)
+            for nation in Nations:
+                if looser_nation.name in nation.status:
+                    winner_nation.status = "Independent Nation"
+
+        if justification_data.get("Looser Becomes Puppet State") is not None:
+            looser_nation = Nations.get(winner_combatant_data.target_id)
+            looser_nation.status = f"Puppet State of {winner_nation.name}"
 
 class WarScoreData:
     

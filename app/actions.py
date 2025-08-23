@@ -1871,17 +1871,20 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
     from app.nation import Nations
     from app.war import Wars
 
+    justification_scenario_dict = core.get_scenario_dict(game_id, "justifications")
+
     for action in actions_list:
 
         attacker_nation = Nations.get(action.id)
         defender_nation = Nations.get(action.target_nation)
+        justification_data: dict = justification_scenario_dict[action.war_justification]
 
         if not _war_action_valid(action, attacker_nation, defender_nation):
             continue
 
         region_claims_list = []
 
-        if action.war_justification in ["Border Skirmish", "Conquest"]:
+        if justification_data.get("War Claims") is not None:
             
             claim_cost = Wars.get_war_claims(attacker_nation.name, action.war_justification)
             if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
@@ -1899,17 +1902,20 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
     from app.nation import Nations
     from app.war import Wars
 
+    justification_scenario_dict = core.get_scenario_dict(game_id, "justifications")
+
     for action in actions_list:
 
         war = Wars.get(action.war_name)
         attacker_nation = Nations.get(action.id)
+        justification_data: dict = justification_scenario_dict[action.war_justification]
 
         war.add_combatant(attacker_nation, f"Secondary {action.side}", action.war_justification)
         combatant = war.get_combatant(action.id)
         region_claims_list = []
 
         # process war claims
-        if action.war_justification in ["Border Skirmish", "Conquest"]:
+        if justification_data.get("War Claims") is not None:
 
             combatant.target_id = "N/A"
             main_attacker_id, main_defender_id = war.get_main_combatant_ids()
@@ -1944,36 +1950,18 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
     from app.truce import Truces
     from app.war import Wars
 
+    justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
+    justification_data: dict = justification_scenario_dict[action.war_justification]
+
     # agenda check
-    # TODO - move this data to a scenario file
-    valid_war_justification = False
-    match action.war_justification:
-        case "Animosity" | "Border Skirmish":
-            valid_war_justification = True
-        case "Conquest":
-            if "Early Expansion" in attacker_nation.completed_research:
-                valid_war_justification = True
-        case "Containment":
-            if "Ideological Wars" in attacker_nation.completed_research and defender_nation.fp != "Diplomatic":
-                valid_war_justification = True
-        case "Independence":
-            if "Puppet State" in attacker_nation.status and defender_nation.name in attacker_nation.status:
-                valid_war_justification = True
-        case "Subjugation":
-            if "Dominion" in attacker_nation.completed_research:
-                valid_war_justification = True
-    if not valid_war_justification:
+    prereq: str = justification_data["Required Agenda"]
+    if prereq is not None and prereq not in attacker_nation.completed_research:
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have the required agenda.")
         return False
 
     # military capacity check
     if attacker_nation.get_used_mc() == 0:
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You do not have any military units.")
-        return False
-
-    # independence check
-    if attacker_nation.status != "Independent Nation" and action.war_justification != "Independence":
-        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot declare war.")
         return False
 
     # existing war check
@@ -1996,6 +1984,25 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
     if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
         return False
+    
+    # independence check
+    if attacker_nation.status != "Independent Nation" and not justification_data.get("For Puppet States", False):
+        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. As a puppet state, you cannot use this war justification.")
+        return False
+    
+    # target requirements check
+    # TODO - more requirements can easily be added here in the future to improve modding
+    target_requirements: dict = justification_data.get("Target Requirements", {})
+    for requirement, value in target_requirements.items():
+        match requirement:
+            case "Foreign Policy":
+                if defender_nation.fp not in value:
+                    attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Invalid foreign policy.")
+                    return False
+            case "isOverlord":
+                if defender_nation.name not in attacker_nation.status:
+                    attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You are not a puppet state of this nation.")
+                    return False
 
     # tag check
     is_blocked = False
