@@ -11,6 +11,7 @@ from collections import defaultdict
 
 from app import core
 from app import palette
+from app.scenario import ScenarioData as SD
 from app.alliance import Alliances
 from app.region import Region, Regions
 from app.nation import Nations
@@ -39,6 +40,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     """
 
     # get game files
+    SD.load(game_id)
     Regions.load(game_id)
     Nations.load(game_id)
 
@@ -119,6 +121,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
 
     # get game files
+    SD.load(game_id)
     Alliances.load(game_id)
     Nations.load(game_id)
     Regions.load(game_id)
@@ -196,6 +199,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     
     # get game data
+    SD.load(game_id)
     Alliances.load(game_id)
     Regions.load(game_id)
     Nations.load(game_id)

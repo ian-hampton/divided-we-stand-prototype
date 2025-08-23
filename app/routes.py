@@ -14,6 +14,7 @@ from app import site_functions
 from app import core
 from app import events
 from app import palette
+from app.scenario import ScenarioData as SD
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -1139,6 +1140,8 @@ def event_resolution():
     
     game_id = request.form.get("full_game_id")
 
+    SD.load(game_id)
+    
     Alliances.load(game_id)
     Regions.load(game_id)
     Nations.load(game_id)
