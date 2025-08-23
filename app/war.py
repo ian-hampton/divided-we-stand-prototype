@@ -676,7 +676,6 @@ class War:
                 attacker_nation.update_stockpile("Dollars", 50)
                 attacker_nation.update_stockpile("Research", 20)
                 attacker_nation.update_stockpile("Advanced Metals", 10)
-            Nations.save(attacker_nation)
 
     def _resolve_war_justification(self, nation_id: str):
         

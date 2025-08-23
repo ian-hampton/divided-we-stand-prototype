@@ -241,8 +241,6 @@ class CorruptionScandal(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         victim_nation.tags["Corruption Scandal"] = new_tag
-        
-        Nations.save(victim_nation)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -273,7 +271,6 @@ class Coup(Event):
         
         victim_nation.gov = new_government
         victim_nation.update_stockpile("Political Power", 0, overwrite=True)
-        Nations.save(victim_nation)
         Notifications.add(f"{victim_nation_name}'s {old_government} government has been defeated by a coup. A new {new_government} government has taken power.", 2)
 
         self.state = 0
@@ -587,7 +584,6 @@ class SecurityBreach(Event):
             "Expire Turn": self.current_turn_num + self.duration + 1
         }
         victim_nation.tags["Security Breach"] = new_tag
-        Nations.save(victim_nation)
         
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -1107,7 +1103,6 @@ class ForeignInvasion(Event):
         foreign_invasion_nation.name = "Foreign Adversary"
         foreign_invasion_nation.gov = "Foreign Nation"
         foreign_invasion_nation.fp = "Hostile"
-        Nations.save(foreign_invasion_nation)
 
         # note - all war justifications are set to null because this is not a conventional war
         Wars.create("99", "1", "NULL", [])
@@ -1211,7 +1206,6 @@ class ForeignInvasion(Event):
             if region.unit.owner_id != "0":
                 temp = Nations.get(region.unit.owner_id)
                 temp.unit_counts[region.unit.name] -= 1
-                Nations.save(temp)
             region.unit.clear()
 
         if region.improvement.name is not None:
@@ -1219,7 +1213,6 @@ class ForeignInvasion(Event):
             if region.data.owner_id != "0":
                 temp = Nations.get(region.data.owner_id)
                 temp.improvement_counts[region.improvement.name] -= 1
-                Nations.save(temp)
             region.improvement.clear()
 
         region.data.owner_id = "99"
@@ -1228,7 +1221,6 @@ class ForeignInvasion(Event):
 
         foreign_nation = Nations.get("99")
         foreign_nation.unit_counts[unit_name] += 1
-        Nations.save(foreign_nation)
 
     def _foreign_invasion_calculate_target_region(self, adjacency_list: list, destination_dict: dict) -> tuple:
         """
@@ -1318,8 +1310,6 @@ class ForeignInvasion(Event):
             war = Wars.get("Foreign Invasion")
             war.end = self.current_turn_num
             war.outcome = "White Peace"
-
-        Nations.save(foreign_invasion_nation)
 
 class Pandemic(Event):
     
