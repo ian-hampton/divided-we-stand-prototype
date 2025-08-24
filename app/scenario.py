@@ -32,6 +32,11 @@ class SD_Improvement:
     def __init__(self, d: dict):
         pass
 
+class SD_Market:
+    
+    def __init__(self, d: dict):
+        self.base_price = d["Base Price"]
+
 class SD_Missile:
     
     def __init__(self, d: dict):
@@ -85,6 +90,7 @@ ClassNameToFileName = {
     "SD_Alliance": "alliances",
     "SD_Event": "events",
     "SD_Improvement": "improvements",
+    "SD_Market": "market",
     "SD_Missile": "missiles",
     "SD_Technology": "technologies",
     "SD_Units": "units",
@@ -139,6 +145,7 @@ class ScenarioData:
     alliances: ClassVar[ScenarioDataFile[SD_Alliance]] = None
     events: ClassVar[ScenarioDataFile[SD_Event]] = None
     improvements: ClassVar[ScenarioDataFile[SD_Improvement]] = None
+    market: ClassVar[ScenarioDataFile[SD_Market]] = None
     missiles: ClassVar[ScenarioDataFile[SD_Missile]] = None
     technologies: ClassVar[ScenarioDataFile[SD_Technology]] = None
     units: ClassVar[ScenarioDataFile[SD_Units]] = None
@@ -155,6 +162,7 @@ class ScenarioData:
         cls.alliances = ScenarioDataFile(SD_Alliance)
         cls.events = ScenarioDataFile(SD_Event)
         cls.improvements = ScenarioDataFile(SD_Improvement)
+        cls.market = ScenarioDataFile(SD_Market)
         cls.missiles = ScenarioDataFile(SD_Missile)
         cls.technologies = ScenarioDataFile(SD_Technology)
         cls.units = ScenarioDataFile(SD_Units)

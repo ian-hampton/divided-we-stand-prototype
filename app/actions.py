@@ -1631,7 +1631,9 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
     
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
+    
     rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
     current_turn_num = core.get_current_turn_num(game_id)
     with open('active_games.json', 'r') as json_file:
@@ -1639,7 +1641,14 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
 
     rmdata_update_list = []
     steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
-    data = core.get_scenario_dict(game_id, "market")
+    data = {}
+    for resource_name, market_data in SD.market:
+        data[resource_name] = {
+        "Base Price": market_data.base_price,
+        "Current Price": 0,
+        "Bought": 0,
+        "Sold": 0
+    }
 
     # sum up recent transactions
     rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)

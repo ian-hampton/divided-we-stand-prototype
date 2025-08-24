@@ -792,15 +792,25 @@ def improvements_ref(full_game_id):
 @main.route('/<full_game_id>/resource_market')
 def resource_market(full_game_id):
 
-    # get game data
+    from app.scenario import ScenarioData as SD
+
+    SD.load(full_game_id)
+
     current_turn_num = core.get_current_turn_num(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Resource Market'
 
-    # tba - grab this from scenario files
-    data = core.get_scenario_dict(full_game_id, "market")
+    # generate market data
+    data = {}
+    for resource_name, market_data in SD.market:
+        data[resource_name] = {
+        "Base Price": market_data.base_price,
+        "Current Price": 0,
+        "Bought": 0,
+        "Sold": 0
+    }
     
     # get resource market records
     rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
