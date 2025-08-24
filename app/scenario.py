@@ -83,7 +83,30 @@ class SD_VictoryCondition:
 class SD_WarJustification:
     
     def __init__(self, d: dict):
-        pass
+        
+        self.d = d
+        self.required_agenda: str = d["Required Agenda"]
+        self.truce_duration: int = d["Truce Duraton"]
+        
+        self.has_war_claims: bool = d.get("War Claims") is not None
+        self.free_claims: int = None if not self.has_war_claims else d["War Claims"]["Free"]
+        self.max_claims: int = None if not self.has_war_claims else d["War Claims"]["Max"]
+        self.claim_cost: int = None if not self.has_war_claims else d["War Claims"]["Cost"]
+        
+        self.winner_stockpile_gains: dict = d.get("Winner Stockpile Gains", {})
+        self.winner_becomes_independent: bool = d.get("Winner Becomes Independent") is not None
+
+        self.looser_stockpile_gains: dict = d.get("Looser Stockpile Gains", {})
+        self.looser_penalty_duration: int = d.get("Looser Penalty Duration", None)
+        self.looser_releases_all_puppet_states: bool = d.get("Looser Releases All Puppet States") is not None
+        self.looser_becomes_puppet_state: bool = d.get("Looser Becomes Puppet State") is not None
+        
+        self.for_puppet_states: bool = d.get("For Puppet States") is not None
+        self.target_requirements: dict = d.get("Target Requirements", None)
+
+    @property
+    def looser_penalties(self) -> dict | None:
+        return copy.deepcopy(self.d.get("Looser Penalties", None))
 
 ClassNameToFileName = {
     "SD_Agenda": "agendas",
@@ -117,7 +140,7 @@ class ScenarioDataFile(Generic[T]):
 
     def __iter__(self):
         for name in self.file:
-            yield name, self[name]
+            yield str(name), self[name]
 
     def __contains__(self, name_str: str):
         return self.file is not None and name_str in self.file

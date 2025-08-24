@@ -397,30 +397,26 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def _validate_war_claims(cls, war_justification: str, region_claims_list: list[str]) -> int:
 
+        from app.scenario import ScenarioData as SD
         from app.region import Regions
 
         region_id_set = set(Regions.ids())
-        justification_scenario_dict = core.get_scenario_dict(cls.game_id, "justifications")
-        justification_data = justification_scenario_dict[war_justification]
-
-        if "War Claims" not in justification_data:
-            return 0
+        war_justification_data = SD.war_justificiations[war_justification]
 
         total = 0
-        max_claims: int = justification_data["War Claims"]["Max"]
-        free_claims: int = justification_data["War Claims"]["Free"]
-        claim_cost: int = justification_data["War Claims"]["Cost"]
+        if not war_justification_data.has_war_claims:
+            return 0
 
         for i, region_id in enumerate(region_claims_list):
             
             if region_id not in region_id_set:
                 return -1
             
-            if i + 1 > max_claims:
+            if i + 1 > war_justification_data.max_claims:
                 return -1
             
-            if i + 1 > free_claims:
-                total += claim_cost
+            if i + 1 > war_justification_data.free_claims:
+                total += war_justification_data.claim_cost
 
         return total
 
@@ -537,9 +533,8 @@ class War:
 
     def add_missing_justifications(self) -> None:
         
+        from app.scenario import ScenarioData as SD
         from app.nation import Nations
-
-        justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
 
         for combatant_id in self.combatants:
             
@@ -554,10 +549,8 @@ class War:
             if war_justification == "SKIP":
                 continue
 
-            justification_data: dict = justification_scenario_dict[war_justification]
-
             # process war claims
-            if justification_data.get("War Claims") is not None:
+            if SD.war_justificiations[war_justification].has_war_claims:
 
                 combatant.target_id = "N/A"
                 
@@ -613,12 +606,12 @@ class War:
 
     def end_conflict(self, outcome: str) -> None:
         
+        from app.scenario import ScenarioData as SD
         from app.nation import Nations
         from app.region import Regions
         from app.truce import Truces
         
         current_turn_num = core.get_current_turn_num(Wars.game_id)
-        justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
         
         # resolve war justifications
         truce_length = 4
@@ -627,11 +620,12 @@ class War:
             case "Attacker Victory":
                 for combatant_id in self.combatants:
                     combatant = self.get_combatant(combatant_id)
+                    if combatant.justification in ["TBD", "N/A"]:
+                        continue
                     if "Attacker" in combatant.role:
                         self._resolve_war_justification(combatant_id)
                     if "Main Attacker" == combatant.role:
-                        justification_data: dict = justification_scenario_dict[combatant.justification]
-                        truce_length = justification_data["Truce Duraton"]
+                        truce_length = SD.war_justificiations[combatant.justification].truce_duration
 
             case "Defender Victory":
                 for combatant_id in self.combatants:
@@ -639,8 +633,7 @@ class War:
                     if "Defender" in combatant.role:
                         self._resolve_war_justification(combatant_id)
                     if "Main Defender" == combatant.role:
-                        justification_data: dict = justification_scenario_dict[combatant.justification]
-                        truce_length = justification_data["Truce Duraton"]
+                        truce_length = SD.war_justificiations[combatant.justification].truce_duration
         
         # add truce periods
         for combatant_id in self.combatants:
@@ -679,17 +672,17 @@ class War:
 
     def _resolve_war_justification(self, nation_id: str):
         
+        from app.scenario import ScenarioData as SD
         from app.nation import Nations
         from app.region import Region
         
         current_turn_num = core.get_current_turn_num(Wars.game_id)
-        justification_scenario_dict = core.get_scenario_dict(Wars.game_id, "justifications")
         
         winner_nation = Nations.get(nation_id)
         winner_combatant_data = self.get_combatant(nation_id)
-        justification_data: dict = justification_scenario_dict[winner_combatant_data.justification]
+        war_justification_data = SD.war_justificiations[winner_combatant_data.justification]
 
-        if justification_data.get("War Claims") is not None:
+        if not war_justification_data.has_war_claims:
             for region_id, original_owner_id in winner_combatant_data.claims.items():
                 region = Region(region_id)
                 
@@ -705,31 +698,28 @@ class War:
                 region.data.owner_id = winner_nation.id
                 region.data.occupier_id = "0"
 
-        stockpile_gains = justification_data.get("Winner Stockpile Gains", {})
-        for resource_name, amount in stockpile_gains:
+        for resource_name, amount in war_justification_data.winner_stockpile_gains:
             winner_nation.update_stockpile(resource_name, amount)
 
-        stockpile_gains = justification_data.get("Looser Stockpile Gains", {})
-        for resource_name, amount in stockpile_gains:
+        for resource_name, amount in war_justification_data.looser_stockpile_gains:
             looser_nation = Nations.get(winner_combatant_data.target_id)
             looser_nation.update_stockpile(resource_name, amount)
 
-        penalties = justification_data.get("Looser Penalties")
-        if penalties is not None:
+        if war_justification_data.looser_penalties is not None:
             looser_nation = Nations.get(winner_combatant_data.target_id)
-            penalties["Expire Turn"] = current_turn_num + justification_data["Looser Penalty Duration"] + 1
-            looser_nation.tags[f"Defeated by {winner_nation} in {self.name}"] = penalties
+            war_justification_data.looser_penalties["Expire Turn"] = current_turn_num + war_justification_data.looser_penalty_duration + 1
+            looser_nation.tags[f"Defeated by {winner_nation} in {self.name}"] = war_justification_data.looser_penalties
 
-        if justification_data.get("Winner Becomes Independent") is not None:
+        if war_justification_data.winner_becomes_independent:
             winner_nation.status = "Independent Nation"
 
-        if justification_data.get("Looser Releases All Puppet States") is not None:
+        if war_justification_data.looser_releases_all_puppet_states:
             looser_nation = Nations.get(winner_combatant_data.target_id)
             for nation in Nations:
                 if looser_nation.name in nation.status:
                     winner_nation.status = "Independent Nation"
 
-        if justification_data.get("Looser Becomes Puppet State") is not None:
+        if war_justification_data.looser_becomes_puppet_state:
             looser_nation = Nations.get(winner_combatant_data.target_id)
             looser_nation.status = f"Puppet State of {winner_nation.name}"
 
