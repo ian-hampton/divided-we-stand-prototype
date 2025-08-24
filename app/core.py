@@ -123,11 +123,10 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     """
     
     from app.scenario import ScenarioData as SD
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
     # build yield dict
     yield_dict = {}
-    for improvement_name, improvement_data in improvement_data_dict.items():
+    for improvement_name, improvement_data in SD.improvements:
         
         # no point in tracking the data for improvements the player does not have any of
         if nation.improvement_counts[improvement_name] == 0:
@@ -140,8 +139,8 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
                 "Income Multiplier": 1
             }
 
-        for resource_name in improvement_data["Income"]:
-            yield_dict[improvement_name][resource_name]["Income"] = improvement_data["Income"][resource_name]
+        for resource_name, amount in improvement_data.income.items():
+            yield_dict[improvement_name][resource_name]["Income"] = amount
     
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:   
@@ -178,13 +177,11 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         dict: Upkeep dictionary detailing upkeep and upkeep multiplier for every improvement.
     """
     
-    # load game info
     from app.scenario import ScenarioData as SD
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
     upkeep_dict = {}
 
-    for improvement_name, improvement_data in improvement_data_dict.items():
+    for improvement_name, improvement_data in SD.improvements:
 
         # no point in tracking the data for improvements the player does not have any of
         if nation.improvement_counts[improvement_name] == 0:
@@ -197,8 +194,8 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
                 "Upkeep Multiplier": 1
             }
 
-        for resource_name in improvement_data["Upkeep"]:
-            upkeep_dict[improvement_name][resource_name]["Upkeep"] = improvement_data["Upkeep"][resource_name]
+        for resource_name, amount in improvement_data.upkeep.items():
+            upkeep_dict[improvement_name][resource_name]["Upkeep"] = amount
 
     for unit_name, unit_data in SD.units:
 
@@ -272,12 +269,10 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
     
     # get game data
     from app.region import Region
-    improvement_data_dict = get_scenario_dict(game_id, "Improvements")
     target_region = Region(target_region_id)
 
     defender_name = None
-    # TODO - get priority for missile defense from game files
-    # TODO - get defensive capabilities from game files
+    # TODO - rewrite, no hardcoding the names
 
     # check for MDS
     if target_region.improvement.name == "Missile Defense System":

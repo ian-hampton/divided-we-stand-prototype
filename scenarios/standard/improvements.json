@@ -2,12 +2,6 @@
     "Advanced Metals Mine": {
         "Required Research": "Metallurgy",
         "Required Resource": "Advanced Metals",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Advanced Metals": 1
         },
@@ -24,8 +18,6 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 9,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Military Capacity": 2
         },
@@ -44,8 +36,6 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 7,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Dollars": 5,
             "Political Power": 1,
@@ -65,8 +55,6 @@
         "Victory Damage": 2,
         "Combat Value": 7,
         "Draw Damage": 1,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {},
         "Abilities": [
             "Provides +20 storage capacity for all resources.",
@@ -87,8 +75,6 @@
         "Victory Damage": 2,
         "Combat Value": 7,
         "Draw Damage": 1,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Dollars": 5
         },
@@ -104,12 +90,6 @@
     "Coal Mine": {
         "Required Research": "Coal Mining",
         "Required Resource": "Coal",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Coal": 1
         },
@@ -126,8 +106,6 @@
         "Victory Damage": 3,
         "Combat Value": 9,
         "Draw Damage": 1,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Dollars": 10,
             "Political Power": 0.25,
@@ -145,12 +123,6 @@
     "Common Metals Mine": {
         "Required Research": "Metal Extraction",
         "Required Resource": "Common Metals",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Common Metals": 1
         },
@@ -163,12 +135,6 @@
     "Farm": {
         "Required Research": "Resettlement",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Food": 3
         },
@@ -181,12 +147,6 @@
     "Industrial Zone": {
         "Required Research": null,
         "Required Resource": "Basic Materials",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Basic Materials": 1
         },
@@ -203,8 +163,6 @@
         "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 5,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {},
         "Abilities": [],
         "Upkeep": {
@@ -222,8 +180,6 @@
         "Victory Damage": 3,
         "Draw Damage": 2,
         "Combat Value": 7,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {},
         "Abilities": [],
         "Upkeep": {
@@ -259,12 +215,6 @@
     "Nuclear Power Plant": {
         "Required Research": "Nuclear Power",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Energy": 6
         },
@@ -280,12 +230,6 @@
     "Oil Well": {
         "Required Research": "Oil Drilling",
         "Required Resource": "Oil",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Oil": 1
         },
@@ -298,12 +242,6 @@
     "Uranium Mine": {
         "Required Research": "Uranium Mining",
         "Required Resource": "Uranium",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Uranium": 1
         },
@@ -316,12 +254,6 @@
     "Rare Earth Elements Mine": {
         "Required Research": "Rare Earth Mining",
         "Required Resource": "Rare Earth Elements",
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Rare Earth Elements": 1
         },
@@ -334,12 +266,6 @@
     "Research Institute": {
         "Required Research": "Research Institutes",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Research": 5
         },
@@ -356,12 +282,6 @@
     "Research Laboratory": {
         "Required Research": "Laboratories",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Research": 1
         },
@@ -374,12 +294,6 @@
     "Trench": {
         "Required Research": "Trench Warfare",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {},
         "Abilities": [
             "All of your Infantry-type units located within a region with a Trench improvement will receive 1 less damage from enemy attacks."
@@ -396,8 +310,6 @@
         "Victory Damage": 2,
         "Draw Damage": 1,
         "Combat Value": 9,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {},
         "Abilities": [
             "May launch up to three Standard Missiles or one Nuclear Missile per turn."
@@ -416,8 +328,6 @@
         "Victory Damage": 2,
         "Combat Value": 9,
         "Draw Damage": 1,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Dollars": 3
         },
@@ -432,12 +342,6 @@
     "Solar Farm": {
         "Required Research": "Solar Panels",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Energy": 2
         },
@@ -452,12 +356,6 @@
         "Required Research": "Surveillance Operations",
         "Required Resource": null,
         "Fog of War Improvement": true,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {},
         "Abilities": [
             "Allows your nation to gather intelligence on an enemy nation.",
@@ -473,12 +371,6 @@
     "Wind Farm": {
         "Required Research": "Wind Turbines",
         "Required Resource": null,
-        "Health": 99,
-        "Victory Damage": 99,
-        "Draw Damage": 99,
-        "Combat Value": 99,
-        "Standard Missile Defense": 99,
-        "Nuclear Missile Defense": 99,
         "Income": {
             "Energy": 1
         },

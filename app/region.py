@@ -517,15 +517,16 @@ class ImprovementData:
         return True if self.health not in [0, 99] else False
 
     def _load_attributes_from_game_files(self) -> None:
+
+        from app.scenario import ScenarioData as SD
         
-        data_dict = core.get_scenario_dict(Regions.game_id, "Improvements")
         if self.name is not None:
-            self.victory_damage: int = data_dict[self.name]["Victory Damage"]
-            self.draw_damage: int = data_dict[self.name]["Draw Damage"]
-            self.max_health: int = data_dict[self.name]["Health"]
-            self.hit_value: int = data_dict[self.name]["Combat Value"]
-            self.missile_defense: int = data_dict[self.name]["Standard Missile Defense"]
-            self.nuke_defense: int = data_dict[self.name]["Nuclear Missile Defense"]
+            self.victory_damage = SD.improvements[self.name].victory_damage
+            self.draw_damage = SD.improvements[self.name].draw_damage
+            self.max_health = SD.improvements[self.name].health
+            self.hit_value = SD.improvements[self.name].hit_value
+            self.missile_defense = SD.improvements[self.name].missile_defense
+            self.nuclear_defense = SD.improvements[self.name].nuclear_defense
         else:
             self.victory_damage = None
             self.draw_damage = None

@@ -30,7 +30,28 @@ class SD_Event:
 class SD_Improvement:
     
     def __init__(self, d: dict):
-        pass
+        
+        self.d = d
+        self.required_research: str = d["Required Research"]
+        self.required_resource: str = d["Required Resource"]
+
+        self.health: int = d.get("Health", 99)
+        self.victory_damage: int = d.get("Victory Damage", 99)
+        self.draw_damage: int = d.get("Draw Damage", 99)
+        self.hit_value: int = d.get("Combat Value", 99)
+        self.missile_defense: int = d.get("Standard Missile Defense", 99)
+        self.nuclear_defense: int = d.get("Nuclear Missile Defense", 99)
+
+        self.income: dict = d.get("Income", {})
+        self.abilities: list = d.get("Abilities", [])
+
+    @property
+    def upkeep(self) -> dict:
+        return copy.deepcopy(self.d.get("Upkeep", {}))
+    
+    @property
+    def cost(self) -> dict:
+        return copy.deepcopy(self.d.get("Build Costs", {}))
 
 class SD_Market:
     
@@ -62,23 +83,23 @@ class SD_Unit:
         self.abbreviation: str = d["Abbreviation"]
         self.value: int = d["Point Value"]
         
-        self.health: int = d["Health"]
-        self.victory_damage: int = d["Victory Damage"]
-        self.draw_damage: int = d["Draw Damage"]
-        self.hit_value: int = d["Combat Value"]
+        self.health: int = d.get("Health", 99)
+        self.victory_damage: int = d.get("Victory Damage", 99)
+        self.draw_damage: int = d.get("Draw Damage", 99)
+        self.hit_value: int = d.get("Combat Value", 99)
         self.missile_defense: int = d.get("Standard Missile Defense", 99)
         self.nuclear_defense: int = d.get("Nuclear Missile Defense", 99)
         
-        self.movement: int = d["Movement"]
-        self.abilities: list = d["Abilities"]
+        self.movement: int = d.get("Movement", 0)
+        self.abilities: list = d.get("Abilities", [])
 
     @property
     def upkeep(self) -> dict:
-        return copy.deepcopy(self.d["Upkeep"])
+        return copy.deepcopy(self.d.get("Upkeep", {}))
     
     @property
     def cost(self) -> dict:
-        return copy.deepcopy(self.d["Build Costs"])
+        return copy.deepcopy(self.d.get("Build Costs", {}))
 
 class SD_VictoryCondition:
     

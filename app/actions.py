@@ -810,8 +810,7 @@ def _check_nation_name(game_id: str, nation_name: str) -> str | None:
 
 def _check_improvement_name(game_id: str, improvement_name: str) -> str | None:
 
-    improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
-    improvement_names = set(improvement_scenario_dict.keys())
+    from app.scenario import ScenarioData as SD
 
     improvement_errors = {
         "amm": "Advanced Metals Mine",
@@ -851,7 +850,7 @@ def _check_improvement_name(game_id: str, improvement_name: str) -> str | None:
         "wind turbines": "Wind Farm"
     }
 
-    if improvement_name.title() in improvement_names:
+    if improvement_name.title() in SD.improvements.names():
         return improvement_name.title()
     
     return improvement_errors.get(improvement_name.lower())
@@ -1492,8 +1491,8 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
 
 def resolve_improvement_build_actions(game_id: str, actions_list: list[ImprovementBuildAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
-    improvement_data_dict = core.get_scenario_dict(game_id, "Improvements")
 
     for action in actions_list:
         
@@ -1508,12 +1507,12 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
             continue
         
-        required_research = improvement_data_dict[action.improvement_name]["Required Research"]
+        required_research = SD.improvements[action.improvement_name].required_research
         if required_research is not None and required_research not in nation.completed_research:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not have the required research.")
             continue
 
-        required_resource = improvement_data_dict[action.improvement_name]["Required Resource"]
+        required_resource = SD.improvements[action.improvement_name].required_resource
         if required_resource is not None and required_resource != region.data.resource:
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. The region does not have the resource required for this improvement.")
             continue
@@ -1526,7 +1525,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You are not the Collaborator.")
             continue
 
-        build_cost_dict: dict = copy.deepcopy(improvement_data_dict[action.improvement_name]["Build Costs"])
+        build_cost_dict = SD.improvements[action.improvement_name].cost
         nation.apply_build_discount(build_cost_dict)
 
         valid = True
@@ -2020,7 +2019,6 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
     from app.scenario import ScenarioData as SD
     from app.nation import Nations
     from app.war import Wars
-    improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
 
     # missile launch capacity is calculated in advance of actions because missile launches are simultaneous
     missiles_launched_list = [0] * len(Nations)
@@ -2110,9 +2108,12 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                 else:
                     hit_value = SD.units[defender_name].nuclear_defense
             else:
-                hit_value = improvement_scenario_dict[defender_name][f"{action.missile_type} Defense"]
+                if action.missile_type == "Standard Missile":
+                    hit_value = SD.improvements[defender_name].missile_defense
+                else:
+                    hit_value = SD.improvements[defender_name].nuclear_defense
                 if "Local Missile Defense" in nation.completed_research and defender_name not in ["Missile Defense System", "Missile Defense Network"]:
-                    hit_value = improvement_scenario_dict[defender_name][f"Hit Value"]
+                    hit_value = SD.improvements[defender_name].hit_value
 
             missile_defense_roll = random.randint(1, 10)
             if missile_defense_roll >= hit_value:

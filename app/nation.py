@@ -63,7 +63,6 @@ class Nations(metaclass=NationsMeta):
     def create(cls, nation_id: str, player_id: int) -> None:
 
         from app.scenario import ScenarioData as SD
-        improvement_dict = core.get_scenario_dict(cls.game_id, "Improvements")
 
         nation_data = {
             "nationName": "N/A",
@@ -181,7 +180,7 @@ class Nations(metaclass=NationsMeta):
                 "researchCount": [],
                 "transactionCount": []
             },
-            "improvementCounts": {key: 0 for key in improvement_dict},
+            "improvementCounts": {improvement_name: 0 for improvement_name, improvement_data in SD.improvements},
             "unitCounts": {unit_name: 0 for unit_name, unit_data in SD.units},
             "unlockedResearch": {},
             "incomeDetails": [],

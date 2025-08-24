@@ -30,7 +30,6 @@ class GameMaps:
         """
 
         from app.scenario import ScenarioData as SD
-        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
 
         print("Updating game maps...")
 
@@ -115,7 +114,7 @@ class GameMaps:
 
                 # place improvement health
                 if region.improvement.health != 99:
-                    max_health = improvement_data_dict[region.improvement.name]["Health"]
+                    max_health = SD.improvements[region.improvement.name].health
                     health_img = Image.open(f"{self.images_filepath}/health/{region.improvement.health}-{max_health}.png")
                     x = region.graph.improvement_coordinates[0] - 12
                     y = region.graph.improvement_coordinates[1] + 52
@@ -166,14 +165,14 @@ class GameMaps:
         Spawns random improvements on random regions. Should only be called at the start of the game.
         """
         
-        # get game data
-        improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
+        from app.scenario import ScenarioData as SD
+        
         region_id_list = Regions.ids()
         
         # get list of improvements that can spawn
         improvement_candidates_list = []
-        for improvement_name in improvement_data_dict:
-            if improvement_data_dict[improvement_name]['Required Resource'] == None and improvement_name not in DO_NOT_SPAWN:
+        for improvement_name, improvement_data in SD.improvements:
+            if improvement_data.required_resource is None and improvement_name not in DO_NOT_SPAWN:
                 improvement_candidates_list.append(improvement_name)
         
         # place improvements randomly
@@ -235,7 +234,7 @@ class GameMaps:
                     if random_region.graph.is_significant and random.randint(1, 10) > 5:
                         improvement_name = "City"
                     # add health bar if needed
-                    if improvement_data_dict[improvement_name]["Health"] == 99:
+                    if SD.improvements[improvement_name].health == 99:
                         random_region.improvement.set(improvement_name)
                     else:
                         random_region.improvement.set(improvement_name, 1)
