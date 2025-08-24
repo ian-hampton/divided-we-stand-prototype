@@ -180,7 +180,6 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     
     # load game info
     from app.scenario import ScenarioData as SD
-    unit_data_dict = get_scenario_dict(game_id, "Units")
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
     upkeep_dict = {}
@@ -201,7 +200,7 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         for resource_name in improvement_data["Upkeep"]:
             upkeep_dict[improvement_name][resource_name]["Upkeep"] = improvement_data["Upkeep"][resource_name]
 
-    for unit_name, unit_data in unit_data_dict.items():
+    for unit_name, unit_data in SD.units:
 
         # no point in tracking the data for units the player does not have any of
         if nation.unit_counts[unit_name] == 0:
@@ -214,8 +213,8 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
                 "Upkeep Multiplier": 1
             }
 
-        for resource_name in unit_data["Upkeep"]:
-            upkeep_dict[unit_name][resource_name]["Upkeep"] = unit_data["Upkeep"][resource_name]
+        for resource_name, amount in unit_data.upkeep.items():
+            upkeep_dict[unit_name][resource_name]["Upkeep"] = amount
     
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:
@@ -436,12 +435,12 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     Randomly destroys one unit of a given type belonging to a specific player.
     """
 
+    from app.scenario import ScenarioData as SD
     from app.region import Region, Regions
-    unit_scenario_dict = get_scenario_dict(game_id, "Units")
 
     # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []
-    if desired_unit_name in unit_scenario_dict:
+    if desired_unit_name in SD.units:
         for region in Regions:
             if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
                 candidate_region_ids.append(region.region_id)

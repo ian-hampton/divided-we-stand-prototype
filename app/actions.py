@@ -933,14 +933,11 @@ def _check_research(game_id: str, research_name: str) -> str | None:
 
 def _check_unit(game_id: str, unit_str: str) -> str | None:
     
-    unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
-    unit_names = set(unit_scenario_dict.keys())
+    from app.scenario import ScenarioData as SD
     
-    if unit_str.title() in unit_names:
-        return unit_str.title()
-    
-    for unit_name, unit_data in unit_scenario_dict.items():
-        if unit_data["Abbreviation"] == unit_str.upper():
+    for unit_name, unit_data in SD.units:
+        if (unit_name.lower() == unit_str.lower()
+            or unit_data.abbreviation == unit_str.upper()):
             return unit_name
         
     return None
@@ -1820,19 +1817,20 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
 
 def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
-    unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
 
     for action in actions_list:
 
         region = Region(action.target_region)
         nation = Nations.get(action.id)
+        sd_unit = SD.units[action.unit_name]
 
         if str(region.data.owner_id) != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not control this region.")
             continue
         
-        if unit_scenario_dict[action.unit_name]['Required Research'] not in nation.completed_research:
+        if sd_unit.required_research not in nation.completed_research:
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. You do not have the required research.")
             continue
 
@@ -1840,7 +1838,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             nation.action_log.append(f"Failed to deploy {action.unit_name} in region {action.target_region}. Insufficient military capacity.")
             continue
 
-        build_cost_dict: dict = copy.deepcopy(unit_scenario_dict[action.unit_name]["Build Costs"])
+        build_cost_dict = sd_unit.cost
         if nation.gov == "Military Junta":
             for key in build_cost_dict:
                 build_cost_dict[key] *= 0.8
@@ -2019,10 +2017,10 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
 
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
     from app.war import Wars
     improvement_scenario_dict = core.get_scenario_dict(game_id, "Improvements")
-    unit_scenario_dict = core.get_scenario_dict(game_id, "Units")
 
     # missile launch capacity is calculated in advance of actions because missile launches are simultaneous
     missiles_launched_list = [0] * len(Nations)
@@ -2106,8 +2104,11 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         if defender_name is not None:
             
             war.log.append(f"    A nearby {defender_name} attempted to defend {target_region.region_id}.")
-            if defender_name in unit_scenario_dict:
-                hit_value = unit_scenario_dict[defender_name][f"{action.missile_type} Defense"]
+            if defender_name in SD.units:
+                if action.missile_type == "Standard Missile":
+                    hit_value = SD.units[defender_name].missile_defense
+                else:
+                    hit_value = SD.units[defender_name].nuclear_defense
             else:
                 hit_value = improvement_scenario_dict[defender_name][f"{action.missile_type} Defense"]
                 if "Local Missile Defense" in nation.completed_research and defender_name not in ["Missile Defense System", "Missile Defense Network"]:

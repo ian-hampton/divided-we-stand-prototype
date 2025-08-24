@@ -55,7 +55,30 @@ class SD_Technology:
 class SD_Unit:
     
     def __init__(self, d: dict):
-        pass
+        
+        self.d = d
+        self.required_research: str = d["Required Research"]
+        self.type: str = d["Unit Type"]
+        self.abbreviation: str = d["Abbreviation"]
+        self.value: int = d["Point Value"]
+        
+        self.health: int = d["Health"]
+        self.victory_damage: int = d["Victory Damage"]
+        self.draw_damage: int = d["Draw Damage"]
+        self.hit_value: int = d["Combat Value"]
+        self.missile_defense: int = d.get("Standard Missile Defense", 99)
+        self.nuclear_defense: int = d.get("Nuclear Missile Defense", 99)
+        
+        self.movement: int = d["Movement"]
+        self.abilities: list = d["Abilities"]
+
+    @property
+    def upkeep(self) -> dict:
+        return copy.deepcopy(self.d["Upkeep"])
+    
+    @property
+    def cost(self) -> dict:
+        return copy.deepcopy(self.d["Build Costs"])
 
 class SD_VictoryCondition:
     

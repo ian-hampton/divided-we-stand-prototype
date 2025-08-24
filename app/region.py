@@ -596,21 +596,26 @@ class UnitData:
 
     def _load_attributes_from_game_files(self) -> None:
     
-        data_dict = core.get_scenario_dict(Regions.game_id, "Units")
+        from app.scenario import ScenarioData as SD
+
         if self.name is not None:
-            self.type: str = data_dict[self.name]["Unit Type"]
-            self.victory_damage: int = data_dict[self.name]["Victory Damage"]
-            self.draw_damage: int = data_dict[self.name]["Draw Damage"]
-            self.max_health: int = data_dict[self.name]["Health"]
-            self.hit_value: int = data_dict[self.name]["Combat Value"]
-            self.value: int = data_dict[self.name]["Point Value"]
+            self.type = SD.units[self.name].type
+            self.value = SD.units[self.name].value
+            self.victory_damage = SD.units[self.name].victory_damage
+            self.draw_damage = SD.units[self.name].draw_damage
+            self.max_health = SD.units[self.name].health
+            self.hit_value = SD.units[self.name].hit_value
+            self.missile_defense = SD.units[self.name].missile_defense
+            self.nuclear_defense = SD.units[self.name].nuclear_defense
         else:
             self.type = None
+            self.value = None
             self.victory_damage = None
             self.draw_damage = None
             self.max_health = None
             self.hit_value = None
-            self.value = None
+            self.missile_defense = None
+            self.nuclear_defense = None
 
     def set(self, unit_name: str, owner_id: str, starting_health=0) -> None:
         self.clear()

@@ -29,11 +29,10 @@ class GameMaps:
         Exports updated maps to game files.
         """
 
-        print("Updating game maps...")
-        
-        # get game data
+        from app.scenario import ScenarioData as SD
         improvement_data_dict = core.get_scenario_dict(self.game_id, "Improvements")
-        unit_data_dict = core.get_scenario_dict(self.game_id, "Units")
+
+        print("Updating game maps...")
 
         # initialize map images
         self._init_images()
@@ -141,11 +140,11 @@ class GameMaps:
 
                 # place unit name
                 font = ImageFont.truetype("app/fonts/LeelaUIb.ttf", size=12)
-                abbrev = unit_data_dict[region.unit.name]["Abbreviation"]
+                abbrev = SD.units[region.unit.name].abbreviation
                 ImageDraw.Draw(unit_img).text(xy=(25, 4), text=abbrev, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
 
                 # place unit health
-                max_health = unit_data_dict[region.unit.name]["Health"]
+                max_health = SD.units[region.unit.name].health
                 ImageDraw.Draw(unit_img).text(xy=(25, 36), text=f"{region.unit.health}/{max_health}", fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
                 
                 # place unit on map
