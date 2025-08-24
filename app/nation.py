@@ -207,9 +207,10 @@ class Nations(metaclass=NationsMeta):
     
     @classmethod
     def update_records(cls) -> None:
+
+        from app.scenario import ScenarioData as SD
         
         current_turn_num = core.get_current_turn_num(cls.game_id)
-        tech_data_dict = core.get_scenario_dict(cls.game_id, "Technologies")
         rmdata_filepath = f"gamedata/{cls.game_id}/rmdata.csv"
         rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
 
@@ -236,7 +237,7 @@ class Nations(metaclass=NationsMeta):
             # update tech count
             technology_count = 0
             for technology_name in nation.completed_research:
-                if technology_name in tech_data_dict:
+                if technology_name in SD.technologies:
                     technology_count += 1
             nation._records["researchCount"].append(technology_count)
 
@@ -700,9 +701,9 @@ class Nation:
 
     def add_tech(self, technology_name: str) -> None:
         
-        tech_dict = core.get_scenario_dict(Nations.game_id, "Technologies")
-        agenda_dict = core.get_scenario_dict(Nations.game_id, "Agendas")
-        if technology_name not in tech_dict and technology_name not in agenda_dict:
+        from app.scenario import ScenarioData as SD
+
+        if technology_name not in SD.agendas and technology_name not in SD.technologies:
             raise Exception(f"{technology_name} not recognized as an agenda/technology.")
 
         self.completed_research[technology_name] = True
@@ -722,7 +723,8 @@ class Nation:
 
     def award_research_bonus(self, research_name: str) -> None:
         
-        research_scenario_dict = core.get_scenario_dict(Nations.game_id, "Technologies")
+        from app.scenario import ScenarioData as SD
+        from app.scenario import SD_Technology
 
         for tag_data in self.tags.values():
             
@@ -730,7 +732,9 @@ class Nation:
                 continue
             
             bonus_dict = tag_data["Research Bonus"]
-            if research_scenario_dict[research_name]["Research Type"] in bonus_dict["Categories"]:
+            sd_technology: SD_Technology = SD.technologies.get(research_name)
+
+            if sd_technology.type in bonus_dict["Categories"]:
                 resource_name: str = bonus_dict["Resource"]
                 resource_amount: int = bonus_dict["Amount"]
                 self.update_stockpile(resource_name, resource_amount)
@@ -747,11 +751,11 @@ class Nation:
 
     def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
         
-        adjustment = 0
-        agenda_data_dict = core.get_scenario_dict(Nations.game_id, "Agendas")
-        agenda_type = agenda_data_dict[agenda_name]['Agenda Type']
+        from app.scenario import ScenarioData as SD
+        from app.scenario import SD_Agenda
 
-        # cost adjustment from foreign policy
+        adjustment = 0
+
         agenda_cost_adjustment = {
             "Cooperative": {
                 "Diplomatic": -5,
@@ -778,7 +782,9 @@ class Nation:
                 "Imperialist": -5,
             }
         }
-        adjustment += agenda_cost_adjustment[agenda_type][self.fp]
+
+        sd_agenda: SD_Agenda = SD.agendas.get(agenda_name)
+        adjustment += agenda_cost_adjustment[sd_agenda.type][self.fp]
 
         # cost adjustment from tags
         for tag_data in self.tags.values():

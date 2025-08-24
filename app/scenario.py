@@ -18,6 +18,13 @@ class ScenarioDataFile:
         with open(filepath, 'r') as file:
             self.file = json.load(file)
 
+    def __iter__(self):
+        for name in self.file:
+            yield name, self.get(name)
+
+    def __contains__(self, name_str: str):
+        return self.file is not None and name_str in self.file
+
     def get(self, name: str) -> any:
         
         data: dict = self.file.get(name)
@@ -39,8 +46,8 @@ class ScenarioDataFile:
 
         return files[self.filename](data)
     
-    def names(self) -> list:
-        return self.file.keys()
+    def names(self) -> set:
+        return set(self.file.keys())
 
 @dataclass
 class ScenarioData:
@@ -88,12 +95,16 @@ class ScenarioData:
 class SD_Agenda:
     
     def __init__(self, d: dict):
-        pass
+        self.type: str = d["Agenda Type"]
+        self.prerequisite: str | None = d["Prerequisite"]
+        self.cost: int = d["Cost"]
+        self.description: str = d["Description"]
+        self.location: str = d["Location"]
+        self.modifiers: dict = d["Modifiers"]
 
 class SD_Alliance:
     
     def __init__(self, d: dict):
-        
         self.color_theme: str = d["colorTheme"]
         self.description: list = d["descriptionList"]
 
@@ -115,7 +126,12 @@ class SD_Missile:
 class SD_Technology:
     
     def __init__(self, d: dict):
-        pass
+        self.type: str = d["Agenda Type"]
+        self.prerequisite: str | None = d["Prerequisite"]
+        self.cost: int = d["Cost"]
+        self.description: str = d["Description"]
+        self.location: str = d["Location"]
+        self.modifiers: dict = d["Modifiers"]
 
 class SD_Units:
     

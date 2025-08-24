@@ -122,10 +122,9 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
         dict: Yield dictionary detailing income and multiplier for every improvement.
     """
     
-    # load game info
+    from app.scenario import ScenarioData as SD
+    from app.scenario import SD_Agenda, SD_Technology
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    technology_data_dict = get_scenario_dict(game_id, "Technologies")
-    agenda_data_dict = get_scenario_dict(game_id, "Agendas")
 
     # build yield dict
     yield_dict = {}
@@ -147,20 +146,21 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:   
+
+        if tech_name in SD.agendas:
+            tech_dict = SD.agendas.get(tech_name)
+        else:
+            tech_dict = SD.technologies.get(tech_name)
         
-        if tech_name in technology_data_dict:
-            tech_dict = technology_data_dict[tech_name]
-        elif tech_name in agenda_data_dict:
-            tech_dict = agenda_data_dict[tech_name]
-        
-        for target in tech_dict["Modifiers"]: 
+        tech_dict: SD_Agenda | SD_Technology
+        for target in tech_dict.modifiers: 
 
             # skip over modifiers that are not affecting improvements
             if target not in yield_dict:
                 continue
             
             improvement_name = target
-            for resource_name, modifier_dict in tech_dict["Modifiers"][improvement_name].items():
+            for resource_name, modifier_dict in tech_dict.modifiers[improvement_name].items():
                 if "Income" in modifier_dict:
                     yield_dict[improvement_name][resource_name]["Income"] += modifier_dict["Income"]
                 elif "Income Multiplier" in modifier_dict:
@@ -181,10 +181,10 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     """
     
     # load game info
+    from app.scenario import ScenarioData as SD
+    from app.scenario import SD_Agenda, SD_Technology
     unit_data_dict = get_scenario_dict(game_id, "Units")
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
-    technology_data_dict = get_scenario_dict(game_id, "Technologies")
-    agenda_data_dict = get_scenario_dict(game_id, "Agendas")
 
     upkeep_dict = {}
 
@@ -223,18 +223,19 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     # get modifiers from each technology and agenda
     for tech_name in nation.completed_research:
         
-        if tech_name in technology_data_dict:
-            tech_dict = technology_data_dict[tech_name]
-        elif tech_name in agenda_data_dict:
-            tech_dict = agenda_data_dict[tech_name]
+        if tech_name in SD.agendas:
+            tech_dict = SD.agendas.get(tech_name)
+        else:
+            tech_dict = SD.technologies.get(tech_name)
 
-        for target in tech_dict["Modifiers"]: 
+        tech_dict: SD_Agenda | SD_Technology
+        for target in tech_dict.modifiers: 
             
             # skip over effects that are not improvements or units
             if target not in upkeep_dict:
                 continue
             
-            for resource_name, modifier_dict in tech_dict["Modifiers"][target].items():
+            for resource_name, modifier_dict in tech_dict.modifiers[target].items():
                 if "Upkeep" in modifier_dict:
                     upkeep_dict[target][resource_name]["Upkeep"] += modifier_dict["Upkeep"]
                 elif "Upkeep Multiplier" in modifier_dict:

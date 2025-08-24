@@ -924,9 +924,9 @@ def _check_missile(game_id: str, missile_type: str) -> str | None:
 
 def _check_research(game_id: str, research_name: str) -> str | None:
 
-    agenda_scenario_dict = core.get_scenario_dict(game_id, "Agendas")
-    technology_scenario_dict = core.get_scenario_dict(game_id, "Technologies")
-    research_names = set(agenda_scenario_dict.keys()).union(technology_scenario_dict.keys())
+    from app.scenario import ScenarioData as SD
+    
+    research_names = set(SD.agendas.names()).union(SD.technologies.names())
 
     if research_name.title() in research_names:
         return research_name.title()
@@ -1192,10 +1192,10 @@ def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, cur
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
+    from app.scenario import SD_Agenda, SD_Technology
     from app.alliance import Alliances
     from app.nation import Nations
-    agenda_data_dict = core.get_scenario_dict(game_id, "Agendas")
-    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
 
     for action in actions_list:
         
@@ -1209,10 +1209,11 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             nation.action_log.append(f"Failed to research {action.research_name} due to an event penalty.")
             continue
 
-        if action.research_name in agenda_data_dict:
+        if action.research_name in SD.agendas:
             
-            cost = agenda_data_dict[action.research_name]["Cost"]
-            prereq = agenda_data_dict[action.research_name]["Prerequisite"]
+            sd_agenda: SD_Agenda = SD.agendas.get(action.research_name)
+            cost = sd_agenda.cost
+            prereq = sd_agenda.prerequisite
 
             if prereq != None and prereq not in nation.completed_research:
                 nation.action_log.append(f"Failed to research {action.research_name}. You do not have the prerequisite research.")
@@ -1229,9 +1230,10 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             nation.add_tech(action.research_name)
 
         else:
-
-            cost = research_data_dict[action.research_name]["Cost"]
-            prereq = research_data_dict[action.research_name]["Prerequisite"]
+            
+            sd_technology: SD_Technology = SD.technologies.get(action.research_name)
+            cost = sd_technology.cost
+            prereq = sd_technology.prerequisite
 
             if prereq != None and prereq not in nation.completed_research:
                 nation.action_log.append(f"Failed to research {action.research_name}. You do not have the prerequisite research.")

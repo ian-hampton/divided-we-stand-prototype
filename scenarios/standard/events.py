@@ -57,17 +57,12 @@ class Event:
         Returns updated playerdata_List and a bool that is True if the research was valid, False otherwise.
         """
 
-        tech_scenario_dict = core.get_scenario_dict(self.game_id, "Technologies")
-        
-        # prereq check
-        try:
-            prereq = tech_scenario_dict[research_name]["Prerequisite"]
-            if prereq != None and prereq not in nation.completed_research:
-                return False
-        except:
+        from app.scenario import ScenarioData as SD
+
+        prereq = SD.technologies.get(research_name).prerequisite
+        if prereq is not None and prereq not in nation.completed_research:
             return False
-        
-        # gain technology
+
         nation.add_tech(research_name)
         nation.award_research_bonus(research_name)
 

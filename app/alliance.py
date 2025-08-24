@@ -217,8 +217,8 @@ class Alliance:
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         
+        from app.scenario import ScenarioData as SD
         from app.nation import Nations
-        agenda_data_dict = core.get_scenario_dict(Alliances.game_id, "Agendas")
 
         if not self.is_active:
             return 0.0, None
@@ -247,7 +247,7 @@ class Alliance:
 
                 tech_set_filtered = set()
                 for research_name in tech_set:
-                    if research_name not in agenda_data_dict:
+                    if research_name not in SD.agendas:
                         tech_set_filtered.add(research_name)
 
                 return len(tech_set_filtered) * 0.2, "Research"

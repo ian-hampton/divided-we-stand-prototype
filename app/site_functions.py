@@ -120,20 +120,19 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
 
-    # get game files
     SD.load(game_id)
+
     Alliances.load(game_id)
     Nations.load(game_id)
     Regions.load(game_id)
-    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
 
     five_point_research_list = []
-    for key in research_data_dict:
-        tech = research_data_dict[key]
-        if tech["Cost"] == 5:
-            five_point_research_list.append(key)
+    for tech_name, tech_data in SD.technologies:
+        if tech_data.cost == 5:
+            five_point_research_list.append(tech_name)
     if active_games_dict[game_id]["Information"]["Fog of War"] == "Disabled":
         five_point_research_list.remove("Surveillance Operations")
 
@@ -601,7 +600,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 
     # alliance data
     alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
-    player_information_dict['Alliance Data']['Name List'] = SD.alliances.names()
+    player_information_dict['Alliance Data']['Name List'] = list(SD.alliances.names())
     alliance_colors = []
     alliance_data = [False, False, False, False]
     if 'Common Ground' in nation.completed_research:

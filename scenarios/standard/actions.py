@@ -514,7 +514,7 @@ def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseA
 
 def resolve_outsource_technology_actions(game_id: str, actions_list: list[OutsourceTechnologyAction]) -> None:
 
-    research_data_dict = core.get_scenario_dict(game_id, "Technologies")
+    from app.scenario import ScenarioData as SD
 
     for action in actions_list:
 
@@ -524,7 +524,7 @@ def resolve_outsource_technology_actions(game_id: str, actions_list: list[Outsou
             nation.action_log.append(f"Failed to Outsource Technology. You are not the collaborator.")
             continue
         
-        if action.research_name not in research_data_dict:
+        if action.research_name not in SD.technologies:
             nation.action_log.append(f"Failed to do Outsource Technology action. Technology name \"{action.research_name}\" not recognized.")
             continue
         
@@ -532,7 +532,7 @@ def resolve_outsource_technology_actions(game_id: str, actions_list: list[Outsou
             nation.action_log.append(f"Failed to do Outsource Technology action. You already have {action.research_name}.")
             continue
         
-        research_prereq = research_data_dict[action.research_name]['Prerequisite']
+        research_prereq = SD.technologies.get(action.research_name).prerequisite
         if research_prereq != None and research_prereq not in nation.completed_research:
             nation.action_log.append(f"Failed to do Outsource Technology action. You do not have the prerequisite for {action.research_name}.")
             continue

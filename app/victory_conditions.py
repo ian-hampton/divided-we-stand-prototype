@@ -99,9 +99,7 @@ def backstab(nation: Nation) -> bool:
 
 def breakthrough(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = Nations.game_id
-    tech_data_dict = core.get_scenario_dict(GAME_ID, "Technologies")
+    from app.scenario import ScenarioData as SD
 
     # build set of all techs other players have researched so we can compare
     completed_research_all = set()
@@ -112,9 +110,9 @@ def breakthrough(nation: Nation) -> bool:
     
     # find 20 point or greater tech that is not in completed_research_all
     for tech_name in nation.completed_research:
-        if (tech_name in tech_data_dict
+        if (tech_name in SD.technologies
             and tech_name not in completed_research_all
-            and tech_data_dict[tech_name]["Cost"] >= 20):
+            and SD.technologies.get(tech_name).cost >= 20):
             return True
 
     return False
@@ -350,13 +348,11 @@ def strong_trade_agreement(nation: Nation) -> bool:
 
 def sphere_of_influence(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = Nations.game_id
-    agenda_data_dict = core.get_scenario_dict(GAME_ID, "Agendas")
+    from app.scenario import ScenarioData as SD
 
     agenda_count = 0
     for research_name in nation.completed_research:
-        if research_name in agenda_data_dict:
+        if research_name in SD.agendas:
             agenda_count += 1
     
     if agenda_count >= 8:
