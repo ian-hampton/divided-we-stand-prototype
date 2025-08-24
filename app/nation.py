@@ -724,7 +724,6 @@ class Nation:
     def award_research_bonus(self, research_name: str) -> None:
         
         from app.scenario import ScenarioData as SD
-        from app.scenario import SD_Technology
 
         for tag_data in self.tags.values():
             
@@ -732,7 +731,7 @@ class Nation:
                 continue
             
             bonus_dict = tag_data["Research Bonus"]
-            sd_technology: SD_Technology = SD.technologies.get(research_name)
+            sd_technology = SD.technologies.get(research_name)
 
             if sd_technology.type in bonus_dict["Categories"]:
                 resource_name: str = bonus_dict["Resource"]
@@ -752,7 +751,6 @@ class Nation:
     def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
         
         from app.scenario import ScenarioData as SD
-        from app.scenario import SD_Agenda
 
         adjustment = 0
 
@@ -783,7 +781,7 @@ class Nation:
             }
         }
 
-        sd_agenda: SD_Agenda = SD.agendas.get(agenda_name)
+        sd_agenda = SD.agendas.get(agenda_name)
         adjustment += agenda_cost_adjustment[sd_agenda.type][self.fp]
 
         # cost adjustment from tags

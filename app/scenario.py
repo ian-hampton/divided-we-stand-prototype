@@ -2,95 +2,7 @@ import json
 import os
 import random
 from dataclasses import dataclass
-from typing import ClassVar, Iterator, Tuple
-
-class ScenarioDataFile:
-    
-    def __init__(self, filename: str):
-
-        self.file: dict = {}
-        self.filename = filename
-
-        filepath = f"scenarios/{ScenarioData.scenario}/{filename}.json"
-        if not os.path.exists(filepath):
-            raise FileNotFoundError(f"Error: {ScenarioData} scenario is missing {filename} file.")
-
-        with open(filepath, 'r') as file:
-            self.file = json.load(file)
-
-    def __iter__(self):
-        for name in self.file:
-            yield name, self.get(name)
-
-    def __contains__(self, name_str: str):
-        return self.file is not None and name_str in self.file
-
-    def get(self, name: str) -> any:
-        
-        data: dict = self.file.get(name)
-
-        if data is None:
-            return None
-        
-        files = {
-            "agendas": SD_Agenda,
-            "alliances": SD_Alliance,
-            "events": SD_Event,
-            "improvements": SD_Improvement,
-            "justifications": SD_WarJustification,
-            "missiles": SD_Missile,
-            "technologies": SD_Technology,
-            "units": SD_Units,
-            "victory": SD_VictoryCondition
-        }
-
-        return files[self.filename](data)
-    
-    def names(self) -> set:
-        return set(self.file.keys())
-
-@dataclass
-class ScenarioData:
-    """
-    Simple read-only class for fetching scenario data on demand.
-    """
-
-    game_id: ClassVar[str] = None
-    scenario: ClassVar[str] = None
-    agendas: ClassVar[ScenarioDataFile] = None
-    alliances: ClassVar[ScenarioDataFile] = None
-    events: ClassVar[ScenarioDataFile] = None
-    improvements: ClassVar[ScenarioDataFile] = None
-    missiles: ClassVar[ScenarioDataFile] = None
-    technologies: ClassVar[ScenarioDataFile] = None
-    units: ClassVar[ScenarioDataFile] = None
-    victory_conditions: ClassVar[ScenarioDataFile] = None
-    war_justificiations: ClassVar[ScenarioDataFile] = None
-    
-    @classmethod
-    def load(cls, game_id: str) -> None:
-
-        cls.game_id = game_id
-        cls.scenario = cls._get_scenario_name()
-
-        cls.agendas = ScenarioDataFile("agendas")
-        cls.alliances = ScenarioDataFile("alliances")
-        cls.events = ScenarioDataFile("events")
-        cls.improvements = ScenarioDataFile("improvements")
-        cls.missiles = ScenarioDataFile("justifications")
-        cls.technologies = ScenarioDataFile("missiles")
-        cls.units = ScenarioDataFile("technologies")
-        cls.victory_conditions = ScenarioDataFile("units")
-        cls.war_justificiations = ScenarioDataFile("victory")
-
-    @classmethod
-    def _get_scenario_name(cls) -> str:
-        if cls.game_id != "TBD":
-            with open('active_games.json', 'r') as json_file:
-                active_games_dict = json.load(json_file)
-            scenario_name: str = active_games_dict[cls.game_id]["Information"]["Scenario"]
-            return scenario_name.lower()
-        return "standard"
+from typing import ClassVar, TypeVar, Generic, Iterator, Tuple
 
 class SD_Agenda:
     
@@ -147,3 +59,90 @@ class SD_WarJustification:
     
     def __init__(self, d: dict):
         pass
+
+ClassNameToFileName = {
+    "SD_Agenda": "agendas",
+    "SD_Alliance": "alliances",
+    "SD_Event": "events",
+    "SD_Improvement": "improvements",
+    "SD_Missile": "missiles",
+    "SD_Technology": "technologies",
+    "SD_Units": "units",
+    "SD_VictoryCondition": "victory",
+    "SD_WarJustification": "justifications",
+}
+
+T = TypeVar("T")
+class ScenarioDataFile(Generic[T]):
+    
+    def __init__(self, cls: type[T]):
+
+        self._cls: type[T] = cls
+        self.file = {}
+
+        try:
+            class_name = cls.__name__
+            filename = ClassNameToFileName[class_name]
+            filepath = f"scenarios/{ScenarioData.scenario}/{filename}.json"
+            with open(filepath, 'r') as file:
+                self.file = json.load(file)
+        except:
+            raise FileNotFoundError(f"Error: {ScenarioData.scenario} scenario is missing {filename} file.")
+
+    def __iter__(self):
+        for name in self.file:
+            yield name, self.get(name)
+
+    def __contains__(self, name_str: str):
+        return self.file is not None and name_str in self.file
+
+    def get(self, name: str) -> T | None:
+        # this should never return None if action validation is done properly in actions.py
+        data = self.file.get(name)
+        if data is None:
+            return None
+        return self._cls(data)
+    
+    def names(self) -> set:
+        return set(self.file.keys())
+
+@dataclass
+class ScenarioData:
+    """
+    Simple read-only class for fetching scenario data on demand.
+    """
+
+    agendas: ClassVar[ScenarioDataFile[SD_Agenda]] = None
+    alliances: ClassVar[ScenarioDataFile[SD_Alliance]] = None
+    events: ClassVar[ScenarioDataFile[SD_Event]] = None
+    improvements: ClassVar[ScenarioDataFile[SD_Improvement]] = None
+    missiles: ClassVar[ScenarioDataFile[SD_Missile]] = None
+    technologies: ClassVar[ScenarioDataFile[SD_Technology]] = None
+    units: ClassVar[ScenarioDataFile[SD_Units]] = None
+    victory_conditions: ClassVar[ScenarioDataFile[SD_VictoryCondition]] = None
+    war_justificiations: ClassVar[ScenarioDataFile[SD_WarJustification]] = None
+    
+    @classmethod
+    def load(cls, game_id: str) -> None:
+
+        cls.game_id = game_id
+        cls.scenario = cls._get_scenario_name()
+
+        cls.agendas = ScenarioDataFile(SD_Agenda)
+        cls.alliances = ScenarioDataFile(SD_Alliance)
+        cls.events = ScenarioDataFile(SD_Event)
+        cls.improvements = ScenarioDataFile(SD_Improvement)
+        cls.missiles = ScenarioDataFile(SD_Missile)
+        cls.technologies = ScenarioDataFile(SD_Technology)
+        cls.units = ScenarioDataFile(SD_Units)
+        cls.victory_conditions = ScenarioDataFile(SD_VictoryCondition)
+        cls.war_justificiations = ScenarioDataFile(SD_WarJustification)
+
+    @classmethod
+    def _get_scenario_name(cls) -> str:
+        if cls.game_id != "TBD":
+            with open('active_games.json', 'r') as json_file:
+                active_games_dict = json.load(json_file)
+            scenario_name: str = active_games_dict[cls.game_id]["Information"]["Scenario"]
+            return scenario_name.lower()
+        return "standard"

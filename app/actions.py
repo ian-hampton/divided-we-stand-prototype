@@ -1193,7 +1193,6 @@ def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, cur
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
     
     from app.scenario import ScenarioData as SD
-    from app.scenario import SD_Agenda, SD_Technology
     from app.alliance import Alliances
     from app.nation import Nations
 
@@ -1211,7 +1210,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
         if action.research_name in SD.agendas:
             
-            sd_agenda: SD_Agenda = SD.agendas.get(action.research_name)
+            sd_agenda = SD.agendas.get(action.research_name)
             cost = sd_agenda.cost
             prereq = sd_agenda.prerequisite
 
@@ -1231,7 +1230,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
         else:
             
-            sd_technology: SD_Technology = SD.technologies.get(action.research_name)
+            sd_technology = SD.technologies.get(action.research_name)
             cost = sd_technology.cost
             prereq = sd_technology.prerequisite
 

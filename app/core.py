@@ -123,7 +123,6 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     """
     
     from app.scenario import ScenarioData as SD
-    from app.scenario import SD_Agenda, SD_Technology
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
     # build yield dict
@@ -152,7 +151,6 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
         else:
             tech_dict = SD.technologies.get(tech_name)
         
-        tech_dict: SD_Agenda | SD_Technology
         for target in tech_dict.modifiers: 
 
             # skip over modifiers that are not affecting improvements
@@ -182,7 +180,6 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     
     # load game info
     from app.scenario import ScenarioData as SD
-    from app.scenario import SD_Agenda, SD_Technology
     unit_data_dict = get_scenario_dict(game_id, "Units")
     improvement_data_dict = get_scenario_dict(game_id, "Improvements")
 
@@ -228,7 +225,6 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
         else:
             tech_dict = SD.technologies.get(tech_name)
 
-        tech_dict: SD_Agenda | SD_Technology
         for target in tech_dict.modifiers: 
             
             # skip over effects that are not improvements or units

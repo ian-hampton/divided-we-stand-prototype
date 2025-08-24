@@ -991,7 +991,6 @@ def alliances(full_game_id):
 
     from app.alliance import Alliances
     from app.nation import Nations
-    from app.scenario import SD_Alliance
 
     SD.load(full_game_id)
 
@@ -1032,7 +1031,7 @@ def alliances(full_game_id):
                 "nationColor": color
             }
 
-        sd_alliance: SD_Alliance = SD.alliances.get(alliance.type)
+        sd_alliance = SD.alliances.get(alliance.type)
         alliance_data["color"] = palette.str_to_hex(sd_alliance.color_theme)
         alliance_data["abilities"] = sd_alliance.description
 
