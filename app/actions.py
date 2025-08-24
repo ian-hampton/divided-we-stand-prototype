@@ -904,7 +904,7 @@ def _check_resource(resource_name: str) -> str | None:
 
 def _check_missile(game_id: str, missile_type: str) -> str | None:
     
-    missile_scenario_dict = core.get_scenario_dict(game_id, "missiles")
+    from app.scenario import ScenarioData as SD
 
     missile_errors = {
         "missile": "Standard Missile",
@@ -915,7 +915,7 @@ def _check_missile(game_id: str, missile_type: str) -> str | None:
         "nuclear missiles": "Nuclear Missile"
     }
 
-    if missile_type.title() in missile_scenario_dict:
+    if missile_type.title() in SD.missiles:
         return missile_type.title()
         
     return missile_errors.get(missile_type.lower())

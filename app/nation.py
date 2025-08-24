@@ -338,10 +338,10 @@ class Nations(metaclass=NationsMeta):
     @classmethod
     def _generate_vc_sets(cls, count: int) -> dict:
 
-        victory_conditions = core.get_scenario_dict(cls.game_id, "victory")
-        easy_list = victory_conditions["easy"]
-        medium_list = victory_conditions["medium"]
-        hard_List = victory_conditions["hard"]
+        from app.scenario import ScenarioData as SD
+        easy_list = SD.victory_conditions.easy
+        medium_list = SD.victory_conditions.medium
+        hard_List = SD.victory_conditions.hard
 
         vc_sets = {}
         random_easys = random.sample(easy_list, len(easy_list))
