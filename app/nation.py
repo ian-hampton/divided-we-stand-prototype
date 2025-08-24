@@ -731,7 +731,7 @@ class Nation:
                 continue
             
             bonus_dict = tag_data["Research Bonus"]
-            sd_technology = SD.technologies.get(research_name)
+            sd_technology = SD.technologies[research_name]
 
             if sd_technology.type in bonus_dict["Categories"]:
                 resource_name: str = bonus_dict["Resource"]
@@ -781,7 +781,7 @@ class Nation:
             }
         }
 
-        sd_agenda = SD.agendas.get(agenda_name)
+        sd_agenda = SD.agendas[agenda_name]
         adjustment += agenda_cost_adjustment[sd_agenda.type][self.fp]
 
         # cost adjustment from tags

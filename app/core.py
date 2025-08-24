@@ -147,9 +147,9 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
     for tech_name in nation.completed_research:   
 
         if tech_name in SD.agendas:
-            tech_dict = SD.agendas.get(tech_name)
+            tech_dict = SD.agendas[tech_name]
         else:
-            tech_dict = SD.technologies.get(tech_name)
+            tech_dict = SD.technologies[tech_name]
         
         for target in tech_dict.modifiers: 
 
@@ -221,9 +221,9 @@ def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
     for tech_name in nation.completed_research:
         
         if tech_name in SD.agendas:
-            tech_dict = SD.agendas.get(tech_name)
+            tech_dict = SD.agendas[tech_name]
         else:
-            tech_dict = SD.technologies.get(tech_name)
+            tech_dict = SD.technologies[tech_name]
 
         for target in tech_dict.modifiers: 
             

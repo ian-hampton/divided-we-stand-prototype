@@ -1210,7 +1210,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
         if action.research_name in SD.agendas:
             
-            sd_agenda = SD.agendas.get(action.research_name)
+            sd_agenda = SD.agendas[action.research_name]
             cost = sd_agenda.cost
             prereq = sd_agenda.prerequisite
 
@@ -1230,7 +1230,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
         else:
             
-            sd_technology = SD.technologies.get(action.research_name)
+            sd_technology = SD.technologies[action.research_name]
             cost = sd_technology.cost
             prereq = sd_technology.prerequisite
 

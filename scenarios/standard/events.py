@@ -59,7 +59,7 @@ class Event:
 
         from app.scenario import ScenarioData as SD
 
-        prereq = SD.technologies.get(research_name).prerequisite
+        prereq = SD.technologies[research_name].prerequisite
         if prereq is not None and prereq not in nation.completed_research:
             return False
 

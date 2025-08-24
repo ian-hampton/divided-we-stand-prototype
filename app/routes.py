@@ -1031,7 +1031,7 @@ def alliances(full_game_id):
                 "nationColor": color
             }
 
-        sd_alliance = SD.alliances.get(alliance.type)
+        sd_alliance = SD.alliances[alliance.type]
         alliance_data["color"] = palette.str_to_hex(sd_alliance.color_theme)
         alliance_data["abilities"] = sd_alliance.description
 

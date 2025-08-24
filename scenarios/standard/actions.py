@@ -532,8 +532,8 @@ def resolve_outsource_technology_actions(game_id: str, actions_list: list[Outsou
             nation.action_log.append(f"Failed to do Outsource Technology action. You already have {action.research_name}.")
             continue
         
-        research_prereq = SD.technologies.get(action.research_name).prerequisite
-        if research_prereq != None and research_prereq not in nation.completed_research:
+        research_prereq = SD.technologies[action.research_name].prerequisite
+        if research_prereq is not None and research_prereq not in nation.completed_research:
             nation.action_log.append(f"Failed to do Outsource Technology action. You do not have the prerequisite for {action.research_name}.")
             continue
 

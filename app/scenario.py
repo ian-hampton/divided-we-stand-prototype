@@ -78,16 +78,17 @@ class ScenarioDataFile(Generic[T]):
     def __init__(self, cls: type[T]):
 
         self._cls: type[T] = cls
+        self.filename = ""
         self.file = {}
 
         try:
             class_name = cls.__name__
-            filename = ClassNameToFileName[class_name]
-            filepath = f"scenarios/{ScenarioData.scenario}/{filename}.json"
+            self.filename = ClassNameToFileName[class_name]
+            filepath = f"scenarios/{ScenarioData.scenario}/{self.filename}.json"
             with open(filepath, 'r') as file:
                 self.file = json.load(file)
         except:
-            raise FileNotFoundError(f"Error: {ScenarioData.scenario} scenario is missing {filename} file.")
+            raise FileNotFoundError(f"Error: {ScenarioData.scenario} scenario is missing {self.filename} file.")
 
     def __iter__(self):
         for name in self.file:
@@ -95,12 +96,15 @@ class ScenarioDataFile(Generic[T]):
 
     def __contains__(self, name_str: str):
         return self.file is not None and name_str in self.file
-
-    def get(self, name: str) -> T | None:
-        # this should never return None if action validation is done properly in actions.py
-        data = self.file.get(name)
+    
+    def __getitem__(self, name_str: str) -> T:
+        """
+        Warning: This method will raise an exception if name/key is not found.
+        This should only occur if the key does not exist in corresponding the scenario file, or if the action validation code allowed an action with an invalid parameter through.
+        """
+        data = self.file.get(name_str)
         if data is None:
-            return None
+            raise KeyError(f"Error: \"name\" not found in \"{self.filename}.json\" scenario file.")
         return self._cls(data)
     
     def names(self) -> set:
