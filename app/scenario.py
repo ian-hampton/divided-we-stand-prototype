@@ -52,7 +52,7 @@ class SD_Technology:
         self.location: str = d["Location"]
         self.modifiers: dict = d["Modifiers"]
 
-class SD_Units:
+class SD_Unit:
     
     def __init__(self, d: dict):
         pass
@@ -93,7 +93,7 @@ ClassNameToFileName = {
     "SD_Market": "market",
     "SD_Missile": "missiles",
     "SD_Technology": "technologies",
-    "SD_Units": "units",
+    "SD_Unit": "units",
     "SD_WarJustification": "justifications",
 }
 
@@ -148,7 +148,7 @@ class ScenarioData:
     market: ClassVar[ScenarioDataFile[SD_Market]] = None
     missiles: ClassVar[ScenarioDataFile[SD_Missile]] = None
     technologies: ClassVar[ScenarioDataFile[SD_Technology]] = None
-    units: ClassVar[ScenarioDataFile[SD_Units]] = None
+    units: ClassVar[ScenarioDataFile[SD_Unit]] = None
     victory_conditions: ClassVar[SD_VictoryCondition] = None
     war_justificiations: ClassVar[ScenarioDataFile[SD_WarJustification]] = None
     
@@ -165,7 +165,7 @@ class ScenarioData:
         cls.market = ScenarioDataFile(SD_Market)
         cls.missiles = ScenarioDataFile(SD_Missile)
         cls.technologies = ScenarioDataFile(SD_Technology)
-        cls.units = ScenarioDataFile(SD_Units)
+        cls.units = ScenarioDataFile(SD_Unit)
         cls.victory_conditions = SD_VictoryCondition()
         cls.war_justificiations = ScenarioDataFile(SD_WarJustification)
 
