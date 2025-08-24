@@ -16,16 +16,16 @@ def trigger_event(game_id: str) -> None:
         None
     """
 
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
     
     # load event data and events module based on scenario
-    event_scenario_dict = core.get_scenario_dict(game_id, "events")
     scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
     events = importlib.import_module(f"scenarios.{scenario}.events")
 
     # create list of eligible events
-    event_list = list(event_scenario_dict.keys())
+    event_list = list(SD.events.names())
     already_chosen_events = set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
     event_list_filtered = []
     for event_name in event_list:

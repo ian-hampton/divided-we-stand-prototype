@@ -23,7 +23,8 @@ class SD_Alliance:
 class SD_Event:
     
     def __init__(self, d: dict):
-        pass
+        self.type: str = d["Type"]
+        self.duration: int = d["Duration"]
 
 class SD_Improvement:
     
@@ -92,7 +93,7 @@ class ScenarioDataFile(Generic[T]):
 
     def __iter__(self):
         for name in self.file:
-            yield name, self.get(name)
+            yield name, self[name]
 
     def __contains__(self, name_str: str):
         return self.file is not None and name_str in self.file

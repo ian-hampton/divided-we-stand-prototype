@@ -1537,6 +1537,8 @@ def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=F
         any: An event object corresponding to the event name, or raises an exception if none found.
     """
 
+    from app.scenario import ScenarioData as SD
+
     events = {
         "Assassination": Assassination,
         "Corruption Scandal": CorruptionScandal,
@@ -1571,8 +1573,11 @@ def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=F
         raise Exception(f"Error: {event_name} event not recognized.")
 
     if event_data is None:
-        event_scenario_dict = core.get_scenario_dict(game_id, "events")
-        event_data = event_scenario_dict[event_name]
+        sd_event = SD.events[event_name]
+        event_data = {
+            "Type": sd_event.type,
+            "Duration": sd_event.duration
+        }
 
     return events[event_name](game_id, event_name, event_data, temp)
     
@@ -1590,14 +1595,14 @@ def _is_first_event(game_id: str) -> bool:
 
 def _no_major_events(game_id: str) -> bool:
 
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
     
-    event_scenario_dict = core.get_scenario_dict(game_id, "events")
     already_chosen_events = set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
    
-    for event_name, event_data in event_scenario_dict.items():
-        if event_name in already_chosen_events and event_data["Type"] == "Major Event":
+    for event_name, event_data in SD.events:
+        if event_name in already_chosen_events and event_data.type == "Major Event":
             return False
         
     return True
