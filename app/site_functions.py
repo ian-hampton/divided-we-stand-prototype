@@ -208,8 +208,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    scenario_actions = importlib.import_module(f"scenarios.{scenario}.actions")
+    scenario_actions = importlib.import_module(f"scenarios.{SD.scenario}.actions")
 
     # sort and validate actions
     actions_dict = defaultdict(list)

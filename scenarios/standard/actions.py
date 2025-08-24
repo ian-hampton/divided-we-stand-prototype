@@ -316,10 +316,11 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
 
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+    
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
         return
@@ -349,10 +350,11 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
 
 def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
 
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
         return
@@ -448,10 +450,11 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
 
 def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
 
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
         return
@@ -481,10 +484,11 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
 
 def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
 
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
         return

@@ -581,21 +581,23 @@ def wars(full_game_id):
 # RESEARCH PAGE
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
-    
-    # get game data
+
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
+
+    SD.load(full_game_id)
+
     Nations.load(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Technology Trees'
-    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
 
 
     # refine technology dictionary
     refined_dict = {}
     research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
-    if scenario == "Standard":
+    if SD.scenario == "Standard":
         categories = ["Energy", "Infrastructure", "Military", "Defense"]
         for category in categories:
             refined_dict[f'{category} Technologies'] = {}
@@ -654,14 +656,16 @@ def technologies(full_game_id):
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
-    # get game data
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
+
+    SD.load(full_game_id)
+    
     Nations.load(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Political Agendas'
-    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
 
 
     # Get Research Information
@@ -669,7 +673,7 @@ def agendas(full_game_id):
     agenda_data_dict = core.get_scenario_dict(full_game_id, "Agendas")
     
     # get scenario data
-    if scenario == "Standard":
+    if SD.scenario == "Standard":
         categories = ["Agendas"]
         for category in categories:
             refined_dict[category] = {}

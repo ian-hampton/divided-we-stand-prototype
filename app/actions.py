@@ -763,12 +763,10 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         action_str = input("Re-enter action or hit enter to skip: ")
 
 def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> any:
-
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    scenario_actions = importlib.import_module(f"scenarios.{scenario}.actions")
+    
+    from app.scenario import ScenarioData as SD
+    
+    scenario_actions = importlib.import_module(f"scenarios.{SD.scenario}.actions")
 
     return scenario_actions._create_action(game_id, nation_id, action_str)
 

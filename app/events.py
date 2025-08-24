@@ -21,8 +21,7 @@ def trigger_event(game_id: str) -> None:
         active_games_dict = json.load(json_file)
     
     # load event data and events module based on scenario
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     # create list of eligible events
     event_list = list(SD.events.names())
@@ -54,12 +53,12 @@ def trigger_event(game_id: str) -> None:
 
 def resolve_current_event(game_id: str) -> None:
     
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
     
     # load events module based on scenario
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     # load event
     event_data = active_games_dict[game_id]["Current Event"]
@@ -82,11 +81,11 @@ def resolve_current_event(game_id: str) -> None:
 
 def resolve_active_events(game_id: str, actions_dict=None):
     
+    from app.scenario import ScenarioData as SD
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     active_events_filtered = {}
 
@@ -111,12 +110,12 @@ def resolve_active_events(game_id: str, actions_dict=None):
 
 def filter_events(game_id: str):
     
+    from app.scenario import ScenarioData as SD
     current_turn_num = core.get_current_turn_num(game_id)
     with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
 
-    scenario = active_games_dict[game_id]["Information"]["Scenario"].lower()
-    events = importlib.import_module(f"scenarios.{scenario}.events")
+    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     active_events_filtered = {}
 
