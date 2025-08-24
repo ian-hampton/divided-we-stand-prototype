@@ -991,10 +991,12 @@ def alliances(full_game_id):
 
     from app.alliance import Alliances
     from app.nation import Nations
+    from app.scenario import SD_Alliance
+
+    SD.load(full_game_id)
 
     Alliances.load(full_game_id)
     Nations.load(full_game_id)
-    alliance_scenario_dict = core.get_scenario_dict(full_game_id, "alliances")
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
@@ -1030,11 +1032,13 @@ def alliances(full_game_id):
                 "nationColor": color
             }
 
-        alliance_data["color"] = palette.str_to_hex(alliance_scenario_dict[alliance.type]["colorTheme"])
+        sd_alliance: SD_Alliance = SD.alliances.get(alliance.type)
+        alliance_data["color"] = palette.str_to_hex(sd_alliance.color_theme)
+        alliance_data["abilities"] = sd_alliance.description
 
         alliance_dict_filtered[alliance.name] = alliance_data
 
-    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_scenario_dict, page_title = page_title)
+    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, page_title = page_title)
 
 # MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')

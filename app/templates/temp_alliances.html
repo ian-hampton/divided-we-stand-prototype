@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="cell-header">Abilities</div>
                     </div>
-                    {% for ability_str in abilities_dict[alliance_data["allianceType"]]["abilitiesDescriptionList"] %}
+                    {% for ability_str in alliance_data["abilities"] %}
                         <div class="row" style="padding-bottom: 8px; width:calc(100% - 16px)">
                             <div class="cell-left">{{ ability_str }}</div>
                         </div>

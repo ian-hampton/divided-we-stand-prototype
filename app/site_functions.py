@@ -546,11 +546,12 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         dict: player_information_dict.
     '''
     
+    SD.load(game_id)
+
     Alliances.load(game_id)
     Nations.load(game_id)
     Wars.load(game_id)
     nation = Nations.get(player_id)
-    alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
 
     # build player info dict
     player_information_dict = {
@@ -600,7 +601,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 
     # alliance data
     alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
-    player_information_dict['Alliance Data']['Name List'] = list(alliance_scenario_dict.keys())
+    player_information_dict['Alliance Data']['Name List'] = SD.alliances.names()
     alliance_colors = []
     alliance_data = [False, False, False, False]
     if 'Common Ground' in nation.completed_research:

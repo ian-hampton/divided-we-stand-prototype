@@ -774,12 +774,11 @@ def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> an
 
 def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
     
-    alliance_scenario_dict = core.get_scenario_dict(game_id, "alliances")
-    alliance_types = set(alliance_scenario_dict.keys())
-
-    if alliance_type.title() in alliance_types:
+    from app.scenario import ScenarioData as SD
+    
+    if alliance_type.title() in SD.alliances.file:
         return alliance_type.title()
-        
+    
     return None
 
 def _check_alliance_name(game_id: str, alliance_name: str) -> str | None:

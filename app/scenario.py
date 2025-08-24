@@ -38,6 +38,9 @@ class ScenarioDataFile:
         }
 
         return files[self.filename](data)
+    
+    def names(self) -> list:
+        return self.file.keys()
 
 @dataclass
 class ScenarioData:
@@ -90,7 +93,9 @@ class SD_Agenda:
 class SD_Alliance:
     
     def __init__(self, d: dict):
-        pass
+        
+        self.color_theme: str = d["colorTheme"]
+        self.description: list = d["descriptionList"]
 
 class SD_Event:
     
