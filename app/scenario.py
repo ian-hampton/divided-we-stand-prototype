@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import random
@@ -58,13 +59,21 @@ class SD_VictoryCondition:
         filename = "victory"
         filepath = f"scenarios/{ScenarioData.scenario}/{filename}.json"
         
-        d = {}
+        self.d = {}
         with open(filepath, 'r') as file:
-            d = json.load(file)
+            self.d = json.load(file)
         
-        self.easy: list = d["easy"]
-        self.medium: list = d["medium"]
-        self.hard: list = d["hard"]
+    @property
+    def easy(self):
+        return copy.deepcopy(self.d["easy"])
+    
+    @property
+    def medium(self):
+        return copy.deepcopy(self.d["medium"])
+    
+    @property
+    def hard(self):
+        return copy.deepcopy(self.d["hard"])
 
 class SD_WarJustification:
     
