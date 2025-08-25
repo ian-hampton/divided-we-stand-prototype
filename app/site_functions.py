@@ -413,6 +413,8 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
         None
     """
 
+    from app.scenario import ScenarioData as SD
+
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
     with open('game_records.json', 'r') as json_file:
@@ -460,6 +462,8 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     }
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
+
+    SD.load(game_id)
 
     # copy starting map images
     map_str = core.get_map_str(game_id)

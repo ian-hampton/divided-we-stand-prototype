@@ -597,7 +597,7 @@ def technologies(full_game_id):
     # refine technology dictionary
     refined_dict = {}
     research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
-    if SD.scenario == "Standard":
+    if SD.scenario == "standard":
         categories = ["Energy", "Infrastructure", "Military", "Defense"]
         for category in categories:
             refined_dict[f'{category} Technologies'] = {}
@@ -673,7 +673,7 @@ def agendas(full_game_id):
     agenda_data_dict = core.get_scenario_dict(full_game_id, "Agendas")
     
     # get scenario data
-    if SD.scenario == "Standard":
+    if SD.scenario == "standard":
         categories = ["Agendas"]
         for category in categories:
             refined_dict[category] = {}
