@@ -588,23 +588,22 @@ def technologies(full_game_id):
     SD.load(full_game_id)
 
     Nations.load(full_game_id)
-    with open('active_games.json', 'r') as json_file:
+    with open("active_games.json", 'r') as json_file:
         active_games_dict = json.load(json_file)
     game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Technology Trees'
+    page_title = f"{game_name} - Technology Trees"
 
+    data = {}
 
-    # refine technology dictionary
-    refined_dict = {}
-    research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
+    # create technology dictionary
     if SD.scenario == "standard":
         categories = ["Energy", "Infrastructure", "Military", "Defense"]
         for category in categories:
-            refined_dict[f'{category} Technologies'] = {}
-        refined_dict["Energy Technologies"]["Colors"] = ["#5555554D", "#CC58264D", "#106A254D", "NONE"]
-        refined_dict["Infrastructure Technologies"]["Colors"] = ["#F9CB304D", "#754C244D", "#5555554D", "#0583C54D"]
-        refined_dict["Military Technologies"]["Colors"] = ["#C419194D", "#5F2F8C4D", "#106A254D", "#CC58264D"]
-        refined_dict["Defense Technologies"]["Colors"] = ["#0583C54D", "#F9CB304D", "#C419194D", "NONE"]
+            data[f"{category} Technologies"] = {}
+        data["Energy Technologies"]["Colors"] = ["#5555554D", "#CC58264D", "#106A254D", "NONE"]
+        data["Infrastructure Technologies"]["Colors"] = ["#F9CB304D", "#754C244D", "#5555554D", "#0583C54D"]
+        data["Military Technologies"]["Colors"] = ["#C419194D", "#5F2F8C4D", "#106A254D", "#CC58264D"]
+        data["Defense Technologies"]["Colors"] = ["#0583C54D", "#F9CB304D", "#C419194D", "NONE"]
         color_complements_dict = {
             "#555555": "#636363",
             "#CC5826": "#E0622B",
@@ -616,7 +615,7 @@ def technologies(full_game_id):
             "#C41919": "#D43939"
         }
     
-    # create research table
+    # create technology table
     for category in categories:
         table_contents = {
             "A": [None] * 4,
@@ -624,33 +623,41 @@ def technologies(full_game_id):
             "C": [None] * 4,
             "D": [None] * 4,
         }
-        refined_dict[f'{category} Technologies']["Table"] = table_contents
-    
-    # hide fow techs if not fog of war
-    if active_games_dict[full_game_id]["Information"]["Fog of War"] == "Disabled":
-        del research_data_dict["Surveillance Operations"]
-        del research_data_dict["Economic Reports"]
-        del research_data_dict["Military Intelligence"]
+        data[f"{category} Technologies"]["Table"] = table_contents
 
-    # add player research data
-    for research_name in research_data_dict:
-        research_data_dict[research_name]["Player Research"] = [None] * len(Nations)
+    # fetch technology data
+    temp_technology_data = {}
+    for research_name, research_data in SD.technologies:
+
+        if active_games_dict[full_game_id]["Information"]["Fog of War"] == "Disabled" and research_name in ["Surveillance Operations", "Economic Reports", "Military Intelligence"]:
+            continue
+
+        temp_technology_data[research_name] = {
+            "Name": research_name,
+            "Research Type": research_data.type,
+            "Cost": research_data.cost,
+            "Description": research_data.description,
+            "Location": research_data.location,
+            "Player Research": [None] * len(Nations)
+        }
+    
+    # fetch player research data
     for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
-            if research_name in research_data_dict:
-                research_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+            if research_name in SD.technologies:
+                data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
-    for key, value in research_data_dict.items():
+    for key, value in temp_technology_data.items():
         research_type = value["Research Type"]
         if research_type in categories:
             pos = value["Location"]
             row_pos = pos[0]
             col_pos = int(pos[1])
             value["Name"] = key
-            refined_dict[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
+            data[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
     
-    return render_template('temp_research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+    return render_template('temp_research.html', page_title = page_title, dict = data, complement = color_complements_dict)
 
 # AGENDAS PAGE
 @main.route('/<full_game_id>/agendas')
@@ -667,17 +674,14 @@ def agendas(full_game_id):
     game_name = active_games_dict[full_game_id]["Name"]
     page_title = f'{game_name} - Political Agendas'
 
+    data = {}
 
-    # Get Research Information
-    refined_dict = {}
-    agenda_data_dict = core.get_scenario_dict(full_game_id, "Agendas")
-    
-    # get scenario data
+   # create dictionary
     if SD.scenario == "standard":
         categories = ["Agendas"]
         for category in categories:
-            refined_dict[category] = {}
-        refined_dict["Agendas"]["Colors"] = ["#0583C54D", "#106A254D", "#5F2F8C4D", "#C419194D"]
+            data[category] = {}
+        data["Agendas"]["Colors"] = ["#0583C54D", "#106A254D", "#5F2F8C4D", "#C419194D"]
         color_complements_dict = {
             "#555555": "#636363",
             "#CC5826": "#E0622B",
@@ -689,7 +693,7 @@ def agendas(full_game_id):
             "#C41919": "#D43939"
         }
     
-    # create research table
+    # create table
     for category in categories:
         table_contents = {
             "A": [None] * 4,
@@ -697,25 +701,36 @@ def agendas(full_game_id):
             "C": [None] * 4,
             "D": [None] * 4,
         }
-        refined_dict[category]["Table"] = table_contents
+        data[category]["Table"] = table_contents
 
-    # add player research data
-    for research_name in agenda_data_dict:
-        agenda_data_dict[research_name]["Player Research"] = [None] * len(Nations)
+    # fetch agenda data
+    temp_agenda_data = {}
+    for agenda_name, agenda_data in SD.agendas:
+        
+        temp_agenda_data[agenda_name] = {
+            "Name": agenda_name,
+            "Agenda Type": agenda_data.type,
+            "Cost": agenda_data.cost,
+            "Description": agenda_data.description,
+            "Location": agenda_data.location,
+            "Player Research": [None] * len(Nations)
+        }
+    
+    # fetch player research data
     for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
-            if research_name in agenda_data_dict:
-                agenda_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+            if research_name in SD.agendas:
+                data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
-    for key, value in agenda_data_dict.items():
+    for key, value in temp_agenda_data.items():
         pos = value["Location"]
         row_pos = pos[0]
         col_pos = int(pos[1])
         value["Name"] = key
-        refined_dict["Agendas"]["Table"][row_pos][col_pos] = value
+        data["Agendas"]["Table"][row_pos][col_pos] = value
     
-    return render_template('temp_agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+    return render_template('temp_agenda.html', page_title = page_title, dict = data, complement = color_complements_dict)
 
 # UNITS REF PAGE
 @main.route('/<full_game_id>/units')
