@@ -344,6 +344,7 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         nation.update_trade_fee()
 
     if not event_phase:
+        Nations.prune_eliminated_nations()
         Nations.update_records()
         Nations.add_leaderboard_bonuses()
 

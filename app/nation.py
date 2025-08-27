@@ -9,14 +9,15 @@ from app import core
 class NationsMeta(type):
 
     def __iter__(cls) -> Iterator["Nation"]:
-        for nation_id in cls._data:
-            if nation_id != "99":
-                yield Nation(nation_id)
+        for nation in cls:
+            if nation.is_active:
+                yield Nation(nation.id)
 
     def __len__(cls):
-        length = len(cls._data)
-        if "99" in cls._data:
-            length -= 1
+        length = 0
+        for nation in cls:
+            if nation.is_active:
+                length += 1
         return length
 
 @dataclass
@@ -51,13 +52,6 @@ class Nations(metaclass=NationsMeta):
         gamedata_dict["nations"] = cls._data
         with open(gamedata_filepath, 'w') as json_file:
             json.dump(gamedata_dict, json_file, indent=4)
-
-    @classmethod
-    def names(cls) -> list:
-        names = []
-        for nation in cls:
-            names.append(nation.name)
-        return names
 
     @classmethod
     def create(cls, nation_id: str, player_id: int) -> None:
@@ -205,6 +199,10 @@ class Nations(metaclass=NationsMeta):
         raise Exception(f"Failed to retrieve nation with identifier {string}.")
     
     @classmethod
+    def get_random_name(cls) -> str:
+        pass
+
+    @classmethod
     def update_records(cls) -> None:
 
         from app.scenario import ScenarioData as SD
@@ -335,6 +333,16 @@ class Nations(metaclass=NationsMeta):
             nation.tags = tags_filtered
 
     @classmethod
+    def prune_eliminated_nations(cls) -> None:
+
+        from app.notifications import Notifications
+        
+        for nation in cls:
+            if nation.stats.regions_owned == 0:
+                nation.status = "Eliminated"
+                Notifications.add(f"{nation.name} has been eliminated!", 1)
+
+    @classmethod
     def _generate_vc_sets(cls, count: int) -> dict:
 
         from app.scenario import ScenarioData as SD
@@ -384,6 +392,17 @@ class Nation:
     def player_id(self):
         return self._player_id
     
+    @property
+    def is_active(self) -> bool:
+        """
+        Returns True if Nation is not eliminated or controlled by an event.
+        """
+
+        if self.status != "Eliminated" and self.id != 99:
+            return True
+        
+        return False
+
     @property
     def color(self):
         return self._color
