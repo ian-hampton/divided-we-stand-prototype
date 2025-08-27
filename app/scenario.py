@@ -34,6 +34,8 @@ class SD_Improvement:
         self.d = d
         self.required_research: str = d["Required Research"]
         self.required_resource: str = d["Required Resource"]
+        self.is_fog_of_war: bool = d.get("Fog of War") is not None
+        self.color: str = d.get("Reference Color", "stat-grey")
 
         self.health: int = d.get("Health", 99)
         self.victory_damage: int = d.get("Victory Damage", 99)

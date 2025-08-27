@@ -769,46 +769,53 @@ def units_ref(full_game_id):
 # IMPROVEMENTS REF PAGE
 @main.route('/<full_game_id>/improvements')
 def improvements_ref(full_game_id):
+
+    # Improvement Colors:
+    # red - military
+    # yellow - energy
+    # blue - civilian
+    # grey - everything else (default)
+
+    from app.scenario import ScenarioData as SD
+
+    SD.load(full_game_id)
     
-    # read the contents of active_games.json
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Improvement Reference'
     
-    # get unit dict
-    improvement_dict: dict = core.get_scenario_dict(full_game_id, "Improvements")
+    game_name = active_games_dict[full_game_id]["Name"]
+    page_title = f"{game_name} - Improvement Reference"
 
-    # filter improvements
-    improvement_dict_filtered = {}
-    for improvement_name, improvement_data in improvement_dict.items():
+    data = {}
+    for improvement_name, improvement_data in SD.improvements:
 
-        # assign color
-        # to do - make a function that assigns color based on improvement's required tech
-        match improvement_name:
-            case 'Boot Camp' | 'Military Base' | 'Military Outpost' | 'Missile Defense System' | 'Missile Silo' | 'Trench':
-                improvement_data["stat_color"] = "stat-red"
-            case 'Coal Mine' | 'Nuclear Power Plant' | 'Oil Well' | 'Solar Farm' | 'Wind Farm':
-                improvement_data["stat_color"] = "stat-yellow"
-            case 'Advanced Metals Mine' | 'Common Metals Mine' | 'Industrial Zone' | 'Uranium Mine' | 'Rare Earth Elements Mine':
-                improvement_data["stat_color"] = "stat-grey"
-            case 'Capital' | 'Central Bank' | 'City' | 'Farm' | 'Research Institute' | 'Research Laboratory' | 'Settlement':
-                improvement_data["stat_color"] = "stat-blue"
-            case _:
-                improvement_data["stat_color"] = "stat-grey"
-
-        # hide fog of war improvements
-        if active_games_dict[full_game_id]["Information"]["Fog of War"] != "Enabled" and improvement_data.get("Fog of War Improvement", None):
-            continue
-
-        # hide event improvements
+        # hide event specific improvements
         if improvement_name == "Colony" and "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
             continue
 
-        improvement_dict_filtered[improvement_name] = improvement_data
+        # hide fog of war improvements
+        if active_games_dict[full_game_id]["Information"]["Fog of War"] != "Enabled" and improvement_data.is_fog_of_war:
+            continue
 
-    improvement_dict_filtered = {key: improvement_dict_filtered[key] for key in sorted(improvement_dict_filtered)}
-    return render_template('temp_improvements.html', page_title = page_title, dict = improvement_dict_filtered)
+        data[improvement_name] = {
+            "Required Research": improvement_data.required_research,
+            "Required Resource": improvement_data.required_resource,
+            "Reference Color": improvement_data.color,
+            "Income": improvement_data.income,
+            "Health": improvement_data.health,
+            "Victory Damage": improvement_data.victory_damage,
+            "Draw Damage": improvement_data.draw_damage,
+            "Combat Value": improvement_data.hit_value,
+            "Standard Missile Defense": improvement_data.missile_defense,
+            "Nuclear Missile Defense": improvement_data.nuclear_defense,
+            "Abilities": improvement_data.abilities,
+            "Upkeep": improvement_data.upkeep,
+            "Build Costs": improvement_data.cost
+        }
+
+    data = {key: data[key] for key in sorted(data)}
+    
+    return render_template('temp_improvements.html', page_title = page_title, dict = data)
 
 # RESOURCE MARKET PAGE
 @main.route('/<full_game_id>/resource_market')
