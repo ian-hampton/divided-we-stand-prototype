@@ -199,8 +199,15 @@ class Nations(metaclass=NationsMeta):
         raise Exception(f"Failed to retrieve nation with identifier {string}.")
     
     @classmethod
-    def get_random_name(cls) -> str:
-        pass
+    def get_random_id(cls) -> str:
+        
+        nation_ids = []
+
+        for nation in cls:
+            if nation.is_active:
+                nation_ids.append(nation.id)
+
+        return random.choice(nation_ids)
 
     @classmethod
     def update_records(cls) -> None:
@@ -338,7 +345,7 @@ class Nations(metaclass=NationsMeta):
         from app.notifications import Notifications
         
         for nation in cls:
-            if nation.stats.regions_owned == 0:
+            if nation.status != "Eliminated" and nation.stats.regions_owned == 0:
                 nation.status = "Eliminated"
                 Notifications.add(f"{nation.name} has been eliminated!", 1)
 

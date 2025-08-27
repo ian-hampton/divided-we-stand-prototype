@@ -177,8 +177,8 @@ class Assassination(Event):
 
     def activate(self):
 
-        victim_player_id = random.randint(1, len(Nations)) 
-        victim_nation = Nations.get(str(victim_player_id))
+        victim_player_id = Nations.get_random_id()
+        victim_nation = Nations.get(victim_player_id)
         self.targets.append(victim_nation.id)
 
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
@@ -325,7 +325,7 @@ class Desertion(Event):
                 if war.outcome != "TBD" or nation.id not in war.combatants:
                     continue
                 nation_combatant_data = war.get_combatant(nation.id)
-                score = war.attacker_total if "Attacker" in nation_combatant_data.role else war.defender_total
+                score = war.attackers.total if "Attacker" in nation_combatant_data.role else war.defenders.total
                 if score < lowest_warscore:
                     lowest_warscore = score
             lowest_warscore_dict[nation.id] = lowest_warscore
@@ -502,8 +502,8 @@ class LostNuclearWeapons(Event):
 
     def activate(self):
 
-        victim_player_id = random.randint(1, len(Nations)) 
-        victim_nation = Nations.get(str(victim_player_id))
+        victim_player_id = Nations.get_random_id()
+        victim_nation = Nations.get(victim_player_id)
         self.targets.append(victim_nation.id)
 
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
