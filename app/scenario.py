@@ -82,6 +82,7 @@ class SD_Unit:
         self.type: str = d["Unit Type"]
         self.abbreviation: str = d["Abbreviation"]
         self.value: int = d["Point Value"]
+        self.color: str = d["Reference Color"]
         
         self.health: int = d.get("Health", 99)
         self.victory_damage: int = d.get("Victory Damage", 99)

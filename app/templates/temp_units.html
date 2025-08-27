@@ -40,9 +40,11 @@
     {% endfor %}
 
     <!-- Missile Interception -->
-    <!-- This is hard coded for now, too bad. -->
-    {% if unit_name == 'Anti-Air' %}
-        <div class="top-break"> <b>Standard Missile Defense:</b> 6+ </div>
+    {% if unit_data["Standard Missile Defense"] != 99 %}
+        <div class="top-break"> <b>Standard Missile Defense:</b> {{ unit_data["Standard Missile Defense"] }} </div>
+    {% endif %}
+    {% if unit_data["Nuclear Missile Defense"] != 99 %}
+        <div class="top-break"> <b>Nuclear Missile Defense:</b> {{ unit_data["Nuclear Missile Defense"] }} </div>
     {% endif %}
 
     <!-- Build Costs -->
@@ -69,23 +71,23 @@
 
     <div class="stats-bar">
 
-        <div class="{{ unit_data["stat_color"] }}">
+        <div class="{{ unit_data["Reference Color"] }}">
             {{ unit_data["Victory Damage"] }}
             <br> <div class="small"> Victory Damage </div>
         </div>
-        <div class="{{ unit_data["stat_color"] }}">
+        <div class="{{ unit_data["Reference Color"] }}">
             {{ unit_data["Draw Damage"] }}
             <br> <div class="small"> Draw Damage </div>
         </div>
-        <div class="{{ unit_data["stat_color"] }}">
+        <div class="{{ unit_data["Reference Color"] }}">
             {{ unit_data["Combat Value"] }}+
             <br> <div class="small"> Hit Value </div>
         </div>
-        <div class="{{ unit_data["stat_color"] }}">
+        <div class="{{ unit_data["Reference Color"] }}">
             {{ unit_data["Health"] }}
             <br> <div class="small"> Health </div>
         </div>
-        <div class="{{ unit_data["stat_color"] }}">
+        <div class="{{ unit_data["Reference Color"] }}">
             {{ unit_data["Movement"] }}
             <br> <div class="small"> Movement </div>
         </div>

@@ -735,29 +735,36 @@ def agendas(full_game_id):
 # UNITS REF PAGE
 @main.route('/<full_game_id>/units')
 def units_ref(full_game_id):
-    
-    # read the contents of active_games.json
+
+    from app.scenario import ScenarioData as SD
+
+    SD.load(full_game_id)
     with open('active_games.json', 'r') as json_file:
         active_games_dict = json.load(json_file)
+
     game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Unit Reference'
-    
-    # get unit dict
-    unit_dict = core.get_scenario_dict(full_game_id, "Units")
+    page_title = f"{game_name} - Unit Reference"
 
-    # add reference colors
-    for unit_name in unit_dict:
-        if "Motorized Infantry" == unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-purple"
-            continue
-        if "Infantry" in unit_name or "Artillery" in unit_name or "Special Forces" in unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-red"
-        elif "Tank" in unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-purple"
-        elif "Air" in unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-yellow"
+    data = {}
+    for unit_name, unit_data in SD.units:
+        data[unit_name] = {
+            "Required Research": unit_data.required_research,
+            "Unit Type": unit_data.type,
+            "Abbreviation": unit_data.abbreviation,
+            "Reference Color": unit_data.color,
+            "Health": unit_data.health,
+            "Victory Damage": unit_data.victory_damage,
+            "Draw Damage": unit_data.draw_damage,
+            "Combat Value": unit_data.hit_value,
+            "Movement": unit_data.movement,
+            "Standard Missile Defense": unit_data.missile_defense,
+            "Nuclear Missile Defense": unit_data.nuclear_defense,
+            "Abilities": unit_data.abilities,
+            "Upkeep": unit_data.upkeep,
+            "Build Costs": unit_data.cost
+        }
 
-    return render_template('temp_units.html', page_title = page_title, dict = unit_dict)
+    return render_template('temp_units.html', page_title = page_title, dict = data)
 
 # IMPROVEMENTS REF PAGE
 @main.route('/<full_game_id>/improvements')
