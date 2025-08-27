@@ -88,7 +88,7 @@ def update_income(game_id: str) -> None:
     # political power income from alliances
     for nation in Nations:
         alliance_income = 0
-        alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
+        alliance_count, alliance_capacity = nation.calculate_alliance_capacity()
         if "Power Broker" in nation.completed_research:
             alliance_income += 0.25
         for tag_data in nation.tags.values():

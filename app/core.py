@@ -61,41 +61,6 @@ def get_map_str(game_id: str) -> str:
 
     return map_name_actual.strip("_")
 
-# DIPLOMACY SUB-FUNCTIONS
-################################################################################
-
-def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
-    """
-    Gets a count of a player's active alliances and their total alliance capacity.
-
-    Params:
-        game_id (str): Game ID string.
-        nation (Nation): Nation object.
-
-    Returns:
-        Tuple:
-            int: Alliance count.
-            int: Alliance limit.
-    """
-
-    from app.alliance import Alliances
-
-    totals = defaultdict(int)
-    for alliance in Alliances:
-        if alliance.is_active and nation.name in alliance:
-            totals[alliance.type] += 1
-    alliance_count = totals["Total"] - totals["Non-Aggression Pact"]
-    
-    alliance_limit = 2
-    if 'Power Broker' in nation.completed_research:
-        alliance_limit += 1
-    if 'Improved Logistics' in nation.completed_research:
-        alliance_limit += 1
-    for tag_data in nation.tags.values():
-        alliance_limit += tag_data.get("Alliance Limit Modifier", 0)
-
-    return alliance_count, alliance_limit
-
 
 # ECONOMIC SUB-FUNCTIONS
 ################################################################################

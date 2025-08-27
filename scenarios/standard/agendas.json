@@ -13,7 +13,9 @@
         "Cost": 15,
         "Description": "+1 alliance capacity. Gain +0.25 political power per turn from each alliance you are a member of.",
         "Location": "A1",
-        "Modifiers": {}
+        "Modifiers": {
+            "Alliance Limit Modifier": 1
+        }
     },
     "Ideological Wars": {
         "Agenda Type": "Cooperative",

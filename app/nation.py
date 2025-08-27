@@ -795,11 +795,32 @@ class Nation:
             pp_cost += float(tag_data.get("Region Claim Cost", 0))
         return pp_cost
 
+    def calculate_alliance_capacity(self) -> tuple[int, int]:
+        
+        from app.scenario import ScenarioData as SD
+        from app.alliance import Alliances
+
+        capacity_used = 0
+        for alliance in Alliances:
+            if (alliance.is_active
+                and self.name in alliance
+                and SD.alliances[alliance.type].capacity
+                ):
+                capacity_used += 1
+        
+        capacity_limit = 2
+        for agenda_name, agenda_data in SD.agendas:
+            capacity_limit += agenda_data.modifiers.get("Alliance Limit Modifier", 0)
+        for tag_data in self.tags.values():
+            capacity_limit += tag_data.get("Alliance Limit Modifier", 0)
+
+        return capacity_used, capacity_limit
+
     def fetch_alliance_data(self) -> dict:
 
         from app.scenario import ScenarioData as SD
 
-        alliance_count, alliance_capacity = core.get_alliance_count(Nations.game_id, self)
+        alliance_count, alliance_capacity = self.calculate_alliance_capacity()
 
         data = {
             "Header": f"Alliances ({alliance_count}/{alliance_capacity})",

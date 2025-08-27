@@ -1330,7 +1330,7 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
             continue
 
         if sd_alliance.capacity:
-            alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
+            alliance_count, alliance_capacity = nation.calculate_alliance_capacity()
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have enough alliance capacity.")
                 continue
@@ -1376,7 +1376,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
             continue
 
         if sd_alliance.capacity:
-            alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
+            alliance_count, alliance_capacity = nation.calculate_alliance_capacity()
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have enough alliance capacity.")
                 continue
