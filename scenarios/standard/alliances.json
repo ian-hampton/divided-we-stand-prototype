@@ -1,6 +1,7 @@
 {
     "Defense Pact": {
         "Required Agenda": "Common Ground",
+        "Capacity": true,
         "Color Theme": "orange",
         "Description": [
             "If a hostile nation declares war on one member of this alliance, all other alliance members will automatically join the war as secondary defenders (unless alliance or truce).",
@@ -10,6 +11,7 @@
     },
     "Non-Aggression Pact": {
         "Required Agenda": "Common Ground",
+        "Capacity": false,
         "Color Theme": "light purple",
         "Description": [
             "Alliance members cannot declare war on each other."
@@ -17,6 +19,7 @@
     },
     "Research Agreement": {
         "Required Agenda": "Technology Exchange",
+        "Capacity": true,
         "Color Theme": "light blue",
         "Description": [
             "Technology that at least one alliance member has researched costs 20% for all other alliance members to research. Does not apply to agendas.",
@@ -26,6 +29,7 @@
     },
     "Trade Agreement": {
         "Required Agenda": "Trade Routes",
+        "Capacity": true,
         "Color Theme": "light green",
         "Description": [
             "Alliance members can always trade with each other, ignoring all restrictions.",
