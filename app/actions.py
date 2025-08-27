@@ -770,26 +770,29 @@ def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> an
 
     return scenario_actions._create_action(game_id, nation_id, action_str)
 
-def _check_alliance_type(game_id: str, alliance_type: str) -> str | None:
+def _check_alliance_type(game_id: str, input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
-    
-    if alliance_type.title() in SD.alliances.file:
-        return alliance_type.title()
+
+    for alliance_type, alliance_type_data in SD.alliances:
+        if input_str.lower() == alliance_type.lower():
+            return alliance_type
     
     return None
 
-def _check_alliance_name(game_id: str, alliance_name: str) -> str | None:
+def _check_alliance_name(game_id: str, input_str: str) -> str | None:
     
     from app.alliance import Alliances
 
     for alliance in Alliances:
-        if alliance.name.lower() == alliance_name.lower():
+        if input_str.lower() == alliance.name.lower():
             return alliance.name
         
     return None
 
 def _check_region_id(region_id: str) -> str | None:
+
+    # region_id string is already converted to all uppercase, so we can just check if it exists or not 
     
     from app.region import Regions
     
@@ -798,17 +801,17 @@ def _check_region_id(region_id: str) -> str | None:
     
     return None
 
-def _check_nation_name(game_id: str, nation_name: str) -> str | None:
+def _check_nation_name(game_id: str, input_str: str) -> str | None:
 
     from app.nation import Nations
 
     for nation in Nations:
-        if nation.name.lower() == nation_name.lower():
+        if input_str.lower() == nation.name.lower():
             return nation.name
         
     return None
 
-def _check_improvement_name(game_id: str, improvement_name: str) -> str | None:
+def _check_improvement_name(game_id: str, input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
 
@@ -850,10 +853,11 @@ def _check_improvement_name(game_id: str, improvement_name: str) -> str | None:
         "wind turbines": "Wind Farm"
     }
 
-    if improvement_name.title() in SD.improvements.names():
-        return improvement_name.title()
+    for improvement_name, improvement_data in SD.improvements:
+        if input_str.lower() == improvement_name.lower():
+            return improvement_name
     
-    return improvement_errors.get(improvement_name.lower())
+    return improvement_errors.get(input_str.lower())
 
 def _check_quantity(quantity: str) -> int | None:
     
@@ -865,7 +869,7 @@ def _check_quantity(quantity: str) -> int | None:
     
 def _check_resource(resource_name: str) -> str | None:
 
-    # to do - make this check reference game files
+    # TODO - make this check reference game files
     resources = {
         "Dollars",
         "Political Power",
@@ -901,7 +905,7 @@ def _check_resource(resource_name: str) -> str | None:
     resource_name = resource_name.lower()
     return resource_errors.get(resource_name)
 
-def _check_missile(game_id: str, missile_type: str) -> str | None:
+def _check_missile(game_id: str, input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
 
@@ -914,49 +918,51 @@ def _check_missile(game_id: str, missile_type: str) -> str | None:
         "nuclear missiles": "Nuclear Missile"
     }
 
-    if missile_type.title() in SD.missiles:
-        return missile_type.title()
+    for missile_type, missile_type_data in SD.missiles:
+        if input_str.lower() == missile_type.lower():
+            return missile_type
         
-    return missile_errors.get(missile_type.lower())
+    return missile_errors.get(input_str.lower())
 
-def _check_research(game_id: str, research_name: str) -> str | None:
+def _check_research(game_id: str, input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
     
     research_names = set(SD.agendas.names()).union(SD.technologies.names())
 
-    if research_name.title() in research_names:
-        return research_name.title()
+    for name in research_names:
+        if input_str.lower() == name.lower():
+            return name
         
     return None
 
-def _check_unit(game_id: str, unit_str: str) -> str | None:
+def _check_unit(game_id: str, input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
     
     for unit_name, unit_data in SD.units:
-        if (unit_name.lower() == unit_str.lower()
-            or unit_data.abbreviation == unit_str.upper()):
+        if (input_str.lower() == unit_name.lower()
+            or input_str.upper() == unit_data.abbreviation):
             return unit_name
         
     return None
 
-def _check_war_name(game_id: str, war_name_str: str) -> str | None:
+def _check_war_name(game_id: str, input_str: str) -> str | None:
 
     from app.war import Wars
 
     for war in Wars:
-        if war_name_str.lower() == war.name.lower():
+        if input_str.lower() == war.name.lower():
             return war.name
         
     return None
 
-def _check_war_justification(game_id: str, war_justification_str: str) -> str | None:
+def _check_war_justification(game_id: str, input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
     
     for justification_name, justification_data in SD.war_justificiations:
-        if justification_name.lower() == war_justification_str.lower():
+        if input_str.lower() == justification_name.lower():
             return justification_name
         
     return None
