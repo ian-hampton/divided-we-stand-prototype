@@ -96,16 +96,6 @@ def get_alliance_count(game_id: str, nation: Nation) -> Tuple[int, int]:
 
     return alliance_count, alliance_limit
 
-def get_subjects(game_id: str, overlord_name: str, subject_type: str) -> list:
-
-    nation_id_list = []
-
-    for nation in Nations:
-        if overlord_name in nation.status and subject_type in nation.status:
-            nation_id_list.append(nation.id)
-    
-    return nation_id_list
-
 
 # ECONOMIC SUB-FUNCTIONS
 ################################################################################

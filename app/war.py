@@ -110,7 +110,7 @@ class Wars(metaclass=WarsMeta):
 
         # call in main attacker allies
         # possible allies: puppet states
-        puppet_states = core.get_subjects(cls.game_id, main_attacker.name, "Puppet State")
+        puppet_states = main_attacker.get_subjects("Puppet State")
         possible_allies = set(puppet_states)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
@@ -122,7 +122,7 @@ class Wars(metaclass=WarsMeta):
 
         # call in main defender allies
         # possible allies: puppet states, defensive pacts, overlord
-        puppet_states = core.get_subjects(cls.game_id, main_defender.name, "Puppet State")
+        puppet_states = main_defender.get_subjects("Puppet State")
         defense_allies = Alliances.allies(main_defender.name, "Defense Pact")
         ally_player_ids = set(puppet_states) | set(defense_allies)
         if main_defender.status != "Independent Nation":

@@ -817,6 +817,16 @@ class Nation:
 
         return data
 
+    def get_subjects(self, subject_type: str) -> list:
+        
+        subjects = []
+
+        for nation in Nations:
+            if self.name in nation.status and subject_type in nation.status:
+                subjects.append(nation.id)
+        
+        return subjects
+
     def export_action_log(self) -> None:
         
         log_file = f"gamedata/{Nations.game_id}/logs/nation{self.id}.txt"
