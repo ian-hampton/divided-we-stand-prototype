@@ -18,8 +18,9 @@ class SD_Agenda:
 class SD_Alliance:
     
     def __init__(self, d: dict):
+        self.required_agenda: str = d["Required Agenda"]
         self.color_theme: str = d["colorTheme"]
-        self.description: list = d["descriptionList"]
+        self.description: list = d["Description"]
 
 class SD_Event:
     
