@@ -450,25 +450,6 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
 
     return chosen_region_id, victim
 
-def get_scenario_dict(game_id: str, filename: str) -> dict:
-    """
-    Gets a dictionary from the chosen scenario.
-    """
-
-    if game_id != "TBD":
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-        scenario_name = active_games_dict[game_id]["Information"]["Scenario"]
-        scenario = scenario_name.lower()
-    else:
-        scenario = "standard"
-
-    dictionary_filepath = f"scenarios/{scenario}/{filename.lower()}.json"
-    with open(dictionary_filepath, 'r') as json_file:
-        chosen_dictionary = json.load(json_file)
-
-    return chosen_dictionary
-
 
 # CSV File Headers
 ################################################################################
