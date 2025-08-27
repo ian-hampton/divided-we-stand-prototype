@@ -1314,6 +1314,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
     from app.alliance import Alliances
     from app.nation import Nations
 
@@ -1322,24 +1323,13 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
     for action in actions_list:
 
         nation = Nations.get(action.id)
-
-        # TODO - tie this to scenario files
-        research_check_success = True
-        match action.alliance_type:
-            case "Non-Aggression Pact" | "Defense Pact":
-                if "Common Ground" not in nation.completed_research:
-                   research_check_success = False
-            case "Trade Agreement":
-                if "Trade Routes" not in nation.completed_research:
-                   research_check_success = False 
-            case "Research Agreement":
-                if "Technology Exchange" not in nation.completed_research:
-                   research_check_success = False 
-        if not research_check_success:
+        sd_alliance = SD.alliances[action.alliance_type]
+        
+        if sd_alliance.required_agenda not in nation.completed_research:
             nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have the required agenda.")
             continue
 
-        if action.alliance_type != 'Non-Aggression Pact':
+        if sd_alliance.capacity:
             alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to form {action.alliance_name} alliance. You do not have enough alliance capacity.")
@@ -1371,6 +1361,7 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
 
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
     from app.alliance import Alliances
     from app.nation import Nations
 
@@ -1378,24 +1369,13 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
         
         nation = Nations.get(action.id)
         alliance = Alliances.get(action.alliance_name)
+        sd_alliance = SD.alliances[alliance.type]
 
-        # TODO - tie this to scenario data
-        research_check_success = True
-        match alliance.type:
-            case "Non-Aggression Pact" | "Defense Pact":
-                if "Common Ground" not in nation.completed_research:
-                   research_check_success = False
-            case "Trade Agreement":
-                if "Trade Routes" not in nation.completed_research:
-                   research_check_success = False 
-            case "Research Agreement":
-                if "Technology Exchange" not in nation.completed_research:
-                   research_check_success = False 
-        if not research_check_success:
+        if sd_alliance.required_agenda not in nation.completed_research:
             nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have the required agenda.")
             continue
 
-        if alliance.type != "Non-Aggression Pact":
+        if sd_alliance.capacity:
             alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
             if (alliance_count + 1) > alliance_capacity:
                 nation.action_log.append(f"Failed to join {action.alliance_name} alliance. You do not have enough alliance capacity.")
