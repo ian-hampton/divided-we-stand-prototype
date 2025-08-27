@@ -602,25 +602,10 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     player_information_dict['Resource Data']['Rate List'] = rate_list
 
     # alliance data
-    alliance_count, alliance_capacity = core.get_alliance_count(game_id, nation)
-    player_information_dict['Alliance Data']['Name List'] = list(SD.alliances.names())
-    alliance_colors = []
-    alliance_data = [False, False, False, False]
-    if 'Common Ground' in nation.completed_research:
-        alliance_data[0] = True
-    if 'Common Ground' in nation.completed_research:
-        alliance_data[1] = True
-    if 'Technology Exchange' in nation.completed_research:
-        alliance_data[2] = True
-    if 'Trade Routes' in nation.completed_research:
-        alliance_data[3] = True
-    for entry in alliance_data:
-        if entry:
-            alliance_colors.append('#00ff00')
-        else:
-            alliance_colors.append('#ff0000')
-    player_information_dict['Alliance Data']['Header'] = f'Alliances ({alliance_count}/{alliance_capacity})'
-    player_information_dict['Alliance Data']['Color List'] = alliance_colors
+    alliance_data = nation.fetch_alliance_data()
+    player_information_dict['Alliance Data']['Header'] = alliance_data["Header"]
+    player_information_dict['Alliance Data']['Name List'] = alliance_data["Names"]
+    player_information_dict['Alliance Data']['Color List'] = alliance_data["Colors"]
 
     # missile data
     player_information_dict['Missile Data']['Standard'] = f'{nation.missile_count}x Standard Missiles'

@@ -795,6 +795,28 @@ class Nation:
             pp_cost += float(tag_data.get("Region Claim Cost", 0))
         return pp_cost
 
+    def fetch_alliance_data(self) -> dict:
+
+        from app.scenario import ScenarioData as SD
+
+        alliance_count, alliance_capacity = core.get_alliance_count(Nations.game_id, self)
+
+        data = {
+            "Header": f"Alliances ({alliance_count}/{alliance_capacity})",
+            "Names": list(SD.alliances.names()),
+            "Colors": []
+        }
+
+        types_sorted = sorted(SD.alliances.names())
+        for alliance_type_name in types_sorted:
+            required_agenda = SD.alliances[alliance_type_name].required_agenda
+            if required_agenda in self.completed_research:
+                data["Colors"].append("#00ff00")
+            else:
+                data["Colors"].append("#ff0000")
+
+        return data
+
     def export_action_log(self) -> None:
         
         log_file = f"gamedata/{Nations.game_id}/logs/nation{self.id}.txt"
