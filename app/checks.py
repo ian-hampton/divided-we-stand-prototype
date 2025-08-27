@@ -368,7 +368,7 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, gam
         else:
             region_id, victim = core.search_and_destroy_unit(game_id, nation.id, consumer_name)
             nation.unit_counts[consumer_name] -= 1
-        Notifications.add(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 6)
+        Notifications.add(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 7)
         
         # update stockpile
         consumer_upkeep = upkeep_dict[consumer_name][resource_name]["Upkeep"] * upkeep_dict[consumer_name][resource_name]["Upkeep Multiplier"]
@@ -406,7 +406,7 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
             nation.update_used_mc(-1)
             nation.unit_counts[victim] -= 1
 
-            Notifications.add(f"{nation.name} lost {victim} {region_id} due to insufficient military capacity.", 5)
+            Notifications.add(f"{nation.name} lost {victim} {region_id} due to insufficient military capacity.", 6)
 
 def bonus_phase_heals(game_id: str) -> None:
     """
@@ -503,7 +503,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
                         outcome = "Attacker Victory"
                     war.end_conflict(outcome)
 
-                    Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 4)
+                    Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 5)
 
 def war_score_forced_surrender(game_id: str) -> None:
     """
@@ -528,13 +528,13 @@ def war_score_forced_surrender(game_id: str) -> None:
             
             if attacker_threshold is not None and war.attackers.total >= attacker_threshold:
                 war.end_conflict("Attacker Victory")
-                Notifications.add(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 4)
-                Notifications.add(f"{war.name} has ended due to war score.", 4)
+                Notifications.add(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 5)
+                Notifications.add(f"{war.name} has ended due to war score.", 5)
 
             elif defender_threshold is not None and war.defenders.total >= defender_threshold:
                 war.end_conflict("Defender Victory")
-                Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 4)
-                Notifications.add(f"{war.name} has ended due to war score.", 4)
+                Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 5)
+                Notifications.add(f"{war.name} has ended due to war score.", 5)
 
 def prune_alliances(game_id: str) -> None:
     """
@@ -549,7 +549,7 @@ def prune_alliances(game_id: str) -> None:
     for alliance in Alliances:
         if alliance.is_active and len(alliance.current_members) < 2:
             alliance.end()
-            Notifications.add(f"{alliance.name} has dissolved.", 7)
+            Notifications.add(f"{alliance.name} has dissolved.", 8)
 
 def gain_market_income(game_id: str, market_results: str) -> None:
     for nation_name, market_info in market_results.items():

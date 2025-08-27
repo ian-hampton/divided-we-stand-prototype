@@ -1103,7 +1103,7 @@ def resolve_trade_actions(game_id: str) -> None:
 
         # save changes
         if trade_valid:
-            Notifications.add(f'{nation1.name} traded with {nation2.name}.', 9)
+            Notifications.add(f'{nation1.name} traded with {nation2.name}.', 10)
         else:
             print(f'Trade between {nation1.name} and {nation2.name} failed. Insufficient resources.')
 
@@ -1137,8 +1137,8 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
 
         # end war
         war.end_conflict(outcome)
-        Notifications.add(f"{surrendering_nation.name} surrendered to {winning_nation.name}.", 4)
-        Notifications.add(f"{war_name} has ended.", 4)
+        Notifications.add(f"{surrendering_nation.name} surrendered to {winning_nation.name}.", 5)
+        Notifications.add(f"{war_name} has ended.", 5)
 
     # execute white peace actions
     white_peace_dict = {}
@@ -1163,7 +1163,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         if white_peace_dict[war_name] == 2:
             war = Wars.get(war_name)
             war.end_conflict("White Peace")
-            Notifications.add(f'{war_name} has ended with a white peace.', 4)
+            Notifications.add(f'{war_name} has ended with a white peace.', 5)
 
 def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
 
@@ -1274,7 +1274,7 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
         alliance = Alliances.get(action.alliance_name)
 
         alliance.remove_member(nation.name)
-        Notifications.add(f"{nation.name} has left the {alliance.name}.", 7)
+        Notifications.add(f"{nation.name} has left the {alliance.name}.", 8)
         nation.action_log.append(f"Left {action.alliance_name}.")
 
 def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
@@ -1310,7 +1310,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
             alliance = Alliances.get(alliance_name)
             if votes >= len(alliance.current_members) - 1:
                 alliance.remove_member(target_nation_name)
-                Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 7)
+                Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 8)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
     
@@ -1348,7 +1348,7 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
         # alliance creation success
         if len(alliance_data["members"]) >= 2:
             Alliances.create(alliance_name, alliance_data["type"], alliance_data["members"])
-            Notifications.add(f"{alliance_name} has formed.", 7)
+            Notifications.add(f"{alliance_name} has formed.", 8)
             for nation_name in alliance_data["members"]:
                 nation = Nations.get(nation_name)
                 nation.action_log.append(f"Successfully formed {action.alliance_name}.")
@@ -1390,7 +1390,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
             continue
 
         alliance.add_member(nation.name)
-        Notifications.add(f"{nation.name} has joined the {alliance.name}.", 7)
+        Notifications.add(f"{nation.name} has joined the {alliance.name}.", 8)
         nation.action_log.append(f"Joined {alliance.name}.")
 
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
@@ -1609,7 +1609,7 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
         }
         nation.tags["Republic Bonus"] = new_tag
         nation.action_log.append(f"Used Republic government action to boost {action.resource_name} income.")
-        Notifications.add(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 8)
+        Notifications.add(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 9)
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
     
@@ -1769,7 +1769,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             market_results[nation_name][entry] -= stolen_amount
             nation.action_log.append(f"{syndicate_nation.name} stole {stolen_amount} {entry} from you! ({int(modifier * 100)}%)")
         
-        Notifications.add(f"{syndicate_nation.name} stole from {nation.name}.", 8)
+        Notifications.add(f"{syndicate_nation.name} stole from {nation.name}.", 9)
 
     # update rmdata.csv
     rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
@@ -1882,7 +1882,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
             attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
 
         Wars.create(attacker_nation.id, defender_nation.id, action.war_justification, region_claims_list)
-        Notifications.add(f"{attacker_nation.name} declared war on {defender_nation.name}.", 3)
+        Notifications.add(f"{attacker_nation.name} declared war on {defender_nation.name}.", 4)
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
 
 def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
@@ -1927,7 +1927,7 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             continue
 
         # save
-        Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 3)
+        Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 4)
         combatant.claims = Wars._claim_pairs(region_claims_list)
 
 def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):

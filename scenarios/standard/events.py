@@ -181,7 +181,7 @@ class Assassination(Event):
         victim_nation = Nations.get(str(victim_player_id))
         self.targets.append(victim_nation.id)
 
-        Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
+        Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
 
         self.state = 2
 
@@ -228,7 +228,7 @@ class CorruptionScandal(Event):
         top_three_economy = Nations.get_top_three("netIncome")
         victim_nation_name = top_three_economy[0][0]
         victim_nation = Nations.get(victim_nation_name)
-        Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
+        Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
 
         new_tag = {
             "Dollars Rate": -20,
@@ -266,7 +266,7 @@ class Coup(Event):
         
         victim_nation.gov = new_government
         victim_nation.update_stockpile("Political Power", 0, overwrite=True)
-        Notifications.add(f"{victim_nation_name}'s {old_government} government has been defeated by a coup. A new {new_government} government has taken power.", 2)
+        Notifications.add(f"{victim_nation_name}'s {old_government} government has been defeated by a coup. A new {new_government} government has taken power.", 3)
 
         self.state = 0
 
@@ -296,7 +296,7 @@ class DecayingInfrastructure(Event):
                 if decay_roll >= 9:
                     nation = Nations.get(region.data.owner_id)
                     nation.improvement_counts[region.improvement.name] -= 1
-                    Notifications.add(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 2)
+                    Notifications.add(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 3)
                     region.improvement.clear()
 
         self.state = 0
@@ -347,7 +347,7 @@ class Desertion(Event):
             if defection_roll >= 9:
                 nation = Nations.get(region.unit.owner_id)
                 nation.unit_counts[region.unit.name] -= 1
-                Notifications.add(f"{nation.name} {region.unit.name} {region_id} has deserted.", 2)
+                Notifications.add(f"{nation.name} {region.unit.name} {region_id} has deserted.", 3)
                 region.unit.clear()
         
         self.state = 0
@@ -366,7 +366,7 @@ class DiplomaticSummit(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -432,7 +432,7 @@ class ForeignAid(Event):
             if count > 0:
                 amount = count * 5
                 nation.update_stockpile("Dollars", amount)
-                Notifications.add(f"{nation_name} has received {amount} dollars worth of foreign aid.", 2)
+                Notifications.add(f"{nation_name} has received {amount} dollars worth of foreign aid.", 3)
 
         self.state = 0
 
@@ -446,7 +446,7 @@ class ForeignInterference(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -506,7 +506,7 @@ class LostNuclearWeapons(Event):
         victim_nation = Nations.get(str(victim_player_id))
         self.targets.append(victim_nation.id)
 
-        Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 2)
+        Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
 
         self.state = 2
 
@@ -535,7 +535,7 @@ class LostNuclearWeapons(Event):
             elif decision == "Scuttle":
                 nation.update_stockpile("Research", 15)
             
-            Notifications.add(f"{nation.name} chose to {decision.lower()} the old military installation.", 2)
+            Notifications.add(f"{nation.name} chose to {decision.lower()} the old military installation.", 3)
         
         self.state = 0
 
@@ -553,7 +553,7 @@ class SecurityBreach(Event):
         victim_nation_name = top_three[0][0]
         self.targets.append(victim_nation_name)
 
-        Notifications.add(f"{victim_nation_name} has suffered a {self.name}!", 2)
+        Notifications.add(f"{victim_nation_name} has suffered a {self.name}!", 3)
 
         self.state = 2
 
@@ -621,7 +621,7 @@ class ObserverStatusInvitation(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -668,8 +668,8 @@ class PeacetimeRewards(Event):
                 names.append(nation.name)
         nations_receiving_award_str = ", ".join(names)
         
-        Notifications.add(f"New Event: {self.name}!", 2)
-        Notifications.add(f"Receiving reward: {nations_receiving_award_str}.", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
+        Notifications.add(f"Receiving reward: {nations_receiving_award_str}.", 3)
         
         self.state = 2
 
@@ -715,7 +715,7 @@ class PowerPlantMeltdown(Event):
         region.data.fallout = 99999
         
         nation.update_stockpile("Political Power", 0, overwrite=True)
-        Notifications.add(f"The {nation.name} Nuclear Power Plant in {meltdown_region_id} has melted down!", 2)
+        Notifications.add(f"The {nation.name} Nuclear Power Plant in {meltdown_region_id} has melted down!", 3)
         
         self.state = 0
 
@@ -733,7 +733,7 @@ class ShiftingAttitudes(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -783,7 +783,7 @@ class UnitedNationsPeacekeepingMandate(Event):
         for war in Wars:
             if war.outcome == "TBD":
                 war.end_conflict("White Peace")
-                Notifications.add(f"{war.name} has ended with a white peace due to United Nations Peacekeeping Mandate.", 2)
+                Notifications.add(f"{war.name} has ended with a white peace due to United Nations Peacekeeping Mandate.", 3)
 
         self.state = 0
 
@@ -801,7 +801,7 @@ class WidespreadCivilDisorder(Event):
 
     def activate(self):
 
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
 
         for nation in Nations:
             new_tag = {
@@ -826,7 +826,7 @@ class Embargo(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -839,7 +839,7 @@ class Embargo(Event):
         nation_name = self._determine_vote_winner()
 
         if nation_name is None:
-            Notifications.add(f"Vote tied. No nation has been embargoed.", 2)
+            Notifications.add(f"Vote tied. No nation has been embargoed.", 3)
             self.state = 0
             return
         
@@ -849,7 +849,7 @@ class Embargo(Event):
         }
         nation.tags["Embargo"] = new_tag
         
-        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 2)
+        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 3)
         
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1     
@@ -864,7 +864,7 @@ class Humiliation(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -877,7 +877,7 @@ class Humiliation(Event):
         nation_name = self._determine_vote_winner()
 
         if nation_name is None:
-            Notifications.add(f"Vote tied. No nation has been humiliated.", 2)
+            Notifications.add(f"Vote tied. No nation has been humiliated.", 3)
             self.state = 0
             return
 
@@ -888,7 +888,7 @@ class Humiliation(Event):
         }
         nation.tags["Humiliation"] = new_tag
         
-        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 2)
+        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 3)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1 
@@ -903,7 +903,7 @@ class ForeignInvestment(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -916,7 +916,7 @@ class ForeignInvestment(Event):
         nation_name = self._determine_vote_winner()
 
         if nation_name is None:
-            Notifications.add(f"Vote tied. No nation will recieve the foreign investment.", 2)
+            Notifications.add(f"Vote tied. No nation will recieve the foreign investment.", 3)
             self.state = 0
             return
 
@@ -927,7 +927,7 @@ class ForeignInvestment(Event):
         }
         nation.tags["Foreign Investment"] = new_tag
         
-        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 2)
+        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 3)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1 
@@ -942,7 +942,7 @@ class NominateMediator(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -955,7 +955,7 @@ class NominateMediator(Event):
         nation_name = self._determine_vote_winner()
 
         if nation_name is None:
-            Notifications.add(f"Vote tied. No nation has been elected Mediator.", 2)
+            Notifications.add(f"Vote tied. No nation has been elected Mediator.", 3)
             self.state = 0
             return
 
@@ -967,7 +967,7 @@ class NominateMediator(Event):
         }
         nation.tags["Mediator"] = new_tag
 
-        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 2)
+        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 3)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1 
@@ -982,7 +982,7 @@ class SharedFate(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -996,7 +996,7 @@ class SharedFate(Event):
         option_name = self._determine_vote_winner()
 
         if option_name is None:
-            Notifications.add(f"Vote tied. No option was resolved.", 2)
+            Notifications.add(f"Vote tied. No option was resolved.", 3)
             self.state = 0
             return
 
@@ -1007,7 +1007,7 @@ class SharedFate(Event):
                     "Expire Turn": 99999
                 }
                 nation.tags["Shared Fate"] = new_tag
-            Notifications.add(f"Cooperation won in a {self.vote_tally.get("Cooperation")} - {self.vote_tally.get("Conflict")} decision.", 2)
+            Notifications.add(f"Cooperation won in a {self.vote_tally.get("Cooperation")} - {self.vote_tally.get("Conflict")} decision.", 3)
 
         elif option_name == "Conflict":
             for nation in Nations:
@@ -1020,7 +1020,7 @@ class SharedFate(Event):
                     "Expire Turn": 99999
                 }
                 nation.tags["Shared Fate"] = new_tag
-            Notifications.add(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 2)
+            Notifications.add(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 3)
 
         self.state = 1
         self.duration = 99999
@@ -1035,7 +1035,7 @@ class ThreatContainment(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -1048,7 +1048,7 @@ class ThreatContainment(Event):
         nation_name = self._determine_vote_winner()
 
         if nation_name is None:
-            Notifications.add(f"Vote tied. No nation has been sanctioned.", 2)
+            Notifications.add(f"Vote tied. No nation has been sanctioned.", 3)
             self.state = 0
             return
         
@@ -1060,7 +1060,7 @@ class ThreatContainment(Event):
         }
         nation.tags["Threat Containment"] = new_tag
 
-        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 2)
+        Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 3)
 
         self.state = 1
         self.expire_turn = self.current_turn_num + self.duration + 1
@@ -1075,7 +1075,7 @@ class ForeignInvasion(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
 
         region_id_list = Regions.ids()
         invasion_point_id = None
@@ -1137,7 +1137,7 @@ class ForeignInvasion(Event):
         
         # generate deployment actions
         if self.current_turn_num % 4 == 0:
-            Notifications.add("The Foreign Invasion has received reinforcements.", 2)
+            Notifications.add("The Foreign Invasion has received reinforcements.", 3)
             for region in Regions:
                 if region.data.owner_id == "99" and region.data.occupier_id == "0":
                     unit_name = self._foreign_invasion_determine_unit()
@@ -1318,7 +1318,7 @@ class Pandemic(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
             
         self.intensify = random.randint(3, 9)
         self.spread = random.randint(3, 9)
@@ -1395,7 +1395,7 @@ class Pandemic(Event):
         if infection_total == 0:
             for region in Regions:
                 region.data.quarantine = False
-            Notifications.add("The pandemic has been eradicated!", 2)
+            Notifications.add("The pandemic has been eradicated!", 3)
             self.state = 0
             return
         
@@ -1404,16 +1404,16 @@ class Pandemic(Event):
         cure_percentage = round(cure_percentage, 2)
         if infection_total != 0:
             if cure_percentage >= 0.5:
-                Notifications.add(f"Pandemic intensify value: {self.intensify}", 2)
-                Notifications.add(f"Pandemic spread value: {self.spread}", 2)
+                Notifications.add(f"Pandemic intensify value: {self.intensify}", 3)
+                Notifications.add(f"Pandemic spread value: {self.spread}", 3)
             if cure_percentage >= 0.75:
                 for nation in Nations:
                     score = infection_scores[int(nation.id) - 1]
-                    Notifications.add(f"{nation.name} pandemic infection score: {score}", 2)
+                    Notifications.add(f"{nation.name} pandemic infection score: {score}", 3)
             if cure_percentage < 1:
-                Notifications.add(f"Pandemic cure research progress: {self.cure_current}/{self.cure_threshold}", 2)
+                Notifications.add(f"Pandemic cure research progress: {self.cure_current}/{self.cure_threshold}", 3)
             else:
-                Notifications.add(f"Pandemic cure research has been completed! The pandemic is now in decline.", 2)
+                Notifications.add(f"Pandemic cure research has been completed! The pandemic is now in decline.", 3)
 
         self.state = 1
 
@@ -1449,7 +1449,7 @@ class FaustianBargain(Event):
 
     def activate(self):
         
-        Notifications.add(f"New Event: {self.name}!", 2)
+        Notifications.add(f"New Event: {self.name}!", 3)
         for nation in Nations:
             self.targets.append(nation.id)
         
@@ -1471,7 +1471,7 @@ class FaustianBargain(Event):
                 nation.update_stockpile("Political Power", 5)
 
         if len(candidates_list) == 0:
-            Notifications.add("No nation took the Faustian Bargain. collaborate with the foreign nation.", 2)
+            Notifications.add("No nation took the Faustian Bargain. collaborate with the foreign nation.", 3)
             self.state = 0
             return
         
@@ -1492,7 +1492,7 @@ class FaustianBargain(Event):
             if nation.name in alliance.current_members:
                 alliance.remove_member(nation.name)
 
-        Notifications.add(f"{nation.name} took the Faustian Bargain and will collaborate with the foreign nation.", 2)
+        Notifications.add(f"{nation.name} took the Faustian Bargain and will collaborate with the foreign nation.", 3)
 
         self.state = 1
         self.duration = 99999
@@ -1508,7 +1508,7 @@ class FaustianBargain(Event):
         if nation.improvement_counts["Capital"] == 0:
             del nation.tags["Faustian Bargain"]
             self.state = 0
-            Notifications.add(f"{self.name} event has ended.", 2)
+            Notifications.add(f"{self.name} event has ended.", 3)
             return
 
         self.state = 1
