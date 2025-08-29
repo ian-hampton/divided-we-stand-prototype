@@ -14,7 +14,8 @@
         "Description": "+1 alliance capacity. Gain +0.25 political power per turn from each alliance you are a member of.",
         "Location": "A1",
         "Modifiers": {
-            "Alliance Limit Modifier": 1
+            "Alliance Limit Modifier": 1,
+            "Alliance Political Power Bonus": 0.25
         }
     },
     "Ideological Wars": {

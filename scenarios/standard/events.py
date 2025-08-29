@@ -639,6 +639,7 @@ class ObserverStatusInvitation(Event):
             
             if decision == "Accept":
                 new_tag = {
+                    "Political Power Income": 0.5,
                     "Expire Turn": 99999
                 }
                 nation.tags["Observer Status"] = new_tag
