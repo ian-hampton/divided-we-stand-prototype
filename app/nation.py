@@ -835,8 +835,13 @@ class Nation:
                 capacity_used += 1
         
         capacity_limit = 2
-        for agenda_name, agenda_data in SD.agendas:
-            capacity_limit += agenda_data.modifiers.get("Alliance Limit Modifier", 0)
+        for name in self.completed_research:
+            if name in SD.agendas:
+                agenda_data = SD.agendas[name]
+                capacity_limit += agenda_data.modifiers.get("Alliance Limit Modifier", 0)
+            elif name in SD.technologies:
+                technology_data = SD.technologies[name]
+                capacity_limit += technology_data.modifiers.get("Alliance Limit Modifier", 0)
         for tag_data in self.tags.values():
             capacity_limit += tag_data.get("Alliance Limit Modifier", 0)
 
