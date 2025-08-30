@@ -9,13 +9,15 @@ from app import core
 class NationsMeta(type):
 
     def __iter__(cls) -> Iterator["Nation"]:
-        for nation in cls:
+        for nation_id in cls._data:
+            nation = Nation(nation_id)
             if nation.is_active:
                 yield Nation(nation.id)
 
     def __len__(cls):
         length = 0
-        for nation in cls:
+        for nation_id in cls._data:
+            nation = Nation(nation_id)
             if nation.is_active:
                 length += 1
         return length
