@@ -225,7 +225,7 @@ class CorruptionScandal(Event):
 
     def activate(self):
         
-        top_three_economy = Nations.get_top_three("netIncome")
+        top_three_economy = Nations.get_top_three("net_income")
         victim_nation_name = top_three_economy[0][0]
         victim_nation = Nations.get(victim_nation_name)
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
@@ -242,7 +242,7 @@ class CorruptionScandal(Event):
 
     def has_conditions_met(self) -> bool:
 
-        if not _no_ranking_tie(self.game_id, "netIncome"):
+        if not _no_ranking_tie(self.game_id, "net_income"):
             return False
         
         return True
@@ -254,7 +254,7 @@ class Coup(Event):
 
     def activate(self):
         
-        lowest_economy = Nations.get_lowest_in_record("netIncome")
+        lowest_economy = Nations.get_lowest_in_record("net_income")
         victim_nation_name = lowest_economy[0]
         victim_nation = Nations.get(victim_nation_name)
 
@@ -284,7 +284,7 @@ class DecayingInfrastructure(Event):
 
     def activate(self):
 
-        top_three = Nations.get_top_three("nationSize")
+        top_three = Nations.get_top_three("nation_size")
         top_three_ids = set()
         for nation_name, nation_size in top_three:
             temp = Nations.get(nation_name)
@@ -420,7 +420,7 @@ class ForeignAid(Event):
 
     def activate(self):
         
-        for record_name in ["militaryStrength", "nationSize", "netIncome", "researchCount", "transactionCount"]:
+        for record_name in Nations.LEADERBOARD_RECORD_NAMES:
             top_three = Nations.get_top_three(record_name)
             for nation_name, score in top_three:
                 if score != 0 and nation_name not in self.targets:
@@ -549,7 +549,7 @@ class SecurityBreach(Event):
 
     def activate(self):
 
-        top_three = Nations.get_top_three("researchCount")
+        top_three = Nations.get_top_three("technology_count")
         victim_nation_name = top_three[0][0]
         self.targets.append(victim_nation_name)
 
@@ -585,7 +585,7 @@ class SecurityBreach(Event):
 
     def has_conditions_met(self) -> bool:
 
-        if not _no_ranking_tie(self.game_id, "researchCount"):
+        if not _no_ranking_tie(self.game_id, "technology_count"):
             return False
         
         return True

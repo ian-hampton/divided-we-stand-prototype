@@ -989,10 +989,8 @@ def announcements(full_game_id):
 
     # get top three standings
     standings_dict = {}
-    records = ["nationSize", "netIncome", "transactionCount", "militaryStrength", "researchCount"]
-    record_names = ["Largest Nation", "Most Income", "Most Transactions", "Largest Military", "Most Technology"]
-    for i, record in enumerate(records):
-        standings = Nations.get_top_three(record)
+    for record_name in Nations.LEADERBOARD_RECORD_NAMES:
+        standings = Nations.get_top_three(record_name)
         standings_filtered = []
         for entry in standings:
             # add html span tag
@@ -1003,12 +1001,12 @@ def announcements(full_game_id):
             if end_index - start_index > 30:
                 nation_name = nation_name[0:start_index+31] + nation_name[end_index:]
             # format standing
-            if record == "netIncome":
+            if record_name == "net_income":
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
                 standings_filtered.append([nation_name, entry[1]])
-        record_name = record_names[i]
-        standings_dict[record_name] = standings_filtered
+        title = Nations.attribute_to_title(record_name)
+        standings_dict[title] = standings_filtered
     
     # update scoreboard
     scoreboard_dict = {}

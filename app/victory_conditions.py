@@ -413,7 +413,7 @@ def warmonger(nation: Nation) -> bool:
 def economic_domination(nation: Nation) -> bool:
 
     # check if first and not tied
-    first, second, third = Nations.get_top_three("netIncome")
+    first, second, third = Nations.get_top_three("net_income")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -422,7 +422,7 @@ def economic_domination(nation: Nation) -> bool:
 def influence_through_trade(nation: Nation) -> bool:
 
     # check if first and not tied
-    first, second, third = Nations.get_top_three("transactionCount")
+    first, second, third = Nations.get_top_three("transaction_count")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -431,7 +431,7 @@ def influence_through_trade(nation: Nation) -> bool:
 def military_superpower(nation: Nation) -> bool:
 
     # check if first and not tied
-    first, second, third = Nations.get_top_three("militaryStrength")
+    first, second, third = Nations.get_top_three("military_size")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -440,7 +440,7 @@ def military_superpower(nation: Nation) -> bool:
 def scientific_leader(nation: Nation) -> bool:
 
     # check if first and not tied
-    first, second, third = Nations.get_top_three("researchCount")
+    first, second, third = Nations.get_top_three("technology_count")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -449,7 +449,7 @@ def scientific_leader(nation: Nation) -> bool:
 def territorial_control(nation: Nation) -> bool:
 
     # check if first and not tied
-    first, second, third = Nations.get_top_three("nationSize")
+    first, second, third = Nations.get_top_three("nation_size")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
