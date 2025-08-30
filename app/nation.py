@@ -166,6 +166,7 @@ class Nations(metaclass=NationsMeta):
             "statistics": {
                 "regionsOwned": 0,
                 "regionsOccupied": 0,
+                "regionsOnEdge": 0,
                 "resourcesGiven": 0,
                 "resourcesReceived": 0
             },
@@ -1106,12 +1107,17 @@ class NationStatistics:
         self._data = d
         self._regions_owned: int = d["regionsOwned"]
         self._regions_occupied: int = d["regionsOccupied"]
+        self._regions_on_map_edge: int = d["regionsOnEdge"]
         self._resources_given: float = d["resourcesGiven"]
         self._resources_received: float = d["resourcesReceived"]
 
     @property
     def regions_owned(self):
         return self._regions_owned
+    
+    @property
+    def regions_on_map_edge(self):
+        return self._regions_on_map_edge
     
     @property
     def regions_occupied(self):
@@ -1134,6 +1140,11 @@ class NationStatistics:
     def regions_occupied(self, value: int):
         self._regions_occupied = value
         self._data["regionsOccupied"] = value
+
+    @regions_on_map_edge.setter
+    def regions_on_map_edge(self, value: int):
+        self._regions_on_map_edge = value
+        self._data["regionsOnEdge"] = value
 
     @resources_given.setter
     def resources_given(self, value: float):

@@ -32,6 +32,7 @@ def update_income(game_id: str) -> None:
         # reset only the statistics that are calculated by this function
         nation.stats.regions_owned = 0
         nation.stats.regions_occupied = 0
+        nation.stats.regions_on_map_edge = 0
     
     _calculate_gross_income(yield_dict, text_dict)
     _calculate_net_income(upkeep_dict, text_dict)
@@ -57,6 +58,8 @@ def _calculate_gross_income(yield_dict: dict, text_dict: dict) -> None:
         nation.stats.regions_owned += 1
         if region.data.occupier_id != "0":
             nation.stats.regions_occupied += 1
+        if region.graph.is_edge:
+            nation.stats.regions_on_map_edge += 1
         
         # skip if region is empty
         if region.improvement.name is None and region.unit.name is None:
