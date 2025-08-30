@@ -537,7 +537,7 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
 ################################################################################
 
 def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
-    '''
+    """
     Gathers all the needed data for a player's nation sheet data and spits it as a dict.
 
     Params:
@@ -547,7 +547,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 
     Returns:
         dict: player_information_dict.
-    '''
+    """
     
     SD.load(game_id)
 
@@ -558,29 +558,31 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 
     # build player info dict
     player_information_dict = {
-        'Victory Conditions Data': {},
-        'Resource Data': {},
-        'Misc Info': {},
-        'Alliance Data': {},
-        'Missile Data': {},
-        'Relations Data': {}
+        "Victory Conditions Data": {},
+        "Resource Data": {},
+        "Misc Info": {},
+        "Alliance Data": {},
+        "Missile Data": {},
+        "Relations Data": {}
     }
-    player_information_dict['Nation Name'] = nation.name
-    player_information_dict['Color'] = nation.color
-    player_information_dict['Government'] = nation.gov
-    player_information_dict['Foreign Policy'] = nation.fp
-    player_information_dict['Military Capacity'] = f"{nation.get_used_mc()} / {nation.get_max_mc()}"
-    player_information_dict['Trade Fee'] = nation.trade_fee
-    player_information_dict['Status'] = nation.status
+    player_information_dict["Nation Name"] = nation.name
+    player_information_dict["Color"] = nation.color
+    player_information_dict["Government"] = nation.gov
+    player_information_dict["Foreign Policy"] = nation.fp
+    player_information_dict["Military Capacity"] = f"{nation.get_used_mc()} / {nation.get_max_mc()}"
+    player_information_dict["Trade Fee"] = nation.trade_fee
+    player_information_dict["Status"] = nation.status
     
     # get victory condition data
-    player_information_dict['Victory Conditions Data']['Conditions List'] = list(nation.victory_conditions.keys())
-    player_information_dict['Victory Conditions Data']['Color List'] = list(nation.victory_conditions.values())
-    for i, entry in enumerate(player_information_dict['Victory Conditions Data']['Color List']):
+    player_information_dict["Victory Conditions Data"] = {
+        "Conditions List": list(nation.victory_conditions.keys()),
+        "Color List": list(nation.victory_conditions.values())
+    }
+    for i, entry in enumerate(player_information_dict["Victory Conditions Data"]["Color List"]):
         if entry:
-           player_information_dict['Victory Conditions Data']['Color List'][i] = "#00ff00"
+           player_information_dict["Victory Conditions Data"]["Color List"][i] = "#00ff00"
         else:
-            player_information_dict['Victory Conditions Data']['Color List'][i] = "#ff0000"
+            player_information_dict["Victory Conditions Data"]["Color List"][i] = "#ff0000"
 
     # resource data
     class_list = []
@@ -596,67 +598,74 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         stored_list.append(f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}")
         income_list.append(nation.get_income(resource_name))
         rate_list.append(f"{nation.get_rate(resource_name)}%")
-    player_information_dict['Resource Data']['Class List'] = class_list
-    player_information_dict['Resource Data']['Name List'] = name_list
-    player_information_dict['Resource Data']['Stored List'] = stored_list
-    player_information_dict['Resource Data']['Income List'] = income_list
-    player_information_dict['Resource Data']['Rate List'] = rate_list
+    player_information_dict["Resource Data"] = {
+        "Class List": class_list,
+        "Name List": name_list,
+        "Stored List": stored_list,
+        "Income List": income_list,
+        "Rate List": rate_list
+    }
 
     # alliance data
     alliance_data = nation.fetch_alliance_data()
-    player_information_dict['Alliance Data']['Header'] = alliance_data["Header"]
-    player_information_dict['Alliance Data']['Name List'] = alliance_data["Names"]
-    player_information_dict['Alliance Data']['Color List'] = alliance_data["Colors"]
+    player_information_dict["Alliance Data"] = {
+        "Header": alliance_data["Header"],
+        "Name List": alliance_data["Names"],
+        "Color List": alliance_data["Colors"]
+    }
 
     # missile data
-    player_information_dict['Missile Data']['Standard'] = f'{nation.missile_count}x Standard Missiles'
-    player_information_dict['Missile Data']['Nuclear'] = f'{nation.nuke_count}x Nuclear Missiles'
+    player_information_dict["Missile Data"] = {
+        "Standard": f"{nation.missile_count}x Standard Missiles",
+        "Nuclear": f"{nation.nuke_count}x Nuclear Missiles"
+    }
 
     # relations data
-    nation_name_list = ['-'] * 10
-    relation_colors = ['#000000'] * 10
-    relations_status_list = ['-'] * 10
+    nation_name_list = ["-"] * 10
+    relation_colors = ["#000000"] * 10
+    relations_status_list = ["-"] * 10
     for i in range(len(Nations)):
         temp = Nations.get(str(i + 1))
         if temp.name == nation.name:
             continue
         elif Wars.get_war_name(player_id, temp.id) is not None:
-            relation_colors[i] = '#ff0000'
+            relation_colors[i] = "#ff0000"
             relations_status_list[i] = "At War"
         elif Alliances.are_allied(nation.name, temp.name):
-            relation_colors[i] = '#3c78d8'
+            relation_colors[i] = "#3c78d8"
             relations_status_list[i] = "Allied"
         else:
-            relation_colors[i] = '#00ff00'
-            relations_status_list[i] = 'Neutral'
+            relation_colors[i] = "#00ff00"
+            relations_status_list[i] = "Neutral"
         nation_name_list[i] = temp.name
     while len(nation_name_list) < 10:
-        nation_name_list.append('-')
-    player_information_dict['Relations Data']['Name List'] = nation_name_list
-    player_information_dict['Relations Data']['Color List'] = relation_colors
-    player_information_dict['Relations Data']['Status List'] = relations_status_list
+        nation_name_list.append("-")
+    player_information_dict["Relations Data"] = {
+        "Name List": nation_name_list,
+        "Color List": relation_colors,
+        "Status List": relations_status_list
+    }
 
     # misc data
-    player_information_dict['Misc Info']['Owned Regions'] = f"Total Regions: {nation.stats.regions_owned}"
-    player_information_dict['Misc Info']['Occupied Regions'] = f"Occupied Regions: {nation.stats.regions_occupied}"
-    if float(nation._records["netIncome"][-1]) >= 0:
-        player_information_dict['Misc Info']['Net Income'] = f"Total Net Income: +{nation._records["netIncome"][-1]}"
-    else:
-        player_information_dict['Misc Info']['Net Income'] = f"Total Net Income: {nation._records["netIncome"][-1]}"
-    player_information_dict['Misc Info']['Transaction Total'] = f"Total Transactions: {nation._records["transactionCount"][-1]}"
-    player_information_dict['Misc Info']['Technology Count'] = f"Technology Count: {nation._records["researchCount"][-1]}"
-
+    player_information_dict["Misc Info"] = {
+        "Owned Regions": f"Total Regions: {nation.stats.regions_owned}",
+        "Occupied Regions": f"Occupied Regions: {nation.stats.regions_occupied}",
+        "Net Income": f"Total Net Income: {nation.records.net_income[-1]:+.2f}",
+        "Transaction Total": f"Total Transactions: {nation.records.transaction_count[-1]}",
+        "Technology Count": f"Technology Count: {nation.records.technology_count[-1]}"
+    }
+    
     # income details
     income_details = nation.income_details
     for i in range(len(income_details)):
-        income_details[i] = income_details[i].replace('&Tab;', '&nbsp;&nbsp;&nbsp;&nbsp;')
+        income_details[i] = income_details[i].replace("&Tab;", "&nbsp;&nbsp;&nbsp;&nbsp;")
     income_str = "<br>".join(income_details)
-    player_information_dict['Income Details'] = income_str
+    player_information_dict["Income Details"] = income_str
 
     # research details
     research_details = list(nation.completed_research.keys())
     research_str = "<br>".join(research_details)
-    player_information_dict['Research Details'] = research_str
+    player_information_dict["Research Details"] = research_str
 
     return player_information_dict
 
