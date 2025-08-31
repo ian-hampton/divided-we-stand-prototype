@@ -119,10 +119,7 @@ def breakthrough(nation: Nation) -> bool:
 
 def diverse_economy(nation: Nation) -> bool:
 
-    non_zero_count = 0
-    for improvement_name, improvement_count in nation.improvement_counts.items():
-        if improvement_count > 0:
-            non_zero_count += 1
+    non_zero_count = sum(1 for count in nation.improvement_counts.values() if count != 0)
     
     if non_zero_count >= 16:
         return True
@@ -167,18 +164,8 @@ def new_empire(nation: Nation) -> bool:
 
 def reconstruction_effort(nation: Nation) -> bool:
 
-    # get score improvement count list
-    sum_dict = {}
-    for temp in Nations:
-        sum_dict[temp.name] = 0
-        sum_dict[temp.name] += temp.improvement_counts["Settlement"]
-        sum_dict[temp.name] += temp.improvement_counts["City"] * 3
-        sum_dict[temp.name] += temp.improvement_counts["Capital"] * 10
-    
-    # check if nation has the greatest sum
-    nation_name_sum = sum_dict[nation.name]
-    for temp_nation_name, sum in sum_dict.items():
-        if temp_nation_name != nation.name and sum >= nation_name_sum:
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.development >= nation.records.development:
             return False
 
     return True
@@ -225,37 +212,17 @@ def threat_containment(nation: Nation) -> bool:
 # medium
 
 def energy_focus(nation: Nation) -> bool:
-
-    # get gross income sums for each nation using gross income data
-    sum_dict = {}
-    for temp in Nations:
-        sum_dict[temp.name] = 0
-        for resource_name in temp._resources:
-            if resource_name in ["Coal", "Oil", "Energy"]:
-                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
     
-    # check if nation has the greatest sum
-    nation_name_sum = sum_dict[nation.name]
-    for temp_nation_name, sum in sum_dict.items():
-        if temp_nation_name != nation.name and sum >= nation_name_sum:
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.energy_income >= nation.records.energy_income:
             return False
 
     return True
 
 def industrial_focus(nation: Nation) -> bool:
-
-    # get gross income sums for each nation using gross income data
-    sum_dict = {}
-    for temp in Nations:
-        sum_dict[temp.name] = 0
-        for resource_name in temp._resources:
-            if resource_name in ["Basic Materials", "Common Metals", "Advanced Metals"]:
-                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
     
-    # check if nation has the greatest sum
-    nation_name_sum = sum_dict[nation.name]
-    for temp_nation_name, sum in sum_dict.items():
-        if temp_nation_name != nation.name and sum >= nation_name_sum:
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.industrial_income >= nation.records.industrial_income:
             return False
 
     return True
@@ -348,14 +315,7 @@ def strong_trade_agreement(nation: Nation) -> bool:
 
 def sphere_of_influence(nation: Nation) -> bool:
 
-    from app.scenario import ScenarioData as SD
-
-    agenda_count = 0
-    for research_name in nation.completed_research:
-        if research_name in SD.agendas:
-            agenda_count += 1
-    
-    if agenda_count >= 8:
+    if nation.records.agenda_count >= 8:
         return True
 
     return False
@@ -430,12 +390,11 @@ def influence_through_trade(nation: Nation) -> bool:
 
 def military_superpower(nation: Nation) -> bool:
 
-    # check if first and not tied
-    first, second, third = Nations.get_top_three("military_size")
-    if nation.name in first[0] and (first[1] > second[1]):
-        return True
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.military_strength >= nation.records.military_strength:
+            return False
 
-    return False
+    return True
 
 def scientific_leader(nation: Nation) -> bool:
 
