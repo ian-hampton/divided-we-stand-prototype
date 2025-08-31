@@ -28,7 +28,7 @@ class Nations(metaclass=NationsMeta):
 
     game_id: ClassVar[str] = None
     _data: ClassVar[dict[str, dict]] = None
-    LEADERBOARD_RECORD_NAMES: ClassVar[list[str]] = ["nation_size", "net_income", "transaction_count", "military_size", "technology_count"]
+    LEADERBOARD_RECORD_NAMES: ClassVar[list[str]] = ["nation_size", "net_income", "military_size", "technology_count", "transaction_count"]
 
     @classmethod
     def load(cls, game_id: str) -> None:
@@ -173,7 +173,12 @@ class Nations(metaclass=NationsMeta):
                 "resourcesReceived": 0
             },
             "records": {
+                "agendaCount": [],
+                "developmentScore": [],
+                "energyIncome": [],
+                "industrialIncome": [],
                 "militarySize": [],
+                "militaryStrength": [],
                 "nationSize": [],
                 "netIncome": [],
                 "researchCount": [],
@@ -225,11 +230,6 @@ class Nations(metaclass=NationsMeta):
 
         for nation in cls:
 
-            military_size = 0
-            for unit_name, unit_count in nation.unit_counts.items():
-                military_size += unit_count
-            nation.records.military_size.append(military_size)
-
             nation.records.nation_size.append(nation.stats.regions_owned)
 
             net_income_total = 0
@@ -240,10 +240,45 @@ class Nations(metaclass=NationsMeta):
                 net_income_total += income
             nation.records.net_income.append(f"{net_income_total:.2f}")
 
+            industrial_income_total = 0
+            energy_income_total = 0
+            for resource_name in nation._resources:
+                if resource_name == "Military Capacity":
+                    continue
+                income = float(nation.get_gross_income(resource_name))
+                if resource_name in ["Basic Materials", "Common Metals", "Advanced Metals"]:
+                    industrial_income_total += income
+                if resource_name in ["Energy", "Coal", "Oil"]:
+                    energy_income_total += income
+            nation.records.industrial_income.append(f"{industrial_income_total:.2f}")
+            nation.records.energy_income.append(f"{energy_income_total:.2f}")
+
+            development_score = 0
+            development_score += nation.improvement_counts.get("Central Bank", 0)
+            development_score += nation.improvement_counts.get("Research Institute", 0)
+            development_score += nation.improvement_counts.get("Settlement", 0)
+            development_score += nation.improvement_counts.get("City", 3)
+            development_score += nation.improvement_counts.get("Capital", 10)
+            nation.records.development.append(development_score)
+
+            military_size = 0
+            for unit_name, unit_count in nation.unit_counts.items():
+                military_size += unit_count
+            nation.records.military_size.append(military_size)
+
+            military_strength = 0
+            for unit_name, unit_data in SD.units:
+                military_strength += nation.unit_counts.get(unit_name, 0) * unit_data.value
+            nation.records.military_strength.append(military_strength)
+
+            agenda_count = 0
             technology_count = 0
-            for technology_name in nation.completed_research:
-                if technology_name in SD.technologies:
+            for name in nation.completed_research:
+                if name in SD.agendas:
+                    agenda_count += 1
+                elif name in SD.technologies:
                     technology_count += 1
+            nation.records.agenda_count.append(agenda_count)
             nation.records.technology_count.append(technology_count)
 
             transaction_count = 0
@@ -1169,10 +1204,30 @@ class NationRecords:
     def __init__(self, d: dict):
 
         self._data = d
+
+    @property
+    def agenda_count(self) -> list:
+        return self._data["agendaCount"]
+    
+    @property
+    def development(self) -> list:
+        return self._data["developmentScore"]
+    
+    @property
+    def energy_income(self) -> list:
+        return self._data["energyIncome"]
+
+    @property
+    def industrial_income(self) -> list:
+        return self._data["industrialIncome"]
     
     @property
     def military_size(self) -> list:
         return self._data["militarySize"]
+
+    @property
+    def military_strength(self) -> list:
+        return self._data["militaryStrength"]
 
     @property
     def nation_size(self) -> list:
@@ -1190,9 +1245,29 @@ class NationRecords:
     def transaction_count(self) -> list:
         return self._data["transactionCount"]
     
+    @agenda_count.setter
+    def agenda_count(self, value: list) -> None:
+        self._data["agendaCount"] = value
+
+    @development.setter
+    def development(self, value: list) -> None:
+        self._data["developmentScore"] = value
+
+    @energy_income.setter
+    def energy_income(self, value: list) -> None:
+        self._data["energyIncome"] = value
+    
+    @industrial_income.setter
+    def industrial_income(self, value: list) -> None:
+        self._data["industrialIncome"] = value
+
     @military_size.setter
     def military_size(self, value: list) -> None:
         self._data["militarySize"] = value
+
+    @military_strength.setter
+    def military_strength(self, value: list) -> None:
+        self._data["militaryStrength"] = value
 
     @nation_size.setter
     def nation_size(self, value: list) -> None:

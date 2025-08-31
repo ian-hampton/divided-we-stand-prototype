@@ -560,7 +560,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     player_information_dict = {
         "Victory Conditions Data": {},
         "Resource Data": {},
-        "Misc Info": {},
+        "Misc Info": [],
         "Alliance Data": {},
         "Missile Data": {},
         "Relations Data": {}
@@ -647,14 +647,21 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     }
 
     # misc data
-    player_information_dict["Misc Info"] = {
-        "Owned Regions": f"Total Regions: {nation.stats.regions_owned}",
-        "Occupied Regions": f"Occupied Regions: {nation.stats.regions_occupied}",
-        "Net Income": f"Total Net Income: {nation.records.net_income[-1]:+.2f}",
-        "Transaction Total": f"Total Transactions: {nation.records.transaction_count[-1]}",
-        "Technology Count": f"Technology Count: {nation.records.technology_count[-1]}"
-    }
-    
+    misc_data = player_information_dict["Misc Info"]
+    misc_data.append(f"Owned Regions: {nation.stats.regions_owned}")
+    misc_data.append(f"Occupied Regions: {nation.stats.regions_occupied}")
+    misc_data.append(f"Net Income: {nation.records.net_income[-1]:+.2f}")
+    misc_data.append(f"Gross Industrial Income: {nation.records.industrial_income[-1]:+.2f}")
+    misc_data.append(f"Gross Energy Income: {nation.records.energy_income[-1]:+.2f}")
+    misc_data.append(f"Development Score: {nation.records.development[-1]}")
+    misc_data.append(f"Unique Improvements: {sum(1 for count in nation.improvement_counts.values() if count != 0)}")
+    misc_data.append(f"Military Size: {nation.records.military_size[-1]}")
+    misc_data.append(f"Military Strength: {nation.records.military_strength[-1]}")
+    misc_data.append(f"Unique Units: {sum(1 for count in nation.unit_counts.values() if count != 0)}")
+    misc_data.append(f"Total Transactions: {nation.records.transaction_count[-1]}")
+    misc_data.append(f"Technology Count: {nation.records.technology_count[-1]}")
+    misc_data.append(f"Agenda Count: {nation.records.agenda_count[-1]}")
+
     # income details
     income_details = nation.income_details
     for i in range(len(income_details)):
