@@ -626,6 +626,9 @@ class Nation:
     def _resources(self, value: dict) -> None:
         self._data["resources"] = value
 
+    def __lt__(self, other: 'Nation'):
+        return self.name < other.name
+
     def add_gov_tags(self) -> None:
         
         match self.gov:
@@ -860,12 +863,6 @@ class Nation:
             adjustment += int(tag_data.get("Agenda Cost", 0))
         
         return adjustment
-
-    def region_claim_political_power_cost(self) -> float:
-        pp_cost = 0.0
-        for tag_data in self.tags.values():
-            pp_cost += float(tag_data.get("Region Claim Cost", 0))
-        return pp_cost
 
     def calculate_alliance_capacity(self) -> tuple[int, int]:
         
