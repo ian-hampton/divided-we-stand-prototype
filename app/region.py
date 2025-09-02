@@ -161,6 +161,17 @@ class Region:
         """
         self.claim_list.append(player_id)
 
+    def calculate_region_claim_cost(self, nation: 'Nation'):
+        """
+        Calculates cost of claiming a region for a specific nation.
+        """
+        
+        cost_multiplier = 1.0
+        for tag_data in nation.tags.values():
+            cost_multiplier += float(tag_data.get("Region Claim Cost", 0))
+    
+        return int(self.data.purchase_cost * cost_multiplier)
+
     def set_fallout(self, starting_fallout=4) -> None:
         self.data.fallout = starting_fallout
 
