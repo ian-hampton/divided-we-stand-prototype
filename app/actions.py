@@ -1402,7 +1402,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         active_games_dict = json.load(json_file)
 
     # initial validation
-    total_spend: dict[str, int] = defaultdict(int)
+    minimum_spend: dict[str, int] = defaultdict(int)
     claim_actions_grouped: dict[str, dict[str, Region]] = defaultdict(dict)
     for action in actions_list:
         nation = Nations.get(action.id)
@@ -1420,20 +1420,9 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             nation.action_log.append(f"Failed to claim {action.target_region} due to the Widespread Civil Disorder event.")
             continue
 
-        # add target region of claim action
-        if region.region_id in claim_actions_grouped[nation.id]:
-            continue
-        claim_actions_grouped[nation.id][region.region_id] = region
-        
-        # add any unclaimed regions that were encircled by this claim action
-        encircled_region_id_list = _find_encircled_regions(nation)
-        for region_id in encircled_region_id_list:
-            if region_id in claim_actions_grouped[nation.id]:
-                continue
-            region = Region(region_id)
-            claim_actions_grouped[nation.id][region.region_id] = region
+        # TODO - minimum spend check
 
-        # TODO - total spend check
+        claim_actions_grouped[nation.id][region.region_id] = region
 
     # priority queue #1 - validate and pay for the claim actions of each nation
     claim_actions_validated: dict[str, Region] = {}
@@ -1500,11 +1489,13 @@ def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> 
 
     while heap:
         priority, region = heapq.heappop(heap)
+        nation = Nations.get(nation_id)
 
         if priority != priorities[region.region_id] or region.region_id in resolved or region.region_id in failed:
             continue
 
         if priority == 99999:
+            nation.action_log.append(f"Failed to claim {region.region_id}. Region is not adjacent to enough regions under your control.")
             failed.add(region.region_id)
             continue
         
@@ -1512,7 +1503,6 @@ def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> 
             heapq.heappush(heap, (priority, region))
             continue
 
-        nation = Nations.get(nation_id)
         cost = region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - cost < 0:
             # nation could not afford region
@@ -1571,21 +1561,28 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
 
     while heap:
         priority, region = heapq.heappop(heap)
+        nation_id = region.claim_list[0]
+        nation = Nations.get(nation_id)
 
         if priority != priorities[region.region_id] or region.region_id in resolved or region.region_id in failed:
             continue
 
         if priority == 99999:
+            nation.action_log.append(f"Failed to claim {region.region_id}. Region is not adjacent to enough regions under your control.")
             failed.add(region.region_id)
             continue
         
         if priority > 0:
             heapq.heappush(heap, (priority, region))
             continue
+
+        # TODO - somehow have to do encirclement check here
+        # get list of encircled regions
+        # select the regions that do not already have a claim action
+        # check that player can afford to buy them too
+        # add them to the heap if success, otherwise fail all these claims
         
         # claim region
-        nation_id = region.claim_list[0]
-        nation = Nations.get(nation_id)
         region.data.owner_id = nation_id
         if region.improvement.name is not None:
             nation.improvement_counts[region.improvement.name] += 1
@@ -1627,7 +1624,7 @@ def _validate_claim_action(target_region: Region, nation_id: str, adj_owned_coun
 
         return 2 - adj_owned_count
 
-def _find_encircled_regions():
+def _find_encircled_regions(region: Region, nation_id: str) -> list:
     pass
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
