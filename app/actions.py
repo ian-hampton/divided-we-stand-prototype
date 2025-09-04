@@ -1420,7 +1420,10 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             nation.action_log.append(f"Failed to claim {action.target_region} due to the Widespread Civil Disorder event.")
             continue
 
-        # TODO - minimum spend check
+        minimum_spend[nation.id] += region.calculate_region_claim_cost(nation)
+        if float(nation.get_stockpile("Dollars")) - minimum_spend < 0:
+            nation.action_log.append(f"Failed to claim {region.region_id}. Insufficient dollars.")
+            continue
 
         claim_actions_grouped[nation.id][region.region_id] = region
 
@@ -1506,7 +1509,7 @@ def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> 
         cost = region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - cost < 0:
             # nation could not afford region
-            nation.action_log.append(f"Failed to claim {region.region_id}. Insufficient resources.")
+            nation.action_log.append(f"Failed to claim {region.region_id}. Insufficient dollars.")
             failed.add(region.region_id)
         else:
             # region successfully paid for
