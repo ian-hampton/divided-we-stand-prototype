@@ -1462,7 +1462,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
 
 def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> set[Region]:
 
-    def get_priority(region: Region) -> int:
+    def get_priority(region: Region, nation_id: str) -> int:
         
         # adjacent owned - region already owned by the nation before claim actions resolved
         adj_owned_count = 0
@@ -1478,7 +1478,7 @@ def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> 
             if adj_region is not None and adj_region_id not in failed:
                 adj_claimed_count += 1
 
-        return _validate_claim_action()
+        return _validate_claim_action(region, nation_id, adj_owned_count, adj_claimed_count)
     
     heap: List[Tuple[int, Region]] = []
     priorities = {}
@@ -1486,7 +1486,7 @@ def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> 
     failed = set()
 
     for region in claimed_regions.values():
-        priority = get_priority(region)
+        priority = get_priority(region, nation_id)
         priorities[region.region_id] = priority
         heapq.heappush(heap, (priority, region))
 
@@ -1520,7 +1520,7 @@ def _validate_all_claims(nation_id: str, claimed_regions: dict[str, Region]) -> 
         for adj_region_id in region.graph.adjacent_regions:
             if adj_region_id in claimed_regions and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_region = claimed_regions.get(adj_region_id)
-                new_priority = get_priority(adj_region)
+                new_priority = get_priority(adj_region, nation_id)
                 priorities[adj_region_id] = new_priority
                 heapq.heappush(heap, (new_priority, region))
     
@@ -1535,6 +1535,8 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
 
     def get_priority(region: Region) -> int:
 
+        nation_id = region.claim_list[0]
+
         # adjacent owned - region already owned by the nation before claim actions resolved
         # OR successful claims already resolved because Regions is always up to date
         adj_owned_count = 0
@@ -1547,10 +1549,10 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
         adj_claimed_count = 0
         for adj_region_id in region.graph.adjacent_regions:
             adj_region = verified_claim_actions.get(adj_region_id)
-            if adj_region is not None and adj_region_id not in failed:
+            if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
                 adj_claimed_count += 1
 
-        return _validate_claim_action()
+        return _validate_claim_action(region, nation_id, adj_owned_count, adj_claimed_count)
     
     heap: List[Tuple[int, Region]] = []
     priorities = {}
@@ -1618,9 +1620,21 @@ def _validate_claim_action(target_region: Region, nation_id: str, adj_owned_coun
         
         # TODO - claim action always valid if the target region already borders at least one owned regions during first 4 turns only
         
-        # TODO - sea route special case
+        # special case - no other adjacent regions
+        if adj_owned_count + adj_claimed_count == 1 and len(target_region.graph.adjacent_regions) == 1:
+            return 0
         
-        # TODO - expansion rules
+        # special case - all other adjacent regions unreachable or already claimed (this covers sea routes too)
+        if adj_owned_count + adj_claimed_count == 1:
+            for adj_region_id in target_region.graph.adjacent_regions:
+                adj_region = Region(adj_region_id)
+                if adj_region.data.owner_id != "0":
+                    continue
+                for temp_id in adj_region.graph.adjacent_regions:
+                    temp_region = Region(temp_id)
+                    if temp_region.data.owner_id == nation_id or nation_id in temp_region.claim_list:
+                        return 99999
+            return 0
 
         if adj_owned_count + adj_claimed_count < 2:
             return 99999
@@ -1628,7 +1642,19 @@ def _validate_claim_action(target_region: Region, nation_id: str, adj_owned_coun
         return 2 - adj_owned_count
 
 def _find_encircled_regions(region: Region, nation_id: str) -> list:
-    pass
+    
+    unclaimed_encircled = set()
+    
+    for adj_region_id in region.graph.adjacent_regions:
+        adj_region = Region(adj_region_id)
+        unclaimed_regions_found = set()
+        if adj_region.data.owner_id != "0" or adj_region_id in unclaimed_encircled:
+            continue
+        # find unclaimed regions
+        # check unclaimed regions
+        # update if encircled
+    
+    return unclaimed_encircled
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
     
