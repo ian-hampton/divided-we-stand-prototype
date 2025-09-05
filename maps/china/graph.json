@@ -1331,7 +1331,9 @@
         ],
         "adjacencyMap": {
             "ANSHA": true,
-            "DANDO": true,
+            "DANDO": true
+        },
+        "seaRoutes": {
             "YANTA": true
         }
     },
@@ -1429,10 +1431,12 @@
         ],
         "adjacencyMap": {
             "CHNDE": true,
-            "DONGY": true,
             "LANGF": true,
             "QINHU": true,
             "TIANJ": true
+        },
+        "seaRoutes": {
+            "DONGY": true
         }
     },
     "BEIJI": {
@@ -1743,8 +1747,10 @@
             2246
         ],
         "adjacencyMap": {
-            "DALIA": true,
             "QINGD": true
+        },
+        "seaRoutes": {
+            "DALIA": true
         }
     },
     "DONGY": {
@@ -1765,8 +1771,10 @@
         "adjacencyMap": {
             "BINZH": true,
             "JINAN": true,
-            "TNGSN": true,
             "WEIFA": true
+        },
+        "seaRoutes": {
+            "TNGSN": true
         }
     },
     "HENGS": {
@@ -6224,9 +6232,11 @@
             4519
         ],
         "adjacencyMap": {
-            "HAIKO": true,
             "MAOMI": true,
             "QINZH": true
+        },
+        "seaRoutes": {
+            "HAIKO": true
         }
     },
     "HAIKO": {
@@ -6245,7 +6255,9 @@
             4667
         ],
         "adjacencyMap": {
-            "SANYA": true,
+            "SANYA": true
+        },
+        "seaRoutes": {
             "ZHANJ": true
         }
     },

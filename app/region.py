@@ -479,7 +479,9 @@ class GraphData:
         self.is_significant: bool = d["hasRegionalCapital"]
         self.is_magnified: bool = d["isMagnified"]
         self.is_start: bool = d["randomStartAllowed"]
-        self.adjacent_regions: dict = d["adjacencyMap"]
+        self.map: dict = d.get("adjacencyMap", {})
+        self.sea_routes: dict = d.get("seaRoutes", {})
+        self.adjacent_regions: dict = self.map | self.sea_routes
         self.additional_region_coordinates: list = d["additionalRegionCords"]
         self.improvement_coordinates: list = d["improvementCords"]
         self.unit_coordinates: list = d["unitCords"]

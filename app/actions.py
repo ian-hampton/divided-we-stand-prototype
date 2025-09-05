@@ -1627,9 +1627,9 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
             # populate queue with adjacent unclaimed regions
             for adj_region_id in target_region.graph.adjacent_regions:
                 adj_region = Region(adj_region_id)
+                visited.add(adj_region_id)
                 if adj_region.data.owner_id != "0":
                     continue
-                visited.add(adj_region_id)
                 queue.append(adj_region)
 
             while queue:
@@ -1659,12 +1659,12 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
         # TODO - special case - valid with one if first 4 turns only
 
         # special case - valid with one if sea route
-        for adj_region_id in []:
+        for adj_region_id in target_region.graph.sea_routes:
             if adj_region_id in adj_owned:
                 return 0
 
         # special case - valid with one if no other adjacent regions
-        if adj_owned_count == 1 and len(target_region.graph.adjacent_regions) == 1:
+        if adj_owned_count == 1 and len(target_region.graph.map) == 1:
             return 0
         
         # special case - valid with one if all other adjacent regions are unclaimable
