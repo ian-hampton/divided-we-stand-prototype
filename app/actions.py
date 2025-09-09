@@ -1462,7 +1462,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     with open("active_games.json", 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-def _validate_all_claims(claimed_regions: dict[str, Region]) -> set[Region]:
+def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
     def get_priority(region: Region) -> int:
 
@@ -1618,9 +1618,14 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
 
         def bfs_no_access():
             """
-            Returns True if the nation has no route to a second region adjacent to the target.
+            Returns True if the target region meets the criteria to be claimed with only one adjacent owned region (for this specific player).
+
+            If we find 2+ regions owned by the player that are adjacent to nearby unclaimed regions, we can assume that the player has a route to claim a second adjacent region to the target.
+            If that is the case, the player could claim the target region while abiding by the conventional two owned adjacent regions restriction.
+            Therefore, the player should not be allowed to claim the target region now.
             """
             
+            friendly_regions_found = 0
             visited = set([target_region.region_id])
             queue: deque[Region] = deque()
 
@@ -1636,9 +1641,13 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
 
                 current_region = queue.popleft()
 
+                # check if this region is owned by the player
                 if current_region.data.owner_id == nation_id:
+                    friendly_regions_found += 1
+                if friendly_regions_found >= 2:
                     return False
 
+                # regions owned by players constrain possible routes to the target region
                 if current_region.data.owner_id != "0":
                     continue
 
