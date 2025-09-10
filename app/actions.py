@@ -1468,18 +1468,18 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
         nation_id = region.claim_list[0]
         
-        # adjacent owned - region already owned by the nation before claim actions resolved
+        # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
         for adj_region_id in region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
-            if nation_id == adj_region.data.owner_id:
+            if nation_id == adj_region.data.owner_id or adj_region.region_id in resolved:
                 adj_owned.add(adj_region.region_id)
 
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
         for adj_region_id in region.graph.adjacent_regions:
             adj_region = claimed_regions.get(adj_region_id)
-            if adj_region is not None and adj_region_id not in failed:
+            if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_claimed.add(adj_region.region_id)
 
         return _validate_claim_action(nation_id, region, adj_owned, adj_claimed)
@@ -1527,7 +1527,7 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
                 adj_region = claimed_regions.get(adj_region_id)
                 new_priority = get_priority(adj_region)
                 priorities[adj_region_id] = new_priority
-                heapq.heappush(heap, (new_priority, region))
+                heapq.heappush(heap, (new_priority, adj_region))
 
     return resolved
 
@@ -1537,8 +1537,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
 
         nation_id = region.claim_list[0]
 
-        # adjacent owned - region already owned by the nation before claim actions resolved
-        # OR successful claims already resolved because Regions is always up to date
+        # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
         for adj_region_id in region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
@@ -1600,7 +1599,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
                 adj_region = verified_claim_actions.get(adj_region_id)
                 new_priority = get_priority(adj_region)
                 priorities[adj_region_id] = new_priority
-                heapq.heappush(heap, (new_priority, region))
+                heapq.heappush(heap, (new_priority, adj_region))
 
 def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set, adj_claimed: set) -> int:
         """
@@ -1654,7 +1653,7 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
                 for adj_region_id in current_region.graph.adjacent_regions:
                     if adj_region_id not in visited:
                         visited.add(adj_region_id)
-                        queue.append(adj_region_id)
+                        queue.append(Region(adj_region_id))
             
             return True
         
