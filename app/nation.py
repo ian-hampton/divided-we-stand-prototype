@@ -254,11 +254,11 @@ class Nations(metaclass=NationsMeta):
             nation.records.energy_income.append(f"{energy_income_total:.2f}")
 
             development_score = 0
-            development_score += nation.improvement_counts.get("Central Bank", 0)
-            development_score += nation.improvement_counts.get("Research Institute", 0)
-            development_score += nation.improvement_counts.get("Settlement", 0)
-            development_score += nation.improvement_counts.get("City", 3)
-            development_score += nation.improvement_counts.get("Capital", 10)
+            development_score += nation.improvement_counts.get("Central Bank", 0) * 1
+            development_score += nation.improvement_counts.get("Research Institute", 0) * 1
+            development_score += nation.improvement_counts.get("Settlement", 0) * 1
+            development_score += nation.improvement_counts.get("City", 0) * 3
+            development_score += nation.improvement_counts.get("Capital", 0) * 10
             nation.records.development.append(development_score)
 
             military_size = 0

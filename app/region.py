@@ -75,6 +75,9 @@ class Region:
             return self.region_id == other.region_id
         return False
     
+    def __lt__(self, other: 'Region'):
+        return self.region_id < other.region_id
+    
     def owned_adjacent_regions(self) -> list:
         owned_adjacent_list = []
         for region_id in self.graph.adjacent_regions:

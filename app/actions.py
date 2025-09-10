@@ -1421,7 +1421,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             continue
 
         minimum_spend[nation.id] += region.calculate_region_claim_cost(nation)
-        if float(nation.get_stockpile("Dollars")) - minimum_spend < 0:
+        if float(nation.get_stockpile("Dollars")) - minimum_spend[nation.id] < 0:
             nation.action_log.append(f"Failed to claim {region.region_id}. Insufficient dollars.")
             continue
         
