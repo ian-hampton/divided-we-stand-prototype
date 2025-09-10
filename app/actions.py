@@ -1553,6 +1553,60 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
 
         return _validate_claim_action(nation_id, region, adj_owned, adj_claimed)
     
+    def find_encircled_regions(region: Region, nation_id: str) -> Tuple[int, set[Region]]:
+        """
+        Checks for pockets of unclaimed regions that are entirely encircled by one nation as a result of a claim action.
+        """
+        
+        encircled_cost = 0
+        encircled_regions = set()
+        
+        # checking every adjacent region with a seperate BFS because one claim can result in multiple encircled pockets
+        for adj_region_id in region.graph.adjacent_regions:
+            adj_region = Region(adj_region_id)
+            
+            if adj_region.data.owner_id != "0":
+                continue
+            
+            encircled = True
+            pocket_cost = 0
+            unclaimed: set[Region] = set()
+
+            visited = set([adj_region.region_id])
+            queue: deque[Region] = deque([adj_region])
+
+            while queue:
+
+                current_region = queue.popleft()
+
+                # pocket is not encircled if this region is owned by another player
+                if current_region.data.owner_id not in ["0", nation_id]:
+                    encircled = False
+                    break
+
+                # continue if already owned
+                if current_region.data.owner_id == nation_id:
+                    continue
+
+                # continue if claim action already queued
+                if current_region.region_id in verified_claim_actions:
+                    continue
+
+                pocket_cost += current_region.calculate_region_claim_cost(nation)
+                current_region.add_claim(nation_id)
+                unclaimed.add(current_region)
+
+                for adj_region_id in current_region.graph.adjacent_regions:
+                    if adj_region_id not in visited:
+                        visited.add(adj_region_id)
+                        queue.append(Region(adj_region_id))
+
+            if encircled:
+                encircled_cost += pocket_cost
+                encircled_regions.update(unclaimed)
+        
+        return encircled_cost, encircled_regions
+
     heap: List[Tuple[int, Region]] = []
     priorities = {}
     resolved = set()
@@ -1580,9 +1634,8 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
             heapq.heappush(heap, (priority, region))
             continue
 
-        # TODO - somehow have to do encirclement check here
-        # get list of encircled regions
-        # select the regions that do not already have a claim action
+        # encirclement check
+        encircled_cost, encircled_regions = find_encircled_regions(region, nation.id)
         # check that player can afford to buy them too
         # add them to the heap if success, otherwise fail all these claims
         
@@ -1684,21 +1737,6 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
             return 99999
 
         return 2 - adj_owned_count
-
-def _find_encircled_regions(region: Region, nation_id: str) -> list:
-    
-    unclaimed_encircled = set()
-    
-    for adj_region_id in region.graph.adjacent_regions:
-        adj_region = Region(adj_region_id)
-        unclaimed_regions_found = set()
-        if adj_region.data.owner_id != "0" or adj_region_id in unclaimed_encircled:
-            continue
-        # find unclaimed regions
-        # check unclaimed regions
-        # update if encircled
-    
-    return unclaimed_encircled
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
     
