@@ -78,6 +78,15 @@ class Region:
     def __lt__(self, other: 'Region'):
         return self.region_id < other.region_id
     
+    def __hash__(self):
+        return hash(self.region_id)
+
+    def __str__(self):
+        return f"R[{self.region_id}]"
+    
+    def __repr__(self):
+        return self.__str__()
+
     def owned_adjacent_regions(self) -> list:
         owned_adjacent_list = []
         for region_id in self.graph.adjacent_regions:
