@@ -1406,13 +1406,13 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     claim_actions_grouped: dict[str, dict[str, Region]] = defaultdict(dict)
     for action in actions_list:
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        target_region = Region(action.target_region)
 
-        if region.data.owner_id == nation.id:
+        if target_region.data.owner_id == nation.id:
             nation.action_log.append(f"Failed to claim {action.target_region}. You already own this region.")
             continue
 
-        if region.data.owner_id != "0":
+        if target_region.data.owner_id != "0":
             nation.action_log.append(f"Failed to claim {action.target_region}. This region is already owned by another nation.")
             continue
 
@@ -1420,40 +1420,40 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             nation.action_log.append(f"Failed to claim {action.target_region} due to the Widespread Civil Disorder event.")
             continue
 
-        minimum_spend[nation.id] += region.calculate_region_claim_cost(nation)
+        minimum_spend[nation.id] += target_region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - minimum_spend[nation.id] < 0:
-            nation.action_log.append(f"Failed to claim {region.region_id}. Insufficient dollars.")
+            nation.action_log.append(f"Failed to claim {target_region.region_id}. Insufficient dollars.")
             continue
         
-        region.add_claim(nation.id)
-        claim_actions_grouped[nation.id][region.region_id] = region
+        target_region.add_claim(nation.id)
+        claim_actions_grouped[nation.id][target_region.region_id] = target_region
 
     # priority queue #1 - validate and pay for the claim actions of each nation
     claim_actions_validated: dict[str, Region] = {}
     for nation in Nations:
         validated_region_ids = _validate_all_claims(claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
-            region = Region(region_id)
-            if region.region_id in claim_actions_validated:
-                claim_actions_validated[region.region_id].add_claim(action.id)
+            target_region = Region(region_id)
+            if target_region.region_id in claim_actions_validated:
+                claim_actions_validated[target_region.region_id].add_claim(action.id)
             else:
-                region.add_claim(nation.id)
-                claim_actions_validated[region.region_id] = region
+                target_region.add_claim(nation.id)
+                claim_actions_validated[target_region.region_id] = target_region
 
     # resolve region disputes
     claim_actions_final: dict[str, Region] = {}
-    for region in claim_actions_validated.values():
+    for target_region in claim_actions_validated.values():
         
-        if len(region.claim_list) == 1:
-            claim_actions_final[region.region_id] = region
+        if len(target_region.claim_list) == 1:
+            claim_actions_final[target_region.region_id] = target_region
             continue
 
-        for player_id in region.claim_list:
+        for player_id in target_region.claim_list:
             nation = Nations.get(player_id)
-            cost = region.calculate_region_claim_cost(nation)
-            nation.action_log.append(f"Failed to claim {region.region_id} due to a region dispute. {cost:.2f} dollars wasted.")
+            cost = target_region.calculate_region_claim_cost(nation)
+            nation.action_log.append(f"Failed to claim {target_region.region_id} due to a region dispute. {cost:.2f} dollars wasted.")
 
-        region.data.purchase_cost += 5
+        target_region.data.purchase_cost += 5
         active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
 
     # priority queue #2 - validate remaining claim actions together and resolve
@@ -1464,65 +1464,65 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
 
 def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
-    def get_priority(region: Region) -> int:
+    def get_priority(target_region: Region) -> int:
 
-        nation_id = region.claim_list[0]
+        nation_id = target_region.claim_list[0]
         
         # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
             if nation_id == adj_region.data.owner_id or adj_region.region_id in resolved:
                 adj_owned.add(adj_region.region_id)
 
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = claimed_regions.get(adj_region_id)
             if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_claimed.add(adj_region.region_id)
 
-        return _validate_claim_action(nation_id, region, adj_owned, adj_claimed)
+        return _validate_claim_action(nation_id, target_region, adj_owned, adj_claimed)
     
     heap: List[Tuple[int, Region]] = []
     priorities = {}
     resolved = set()
     failed = set()
 
-    for region in claimed_regions.values():
-        priority = get_priority(region)
-        priorities[region.region_id] = priority
-        heapq.heappush(heap, (priority, region))
+    for target_region in claimed_regions.values():
+        priority = get_priority(target_region)
+        priorities[target_region.region_id] = priority
+        heapq.heappush(heap, (priority, target_region))
 
     while heap:
-        priority, region = heapq.heappop(heap)
-        nation_id = region.claim_list[0]
+        priority, target_region = heapq.heappop(heap)
+        nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
-        if priority != priorities[region.region_id] or region.region_id in resolved or region.region_id in failed:
+        if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
             continue
 
         if priority == 99999:
-            nation.action_log.append(f"Failed to claim {region.region_id}. Region is not adjacent to enough regions under your control.")
-            failed.add(region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
+            failed.add(target_region.region_id)
             continue
         
         if priority > 0:
-            heapq.heappush(heap, (priority, region))
+            heapq.heappush(heap, (priority, target_region))
             continue
 
-        cost = region.calculate_region_claim_cost(nation)
+        cost = target_region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - cost < 0:
             # nation could not afford region
-            nation.action_log.append(f"Failed to claim {region.region_id}. Insufficient dollars.")
-            failed.add(region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.region_id}. Insufficient dollars.")
+            failed.add(target_region.region_id)
         else:
             # region successfully paid for
             nation.update_stockpile("Dollars", -1 * cost)
-            resolved.add(region.region_id)
+            resolved.add(target_region.region_id)
 
         # update priority values for adjacent regions
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             if adj_region_id in claimed_regions and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_region = claimed_regions.get(adj_region_id)
                 new_priority = get_priority(adj_region)
@@ -1533,27 +1533,27 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
 def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
 
-    def get_priority(region: Region) -> int:
+    def get_priority(target_region: Region) -> int:
 
-        nation_id = region.claim_list[0]
+        nation_id = target_region.claim_list[0]
 
         # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
             if nation_id == adj_region.data.owner_id:
                 adj_owned.add(adj_region.region_id)
         
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = verified_claim_actions.get(adj_region_id)
             if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
                 adj_claimed.add(adj_region.region_id)
 
-        return _validate_claim_action(nation_id, region, adj_owned, adj_claimed)
+        return _validate_claim_action(nation_id, target_region, adj_owned, adj_claimed)
     
-    def find_encircled_regions(region: Region, nation_id: str) -> set[Region]:
+    def find_encircled_regions(target_region: Region, nation_id: str) -> set[Region]:
         """
         Checks for pockets of unclaimed regions that are entirely encircled by one nation as a result of a claim action.
         """
@@ -1561,7 +1561,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
         encircled_regions: set[Region] = set()
         
         # checking every adjacent region with a seperate BFS because one claim can result in multiple encircled pockets
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
             
             # skip if already owned by someone
@@ -1580,21 +1580,21 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
 
             while queue:
 
-                current_region = queue.popleft()
+                region = queue.popleft()
 
                 # pocket is not encircled if this region is owned by another player
-                if current_region.data.owner_id not in ["0", nation_id]:
+                if region.data.owner_id not in ["0", nation_id]:
                     encircled = False
                     break
 
                 # continue if already owned
-                if current_region.data.owner_id == nation_id or current_region.region_id == region.region_id:
+                if region.data.owner_id == nation_id or region.region_id == target_region.region_id:
                     continue
 
-                current_region.add_claim(nation_id)
-                unclaimed.add(current_region)
+                region.add_claim(nation_id)
+                unclaimed.add(region)
 
-                for temp_id in current_region.graph.adjacent_regions:
+                for temp_id in region.graph.adjacent_regions:
                     if temp_id not in visited:
                         visited.add(temp_id)
                         queue.append(Region(temp_id))
@@ -1609,31 +1609,31 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
     resolved = set()
     failed = set()
     
-    for region in verified_claim_actions.values():
-        priority = get_priority(region)
-        priorities[region.region_id] = priority
-        heapq.heappush(heap, (priority, region))
+    for target_region in verified_claim_actions.values():
+        priority = get_priority(target_region)
+        priorities[target_region.region_id] = priority
+        heapq.heappush(heap, (priority, target_region))
 
     while heap:
-        priority, region = heapq.heappop(heap)
-        nation_id = region.claim_list[0]
+        priority, target_region = heapq.heappop(heap)
+        nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
-        if priority != priorities[region.region_id] or region.region_id in resolved or region.region_id in failed:
+        if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
             continue
 
         if priority == 99999:
-            nation.action_log.append(f"Failed to claim {region.region_id}. Region is not adjacent to enough regions under your control.")
-            failed.add(region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
+            failed.add(target_region.region_id)
             continue
         
         if priority > 0:
-            heapq.heappush(heap, (priority, region))
+            heapq.heappush(heap, (priority, target_region))
             continue
 
         # encirclement check - any unclaimed regions encircled by this claim must also be claimed
         encircled_cost = 0
-        encircled_regions = find_encircled_regions(region, nation.id)
+        encircled_regions = find_encircled_regions(target_region, nation.id)
         for encircled_region in encircled_regions:
             if encircled_region.region_id in verified_claim_actions:
                 continue
@@ -1641,16 +1641,16 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
         
         if float(nation.get_stockpile("Dollars")) - encircled_cost < 0:
             # player cannot afford to claim the unclaimed regions it has encircled
-            nation.update_stockpile("Dollars", region.calculate_region_claim_cost(nation))
-            nation.action_log.append(f"Failed to claim {region.region_id}. You could not afford to pay for the unclaimed regions this claim action encircled.")
-            failed.add(region.region_id)
+            nation.update_stockpile("Dollars", target_region.calculate_region_claim_cost(nation))
+            nation.action_log.append(f"Failed to claim {target_region.region_id}. You could not afford to pay for the unclaimed regions this claim action encircled.")
+            failed.add(target_region.region_id)
         else:
             # claim region
-            region.data.owner_id = nation_id
-            if region.improvement.name is not None:
-                nation.improvement_counts[region.improvement.name] += 1
-            nation.action_log.append(f"Claimed region {region.region_id} for {region.calculate_region_claim_cost(nation):.2f} dollars.")
-            resolved.add(region.region_id)
+            target_region.data.owner_id = nation_id
+            if target_region.improvement.name is not None:
+                nation.improvement_counts[target_region.improvement.name] += 1
+            nation.action_log.append(f"Claimed region {target_region.region_id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
+            resolved.add(target_region.region_id)
             # pay for and create claim actions for encircled regions (if any)
             for encircled_region in encircled_regions:
                 if encircled_region.region_id in verified_claim_actions:
@@ -1663,7 +1663,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
                 heapq.heappush(heap, (encircled_priority, encircled_region))
 
         # update priority values for adjacent regions
-        for adj_region_id in region.graph.adjacent_regions:
+        for adj_region_id in target_region.graph.adjacent_regions:
             if adj_region_id in verified_claim_actions and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_region = verified_claim_actions.get(adj_region_id)
                 new_priority = get_priority(adj_region)
@@ -1707,19 +1707,19 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
 
             while queue:
 
-                current_region = queue.popleft()
+                region = queue.popleft()
 
                 # check if this region is owned by the player
-                if current_region.data.owner_id == nation_id:
+                if region.data.owner_id == nation_id:
                     friendly_regions_found += 1
                 if friendly_regions_found >= 2:
                     return False
 
                 # regions owned by players constrain possible routes to the target region
-                if current_region.data.owner_id != "0":
+                if region.data.owner_id != "0":
                     continue
 
-                for adj_region_id in current_region.graph.adjacent_regions:
+                for adj_region_id in region.graph.adjacent_regions:
                     if adj_region_id not in visited:
                         visited.add(adj_region_id)
                         queue.append(Region(adj_region_id))
