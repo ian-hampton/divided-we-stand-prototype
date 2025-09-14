@@ -523,8 +523,10 @@
         ],
         "adjacencyMap": {
             "EAUCL": true,
-            "NTHMI": true,
             "STEVE": true
+        },
+        "seaRoutes": {
+            "NTHMI": true
         }
     },
     "NTHNH": {
@@ -852,7 +854,9 @@
         ],
         "adjacencyMap": {
             "GRAPI": true,
-            "LANSI": true,
+            "LANSI": true
+        },
+        "seaRoutes": {
             "UPPEN": true
         }
     },
@@ -2365,7 +2369,9 @@
         ],
         "adjacencyMap": {
             "NTHCT": true,
-            "SACRA": true,
+            "SACRA": true
+        },
+        "seaRoutes": {
             "SANFR": true
         }
     },
@@ -2715,8 +2721,10 @@
         "adjacencyMap": {
             "SACRA": true,
             "SANJO": true,
-            "SROSA": true,
             "STOCK": true
+        },
+        "seaRoutes": {
+            "SROSA": true
         }
     },
     "SIENV": {

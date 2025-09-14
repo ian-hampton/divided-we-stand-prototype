@@ -75,6 +75,18 @@ class Region:
             return self.region_id == other.region_id
         return False
     
+    def __lt__(self, other: 'Region'):
+        return self.region_id < other.region_id
+    
+    def __hash__(self):
+        return hash(self.region_id)
+
+    def __str__(self):
+        return f"R[{self.region_id}]"
+    
+    def __repr__(self):
+        return self.__str__()
+
     def owned_adjacent_regions(self) -> list:
         owned_adjacent_list = []
         for region_id in self.graph.adjacent_regions:
@@ -160,6 +172,17 @@ class Region:
         Adds player id to claim list. Used for region claim public action.
         """
         self.claim_list.append(player_id)
+
+    def calculate_region_claim_cost(self, nation: 'Nation'):
+        """
+        Calculates cost of claiming a region for a specific nation.
+        """
+        
+        cost_multiplier = 1.0
+        for tag_data in nation.tags.values():
+            cost_multiplier += float(tag_data.get("Region Claim Cost", 0))
+    
+        return int(self.data.purchase_cost * cost_multiplier)
 
     def set_fallout(self, starting_fallout=4) -> None:
         self.data.fallout = starting_fallout
@@ -468,7 +491,9 @@ class GraphData:
         self.is_significant: bool = d["hasRegionalCapital"]
         self.is_magnified: bool = d["isMagnified"]
         self.is_start: bool = d["randomStartAllowed"]
-        self.adjacent_regions: dict = d["adjacencyMap"]
+        self.map: dict = d.get("adjacencyMap", {})
+        self.sea_routes: dict = d.get("seaRoutes", {})
+        self.adjacent_regions: dict = self.map | self.sea_routes
         self.additional_region_coordinates: list = d["additionalRegionCords"]
         self.improvement_coordinates: list = d["improvementCords"]
         self.unit_coordinates: list = d["unitCords"]

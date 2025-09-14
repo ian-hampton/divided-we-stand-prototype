@@ -17,7 +17,7 @@ This document is a complete reference for all modifiers that can be attached to 
 | Improvement Income Multiplier| Improvement income increases by given resource-amount pairs (as a percentage). 100% = 1.0| See below.                                                  |
 | Market Buy Price             | Buy price for all resources decreased by specified value (as a percentage). 100% = 1.0   | "Market Buy Modifier": 0.2                                  |
 | Market Sell Price            | Sell price for all resources increased by specified value (as a percentage). 100% = 1.0  | "Market Sell Modifier": 0.2                                 |
-| Region Claim Political Cost  | Claim action political power cost (usually 0) increased by specified value.              | "Region Claim Cost": 1                                      |
+| Region Claim Cost Multiplier | Claim action cost (usually 5) increased by specified value (as a percentage). 100% = 1.0 | "Region Claim Cost": 0.2                                    |
 | Research Category Bonus      | Awards an amount of any 1 resource for completing research in specified categories.      | See below.                                                  |
 | Resource Income              | Resource income increases by specified value.                                            | f"{action.resource_name} Income": 5                         |
 | Resource Rate                | Resource income increases by specified value (as a percentage). 100% = 100.              | f"{action.resource_name} Rate": 20                          |
