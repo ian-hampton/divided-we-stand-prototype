@@ -167,19 +167,6 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     current_date_string = current_date.strftime("%m/%d/%Y")
     active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
     active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
-    
-    # add crime syndicate tracking
-    # TODO - move this somewhere else
-    steal_tracking_dict = {}
-    for nation in Nations:
-        if nation.gov == 'Crime Syndicate':
-            inner_dict = {
-                'Nation Name': None,
-                'Streak': 0,
-            }
-            steal_tracking_dict[nation.name] = inner_dict
-    active_games_dict[game_id]["Steal Action Record"] = steal_tracking_dict
-
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 

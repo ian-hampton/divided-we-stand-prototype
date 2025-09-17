@@ -72,6 +72,7 @@ class Nations(metaclass=NationsMeta):
             "tradeFee": "1:2",
             "standardMissileStockpile": 0,
             "nuclearMissileStockpile": 0,
+            "stealActionRecord": [0, ""],
             "score": 0,
             "chosenVictorySet": {},
             "victorySets": cls._generate_vc_sets(2),
@@ -513,6 +514,10 @@ class Nation:
         return self._data["unitCounts"]
 
     @property
+    def steal_action_record(self) -> list:
+        return self._data["stealActionRecord"]
+
+    @property
     def tags(self) -> dict:
         return self._data["tags"]
 
@@ -601,6 +606,10 @@ class Nation:
     @unit_counts.setter
     def unit_counts(self, value: dict) -> None:
         self._data["unitCounts"] = value
+
+    @steal_action_record.setter
+    def stealActionRecord(self, value: list) -> None:
+        self._data["stealActionRecord"] = value
 
     @tags.setter
     def tags(self, value: dict) -> None:

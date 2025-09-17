@@ -1923,7 +1923,6 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         active_games_dict = json.load(json_file)
 
     rmdata_update_list = []
-    steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
     data = {}
     for resource_name, market_data in SD.market:
         data[resource_name] = {
@@ -2024,7 +2023,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         nation.action_log.append(f"Sold {action.quantity} {action.resource_name} to the resource market for {dollars_earned:.2f} dollars.")
 
     # get crime syndicate steal actions
-    for action in crime_list:
+    for nation in Nations:
         for crime_action in crime_list:
             market_results[nation.name]["Thieves"].append(crime_action.id)
     for nation_name, nation_info in market_results.items():
@@ -2044,8 +2043,8 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             
         nation = Nations.get(nation_name)
         syndicate_nation = Nations.get(thief_id)
-        nation_name_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Nation Name"]
-        streak_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Streak"]
+        streak_of_last_victim = syndicate_nation.steal_action_record[0]
+        nation_name_of_last_victim = syndicate_nation.steal_action_record[1]
 
         # calculate steal amount and update record
         modifier = 0.5
@@ -2053,10 +2052,10 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             for i in range(streak_of_last_victim):
                 modifier *= 0.5
             modifier = round(modifier, 2)
-            steal_tracking_dict[syndicate_nation.name]["Streak"] += 1
+            syndicate_nation.steal_action_record[0] += 1
         else:
-            steal_tracking_dict[syndicate_nation.name]["Nation Name"] = nation.name
-            steal_tracking_dict[syndicate_nation.name]["Streak"] = 1
+            syndicate_nation.steal_action_record[0] += 1
+            syndicate_nation.steal_action_record[1] = nation.name
 
         # execute steal
         for entry, amount in nation_info.items():
