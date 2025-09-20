@@ -118,10 +118,6 @@ def settings():
 # SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
 def create_game():
-    
-    # get game record dictionaries
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
     # get username list
     username_list = []
@@ -161,8 +157,7 @@ def create_game():
         return redirect(f'/games')
 
     # create game files
-    game_id = ''.join(random.choices(string.ascii_letters, k=20))
-    site_functions.create_new_game(game_id, form_data_dict, profile_ids_list)
+    site_functions.create_new_game(form_data_dict, profile_ids_list)
     
     return redirect(f'/games')
 

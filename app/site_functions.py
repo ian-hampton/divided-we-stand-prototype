@@ -5,6 +5,7 @@ import shutil
 import os
 import copy
 import importlib
+import string
 from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
@@ -388,70 +389,28 @@ def resolve_win(game_id: str) -> None:
     with open("game_records.json", 'w') as json_file:
         json.dump(game_records_dict, json_file, indent=4)
 
-def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> None:
+def create_new_game(form_data_dict: dict, user_id_list: list) -> None:
     """
     Backend code for creating the files for a new game.
 
     Params:
-        game_id (str): A new game_id to be used for the new game. 20 characters, randomly generated.
         form_data_dict (dict): Dictionary of data gathered from the turn resolution HTML form.
         user_id_list (list): A list of all the user ids of players participating in the game.
-
-    Returns:
-        None
     """
 
+    from app.gamedata import Games
     from app.scenario import ScenarioData as SD
 
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    with open('game_records.json', 'r') as json_file:
-        game_records_dict = json.load(json_file)
-    
-    GAME_VERSION = "Development"
-    current_date = datetime.today().date()
+    game_id = ''.join(random.choices(string.ascii_letters, k=20))
+
+    Games.create(game_id, form_data_dict)
+    SD.load(game_id)
+    with open(f"maps/{map_str}/graph.json", 'r') as json_file:
+        graph_dict = json.load(json_file)
+
+    # create directories
     os.makedirs(f"gamedata/{game_id}/images")
     os.makedirs(f"gamedata/{game_id}/logs")
-
-    # cleanup - completed games are to be removed from active games upon creating new game
-    active_games_dict_filtered = {}
-    for temp_game_id, temp_game_data in active_games_dict.items():
-        if temp_game_data["Game Active"]:
-            active_games_dict_filtered[temp_game_id] = temp_game_data
-        else:
-            shutil.rmtree(f"gamedata/{temp_game_id}")
-    active_games_dict = active_games_dict_filtered
-    
-    # add new game to active games
-    active_games_dict[game_id] = {
-        "Name": form_data_dict["Game Name"],
-        "Number": len(game_records_dict) + len(active_games_dict) + 1,
-        "Game Active": True,
-        "Information": {
-            "Version": GAME_VERSION,
-            "Scenario": form_data_dict["Scenario"],
-            "Map": form_data_dict["Map"],
-            "Victory Conditions": form_data_dict["Victory Conditions"],
-            "Fog of War": form_data_dict["Fog of War"],
-            "Turn Length": form_data_dict["Turn Length"],
-            "Accelerated Schedule": form_data_dict["Accelerated Schedule"],
-            "Deadlines on Weekends": form_data_dict["Deadlines on Weekends"]
-        },
-        "Statistics": {
-            "Player Count": form_data_dict["Player Count"],
-            "Region Disputes": 0,
-            "Current Turn": "Starting Region Selection in Progress",
-            "Days Ellapsed": 0,
-            "Game Started": current_date.strftime("%m/%d/%Y")
-        },
-        "Inactive Events": [],
-        "Active Events": {},
-        "Current Event": {}
-    }
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
-    SD.load(game_id)
 
     # copy starting map images
     map_str = core.get_map_str(game_id)
@@ -460,14 +419,10 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/resourcemap.png")
     shutil.copy(f"app/static/images/map_images/{map_str}/{map_str}.png", f"{files_destination}/images")
     shutil.move(f"{files_destination}/images/{map_str}.png", f"gamedata/{game_id}/images/controlmap.png")
-
-    with open(f'maps/{map_str}/graph.json', 'r') as json_file:
-        graph_dict = json.load(json_file)
     
     # create regdata.json
     regdata_dict = {}
     for region_id in graph_dict:
-        
         regdata_dict[region_id] = {
             "regionData": {
                 "ownerID": "0",
@@ -487,16 +442,14 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
                 "ownerID": "0"
             }
         }
-        
         if form_data_dict["Scenario"] == "Standard":
             regdata_dict[region_id]["regionData"]["infection"] = 0
             regdata_dict[region_id]["regionData"]["quarantine"] = False
-    
     with open(f"gamedata/{game_id}/regdata.json", 'w') as json_file:
         json.dump(regdata_dict, json_file, indent=4)
 
     # create gamedata.json
-    gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
+    gamedata_filepath = f"gamedata/{game_id}/gamedata.json"
     gamedata_dict = {
         "alliances": {},
         "nations": {},
@@ -518,6 +471,8 @@ def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> N
     with open(rmdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.rmdata_header)
+
+    Games.save()
 
 
 # MISC SITE FUNCTIONS
