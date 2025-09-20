@@ -404,7 +404,9 @@ def create_new_game(form_data_dict: dict, user_id_list: list) -> None:
     game_id = ''.join(random.choices(string.ascii_letters, k=20))
 
     Games.create(game_id, form_data_dict)
+    game = Games.load(game_id)
     SD.load(game_id)
+    map_str = game.get_map_string()
     with open(f"maps/{map_str}/graph.json", 'r') as json_file:
         graph_dict = json.load(json_file)
 
@@ -413,7 +415,6 @@ def create_new_game(form_data_dict: dict, user_id_list: list) -> None:
     os.makedirs(f"gamedata/{game_id}/logs")
 
     # copy starting map images
-    map_str = core.get_map_str(game_id)
     files_destination = f"gamedata/{game_id}"
     shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
     shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/resourcemap.png")
@@ -471,8 +472,6 @@ def create_new_game(form_data_dict: dict, user_id_list: list) -> None:
     with open(rmdata_filepath, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(core.rmdata_header)
-
-    Games.save()
 
 
 # MISC SITE FUNCTIONS
@@ -622,34 +621,6 @@ def check_color_correction(color):
     if color in palette.BAD_PRIMARY_COLORS:
         color = palette.normal_to_occupied[color]
     return color
-        
-def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> list:
-    """
-    Creates list of nations that is shown alongside each game.
-    """
-
-    with open('playerdata/player_records.json', 'r') as json_file:
-        player_records_dict = json.load(json_file)
-
-    data_a = []
-    data_b = []
-   
-    for nation in Nations:
-        gov_fp_str = f"{nation.fp} - {nation.gov}"
-        username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
-        player_color = check_color_correction(nation.color)
-        # tba - fix duplicate player color (second one should be redundant)
-        if nation.score > 0:
-            data_a.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
-        else:
-            data_b.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
-
-    filtered_data_a = sorted(data_a, key=itemgetter(0), reverse=False)
-    filtered_data_a = sorted(filtered_data_a, key=itemgetter(1), reverse=True)
-    filtered_data_b = sorted(data_b, key=itemgetter(0), reverse=False)
-    data = filtered_data_a + filtered_data_b
-
-    return data
 
 def generate_refined_player_list_inactive(game_data):
     

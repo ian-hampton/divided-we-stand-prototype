@@ -8,6 +8,7 @@ import uuid
 import string
 import random
 import shutil
+from operator import itemgetter
 from collections import defaultdict
 
 from app import site_functions
@@ -31,76 +32,102 @@ def main_function():
 #GAMES PAGE
 @main.route('/games')
 def games():
+
+    def generate_refined_player_list_active():
+        """
+        Creates list of nations that is shown alongside each game.
+        """
+
+        with open('playerdata/player_records.json', 'r') as json_file:
+            player_records_dict = json.load(json_file)
+
+        data_a = []
+        data_b = []
     
-    # read game files
+        for nation in Nations:
+            gov_fp_str = f"{nation.fp} - {nation.gov}"
+            username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
+            player_color = site_functions.check_color_correction(nation.color)
+            # tba - fix duplicate player color (second one should be redundant)
+            if nation.score > 0:
+                data_a.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
+            else:
+                data_b.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
+
+        filtered_data_a = sorted(data_a, key=itemgetter(0), reverse=False)
+        filtered_data_a = sorted(filtered_data_a, key=itemgetter(1), reverse=True)
+        filtered_data_b = sorted(data_b, key=itemgetter(0), reverse=False)
+        data = filtered_data_a + filtered_data_b
+
+        return data
+    
+    from app.gamedata import Games, GameStatus
     from app.nation import Nations
-    with open('playerdata/player_records.json', 'r') as json_file:
+    with open("playerdata/player_records.json", 'r') as json_file:
         player_records_dict = json.load(json_file)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
-    # read active games
-    for game_id, game_data in active_games_dict.items():
+    active_games = {}
 
-        Nations.load(game_id)
-        current_turn = game_data["Statistics"]["Current Turn"]
-        if current_turn == "Turn N/A":
-            continue
+    for game in Games:
+
+        Nations.load(game.id)
+        active_games[game.id] = {
+            "title": None,
+            "status": None,
+            "image_url": None,
+            "playerdata": None,
+            "information": {
+                "Scenario": game.info.scenario,
+                "Map": game.info.map,
+                "Players": game.info.player_count,
+                "Turn Length": game.info.turn_length,
+                "Victory Conditions": game.info.victory_conditions,
+                "Accelerated Schedule": game.info.accelerated_schedule,
+                "Weekend Deadlines": game.info.weekend_deadlines,
+                "Fog of War": game.info.fog_of_war
+            },
+            "statistics": {
+                "Date Started": game.stats.date_started,
+                "Days Ellapsed": game.stats.days_elapsed,
+                "Region Disputes": game.stats.region_disputes,
+            }
+        }
         
-        match current_turn:
+        match game.status:
 
-            case "Starting Region Selection in Progress":
-                # get title and game link
-                game_name = game_data["Name"]
-                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                # get status
-                game_data["Status"] = current_turn
-                # get player information
+            case GameStatus.REGION_SELECTION:
+                active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
+                active_games[game.id]["status"] = "Starting Region Selection in Progress"
                 refined_player_data = []
                 for nation in Nations:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
                     refined_player_data.append([nation.name, 0, 'TBD', username_str, '#ffffff', '#ffffff'])
-                # get image
-                game_map = game_data["Information"]["Map"]
-                if game_map == "United States 2.0":
-                    game_map = "united_states"
-                image_url = url_for('main.get_mainmap', full_game_id=game_id)
+                active_games[game.id]["playerdata"] = refined_player_data
+                active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
 
-            case "Nation Setup in Progress":
-                # get title and game link
-                game_name = game_data["Name"]
-                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                # get status
-                game_data["Status"] = current_turn
-                # get player information
+            case GameStatus.NATION_SETUP:
+                active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
+                active_games[game.id]["status"] = "Nation Setup in Progress"
                 refined_player_data = []
                 for nation in Nations:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
                     player_color_2 = site_functions.check_color_correction(nation.color)
                     refined_player_data.append([nation.name, 0, 'TBD', username_str, nation.color, player_color_2])
-                # get image
-                image_url = url_for('main.get_mainmap', full_game_id=game_id)
+                active_games[game.id]["playerdata"] = refined_player_data
+                active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
 
             case _:
-                # get title and game link
-                game_name = game_data["Name"]
-                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                # get status
-                if game_data["Game Active"]:
-                    game_data["Status"] = f"Turn {current_turn}"
+                active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
+                if not GameStatus.FINISHED:
+                    active_games[game.id]["status"] = f"Turn {game.turn}"
                 else:
-                    game_data["Status"] = "Game Over!"
-                # get player information
-                refined_player_data = site_functions.generate_refined_player_list_active(game_id, current_turn)
-                # get image
-                image_url = url_for('main.get_mainmap', full_game_id=game_id)
-        
-        game_data["Playerdata Masterlist"] = refined_player_data
-        game_data["image_url"] = image_url
+                    active_games[game.id]["status"] = "Game Over!"
+                active_games[game.id]["playerdata"] = generate_refined_player_list_active()
+                active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
     
-    return render_template('temp_games.html', dict = active_games_dict)
+    return render_template('temp_games.html', dict = active_games)
 
 # SETTINGS PAGE
 @main.route('/settings')
@@ -118,6 +145,8 @@ def settings():
 # SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
 def create_game():
+
+    from app.gamedata import Games
 
     # get username list
     username_list = []
@@ -151,13 +180,17 @@ def create_game():
     if form_data_dict["Game Name"] == "5EQM8Z5VoLxvxqeP1GAu":
         shutil.rmtree(f"gamedata")
         os.makedirs(f"gamedata")
-        active_games_dict = {}
-        with open("active_games.json", 'w') as json_file:
-            json.dump(active_games_dict, json_file, indent=4)
+        active_game_ids = []
+        for game in Games:
+            active_game_ids.append(game.id)
+        for game_id in active_game_ids:
+            Games.delete(game_id)
+        Games.save()
         return redirect(f'/games')
 
     # create game files
     site_functions.create_new_game(form_data_dict, profile_ids_list)
+    Games.save()
     
     return redirect(f'/games')
 
@@ -1078,18 +1111,15 @@ def alliances(full_game_id):
 # MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
-    map_str = core.get_map_str(full_game_id)
-    try:
-        current_turn_num = int(current_turn_num)
-        filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'
-    except:
-        if current_turn_num == "Nation Setup in Progress":
-            filepath = f'..\\gamedata\\{full_game_id}\\images\\0.png'
-        else:
-            filepath = f'..\\app\\static\\images\\map_images\\{map_str}\\blank.png'
+    from app.gamedata import Games, GameStatus
+    game = Games.load(full_game_id)
+    map_str = game.get_map_string()
+    if game.status == GameStatus.REGION_SELECTION:
+        filepath = f"..\\app\\static\\images\\map_images\\{map_str}\\blank.png"
+    elif game.status == GameStatus.NATION_SETUP:
+        filepath = f"..\\gamedata\\{full_game_id}\\images\\0.png"
+    else:
+        filepath = f"..\\gamedata\\{full_game_id}\\images\\{game.turn - 1}.png"
     return send_file(filepath, mimetype='image/png')
 @main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):

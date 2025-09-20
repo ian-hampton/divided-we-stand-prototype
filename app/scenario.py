@@ -243,9 +243,8 @@ class ScenarioData:
 
     @classmethod
     def _get_scenario_name(cls) -> str:
+        from app.gamedata import Games
         if cls.game_id != "TBD":
-            with open('active_games.json', 'r') as json_file:
-                active_games_dict = json.load(json_file)
-            scenario_name: str = active_games_dict[cls.game_id]["Information"]["Scenario"]
-            return scenario_name.lower()
+            game = Games.load(cls.game_id)
+            return game.info.scenario.lower()
         return "standard"

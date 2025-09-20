@@ -5,9 +5,13 @@ import random
 from datetime import datetime
 from enum import Enum, IntEnum
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, Iterator
 
 class GamesMeta(type):
+
+    def __iter__(cls) -> Iterator["Game"]:
+        for game_id in cls._data:
+            yield Game(game_id)
 
     def __len__(cls):
         return len(cls._data)
@@ -25,7 +29,7 @@ class Games(metaclass=GamesMeta):
             json.dump(cls._data, json_file, indent=4)
 
     @classmethod
-    def create(cls, game_id: str, form_data_dict: dict):
+    def create(cls, game_id: str, form_data_dict: dict) -> None:
 
         GAME_VERSION = "Development"
         current_date = datetime.today().date()
@@ -60,6 +64,11 @@ class Games(metaclass=GamesMeta):
         }
 
         cls._data[game_id] = game_data
+
+    @classmethod
+    def delete(cls, game_id: str) -> None:
+        if game_id in cls._data:
+            del cls._data[game_id]
 
     @classmethod
     def load(cls, game_id: str) -> "Game":
@@ -132,6 +141,15 @@ class Game:
     @inactive_events.setter
     def inactive_events(self, value: dict) -> None:
         self._data["inactiveEvents"] = value
+
+    def get_map_string(self) -> str:
+        map_name_actual = ""
+        for char in self.info.map:
+            if char.isalpha():
+                map_name_actual += char.lower()
+            elif char == " ":
+                map_name_actual += "_"
+        return map_name_actual.strip("_")
 
 class GameInformation:
     
