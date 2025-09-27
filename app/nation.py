@@ -368,7 +368,8 @@ class Nations(metaclass=NationsMeta):
                     p1.append(f"&Tab;+{bonus[i]:.2f} {string}")
                     nation.income_details = p1 + p2
 
-    def attribute_to_title(self, attribute_name: str) -> str:
+    @classmethod
+    def attribute_to_title(cls, attribute_name: str) -> str:
 
         attribute_str_to_name_str = {
             "military_size": "Largest Military",

@@ -343,22 +343,6 @@ def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
             rmdata_refined_list.append(transaction)
     return rmdata_refined_list
 
-def date_from_turn_num(current_turn_num):
-    remainder = current_turn_num % 4
-    if remainder == 0:
-        season = 'Winter'
-    elif remainder == 1:
-        season = 'Spring'
-    elif remainder == 2:
-        season = 'Summer'
-    elif remainder == 3:
-        season = 'Fall'
-    quotient = current_turn_num // 4
-    year = 2021 + quotient
-    if season == 'Winter':
-        year -= 1
-    return season, year
-
 def search_and_destroy(game_id: str, player_id: str, target_improvement: str) -> str:
     """
     Searches for a specific improvement and removes it.

@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 from enum import Enum, IntEnum
 from dataclasses import dataclass
-from typing import ClassVar, Iterator
+from typing import ClassVar, Iterator, Tuple
 
 class GamesMeta(type):
 
@@ -148,6 +148,25 @@ class Game:
     @inactive_events.setter
     def inactive_events(self, value: dict) -> None:
         self._data["inactiveEvents"] = value
+
+    def get_season_and_year(self) -> Tuple[str, str]:
+        
+        match (self.turn % 4):
+            case 0:
+                season = 'Winter'
+            case 1:
+                season = 'Spring'
+            case 2:
+                season = 'Summer'
+            case 3:
+                season = 'Fall'
+
+        quotient = self.turn // 4
+        year = 2021 + quotient
+        if season == 'Winter':
+            year -= 1
+            
+        return season, year
 
     def get_map_string(self) -> str:
         map_name_actual = ""

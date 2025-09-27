@@ -5,7 +5,9 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
 from app import core
+from app.gamedata import Games
 from app.nation import Nation
+
 
 class WarsMeta(type):
     
@@ -65,14 +67,15 @@ class Wars(metaclass=WarsMeta):
         from app.alliance import Alliances
         from app.truce import Truces
         from app.nation import Nations
+
+        game = Games.load(cls.game_id)
         main_attacker = Nations.get(main_attacker_id)
         main_defender = Nations.get(main_defender_id)
-        current_turn_num = core.get_current_turn_num(cls.game_id)
 
         # create new war
         war_name = cls._generate_war_name(main_attacker, main_defender, war_justification)
         new_war_data = {
-            "start": current_turn_num,
+            "start": game.turn,
             "end": 0,
             "outcome": "TBD",
             "combatants": {},
@@ -226,14 +229,15 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def find_longest_war(cls) -> tuple:
 
+        game = Games.load(cls.game_id)
+
         longest_name = None
         longest_time = 0
-        current_turn_num = core.get_current_turn_num(cls.game_id)
 
         for war in cls:
             
             if war.outcome == "TBD":
-                war_duration = current_turn_num - war.start
+                war_duration = game.turn - war.start
             else:
                 war_duration = war.end - war.start
             

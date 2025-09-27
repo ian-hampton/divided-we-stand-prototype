@@ -16,6 +16,7 @@ from app import core
 from app import events
 from app import palette
 from app.scenario import ScenarioData as SD
+from app.gamedata import Games, GameStatus
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -61,7 +62,6 @@ def games():
 
         return data
     
-    from app.gamedata import Games, GameStatus
     from app.nation import Nations
     with open("playerdata/player_records.json", 'r') as json_file:
         player_records_dict = json.load(json_file)
@@ -145,8 +145,6 @@ def settings():
 # SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
 def create_game():
-
-    from app.gamedata import Games
 
     def create_new_game() -> None:
 
@@ -421,7 +419,6 @@ def profile_route(profile_id):
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
-    from app.gamedata import Games, GameStatus
     from app.nation import Nations
 
     game = Games.load(full_game_id)
@@ -495,11 +492,8 @@ def game_load(full_game_id):
             return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
         
         case _:
-            
-            form_key = "main.turn_resolution"
-            main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
-            player_data = []
 
+            player_data = []
             for nation in Nations:
                 p_id = f'p{nation.id}'
                 public_actions_textarea_id = f"public_textarea_{p_id}"
@@ -509,13 +503,7 @@ def game_load(full_game_id):
                 player_data.append(refined_player_data)
             active_player_data = player_data.pop(0)
             
-            with open(f'active_games.json', 'r') as json_file:  
-                active_games_dict = json.load(json_file)
-            current_event_dict = active_games_dict[full_game_id]["Current Event"]
-            if current_event_dict != {}:
-                form_key = "main.event_resolution"
-            
-            return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
 
 # GENERATE NATION SHEET PAGES
 @main.route('/<full_game_id>/player<int:player_id>')
@@ -991,97 +979,95 @@ def announcements(full_game_id):
     from app.truce import Truces
     from app.war import Wars
 
-    # get game data
+    def build_diplomacy_string() -> str:
+        
+        diplomacy_list = []
+
+        if game.turn <= 4:
+            diplomacy_list.append("First year expansion rules are in effect.")
+        elif game.turn == 5:
+            diplomacy_list.append("Normal expansion rules are now in effect.")
+
+        if game.info.accelerated_schedule:
+            if game.turn <= 10:
+                diplomacy_list.append("Accelerated schedule is in effect until turn 11.")
+            elif game.turn == 11:
+                diplomacy_list.append("Normal turn schedule is now in effect.")
+
+        for war in Wars:
+            if war.outcome == "TBD":
+                diplomacy_list.append(f"{war.name} is ongoing.")
+
+        for truce in Truces:
+            if truce.end_turn > game.turn:
+                diplomacy_list.append(f"{str(truce)} truce until turn {truce.end_turn}.")
+            elif truce.end_turn == game.turn:
+                diplomacy_list.append(f"{str(truce)} truce has expired.")
+
+        diplomacy_string = "<br>".join(diplomacy_list)
+        diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
+        return diplomacy_string
+
+    def build_notifications_string() -> str:
+        
+        notifications_list = []
+        q = PriorityQueue()
+        for notification in Notifications:
+            q.put(notification)
+        while not q.empty():
+            ntf = q.get()
+            notifications_list.append(ntf[1])
+        
+        notifications_string = "<br>".join(notifications_list)
+        notifications_string = palette.color_nation_names(notifications_string, full_game_id)
+        return notifications_string
+
+    def build_statistics_string() -> str:
+        
+        statistics_list = []
+        
+        statistics_list.append(f"Total alliances: {len(Alliances)}")
+        longest_alliance_name, longest_alliance_duration = Alliances.longest_alliance()
+        if longest_alliance_name is not None:
+            statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
+        else:
+            statistics_list.append(f"Longest alliance: N/A")
+        
+        statistics_list.append(f"Total wars: {len(Wars)}")
+        statistics_list.append(f"Units lost in war: {Wars.total_units_lost()}")
+        statistics_list.append(f"Improvements destroyed in war: {Wars.total_units_lost()}")
+        statistics_list.append(f"Nuclear Missiles launched: {Wars.total_missiles_launched()}")
+        
+        war_name, war_duration = Wars.find_longest_war()
+        if war_name is not None:
+            statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
+        else:
+            statistics_list.append("Longest war: N/A")
+        
+        statistics_list.append(f"Region disputes: {game.stats.region_disputes}")
+        
+        statistics_string = "<br>".join(statistics_list)
+        statistics_string = palette.color_nation_names(statistics_string, full_game_id)
+        return statistics_string
+
+    game = Games.load(full_game_id)
     Alliances.load(full_game_id)
     Nations.load(full_game_id)
     Notifications.initialize(full_game_id)
     Truces.load(full_game_id)
     Wars.load(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
-    # read the contents of active_games.json
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Announcements Page'
-    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
-    accelerated_schedule_str = active_games_dict[full_game_id]["Information"]["Accelerated Schedule"]
-    current_event_dict = active_games_dict[full_game_id]["Current Event"]
-    if current_event_dict != {}:
-        event_pending = True
-    else:
-        event_pending = False
+    # page title and date
+    page_title = f"{game.name} - Announcements Page"
+    season, year = game.get_season_and_year()
+    date_str = f"{season} {year} - Turn {game.turn}"
+    if game.status == GameStatus.ACTIVE_PENDING_EVENT:
+        date_str += " Bonus Phase"
 
-    # calculate date information
-    if not event_pending:
-        season, year = core.date_from_turn_num(current_turn_num)
-        date_output = f'{season} {year} - Turn {current_turn_num}'
-    else:
-        current_turn_num -= 1
-        season, year = core.date_from_turn_num(current_turn_num)
-        date_output = f'{season} {year} - Turn {current_turn_num} Bonus Phase'
-
-
-    # Build Diplomacy String
-    diplomacy_list = []
-    # expansion rules reminder
-    if current_turn_num <= 4:
-        diplomacy_list.append('First year expansion rules are in effect.')
-    elif current_turn_num == 5:
-        diplomacy_list.append('Normal expansion rules are now in effect.')
-    # accelerate schedule reminder
-    if accelerated_schedule_str == 'Enabled' and current_turn_num <= 10:
-        diplomacy_list.append('Accelerated schedule is in effect until turn 11.')
-    elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
-        diplomacy_list.append('Normal turn schedule is now in effect.')
-    # get all ongoing wars
-    for war in Wars:
-        if war.outcome == "TBD":
-            diplomacy_list.append(f"{war.name} is ongoing.")
-    # get all ongoing truces
-    for truce in Truces:
-        if truce.end_turn > current_turn_num:
-            diplomacy_list.append(f"{str(truce)} truce until turn {truce.end_turn}.")
-        elif truce.end_turn == current_turn_num:
-            diplomacy_list.append(f"{str(truce)} truce has expired.")
-    # format diplomacy string
-    diplomacy_string = "<br>".join(diplomacy_list)
-    diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
-
-    
-    # Build Notifications String
-    notifications_list = []
-    q = PriorityQueue()
-    for notification in Notifications:
-        q.put(notification)
-    while not q.empty():
-        ntf = q.get()
-        notifications_list.append(ntf[1])
-    notifications_string = "<br>".join(notifications_list)
-    notifications_string = palette.color_nation_names(notifications_string, full_game_id)
-
-
-    # Build Statistics String
-    statistics_list = []
-    statistics_list.append(f"Total alliances: {len(Alliances)}")
-    longest_alliance_name, longest_alliance_duration = Alliances.longest_alliance()
-    if longest_alliance_name is not None:
-        statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
-    else:
-        statistics_list.append(f"Longest alliance: N/A")
-    statistics_list.append(f"Total wars: {len(Wars)}")
-    statistics_list.append(f"Units lost in war: {Wars.total_units_lost()}")
-    statistics_list.append(f"Improvements destroyed in war: {Wars.total_units_lost()}")
-    statistics_list.append(f"Nuclear Missiles launched: {Wars.total_missiles_launched()}")
-    war_name, war_duration = Wars.find_longest_war()
-    if war_name is not None:
-        statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
-    else:
-        statistics_list.append("Longest war: N/A")
-    dispute_count = active_games_dict[full_game_id]["Statistics"]["Region Disputes"]
-    statistics_list.append(f"Region disputes: {dispute_count}")
-    statistics_string = "<br>".join(statistics_list)
-    statistics_string = palette.color_nation_names(statistics_string, full_game_id)
-
+    # build announcements strings
+    diplomacy_string = build_diplomacy_string()
+    notifications_string = build_notifications_string()
+    statistics_string = build_statistics_string()
 
     # get top three standings
     standings_dict = {}
@@ -1101,6 +1087,7 @@ def announcements(full_game_id):
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
                 standings_filtered.append([nation_name, entry[1]])
+        print(record_name)
         title = Nations.attribute_to_title(record_name)
         standings_dict[title] = standings_filtered
     
@@ -1120,7 +1107,7 @@ def announcements(full_game_id):
         )
     )
 
-    return render_template('temp_announcements.html', game_name = game_name, page_title = page_title, date_output = date_output, scoreboard_dict = scoreboard_dict, standings_dict = standings_dict, statistics_string = statistics_string, diplomacy_string = diplomacy_string, notifications_string = notifications_string)
+    return render_template('temp_announcements.html', game_name = game.name, page_title = page_title, date_output = date_str, scoreboard_dict = scoreboard_dict, standings_dict = standings_dict, statistics_string = statistics_string, diplomacy_string = diplomacy_string, notifications_string = notifications_string)
 
 # ALLIANCE PAGE
 @main.route('/<full_game_id>/alliances')
@@ -1179,7 +1166,6 @@ def alliances(full_game_id):
 # MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):
-    from app.gamedata import Games, GameStatus
     game = Games.load(full_game_id)
     map_str = game.get_map_string()
     if game.status == GameStatus.REGION_SELECTION:
@@ -1202,7 +1188,6 @@ def get_controlmap(full_game_id):
 @main.route('/<full_game_id>/resolve', methods=['POST'])
 def turn_resolution_new(full_game_id):
 
-    from app.gamedata import Games, GameStatus
     from app.alliance import Alliances
     from app.region import Regions
     from app.nation import Nations
