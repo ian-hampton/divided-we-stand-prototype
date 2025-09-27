@@ -18,9 +18,12 @@ class GameMaps:
 
     def __init__(self, game_id: str):
 
+        from app.gamedata import Games
+        game = Games.load(game_id)
+
         self.game_id = game_id
-        self.map_str = core.get_map_str(self.game_id)
-        self.turn_num: any = core.get_current_turn_num(self.game_id)    # TODO: game state needs to be tracked independently instead of relying on current turn #
+        self.map_str = game.get_map_string()
+        self.turn_num = game.turn
         with open(f"maps/{self.map_str}/config.json", 'r') as json_file:
             self.map_config: dict = json.load(json_file)
 
@@ -156,7 +159,7 @@ class GameMaps:
             case "Starting Region Selection in Progress" | "Nation Setup in Progress":
                 self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
             case _:
-                self.main_map.save(f"gamedata/{self.game_id}/images/{self.turn_num - 1}.png")
+                self.main_map.save(f"gamedata/{self.game_id}/images/{self.turn_num}.png")
         self.resource_map.save(f"gamedata/{self.game_id}/images/resourcemap.png")
         self.control_map.save(f"gamedata/{self.game_id}/images/controlmap.png")
 
@@ -247,9 +250,9 @@ class GameMaps:
         """
         
         # get resource data for map
-        with open('active_games.json', 'r') as json_file:
-            active_games_dict = json.load(json_file)
-        scenario_name: str = active_games_dict[self.game_id]["Information"]["Scenario"].lower()
+        from app.gamedata import Games
+        game = Games.load(self.game_id)
+        scenario_name = game.info.scenario.lower()
         map_resources: dict = self.map_config["mapResources"][scenario_name]
         
         # create resource list

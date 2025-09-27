@@ -29,9 +29,13 @@ class Regions(metaclass=RegionsMeta):
 
     @classmethod
     def load(cls, game_id: str) -> None:
+
+        from app.gamedata import Games
+        game = Games.load(game_id)
+        
         cls.game_id = game_id
         regdata_filepath = f"gamedata/{Regions.game_id}/regdata.json"
-        graph_filepath = f"maps/{core.get_map_str(Regions.game_id)}/graph.json"
+        graph_filepath = f"maps/{game.get_map_string()}/graph.json"
         
         if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Regions class.")

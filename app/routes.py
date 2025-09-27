@@ -421,59 +421,22 @@ def profile_route(profile_id):
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
-    #read the contents of active_games.json
+    from app.gamedata import Games, GameStatus
     from app.nation import Nations
+
+    game = Games.load(full_game_id)
     Nations.load(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game1_title = active_games_dict[full_game_id]["Name"]
-    game1_turn = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
-    game1_active_bool = active_games_dict[full_game_id]["Game Active"]
-    game1_extendedtitle = f"Divided We Stand - {game1_title}" 
-    
-    #load images
+
+    full_title = f"Divided We Stand - {game.name}" 
     main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
     resource_url = url_for('main.get_resourcemap', full_game_id=full_game_id)
     control_url = url_for('main.get_controlmap', full_game_id=full_game_id)
-    #load inactive state
-    if not game1_active_bool:
-        with open('game_records.json', 'r') as json_file:
-            game_records_dict = json.load(json_file)
-        game_data = game_records_dict[game1_title]
-        largest_nation_tup = Nations.get_top_three("Largest Nation")
-        strongest_economy_tup = Nations.get_top_three("Most Income")
-        largest_military_tup = Nations.get_top_three("Largest Military")
-        most_research_tup = Nations.get_top_three("Most Technology")
-        largest_nation_list = list(largest_nation_tup)
-        strongest_economy_list = list(strongest_economy_tup)
-        largest_military_list = list(largest_military_tup)
-        most_research_list = list(most_research_tup)
-        for i in range(len(largest_nation_list)):
-            largest_nation_list[i] = palette.color_nation_names(largest_nation_list[i], full_game_id)
-            strongest_economy_list[i] = palette.color_nation_names(strongest_economy_list[i], full_game_id)
-            largest_military_list[i] = palette.color_nation_names(largest_military_list[i], full_game_id)
-            most_research_list[i] = palette.color_nation_names(most_research_list[i], full_game_id)
-        archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
-        if len(players_who_won_list) == 1:
-            victors_str = players_who_won_list[0]
-            victory_string = (f"""{victors_str} has won the game.""")
-        elif len(players_who_won_list) > 1:
-            victors_str = ' and '.join(players_who_won_list)
-            victory_string = (f'{victors_str} have won the game.')
-        elif len(players_who_won_list) == 0:
-            victory_string = (f'Game drawn.')
-        victory_string = palette.color_nation_names(victory_string, full_game_id)
-        return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
-    
-    # load active state
-    # tba - fix this garbage when you get around to redoing the frontend
-    match game1_turn:
-        
-        case "Starting Region Selection in Progress":
+
+    match game.status:
+
+        case GameStatus.REGION_SELECTION:
             
-            form_key = "main.stage1_resolution"
             player_data = []
-            
             for nation in Nations:
                 p_id = f'p{nation.id}'
                 regioninput_id = f'regioninput_{p_id}'
@@ -482,10 +445,10 @@ def game_load(full_game_id):
                 refined_player_data = [f"Player #{nation.id}", p_id, nation.color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, regioninput_id, colordropdown_id]
                 player_data.append(refined_player_data)
             active_player_data = player_data.pop(0)
-            
-            return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
-        
-        case "Nation Setup in Progress":
+
+            return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
+
+        case GameStatus.NATION_SETUP:
             
             form_key = "main.stage2_resolution"
             player_data = []
@@ -502,6 +465,36 @@ def game_load(full_game_id):
             active_player_data = player_data.pop(0)
             
             return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+
+        case GameStatus.FINISHED:
+            # TODO - fix stage 4 rendering, currently broken
+            with open('game_records.json', 'r') as json_file:
+                game_records_dict = json.load(json_file)
+            game_data = game_records_dict[game1_title]
+            largest_nation_tup = Nations.get_top_three("Largest Nation")
+            strongest_economy_tup = Nations.get_top_three("Most Income")
+            largest_military_tup = Nations.get_top_three("Largest Military")
+            most_research_tup = Nations.get_top_three("Most Technology")
+            largest_nation_list = list(largest_nation_tup)
+            strongest_economy_list = list(strongest_economy_tup)
+            largest_military_list = list(largest_military_tup)
+            most_research_list = list(most_research_tup)
+            for i in range(len(largest_nation_list)):
+                largest_nation_list[i] = palette.color_nation_names(largest_nation_list[i], full_game_id)
+                strongest_economy_list[i] = palette.color_nation_names(strongest_economy_list[i], full_game_id)
+                largest_military_list[i] = palette.color_nation_names(largest_military_list[i], full_game_id)
+                most_research_list[i] = palette.color_nation_names(most_research_list[i], full_game_id)
+            archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
+            if len(players_who_won_list) == 1:
+                victors_str = players_who_won_list[0]
+                victory_string = (f"""{victors_str} has won the game.""")
+            elif len(players_who_won_list) > 1:
+                victors_str = ' and '.join(players_who_won_list)
+                victory_string = (f'{victors_str} have won the game.')
+            elif len(players_who_won_list) == 0:
+                victory_string = (f'Game drawn.')
+            victory_string = palette.color_nation_names(victory_string, full_game_id)
+            return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
         
         case _:
             
@@ -1207,26 +1200,55 @@ def get_controlmap(full_game_id):
     filepath = f'../gamedata/{full_game_id}/images/controlmap.png'
     return send_file(filepath, mimetype='image/png')
 
+# TURN RESOLUTION
+@main.route('/<full_game_id>/resolve', methods=['POST'])
+def turn_resolution_new(full_game_id):
+
+    from app.gamedata import Games, GameStatus
+    from app.alliance import Alliances
+    from app.region import Regions
+    from app.nation import Nations
+    from app.notifications import Notifications
+    from app.truce import Truces
+    from app.war import Wars
+
+    game = Games.load(full_game_id)
+    SD.load(full_game_id)
+
+    match game.status:
+
+        case GameStatus.REGION_SELECTION:
+            
+            Nations.load(full_game_id)
+            Regions.load(full_game_id)
+
+            contents_dict = {}
+            for nation in Nations:
+                contents_dict[nation.id] = {}
+                contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
+                contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
+            
+            site_functions.resolve_stage1_processing(full_game_id, contents_dict)
+            Nations.save()
+            Regions.save()
+            game.status = GameStatus.NATION_SETUP
+            
+        case GameStatus.NATION_SETUP:
+            pass
+
+        case GameStatus.ACTIVE:
+            pass
+
+        case GameStatus.ACTIVE_PENDING_EVENT:
+            pass
+    
+    Games.save()
+
+    return redirect("/games")    # remove this when done testing
+    return redirect(f"/{full_game_id}")
 
 # ACTION PROCESSING
 ################################################################################
-
-@main.route('/stage1_resolution', methods=['POST'])
-def stage1_resolution():
-    
-    full_game_id = request.form.get('full_game_id')
-    from app.nation import Nations
-    Nations.load(full_game_id)
-
-    contents_dict = {}
-    for nation in Nations:
-        contents_dict[nation.id] = {}
-        contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
-        contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
-    
-    site_functions.resolve_stage1_processing(full_game_id, contents_dict)
-    
-    return redirect(f'/{full_game_id}')
 
 @main.route('/stage2_resolution', methods=['POST'])
 def stage2_resolution():

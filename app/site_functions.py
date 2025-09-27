@@ -40,11 +40,6 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
 
-    # get game files
-    SD.load(game_id)
-    Regions.load(game_id)
-    Nations.load(game_id)
-
     # update nation colors
     for nation_id, setup_data in contents_dict.items():
         color_name = setup_data["color"]
@@ -92,22 +87,11 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
                 nation.improvement_counts["Capital"] += 1
                 break
     
-    # update active_games.json
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-    
     # update game maps
     maps = GameMaps(game_id)
     maps.populate_resource_map()
     maps.populate_main_map()
     maps.update_all()
-
-    # save
-    Nations.save()
-    Regions.save()
 
 def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
