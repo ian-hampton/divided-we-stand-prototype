@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
 from app import core
+from app.gamedata import Games
 from app.nation import Nation
 
 class RegionsMeta(type):
@@ -30,7 +31,6 @@ class Regions(metaclass=RegionsMeta):
     @classmethod
     def load(cls, game_id: str) -> None:
 
-        from app.gamedata import Games
         game = Games.load(game_id)
         
         cls.game_id = game_id
@@ -325,7 +325,6 @@ class Region:
             dict: Contains all yields from this improvement.
         """
 
-        from app.gamedata import Games
         game = Games.load(game_id)
 
         improvement_income_dict = copy.deepcopy(improvement_income_dict)  # deepcopy required because of modifiers below

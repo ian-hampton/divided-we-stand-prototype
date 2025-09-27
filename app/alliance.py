@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
 from app import core
+from app.gamedata import Games
 
 class AlliancesMeta(type):
 

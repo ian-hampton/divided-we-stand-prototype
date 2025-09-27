@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app import core
 from app import palette
+from app.gamedata import Games
 from app.region import Region, Regions
 from app.nation import Nation, Nations
 
@@ -18,7 +19,6 @@ class GameMaps:
 
     def __init__(self, game_id: str):
 
-        from app.gamedata import Games
         game = Games.load(game_id)
 
         self.game_id = game_id
@@ -250,7 +250,6 @@ class GameMaps:
         """
         
         # get resource data for map
-        from app.gamedata import Games
         game = Games.load(self.game_id)
         scenario_name = game.info.scenario.lower()
         map_resources: dict = self.map_config["mapResources"][scenario_name]
