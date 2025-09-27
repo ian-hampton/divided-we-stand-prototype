@@ -224,10 +224,11 @@ class Nations(metaclass=NationsMeta):
     def update_records(cls) -> None:
 
         from app.scenario import ScenarioData as SD
+        from app.gamedata import Games
+        game = Games.load(cls.game_id)
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
         rmdata_filepath = f"gamedata/{cls.game_id}/rmdata.csv"
-        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, game.turn, False, False)
 
         for nation in cls:
 

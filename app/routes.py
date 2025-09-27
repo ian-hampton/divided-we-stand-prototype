@@ -121,9 +121,9 @@ def games():
             case _:
                 active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
                 if not GameStatus.FINISHED:
-                    active_games[game.id]["status"] = f"Turn {game.turn}"
-                else:
                     active_games[game.id]["status"] = "Game Over!"
+                else:
+                    active_games[game.id]["status"] = f"Turn {game.turn}"
                 active_games[game.id]["playerdata"] = generate_refined_player_list_active()
                 active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
     

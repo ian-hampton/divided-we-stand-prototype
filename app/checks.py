@@ -46,7 +46,7 @@ def update_income(game_id: str) -> None:
                 
                 nation = Nations.get(region.data.owner_id)
                 improvement_income_dict = yield_dict[nation.name][region.improvement.name]
-                improvement_yield_dict = region.calculate_yield(nation, game_id, improvement_income_dict)
+                improvement_yield_dict = region.calculate_yield(game_id, nation, improvement_income_dict)
                 
                 for resource_name, amount_gained in improvement_yield_dict.items():
                     if amount_gained == 0:
