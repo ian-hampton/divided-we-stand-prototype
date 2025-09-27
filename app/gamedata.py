@@ -20,6 +20,7 @@ class GamesMeta(type):
 class Games(metaclass=GamesMeta):
 
     _data: ClassVar[dict[str, dict]]
+    _instances: ClassVar[dict[str, "Game"]] = {}
     with open("active_games.json", "r") as json_file:
         _data = json.load(json_file)
 
@@ -72,9 +73,15 @@ class Games(metaclass=GamesMeta):
 
     @classmethod
     def load(cls, game_id: str) -> "Game":
+        
+        # trying to load a game that does not exist is a critical error
         if game_id not in cls._data:
             raise Exception(f"Error loading Game. {game_id} not recognized as a valid Game ID.")
-        return Game(game_id)
+        
+        # reuse cached Game object if it exists
+        if game_id not in cls._instances:
+            cls._instances[game_id] = Game(game_id)
+        return cls._instances[game_id]
 
 class Game:
     
