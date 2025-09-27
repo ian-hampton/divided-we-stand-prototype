@@ -157,6 +157,12 @@ class Game:
             elif char == " ":
                 map_name_actual += "_"
         return map_name_actual.strip("_")
+    
+    def set_startdate(self) -> None:
+        current_date = datetime.today().date()
+        current_date_string = current_date.strftime("%m/%d/%Y")
+        self.stats.date_started = current_date_string
+        self.stats.days_elapsed = 0
 
 class GameInformation:
     

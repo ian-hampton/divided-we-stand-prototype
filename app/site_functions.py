@@ -105,25 +105,18 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
 
-    SD.load(game_id)
-
-    Alliances.load(game_id)
-    Nations.load(game_id)
-    Regions.load(game_id)
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    from app.gamedata import Games
+    game = Games.load(game_id)
 
     five_point_research_list = []
     for tech_name, tech_data in SD.technologies:
         if tech_data.cost == 5:
             five_point_research_list.append(tech_name)
-    if active_games_dict[game_id]["Information"]["Fog of War"] == "Disabled":
+    if not game.info.fog_of_war:
         five_point_research_list.remove("Surveillance Operations")
 
     # update nation data
     for nation_id, setup_data in contents_dict.items():
-        
         nation = Nations.get(nation_id)
         
         # add basic data
@@ -145,18 +138,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     # update income in playerdata
     checks.update_income(game_id)
     Nations.update_records()
-
-    # update game_settings
-    active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
-    Nations.save()
-
+        
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     Resolves a normal turn.

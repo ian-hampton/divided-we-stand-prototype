@@ -450,11 +450,9 @@ def game_load(full_game_id):
 
         case GameStatus.NATION_SETUP:
             
-            form_key = "main.stage2_resolution"
             player_data = []
-            
             for nation in Nations:
-                p_id = f'p{nation.id}'
+                p_id = f"p{nation.id}"
                 nameinput_id = f"nameinput_{p_id}"
                 govinput_id = f"govinput_{p_id}"
                 fpinput_id = f"fpinput_{p_id}"
@@ -464,7 +462,7 @@ def game_load(full_game_id):
                 player_data.append(refined_player_data)
             active_player_data = player_data.pop(0)
             
-            return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
 
         case GameStatus.FINISHED:
             # TODO - fix stage 4 rendering, currently broken
@@ -1234,7 +1232,24 @@ def turn_resolution_new(full_game_id):
             game.status = GameStatus.NATION_SETUP
             
         case GameStatus.NATION_SETUP:
-            pass
+            
+            Alliances.load(full_game_id)
+            Nations.load(full_game_id)
+            Regions.load(full_game_id)
+
+            contents_dict = {}
+            for nation in Nations:
+                contents_dict[nation.id] = {}
+                contents_dict[nation.id]["name_choice"] = request.form.get(f"nameinput_p{nation.id}")
+                contents_dict[nation.id]["gov_choice"] = request.form.get(f"govinput_p{nation.id}")
+                contents_dict[nation.id]["fp_choice"] = request.form.get(f"fpinput_p{nation.id}")
+                contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
+
+            site_functions.resolve_stage2_processing(full_game_id, contents_dict)
+            Nations.save()
+            game.set_startdate()
+            game.turn += 1
+            game.status = GameStatus.ACTIVE
 
         case GameStatus.ACTIVE:
             pass
@@ -1249,25 +1264,6 @@ def turn_resolution_new(full_game_id):
 
 # ACTION PROCESSING
 ################################################################################
-
-@main.route('/stage2_resolution', methods=['POST'])
-def stage2_resolution():
-
-    full_game_id = request.form.get('full_game_id')
-    from app.nation import Nations
-    Nations.load(full_game_id)
-
-    contents_dict = {}
-    for nation in Nations:
-        contents_dict[nation.id] = {}
-        contents_dict[nation.id]["name_choice"] = request.form.get(f"nameinput_p{nation.id}")
-        contents_dict[nation.id]["gov_choice"] = request.form.get(f"govinput_p{nation.id}")
-        contents_dict[nation.id]["fp_choice"] = request.form.get(f"fpinput_p{nation.id}")
-        contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
-
-    site_functions.resolve_stage2_processing(full_game_id, contents_dict)
-    
-    return redirect(f'/{full_game_id}')
 
 @main.route('/turn_resolution', methods=['POST'])
 def turn_resolution():
