@@ -41,7 +41,7 @@ class Games(metaclass=GamesMeta):
             "name": form_data_dict["Game Name"],
             "number": len(game_records_dict) + len(cls) + 1,
             "turn": 0,
-            "status": 100,
+            "status": 101,
             "information": {
                 "version": GAME_VERSION,
                 "scenario": str(form_data_dict["Scenario"]),
@@ -258,17 +258,17 @@ class GameStatistics:
         self._data["gameStarted"] = value
 
 class GameStatus(IntEnum):
-    REGION_SELECTION = 100
-    NATION_SETUP = 101
-    ACTIVE = 200
-    ACTIVE_PENDING_EVENT = 201
-    FINISHED = 300
+    REGION_SELECTION = 101
+    NATION_SETUP = 102
+    ACTIVE = 201
+    ACTIVE_PENDING_EVENT = 202
+    FINISHED = 301
 
     def is_setup(self) -> bool:
-        return 100 <= self.value < 200
+        return 100 < self.value < 200
 
     def is_active(self) -> bool:
-        return 200 <= self.value < 300
+        return 200 < self.value < 300
 
     def is_finished(self) -> bool:
         return self is GameStatus.FINISHED
