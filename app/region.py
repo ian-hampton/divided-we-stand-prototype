@@ -314,7 +314,7 @@ class Region:
         target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
         self.unit.clear()
 
-    def calculate_yield(self, nation: Nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
+    def calculate_yield(self, game_id: str, nation: Nation, improvement_income_dict: dict) -> dict:
         """
         Calculates the final yield of this improvement.
 
@@ -324,6 +324,9 @@ class Region:
         Returns:
             dict: Contains all yields from this improvement.
         """
+
+        from app.gamedata import Games
+        game = Games.load(game_id)
 
         improvement_income_dict = copy.deepcopy(improvement_income_dict)  # deepcopy required because of modifiers below
 
@@ -341,7 +344,7 @@ class Region:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
         
         # get pandemic multiplier
-        if "Pandemic" in active_games_dict[self.game_id]["Active Events"]:
+        if "Pandemic" in game.active_events:
             for resource_name in improvement_income_dict:
                 multiplier = improvement_income_dict[resource_name]["Income Multiplier"]
                 penalty = 0
