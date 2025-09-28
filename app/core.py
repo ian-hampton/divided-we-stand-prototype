@@ -42,25 +42,6 @@ def update_turn_num(game_id: str) -> None:
     with open('active_games.json', 'w') as json_file:
         json.dump(active_games_dict, json_file, indent=4)
 
-def get_map_str(game_id: str) -> str:
-    """
-    Takes a map name and returns its filepath
-    """
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    map_name: str = active_games_dict[game_id]["Information"]["Map"]
-
-    map_name_actual = ""
-    for index, char in enumerate(map_name):
-        if char.isalpha():
-            map_name_actual += char.lower()
-        elif char == " ":
-            map_name_actual += "_"
-
-    return map_name_actual.strip("_")
-
 
 # ECONOMIC SUB-FUNCTIONS
 ################################################################################
