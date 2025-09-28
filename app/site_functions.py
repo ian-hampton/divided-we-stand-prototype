@@ -253,6 +253,58 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         Nations.add_leaderboard_bonuses()
 
 def run_post_turn_checks(game_id: str, market_results: dict) -> None:
+
+    def resolve_win():
+
+        game.status = GameStatus.FINISHED
+        game.updated_days_ellapsed()
+
+        with open("game_records.json", 'r') as json_file:
+            game_records_dict = json.load(json_file)
+
+        # create game archive entry
+        game_records_dict[game_id] = {
+            "Name": game.name,
+            "Number": game.number,
+            "Information": {
+                "Version": game.info.version,
+                "Scenario": game.info.scenario,
+                "Map": game.info.map,
+                "Victory Conditions": game.info.victory_conditions,
+                "Fog of War": game.info.fog_of_war,
+                "Turn Duration": game.info.turn_length,
+                "Accelerated Schedule": game.info.accelerated_schedule,
+                "Deadlines on Weekends": game.info.weekend_deadlines
+            },
+            "Statistics": {
+                "Player Count": game.info.player_count,
+                "Region Disputes": game.stats.region_disputes,
+                "Game End Turn": game.turn,
+                "Days Ellapsed": game.stats.days_elapsed,
+                "Game Started": game.stats.date_started,
+                "Game Ended": datetime.today().date().strftime("%m/%d/%Y")
+            },
+            "Player Data": ()
+        }
+        
+        # add player data to game archive entry
+        player_data_dict = {}
+        for nation in Nations:
+            player_data_entry_dict = {
+                "Nation Name": nation.name,
+                "Color": nation.color,
+                "Government": nation.gov,
+                "Foreign Policy": nation.fp,
+                "Score": nation.score,
+                "Victory": 0
+            }
+            if nation.score == 3:
+                player_data_entry_dict["Victory"] = 1
+            player_data_dict[nation.player_id] = player_data_entry_dict
+        game_records_dict[game_id]["Player Data"] = player_data_dict
+
+        with open("game_records.json", 'w') as json_file:
+            json.dump(game_records_dict, json_file, indent=4)
     
     game = Games.load(game_id)
 
@@ -266,7 +318,6 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
 
     if player_has_won:
         resolve_win(game_id)
-        game.status = GameStatus.FINISHED
 
     if game.turn % 4 == 0:
         checks.bonus_phase_heals(game_id)
@@ -283,60 +334,6 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
     game.updated_days_ellapsed()
     events.filter_events(game_id)
     Nations.check_tags()
-
-def resolve_win(game_id: str) -> None:
-    """
-    Updates the game state and game records upon player victory.
-    """
-
-    # load game data
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    with open("game_records.json", 'r') as json_file:
-        game_records_dict = json.load(json_file)
-
-    # update active games
-    active_games_dict[game_id]["Game Active"] = False
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-    
-    # copy game data to game archive
-    game_records_dict[game_id] = copy.deepcopy(active_games_dict[game_id])
-    del game_records_dict[game_id]["Inactive Events"]
-    del game_records_dict[game_id]["Active Events"]
-    del game_records_dict[game_id]["Current Event"]
-    
-    # datetime calculations for game archive entry
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    game_records_dict[game_id]["Statistics"]["Game Ended"] = current_date_string
-    game_records_dict[game_id]["Statistics"]["Game End Turn"] = current_turn_num
-    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-    start_date_obj = datetime.strptime(game_records_dict[game_id]["Statistics"]["Game Started"], "%m/%d/%Y")
-    date_difference = current_date_obj - start_date_obj
-    game_records_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
-    
-    # add player data game archive entry
-    player_data_dict = {}
-    for nation in Nations:
-        player_data_entry_dict = {
-            "Nation Name": nation.name,
-            "Color": nation.color,
-            "Government": nation.gov,
-            "Foreign Policy": nation.fp,
-            "Score": nation.score,
-            "Victory": 0
-        }
-        if nation.score == 3:
-            player_data_entry_dict["Victory"] = 1
-        player_data_dict[nation.player_id] = player_data_entry_dict
-    game_records_dict[game_id]["Player Data"] = player_data_dict
-
-    # save game data
-    with open("game_records.json", 'w') as json_file:
-        json.dump(game_records_dict, json_file, indent=4)
-
 
 # MISC SITE FUNCTIONS
 ################################################################################
