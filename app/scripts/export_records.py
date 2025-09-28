@@ -20,7 +20,7 @@ def create_record_table(attribute_name):
     data = []
 
     header = ["-"]
-    end_turn = int(active_games_dict[GAME_ID]["Statistics"]["Current Turn"])
+    end_turn = int(active_games_dict[GAME_ID]["turn"])
     for i in range(end_turn + 1):
         header.append(i)
     data.append(header)
