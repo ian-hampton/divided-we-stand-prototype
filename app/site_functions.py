@@ -13,6 +13,7 @@ from collections import defaultdict
 from app import core
 from app import palette
 from app.scenario import ScenarioData as SD
+from app.gamedata import Games, GameStatus
 from app.alliance import Alliances
 from app.region import Region, Regions
 from app.nation import Nations
@@ -105,7 +106,6 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
 
-    from app.gamedata import Games
     game = Games.load(game_id)
 
     five_point_research_list = []
@@ -151,17 +151,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
     
-    # get game data
-    SD.load(game_id)
-    Alliances.load(game_id)
-    Regions.load(game_id)
-    Nations.load(game_id)
-    Notifications.initialize(game_id)
-    Truces.load(game_id)
-    Wars.load(game_id)
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
     scenario_actions = importlib.import_module(f"scenarios.{SD.scenario}.actions")
 
     # sort and validate actions
@@ -228,53 +218,13 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     print("Resolving end of turn updates...")
     checks.countdown(game_id)    # TODO: replace this function with something better
     run_end_of_turn_checks(game_id)
-    checks.gain_market_income(game_id, market_results)
 
-    # update victory progress and check if player has won the game
-    player_has_won = False
-    for nation in Nations:
-        nation.update_victory_progress()
-        if nation.score == 3:
-            player_has_won = True
-
-    if player_has_won:
-        # game end procedure
-        resolve_win(game_id)
-    else:
-        # bonus phase
-        if current_turn_num % 4 == 0:
-            checks.bonus_phase_heals(game_id)
-            Notifications.add('All units and defensive improvements have regained 2 health.', 2)
-        if current_turn_num % 8 == 0:
-            events.trigger_event(game_id)
-
-    # update active game records
-    core.update_turn_num(game_id)
-    events.filter_events(game_id)
-    Nations.check_tags()
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-    start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
-    date_difference = current_date_obj - start_date_obj
-    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    # post-turn checks
+    run_post_turn_checks(game_id, market_results)
 
     # update game maps
     maps = GameMaps(game_id)
     maps.update_all()
-
-    # save
-    Alliances.save()
-    Regions.save()
-    Nations.save()
-    Notifications.save()
-    Truces.save()
-    Wars.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
@@ -301,6 +251,38 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         Nations.prune_eliminated_nations()
         Nations.update_records()
         Nations.add_leaderboard_bonuses()
+
+def run_post_turn_checks(game_id: str, market_results: dict) -> None:
+    
+    game = Games.load(game_id)
+
+    checks.gain_market_income(game_id, market_results)
+
+    player_has_won = False
+    for nation in Nations:
+        nation.update_victory_progress()
+        if nation.score == 3:
+            player_has_won = True
+
+    if player_has_won:
+        resolve_win(game_id)
+        game.status = GameStatus.FINISHED
+
+    if game.turn % 4 == 0:
+        checks.bonus_phase_heals(game_id)
+        Notifications.add('All units and defensive improvements have regained 2 health.', 2)
+    
+    if game.turn % 8 == 0 and not player_has_won:
+        events.trigger_event(game_id)
+        game.updated_days_ellapsed()
+        events.filter_events(game_id)
+        Nations.check_tags()
+        return
+    
+    game.turn += 1
+    game.updated_days_ellapsed()
+    events.filter_events(game_id)
+    Nations.check_tags()
 
 def resolve_win(game_id: str) -> None:
     """

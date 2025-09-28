@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app import core
 from app import palette
-from app.gamedata import Games
+from app.gamedata import Games, GameStatus
 from app.region import Region, Regions
 from app.nation import Nation, Nations
 
@@ -23,7 +23,6 @@ class GameMaps:
 
         self.game_id = game_id
         self.map_str = game.get_map_string()
-        self.turn_num = game.turn
         with open(f"maps/{self.map_str}/config.json", 'r') as json_file:
             self.map_config: dict = json.load(json_file)
 
@@ -155,11 +154,11 @@ class GameMaps:
                 self.main_map.paste(unit_img, (x, y))
 
         # save images
-        match self.turn_num:
-            case "Starting Region Selection in Progress" | "Nation Setup in Progress":
-                self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
-            case _:
-                self.main_map.save(f"gamedata/{self.game_id}/images/{self.turn_num}.png")
+        game = Games.load(self.game_id)
+        if game.status.is_setup():
+            self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
+        else:
+            self.main_map.save(f"gamedata/{self.game_id}/images/{game.turn - 1}.png")
         self.resource_map.save(f"gamedata/{self.game_id}/images/resourcemap.png")
         self.control_map.save(f"gamedata/{self.game_id}/images/controlmap.png")
 

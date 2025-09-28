@@ -1189,6 +1189,7 @@ def turn_resolution_new(full_game_id):
             site_functions.resolve_stage1_processing(full_game_id, contents_dict)
             Nations.save()
             Regions.save()
+            
             game.status = GameStatus.NATION_SETUP
             
         case GameStatus.NATION_SETUP:
@@ -1207,80 +1208,61 @@ def turn_resolution_new(full_game_id):
 
             site_functions.resolve_stage2_processing(full_game_id, contents_dict)
             Nations.save()
+            
             game.set_startdate()
             game.turn += 1
             game.status = GameStatus.ACTIVE
 
         case GameStatus.ACTIVE:
-            pass
+            
+            Alliances.load(full_game_id)
+            Regions.load(full_game_id)
+            Nations.load(full_game_id)
+            Notifications.initialize(full_game_id)
+            Truces.load(full_game_id)
+            Wars.load(full_game_id)
+
+            contents_dict = {}
+            for nation in Nations:
+                contents_dict[nation.id] = []
+                public_str = request.form.get(f"public_textarea_p{nation.id}")
+                private_str = request.form.get(f"private_textarea_p{nation.id}")
+                if public_str:
+                    actions_list = public_str.split('\r\n')
+                    contents_dict[nation.id].extend(actions_list)
+                if private_str:
+                    actions_list = private_str.split('\r\n')
+                    contents_dict[nation.id].extend(actions_list)
+
+            site_functions.resolve_turn_processing(full_game_id, contents_dict)
+            Alliances.save()
+            Regions.save()
+            Nations.save()
+            Notifications.save()
+            Truces.save()
+            Wars.save()
 
         case GameStatus.ACTIVE_PENDING_EVENT:
-            pass
+            
+            Alliances.load(full_game_id)
+            Regions.load(full_game_id)
+            Nations.load(full_game_id)
+            Notifications.initialize(full_game_id)
+            Truces.load(full_game_id)
+            Wars.load(full_game_id)
+
+            events.resolve_current_event(full_game_id)
+            site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
+            Alliances.save()
+            Regions.save()
+            Nations.save()
+            Notifications.save()
+            Truces.save()
+            Wars.save()
+            
+            game.turn += 1
+            game.status = GameStatus.ACTIVE
     
     Games.save()
 
-    return redirect("/games")    # remove this when done testing
     return redirect(f"/{full_game_id}")
-
-# ACTION PROCESSING
-################################################################################
-
-@main.route('/turn_resolution', methods=['POST'])
-def turn_resolution():
-
-    full_game_id = request.form.get('full_game_id')
-    from app.nation import Nations
-    Nations.load(full_game_id)
-
-    contents_dict = {}
-    for nation in Nations:
-        contents_dict[nation.id] = []
-        public_str = request.form.get(f"public_textarea_p{nation.id}")
-        private_str = request.form.get(f"private_textarea_p{nation.id}")
-        if public_str:
-            actions_list = public_str.split('\r\n')
-            contents_dict[nation.id].extend(actions_list)
-        if private_str:
-            actions_list = private_str.split('\r\n')
-            contents_dict[nation.id].extend(actions_list)
-
-    site_functions.resolve_turn_processing(full_game_id, contents_dict)
-
-    return redirect(f'/{full_game_id}')
-
-@main.route('/event_resolution', methods=['POST'])
-def event_resolution():
-    """
-    Handles current event and runs end of turn checks & updates when activated.
-    Redirects back to selected game.
-    """
-
-    from app.alliance import Alliances
-    from app.region import Regions
-    from app.nation import Nations
-    from app.notifications import Notifications
-    from app.truce import Truces
-    from app.war import Wars
-    
-    game_id = request.form.get("full_game_id")
-
-    SD.load(game_id)
-    
-    Alliances.load(game_id)
-    Regions.load(game_id)
-    Nations.load(game_id)
-    Notifications.initialize(game_id)
-    Truces.load(game_id)
-    Wars.load(game_id)
-    
-    events.resolve_current_event(game_id)
-    site_functions.run_end_of_turn_checks(game_id, event_phase=True)
-
-    Alliances.save()
-    Regions.save()
-    Nations.save()
-    Notifications.save()
-    Truces.save()
-    Wars.save()
-
-    return redirect(f"/{game_id}")

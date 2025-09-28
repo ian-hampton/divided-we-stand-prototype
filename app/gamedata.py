@@ -215,6 +215,14 @@ class Game:
         self.stats.date_started = current_date_string
         self.stats.days_elapsed = 0
 
+    def updated_days_ellapsed(self) -> None:
+        current_date = datetime.today().date()
+        current_date_string = current_date.strftime("%m/%d/%Y")
+        current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
+        start_date_obj = datetime.strptime(self.stats.date_started, "%m/%d/%Y")
+        date_difference = current_date_obj - start_date_obj
+        self.stats.days_elapsed = date_difference.days
+
 class GameInformation:
     
     def __init__(self, d: dict):

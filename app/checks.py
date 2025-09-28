@@ -556,7 +556,7 @@ def prune_alliances(game_id: str) -> None:
             alliance.end()
             Notifications.add(f"{alliance.name} has dissolved.", 8)
 
-def gain_market_income(game_id: str, market_results: str) -> None:
+def gain_market_income(game_id: str, market_results: dict) -> None:
     for nation_name, market_info in market_results.items():
         nation = Nations.get(nation_name)
         for resource_name, amount in market_info.items():
