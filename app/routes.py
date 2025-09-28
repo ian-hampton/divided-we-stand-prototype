@@ -148,7 +148,6 @@ def create_game():
 
     def create_new_game() -> None:
 
-        from app.scenario import ScenarioData as SD
         from app.nation import Nations
 
         game_id = ''.join(random.choices(string.ascii_letters, k=20))
@@ -516,18 +515,17 @@ def player_route(full_game_id, player_id):
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
     
-    # get game data
     from app.nation import Nations
     from app.alliance import Alliances
     from app.war import Wars
+
+    game = Games.load(full_game_id)
+    
     Nations.load(full_game_id)
     Alliances.load(full_game_id)
     Wars.load(full_game_id)
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} Wars List'
+    
+    page_title = f"{game.name} Wars List"
     
     # read wars
     results = {}
@@ -536,10 +534,10 @@ def wars(full_game_id):
         inner_dict = {}
         
         # get war timeframe
-        season, year = core.date_from_turn_num(war.start)
+        season, year = game.get_season_and_year(war.start)
         start_str = f"{season} {year}"
         if war.end != 0:
-            season, year = core.date_from_turn_num(war.end)
+            season, year = game.get_season_and_year(war.end)
             end_str = f"{season} {year}"
         else:
             end_str = "Present"
@@ -629,8 +627,8 @@ def wars(full_game_id):
             
             case "TBD":
                 # calculate negotiation turn
-                if current_turn_num - war.start < 4:
-                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war.start + 4) - current_turn_num} turns."
+                if game.turn - war.start < 4:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war.start + 4) - game.turn} turns."
                 else:
                     can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
                 inner_dict["canEndStr"] = can_end_str
@@ -666,17 +664,14 @@ def wars(full_game_id):
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
 
-    from app.scenario import ScenarioData as SD
     from app.nation import Nations
 
     SD.load(full_game_id)
+    game = Games.load(full_game_id)
 
     Nations.load(full_game_id)
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f"{game_name} - Technology Trees"
 
+    page_title = f"{game.name} - Technology Trees"
     data = {}
 
     # create technology dictionary
@@ -713,7 +708,8 @@ def technologies(full_game_id):
     temp_technology_data = {}
     for research_name, research_data in SD.technologies:
 
-        if active_games_dict[full_game_id]["Information"]["Fog of War"] == "Disabled" and research_name in ["Surveillance Operations", "Economic Reports", "Military Intelligence"]:
+        # TODO - make an attribute for technologies to handle this
+        if not game.info.fog_of_war and research_name in ["Surveillance Operations", "Economic Reports", "Military Intelligence"]:
             continue
 
         temp_technology_data[research_name] = {
@@ -747,20 +743,17 @@ def technologies(full_game_id):
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
-    from app.scenario import ScenarioData as SD
     from app.nation import Nations
 
     SD.load(full_game_id)
+    game = Games.load(full_game_id)
     
     Nations.load(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Political Agendas'
 
+    page_title = f"{game.name} - Political Agendas"
     data = {}
 
-   # create dictionary
+    # create dictionary
     if SD.scenario == "standard":
         categories = ["Agendas"]
         for category in categories:
@@ -820,14 +813,10 @@ def agendas(full_game_id):
 @main.route('/<full_game_id>/units')
 def units_ref(full_game_id):
 
-    from app.scenario import ScenarioData as SD
-
     SD.load(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(full_game_id)
 
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f"{game_name} - Unit Reference"
+    page_title = f"{game.name} - Unit Reference"
 
     data = {}
     for unit_name, unit_data in SD.units:
@@ -860,25 +849,20 @@ def improvements_ref(full_game_id):
     # blue - civilian
     # grey - everything else (default)
 
-    from app.scenario import ScenarioData as SD
-
     SD.load(full_game_id)
-    
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f"{game_name} - Improvement Reference"
+    game = Games.load(full_game_id)
+
+    page_title = f"{game.name} - Improvement Reference"
 
     data = {}
     for improvement_name, improvement_data in SD.improvements:
 
         # hide event specific improvements
-        if improvement_name == "Colony" and "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
+        if improvement_name == "Colony" and "Faustian Bargain" not in game.active_events:
             continue
 
         # hide fog of war improvements
-        if active_games_dict[full_game_id]["Information"]["Fog of War"] != "Enabled" and improvement_data.is_fog_of_war:
+        if not game.info.fog_of_war and improvement_data.is_fog_of_war:
             continue
 
         data[improvement_name] = {
@@ -905,15 +889,10 @@ def improvements_ref(full_game_id):
 @main.route('/<full_game_id>/resource_market')
 def resource_market(full_game_id):
 
-    from app.scenario import ScenarioData as SD
-
     SD.load(full_game_id)
+    game = Games.load(full_game_id)
 
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Resource Market'
+    page_title = f"{game.name} - Resource Market"
 
     # generate market data
     data = {}
@@ -926,8 +905,7 @@ def resource_market(full_game_id):
     }
     
     # get resource market records
-    rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
-    rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
+    rmdata_recent_transaction_list = game.get_market_data()
     if len(rmdata_recent_transaction_list) != 0:
         records_flag = True
         rmdata_recent_transaction_list = rmdata_recent_transaction_list[::-1]
@@ -953,11 +931,11 @@ def resource_market(full_game_id):
         data[resource_name]["Current Price"] = round(current_price, 2)
     
     # factor in impact of events on current prices
-    if "Market Inflation" in active_games_dict[full_game_id]["Active Events"]:
+    if "Market Inflation" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 2
             data[resource_name]["Current Price"] = round(new_price, 2)
-    elif "Market Recession" in active_games_dict[full_game_id]["Active Events"]:
+    elif "Market Recession" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 0.5
             data[resource_name]["Current Price"] = round(new_price, 2)
@@ -1087,7 +1065,6 @@ def announcements(full_game_id):
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
                 standings_filtered.append([nation_name, entry[1]])
-        print(record_name)
         title = Nations.attribute_to_title(record_name)
         standings_dict[title] = standings_filtered
     
@@ -1117,13 +1094,11 @@ def alliances(full_game_id):
     from app.nation import Nations
 
     SD.load(full_game_id)
+    game = Games.load(full_game_id)
 
     Alliances.load(full_game_id)
     Nations.load(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Name"]
-    page_title = f'{game_name} - Alliance Page'
+    page_title = f"{game.name} - Alliance Page"
 
     alliance_dict_filtered = {}
     

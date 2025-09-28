@@ -1,4 +1,5 @@
 import copy
+import csv
 import json
 import os
 import random
@@ -149,9 +150,12 @@ class Game:
     def inactive_events(self, value: dict) -> None:
         self._data["inactiveEvents"] = value
 
-    def get_season_and_year(self) -> Tuple[str, str]:
+    def get_season_and_year(self, turn=-1) -> Tuple[str, str]:
+
+        if turn == -1:
+            turn = self.turn
         
-        match (self.turn % 4):
+        match (turn % 4):
             case 0:
                 season = 'Winter'
             case 1:
@@ -161,11 +165,11 @@ class Game:
             case 3:
                 season = 'Fall'
 
-        quotient = self.turn // 4
+        quotient = turn // 4
         year = 2021 + quotient
         if season == 'Winter':
             year -= 1
-            
+
         return season, year
 
     def get_map_string(self) -> str:
@@ -177,6 +181,34 @@ class Game:
                 map_name_actual += "_"
         return map_name_actual.strip("_")
     
+    def get_market_data(self, refine=12, include_header=False) -> list:
+        """
+        Reads rmdata.csv and generates a list of all currently relevant transactions.
+        """
+        
+        rmdata_filepath = f"gamedata/{self.id}/rmdata.csv"
+
+        # get list of all transactions
+        rmdata_list = []
+        with open(rmdata_filepath, 'r') as file:
+            reader = csv.reader(file)
+            if not include_header:
+                next(reader,None)
+            for row in reader:
+                if row != []:
+                    rmdata_list.append(row)
+
+        # refine list as needed
+        rmdata_refined_list = []
+        for transaction in rmdata_list:
+            transaction[0] = int(transaction[0])
+            transaction[3] = int(transaction[3])
+            if refine and transaction[0] < self.turn - refine:
+                continue
+            rmdata_refined_list.append(transaction)
+        
+        return rmdata_refined_list
+
     def set_startdate(self) -> None:
         current_date = datetime.today().date()
         current_date_string = current_date.strftime("%m/%d/%Y")
