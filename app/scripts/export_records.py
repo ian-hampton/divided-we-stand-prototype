@@ -7,21 +7,20 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.append(parent_dir)
 os.chdir(parent_dir)
 
+from app.gamedata import Games
 from app.nation import Nations
 
 GAME_ID = "game1"
-Nations.load(GAME_ID)
 
 def create_record_table(attribute_name):
 
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(GAME_ID)
+    Nations.load(GAME_ID)
 
     data = []
 
     header = ["-"]
-    end_turn = int(active_games_dict[GAME_ID]["turn"])
-    for i in range(end_turn + 1):
+    for i in range(game.turn + 1):
         header.append(i)
     data.append(header)
 
