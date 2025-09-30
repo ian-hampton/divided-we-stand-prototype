@@ -1,8 +1,10 @@
+import copy
 import json
 import random
 import importlib
 
 from app import core
+from app.gamedata import Games
 from app.notifications import Notifications
 
 def trigger_event(game_id: str) -> None:
@@ -17,15 +19,13 @@ def trigger_event(game_id: str) -> None:
     """
 
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
     
-    # load event data and events module based on scenario
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     # create list of eligible events
     event_list = list(SD.events.names())
-    already_chosen_events = set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
+    already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
     event_list_filtered = []
     for event_name in event_list:
         event = events.load_event(game_id, event_name, event_data=None)
@@ -42,54 +42,45 @@ def trigger_event(game_id: str) -> None:
     # save event
     match event.state:
         case 2:
-            active_games_dict[game_id]["Current Event"] = event.export()
+            game.current_event = event.export()
         case 1:
-            active_games_dict[game_id]["Active Events"][event_name] = event.export()
+            game.active_events[event_name] = event.export()
         case 0:
-            active_games_dict[game_id]["Inactive Events"].append(event_name)
-
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+            game.inactive_events.append(event_name)
 
 def resolve_current_event(game_id: str) -> None:
     
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
     
-    # load events module based on scenario
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     # load event
-    event_data = active_games_dict[game_id]["Current Event"]
+    event_data = copy.deepcopy(game.current_event)
     event_name = event_data["Name"]
     event = events.load_event(game_id, event_name, event_data)
 
     # resolve current event
     event.resolve()
-    active_games_dict[game_id]["Current Event"] = {}
+    game.current_event = {}
 
     # save event
     match event.state:
         case 1:
-            active_games_dict[game_id]["Active Events"][event_name] = event.export()
+            game.active_events[event_name] = event.export()
         case 0:
-            active_games_dict[game_id]["Inactive Events"].append(event_name)
-
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+            game.inactive_events.append(event_name)
 
 def resolve_active_events(game_id: str, actions_dict=None):
     
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
+    
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     active_events_filtered = {}
 
-    for event_name, event_data in active_games_dict[game_id]["Active Events"].items():
+    for event_name, event_data in game.active_events.items():
 
         event = events.load_event(game_id, event_name, event_data)
 
@@ -102,28 +93,24 @@ def resolve_active_events(game_id: str, actions_dict=None):
             case 1:
                 active_events_filtered[event_name] = event.export()
             case 0:
-                active_games_dict[game_id]["Inactive Events"].append(event_name)
+                game.inactive_events.append(event_name)
 
-    active_games_dict[game_id]["Active Events"] = active_events_filtered
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    game.active_events = active_events_filtered
 
 def filter_events(game_id: str):
     
     from app.scenario import ScenarioData as SD
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     active_events_filtered = {}
 
-    for event_name, event_data in active_games_dict[game_id]["Active Events"].items():
+    for event_name, event_data in game.active_events.items():
 
         event = events.load_event(game_id, event_name, event_data)
 
-        if current_turn_num >= event.expire_turn:
+        if game.turn >= event.expire_turn:
             Notifications.add(f"{event.name} event has ended.", 3)
             if event.name == "Foreign Invasion":
                 event._foreign_invasion_end()
@@ -135,6 +122,4 @@ def filter_events(game_id: str):
         else:
             Notifications.add(f"{event.name} event is active.", 3)
 
-    active_games_dict[game_id]["Active Events"] = active_events_filtered
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    game.active_events = active_events_filtered
