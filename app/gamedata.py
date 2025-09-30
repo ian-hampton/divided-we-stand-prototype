@@ -143,11 +143,11 @@ class Game:
         self._data["activeEvents"] = value
     
     @property
-    def inactive_events(self) -> dict:
+    def inactive_events(self) -> list:
         return self._data["inactiveEvents"]
     
     @inactive_events.setter
-    def inactive_events(self, value: dict) -> None:
+    def inactive_events(self, value: list) -> None:
         self._data["inactiveEvents"] = value
 
     def get_season_and_year(self, turn=-1) -> Tuple[str, str]:
