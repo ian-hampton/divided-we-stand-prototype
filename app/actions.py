@@ -8,6 +8,7 @@ from collections import defaultdict, deque
 from typing import List, Tuple
 
 from app import core
+from app.gamedata import Games
 from app.nation import Nation, Nations
 from app.region import Region
 from app.notifications import Notifications
@@ -1398,8 +1399,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
 
     from app.nation import Nations
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     # initial validation
     minimum_spend: dict[str, int] = defaultdict(int)
@@ -1454,13 +1454,10 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             nation.action_log.append(f"Failed to claim {target_region.region_id} due to a region dispute. {cost:.2f} dollars wasted.")
 
         target_region.data.purchase_cost += 5
-        active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
+        game.stats.region_disputes += 1
 
     # priority queue #2 - validate remaining claim actions together and resolve
     _resolve_all_claims(claim_actions_final)
-
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
 
 def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
@@ -1916,11 +1913,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     
     from app.scenario import ScenarioData as SD
     from app.nation import Nations
-    
-    rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     rmdata_update_list = []
     data = {}
@@ -1933,7 +1926,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     }
 
     # sum up recent transactions
-    rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
+    rmdata_recent_transaction_list = game.get_market_data()
     for transaction in rmdata_recent_transaction_list: 
         exchange = transaction[2]
         count = transaction[3]
@@ -1952,11 +1945,11 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         data[resource_name]["Current Price"] = round(current_price, 2)
     
     # factor in impact of events on current prices
-    if "Market Inflation" in active_games_dict[game_id]["Active Events"]:
+    if "Market Inflation" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 2
             data[resource_name]["Current Price"] = round(new_price, 2)
-    elif "Market Recession" in active_games_dict[game_id]["Active Events"]:
+    elif "Market Recession" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 0.5
             data[resource_name]["Current Price"] = round(new_price, 2)
@@ -1991,7 +1984,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             continue
 
         nation.update_stockpile("Dollars", -1 * cost)
-        new_entry = [current_turn_num, nation.name, 'Bought', action.quantity, action.resource_name]
+        new_entry = [game.turn, nation.name, 'Bought', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
         market_results[nation.name][action.resource_name] = action.quantity
@@ -2015,7 +2008,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             continue
 
         nation.update_stockpile(action.resource_name, -1 * action.quantity)
-        new_entry = [current_turn_num, nation.name, 'Sold', action.quantity, action.resource_name]
+        new_entry = [game.turn, nation.name, 'Sold', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
         dollars_earned = round(action.quantity * price * rate, 2)
@@ -2072,12 +2065,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         Notifications.add(f"{syndicate_nation.name} stole from {nation.name}.", 9)
 
     # update rmdata.csv
-    rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
-    with open(rmdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.rmdata_header)
-        writer.writerows(rmdata_all_transaction_list)
-        writer.writerows(rmdata_update_list)
+    game.update_market_data(rmdata_update_list)
 
     return market_results
 

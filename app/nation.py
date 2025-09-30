@@ -227,8 +227,7 @@ class Nations(metaclass=NationsMeta):
         from app.scenario import ScenarioData as SD
         game = Games.load(cls.game_id)
         
-        rmdata_filepath = f"gamedata/{cls.game_id}/rmdata.csv"
-        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, game.turn, False, False)
+        rmdata_all_transaction_list = game.get_market_data(refine=0)
 
         for nation in cls:
 

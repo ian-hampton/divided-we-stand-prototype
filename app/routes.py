@@ -220,7 +220,7 @@ def create_game():
         rmdata_filepath = f'{files_destination}/rmdata.csv'
         with open(rmdata_filepath, 'w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(core.rmdata_header)
+            writer.writerow(["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"])
 
     # get username list
     username_list = []

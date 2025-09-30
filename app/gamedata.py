@@ -185,12 +185,10 @@ class Game:
         """
         Reads rmdata.csv and generates a list of all currently relevant transactions.
         """
-        
-        rmdata_filepath = f"gamedata/{self.id}/rmdata.csv"
 
         # get list of all transactions
         rmdata_list = []
-        with open(rmdata_filepath, 'r') as file:
+        with open(f"gamedata/{self.id}/rmdata.csv", 'r') as file:
             reader = csv.reader(file)
             if not include_header:
                 next(reader,None)
@@ -222,6 +220,14 @@ class Game:
         start_date_obj = datetime.strptime(self.stats.date_started, "%m/%d/%Y")
         date_difference = current_date_obj - start_date_obj
         self.stats.days_elapsed = date_difference.days
+
+    def update_market_data(self, new_transactions_list) -> None:
+        all_transactions_list = self.get_market_data(refine=0)
+        with open(f"gamedata/{self.id}/rmdata.csv", 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"])
+            writer.writerows(all_transactions_list)
+            writer.writerows(new_transactions_list)
 
 class GameInformation:
     
