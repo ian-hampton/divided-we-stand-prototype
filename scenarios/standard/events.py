@@ -2,6 +2,7 @@ import json
 import random
 
 from app import core
+from app.gamedata import Games
 from app import actions
 from app.alliance import Alliances
 from app.region import Region, Regions
@@ -25,16 +26,10 @@ class Event:
         self.targets: list = event_data.get("Targets", [])
         self.expire_turn: int = event_data.get("Expiration", -1)
 
-        self.current_turn_num = core.get_current_turn_num(self.game_id)
-        with open("active_games.json", 'r') as json_file:
-            self.active_games_dict = json.load(json_file)
-
         # EVENT STATES
         #  2  event is pending input from players
         #  1  event is active and does not require attention from players
         #  0  event is completed and ready to be archived
-    
-        # Do not save any changes to active_games.json, they will be lost!
 
     def export(self) -> dict:
         
@@ -1584,10 +1579,9 @@ def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=F
     
 def _is_first_event(game_id: str) -> bool:
 
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
     
-    already_chosen_events = set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
+    already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
 
     if len(already_chosen_events) != 0:
         return False
@@ -1597,10 +1591,9 @@ def _is_first_event(game_id: str) -> bool:
 def _no_major_events(game_id: str) -> bool:
 
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
     
-    already_chosen_events = set(active_games_dict[game_id]["Inactive Events"]) | set(key for key in active_games_dict[game_id]["Active Events"])
+    already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
    
     for event_name, event_data in SD.events:
         if event_name in already_chosen_events and event_data.type == "Major Event":
