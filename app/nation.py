@@ -325,8 +325,8 @@ class Nations(metaclass=NationsMeta):
     def add_leaderboard_bonuses(cls) -> None:
         
         # leaderboard bonuses only begin starting on turn 5
-        current_turn_num = core.get_current_turn_num(cls.game_id)
-        if current_turn_num < 5:
+        game = Games.load(cls.game_id)
+        if game.turn < 5:
             return
 
         bonus = [1, 0.5, 0.25]
@@ -383,13 +383,13 @@ class Nations(metaclass=NationsMeta):
     @classmethod
     def check_tags(cls) -> None:
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
+        game = Games.load(cls.game_id)
         
         for nation in cls:
             
             tags_filtered = {}
             for tag_name, tag_data in nation.tags.items():
-                if tag_data["Expire Turn"] > current_turn_num:
+                if tag_data["Expire Turn"] > game.turn:
                     tags_filtered[tag_name] = tag_data
             
             nation.tags = tags_filtered

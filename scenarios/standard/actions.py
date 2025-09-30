@@ -279,7 +279,7 @@ def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
 def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
 
     from app.truce import Truces
-    current_turn_num = core.get_current_turn_num(game_id)
+    game = Games.load(game_id)
 
     for action in actions_list:
 
@@ -301,7 +301,7 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Mediator is involved in this truce.")
                     break
             
-                if truce.end_turn <= current_turn_num:
+                if truce.end_turn <= game.turn:
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Truce has already expired.")
                     break
 

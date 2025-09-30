@@ -180,7 +180,7 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def at_peace_for_x(cls, nation_id: str) -> int:
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
+        game = Games.load(cls.game_id)
 
         last_at_war_turn = -1
         for war in cls:
@@ -191,7 +191,7 @@ class Wars(metaclass=WarsMeta):
             elif war.end > last_at_war_turn:
                 last_at_war_turn = war.end
         
-        return current_turn_num - last_at_war_turn
+        return game.turn - last_at_war_turn
 
     @classmethod
     def total_units_lost(cls) -> int:
@@ -614,8 +614,7 @@ class War:
         from app.nation import Nations
         from app.region import Regions
         from app.truce import Truces
-        
-        current_turn_num = core.get_current_turn_num(Wars.game_id)
+        game = Games.load(Wars.game_id)
         
         # resolve war justifications
         truce_length = 4
@@ -652,7 +651,7 @@ class War:
                 Truces.create(signatories, truce_length)
 
         # update war
-        self.end = current_turn_num
+        self.end = game.turn
         self.outcome = outcome
 
         # end occupations
@@ -679,8 +678,7 @@ class War:
         from app.scenario import ScenarioData as SD
         from app.nation import Nations
         from app.region import Region
-        
-        current_turn_num = core.get_current_turn_num(Wars.game_id)
+        game = Games.load(Wars.game_id)
         
         winner_nation = Nations.get(nation_id)
         winner_combatant_data = self.get_combatant(nation_id)
@@ -711,7 +709,7 @@ class War:
 
         if war_justification_data.looser_penalties is not None:
             looser_nation = Nations.get(winner_combatant_data.target_id)
-            war_justification_data.looser_penalties["Expire Turn"] = current_turn_num + war_justification_data.looser_penalty_duration + 1
+            war_justification_data.looser_penalties["Expire Turn"] = game.turn + war_justification_data.looser_penalty_duration + 1
             looser_nation.tags[f"Defeated by {winner_nation} in {self.name}"] = war_justification_data.looser_penalties
 
         if war_justification_data.winner_becomes_independent:

@@ -1114,10 +1114,9 @@ def resolve_trade_actions(game_id: str) -> None:
 
 def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], white_peace_list: list[WhitePeaceAction]) -> None:
     
-    # get game data
     from app.nation import Nations
     from app.war import Wars
-    current_turn_num = core.get_current_turn_num(game_id)
+    game = Games.load(game_id)
 
     # execute surrender actions
     for action in surrender_list:
@@ -1126,7 +1125,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         winning_nation = Nations.get(action.target_nation)
 
        # check if peace is possible
-        if not _peace_action_valid(surrendering_nation, winning_nation, current_turn_num):
+        if not _peace_action_valid(surrendering_nation, winning_nation, game.turn):
             continue
 
         # get war and war outcome
@@ -1151,7 +1150,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         winning_nation = Nations.get(action.target_nation)
 
         # check if peace is possible
-        if not _peace_action_valid(surrendering_nation, winning_nation, current_turn_num):
+        if not _peace_action_valid(surrendering_nation, winning_nation, game.turn):
             continue
 
         # add white peace request to white_peace_dict
@@ -2522,7 +2521,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     
     from app.nation import Nations
-    current_turn_num = core.get_current_turn_num(game_id)
+    game = Games.load(game_id)
 
     # generate movement order for the turn
     players_moving_units: list[str] = []
@@ -2538,7 +2537,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
 
     # print movement order
     if len(players_moving_units) != 0: 
-        print(f"Movement Order - Turn {current_turn_num}")
+        print(f"Movement Order - Turn {game.turn}")
     for i, nation_id in enumerate(players_moving_units):
         nation = Nations.get(nation_id)
         print(f"{i + 1}. {nation.name}")

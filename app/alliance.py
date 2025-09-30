@@ -50,12 +50,12 @@ class Alliances(metaclass=AlliancesMeta):
 
     @classmethod
     def create(cls, alliance_name: str, alliance_type: str, founding_members: list[str]) -> None:
-
-        current_turn_num = core.get_current_turn_num(cls.game_id)
+        
+        game = Games.load(cls.game_id)
 
         new_alliance_data = {
             "allianceType": alliance_type,
-            "turnCreated": current_turn_num,
+            "turnCreated": game.turn,
             "turnEnded": 0,
             "currentMembers": {},
             "foundingMembers": {},
@@ -63,8 +63,8 @@ class Alliances(metaclass=AlliancesMeta):
         }
 
         for nation_name in founding_members:
-            new_alliance_data["currentMembers"][nation_name] = current_turn_num
-            new_alliance_data["foundingMembers"][nation_name] = current_turn_num
+            new_alliance_data["currentMembers"][nation_name] = game.turn
+            new_alliance_data["foundingMembers"][nation_name] = game.turn
 
         cls._data[alliance_name] = new_alliance_data
     
@@ -86,16 +86,16 @@ class Alliances(metaclass=AlliancesMeta):
     @classmethod
     def former_ally_truce(cls, nation_name_1: str, nation_name_2: str) -> bool:
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
+        game = Games.load(cls.game_id)
 
         for alliance in cls:
             
             if nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_1] <= 2:
+                if game.turn - alliance.former_members[nation_name_1] <= 2:
                     return True
                 
             elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_2] <= 2:
+                if game.turn - alliance.former_members[nation_name_2] <= 2:
                     return True
 
         return False
@@ -163,8 +163,9 @@ class Alliance:
 
     @property
     def age(self):
+        game = Games.load(Alliances.game_id)
         if self._turn_ended == 0:
-           return core.get_current_turn_num(Alliances.game_id) - self.turn_created
+           return game.turn - self.turn_created
         else:
            return self.turn_ended - self.turn_created
 
@@ -208,13 +209,15 @@ class Alliance:
         self._data["formerMembers"] = value
 
     def add_member(self, nation_name: str) -> None:
+        game = Games.load(Alliances.game_id)
         if nation_name in self.former_members:
             del self.former_members[nation_name]
-        self.current_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
+        self.current_members[nation_name] = game.turn
 
     def remove_member(self, nation_name: str) -> None:
+        game = Games.load(Alliances.game_id)
         del self.current_members[nation_name]
-        self.former_members[nation_name] = core.get_current_turn_num(Alliances.game_id)
+        self.former_members[nation_name] = game.turn
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         
@@ -263,7 +266,7 @@ class Alliance:
         
         from app.nation import Nations
         from app.truce import Truces
-        current_turn_num = core.get_current_turn_num(Alliances.game_id)
+        game = Games.load(Alliances.game_id)
 
         # add truce periods
         for nation1_name in self.current_members:
@@ -283,4 +286,4 @@ class Alliance:
         for nation_name in names:
             self.remove_member(nation_name)
         self.current_members = {}
-        self.turn_ended = current_turn_num
+        self.turn_ended = game.turn
