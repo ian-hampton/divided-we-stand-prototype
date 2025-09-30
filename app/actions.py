@@ -1430,7 +1430,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     # priority queue #1 - validate and pay for the claim actions of each nation
     claim_actions_validated: dict[str, Region] = {}
     for nation in Nations:
-        validated_region_ids = _validate_all_claims(claim_actions_grouped[nation.id])
+        validated_region_ids = _check_all_claims(game_id, claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
             target_region = Region(region_id)
             if target_region.region_id in claim_actions_validated:
@@ -1456,9 +1456,9 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         game.stats.region_disputes += 1
 
     # priority queue #2 - validate remaining claim actions together and resolve
-    _resolve_all_claims(claim_actions_final)
+    _resolve_all_claims(game_id, claim_actions_final)
 
-def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
+def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
 
     def get_priority(target_region: Region) -> int:
 
@@ -1478,7 +1478,7 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
             if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_claimed.add(adj_region.region_id)
 
-        return _validate_claim_action(nation_id, target_region, adj_owned, adj_claimed)
+        return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
     heap: List[Tuple[int, Region]] = []
     priorities = {}
@@ -1527,7 +1527,7 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
     return resolved
 
-def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
+def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region]) -> None:
 
     def get_priority(target_region: Region) -> int:
 
@@ -1547,7 +1547,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
             if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
                 adj_claimed.add(adj_region.region_id)
 
-        return _validate_claim_action(nation_id, target_region, adj_owned, adj_claimed)
+        return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
     def find_encircled_regions(target_region: Region, nation_id: str) -> set[Region]:
         """
@@ -1666,12 +1666,13 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
                 priorities[adj_region_id] = new_priority
                 heapq.heappush(heap, (new_priority, adj_region))
 
-def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set, adj_claimed: set) -> int:
+def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, adj_owned: set, adj_claimed: set) -> int:
         """
         Verifies if a specific claim action abides by expansion rules by examining the target region.
 
         Params:
-        nation_id (str): Nation ID of the nation that entered the claim action.
+            game_id (str): Game ID string.
+            nation_id (str): Nation ID of the nation that entered the claim action.
             target_region (Region): Region object representing the target region of the claim action.
             adj_owned_count (set): Set of adjacent region_ids to target region owned by the nation.
             adj_claimed_count (set): Set of adjacent region_ids to target region also claimed by the nation.
@@ -1722,14 +1723,13 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
             
             return True
         
+        game = Games.load(game_id)
         adj_owned_count = len(adj_owned)
         adj_claimed_count = len(adj_claimed)
 
         # claim action always valid if the target region borders at least two owned regions
         if adj_owned_count >= 2:
             return 0
-        
-        # TODO - special case - valid with one if first 4 turns only
 
         # special case - valid with one if sea route
         for adj_region_id in target_region.graph.sea_routes:
@@ -1738,6 +1738,10 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
 
         # special case - valid with one if no other adjacent regions
         if adj_owned_count == 1 and len(target_region.graph.map) == 1:
+            return 0
+        
+        # special case - valid with one if first 4 turns only
+        if adj_owned_count == 1 and game.turn <= 4:
             return 0
         
         # special case - valid with one if all other adjacent regions are unclaimable
