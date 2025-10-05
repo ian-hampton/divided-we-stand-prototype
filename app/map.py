@@ -3,7 +3,6 @@ import random
 
 from PIL import Image, ImageDraw, ImageFont
 
-from app import core
 from app import palette
 from app.gamedata import Games, GameStatus
 from app.region import Region, Regions

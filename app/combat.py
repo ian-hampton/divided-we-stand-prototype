@@ -1,8 +1,6 @@
-import ast
 import random
 from typing import Union, Tuple
 
-from app import core
 from app.region import Region
 from app.nation import Nation, Nations
 

@@ -1,7 +1,5 @@
-import json
 from collections import defaultdict
 
-from app import core
 from app.nation import Nation, Nations
 
 # easy

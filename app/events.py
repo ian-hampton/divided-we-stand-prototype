@@ -1,9 +1,7 @@
 import copy
-import json
 import random
 import importlib
 
-from app import core
 from app.gamedata import Games
 from app.notifications import Notifications
 

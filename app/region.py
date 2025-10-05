@@ -5,7 +5,6 @@ from collections import deque
 from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
-from app import core
 from app.gamedata import Games
 from app.nation import Nation
 

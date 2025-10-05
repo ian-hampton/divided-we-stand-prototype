@@ -165,7 +165,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             actions_dict[class_name].append(action)
 
     # prompt for missing war justifications
-    checks.prompt_for_missing_war_justifications(game_id)
+    checks.prompt_for_missing_war_justifications()
     
     # oppertunity to resolve active events
     events.resolve_active_events(game_id, actions_dict)
@@ -216,7 +216,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # end of turn checks
     print("Resolving end of turn updates...")
-    checks.countdown(game_id)    # TODO: replace this function with something better
+    checks.countdown()    # TODO: replace this function with something better
     run_end_of_turn_checks(game_id)
 
     # post-turn checks
@@ -232,14 +232,14 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
 
     if not event_phase:
-        checks.total_occupation_forced_surrender(game_id)
-        checks.war_score_forced_surrender(game_id)
-        checks.prune_alliances(game_id)
+        checks.total_occupation_forced_surrender()
+        checks.war_score_forced_surrender()
+        checks.prune_alliances()
     
     checks.update_income(game_id)
     if not event_phase:
-        checks.gain_income(game_id)
-    checks.resolve_resource_shortages(game_id)
+        checks.gain_income()
+    checks.resolve_resource_shortages()
     checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)
     
@@ -308,7 +308,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
     
     game = Games.load(game_id)
 
-    checks.gain_market_income(game_id, market_results)
+    checks.gain_market_income(market_results)
 
     player_has_won = False
     for nation in Nations:
@@ -320,7 +320,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
         resolve_win(game_id)
 
     if game.turn % 4 == 0:
-        checks.bonus_phase_heals(game_id)
+        checks.bonus_phase_heals()
         Notifications.add('All units and defensive improvements have regained 2 health.', 2)
     
     if game.turn % 8 == 0 and not player_has_won:

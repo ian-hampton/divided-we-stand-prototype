@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 from collections.abc import Generator
 
-from app import core
 from app.gamedata import Games
 
 class NationsMeta(type):

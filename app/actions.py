@@ -2373,7 +2373,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         
         # log launch and find best missile defense
         nation.action_log.append(f"Launched {action.missile_type} at {action.target_region}. See combat log for details.")
-        defender_name = core.locate_best_missile_defense(game_id, target_nation, action.missile_type, action.target_region)
+        defender_name = core.locate_best_missile_defense(target_nation, action.missile_type, action.target_region)
         
         # engage missile defense
         missile_intercepted = False

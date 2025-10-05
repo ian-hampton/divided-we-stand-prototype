@@ -1,8 +1,5 @@
 import copy
-import csv
-import json
 import random
-import datetime
 from collections import defaultdict
 
 from app import core
@@ -277,8 +274,8 @@ def update_income(game_id: str) -> None:
 
     for nation in Nations:
 
-        yield_dict[nation.name] = core.create_player_yield_dict(game_id, nation)
-        upkeep_dict[nation.name] = core.create_player_upkeep_dict(game_id, nation)
+        yield_dict[nation.name] = core.create_player_yield_dict(nation)
+        upkeep_dict[nation.name] = core.create_player_upkeep_dict(nation)
         text_dict[nation.name] = {}
         
         for resource_name in nation._resources:
@@ -298,7 +295,7 @@ def update_income(game_id: str) -> None:
     calculate_net_income()
     refine_income_strings()
 
-def gain_income(game_id: str) -> None:
+def gain_income() -> None:
 
     for nation in Nations:
 
@@ -308,7 +305,15 @@ def gain_income(game_id: str) -> None:
             amount = float(nation.get_income(resource_name))
             nation.update_stockpile(resource_name, amount)
 
-def countdown(game_id: str) -> None:
+def gain_market_income(market_results: dict) -> None:
+    for nation_name, market_info in market_results.items():
+        nation = Nations.get(nation_name)
+        for resource_name, amount in market_info.items():
+            if resource_name == "Thieves":
+                continue
+            nation.update_stockpile(resource_name, amount)
+
+def countdown() -> None:
     """
     Resolves improvements/units that have countdowns associated with them.
     """
@@ -320,7 +325,7 @@ def countdown(game_id: str) -> None:
         if region.data.fallout != 0:
             region.data.fallout -= 1
 
-def resolve_resource_shortages(game_id: str) -> None:
+def resolve_resource_shortages() -> None:
     """
     Resolves resource shortages by pruning units and improvements that cost upkeep.
     """
@@ -330,16 +335,16 @@ def resolve_resource_shortages(game_id: str) -> None:
         if nation.name == "Foreign Invasion":
             continue
 
-        upkeep_dict = core.create_player_upkeep_dict(game_id, nation)
+        upkeep_dict = core.create_player_upkeep_dict(nation)
 
-        _resolve_shortage("Oil", upkeep_dict, nation, game_id)
-        _resolve_shortage("Coal", upkeep_dict, nation, game_id)
-        _resolve_shortage("Energy", upkeep_dict, nation, game_id)
-        _resolve_shortage("Uranium", upkeep_dict, nation, game_id)
-        _resolve_shortage("Food", upkeep_dict, nation, game_id)
-        _resolve_shortage("Dollars", upkeep_dict, nation, game_id)
+        _resolve_shortage("Oil", upkeep_dict, nation)
+        _resolve_shortage("Coal", upkeep_dict, nation)
+        _resolve_shortage("Energy", upkeep_dict, nation)
+        _resolve_shortage("Uranium", upkeep_dict, nation)
+        _resolve_shortage("Food", upkeep_dict, nation)
+        _resolve_shortage("Dollars", upkeep_dict, nation)
 
-def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, game_id: str) -> None:
+def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation) -> None:
     """
     Helper function for resolve_resource_shortages().
     """
@@ -368,10 +373,10 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation, gam
         
         # remove consumer
         if consumer_type == "improvement":
-            region_id = core.search_and_destroy(game_id, nation.id, consumer_name)
+            region_id = core.search_and_destroy(nation.id, consumer_name)
             nation.improvement_counts[consumer_name] -= 1
         else:
-            region_id, victim = core.search_and_destroy_unit(game_id, nation.id, consumer_name)
+            region_id, victim = core.search_and_destroy_unit(nation.id, consumer_name)
             nation.unit_counts[consumer_name] -= 1
         Notifications.add(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 7)
         
@@ -407,13 +412,13 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
         
         while float(nation.get_used_mc()) > float(nation.get_max_mc()):
             
-            region_id, victim = core.search_and_destroy_unit(game_id, nation.id, 'ANY')
+            region_id, victim = core.search_and_destroy_unit(nation.id, 'ANY')
             nation.update_used_mc(-1)
             nation.unit_counts[victim] -= 1
 
             Notifications.add(f"{nation.name} lost {victim} {region_id} due to insufficient military capacity.", 6)
 
-def bonus_phase_heals(game_id: str) -> None:
+def bonus_phase_heals() -> None:
     """
     Heals all units and defensive improvements by 2 health.
     """
@@ -457,7 +462,7 @@ def bonus_phase_heals(game_id: str) -> None:
                 if nation_unit.id != "0" and "Peacetime Recovery" in nation_unit.completed_research and Wars.is_at_peace(nation_unit.id):
                     region.unit.heal(100)
 
-def prompt_for_missing_war_justifications(game_id: str) -> None:
+def prompt_for_missing_war_justifications() -> None:
     """
     Prompts in terminal when a war justification has not been entered for an ongoing war.
     """
@@ -466,7 +471,7 @@ def prompt_for_missing_war_justifications(game_id: str) -> None:
         if war.outcome == "TBD":
             war.add_missing_justifications()
 
-def total_occupation_forced_surrender(game_id: str) -> None:
+def total_occupation_forced_surrender() -> None:
     """
     Forces a player to surrender if they are totally occupied.
 
@@ -510,7 +515,7 @@ def total_occupation_forced_surrender(game_id: str) -> None:
 
                     Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 5)
 
-def war_score_forced_surrender(game_id: str) -> None:
+def war_score_forced_surrender() -> None:
     """
     Forces a side to surrender if critical war score difference reached.
 
@@ -541,7 +546,7 @@ def war_score_forced_surrender(game_id: str) -> None:
                 Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 5)
                 Notifications.add(f"{war.name} has ended due to war score.", 5)
 
-def prune_alliances(game_id: str) -> None:
+def prune_alliances() -> None:
     """
     Ends all alliances that have less than 2 members.
 
@@ -555,11 +560,3 @@ def prune_alliances(game_id: str) -> None:
         if alliance.is_active and len(alliance.current_members) < 2:
             alliance.end()
             Notifications.add(f"{alliance.name} has dissolved.", 8)
-
-def gain_market_income(game_id: str, market_results: dict) -> None:
-    for nation_name, market_info in market_results.items():
-        nation = Nations.get(nation_name)
-        for resource_name, amount in market_info.items():
-            if resource_name == "Thieves":
-                continue
-            nation.update_stockpile(resource_name, amount)

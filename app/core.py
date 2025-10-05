@@ -1,18 +1,13 @@
-import ast
-import csv
-import json
 import random
 import copy
-from collections import defaultdict
-from typing import Union, Tuple, List
 
 from app.nation import Nation, Nations
 
 
-# ECONOMIC SUB-FUNCTIONS
+# ECONOMIC HELPER FUNCTIONS
 ################################################################################
 
-def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
+def create_player_yield_dict(nation: Nation) -> dict:
     """
     Given a player, this function creates the initial dictionary with the yields of all improvements.
 
@@ -67,7 +62,7 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
 
     return yield_dict
 
-def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
+def create_player_upkeep_dict(nation: Nation) -> dict:
     """
     Given a player, this function creates the initial dictionary with the upkeep of all improvements and units.
 
@@ -161,10 +156,10 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
     return sum
 
 
-# WAR SUB-FUNCTIONS
+# WAR HELPRR FUNCTIONS
 ################################################################################
 
-def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
+def locate_best_missile_defense(target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
     """
     Identifies best missile defense to counter incoming missile. Returns None if not found.
     """
@@ -205,7 +200,7 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
 
     return defender_name
 
-def withdraw_units(game_id: str):
+def withdraw_units():
 
     from app.region import Region, Regions
 
@@ -226,10 +221,10 @@ def withdraw_units(game_id: str):
                 region.unit.clear()
 
 
-# MISC SUB-FUNCTIONS
+# MISC HELPER FUNCTIONS
 ################################################################################
 
-def search_and_destroy(game_id: str, player_id: str, target_improvement: str) -> str:
+def search_and_destroy(player_id: str, target_improvement: str) -> str:
     """
     Searches for a specific improvement and removes it.
     """
@@ -250,7 +245,7 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     
     return chosen_region_id
 
-def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str) -> tuple[str, str]:
+def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str, str]:
     """
     Randomly destroys one unit of a given type belonging to a specific player.
     """

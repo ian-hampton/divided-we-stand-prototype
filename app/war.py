@@ -660,7 +660,7 @@ class War:
                 region.data.occupier_id = "0"
 
         # withdraw units
-        core.withdraw_units(Wars.game_id)
+        core.withdraw_units()
 
         # resolve foreign interference tag if applicable (event)
         attacker_id, defender_id = self.get_main_combatant_ids()
