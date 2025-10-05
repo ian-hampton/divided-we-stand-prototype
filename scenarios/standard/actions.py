@@ -196,7 +196,7 @@ class OutsourceTechnologyAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.research_name = actions._check_research(self.game_id, self.research_name)
+        self.research_name = actions._check_research(self.research_name)
         if self.research_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad research name.""")
             return False

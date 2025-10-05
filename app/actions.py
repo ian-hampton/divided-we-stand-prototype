@@ -1,8 +1,5 @@
-import copy
-import csv
 import importlib
 import heapq
-import json
 import random
 from collections import defaultdict, deque
 from typing import List, Tuple
@@ -37,7 +34,7 @@ class AllianceCreateAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.alliance_type = _check_alliance_type(self.game_id, self.alliance_type)
+        self.alliance_type = _check_alliance_type(self.alliance_type)
         if self.alliance_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance type.""")
             return False
@@ -64,7 +61,7 @@ class AllianceJoinAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        self.alliance_name = _check_alliance_name(self.alliance_name)
         if self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
@@ -95,12 +92,12 @@ class AllianceKickAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        self.alliance_name = _check_alliance_name(self.alliance_name)
         if self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
@@ -127,7 +124,7 @@ class AllianceLeaveAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        self.alliance_name = _check_alliance_name(self.alliance_name)
         if self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
@@ -181,7 +178,7 @@ class CrimeSyndicateAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
@@ -224,7 +221,7 @@ class ImprovementBuildAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.improvement_name = _check_improvement_name(self.game_id, self.improvement_name)
+        self.improvement_name = _check_improvement_name(self.improvement_name)
         if self.improvement_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad improvement name.""")
             return False
@@ -355,7 +352,7 @@ class MissileMakeAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad quantity.""")
             return False
         
-        self.missile_type = _check_missile(self.game_id, self.missile_type)
+        self.missile_type = _check_missile(self.missile_type)
         if self.missile_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
@@ -383,7 +380,7 @@ class MissileLaunchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.missile_type = _check_missile(self.game_id, self.missile_type)
+        self.missile_type = _check_missile(self.missile_type)
         if self.missile_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
@@ -442,7 +439,7 @@ class ResearchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.research_name = _check_research(self.game_id, self.research_name)
+        self.research_name = _check_research(self.research_name)
         if self.research_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad research name.""")
             return False
@@ -469,7 +466,7 @@ class SurrenderAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
@@ -497,7 +494,7 @@ class UnitDeployAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.unit_name = _check_unit(self.game_id, self.unit_name)
+        self.unit_name = _check_unit(self.unit_name)
         if self.unit_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad unit name.""")
             return False
@@ -606,12 +603,12 @@ class WarAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
         
-        self.war_justification = _check_war_justification(self.game_id, self.war_justification)
+        self.war_justification = _check_war_justification(self.war_justification)
         if self.war_justification is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war justification.""")
             return False
@@ -643,7 +640,7 @@ class WarJoinAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.war_name = _check_war_name(self.game_id, self.war_name)
+        self.war_name = _check_war_name(self.war_name)
         if self.war_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war name.""")
             return False
@@ -652,7 +649,7 @@ class WarJoinAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Expecting "Attacker" or "Defender" for war side.""")
             return False
         
-        self.war_justification = _check_war_justification(self.game_id, self.war_justification)
+        self.war_justification = _check_war_justification(self.war_justification)
         if self.war_justification is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war justification.""")
             return False
@@ -679,7 +676,7 @@ class WhitePeaceAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
@@ -773,7 +770,7 @@ def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> an
 
     return scenario_actions._create_action(game_id, nation_id, action_str)
 
-def _check_alliance_type(game_id: str, input_str: str) -> str | None:
+def _check_alliance_type(input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
 
@@ -783,7 +780,7 @@ def _check_alliance_type(game_id: str, input_str: str) -> str | None:
     
     return None
 
-def _check_alliance_name(game_id: str, input_str: str) -> str | None:
+def _check_alliance_name(input_str: str) -> str | None:
     
     from app.alliance import Alliances
 
@@ -804,7 +801,7 @@ def _check_region_id(region_id: str) -> str | None:
     
     return None
 
-def _check_nation_name(game_id: str, input_str: str) -> str | None:
+def _check_nation_name(input_str: str) -> str | None:
 
     from app.nation import Nations
 
@@ -814,7 +811,7 @@ def _check_nation_name(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_improvement_name(game_id: str, input_str: str) -> str | None:
+def _check_improvement_name(input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
 
@@ -908,7 +905,7 @@ def _check_resource(resource_name: str) -> str | None:
     resource_name = resource_name.lower()
     return resource_errors.get(resource_name)
 
-def _check_missile(game_id: str, input_str: str) -> str | None:
+def _check_missile(input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
 
@@ -927,7 +924,7 @@ def _check_missile(game_id: str, input_str: str) -> str | None:
         
     return missile_errors.get(input_str.lower())
 
-def _check_research(game_id: str, input_str: str) -> str | None:
+def _check_research(input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
     
@@ -939,7 +936,7 @@ def _check_research(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_unit(game_id: str, input_str: str) -> str | None:
+def _check_unit(input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
     
@@ -950,7 +947,7 @@ def _check_unit(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_war_name(game_id: str, input_str: str) -> str | None:
+def _check_war_name(input_str: str) -> str | None:
 
     from app.war import Wars
 
@@ -960,7 +957,7 @@ def _check_war_name(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_war_justification(game_id: str, input_str: str) -> str | None:
+def _check_war_justification(input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
     
