@@ -1643,6 +1643,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         else:
             # claim region
             target_region.data.owner_id = nation_id
+            nation.stats.regions_owned += 1
             if target_region.improvement.name is not None:
                 nation.improvement_counts[target_region.improvement.name] += 1
             nation.action_log.append(f"Claimed region {target_region.region_id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
@@ -1683,12 +1684,17 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
 
         def bfs_no_access():
             """
-            Returns True if the target region meets the criteria to be claimed with only one adjacent owned region (for this specific player).
+            Returns True if the target region is elligable to be claimed with only one adjacent owned region (for this specific player).
 
-            If we find 2+ regions owned by the player that are adjacent to nearby unclaimed regions, we can assume that the player has a route to claim a second adjacent region to the target.
-            If that is the case, the player could claim the target region while abiding by the conventional two owned adjacent regions restriction.
-            Therefore, the player should not be allowed to claim the target region now.
+            If we can find 2+ regions owned by the player that are adjacent to nearby unclaimed regions, we can assume that the player has a route to claim a second adjacent region to the target region.
+            If that is the case, the player could claim the target region while abiding by all of the usual expansion rules.
+            Therefore, this check fails and the player is not allowed to claim the target region now.
             """
+
+            # always fail if player owns less than 3 regions
+            nation = Nations.get(nation_id)
+            if nation.stats.regions_owned < 3:
+                return False
             
             friendly_regions_found = 0
             visited = set([target_region.region_id])
@@ -1745,9 +1751,8 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
             return 0
         
         # special case - valid with one if all other adjacent regions are unclaimable
-        if adj_owned_count == 1 and adj_claimed_count == 0:
-            if bfs_no_access():
-                return 0
+        if adj_owned_count == 1 and adj_claimed_count == 0 and bfs_no_access():
+            return 0
 
         if adj_owned_count < 2 and adj_claimed_count == 0:
             return 99999
