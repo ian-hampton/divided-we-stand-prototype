@@ -3,6 +3,7 @@ import json
 import importlib
 
 from app import core
+from app.gamedata import Games
 from app.region import Region
 from app.nation import Nations
 from app.notifications import Notifications
@@ -195,7 +196,7 @@ class OutsourceTechnologyAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.research_name = actions._check_research(self.game_id, self.research_name)
+        self.research_name = actions._check_research(self.research_name)
         if self.research_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad research name.""")
             return False
@@ -278,7 +279,7 @@ def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
 def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
 
     from app.truce import Truces
-    current_turn_num = core.get_current_turn_num(game_id)
+    game = Games.load(game_id)
 
     for action in actions_list:
 
@@ -300,7 +301,7 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Mediator is involved in this truce.")
                     break
             
-                if truce.end_turn <= current_turn_num:
+                if truce.end_turn <= game.turn:
                     nation.action_log.append(f"Failed to Host Peace Talks for Truce #{action.truce_id}. Truce has already expired.")
                     break
 
@@ -317,22 +318,21 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    
+
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
-    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+    if "Pandemic" not in game.active_events:
         return
 
-    event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
+    event_data = game.active_events["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
 
@@ -344,29 +344,26 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
         event.cure_current += action.amount
         nation.action_log.append(f"Used Cure Research to spend {action.amount} technology in exchange for {action.amount} cure progress.")
     
-    active_games_dict[game_id]["Active Events"]["Pandemic"] = event.export()
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    game.active_events["Pandemic"] = event.export()
 
 def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
 
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
-    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+    if "Pandemic" not in game.active_events:
         return
 
-    event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
+    event_data = game.active_events["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
 
@@ -378,20 +375,17 @@ def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundrais
         event.cure_current += action.amount // 3
         nation.action_log.append(f"Used Fundraise to spend {action.amount} dollars in exchange for {action.amount // 3} cure progress.")
     
-    active_games_dict[game_id]["Active Events"]["Pandemic"] = event.export()
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    game.active_events["Pandemic"] = event.export()
 
 def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegionAction]) -> None:
 
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
         
@@ -405,14 +399,13 @@ def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegio
 
 def resolve_quarantine_create_actions(game_id: str, actions_list: list[QuarantineCreateAction]) -> None:
 
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
 
@@ -428,14 +421,13 @@ def resolve_quarantine_create_actions(game_id: str, actions_list: list[Quarantin
 
 def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEndAction]) -> None:
 
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
 
@@ -451,22 +443,21 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
 def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
 
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
+    
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
-    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+    if "Pandemic" not in game.active_events:
         return
 
-    event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
+    event_data = game.active_events["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
 
@@ -478,29 +469,26 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
         event.closed_borders.remove(nation.id)
         nation.action_log.append("Spent 10 political power to Open Borders.")
     
-    active_games_dict[game_id]["Active Events"]["Pandemic"] = event.export()
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    game.active_events["Pandemic"] = event.export()
 
 def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
 
     from app.scenario import ScenarioData as SD
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
+    
+    game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
-    if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+    if "Pandemic" not in game.active_events:
         return
 
-    event_data = active_games_dict[game_id]["Active Events"]["Pandemic"]
+    event_data = game.active_events["Pandemic"]
     event = events.load_event(game_id, "Pandemic", event_data, temp=True)
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
 
-        if "Pandemic" not in active_games_dict[game_id]["Active Events"]:
+        if "Pandemic" not in game.active_events:
             nation.action_log.append(f"{action.action_str} failed. Corresponding event is not active.")
             continue
 
@@ -512,9 +500,7 @@ def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseA
         event.closed_borders.append(nation.id)
         nation.action_log.append("Spent 10 political power to Close Borders.")
     
-    active_games_dict[game_id]["Active Events"]["Pandemic"] = event.export()
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    game.active_events["Pandemic"] = event.export()
 
 def resolve_outsource_technology_actions(game_id: str, actions_list: list[OutsourceTechnologyAction]) -> None:
 

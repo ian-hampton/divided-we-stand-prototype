@@ -1,71 +1,13 @@
-import ast
-import csv
-import json
 import random
 import copy
-from collections import defaultdict
-from typing import Union, Tuple, List
 
 from app.nation import Nation, Nations
 
 
-# GAMEDATA HELPER FUNCTIONS
+# ECONOMIC HELPER FUNCTIONS
 ################################################################################
 
-def get_current_turn_num(game_id: str) -> str | int:
-    """
-    Gets current turn number given game id.
-    """
-    
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    try:
-        current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
-    except:
-        current_turn_num = active_games_dict[game_id]["Statistics"]["Current Turn"]
-
-    return current_turn_num
-
-def update_turn_num(game_id: str) -> None:
-    """
-    Updates the turn number given game id.
-    """
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    current_turn_num = int(active_games_dict[game_id]["Statistics"]["Current Turn"])
-    current_turn_num += 1
-    active_games_dict[game_id]["Statistics"]["Current Turn"] = str(current_turn_num)
-
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
-def get_map_str(game_id: str) -> str:
-    """
-    Takes a map name and returns its filepath
-    """
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-
-    map_name: str = active_games_dict[game_id]["Information"]["Map"]
-
-    map_name_actual = ""
-    for index, char in enumerate(map_name):
-        if char.isalpha():
-            map_name_actual += char.lower()
-        elif char == " ":
-            map_name_actual += "_"
-
-    return map_name_actual.strip("_")
-
-
-# ECONOMIC SUB-FUNCTIONS
-################################################################################
-
-def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
+def create_player_yield_dict(nation: Nation) -> dict:
     """
     Given a player, this function creates the initial dictionary with the yields of all improvements.
 
@@ -120,7 +62,7 @@ def create_player_yield_dict(game_id: str, nation: Nation) -> dict:
 
     return yield_dict
 
-def create_player_upkeep_dict(game_id: str, nation: Nation) -> dict:
+def create_player_upkeep_dict(nation: Nation) -> dict:
     """
     Given a player, this function creates the initial dictionary with the upkeep of all improvements and units.
 
@@ -214,10 +156,10 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
     return sum
 
 
-# WAR SUB-FUNCTIONS
+# WAR HELPRR FUNCTIONS
 ################################################################################
 
-def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
+def locate_best_missile_defense(target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
     """
     Identifies best missile defense to counter incoming missile. Returns None if not found.
     """
@@ -258,7 +200,7 @@ def locate_best_missile_defense(game_id: str, target_nation: Nation, missile_typ
 
     return defender_name
 
-def withdraw_units(game_id: str):
+def withdraw_units():
 
     from app.region import Region, Regions
 
@@ -279,87 +221,10 @@ def withdraw_units(game_id: str):
                 region.unit.clear()
 
 
-# MISC SUB-FUNCTIONS
+# MISC HELPER FUNCTIONS
 ################################################################################
 
-def read_file(filepath, skip_value):
-
-    '''
-    Reads a csv file given a filepath and returns it as a list of lists.
-
-    Parameters:
-    - filepath: The full filepath to the desired file relative to core.py.
-    - skip_value: A positive integer value representing how many of the first rows to skip. Usually 0-2.
-    '''
-    output = []
-    with open(filepath, 'r') as file:
-        reader = csv.reader(file)
-        for i in range(0, skip_value):
-            next(reader, None)
-        for row in reader:
-            if row != []:
-                output.append(row)
-    return output
-
-def read_rmdata(rmdata_filepath, current_turn_num, refine, keep_header):
-    '''
-    Reads rmdata.csv and generates a list of all currently relevant transactions.
-
-    Parameters:
-    - rmdata_filepath: The full relative filepath to rmdata.csv.
-    - current_turn_num: An integer number representing the game's current turn number.
-    - refine: A count representing how many turns back you want of resource market data. Define as a positive integer or False if you want all records.
-    - keep_header: A boolean value. Enter as True if you don't care about the header rows being in your data.
-    '''
-
-    #Get list of all transactions
-    rmdata_list = []
-    if keep_header == True:
-        with open(rmdata_filepath, 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                if row != []:
-                    rmdata_list.append(row)
-    if keep_header == False:
-        with open(rmdata_filepath, 'r') as file:
-                reader = csv.reader(file)
-                next(reader,None)
-                for row in reader:
-                    if row != []:
-                        rmdata_list.append(row)
-    #Refine list as needed
-    rmdata_refined_list = []
-    if refine:
-        limit = current_turn_num - refine
-        for transaction in rmdata_list:
-            transaction[0] = int(transaction[0])
-            transaction[3] = int(transaction[3])
-            if transaction[0] >= limit:
-                rmdata_refined_list.append(transaction)
-    elif refine == False:
-        for transaction in rmdata_list:
-            transaction[0] = int(transaction[0])
-            transaction[3] = int(transaction[3])
-            rmdata_refined_list.append(transaction)
-    return rmdata_refined_list
-
-def date_from_turn_num(current_turn_num):
-    remainder = current_turn_num % 4
-    if remainder == 0:
-        season = 'Winter'
-    elif remainder == 1:
-        season = 'Spring'
-    elif remainder == 2:
-        season = 'Summer'
-    elif remainder == 3:
-        season = 'Fall'
-    quotient = current_turn_num // 4
-    year = 2021 + quotient
-    if season == 'Winter':
-        year -= 1
-    return season, year
-
-def search_and_destroy(game_id: str, player_id: str, target_improvement: str) -> str:
+def search_and_destroy(player_id: str, target_improvement: str) -> str:
     """
     Searches for a specific improvement and removes it.
     """
@@ -380,7 +245,7 @@ def search_and_destroy(game_id: str, player_id: str, target_improvement: str) ->
     
     return chosen_region_id
 
-def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str) -> tuple[str, str]:
+def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str, str]:
     """
     Randomly destroys one unit of a given type belonging to a specific player.
     """
@@ -404,9 +269,3 @@ def search_and_destroy_unit(game_id: str, player_id: str, desired_unit_name: str
     target_region.unit.clear()
 
     return chosen_region_id, victim
-
-
-# CSV File Headers
-################################################################################
-
-rmdata_header = ["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"]

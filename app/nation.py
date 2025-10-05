@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 from collections.abc import Generator
 
-from app import core
+from app.gamedata import Games
 
 class NationsMeta(type):
 
@@ -72,6 +72,7 @@ class Nations(metaclass=NationsMeta):
             "tradeFee": "1:2",
             "standardMissileStockpile": 0,
             "nuclearMissileStockpile": 0,
+            "stealActionRecord": [0, ""],
             "score": 0,
             "chosenVictorySet": {},
             "victorySets": cls._generate_vc_sets(2),
@@ -223,10 +224,9 @@ class Nations(metaclass=NationsMeta):
     def update_records(cls) -> None:
 
         from app.scenario import ScenarioData as SD
+        game = Games.load(cls.game_id)
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
-        rmdata_filepath = f"gamedata/{cls.game_id}/rmdata.csv"
-        rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
+        rmdata_all_transaction_list = game.get_market_data(refine=0)
 
         for nation in cls:
 
@@ -324,8 +324,8 @@ class Nations(metaclass=NationsMeta):
     def add_leaderboard_bonuses(cls) -> None:
         
         # leaderboard bonuses only begin starting on turn 5
-        current_turn_num = core.get_current_turn_num(cls.game_id)
-        if current_turn_num < 5:
+        game = Games.load(cls.game_id)
+        if game.turn < 5:
             return
 
         bonus = [1, 0.5, 0.25]
@@ -366,7 +366,8 @@ class Nations(metaclass=NationsMeta):
                     p1.append(f"&Tab;+{bonus[i]:.2f} {string}")
                     nation.income_details = p1 + p2
 
-    def attribute_to_title(self, attribute_name: str) -> str:
+    @classmethod
+    def attribute_to_title(cls, attribute_name: str) -> str:
 
         attribute_str_to_name_str = {
             "military_size": "Largest Military",
@@ -381,13 +382,13 @@ class Nations(metaclass=NationsMeta):
     @classmethod
     def check_tags(cls) -> None:
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
+        game = Games.load(cls.game_id)
         
         for nation in cls:
             
             tags_filtered = {}
             for tag_name, tag_data in nation.tags.items():
-                if tag_data["Expire Turn"] > current_turn_num:
+                if tag_data["Expire Turn"] > game.turn:
                     tags_filtered[tag_name] = tag_data
             
             nation.tags = tags_filtered
@@ -513,6 +514,10 @@ class Nation:
         return self._data["unitCounts"]
 
     @property
+    def steal_action_record(self) -> list:
+        return self._data["stealActionRecord"]
+
+    @property
     def tags(self) -> dict:
         return self._data["tags"]
 
@@ -601,6 +606,10 @@ class Nation:
     @unit_counts.setter
     def unit_counts(self, value: dict) -> None:
         self._data["unitCounts"] = value
+
+    @steal_action_record.setter
+    def stealActionRecord(self, value: list) -> None:
+        self._data["stealActionRecord"] = value
 
     @tags.setter
     def tags(self, value: dict) -> None:

@@ -7,10 +7,10 @@
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 3,
@@ -55,10 +55,10 @@
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 5,
@@ -119,10 +119,10 @@
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 7,
@@ -199,10 +199,10 @@
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 8,
@@ -287,10 +287,10 @@
             "Scenario": "Standard",
             "Map": "Africa 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 6,
@@ -359,10 +359,10 @@
             "Scenario": "Standard",
             "Map": "Southeast Asia 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 4,
@@ -415,10 +415,10 @@
             "Scenario": "Standard",
             "Map": "Europe 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 7,
@@ -495,10 +495,10 @@
             "Scenario": "Standard",
             "Map": "United States 1.1",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Enabled",
+            "Fog of War": true,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 7,
@@ -575,10 +575,10 @@
             "Scenario": "Standard",
             "Map": "China 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 9,
@@ -671,10 +671,10 @@
             "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
-            "Fog of War": "Disabled",
-            "Accelerated Schedule": "Enabled",
+            "Fog of War": false,
+            "Accelerated Schedule": true,
             "Turn Duration": "Live Game",
-            "Deadlines on Weekends": "Enabled"
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": "4",
@@ -727,10 +727,10 @@
             "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Disabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": false
         },
         "Statistics": {
             "Player Count": 8,
@@ -813,9 +813,9 @@
         "Information": {
             "Victory Conditions": "Randomized Sets",
             "Map": "China 2.0",
-            "Accelerated Schedule": "Enabled",
+            "Accelerated Schedule": true,
             "Turn Duration": "48 hours",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Version": "Development",
             "Scenario": "Standard"
         },

@@ -5,6 +5,7 @@ import shutil
 import os
 import copy
 import importlib
+import string
 from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
@@ -12,6 +13,7 @@ from collections import defaultdict
 from app import core
 from app import palette
 from app.scenario import ScenarioData as SD
+from app.gamedata import Games, GameStatus
 from app.alliance import Alliances
 from app.region import Region, Regions
 from app.nation import Nations
@@ -38,11 +40,6 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
     Returns:
         None
     """
-
-    # get game files
-    SD.load(game_id)
-    Regions.load(game_id)
-    Nations.load(game_id)
 
     # update nation colors
     for nation_id, setup_data in contents_dict.items():
@@ -91,22 +88,11 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
                 nation.improvement_counts["Capital"] += 1
                 break
     
-    # update active_games.json
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    active_games_dict[game_id]["Statistics"]["Current Turn"] = "Nation Setup in Progress"
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-    
     # update game maps
     maps = GameMaps(game_id)
     maps.populate_resource_map()
     maps.populate_main_map()
     maps.update_all()
-
-    # save
-    Nations.save()
-    Regions.save()
 
 def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     """
@@ -120,25 +106,17 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
 
-    SD.load(game_id)
-
-    Alliances.load(game_id)
-    Nations.load(game_id)
-    Regions.load(game_id)
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     five_point_research_list = []
     for tech_name, tech_data in SD.technologies:
         if tech_data.cost == 5:
             five_point_research_list.append(tech_name)
-    if active_games_dict[game_id]["Information"]["Fog of War"] == "Disabled":
+    if not game.info.fog_of_war:
         five_point_research_list.remove("Surveillance Operations")
 
     # update nation data
     for nation_id, setup_data in contents_dict.items():
-        
         nation = Nations.get(nation_id)
         
         # add basic data
@@ -160,31 +138,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
     # update income in playerdata
     checks.update_income(game_id)
     Nations.update_records()
-
-    # update game_settings
-    active_games_dict[game_id]["Statistics"]["Current Turn"] = "1"
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    active_games_dict[game_id]["Statistics"]["Game Started"] = current_date_string
-    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = 0
-    
-    # add crime syndicate tracking
-    # TODO - move this somewhere else
-    steal_tracking_dict = {}
-    for nation in Nations:
-        if nation.gov == 'Crime Syndicate':
-            inner_dict = {
-                'Nation Name': None,
-                'Streak': 0,
-            }
-            steal_tracking_dict[nation.name] = inner_dict
-    active_games_dict[game_id]["Steal Action Record"] = steal_tracking_dict
-
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
-    Nations.save()
-
+        
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     """
     Resolves a normal turn.
@@ -197,17 +151,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
         None
     """
     
-    # get game data
-    SD.load(game_id)
-    Alliances.load(game_id)
-    Regions.load(game_id)
-    Nations.load(game_id)
-    Notifications.initialize(game_id)
-    Truces.load(game_id)
-    Wars.load(game_id)
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
     scenario_actions = importlib.import_module(f"scenarios.{SD.scenario}.actions")
 
     # sort and validate actions
@@ -221,7 +165,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
             actions_dict[class_name].append(action)
 
     # prompt for missing war justifications
-    checks.prompt_for_missing_war_justifications(game_id)
+    checks.prompt_for_missing_war_justifications()
     
     # oppertunity to resolve active events
     events.resolve_active_events(game_id, actions_dict)
@@ -272,55 +216,15 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
 
     # end of turn checks
     print("Resolving end of turn updates...")
-    checks.countdown(game_id)    # TODO: replace this function with something better
+    checks.countdown()    # TODO: replace this function with something better
     run_end_of_turn_checks(game_id)
-    checks.gain_market_income(game_id, market_results)
 
-    # update victory progress and check if player has won the game
-    player_has_won = False
-    for nation in Nations:
-        nation.update_victory_progress()
-        if nation.score == 3:
-            player_has_won = True
-
-    if player_has_won:
-        # game end procedure
-        resolve_win(game_id)
-    else:
-        # bonus phase
-        if current_turn_num % 4 == 0:
-            checks.bonus_phase_heals(game_id)
-            Notifications.add('All units and defensive improvements have regained 2 health.', 2)
-        if current_turn_num % 8 == 0:
-            events.trigger_event(game_id)
-
-    # update active game records
-    core.update_turn_num(game_id)
-    events.filter_events(game_id)
-    Nations.check_tags()
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    start_date = active_games_dict[game_id]["Statistics"]["Game Started"]
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-    start_date_obj = datetime.strptime(start_date, "%m/%d/%Y")
-    date_difference = current_date_obj - start_date_obj
-    active_games_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
+    # post-turn checks
+    run_post_turn_checks(game_id, market_results)
 
     # update game maps
     maps = GameMaps(game_id)
     maps.update_all()
-
-    # save
-    Alliances.save()
-    Regions.save()
-    Nations.save()
-    Notifications.save()
-    Truces.save()
-    Wars.save()
 
 def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
@@ -328,14 +232,14 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
 
     if not event_phase:
-        checks.total_occupation_forced_surrender(game_id)
-        checks.war_score_forced_surrender(game_id)
-        checks.prune_alliances(game_id)
+        checks.total_occupation_forced_surrender()
+        checks.war_score_forced_surrender()
+        checks.prune_alliances()
     
     checks.update_income(game_id)
     if not event_phase:
-        checks.gain_income(game_id)
-    checks.resolve_resource_shortages(game_id)
+        checks.gain_income()
+    checks.resolve_resource_shortages()
     checks.resolve_military_capacity_shortages(game_id)
     checks.update_income(game_id)
     
@@ -348,190 +252,88 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         Nations.update_records()
         Nations.add_leaderboard_bonuses()
 
-def resolve_win(game_id: str) -> None:
-    """
-    Updates the game state and game records upon player victory.
-    """
+def run_post_turn_checks(game_id: str, market_results: dict) -> None:
 
-    # load game data
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open("active_games.json", 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    with open("game_records.json", 'r') as json_file:
-        game_records_dict = json.load(json_file)
+    def resolve_win():
 
-    # update active games
-    active_games_dict[game_id]["Game Active"] = False
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-    
-    # copy game data to game archive
-    game_records_dict[game_id] = copy.deepcopy(active_games_dict[game_id])
-    del game_records_dict[game_id]["Inactive Events"]
-    del game_records_dict[game_id]["Active Events"]
-    del game_records_dict[game_id]["Current Event"]
-    
-    # datetime calculations for game archive entry
-    current_date = datetime.today().date()
-    current_date_string = current_date.strftime("%m/%d/%Y")
-    game_records_dict[game_id]["Statistics"]["Game Ended"] = current_date_string
-    game_records_dict[game_id]["Statistics"]["Game End Turn"] = current_turn_num
-    current_date_obj = datetime.strptime(current_date_string, "%m/%d/%Y")
-    start_date_obj = datetime.strptime(game_records_dict[game_id]["Statistics"]["Game Started"], "%m/%d/%Y")
-    date_difference = current_date_obj - start_date_obj
-    game_records_dict[game_id]["Statistics"]["Days Ellapsed"] = date_difference.days
-    
-    # add player data game archive entry
-    player_data_dict = {}
-    for nation in Nations:
-        player_data_entry_dict = {
-            "Nation Name": nation.name,
-            "Color": nation.color,
-            "Government": nation.gov,
-            "Foreign Policy": nation.fp,
-            "Score": nation.score,
-            "Victory": 0
+        game.status = GameStatus.FINISHED
+        game.updated_days_ellapsed()
+
+        with open("game_records.json", 'r') as json_file:
+            game_records_dict = json.load(json_file)
+
+        # create game archive entry
+        game_records_dict[game_id] = {
+            "Name": game.name,
+            "Number": game.number,
+            "Information": {
+                "Version": game.info.version,
+                "Scenario": game.info.scenario,
+                "Map": game.info.map,
+                "Victory Conditions": game.info.victory_conditions,
+                "Fog of War": game.info.fog_of_war,
+                "Turn Duration": game.info.turn_length,
+                "Accelerated Schedule": game.info.accelerated_schedule,
+                "Deadlines on Weekends": game.info.weekend_deadlines
+            },
+            "Statistics": {
+                "Player Count": game.info.player_count,
+                "Region Disputes": game.stats.region_disputes,
+                "Game End Turn": game.turn,
+                "Days Ellapsed": game.stats.days_elapsed,
+                "Game Started": game.stats.date_started,
+                "Game Ended": datetime.today().date().strftime("%m/%d/%Y")
+            },
+            "Player Data": ()
         }
-        if nation.score == 3:
-            player_data_entry_dict["Victory"] = 1
-        player_data_dict[nation.player_id] = player_data_entry_dict
-    game_records_dict[game_id]["Player Data"] = player_data_dict
-
-    # save game data
-    with open("game_records.json", 'w') as json_file:
-        json.dump(game_records_dict, json_file, indent=4)
-
-def create_new_game(game_id: str, form_data_dict: dict, user_id_list: list) -> None:
-    """
-    Backend code for creating the files for a new game.
-
-    Params:
-        game_id (str): A new game_id to be used for the new game. 20 characters, randomly generated.
-        form_data_dict (dict): Dictionary of data gathered from the turn resolution HTML form.
-        user_id_list (list): A list of all the user ids of players participating in the game.
-
-    Returns:
-        None
-    """
-
-    from app.scenario import ScenarioData as SD
-
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    with open('game_records.json', 'r') as json_file:
-        game_records_dict = json.load(json_file)
-    
-    GAME_VERSION = "Development"
-    current_date = datetime.today().date()
-    os.makedirs(f"gamedata/{game_id}/images")
-    os.makedirs(f"gamedata/{game_id}/logs")
-
-    # cleanup - completed games are to be removed from active games upon creating new game
-    active_games_dict_filtered = {}
-    for temp_game_id, temp_game_data in active_games_dict.items():
-        if temp_game_data["Game Active"]:
-            active_games_dict_filtered[temp_game_id] = temp_game_data
-        else:
-            shutil.rmtree(f"gamedata/{temp_game_id}")
-    active_games_dict = active_games_dict_filtered
-    
-    # add new game to active games
-    active_games_dict[game_id] = {
-        "Name": form_data_dict["Game Name"],
-        "Number": len(game_records_dict) + len(active_games_dict) + 1,
-        "Game Active": True,
-        "Information": {
-            "Version": GAME_VERSION,
-            "Scenario": form_data_dict["Scenario"],
-            "Map": form_data_dict["Map"],
-            "Victory Conditions": form_data_dict["Victory Conditions"],
-            "Fog of War": form_data_dict["Fog of War"],
-            "Turn Length": form_data_dict["Turn Length"],
-            "Accelerated Schedule": form_data_dict["Accelerated Schedule"],
-            "Deadlines on Weekends": form_data_dict["Deadlines on Weekends"]
-        },
-        "Statistics": {
-            "Player Count": form_data_dict["Player Count"],
-            "Region Disputes": 0,
-            "Current Turn": "Starting Region Selection in Progress",
-            "Days Ellapsed": 0,
-            "Game Started": current_date.strftime("%m/%d/%Y")
-        },
-        "Inactive Events": [],
-        "Active Events": {},
-        "Current Event": {}
-    }
-    with open('active_games.json', 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
-    SD.load(game_id)
-
-    # copy starting map images
-    map_str = core.get_map_str(game_id)
-    files_destination = f"gamedata/{game_id}"
-    shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
-    shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/resourcemap.png")
-    shutil.copy(f"app/static/images/map_images/{map_str}/{map_str}.png", f"{files_destination}/images")
-    shutil.move(f"{files_destination}/images/{map_str}.png", f"gamedata/{game_id}/images/controlmap.png")
-
-    with open(f'maps/{map_str}/graph.json', 'r') as json_file:
-        graph_dict = json.load(json_file)
-    
-    # create regdata.json
-    regdata_dict = {}
-    for region_id in graph_dict:
         
-        regdata_dict[region_id] = {
-            "regionData": {
-                "ownerID": "0",
-                "occupierID": "0",
-                "purchaseCost": 5,
-                "regionResource": "Empty",
-                "nukeTurns": 0,
-            },
-            "improvementData": {
-                "name": None,
-                "health": 99,
-                "turnTimer": 99
-            },
-            "unitData": {
-                "name": None,
-                "health": 99,
-                "ownerID": "0"
+        # add player data to game archive entry
+        player_data_dict = {}
+        for nation in Nations:
+            player_data_entry_dict = {
+                "Nation Name": nation.name,
+                "Color": nation.color,
+                "Government": nation.gov,
+                "Foreign Policy": nation.fp,
+                "Score": nation.score,
+                "Victory": 0
             }
-        }
-        
-        if form_data_dict["Scenario"] == "Standard":
-            regdata_dict[region_id]["regionData"]["infection"] = 0
-            regdata_dict[region_id]["regionData"]["quarantine"] = False
+            if nation.score == 3:
+                player_data_entry_dict["Victory"] = 1
+            player_data_dict[nation.player_id] = player_data_entry_dict
+        game_records_dict[game_id]["Player Data"] = player_data_dict
+
+        with open("game_records.json", 'w') as json_file:
+            json.dump(game_records_dict, json_file, indent=4)
     
-    with open(f"gamedata/{game_id}/regdata.json", 'w') as json_file:
-        json.dump(regdata_dict, json_file, indent=4)
+    game = Games.load(game_id)
 
-    # create gamedata.json
-    gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
-    gamedata_dict = {
-        "alliances": {},
-        "nations": {},
-        "notifications": [],
-        "truces": {},
-        "wars": {}
-    }
-    with open(gamedata_filepath, 'w') as json_file:
-        json.dump(gamedata_dict, json_file, indent=4)
+    checks.gain_market_income(market_results)
 
-    # create nationdata
-    Nations.load(game_id)
-    for i, user_id in enumerate(user_id_list):
-        Nations.create(str(i + 1), user_id)
-    Nations.save()
+    player_has_won = False
+    for nation in Nations:
+        nation.update_victory_progress()
+        if nation.score == 3:
+            player_has_won = True
 
-    # create rmdata file
-    rmdata_filepath = f'{files_destination}/rmdata.csv'
-    with open(rmdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.rmdata_header)
+    if player_has_won:
+        resolve_win(game_id)
 
+    if game.turn % 4 == 0:
+        checks.bonus_phase_heals()
+        Notifications.add('All units and defensive improvements have regained 2 health.', 2)
+    
+    if game.turn % 8 == 0 and not player_has_won:
+        events.trigger_event(game_id)
+        game.updated_days_ellapsed()
+        events.filter_events(game_id)
+        Nations.check_tags()
+        return
+    
+    game.turn += 1
+    game.updated_days_ellapsed()
+    events.filter_events(game_id)
+    Nations.check_tags()
 
 # MISC SITE FUNCTIONS
 ################################################################################
@@ -680,34 +482,6 @@ def check_color_correction(color):
     if color in palette.BAD_PRIMARY_COLORS:
         color = palette.normal_to_occupied[color]
     return color
-        
-def generate_refined_player_list_active(game_id: str, current_turn_num: int) -> list:
-    """
-    Creates list of nations that is shown alongside each game.
-    """
-
-    with open('playerdata/player_records.json', 'r') as json_file:
-        player_records_dict = json.load(json_file)
-
-    data_a = []
-    data_b = []
-   
-    for nation in Nations:
-        gov_fp_str = f"{nation.fp} - {nation.gov}"
-        username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
-        player_color = check_color_correction(nation.color)
-        # tba - fix duplicate player color (second one should be redundant)
-        if nation.score > 0:
-            data_a.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
-        else:
-            data_b.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
-
-    filtered_data_a = sorted(data_a, key=itemgetter(0), reverse=False)
-    filtered_data_a = sorted(filtered_data_a, key=itemgetter(1), reverse=True)
-    filtered_data_b = sorted(data_b, key=itemgetter(0), reverse=False)
-    data = filtered_data_a + filtered_data_b
-
-    return data
 
 def generate_refined_player_list_inactive(game_data):
     

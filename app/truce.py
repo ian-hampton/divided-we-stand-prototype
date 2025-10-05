@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
-from app import core
+from app.gamedata import Games
 
 class TrucesMeta(type):
 
@@ -50,12 +50,12 @@ class Truces(metaclass=TrucesMeta):
     @classmethod
     def create(cls, signatories: list[str], truce_length: int) -> None:
 
+        game = Games.load(cls.game_id)
         truce_id = len(Truces) + 1
-        current_turn_num = core.get_current_turn_num(cls.game_id)
 
         new_truce_data = {
-            "startTurn": current_turn_num,
-            "endTurn": current_turn_num + truce_length + 1,
+            "startTurn": game.turn,
+            "endTurn": game.turn + truce_length + 1,
             "signatories": {nation_id: True for nation_id in signatories}
         }
 
@@ -90,8 +90,8 @@ class Truce:
     
     @property
     def is_active(self) -> bool:
-        current_turn_num = core.get_current_turn_num(Truces.game_id)
-        return True if self.end_turn > current_turn_num else False
+        game = Games.load(Truces.game_id)
+        return True if self.end_turn > game.turn else False
     
     @end_turn.setter
     def end_turn(self, turn: int) -> None:

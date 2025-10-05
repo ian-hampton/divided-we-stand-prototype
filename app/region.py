@@ -5,7 +5,7 @@ from collections import deque
 from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
-from app import core
+from app.gamedata import Games
 from app.nation import Nation
 
 class RegionsMeta(type):
@@ -29,9 +29,12 @@ class Regions(metaclass=RegionsMeta):
 
     @classmethod
     def load(cls, game_id: str) -> None:
+
+        game = Games.load(game_id)
+        
         cls.game_id = game_id
         regdata_filepath = f"gamedata/{Regions.game_id}/regdata.json"
-        graph_filepath = f"maps/{core.get_map_str(Regions.game_id)}/graph.json"
+        graph_filepath = f"maps/{game.get_map_string()}/graph.json"
         
         if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Regions class.")
@@ -310,7 +313,7 @@ class Region:
         target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
         self.unit.clear()
 
-    def calculate_yield(self, nation: Nation, improvement_income_dict: dict, active_games_dict: dict) -> dict:
+    def calculate_yield(self, game_id: str, nation: Nation, improvement_income_dict: dict) -> dict:
         """
         Calculates the final yield of this improvement.
 
@@ -320,6 +323,8 @@ class Region:
         Returns:
             dict: Contains all yields from this improvement.
         """
+
+        game = Games.load(game_id)
 
         improvement_income_dict = copy.deepcopy(improvement_income_dict)  # deepcopy required because of modifiers below
 
@@ -337,7 +342,7 @@ class Region:
                 improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
         
         # get pandemic multiplier
-        if "Pandemic" in active_games_dict[self.game_id]["Active Events"]:
+        if "Pandemic" in game.active_events:
             for resource_name in improvement_income_dict:
                 multiplier = improvement_income_dict[resource_name]["Income Multiplier"]
                 penalty = 0

@@ -1,13 +1,11 @@
-import copy
-import csv
 import importlib
 import heapq
-import json
 import random
 from collections import defaultdict, deque
 from typing import List, Tuple
 
 from app import core
+from app.gamedata import Games
 from app.nation import Nation, Nations
 from app.region import Region
 from app.notifications import Notifications
@@ -36,7 +34,7 @@ class AllianceCreateAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.alliance_type = _check_alliance_type(self.game_id, self.alliance_type)
+        self.alliance_type = _check_alliance_type(self.alliance_type)
         if self.alliance_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance type.""")
             return False
@@ -63,7 +61,7 @@ class AllianceJoinAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        self.alliance_name = _check_alliance_name(self.alliance_name)
         if self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
@@ -94,12 +92,12 @@ class AllianceKickAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        self.alliance_name = _check_alliance_name(self.alliance_name)
         if self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
@@ -126,7 +124,7 @@ class AllianceLeaveAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.alliance_name = _check_alliance_name(self.game_id, self.alliance_name)
+        self.alliance_name = _check_alliance_name(self.alliance_name)
         if self.alliance_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad alliance name.""")
             return False
@@ -180,7 +178,7 @@ class CrimeSyndicateAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
@@ -223,7 +221,7 @@ class ImprovementBuildAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.improvement_name = _check_improvement_name(self.game_id, self.improvement_name)
+        self.improvement_name = _check_improvement_name(self.improvement_name)
         if self.improvement_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad improvement name.""")
             return False
@@ -354,7 +352,7 @@ class MissileMakeAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad quantity.""")
             return False
         
-        self.missile_type = _check_missile(self.game_id, self.missile_type)
+        self.missile_type = _check_missile(self.missile_type)
         if self.missile_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
@@ -382,7 +380,7 @@ class MissileLaunchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.missile_type = _check_missile(self.game_id, self.missile_type)
+        self.missile_type = _check_missile(self.missile_type)
         if self.missile_type is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad missile type.""")
             return False
@@ -441,7 +439,7 @@ class ResearchAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.research_name = _check_research(self.game_id, self.research_name)
+        self.research_name = _check_research(self.research_name)
         if self.research_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad research name.""")
             return False
@@ -468,7 +466,7 @@ class SurrenderAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
@@ -496,7 +494,7 @@ class UnitDeployAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.unit_name = _check_unit(self.game_id, self.unit_name)
+        self.unit_name = _check_unit(self.unit_name)
         if self.unit_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad unit name.""")
             return False
@@ -605,12 +603,12 @@ class WarAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
         
-        self.war_justification = _check_war_justification(self.game_id, self.war_justification)
+        self.war_justification = _check_war_justification(self.war_justification)
         if self.war_justification is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war justification.""")
             return False
@@ -642,7 +640,7 @@ class WarJoinAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.war_name = _check_war_name(self.game_id, self.war_name)
+        self.war_name = _check_war_name(self.war_name)
         if self.war_name is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war name.""")
             return False
@@ -651,7 +649,7 @@ class WarJoinAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Expecting "Attacker" or "Defender" for war side.""")
             return False
         
-        self.war_justification = _check_war_justification(self.game_id, self.war_justification)
+        self.war_justification = _check_war_justification(self.war_justification)
         if self.war_justification is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad war justification.""")
             return False
@@ -678,7 +676,7 @@ class WhitePeaceAction:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Malformed action.""")
             return False
         
-        self.target_nation = _check_nation_name(self.game_id, self.target_nation)
+        self.target_nation = _check_nation_name(self.target_nation)
         if self.target_nation is None:
             print(f"""Action "{self.action_str}" submitted by player {self.id} is invalid. Bad nation name.""")
             return False
@@ -772,7 +770,7 @@ def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> an
 
     return scenario_actions._create_action(game_id, nation_id, action_str)
 
-def _check_alliance_type(game_id: str, input_str: str) -> str | None:
+def _check_alliance_type(input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
 
@@ -782,7 +780,7 @@ def _check_alliance_type(game_id: str, input_str: str) -> str | None:
     
     return None
 
-def _check_alliance_name(game_id: str, input_str: str) -> str | None:
+def _check_alliance_name(input_str: str) -> str | None:
     
     from app.alliance import Alliances
 
@@ -803,7 +801,7 @@ def _check_region_id(region_id: str) -> str | None:
     
     return None
 
-def _check_nation_name(game_id: str, input_str: str) -> str | None:
+def _check_nation_name(input_str: str) -> str | None:
 
     from app.nation import Nations
 
@@ -813,7 +811,7 @@ def _check_nation_name(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_improvement_name(game_id: str, input_str: str) -> str | None:
+def _check_improvement_name(input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
 
@@ -907,7 +905,7 @@ def _check_resource(resource_name: str) -> str | None:
     resource_name = resource_name.lower()
     return resource_errors.get(resource_name)
 
-def _check_missile(game_id: str, input_str: str) -> str | None:
+def _check_missile(input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
 
@@ -926,7 +924,7 @@ def _check_missile(game_id: str, input_str: str) -> str | None:
         
     return missile_errors.get(input_str.lower())
 
-def _check_research(game_id: str, input_str: str) -> str | None:
+def _check_research(input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
     
@@ -938,7 +936,7 @@ def _check_research(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_unit(game_id: str, input_str: str) -> str | None:
+def _check_unit(input_str: str) -> str | None:
     
     from app.scenario import ScenarioData as SD
     
@@ -949,7 +947,7 @@ def _check_unit(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_war_name(game_id: str, input_str: str) -> str | None:
+def _check_war_name(input_str: str) -> str | None:
 
     from app.war import Wars
 
@@ -959,7 +957,7 @@ def _check_war_name(game_id: str, input_str: str) -> str | None:
         
     return None
 
-def _check_war_justification(game_id: str, input_str: str) -> str | None:
+def _check_war_justification(input_str: str) -> str | None:
 
     from app.scenario import ScenarioData as SD
     
@@ -1113,10 +1111,9 @@ def resolve_trade_actions(game_id: str) -> None:
 
 def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], white_peace_list: list[WhitePeaceAction]) -> None:
     
-    # get game data
     from app.nation import Nations
     from app.war import Wars
-    current_turn_num = core.get_current_turn_num(game_id)
+    game = Games.load(game_id)
 
     # execute surrender actions
     for action in surrender_list:
@@ -1125,7 +1122,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         winning_nation = Nations.get(action.target_nation)
 
        # check if peace is possible
-        if not _peace_action_valid(surrendering_nation, winning_nation, current_turn_num):
+        if not _peace_action_valid(surrendering_nation, winning_nation, game.turn):
             continue
 
         # get war and war outcome
@@ -1150,7 +1147,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
         winning_nation = Nations.get(action.target_nation)
 
         # check if peace is possible
-        if not _peace_action_valid(surrendering_nation, winning_nation, current_turn_num):
+        if not _peace_action_valid(surrendering_nation, winning_nation, game.turn):
             continue
 
         # add white peace request to white_peace_dict
@@ -1398,8 +1395,7 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
 
     from app.nation import Nations
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     # initial validation
     minimum_spend: dict[str, int] = defaultdict(int)
@@ -1431,7 +1427,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     # priority queue #1 - validate and pay for the claim actions of each nation
     claim_actions_validated: dict[str, Region] = {}
     for nation in Nations:
-        validated_region_ids = _validate_all_claims(claim_actions_grouped[nation.id])
+        validated_region_ids = _check_all_claims(game_id, claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
             target_region = Region(region_id)
             if target_region.region_id in claim_actions_validated:
@@ -1454,15 +1450,12 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             nation.action_log.append(f"Failed to claim {target_region.region_id} due to a region dispute. {cost:.2f} dollars wasted.")
 
         target_region.data.purchase_cost += 5
-        active_games_dict[game_id]["Statistics"]["Region Disputes"] += 1
+        game.stats.region_disputes += 1
 
     # priority queue #2 - validate remaining claim actions together and resolve
-    _resolve_all_claims(claim_actions_final)
+    _resolve_all_claims(game_id, claim_actions_final)
 
-    with open("active_games.json", 'w') as json_file:
-        json.dump(active_games_dict, json_file, indent=4)
-
-def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
+def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
 
     def get_priority(target_region: Region) -> int:
 
@@ -1482,7 +1475,7 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
             if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
                 adj_claimed.add(adj_region.region_id)
 
-        return _validate_claim_action(nation_id, target_region, adj_owned, adj_claimed)
+        return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
     heap: List[Tuple[int, Region]] = []
     priorities = {}
@@ -1531,7 +1524,7 @@ def _validate_all_claims(claimed_regions: dict[str, Region]) -> set:
 
     return resolved
 
-def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
+def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region]) -> None:
 
     def get_priority(target_region: Region) -> int:
 
@@ -1551,7 +1544,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
             if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
                 adj_claimed.add(adj_region.region_id)
 
-        return _validate_claim_action(nation_id, target_region, adj_owned, adj_claimed)
+        return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
     def find_encircled_regions(target_region: Region, nation_id: str) -> set[Region]:
         """
@@ -1647,6 +1640,7 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
         else:
             # claim region
             target_region.data.owner_id = nation_id
+            nation.stats.regions_owned += 1
             if target_region.improvement.name is not None:
                 nation.improvement_counts[target_region.improvement.name] += 1
             nation.action_log.append(f"Claimed region {target_region.region_id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
@@ -1670,12 +1664,13 @@ def _resolve_all_claims(verified_claim_actions: dict[str, Region]) -> None:
                 priorities[adj_region_id] = new_priority
                 heapq.heappush(heap, (new_priority, adj_region))
 
-def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set, adj_claimed: set) -> int:
+def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, adj_owned: set, adj_claimed: set) -> int:
         """
         Verifies if a specific claim action abides by expansion rules by examining the target region.
 
         Params:
-        nation_id (str): Nation ID of the nation that entered the claim action.
+            game_id (str): Game ID string.
+            nation_id (str): Nation ID of the nation that entered the claim action.
             target_region (Region): Region object representing the target region of the claim action.
             adj_owned_count (set): Set of adjacent region_ids to target region owned by the nation.
             adj_claimed_count (set): Set of adjacent region_ids to target region also claimed by the nation.
@@ -1686,12 +1681,17 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
 
         def bfs_no_access():
             """
-            Returns True if the target region meets the criteria to be claimed with only one adjacent owned region (for this specific player).
+            Returns True if the target region is elligable to be claimed with only one adjacent owned region (for this specific player).
 
-            If we find 2+ regions owned by the player that are adjacent to nearby unclaimed regions, we can assume that the player has a route to claim a second adjacent region to the target.
-            If that is the case, the player could claim the target region while abiding by the conventional two owned adjacent regions restriction.
-            Therefore, the player should not be allowed to claim the target region now.
+            If we can find 2+ regions owned by the player that are adjacent to nearby unclaimed regions, we can assume that the player has a route to claim a second adjacent region to the target region.
+            If that is the case, the player could claim the target region while abiding by all of the usual expansion rules.
+            Therefore, this check fails and the player is not allowed to claim the target region now.
             """
+
+            # always fail if player owns less than 3 regions
+            nation = Nations.get(nation_id)
+            if nation.stats.regions_owned < 3:
+                return False
             
             friendly_regions_found = 0
             visited = set([target_region.region_id])
@@ -1726,14 +1726,13 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
             
             return True
         
+        game = Games.load(game_id)
         adj_owned_count = len(adj_owned)
         adj_claimed_count = len(adj_claimed)
 
         # claim action always valid if the target region borders at least two owned regions
         if adj_owned_count >= 2:
             return 0
-        
-        # TODO - special case - valid with one if first 4 turns only
 
         # special case - valid with one if sea route
         for adj_region_id in target_region.graph.sea_routes:
@@ -1744,10 +1743,13 @@ def _validate_claim_action(nation_id: str, target_region: Region, adj_owned: set
         if adj_owned_count == 1 and len(target_region.graph.map) == 1:
             return 0
         
+        # special case - valid with one if first 4 turns only
+        if adj_owned_count == 1 and game.turn <= 4:
+            return 0
+        
         # special case - valid with one if all other adjacent regions are unclaimable
-        if adj_owned_count == 1 and adj_claimed_count == 0:
-            if bfs_no_access():
-                return 0
+        if adj_owned_count == 1 and adj_claimed_count == 0 and bfs_no_access():
+            return 0
 
         if adj_owned_count < 2 and adj_claimed_count == 0:
             return 99999
@@ -1916,14 +1918,9 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     
     from app.scenario import ScenarioData as SD
     from app.nation import Nations
-    
-    rmdata_filepath = f'gamedata/{game_id}/rmdata.csv'
-    current_turn_num = core.get_current_turn_num(game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    game = Games.load(game_id)
 
     rmdata_update_list = []
-    steal_tracking_dict = active_games_dict[game_id]["Steal Action Record"]
     data = {}
     for resource_name, market_data in SD.market:
         data[resource_name] = {
@@ -1934,7 +1931,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     }
 
     # sum up recent transactions
-    rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
+    rmdata_recent_transaction_list = game.get_market_data()
     for transaction in rmdata_recent_transaction_list: 
         exchange = transaction[2]
         count = transaction[3]
@@ -1953,11 +1950,11 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         data[resource_name]["Current Price"] = round(current_price, 2)
     
     # factor in impact of events on current prices
-    if "Market Inflation" in active_games_dict[game_id]["Active Events"]:
+    if "Market Inflation" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 2
             data[resource_name]["Current Price"] = round(new_price, 2)
-    elif "Market Recession" in active_games_dict[game_id]["Active Events"]:
+    elif "Market Recession" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 0.5
             data[resource_name]["Current Price"] = round(new_price, 2)
@@ -1992,7 +1989,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             continue
 
         nation.update_stockpile("Dollars", -1 * cost)
-        new_entry = [current_turn_num, nation.name, 'Bought', action.quantity, action.resource_name]
+        new_entry = [game.turn, nation.name, 'Bought', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
         market_results[nation.name][action.resource_name] = action.quantity
@@ -2016,7 +2013,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             continue
 
         nation.update_stockpile(action.resource_name, -1 * action.quantity)
-        new_entry = [current_turn_num, nation.name, 'Sold', action.quantity, action.resource_name]
+        new_entry = [game.turn, nation.name, 'Sold', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
         dollars_earned = round(action.quantity * price * rate, 2)
@@ -2024,7 +2021,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         nation.action_log.append(f"Sold {action.quantity} {action.resource_name} to the resource market for {dollars_earned:.2f} dollars.")
 
     # get crime syndicate steal actions
-    for action in crime_list:
+    for nation in Nations:
         for crime_action in crime_list:
             market_results[nation.name]["Thieves"].append(crime_action.id)
     for nation_name, nation_info in market_results.items():
@@ -2044,8 +2041,8 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             
         nation = Nations.get(nation_name)
         syndicate_nation = Nations.get(thief_id)
-        nation_name_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Nation Name"]
-        streak_of_last_victim = steal_tracking_dict[syndicate_nation.name]["Streak"]
+        streak_of_last_victim = syndicate_nation.steal_action_record[0]
+        nation_name_of_last_victim = syndicate_nation.steal_action_record[1]
 
         # calculate steal amount and update record
         modifier = 0.5
@@ -2053,10 +2050,10 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
             for i in range(streak_of_last_victim):
                 modifier *= 0.5
             modifier = round(modifier, 2)
-            steal_tracking_dict[syndicate_nation.name]["Streak"] += 1
+            syndicate_nation.steal_action_record[0] += 1
         else:
-            steal_tracking_dict[syndicate_nation.name]["Nation Name"] = nation.name
-            steal_tracking_dict[syndicate_nation.name]["Streak"] = 1
+            syndicate_nation.steal_action_record[0] += 1
+            syndicate_nation.steal_action_record[1] = nation.name
 
         # execute steal
         for entry, amount in nation_info.items():
@@ -2073,12 +2070,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         Notifications.add(f"{syndicate_nation.name} stole from {nation.name}.", 9)
 
     # update rmdata.csv
-    rmdata_all_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, False, False)
-    with open(rmdata_filepath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(core.rmdata_header)
-        writer.writerows(rmdata_all_transaction_list)
-        writer.writerows(rmdata_update_list)
+    game.update_market_data(rmdata_update_list)
 
     return market_results
 
@@ -2381,7 +2373,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         
         # log launch and find best missile defense
         nation.action_log.append(f"Launched {action.missile_type} at {action.target_region}. See combat log for details.")
-        defender_name = core.locate_best_missile_defense(game_id, target_nation, action.missile_type, action.target_region)
+        defender_name = core.locate_best_missile_defense(target_nation, action.missile_type, action.target_region)
         
         # engage missile defense
         missile_intercepted = False
@@ -2535,7 +2527,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     
     from app.nation import Nations
-    current_turn_num = core.get_current_turn_num(game_id)
+    game = Games.load(game_id)
 
     # generate movement order for the turn
     players_moving_units: list[str] = []
@@ -2551,7 +2543,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
 
     # print movement order
     if len(players_moving_units) != 0: 
-        print(f"Movement Order - Turn {current_turn_num}")
+        print(f"Movement Order - Turn {game.turn}")
     for i, nation_id in enumerate(players_moving_units):
         nation = Nations.get(nation_id)
         print(f"{i + 1}. {nation.name}")

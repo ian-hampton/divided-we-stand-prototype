@@ -5,7 +5,9 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
 from app import core
+from app.gamedata import Games
 from app.nation import Nation
+
 
 class WarsMeta(type):
     
@@ -65,14 +67,15 @@ class Wars(metaclass=WarsMeta):
         from app.alliance import Alliances
         from app.truce import Truces
         from app.nation import Nations
+
+        game = Games.load(cls.game_id)
         main_attacker = Nations.get(main_attacker_id)
         main_defender = Nations.get(main_defender_id)
-        current_turn_num = core.get_current_turn_num(cls.game_id)
 
         # create new war
         war_name = cls._generate_war_name(main_attacker, main_defender, war_justification)
         new_war_data = {
-            "start": current_turn_num,
+            "start": game.turn,
             "end": 0,
             "outcome": "TBD",
             "combatants": {},
@@ -177,7 +180,7 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def at_peace_for_x(cls, nation_id: str) -> int:
         
-        current_turn_num = core.get_current_turn_num(cls.game_id)
+        game = Games.load(cls.game_id)
 
         last_at_war_turn = -1
         for war in cls:
@@ -188,7 +191,7 @@ class Wars(metaclass=WarsMeta):
             elif war.end > last_at_war_turn:
                 last_at_war_turn = war.end
         
-        return current_turn_num - last_at_war_turn
+        return game.turn - last_at_war_turn
 
     @classmethod
     def total_units_lost(cls) -> int:
@@ -226,14 +229,15 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def find_longest_war(cls) -> tuple:
 
+        game = Games.load(cls.game_id)
+
         longest_name = None
         longest_time = 0
-        current_turn_num = core.get_current_turn_num(cls.game_id)
 
         for war in cls:
             
             if war.outcome == "TBD":
-                war_duration = current_turn_num - war.start
+                war_duration = game.turn - war.start
             else:
                 war_duration = war.end - war.start
             
@@ -610,8 +614,7 @@ class War:
         from app.nation import Nations
         from app.region import Regions
         from app.truce import Truces
-        
-        current_turn_num = core.get_current_turn_num(Wars.game_id)
+        game = Games.load(Wars.game_id)
         
         # resolve war justifications
         truce_length = 4
@@ -648,7 +651,7 @@ class War:
                 Truces.create(signatories, truce_length)
 
         # update war
-        self.end = current_turn_num
+        self.end = game.turn
         self.outcome = outcome
 
         # end occupations
@@ -657,7 +660,7 @@ class War:
                 region.data.occupier_id = "0"
 
         # withdraw units
-        core.withdraw_units(Wars.game_id)
+        core.withdraw_units()
 
         # resolve foreign interference tag if applicable (event)
         attacker_id, defender_id = self.get_main_combatant_ids()
@@ -675,8 +678,7 @@ class War:
         from app.scenario import ScenarioData as SD
         from app.nation import Nations
         from app.region import Region
-        
-        current_turn_num = core.get_current_turn_num(Wars.game_id)
+        game = Games.load(Wars.game_id)
         
         winner_nation = Nations.get(nation_id)
         winner_combatant_data = self.get_combatant(nation_id)
@@ -707,7 +709,7 @@ class War:
 
         if war_justification_data.looser_penalties is not None:
             looser_nation = Nations.get(winner_combatant_data.target_id)
-            war_justification_data.looser_penalties["Expire Turn"] = current_turn_num + war_justification_data.looser_penalty_duration + 1
+            war_justification_data.looser_penalties["Expire Turn"] = game.turn + war_justification_data.looser_penalty_duration + 1
             looser_nation.tags[f"Defeated by {winner_nation} in {self.name}"] = war_justification_data.looser_penalties
 
         if war_justification_data.winner_becomes_independent:
