@@ -234,14 +234,14 @@ def create_game():
     # get values from settings form
     form_data_dict = {
         "Game Name": request.form.get('name_input'),
-        "Player Count": request.form.get('pc_dropdown'),
-        "Victory Conditions": request.form.get('vc_dropdown'),
+        "Scenario": request.form.get('scenario_dropdown'),
         "Map": request.form.get('map_dropdown'),
-        "Accelerated Schedule": request.form.get('as_dropdown'),
+        "Player Count": int(request.form.get('pc_dropdown')),
+        "Victory Conditions": request.form.get('vc_dropdown'),
         "Turn Length": request.form.get('td_dropdown'),
-        "Fog of War": request.form.get('fow_dropdown'),
-        "Deadlines on Weekends": request.form.get('dow_dropdown'),
-        "Scenario": request.form.get('scenario_dropdown')
+        "Fog of War": request.form.get('fow_dropdown') == 'true',
+        "Accelerated Schedule": request.form.get('as_dropdown') == 'true',
+        "Deadlines on Weekends": request.form.get('dow_dropdown') == 'true'
     }
     profile_ids_list = []
     for index, username in enumerate(username_list):

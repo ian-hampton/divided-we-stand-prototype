@@ -46,14 +46,14 @@ class Games(metaclass=GamesMeta):
             "status": 101,
             "information": {
                 "version": GAME_VERSION,
-                "scenario": str(form_data_dict["Scenario"]),
-                "map": str(form_data_dict["Map"]),
-                "playerCount": int(form_data_dict["Player Count"]),
-                "victoryConditions": str(form_data_dict["Victory Conditions"]),
-                "turnLength": str(form_data_dict["Turn Length"]),
-                "fogOfWar": bool(form_data_dict["Fog of War"]),
-                "acceleratedSchedule": bool(form_data_dict["Accelerated Schedule"]),
-                "weekendDeadlines": bool(form_data_dict["Deadlines on Weekends"])
+                "scenario": form_data_dict["Scenario"],
+                "map": form_data_dict["Map"],
+                "playerCount": form_data_dict["Player Count"],
+                "victoryConditions": form_data_dict["Victory Conditions"],
+                "turnLength": form_data_dict["Turn Length"],
+                "fogOfWar": form_data_dict["Fog of War"],
+                "acceleratedSchedule":form_data_dict["Accelerated Schedule"],
+                "weekendDeadlines": form_data_dict["Deadlines on Weekends"]
             },
             "statistics": {
                 "regionDisputes": 0,
