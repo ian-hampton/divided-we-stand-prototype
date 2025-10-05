@@ -460,36 +460,6 @@ def game_load(full_game_id):
             
             return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
 
-        case GameStatus.FINISHED:
-            # TODO - fix stage 4 rendering, currently broken
-            with open('game_records.json', 'r') as json_file:
-                game_records_dict = json.load(json_file)
-            game_data = game_records_dict[game1_title]
-            largest_nation_tup = Nations.get_top_three("Largest Nation")
-            strongest_economy_tup = Nations.get_top_three("Most Income")
-            largest_military_tup = Nations.get_top_three("Largest Military")
-            most_research_tup = Nations.get_top_three("Most Technology")
-            largest_nation_list = list(largest_nation_tup)
-            strongest_economy_list = list(strongest_economy_tup)
-            largest_military_list = list(largest_military_tup)
-            most_research_list = list(most_research_tup)
-            for i in range(len(largest_nation_list)):
-                largest_nation_list[i] = palette.color_nation_names(largest_nation_list[i], full_game_id)
-                strongest_economy_list[i] = palette.color_nation_names(strongest_economy_list[i], full_game_id)
-                largest_military_list[i] = palette.color_nation_names(largest_military_list[i], full_game_id)
-                most_research_list[i] = palette.color_nation_names(most_research_list[i], full_game_id)
-            archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
-            if len(players_who_won_list) == 1:
-                victors_str = players_who_won_list[0]
-                victory_string = (f"""{victors_str} has won the game.""")
-            elif len(players_who_won_list) > 1:
-                victors_str = ' and '.join(players_who_won_list)
-                victory_string = (f'{victors_str} have won the game.')
-            elif len(players_who_won_list) == 0:
-                victory_string = (f'Game drawn.')
-            victory_string = palette.color_nation_names(victory_string, full_game_id)
-            return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
-        
         case _:
 
             player_data = []
@@ -1263,6 +1233,9 @@ def turn_resolution_new(full_game_id):
             game.turn += 1
             game.status = GameStatus.ACTIVE
     
+        case GameStatus.FINISHED:
+            print(f"{game.name} has already finished. Turn resolution skipped.")
+
     Games.save()
 
     return redirect(f"/{full_game_id}")
