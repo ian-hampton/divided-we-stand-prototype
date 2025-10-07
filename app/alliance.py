@@ -136,34 +136,41 @@ class Alliances(metaclass=AlliancesMeta):
 class Alliance:
     
     def __init__(self, alliance_name: str):
-
         self._data = Alliances._data[alliance_name]
-
         self.name = alliance_name
-        self._type: str = self._data["allianceType"]
-        self._turn_created: int = self._data["turnCreated"]
-        self._turn_ended: int = self._data["turnEnded"]
-    
-    @property
-    def type(self):
-        return self._type
 
     @property
-    def turn_created(self):
-        return self._turn_created
+    def type(self) -> str:
+        return self._data["allianceType"]
 
-    @property
-    def turn_ended(self):
-        return self._turn_ended
+    @type.setter
+    def type(self, value: str) -> None:
+        self._data["allianceType"] = value
     
     @property
-    def is_active(self):
+    def turn_created(self) -> int:
+        return self._data["turnCreated"]
+
+    @turn_created.setter
+    def turn_created(self, value: int) -> None:
+        self._data["turnCreated"] = value
+
+    @property
+    def turn_ended(self) -> int:
+        return self._data["turnEnded"]
+    
+    @turn_ended.setter
+    def turn_ended(self, value: int) -> None:
+        self._data["turnEnded"] = value
+    
+    @property
+    def is_active(self) -> bool:
        return True if self.turn_ended == 0 else False
 
     @property
-    def age(self):
+    def age(self) -> int:
         game = Games.load(Alliances.game_id)
-        if self._turn_ended == 0:
+        if self.turn_ended == 0:
            return game.turn - self.turn_created
         else:
            return self.turn_ended - self.turn_created
@@ -171,37 +178,22 @@ class Alliance:
     @property
     def current_members(self) -> dict[str, int]:
         return self._data["currentMembers"]
-    
-    @property
-    def founding_members(self) -> dict[str, int]:
-        return self._data["foundingMembers"]
-    
-    @property
-    def former_members(self) -> dict[str, int]:
-        return self._data["formerMembers"]
-
-    @type.setter
-    def type(self, alliance_type: str):
-        self._type = alliance_type
-        self._data["allianceType"] = alliance_type
-    
-    @turn_created.setter
-    def turn_created(self, turn: int):
-        self._turn_created = turn
-        self._data["turnCreated"] = turn
-
-    @turn_ended.setter
-    def turn_ended(self, turn: int):
-        self._turn_ended = turn
-        self._data["turnEnded"] = turn
 
     @current_members.setter
     def current_members(self, value: dict) -> None:
         self._data["currentMembers"] = value
 
+    @property
+    def founding_members(self) -> dict[str, int]:
+        return self._data["foundingMembers"]
+    
     @founding_members.setter
     def founding_members(self, value: dict) -> None:
         self._data["foundingMembers"] = value
+
+    @property
+    def former_members(self) -> dict[str, int]:
+        return self._data["formerMembers"]
 
     @former_members.setter
     def former_members(self, value: dict) -> None:
