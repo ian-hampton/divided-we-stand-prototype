@@ -37,6 +37,7 @@ class Wars(metaclass=WarsMeta):
 
         cls._data = gamedata_dict["wars"]
 
+        # TODO - make these enums
         cls.WARSCORE_FROM_VICTORY = 1
         cls.WARSCORE_FROM_OCCUPATION = 2
         cls.WARSCORE_FROM_DESTROY_IMPROVEMENT = 2
@@ -427,50 +428,42 @@ class Wars(metaclass=WarsMeta):
 class War:
 
     def __init__(self, war_name: str):
-    
         self._data = Wars._data[war_name]
-        
         self.name = war_name
-        self._start: int = self._data["start"]
-        self._end: int = self._data["end"]
-        self._outcome: str = self._data["outcome"]
-
         self.attackers = WarScoreData(self._data["attackerWarScore"])
         self.defenders = WarScoreData(self._data["defenderWarScore"])
 
     @property
-    def start(self):
-        return self._start
+    def start(self) -> int:
+        return self._data["start"]
 
     @property
-    def end(self):
-        return self._end
+    def end(self) -> int:
+        return self._data["end"]
     
+    @end.setter
+    def end(self, turn: int) -> None:
+        self._data["end"] = turn
+
     @property
-    def outcome(self):
-        return self._outcome
+    def outcome(self) -> str:
+        return self._data["outcome"]
+
+    @outcome.setter
+    def outcome(self, outcome_str: str) -> None:
+        self._data["outcome"] = outcome_str
 
     @property
     def combatants(self) -> dict:
         return self._data["combatants"]
-    
-    @property
-    def log(self) -> list:
-        return self._data["warLog"]
-
-    @end.setter
-    def end(self, turn: int):
-        self._end = turn
-        self._data["end"] = turn
-
-    @outcome.setter
-    def outcome(self, outcome_str: str):
-        self._outcome = outcome_str
-        self._data["outcome"] = outcome_str
 
     @combatants.setter
     def combatants(self, value: dict) -> None:
         self._data["combatants"] = value
+
+    @property
+    def log(self) -> list:
+        return self._data["warLog"]
 
     @log.setter
     def log(self, value: list) -> None:
@@ -728,196 +721,159 @@ class War:
 class WarScoreData:
     
     def __init__(self, d: dict):
-
         self._data = d
-        self._total: int = d["total"]
-        self._occupation: int = d["occupation"]
-        self._victories: int = d["combatVictories"]
-        self._destroyed_units: int = d["enemyUnitsDestroyed"]
-        self._destroyed_improvements: int = d["enemyImprovementsDestroyed"]
-        self._captures: int = d["capitalCaptures"]
-        self._nuclear_strikes: int = d["nukedEnemyRegions"]
 
     @property
-    def total(self):
-        return self._total
-
-    @property
-    def occupation(self):
-        return self._occupation
-
-    @property
-    def victories(self):
-        return self._victories
-    
-    @property
-    def destroyed_units(self):
-        return self._destroyed_units
-
-    @property
-    def destroyed_improvements(self):
-        return self._destroyed_improvements
-    
-    @property
-    def captures(self):
-        return self._captures
-
-    @property
-    def nuclear_strikes(self):
-        return self._nuclear_strikes
+    def total(self) -> int:
+        return self._data["total"]
     
     @total.setter
-    def total(self, value: int):
-        self._total = value
+    def total(self, value: int) -> None:
         self._data["total"] = value
 
+    @property
+    def occupation(self) -> int:
+        return self._data["occupation"]
+
     @occupation.setter
-    def occupation(self, value: int):
-        self._occupation = value
+    def occupation(self, value: int) -> None:
         self._data["occupation"] = value
 
+    @property
+    def victories(self) -> int:
+        return self._data["combatVictories"]
+    
     @victories.setter
-    def victories(self, value: int):
-        self._victories = value
+    def victories(self, value: int) -> None:
         self._data["combatVictories"] = value
 
+    @property
+    def destroyed_units(self) -> int:
+        return self._data["enemyUnitsDestroyed"]
+
     @destroyed_units.setter
-    def destroyed_units(self, value: int):
-        self._destroyed_units = value
+    def destroyed_units(self, value: int) -> None:
         self._data["enemyUnitsDestroyed"] = value
 
+    @property
+    def destroyed_improvements(self) -> int:
+        return self._data["enemyImprovementsDestroyed"]
+    
     @destroyed_improvements.setter
-    def destroyed_improvements(self, value: int):
-        self._destroyed_improvements = value
+    def destroyed_improvements(self, value: int) -> None:
         self._data["enemyImprovementsDestroyed"] = value
 
+    @property
+    def captures(self) -> int:
+        return self._data["capitalCaptures"]
+
     @captures.setter
-    def captures(self, value: int):
-        self._captures = value
+    def captures(self, value: int) -> None:
         self._data["capitalCaptures"] = value
 
+    @property
+    def nuclear_strikes(self) -> int:
+        return self._data["nukedEnemyRegions"]
+
     @nuclear_strikes.setter
-    def nuclear_strikes(self, value: int):
-        self._nuclear_strikes = value
+    def nuclear_strikes(self, value: int) -> None:
         self._data["nukedEnemyRegions"] = value
 
 class Combatant:
     
     def __init__(self, d: dict):
-
         self._data = d
-
-        self.id: str = d["id"]
-        self.role: str = d["role"]
-        self._target_id: str = d["targetID"]
-        self._justification: str = d["justification"]
-        self._battles_won: int = d["battlesWon"]
-        self._battles_lost: int = d["battlesLost"]
-        self._destroyed_units: int = d["enemyUnitsDestroyed"]
-        self._destroyed_improvements: int = d["enemyImprovementsDestroyed"]
-        self._lost_units: int = d["friendlyUnitsDestroyed"]
-        self._lost_improvements: int = d["friendlyImprovementsDestroyed"]
-        self._launched_missiles: int = d["missilesLaunched"]
-        self._launched_nukes: int = d["nukesLaunched"]
+        self.id: str = self._data["id"]
+        self.role: str = self._data["role"]
 
         from app.nation import Nations
         nation = Nations.get(self.id)
         self.name = nation.name
-        # TODO: include additional attributes from Nation class (readonly)
-
-    @property
-    def justification(self):
-        return self._justification
+        # TODO - restructure Combatant and Nation to both pull nationattribute sfrom a parent class
     
     @property
-    def target_id(self):
-        return self._target_id
+    def target_id(self) -> str:
+        return self._data["targetID"]
     
-    @property
-    def battles_won(self):
-        return self._battles_won
+    @target_id.setter
+    def target_id(self, value: str):
+        self._data["targetID"] = value
 
     @property
-    def battles_lost(self):
-        return self._battles_lost
+    def justification(self) -> str:
+        return self._data["justification"]
+
+    @justification.setter
+    def justification(self, value: str):
+        self._data["justification"] = value
+
+    @property
+    def battles_won(self) -> int:
+        return self._data["battlesWon"]
+
+    @battles_won.setter
+    def battles_won(self, value: int):
+        self._data["battlesWon"] = value
+
+    @property
+    def battles_lost(self) -> int:
+        return self._data["battlesLost"]
     
+    @battles_lost.setter
+    def battles_lost(self, value: int):
+        self._data["battlesLost"] = value
+
     @property
-    def destroyed_units(self):
-        return self._destroyed_units
+    def destroyed_units(self) -> int:
+        return self._data["enemyUnitsDestroyed"]
     
-    @property
-    def destroyed_improvements(self):
-        return self._destroyed_improvements
+    @destroyed_units.setter
+    def destroyed_units(self, value: int):
+        self._data["enemyUnitsDestroyed"] = value
 
     @property
-    def lost_units(self):
-        return self._lost_units
+    def destroyed_improvements(self) -> int:
+        return self._data["enemyImprovementsDestroyed"]
+
+    @destroyed_improvements.setter
+    def destroyed_improvements(self, value: int):
+        self._data["enemyImprovementsDestroyed"] = value
 
     @property
-    def lost_improvements(self):
-        return self._lost_improvements
+    def lost_units(self) -> int:
+        return self._data["friendlyUnitsDestroyed"]
+
+    @lost_units.setter
+    def lost_units(self, value: int):
+        self._data["friendlyUnitsDestroyed"] = value
 
     @property
-    def launched_missiles(self):
-        return self._launched_missiles
+    def lost_improvements(self) -> int:
+        return self._data["friendlyImprovementsDestroyed"]
+
+    @lost_improvements.setter
+    def lost_improvements(self, value: int):
+        self._data["friendlyImprovementsDestroyed"] = value
 
     @property
-    def launched_nukes(self):
-        return self._launched_nukes
+    def launched_missiles(self) -> int:
+        return self._data["missilesLaunched"]
+
+    @launched_missiles.setter
+    def launched_missiles(self, value: int):
+        self._data["missilesLaunched"] = value
+
+    @property
+    def launched_nukes(self) -> int:
+        return self._data["nukesLaunched"]
+
+    @launched_nukes.setter
+    def launched_nukes(self, value: int):
+        self._data["nukesLaunched"] = value
 
     @property
     def claims(self) -> dict:
         return self._data["claims"]
-
-    @justification.setter
-    def justification(self, value: str):
-        self._justification = value
-        self._data["justification"] = value
-
-    @target_id.setter
-    def target_id(self, value: str):
-        self._target_id = value
-        self._data["targetID"] = value
-
-    @battles_won.setter
-    def battles_won(self, value: int):
-        self._battles_won = value
-        self._data["battlesWon"] = value
-
-    @battles_lost.setter
-    def battles_lost(self, value: int):
-        self._battles_lost = value
-        self._data["battlesLost"] = value
-
-    @destroyed_units.setter
-    def destroyed_units(self, value: int):
-        self._destroyed_units = value
-        self._data["enemyUnitsDestroyed"] = value
-
-    @destroyed_improvements.setter
-    def destroyed_improvements(self, value: int):
-        self._destroyed_improvements = value
-        self._data["enemyImprovementsDestroyed"] = value
-
-    @lost_units.setter
-    def lost_units(self, value: int):
-        self._lost_units = value
-        self._data["friendlyUnitsDestroyed"] = value
-
-    @lost_improvements.setter
-    def lost_improvements(self, value: int):
-        self._lost_improvements = value
-        self._data["friendlyImprovementsDestroyed"] = value
-
-    @launched_missiles.setter
-    def launched_missiles(self, value: int):
-        self._launched_missiles = value
-        self._data["missilesLaunched"] = value
-
-    @launched_nukes.setter
-    def launched_nukes(self, value: int):
-        self._launched_nukes = value
-        self._data["nukesLaunched"] = value
 
     @claims.setter
     def claims(self, value: dict) -> None:
