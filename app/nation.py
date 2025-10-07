@@ -428,32 +428,27 @@ class Nations(metaclass=NationsMeta):
 class Nation:
     
     def __init__(self, nation_id: str):
-
         self._data = Nations._data[nation_id]
-
         self.id: str = nation_id
-        self._name: str = self._data["nationName"]
-        self._player_id: str = self._data["playerID"]
-        self._color: str = self._data["color"]
-        self._gov: str = self._data["government"]
-        self._fp: str = self._data["foreignPolicy"]
-        self._status: str = self._data["status"]
-        self._trade_fee: str = self._data["tradeFee"]
-        self._missile_count: int = self._data["standardMissileStockpile"]
-        self._nuke_count: int = self._data["nuclearMissileStockpile"]
-        self._score: int = self._data["score"]
-
         self.stats = NationStatistics(self._data["statistics"])
         self.records = NationRecords(self._data["records"])
 
     @property
-    def name(self):
-        return self._name
-    
+    def name(self) -> str:
+        return self._data["nationName"]
+
+    @name.setter
+    def name(self, value: str):
+        self._data["nationName"] = value
+
     @property
-    def player_id(self):
-        return self._player_id
-    
+    def player_id(self) -> str:
+        return self._data["playerID"]
+
+    @player_id.setter
+    def player_id(self, value: str):
+        self._data["playerID"] = value
+
     @property
     def is_active(self) -> bool:
         """
@@ -466,170 +461,152 @@ class Nation:
         return False
 
     @property
-    def color(self):
-        return self._color
-    
+    def color(self) -> str:
+        return self._data["color"]
+
+    @color.setter
+    def color(self, value: str) -> None:
+        self._data["color"] = value
+
     @property
-    def gov(self):
-        return self._gov
-    
+    def gov(self) -> str:
+        return self._data["government"]
+
+    @gov.setter
+    def gov(self, value: str) -> None:
+        self._data["government"] = value
+
     @property
-    def fp(self):
-        return self._fp
-    
+    def fp(self) -> str:
+        return self._data["foreignPolicy"]
+
+    @fp.setter
+    def fp(self, value: str) -> None:
+        self._data["foreignPolicy"] = value
+
     @property
-    def status(self):
-        return self._status
-    
+    def status(self) -> str:
+        return self._data["status"]
+
+    @status.setter
+    def status(self, value: str) -> None:
+        self._data["status"] = value
+
     @property
-    def trade_fee(self):
-        return self._trade_fee
-    
+    def trade_fee(self) -> str:
+        return self._data["tradeFee"]
+
+    @trade_fee.setter
+    def trade_fee(self, value: str) -> None:
+        self._data["tradeFee"] = value
+
     @property
-    def missile_count(self):
-        return self._missile_count
-    
+    def missile_count(self) -> int:
+        return self._data["standardMissileStockpile"]
+
+    @missile_count.setter
+    def missile_count(self, value: int) -> None:
+        self._data["standardMissileStockpile"] = value
+
     @property
-    def nuke_count(self):
-        return self._nuke_count
-    
+    def nuke_count(self) -> int:
+        return self._data["nuclearMissileStockpile"]
+
+    @nuke_count.setter
+    def nuke_count(self, value: int) -> None:
+        self._data["nuclearMissileStockpile"] = value
+
     @property
-    def score(self):
-        return self._score
-    
+    def score(self) -> int:
+        return self._data["score"]
+
+    @score.setter
+    def score(self, value: int) -> None:
+        self._data["score"] = value
+
     @property
     def victory_conditions(self) -> dict:
         return self._data["chosenVictorySet"]
-
-    @property
-    def completed_research(self) -> dict:
-        return self._data["unlockedResearch"]
-
-    @property
-    def improvement_counts(self) -> dict:
-        return self._data["improvementCounts"]
-
-    @property
-    def unit_counts(self) -> dict:
-        return self._data["unitCounts"]
-
-    @property
-    def steal_action_record(self) -> list:
-        return self._data["stealActionRecord"]
-
-    @property
-    def tags(self) -> dict:
-        return self._data["tags"]
-
-    @property
-    def action_log(self) -> list:
-        return self._data["actionLog"]
-
-    @property
-    def income_details(self) -> list:
-        return self._data["incomeDetails"]
-    
-    @property
-    def _sets(self) -> dict:
-        return self._data["victorySets"]
-
-    @property
-    def _satisfied(self) -> dict:
-        return self._data["satisfiedVictorySet"]
-
-    @property
-    def _resources(self) -> dict:
-        return self._data["resources"]
-
-    @name.setter
-    def name(self, value: str):
-        self._name = value
-        self._data["nationName"] = value
-
-    @player_id.setter
-    def player_id(self, value: str):
-        self._player_id = value
-        self._data["playerID"] = value
-
-    @color.setter
-    def color(self, value: str):
-        self._color = value
-        self._data["color"] = value
-
-    @gov.setter
-    def gov(self, value: str):
-        self._gov = value
-        self._data["government"] = value
-
-    @fp.setter
-    def fp(self, value: str):
-        self._fp = value
-        self._data["foreignPolicy"] = value
-
-    @status.setter
-    def status(self, value: str):
-        self._status = value
-        self._data["status"] = value
-
-    @trade_fee.setter
-    def trade_fee(self, value: str):
-        self._trade_fee = value
-        self._data["tradeFee"] = value
-
-    @missile_count.setter
-    def missile_count(self, value: int):
-        self._missile_count = value
-        self._data["standardMissileStockpile"] = value
-
-    @nuke_count.setter
-    def nuke_count(self, value: int):
-        self._nuke_count = value
-        self._data["nuclearMissileStockpile"] = value
-
-    @score.setter
-    def score(self, value: int):
-        self._score = value
-        self._data["score"] = value
 
     @victory_conditions.setter
     def victory_conditions(self, value: dict) -> None:
         self._data["chosenVictorySet"] = value
 
+    @property
+    def completed_research(self) -> dict:
+        return self._data["unlockedResearch"]
+
     @completed_research.setter
     def completed_research(self, value: dict) -> None:
         self._data["unlockedResearch"] = value
+
+    @property
+    def improvement_counts(self) -> dict:
+        return self._data["improvementCounts"]
 
     @improvement_counts.setter
     def improvement_counts(self, value: dict) -> None:
         self._data["improvementCounts"] = value
 
+    @property
+    def unit_counts(self) -> dict:
+        return self._data["unitCounts"]
+
     @unit_counts.setter
     def unit_counts(self, value: dict) -> None:
         self._data["unitCounts"] = value
+
+    @property
+    def steal_action_record(self) -> list:
+        return self._data["stealActionRecord"]
 
     @steal_action_record.setter
     def stealActionRecord(self, value: list) -> None:
         self._data["stealActionRecord"] = value
 
+    @property
+    def tags(self) -> dict:
+        return self._data["tags"]
+
     @tags.setter
     def tags(self, value: dict) -> None:
         self._data["tags"] = value
+
+    @property
+    def action_log(self) -> list:
+        return self._data["actionLog"]
 
     @action_log.setter
     def action_log(self, value: list) -> None:
         self._data["actionLog"] = value
 
+    @property
+    def income_details(self) -> list:
+        return self._data["incomeDetails"]
+
     @income_details.setter
     def income_details(self, value: list) -> None:
         self._data["incomeDetails"] = value
+
+    @property
+    def _sets(self) -> dict:
+        return self._data["victorySets"]
 
     @_sets.setter
     def _sets(self, value: dict) -> None:
         self._data["victorySets"] = value
 
+    @property
+    def _satisfied(self) -> dict:
+        return self._data["satisfiedVictorySet"]
+
     @_satisfied.setter
     def _satisfied(self, value: dict) -> None:
         self._data["satisfiedVictorySet"] = value
+
+    @property
+    def _resources(self) -> dict:
+        return self._data["resources"]
 
     @_resources.setter
     def _resources(self, value: dict) -> None:
@@ -1152,63 +1129,51 @@ class Nation:
 class NationStatistics:
 
     def __init__(self, d: dict):
-
         self._data = d
-        self._regions_owned: int = d["regionsOwned"]
-        self._regions_occupied: int = d["regionsOccupied"]
-        self._regions_on_map_edge: int = d["regionsOnEdge"]
-        self._resources_given: float = d["resourcesGiven"]
-        self._resources_received: float = d["resourcesReceived"]
 
     @property
-    def regions_owned(self):
-        return self._regions_owned
-    
-    @property
-    def regions_on_map_edge(self):
-        return self._regions_on_map_edge
-    
-    @property
-    def regions_occupied(self):
-        return self._regions_occupied
-    
-    @property
-    def resources_given(self):
-        return self._resources_given
-    
-    @property
-    def resources_received(self):
-        return self._resources_received
-    
+    def regions_owned(self) -> int:
+        return self._data["regionsOwned"]
+        
     @regions_owned.setter
-    def regions_owned(self, value: int):
-        self._regions_owned = value
+    def regions_owned(self, value: int) -> None:
         self._data["regionsOwned"] = value
 
-    @regions_occupied.setter
-    def regions_occupied(self, value: int):
-        self._regions_occupied = value
-        self._data["regionsOccupied"] = value
-
+    @property
+    def regions_on_map_edge(self) -> int:
+        return self._data["regionsOnEdge"]
+    
     @regions_on_map_edge.setter
-    def regions_on_map_edge(self, value: int):
-        self._regions_on_map_edge = value
+    def regions_on_map_edge(self, value: int) -> None:
         self._data["regionsOnEdge"] = value
 
+    @property
+    def regions_occupied(self) -> int:
+        return self._data["regionsOccupied"]
+    
+    @regions_occupied.setter
+    def regions_occupied(self, value: int) -> None:
+        self._data["regionsOccupied"] = value
+
+    @property
+    def resources_given(self) -> float:
+        return self._data["resourcesGiven"]
+
     @resources_given.setter
-    def resources_given(self, value: float):
-        self._resources_given = value
+    def resources_given(self, value: float) -> None:
         self._data["resourcesGiven"] = value
 
+    @property
+    def resources_received(self) -> float:
+        return self._data["resourcesReceived"]
+
     @resources_received.setter
-    def resources_received(self, value: float):
-        self._resources_received = value
+    def resources_received(self, value: float) -> None:
         self._data["resourcesReceived"] = value
 
 class NationRecords:
 
     def __init__(self, d: dict):
-
         self._data = d
 
     @property
