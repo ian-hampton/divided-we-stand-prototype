@@ -61,17 +61,14 @@ class Regions(metaclass=RegionsMeta):
 class Region:
 
     def __init__(self, region_id: str):
-
-        if Regions.game_id is None:
-            raise RuntimeError("Error: Error: Regions data not loaded.")
-
+        self._data = Regions._data[region_id]
         self.region_id = region_id
-        self.claim_list = []
         self.game_id = Regions.game_id
-        self.data = RegionData(Regions._data[self.region_id]["regionData"])
+        self.claim_list = []
+        self.data = RegionData(self._data["regionData"])
         self.graph = GraphData(Regions._graph[self.region_id])
-        self.improvement = ImprovementData(Regions._data[self.region_id]["improvementData"])
-        self.unit = UnitData(Regions._data[self.region_id]["unitData"])
+        self.improvement = ImprovementData(self._data["improvementData"])
+        self.unit = UnitData(self._data["unitData"])
 
     def __eq__(self, other):
         if isinstance(other, Region):
@@ -410,82 +407,66 @@ class Region:
 
 class RegionData:
 
+    # TODO: move infection and quarantine code to scenario file somehow
+
     def __init__(self, d: dict):
-
-        # TODO: move infection and quarantine code to scenario file somehow
-
-        self._regdata = d
-    
-        self._owner_id: str = d["ownerID"]
-        self._occupier_id: str = d["occupierID"]
-        self._purchase_cost: int = d["purchaseCost"]
-        self._resource: str = d["regionResource"]
-        self._fallout: int = d["nukeTurns"]
-        self._infection: int = d["infection"]
-        self._quarantine: bool = d["quarantine"]
+        self._data = d
 
     @property
-    def owner_id(self):
-        return self._owner_id
+    def owner_id(self) -> str:
+        return self._data["ownerID"]
     
     @owner_id.setter
-    def owner_id(self, new_id: str):
-        self._owner_id = new_id
-        self._regdata["ownerID"] = new_id
+    def owner_id(self, new_id: str) -> None:
+        self._data["ownerID"] = new_id
     
     @property
-    def occupier_id(self):
-        return self._occupier_id
+    def occupier_id(self) -> str:
+        return self._data["occupierID"]
     
     @occupier_id.setter
-    def occupier_id(self, new_id: str):
-        self._occupier_id = new_id
-        self._regdata["occupierID"] = new_id
+    def occupier_id(self, new_id: str) -> None:
+        self._data["occupierID"] = new_id
     
     @property
-    def purchase_cost(self):
-        return self._purchase_cost
+    def purchase_cost(self) -> int:
+        return self._data["purchaseCost"]
     
     @purchase_cost.setter
-    def purchase_cost(self, value: int):
-        self._purchase_cost = value
-        self._regdata["purchaseCost"] = value
+    def purchase_cost(self, value: int) -> None:
+        self._data["purchaseCost"] = value
     
     @property
-    def resource(self):
-        return self._resource
+    def resource(self) -> str:
+        return self._data["regionResource"]
     
     @resource.setter
-    def resource(self, value: str):
-        self._resource = value
-        self._regdata["regionResource"] = value
+    def resource(self, value: str) -> None:
+        self._data["regionResource"] = value
     
     @property
-    def fallout(self):
-        return self._fallout
+    def fallout(self) -> int:
+        return self._data["nukeTurns"]
     
     @fallout.setter
-    def fallout(self, value: int):
-        self._fallout = value
-        self._regdata["nukeTurns"] = value
+    def fallout(self, value: int) -> None:
+        self._data["nukeTurns"] = value
 
     @property
-    def infection(self):
-        return self._infection
+    def infection(self) -> int:
+        return self._data["infection"]
     
     @infection.setter
-    def infection(self, value: int):
-        self._infection = value
-        self._regdata["infection"] = value
+    def infection(self, value: int) -> None:
+        self._data["infection"] = value
 
     @property
-    def quarantine(self):
-        return self._quarantine
+    def quarantine(self) -> bool:
+        return self._data["quarantine"]
     
     @quarantine.setter
-    def quarantine(self, value: bool):
-        self._quarantine = value
-        self._regdata["quarantine"] = value
+    def quarantine(self, value: bool) -> None:
+        self._data["quarantine"] = value
 
 class GraphData:
         
@@ -506,41 +487,32 @@ class GraphData:
 class ImprovementData:
     
     def __init__(self, d: dict):
-
-        self._impdata = d
-
-        self._name: str = d["name"]
-        self._health: int = d["health"]
-        self._countdown: int = d["turnTimer"]
-
+        self._data = d
         self._load_attributes_from_game_files()
 
     @property
-    def name(self):
-        return self._name
+    def name(self) -> str:
+        return self._data["name"]
     
     @name.setter
-    def name(self, value: str):
-        self._name = value
-        self._impdata["name"] = value
+    def name(self, value: str) -> None:
+        self._data["name"] = value
 
     @property
-    def health(self):
-        return self._health
+    def health(self) -> int:
+        return self._data["health"]
     
     @health.setter
-    def health(self, value: int):
-        self._health = value
-        self._impdata["health"] = value
+    def health(self, value: int) -> None:
+        self._data["health"] = value
 
     @property
-    def countdown(self):
-        return self._countdown
+    def countdown(self) -> int:
+        return self._data["turnTimer"]
     
     @countdown.setter
-    def countdown(self, value: int):
-        self._countdown = value
-        self._impdata["turnTimer"] = value
+    def countdown(self, value: int) -> None:
+        self._data["turnTimer"] = value
 
     @property
     def has_health(self):
@@ -589,41 +561,32 @@ class ImprovementData:
 class UnitData:
     
     def __init__(self, d: dict):
-
-        self._unitdata = d
-
-        self._name: str = d["name"]
-        self._health: int = d["health"]
-        self._owner_id: str = d["ownerID"]
-
+        self._data = d
         self._load_attributes_from_game_files()
 
     @property
-    def name(self):
-        return self._name
+    def name(self) -> str:
+        return self._data["name"]
     
     @name.setter
-    def name(self, value: str):
-        self._name = value
-        self._unitdata["name"] = value
+    def name(self, value: str) -> None:
+        self._data["name"] = value
 
     @property
-    def health(self):
-        return self._health
+    def health(self) -> int:
+        return self._data["health"]
     
     @health.setter
-    def health(self, value: int):
-        self._health = value
-        self._unitdata["health"] = value
+    def health(self, value: int) -> None:
+        self._data["health"] = value
 
     @property
-    def owner_id(self):
-        return self._owner_id
+    def owner_id(self) -> str:
+        return self._data["ownerID"]
     
     @owner_id.setter
-    def owner_id(self, new_id: str):
-        self._owner_id = new_id
-        self._unitdata["ownerID"] = new_id
+    def owner_id(self, new_id: str) -> None:
+        self._data["ownerID"] = new_id
 
     def _load_attributes_from_game_files(self) -> None:
     
