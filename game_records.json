@@ -892,5 +892,76 @@
                 "Victory": 0
             }
         }
+    },
+    "yLWlauNzvTYrQXcRgKQW": {
+        "Name": "House Divided",
+        "Number": 13,
+        "Information": {
+            "Version": "Development",
+            "Scenario": "Standard",
+            "Map": "United States 3.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": false,
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": false
+        },
+        "Statistics": {
+            "Player Count": 6,
+            "Game End Turn": 32,
+            "Days Ellapsed": 75,
+            "Game Started": "06/16/2025",
+            "Game Ended": "08/30/2025"
+        },
+        "Player Data": {
+            "001": {
+                "Nation Name": "Ian Industries",
+                "Color": "#b66317",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "The Galactic Trade Federation",
+                "Color": "#b654ff",
+                "Government": "Protectorate",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "Walmart",
+                "Color": "#003b84",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "Progeny of Boundless Eternity",
+                "Color": "#ffd64b",
+                "Government": "Technocracy",
+                "Foreign Policy": "Isolationist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "008": {
+                "Nation Name": "Sanctum of the South",
+                "Color": "#5a009d",
+                "Government": "Protectorate",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "Lumiere",
+                "Color": "#9f8757",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            }
+        }
     }
 }
