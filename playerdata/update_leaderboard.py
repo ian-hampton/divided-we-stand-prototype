@@ -13,6 +13,9 @@ def calculate_totals(game_records_dict):
     
     for game_data in game_records_dict.values():
         
+        if game_data["Name"] == "Test Game":
+            continue
+
         player_data = game_data.get("Player Data", {})
         for player_id, player_info in player_data.items():
             player_totals_dict[player_id]["Victory"] += player_info.get("Victory", 0)

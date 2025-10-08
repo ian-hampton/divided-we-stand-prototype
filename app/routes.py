@@ -401,8 +401,8 @@ def profile_route(profile_id):
 
     profile["firstGame"] = game_starts[min(game_starts, key=game_starts.get)]
     profile["lastGame"] = game_ends[max(game_ends, key=game_ends.get)]
-    profile["favoriteGov"] = governments_played[max(governments_played, key=governments_played.get)]
-    profile["favoriteFP"] = foreign_policies_played[max(foreign_policies_played, key=foreign_policies_played.get)]
+    profile["favoriteGov"] = max(governments_played, key=governments_played.get)
+    profile["favoriteFP"] = max(foreign_policies_played, key=foreign_policies_played.get)
 
     profile["reliability"] = int((profile["totalGames"] - profile["resignations"]) / profile["totalGames"] * 100)
 
