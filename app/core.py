@@ -255,10 +255,9 @@ def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str
 
     # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []
-    if desired_unit_name in SD.units:
-        for region in Regions:
-            if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
-                candidate_region_ids.append(region.region_id)
+    for region in Regions:
+        if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
+            candidate_region_ids.append(region.region_id)
 
     # randomly select one of the candidate regions
     # there should always be at least one candidate region because we have already checked that the target unit exists

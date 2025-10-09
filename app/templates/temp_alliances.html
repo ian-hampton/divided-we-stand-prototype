@@ -73,7 +73,7 @@
                         <div class="cell-header">Founding Members</div>
                     </div>
                     {% for nation_name in alliance_data["foundingMembers"] %}
-                        <div class="row-spaced" style="color:{{ alliance_data["currentMembersFormatted"][nation_name]["nationColor"] }}">
+                        <div class="row-spaced" style="color:{{ alliance_data["foundingMembersFormatted"][nation_name]["nationColor"] }}">
                             <div class="cell-left">{{ nation_name }}</div>
                         </div>
                     {% endfor %}

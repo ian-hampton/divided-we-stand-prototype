@@ -1078,7 +1078,8 @@ def alliances(full_game_id):
         alliance_data = {
             "allianceType": alliance.type,
             "foundingMembers": alliance.founding_members,
-            "currentMembersFormatted": {}
+            "currentMembersFormatted": {},
+            "foundingMembersFormatted": {}
         }
 
         turn_started = alliance_data["turnCreated"]
@@ -1094,6 +1095,19 @@ def alliances(full_game_id):
             else:
                 color = nation.color
             alliance_data["currentMembersFormatted"][nation_name] = {
+                "turnJoined": turn_joined,
+                "nationColor": color
+            }
+
+        # add color to nation names
+        for nation_name, turn_joined in alliance.founding_members.items():
+            nation = Nations.get(nation_name)
+            bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+            if nation.color in bad_primary_colors_set:
+                color = palette.normal_to_occupied[nation.color]
+            else:
+                color = nation.color
+            alliance_data["foundingMembersFormatted"][nation_name] = {
                 "turnJoined": turn_joined,
                 "nationColor": color
             }

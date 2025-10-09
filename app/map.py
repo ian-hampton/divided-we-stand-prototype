@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app import palette
 from app.gamedata import Games, GameStatus
+from app.scenario import ScenarioData as SD
 from app.region import Region, Regions
 from app.nation import Nation, Nations
 
@@ -29,8 +30,6 @@ class GameMaps:
         """
         Exports updated maps to game files.
         """
-
-        from app.scenario import ScenarioData as SD
 
         print("Updating game maps...")
 
@@ -165,8 +164,6 @@ class GameMaps:
         """
         Spawns random improvements on random regions. Should only be called at the start of the game.
         """
-        
-        from app.scenario import ScenarioData as SD
         
         region_id_list = Regions.ids()
         
