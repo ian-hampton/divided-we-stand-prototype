@@ -155,6 +155,8 @@ class GameMaps:
         game = Games.load(self.game_id)
         if game.status.is_setup():
             self.main_map.save(f"gamedata/{self.game_id}/images/0.png")
+        elif game.status == GameStatus.ACTIVE_PENDING_EVENT:
+            self.main_map.save(f"gamedata/{self.game_id}/images/{game.turn}.png")
         else:
             self.main_map.save(f"gamedata/{self.game_id}/images/{game.turn - 1}.png")
         self.resource_map.save(f"gamedata/{self.game_id}/images/resourcemap.png")
