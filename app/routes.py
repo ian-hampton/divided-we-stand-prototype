@@ -693,7 +693,7 @@ def technologies(full_game_id):
     for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
             if research_name in SD.technologies:
-                data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+                temp_technology_data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
     for key, value in temp_technology_data.items():
