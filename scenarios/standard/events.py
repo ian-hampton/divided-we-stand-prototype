@@ -1519,7 +1519,7 @@ class FaustianBargain(Event):
         
         return True
 
-def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=False) -> any:
+def load_event(game_id: str, event_name: str, event_data: dict | None) -> any:
     """
     Creates an event object based on the event name.
 
@@ -1575,7 +1575,7 @@ def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=F
             "Duration": sd_event.duration
         }
 
-    return events[event_name](game_id, event_name, event_data, temp)
+    return events[event_name](game_id, event_name, event_data)
     
 def _is_first_event(game_id: str) -> bool:
 
