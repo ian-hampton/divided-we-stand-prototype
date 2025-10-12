@@ -2,7 +2,7 @@ import copy
 import random
 import importlib
 
-from app.gamedata import Games
+from app.gamedata import Games, GameStatus
 from app.notifications import Notifications
 
 def trigger_event(game_id: str) -> None:
@@ -41,6 +41,7 @@ def trigger_event(game_id: str) -> None:
     match event.state:
         case 2:
             game.current_event = event.export()
+            game.status = GameStatus.ACTIVE_PENDING_EVENT
         case 1:
             game.active_events[event_name] = event.export()
         case 0:
