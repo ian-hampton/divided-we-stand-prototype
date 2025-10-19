@@ -101,7 +101,9 @@ class Event:
 
                 if vote_count > float(nation.get_stockpile("Political Power")):
                     continue
-                if target_name.lower() not in Nations._name_to_id:
+                try:
+                    target_nation = Nations.get(target_name)
+                except:
                     continue
                 
                 if target_name in vote_tally_dict:
@@ -738,8 +740,8 @@ class ShiftingAttitudes(Event):
 
     def resolve(self):
 
-        choices = ["Change", "Keep"]
-        print(f"Available Options: {" or ".join(choices)}")
+        self.choices = ["Change", "Keep"]
+        print(f"Available Options: {" or ".join(self.choices)}")
         decision_dict = self._collect_basic_decisions()
 
         for nation_id, decision in decision_dict.items():
