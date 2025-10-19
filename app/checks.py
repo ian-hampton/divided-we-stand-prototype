@@ -218,7 +218,7 @@ def update_income(game_id: str) -> None:
             for resource_name in nation._resources:
                 str_list = []
                 resource_total = float(nation.get_income(resource_name))
-                str_list.append(f"+{resource_total:+.2f} {resource_name}")
+                str_list.append(f"{resource_total:+.2f} {resource_name}")
                 final_income_strings[nation.name][resource_name] = str_list
 
         # add counts
