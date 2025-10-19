@@ -255,10 +255,10 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         "military reinforcements": MilitaryReinforcementsAction
     }
 
-    action_str = action_str.strip().lower()
+    action_str = action_str.strip()
 
     for action_key in sorted(actions.keys(), key=len, reverse=True):
-        if action_str.startswith(action_key):
+        if action_str.lower().startswith(action_key):
             return actions[action_key](game_id, nation_id, action_str)
     
     return None
