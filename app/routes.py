@@ -999,7 +999,7 @@ def announcements(full_game_id):
     game = Games.load(full_game_id)
     Alliances.load(full_game_id)
     Nations.load(full_game_id)
-    Notifications.initialize(full_game_id)
+    Notifications.load(full_game_id)
     Truces.load(full_game_id)
     Wars.load(full_game_id)
 
