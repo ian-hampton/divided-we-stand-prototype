@@ -336,7 +336,7 @@ class Region:
             for resource_name in improvement_income_dict:
                 if resource_name in ["Political Power", "Military Capacity"]:
                     continue
-                improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
+                improvement_income_dict[resource_name]["Income Multiplier"] += 1.0
         
         # get pandemic multiplier
         if "Pandemic" in game.active_events:
