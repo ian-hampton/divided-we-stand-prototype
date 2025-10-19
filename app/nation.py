@@ -858,7 +858,7 @@ class Nation:
         capacity_used = 0
         for alliance in Alliances:
             if (alliance.is_active
-                and self.name in alliance
+                and self.name in alliance.current_members
                 and SD.alliances[alliance.type].capacity
                 ):
                 capacity_used += 1

@@ -1082,9 +1082,8 @@ def alliances(full_game_id):
             "foundingMembersFormatted": {}
         }
 
-        turn_started = alliance_data["turnCreated"]
-        season, year = core.date_from_turn_num(turn_started)
-        date_str = f"{season} {year} (Turn {turn_started})"
+        season, year = game.get_season_and_year()
+        date_str = f"{season} {year} (Turn {game.turn})"
         alliance_data["turnCreated"] = date_str
 
         for nation_name, turn_joined in alliance.current_members.items():
