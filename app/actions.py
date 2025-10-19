@@ -2256,11 +2256,6 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
     if Alliances.are_allied(attacker_nation.name, defender_nation.name):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
         return False
-
-    # alliance truce check
-    if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
-        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
-        return False
     
     # independence check
     if attacker_nation.status != "Independent Nation" and not SD.war_justificiations[action.war_justification].for_puppet_states:

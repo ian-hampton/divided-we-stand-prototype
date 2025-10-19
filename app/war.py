@@ -118,10 +118,9 @@ class Wars(metaclass=WarsMeta):
         possible_allies = set(puppet_states)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
-            if (cls.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
-                and not Truces.are_truced(main_defender.id, ally.id)                    # ally cannot have truce with defender
-                and not Alliances.are_allied(main_defender.name, ally.name)             # ally cannot be allied with defender
-                and not Alliances.former_ally_truce(main_defender.name, ally.name)):    # ally cannot be recently allied with defender
+            if (cls.get_war_name(main_defender.id, ally.id) is None              # ally cannot already be at war with defender
+                and not Truces.are_truced(main_defender.id, ally.id)             # ally cannot have truce with defender
+                and not Alliances.are_allied(main_defender.name, ally.name)):    # ally cannot be allied with defender
                 new_war.add_combatant(ally, "Secondary Attacker", "TBD")
 
         # call in main defender allies
@@ -135,10 +134,9 @@ class Wars(metaclass=WarsMeta):
                     ally_player_ids.add(nation.id)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
-            if (cls.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
-                and not Truces.are_truced(main_attacker.id, ally.id)                    # ally cannot have truce with attacker
-                and not Alliances.are_allied(main_attacker.name, ally.name)             # ally cannot be allied with attacker
-                and not Alliances.former_ally_truce(main_attacker.name, ally.name)):    # ally cannot be recently allied with attacker
+            if (cls.get_war_name(main_attacker.id, ally.id) is None              # ally cannot already be at war with attacker
+                and not Truces.are_truced(main_attacker.id, ally.id)             # ally cannot have truce with attacker
+                and not Alliances.are_allied(main_attacker.name, ally.name)):    # ally cannot be allied with attacker
                 new_war.add_combatant(ally, "Secondary Defender", "TBD")
 
     @classmethod
