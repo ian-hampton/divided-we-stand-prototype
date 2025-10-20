@@ -1481,6 +1481,7 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
     priorities = {}
     resolved = set()
     failed = set()
+    requeued = defaultdict(int)    # temporary solution to break deadlocks
 
     for target_region in claimed_regions.values():
         priority = get_priority(target_region)
@@ -1495,12 +1496,13 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
             continue
 
-        if priority == 99999:
+        if priority == 99999 or requeued[target_region.region_id] > 100:
             nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
             failed.add(target_region.region_id)
             continue
         
         if priority > 0:
+            requeued[target_region.region_id] += 1
             heapq.heappush(heap, (priority, target_region))
             continue
 
@@ -1601,6 +1603,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
     priorities = {}
     resolved = set()
     failed = set()
+    requeued = defaultdict(int)    # temporary solution to break deadlocks
     
     for target_region in verified_claim_actions.values():
         priority = get_priority(target_region)
@@ -1615,7 +1618,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
             continue
 
-        if priority == 99999:
+        if priority == 99999 or requeued[target_region.region_id] > 100:
             nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
             failed.add(target_region.region_id)
             continue
@@ -1748,7 +1751,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
             return 0
         
         # special case - valid with one if all other adjacent regions are unclaimable
-        if adj_owned_count == 1 and adj_claimed_count == 0 and bfs_no_access():
+        if adj_owned_count == 1 and bfs_no_access():
             return 0
 
         if adj_owned_count < 2 and adj_claimed_count == 0:
