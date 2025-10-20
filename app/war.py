@@ -312,7 +312,6 @@ class Wars(metaclass=WarsMeta):
                     file.write(entry + '\n')
             
             war.log = []
-            cls.save(war)
 
     @classmethod
     def _generate_war_name(cls, main_attacker: Nation, main_defender: Nation, war_justification: str) -> str:

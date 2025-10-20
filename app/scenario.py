@@ -149,7 +149,7 @@ class SD_WarJustification:
         self.looser_becomes_puppet_state: bool = d.get("Looser Becomes Puppet State") is not None
         
         self.for_puppet_states: bool = d.get("For Puppet States") is not None
-        self.target_requirements: dict = d.get("Target Requirements", None)
+        self.target_requirements: dict = d.get("Target Requirements", {})
 
     @property
     def looser_penalties(self) -> dict | None:
