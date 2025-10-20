@@ -281,7 +281,6 @@ def update_income(game_id: str) -> None:
         for resource_name in nation._resources:
             text_dict[nation.name][resource_name] = defaultdict(int)
             if resource_name == "Military Capacity":
-                nation.update_used_mc(0.00, overwrite=True)
                 nation.update_max_mc(0.00, overwrite=True)
             else:
                 nation.update_gross_income(resource_name, 0.00, overwrite=True)
@@ -413,8 +412,8 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
         while float(nation.get_used_mc()) > float(nation.get_max_mc()):
             
             region_id, victim = core.search_and_destroy_unit(nation.id, 'ANY')
-            nation.update_used_mc(-1)
             nation.unit_counts[victim] -= 1
+            nation.update_military_capacity()
 
             Notifications.add(f"{nation.name} lost {victim} {region_id} due to insufficient military capacity.", 6)
 

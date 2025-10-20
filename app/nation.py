@@ -1070,18 +1070,11 @@ class Nation:
     def get_used_mc(self) -> float:
         return float(self._resources["Military Capacity"]["used"])
 
-    def update_used_mc(self, amount: int | float, *, overwrite = False) -> None:
-        
-        if not isinstance(amount, float) and not isinstance(amount, int):
-            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
-        
-        if overwrite:
-            self._resources["Military Capacity"]["used"] = f"{amount:.2f}"
-            return
-        
-        income = float(self._resources["Military Capacity"]["used"])
-        income += amount
-        self._resources["Military Capacity"]["used"] = f"{income:.2f}"
+    def update_military_capacity(self) -> None:
+        used_military_capacity = 0
+        for count in self.unit_counts.values():
+            used_military_capacity += count
+        self._resources["Military Capacity"]["used"] = f"{used_military_capacity:.2f}"
 
     def get_max_mc(self) -> float:
         
