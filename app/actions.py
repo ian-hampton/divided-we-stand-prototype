@@ -2141,9 +2141,9 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
             nation.update_used_mc(-1)
+        region.unit.set(action.unit_name, action.id)
         nation.unit_counts[region.unit.name] += 1
         nation.update_used_mc(1)
-        region.unit.set(action.unit_name, action.id)
 
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
