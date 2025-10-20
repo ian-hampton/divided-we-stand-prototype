@@ -62,27 +62,27 @@ class Region:
 
     def __init__(self, region_id: str):
         self._data = Regions._data[region_id]
-        self.region_id = region_id
+        self.id = region_id
         self.game_id = Regions.game_id
         self.claim_list = []
         self.data = RegionData(self._data["regionData"])
-        self.graph = GraphData(Regions._graph[self.region_id])
+        self.graph = GraphData(Regions._graph[self.id])
         self.improvement = ImprovementData(self._data["improvementData"])
         self.unit = UnitData(self._data["unitData"])
 
     def __eq__(self, other):
         if isinstance(other, Region):
-            return self.region_id == other.region_id
+            return self.id == other.id
         return False
     
     def __lt__(self, other: 'Region'):
-        return self.region_id < other.region_id
+        return self.id < other.id
     
     def __hash__(self):
-        return hash(self.region_id)
+        return hash(self.id)
 
     def __str__(self):
-        return f"R[{self.region_id}]"
+        return f"R[{self.id}]"
     
     def __repr__(self):
         return self.__str__()
@@ -97,8 +97,8 @@ class Region:
     
     def get_regions_in_radius(self, radius: int) -> set:
         
-        visited = set([self.region_id])
-        queue = deque([(self.region_id, 0)])
+        visited = set([self.id])
+        queue = deque([(self.id, 0)])
         
         while queue:
             
@@ -141,7 +141,7 @@ class Region:
             str: Suitable region_id if found, otherwise None.
         """
 
-        queue = deque([self.region_id])
+        queue = deque([self.id])
         visited = set()
 
         while queue:

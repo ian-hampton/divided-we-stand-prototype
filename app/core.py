@@ -213,10 +213,10 @@ def withdraw_units():
             target_id = region.find_suitable_region()
             
             if target_id is not None:
-                nation.action_log.append(f"Withdrew {region.unit.name} {region.region_id} to {target_id}.")
+                nation.action_log.append(f"Withdrew {region.unit.name} {region.id} to {target_id}.")
                 region.move_unit(Region(target_id), withdraw=True)
             else:
-                nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.region_id}. Unit disbanded!")
+                nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.id}. Unit disbanded!")
                 nation.unit_counts[region.unit.name] -= 1
                 region.unit.clear()
 
@@ -235,7 +235,7 @@ def search_and_destroy(player_id: str, target_improvement: str) -> str:
     candidate_region_ids = []
     for region in Regions:
         if region.improvement.name == target_improvement and region.data.owner_id == int(player_id):
-            candidate_region_ids.append(region.region_id)
+            candidate_region_ids.append(region.id)
 
     # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
@@ -257,7 +257,7 @@ def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str
     candidate_region_ids = []
     for region in Regions:
         if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
-            candidate_region_ids.append(region.region_id)
+            candidate_region_ids.append(region.id)
 
     # randomly select one of the candidate regions
     # there should always be at least one candidate region because we have already checked that the target unit exists

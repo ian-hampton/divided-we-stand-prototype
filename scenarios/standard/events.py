@@ -294,7 +294,7 @@ class DecayingInfrastructure(Event):
                 if decay_roll >= 9:
                     nation = Nations.get(region.data.owner_id)
                     nation.improvement_counts[region.improvement.name] -= 1
-                    Notifications.add(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 3)
+                    Notifications.add(f"{nation.name} {region.improvement.name} in {region.id} has decayed.", 3)
                     region.improvement.clear()
 
         self.state = 0
@@ -699,7 +699,7 @@ class PowerPlantMeltdown(Event):
         
         for region in Regions:
             if region.improvement.name == "Nuclear Power Plant":
-                self.targets.append(region.region_id)
+                self.targets.append(region.id)
         random.shuffle(self.targets)
         meltdown_region_id = self.targets.pop()
 
@@ -1131,7 +1131,7 @@ class ForeignInvasion(Event):
             if ending_region_id is None:
                 continue
             # foreign invasion always moves each unit one region at a time
-            movement_action_str = f"Move {region.region_id}-{ending_region_id}"
+            movement_action_str = f"Move {region.id}-{ending_region_id}"
             actions_dict["UnitMoveAction"].append(actions.UnitMoveAction(self.game_id, "99", movement_action_str))
         
         # generate deployment actions
@@ -1140,7 +1140,7 @@ class ForeignInvasion(Event):
             for region in Regions:
                 if region.data.owner_id == "99" and region.data.occupier_id == "0":
                     unit_name = self._foreign_invasion_determine_unit()
-                    deploy_action_str = f"Deploy {unit_name} {region.region_id}"
+                    deploy_action_str = f"Deploy {unit_name} {region.id}"
                     actions_dict["UnitDeployAction"].append(actions.UnitDeployAction(self.game_id, "99", deploy_action_str))
 
         self.state = 1
@@ -1359,7 +1359,7 @@ class Pandemic(Event):
             infected_regions = []
             for region in Regions:
                 if region.data.infection > 0:
-                    infected_regions.append(region.region_id)
+                    infected_regions.append(region.id)
 
             # conduct spread roles
             for region_id in infected_regions:

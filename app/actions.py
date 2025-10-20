@@ -1418,11 +1418,11 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
 
         minimum_spend[nation.id] += target_region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - minimum_spend[nation.id] < 0:
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Insufficient dollars.")
+            nation.action_log.append(f"Failed to claim {target_region.id}. Insufficient dollars.")
             continue
         
         target_region.add_claim(nation.id)
-        claim_actions_grouped[nation.id][target_region.region_id] = target_region
+        claim_actions_grouped[nation.id][target_region.id] = target_region
 
     # priority queue #1 - validate and pay for the claim actions of each nation
     claim_actions_validated: dict[str, Region] = {}
@@ -1430,24 +1430,24 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         validated_region_ids = _check_all_claims(game_id, claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
             target_region = Region(region_id)
-            if target_region.region_id in claim_actions_validated:
-                claim_actions_validated[target_region.region_id].add_claim(action.id)
+            if target_region.id in claim_actions_validated:
+                claim_actions_validated[target_region.id].add_claim(action.id)
             else:
                 target_region.add_claim(nation.id)
-                claim_actions_validated[target_region.region_id] = target_region
+                claim_actions_validated[target_region.id] = target_region
 
     # resolve region disputes
     claim_actions_final: dict[str, Region] = {}
     for target_region in claim_actions_validated.values():
         
         if len(target_region.claim_list) == 1:
-            claim_actions_final[target_region.region_id] = target_region
+            claim_actions_final[target_region.id] = target_region
             continue
 
         for player_id in target_region.claim_list:
             nation = Nations.get(player_id)
             cost = target_region.calculate_region_claim_cost(nation)
-            nation.action_log.append(f"Failed to claim {target_region.region_id} due to a region dispute. {cost:.2f} dollars wasted.")
+            nation.action_log.append(f"Failed to claim {target_region.id} due to a region dispute. {cost:.2f} dollars wasted.")
 
         target_region.data.purchase_cost += 5
         game.stats.region_disputes += 1
@@ -1465,15 +1465,15 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         adj_owned = set()
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
-            if nation_id == adj_region.data.owner_id or adj_region.region_id in resolved:
-                adj_owned.add(adj_region.region_id)
+            if nation_id == adj_region.data.owner_id or adj_region.id in resolved:
+                adj_owned.add(adj_region.id)
 
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = claimed_regions.get(adj_region_id)
             if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
-                adj_claimed.add(adj_region.region_id)
+                adj_claimed.add(adj_region.id)
 
         return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
@@ -1485,7 +1485,7 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
 
     for target_region in claimed_regions.values():
         priority = get_priority(target_region)
-        priorities[target_region.region_id] = priority
+        priorities[target_region.id] = priority
         heapq.heappush(heap, (priority, target_region))
 
     while heap:
@@ -1493,28 +1493,28 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
-        if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
+        if priority != priorities[target_region.id] or target_region.id in resolved or target_region.id in failed:
             continue
 
-        if priority == 99999 or requeued[target_region.region_id] > 100:
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
-            failed.add(target_region.region_id)
+        if priority == 99999 or requeued[target_region.id] > 100:
+            nation.action_log.append(f"Failed to claim {target_region.id}. Region is not adjacent to enough regions under your control.")
+            failed.add(target_region.id)
             continue
         
         if priority > 0:
-            requeued[target_region.region_id] += 1
+            requeued[target_region.id] += 1
             heapq.heappush(heap, (priority, target_region))
             continue
 
         cost = target_region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - cost < 0:
             # nation could not afford region
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Insufficient dollars.")
-            failed.add(target_region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.id}. Insufficient dollars.")
+            failed.add(target_region.id)
         else:
             # region successfully paid for
             nation.update_stockpile("Dollars", -1 * cost)
-            resolved.add(target_region.region_id)
+            resolved.add(target_region.id)
 
         # update priority values for adjacent regions
         for adj_region_id in target_region.graph.adjacent_regions:
@@ -1537,14 +1537,14 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
             if nation_id == adj_region.data.owner_id:
-                adj_owned.add(adj_region.region_id)
+                adj_owned.add(adj_region.id)
         
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = verified_claim_actions.get(adj_region_id)
             if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
-                adj_claimed.add(adj_region.region_id)
+                adj_claimed.add(adj_region.id)
 
         return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
@@ -1570,7 +1570,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
             encircled = True
             unclaimed: set[Region] = set()
 
-            visited = set([adj_region.region_id])
+            visited = set([adj_region.id])
             queue: deque[Region] = deque([adj_region])
 
             while queue:
@@ -1583,7 +1583,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
                     break
 
                 # continue if already owned
-                if region.data.owner_id == nation_id or region.region_id == target_region.region_id:
+                if region.data.owner_id == nation_id or region.id == target_region.id:
                     continue
 
                 region.add_claim(nation_id)
@@ -1607,7 +1607,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
     
     for target_region in verified_claim_actions.values():
         priority = get_priority(target_region)
-        priorities[target_region.region_id] = priority
+        priorities[target_region.id] = priority
         heapq.heappush(heap, (priority, target_region))
 
     while heap:
@@ -1615,12 +1615,12 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
-        if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
+        if priority != priorities[target_region.id] or target_region.id in resolved or target_region.id in failed:
             continue
 
-        if priority == 99999 or requeued[target_region.region_id] > 100:
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
-            failed.add(target_region.region_id)
+        if priority == 99999 or requeued[target_region.id] > 100:
+            nation.action_log.append(f"Failed to claim {target_region.id}. Region is not adjacent to enough regions under your control.")
+            failed.add(target_region.id)
             continue
         
         if priority > 0:
@@ -1631,32 +1631,32 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         encircled_cost = 0
         encircled_regions = find_encircled_regions(target_region, nation.id)
         for encircled_region in encircled_regions:
-            if encircled_region.region_id in verified_claim_actions:
+            if encircled_region.id in verified_claim_actions:
                 continue
             encircled_cost += encircled_region.calculate_region_claim_cost(nation)
         
         if float(nation.get_stockpile("Dollars")) - encircled_cost < 0:
             # player cannot afford to claim the unclaimed regions it has encircled
             nation.update_stockpile("Dollars", target_region.calculate_region_claim_cost(nation))
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. You could not afford to pay for the unclaimed regions this claim action encircled.")
-            failed.add(target_region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.id}. You could not afford to pay for the unclaimed regions this claim action encircled.")
+            failed.add(target_region.id)
         else:
             # claim region
             target_region.data.owner_id = nation_id
             nation.stats.regions_owned += 1
             if target_region.improvement.name is not None:
                 nation.improvement_counts[target_region.improvement.name] += 1
-            nation.action_log.append(f"Claimed region {target_region.region_id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
-            resolved.add(target_region.region_id)
+            nation.action_log.append(f"Claimed region {target_region.id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
+            resolved.add(target_region.id)
             # pay for and create claim actions for encircled regions (if any)
             for encircled_region in encircled_regions:
-                if encircled_region.region_id in verified_claim_actions:
+                if encircled_region.id in verified_claim_actions:
                     continue
                 cost = encircled_region.calculate_region_claim_cost(nation)
                 nation.update_stockpile("Dollars", -1 * cost)
-                verified_claim_actions[encircled_region.region_id] = encircled_region
+                verified_claim_actions[encircled_region.id] = encircled_region
                 encircled_priority = get_priority(encircled_region)
-                priorities[encircled_region.region_id] = encircled_priority
+                priorities[encircled_region.id] = encircled_priority
                 heapq.heappush(heap, (encircled_priority, encircled_region))
 
         # update priority values for adjacent regions
@@ -1697,7 +1697,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
                 return False
             
             friendly_regions_found = 0
-            visited = set([target_region.region_id])
+            visited = set([target_region.id])
             queue: deque[Region] = deque()
 
             # populate queue with adjacent unclaimed regions
@@ -2358,7 +2358,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
 
         # get combatants
         war = Wars.get(war_name)
-        war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.region_id} in {target_nation.name}!")
+        war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.id} in {target_nation.name}!")
         attacking_combatant = war.get_combatant(nation.id)
         defending_combatant = war.get_combatant(target_nation.id)
 
@@ -2378,7 +2378,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         missile_did_something = False
         if defender_name is not None:
             
-            war.log.append(f"    A nearby {defender_name} attempted to defend {target_region.region_id}.")
+            war.log.append(f"    A nearby {defender_name} attempted to defend {target_region.id}.")
             if defender_name in SD.units:
                 if action.missile_type == "Standard Missile":
                     hit_value = SD.units[defender_name].missile_defense
@@ -2424,18 +2424,18 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                     target_region.improvement.health -= 1
                     if target_region.improvement.health > 0:
                         # improvement survived
-                        war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.region_id} and dealt 1 damage.")
+                        war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.id} and dealt 1 damage.")
                     else:
                         # improvement destroyed
                         war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
                         if target_region.improvement.name != 'Capital':
                             attacking_combatant.destroyed_improvements += 1
                             defending_combatant.lost_improvements += 1
-                            war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.region_id} and dealt 1 damage. Improvement destroyed!")
+                            war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.id} and dealt 1 damage. Improvement destroyed!")
                             target_nation.improvement_counts[target_region.improvement.name] -= 1
                             target_region.improvement.clear()
                         else:
-                            war.log.append(f"    Missile struck Capital in {target_region.region_id} and dealt 1 damage. Improvement devastated!")
+                            war.log.append(f"    Missile struck Capital in {target_region.id} and dealt 1 damage. Improvement devastated!")
                 
                 else:
                     war.log.append(f"    Missile missed {target_region.improvement.name}.")
@@ -2453,7 +2453,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                     war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
                     attacking_combatant.destroyed_improvements += 1
                     defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.region_id}!")
+                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.id}!")
                     target_nation.improvement_counts[target_region.improvement.name] -= 1
                     target_region.improvement.clear()
                 
@@ -2474,13 +2474,13 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                     target_region.unit.health -= 1
                     if target_region.unit.health > 0:
                         # unit survived
-                        war.log.append(f"    Missile struck {target_region.unit.name} in {target_region.region_id} and dealt 1 damage.")
+                        war.log.append(f"    Missile struck {target_region.unit.name} in {target_region.id} and dealt 1 damage.")
                     else:
                         # unit destroyed
                         war.attackers.destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
                         attacking_combatant.destroyed_units += 1
                         defending_combatant.lost_units += 1
-                        war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.region_id}!")
+                        war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.id}!")
                         target_nation.unit_counts[target_region.unit.name] -= 1
                         target_region.unit.clear()
                 
@@ -2501,11 +2501,11 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                 if target_region.improvement.name != 'Capital':
                     attacking_combatant.destroyed_improvements += 1
                     defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.region_id}!")
+                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.id}!")
                     target_nation.improvement_counts[target_region.improvement.name] -= 1
                     target_region.improvement.clear()
                 else:
-                    war.log.append(f"    Missile devastated Capital in {target_region.region_id}!")
+                    war.log.append(f"    Missile devastated Capital in {target_region.id}!")
                     target_region.improvement.health = 0
 
             # destroy unit if present
@@ -2514,13 +2514,13 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
                 war.attackers.destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
                 attacking_combatant.destroyed_units += 1
                 defending_combatant.lost_units += 1
-                war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.region_id}!")
+                war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.id}!")
                 target_nation.unit_counts[target_region.unit.name] -= 1
                 target_region.unit.clear()
 
         # message for if missile hit nothing despite reaching its target
         if not missile_did_something:
-            war.log.append(f"    Missile successfully struck {target_region.region_id} but did not damage anything of strategic value.")
+            war.log.append(f"    Missile successfully struck {target_region.id} but did not damage anything of strategic value.")
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     
