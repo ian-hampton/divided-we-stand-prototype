@@ -244,7 +244,7 @@ def update_income(game_id: str) -> None:
         
         if income:
             source = "income"
-            resource_amount = float(nation.get_income("Oil"))
+            resource_amount = float(nation.get_income(resouce_name))
         else:
             source = "reserves"
             resource_amount = float(nation.get_stockpile(resouce_name))
