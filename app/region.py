@@ -257,13 +257,22 @@ class Region:
         """
 
         from app import combat
-        from app.nation import Nations
         from app.war import Wars
+
+        def execute_move() -> None:
+            # update region occupation
+            if attacker_id != defender_id:
+                target_region.data.occupier_id = self.unit.owner_id
+            else:
+                target_region.data.occupier_id = 0
+            # move attacking unit
+            target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
+            self.unit.clear()
 
         combat_occured = False
 
         if withdraw:
-            self._execute_move(target_region)
+            execute_move()
             return True
         
         # conduct combat if needed
@@ -274,41 +283,40 @@ class Region:
             combat.unit_vs_improvement(self, target_region)
             combat_occured = True
 
-        # complete move if still alive and no resistance
+        # complete move if unit still alive and no resistance
         if (self.unit.name is not None
             and not target_region.unit.is_hostile(self.unit.owner_id)
             and not target_region.improvement_is_hostile(self.unit.owner_id)):
             
-            unit_owner_id = copy.deepcopy(self.unit.owner_id)
-            self._execute_move(target_region)
+            attacker_id = self.unit.owner_id
+            defender_id = target_region.data.owner_id
+            execute_move()
 
-            if target_region.improvement_is_hostile(unit_owner_id) and target_region.improvement.name != "Capital":
+            if target_region.improvement.name is not None and target_region.improvement.name != "Capital" and attacker_id != defender_id:
 
                 # load war and combatant data
-                attacking_nation = Nations.get(str(unit_owner_id))
-                defending_nation = Nations.get(str(target_region.data.owner_id))
-                war_name = Wars.get_war_name(attacking_nation.id, defending_nation.id)
+                war_name = Wars.get_war_name(attacker_id, defender_id)
                 war = Wars.get(war_name)
-                attacking_nation_combatant_data = war.get_combatant(attacking_nation.id)
-                defending_nation_combatant_data = war.get_combatant(defending_nation.id)
+                attacking_nation_combatant_data = war.get_combatant(attacker_id)
+                defending_nation_combatant_data = war.get_combatant(defender_id)
                 
                 # award points and update stats
                 war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
                 attacking_nation_combatant_data.destroyed_improvements += 1
                 defending_nation_combatant_data.lost_improvements += 1
                 
-                # save war data
+                # update combat log
                 if combat_occured:
-                    war.log.append(f"    {defending_nation.name} {target_region.improvement.name} has been destroyed!")
+                    war.log.append(f"    {defending_nation_combatant_data.name} {target_region.improvement.name} has been destroyed!")
                 else:
-                    war.log.append(f"{attacking_nation.name} destroyed an undefended {defending_nation.name} {target_region.improvement.name}!")
+                    war.log.append(f"{attacking_nation_combatant_data.name} destroyed an undefended {defending_nation_combatant_data.name} {target_region.improvement.name}!")
 
                 # remove improvement
                 target_region.improvement.clear()
+            
+            return True
         
-    def _execute_move(self, target_region: "Region") -> None:
-        target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
-        self.unit.clear()
+        return False
 
     def calculate_yield(self, game_id: str, nation: Nation, improvement_income_dict: dict) -> dict:
         """
