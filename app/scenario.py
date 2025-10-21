@@ -63,7 +63,13 @@ class SD_Market:
 class SD_Missile:
     
     def __init__(self, d: dict):
-        pass
+        
+        self.d = d
+        self.required_research: str = d["Required Research"]
+
+    @property
+    def cost(self) -> dict:
+        return copy.deepcopy(self.d.get("Build Costs", {}))
 
 class SD_Technology:
     

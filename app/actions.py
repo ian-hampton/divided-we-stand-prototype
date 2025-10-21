@@ -1848,47 +1848,46 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
-    # TODO - add missile data to scenario
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
+        required_research = SD.missiles[action.missile_type].required_research
+        build_cost_dict = SD.missiles[action.missile_type].cost
 
-        if action.missile_type == "Standard Missile" and "Missile Technology" not in nation.completed_research:
-            nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Missile Technology technology.")
+        if required_research is not None and required_research not in nation.completed_research:
+            nation.action_log.append(f"Failed to make {action.quantity} {action.missile_type}. You do not have the required research.")
             continue
-        elif action.missile_type == "Nuclear Missile" and "Nuclear Warhead" not in nation.completed_research:
-            nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Nuclear Warhead technology.")
+
+        valid = True
+        for resource_name, cost in build_cost_dict.items():
+            total_cost = cost * action.quantity
+            if float(nation.get_stockpile(resource_name)) - total_cost < 0:
+                valid = False
+                break
+        if not valid:
+            nation.action_log.append(f"Failed to make {action.quantity} {action.missile_type}. Insufficient resources.")
             continue
 
-        if action.missile_type == "Standard Missile":
+        costs_list = []
+        for resource_name, cost in build_cost_dict.items():
+            total_cost = cost * action.quantity
+            costs_list.append(f"{total_cost} {resource_name.lower()}")
+            nation.update_stockpile(resource_name, -1 * total_cost)
 
-            cost = 3 * action.quantity
-            if float(nation.get_stockpile("Common Metals")) - cost < 0:
-                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
-                continue
-            
-            nation.update_stockpile("Common Metals", -1 * cost)
-
+        if action.missile_type == "Nuclear Missile":
+            nation.nuke_count += action.quantity
+        else:
             nation.missile_count += action.quantity
         
-        elif action.missile_type == "Nuclear Missile":
-
-            cost = 2 * action.quantity
-            if (float(nation.get_stockpile("Advanced Metals")) - cost < 0
-                or float(nation.get_stockpile("Uranium")) - cost < 0
-                or float(nation.get_stockpile("Rare Earth Elements")) - cost < 0):
-                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
-                continue
-            
-            nation.update_stockpile("Advanced Metals", -1 * cost)
-            nation.update_stockpile("Uranium", -1 * cost)
-            nation.update_stockpile("Rare Earth Elements", -1 * cost)
-
-            nation.nuke_count += action.quantity
-
-        nation.action_log.append(f"Manufactured {action.quantity}x {action.missile_type}.")
+        if len(costs_list) <= 2:
+            costs_str = " and ".join(costs_list)
+        else:
+            costs_str = ", ".join(costs_list)
+            costs_str = " and ".join(costs_str.rsplit(", ", 1))
+        nation.action_log.append(f"Manufactured {action.quantity} {action.missile_type} for {costs_str}.") 
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
     

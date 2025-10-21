@@ -1,4 +1,16 @@
 {
-    "Standard Missile": true,
-    "Nuclear Missile": true
+    "Standard Missile": {
+        "Required Research": "Missile Technology",
+        "Build Costs": {
+            "Common Metals": 3
+        }
+    },
+    "Nuclear Missile": {
+        "Required Research": "Nuclear Warhead",
+        "Build Costs": {
+            "Advanced Metals": 2,
+            "Uranium": 2,
+            "Rare Earth Elements": 2
+        }
+    }
 }
