@@ -242,7 +242,7 @@ class Region:
             if other_player_id != "0" and self.data.occupier_id == other_player_id:
                 return False
         
-        return False
+        return True
 
     def move_unit(self, target_region: "Region", *, withdraw=False) -> bool:
         """
@@ -269,13 +269,12 @@ class Region:
             target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
             self.unit.clear()
 
-        combat_occured = False
-
         if withdraw:
             execute_move()
             return True
         
         # conduct combat if needed
+        combat_occured = False
         if target_region.unit.is_hostile(self.unit.owner_id):
             combat.unit_vs_unit(self, target_region)
             combat_occured = True
