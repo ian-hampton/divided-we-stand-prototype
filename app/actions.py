@@ -9,6 +9,7 @@ from app.gamedata import Games
 from app.nation import Nation, Nations
 from app.region import Region
 from app.notifications import Notifications
+from app.missile_strike import *
 
 class AllianceCreateAction:
 
@@ -2295,6 +2296,26 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
     from app.nation import Nations
     from app.war import Wars
 
+    def is_valid_target(nation: Nation, target_region: Region) -> bool:
+        
+        if nation.id != target_region.data.owner_id:
+            if Wars.get_war_name(nation.id, target_region.data.owner_id) is None:
+                # cannot strike a foreign region if it is owned by a nation you are not at war with
+                return False
+            if target_region.data.occupier_id != "0" and Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
+                # cannot strike a hostile nation's region if it is occupied by a non-hostile nation
+                return False
+            if target_region.unit.name is not None and Wars.get_war_name(nation.id, target_region.unit.owner_id) is None:
+                # cannot strike a hostile nation's region if a non-hostile unit is present
+                return False
+        
+        elif nation.id == target_region.data.owner_id:
+            if target_region.data.occupier_id == "0" or Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
+                # only allowed to strike your own region if it is occupied by a hostile nation
+                return False
+        
+        return True
+
     # missile launch capacity is calculated in advance of actions because missile launches are simultaneous
     missiles_launched_list = [0] * len(Nations)
     launch_capacity_list = [0] * len(Nations)
@@ -2305,47 +2326,22 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         
         nation = Nations.get(action.id)
         target_region = Region(action.target_region)
+        missile = SD.missiles[action.missile_type]
 
-        has_missile = True
-        if action.missile_type == "Standard Missile" and nation.missile_count == 0:
-            has_missile = False
-        elif action.missile_type == "Nuclear Missile" and nation.nuke_count == 0:
-            has_missile = False
-        if not has_missile:
+        if (missile.type == "Nuclear Missile" and nation.nuke_count == 0) or (action.missile_type != "Nuclear Missile" and nation.missile_count == 0):
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. You do not have a {action.missile_type} in storage.")
             continue
 
-        is_valid_target = True
-        if nation.id != str(target_region.data.owner_id):
-            engagement_type = 1
-            if Wars.get_war_name(nation.id, target_region.data.owner_id) is None:
-                # cannot nuke a foreign region if it is owned by a nation you are not at war with
-                is_valid_target = False
-            if target_region.data.occupier_id != "0" and Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
-                # cannot nuke a hostile nation's region if it is occupied by a non-hostile nation
-                is_valid_target = False
-            if target_region.unit.name is not None and Wars.get_war_name(nation.id, target_region.unit.owner_id) is None:
-                # cannot nuke a hostile nation's region if a non-hostile unit is present
-                is_valid_target = False
-        elif nation.id == str(target_region.data.owner_id):
-            engagement_type = 2
-            if target_region.data.occupier_id == "0" or Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
-                # only allowed to strike your own region if it is occupied by a hostile nation
-                is_valid_target = False
-        if not is_valid_target:
+        if not is_valid_target(nation, target_region):
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Invalid target!")
             continue
-
-        if action.missile_type == "Standard Missile":
-            capacity_cost = 1
-        elif action.missile_type == "Nuclear Missile":
-            capacity_cost = 3
-        if missiles_launched_list[int(nation.id) - 1] + capacity_cost > launch_capacity_list[int(nation.id) - 1]:
-            nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Insufficient launch capacity!")
+        
+        if missiles_launched_list[int(nation.id) - 1] + missile.launch_cost > launch_capacity_list[int(nation.id) - 1]:
+            nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Insufficient missile silos!")
             continue
 
         # identify conflict
-        if engagement_type == 1 and target_region.data.occupier_id == "0":
+        if nation.id != target_region.data.owner_id and target_region.data.occupier_id == "0":
             # missile strike on hostile territory owned by the same hostile
             target_nation = Nations.get(str(target_region.data.owner_id))
             war_name = Wars.get_war_name(nation.id, str(target_region.data.owner_id))
@@ -2354,171 +2350,15 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
             target_nation = Nations.get(str(target_region.data.occupier_id))
             war_name = Wars.get_war_name(nation.id, str(target_region.data.occupier_id))
 
-        # get combatants
+        # resolve missile strike
         war = Wars.get(war_name)
         war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.id} in {target_nation.name}!")
-        attacking_combatant = war.get_combatant(nation.id)
-        defending_combatant = war.get_combatant(target_nation.id)
-
-        # fire missile
-        missiles_launched_list[int(nation.id) - 1] += capacity_cost
-        if action.missile_type == "Standard Missile":
-            nation.missile_count -= 1
-        elif action.missile_type == "Nuclear Missile":
-            nation.nuke_count -= 1
-        
-        # log launch and find best missile defense
-        nation.action_log.append(f"Launched {action.missile_type} at {action.target_region}. See combat log for details.")
-        defender_name = core.locate_best_missile_defense(target_nation, action.missile_type, action.target_region)
-        
-        # engage missile defense
-        missile_intercepted = False
-        missile_did_something = False
-        if defender_name is not None:
-            
-            war.log.append(f"    A nearby {defender_name} attempted to defend {target_region.id}.")
-            if defender_name in SD.units:
-                if action.missile_type == "Standard Missile":
-                    hit_value = SD.units[defender_name].missile_defense
-                else:
-                    hit_value = SD.units[defender_name].nuclear_defense
-            else:
-                if action.missile_type == "Standard Missile":
-                    hit_value = SD.improvements[defender_name].missile_defense
-                else:
-                    hit_value = SD.improvements[defender_name].nuclear_defense
-                if "Local Missile Defense" in nation.completed_research and defender_name not in ["Missile Defense System", "Missile Defense Network"]:
-                    hit_value = SD.improvements[defender_name].hit_value
-
-            missile_defense_roll = random.randint(1, 10)
-            if missile_defense_roll >= hit_value:
-                # incoming missile shot down
-                missile_intercepted = True
-                war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {hit_value}+). Missile destroyed!")
-            else:
-                # incoming missile dodged defenses
-                war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {hit_value}+). Defenses missed!")
-
-        # end action if missile was destroyed
-        if missile_intercepted:
-            continue
-
-        # conduct missile strike
-        if action.missile_type == 'Standard Missile':
-            
-            attacking_combatant.launched_missiles += 1
-
-            # improvement damage
-            if target_region.improvement.name is not None and target_region.improvement.health != 99:
-
-                # initial roll against improvement
-                missile_did_something = True
-                accuracy_roll = random.randint(1, 10)
-                war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 4+).")
-
-                if accuracy_roll > 3:
-                
-                    # apply damage
-                    target_region.improvement.health -= 1
-                    if target_region.improvement.health > 0:
-                        # improvement survived
-                        war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.id} and dealt 1 damage.")
-                    else:
-                        # improvement destroyed
-                        war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-                        if target_region.improvement.name != 'Capital':
-                            attacking_combatant.destroyed_improvements += 1
-                            defending_combatant.lost_improvements += 1
-                            war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.id} and dealt 1 damage. Improvement destroyed!")
-                            target_nation.improvement_counts[target_region.improvement.name] -= 1
-                            target_region.improvement.clear()
-                        else:
-                            war.log.append(f"    Missile struck Capital in {target_region.id} and dealt 1 damage. Improvement devastated!")
-                
-                else:
-                    war.log.append(f"    Missile missed {target_region.improvement.name}.")
-
-            elif target_region.improvement.name is not None and target_region.improvement.health == 99:
-                
-                # initial roll against improvement
-                missile_did_something = True
-                accuracy_roll = random.randint(1, 10)
-                war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 8+).")
-
-                if accuracy_roll > 7:
-
-                    # improvement has no health so it is destroyed
-                    war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-                    attacking_combatant.destroyed_improvements += 1
-                    defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.id}!")
-                    target_nation.improvement_counts[target_region.improvement.name] -= 1
-                    target_region.improvement.clear()
-                
-                else:
-                    war.log.append(f"    Missile missed {target_region.improvement.name}.")
-
-            # unit damage
-            if target_region.unit.name != None:
-
-                # initial roll against unit
-                missile_did_something = True
-                accuracy_roll = random.randint(1, 10)
-                war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 4+).")
-
-                if accuracy_roll > 3:
-                    
-                    # apply damage
-                    target_region.unit.health -= 1
-                    if target_region.unit.health > 0:
-                        # unit survived
-                        war.log.append(f"    Missile struck {target_region.unit.name} in {target_region.id} and dealt 1 damage.")
-                    else:
-                        # unit destroyed
-                        war.attackers.destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
-                        attacking_combatant.destroyed_units += 1
-                        defending_combatant.lost_units += 1
-                        war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.id}!")
-                        target_nation.unit_counts[target_region.unit.name] -= 1
-                        target_region.unit.clear()
-                
-                else:
-                    war.log.append(f"    Missile missed {target_region.unit.name}.")
-
-        elif action.missile_type == 'Nuclear Missile':
-            
-            attacking_combatant.launched_nukes += 1
-            war.attackers.nuclear_strikes += Wars.WARSCORE_FROM_NUCLEAR_STRIKE
-            if target_region.improvement.name != 'Capital':
-                target_region.set_fallout()
-
-            # destroy improvement if present
-            if target_region.improvement.name is not None:
-                missile_did_something = True
-                war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-                if target_region.improvement.name != 'Capital':
-                    attacking_combatant.destroyed_improvements += 1
-                    defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.id}!")
-                    target_nation.improvement_counts[target_region.improvement.name] -= 1
-                    target_region.improvement.clear()
-                else:
-                    war.log.append(f"    Missile devastated Capital in {target_region.id}!")
-                    target_region.improvement.health = 0
-
-            # destroy unit if present
-            if target_region.unit.name != None:
-                missile_did_something = True
-                war.attackers.destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
-                attacking_combatant.destroyed_units += 1
-                defending_combatant.lost_units += 1
-                war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.id}!")
-                target_nation.unit_counts[target_region.unit.name] -= 1
-                target_region.unit.clear()
-
-        # message for if missile hit nothing despite reaching its target
-        if not missile_did_something:
-            war.log.append(f"    Missile successfully struck {target_region.id} but did not damage anything of strategic value.")
+        if missile.type == "Nuclear Missile":
+            missile_strike = NuclearStrike(nation, target_nation, target_region, war)
+        else:
+            missile_strike = StandardStrike(nation, target_nation, target_region, war)
+        missiles_launched_list[int(nation.id) - 1] += missile_strike.fire_missile()
+        missile_strike.resolve()
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     

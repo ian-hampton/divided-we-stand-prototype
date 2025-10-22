@@ -1,12 +1,16 @@
 {
     "Standard Missile": {
         "Required Research": "Missile Technology",
+        "Type": "Standard Missile",
+        "Launch Capacity": 1,
         "Build Costs": {
             "Common Metals": 3
         }
     },
     "Nuclear Missile": {
         "Required Research": "Nuclear Warhead",
+        "Type": "Nuclear Missile",
+        "Launch Capacity": 3,
         "Build Costs": {
             "Advanced Metals": 2,
             "Uranium": 2,

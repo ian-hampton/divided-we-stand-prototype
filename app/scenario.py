@@ -43,6 +43,7 @@ class SD_Improvement:
         self.hit_value: int = d.get("Combat Value", 99)
         self.missile_defense: int = d.get("Standard Missile Defense", 99)
         self.nuclear_defense: int = d.get("Nuclear Missile Defense", 99)
+        self.defense_range: int = d.get("Missile Defense Range", 99)
 
         self.income: dict = d.get("Income", {})
         self.abilities: list = d.get("Abilities", [])
@@ -66,6 +67,8 @@ class SD_Missile:
         
         self.d = d
         self.required_research: str = d["Required Research"]
+        self.type: str = d["Type"]
+        self.launch_cost: int = d["Launch Capacity"]
 
     @property
     def cost(self) -> dict:
@@ -98,6 +101,7 @@ class SD_Unit:
         self.hit_value: int = d.get("Combat Value", 99)
         self.missile_defense: int = d.get("Standard Missile Defense", 99)
         self.nuclear_defense: int = d.get("Nuclear Missile Defense", 99)
+        self.defense_range: int = d.get("Missile Defense Range", 99)
         
         self.movement: int = d.get("Movement", 0)
         self.abilities: list = d.get("Abilities", [])
