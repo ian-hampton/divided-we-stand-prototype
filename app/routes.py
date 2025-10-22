@@ -1,19 +1,20 @@
-import ast
-from queue import PriorityQueue 
 import csv
-from datetime import datetime
 import json
 import os
-import uuid
+import string
+import random
+import shutil
+from operator import itemgetter
+from collections import defaultdict
+from datetime import datetime
+from queue import PriorityQueue 
 
 from app import site_functions
 from app import core
 from app import events
 from app import palette
-from app.notifications import Notifications
-from app.alliance import AllianceTable
-from app.nationdata import NationTable
-from app.war import WarTable
+from app.scenario import ScenarioData as SD
+from app.gamedata import Games, GameStatus
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -30,110 +31,215 @@ def main_function():
 #GAMES PAGE
 @main.route('/games')
 def games():
+
+    def generate_refined_player_list_active():
+        """
+        Creates list of nations that is shown alongside each game.
+        """
+
+        with open('playerdata/player_records.json', 'r') as json_file:
+            player_records_dict = json.load(json_file)
+
+        data_a = []
+        data_b = []
     
-    # read game files
-    with open('player_records.json', 'r') as json_file:
+        for nation in Nations:
+            gov_fp_str = f"{nation.fp} - {nation.gov}"
+            username_str = f"""<a href="profile/{nation.player_id}">{player_records_dict[nation.player_id]["Username"]}</a>"""
+            player_color = site_functions.check_color_correction(nation.color)
+            # tba - fix duplicate player color (second one should be redundant)
+            if nation.score > 0:
+                data_a.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
+            else:
+                data_b.append([nation.name, nation.score, gov_fp_str, username_str, player_color, player_color])
+
+        filtered_data_a = sorted(data_a, key=itemgetter(0), reverse=False)
+        filtered_data_a = sorted(filtered_data_a, key=itemgetter(1), reverse=True)
+        filtered_data_b = sorted(data_b, key=itemgetter(0), reverse=False)
+        data = filtered_data_a + filtered_data_b
+
+        return data
+    
+    from app.nation import Nations
+    with open("playerdata/player_records.json", 'r') as json_file:
         player_records_dict = json.load(json_file)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
 
-    # read active games
-    for game_id, game_data in active_games_dict.items():
-        current_turn = game_data["Statistics"]["Current Turn"]
-        if current_turn == "Turn N/A":
-            continue
+    active_games = {}
 
-        nation_table = NationTable(game_id)
+    for game in Games:
+
+        Nations.load(game.id)
+        active_games[game.id] = {
+            "title": None,
+            "status": None,
+            "image_url": None,
+            "playerdata": None,
+            "information": {
+                "Scenario": game.info.scenario,
+                "Map": game.info.map,
+                "Players": game.info.player_count,
+                "Turn Length": game.info.turn_length,
+                "Victory Conditions": game.info.victory_conditions,
+                "Accelerated Schedule": game.info.accelerated_schedule,
+                "Weekend Deadlines": game.info.weekend_deadlines,
+                "Fog of War": game.info.fog_of_war
+            },
+            "statistics": {
+                "Date Started": game.stats.date_started,
+                "Days Ellapsed": game.stats.days_elapsed,
+                "Region Disputes": game.stats.region_disputes,
+            }
+        }
         
-        match current_turn:
+        match game.status:
 
-            case "Starting Region Selection in Progress":
-                # get title and game link
-                game_name = game_data["Game Name"]
-                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                # get status
-                game_data["Status"] = current_turn
-                # get player information
+            case GameStatus.REGION_SELECTION:
+                active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
+                active_games[game.id]["status"] = "Starting Region Selection in Progress"
                 refined_player_data = []
-                for nation in nation_table:
+                for nation in Nations:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
                     refined_player_data.append([nation.name, 0, 'TBD', username_str, '#ffffff', '#ffffff'])
-                # get image
-                game_map = game_data["Information"]["Map"]
-                if game_map == "United States 2.0":
-                    game_map = "united_states"
-                image_url = url_for('main.get_mainmap', full_game_id=game_id)
+                active_games[game.id]["playerdata"] = refined_player_data
+                active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
 
-            case "Nation Setup in Progress":
-                # get title and game link
-                game_name = game_data["Game Name"]
-                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                # get status
-                game_data["Status"] = current_turn
-                # get player information
+            case GameStatus.NATION_SETUP:
+                active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
+                active_games[game.id]["status"] = "Nation Setup in Progress"
                 refined_player_data = []
-                for nation in nation_table:
+                for nation in Nations:
                     username = player_records_dict[nation.player_id]["Username"]
                     username_str = f"""<a href="profile/{nation.player_id}">{username}</a>"""
                     player_color_2 = site_functions.check_color_correction(nation.color)
                     refined_player_data.append([nation.name, 0, 'TBD', username_str, nation.color, player_color_2])
-                # get image
-                image_url = url_for('main.get_mainmap', full_game_id=game_id)
+                active_games[game.id]["playerdata"] = refined_player_data
+                active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
 
             case _:
-                # get title and game link
-                game_name = game_data["Game Name"]
-                game_data["Title"] = f"""<a href="/{game_id}">{game_name}</a>"""
-                # get status
-                if game_data["Game Active"]:
-                    game_data["Status"] = f"Turn {current_turn}"
+                active_games[game.id]["title"] = f"""<a href="/{game.id}">{game.name}</a>"""
+                if not GameStatus.FINISHED:
+                    active_games[game.id]["status"] = "Game Over!"
                 else:
-                    game_data["Status"] = "Game Over!"
-                # get player information
-                refined_player_data = site_functions.generate_refined_player_list_active(game_id, current_turn)
-                # get image
-                image_url = url_for('main.get_mainmap', full_game_id=game_id)
-        
-        game_data["Playerdata Masterlist"] = refined_player_data
-        game_data["image_url"] = image_url
+                    active_games[game.id]["status"] = f"Turn {game.turn}"
+                active_games[game.id]["playerdata"] = generate_refined_player_list_active()
+                active_games[game.id]["image_url"] = url_for('main.get_mainmap', full_game_id=game.id)
     
-    return render_template('temp_games.html', dict = active_games_dict, full_game_id = game_id)
+    return render_template('temp_games.html', dict = active_games)
 
 # SETTINGS PAGE
 @main.route('/settings')
 def settings():
+
+    with open("playerdata/player_records.json", 'r') as json_file:
+        player_records_dict = json.load(json_file)
+    
     username_list = []
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
+
     return render_template('temp_settings.html', username_list = username_list)
 
 # SETTINGS PAGE - Create Game Procedure
 @main.route('/create_game', methods=['POST'])
 def create_game():
-    
-    # get game record dictionaries
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+
+    def create_new_game() -> None:
+
+        from app.nation import Nations
+
+        game_id = ''.join(random.choices(string.ascii_letters, k=20))
+
+        Games.create(game_id, form_data_dict)
+        game = Games.load(game_id)
+        SD.load(game_id)
+        map_str = game.get_map_string()
+        with open(f"maps/{map_str}/graph.json", 'r') as json_file:
+            graph_dict = json.load(json_file)
+
+        # create directories
+        os.makedirs(f"gamedata/{game_id}/images")
+        os.makedirs(f"gamedata/{game_id}/logs")
+
+        # copy starting map images
+        files_destination = f"gamedata/{game_id}"
+        shutil.copy(f"app/static/images/map_images/{map_str}/blank.png", f"{files_destination}/images")
+        shutil.move(f"{files_destination}/images/blank.png", f"gamedata/{game_id}/images/resourcemap.png")
+        shutil.copy(f"app/static/images/map_images/{map_str}/{map_str}.png", f"{files_destination}/images")
+        shutil.move(f"{files_destination}/images/{map_str}.png", f"gamedata/{game_id}/images/controlmap.png")
+        
+        # create regdata.json
+        regdata_dict = {}
+        for region_id in graph_dict:
+            regdata_dict[region_id] = {
+                "regionData": {
+                    "ownerID": "0",
+                    "occupierID": "0",
+                    "purchaseCost": 5,
+                    "regionResource": "Empty",
+                    "nukeTurns": 0,
+                },
+                "improvementData": {
+                    "name": None,
+                    "health": 99,
+                    "turnTimer": 99
+                },
+                "unitData": {
+                    "name": None,
+                    "health": 99,
+                    "ownerID": "0"
+                }
+            }
+            if form_data_dict["Scenario"] == "Standard":
+                regdata_dict[region_id]["regionData"]["infection"] = 0
+                regdata_dict[region_id]["regionData"]["quarantine"] = False
+        with open(f"gamedata/{game_id}/regdata.json", 'w') as json_file:
+            json.dump(regdata_dict, json_file, indent=4)
+
+        # create gamedata.json
+        gamedata_filepath = f"gamedata/{game_id}/gamedata.json"
+        gamedata_dict = {
+            "alliances": {},
+            "nations": {},
+            "notifications": [],
+            "truces": {},
+            "wars": {}
+        }
+        with open(gamedata_filepath, 'w') as json_file:
+            json.dump(gamedata_dict, json_file, indent=4)
+
+        # create nationdata
+        Nations.load(game_id)
+        for i, user_id in enumerate(profile_ids_list):
+            Nations.create(str(i + 1), user_id)
+        Nations.save()
+
+        # create rmdata file
+        rmdata_filepath = f'{files_destination}/rmdata.csv'
+        with open(rmdata_filepath, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Turn", "Nation", "Bought/Sold", "Count", "Resource Exchanged"])
 
     # get username list
     username_list = []
-    with open('player_records.json', 'r') as json_file:
+    profile_id_list = []
+    with open('playerdata/player_records.json', 'r') as json_file:
         player_records_dict = json.load(json_file)
     for profile_id, player_data in player_records_dict.items():
         username_list.append(player_data.get("Username"))
+        profile_id_list.append(profile_id)
     
     # get values from settings form
     form_data_dict = {
         "Game Name": request.form.get('name_input'),
-        "Player Count": request.form.get('pc_dropdown'),
-        "Victory Conditions": request.form.get('vc_dropdown'),
+        "Scenario": request.form.get('scenario_dropdown'),
         "Map": request.form.get('map_dropdown'),
-        "Accelerated Schedule": request.form.get('as_dropdown'),
+        "Player Count": int(request.form.get('pc_dropdown')),
+        "Victory Conditions": request.form.get('vc_dropdown'),
         "Turn Length": request.form.get('td_dropdown'),
-        "Fog of War": request.form.get('fow_dropdown'),
-        "Deadlines on Weekends": request.form.get('dow_dropdown'),
-        "Scenario": request.form.get('scenario_dropdown')
+        "Fog of War": request.form.get('fow_dropdown') == 'true',
+        "Accelerated Schedule": request.form.get('as_dropdown') == 'true',
+        "Deadlines on Weekends": request.form.get('dow_dropdown') == 'true'
     }
     profile_ids_list = []
     for index, username in enumerate(username_list):
@@ -144,129 +250,65 @@ def create_game():
 
     # erase all active games override
     if form_data_dict["Game Name"] == "5EQM8Z5VoLxvxqeP1GAu":
-        
-        active_games = [key for key, value in active_games_dict.items() if value.get("Game Active")]
-        for active_game_id in active_games:
-            active_games_dict[active_game_id] = {
-                "Game Name": "Open Game Slot",
-                "Game #": 0,
-                "Game Active": False,
-                "Information": {
-                    "Version": "TBD",
-                    "Scenario": "TBD",
-                    "Map": "TBD",
-                    "Victory Conditions": "TBD",
-                    "Fog of War": "TBD",
-                    "Turn Length": "TBD",
-                    "Accelerated Schedule": "TBD",
-                    "Deadlines on Weekends": "TBD"
-                },
-                "Statistics": {
-                    "Player Count": "0",
-                    "Region Disputes": 0,
-                    "Current Turn": "Turn N/A",
-                    "Days Ellapsed": 0,
-                    "Game Started": "TBD",
-                },
-                "Inactive Events": [],
-                "Active Events": {},
-                "Current Event": {}
-            }
-            site_functions.erase_game(active_game_id)
-        
-        with open('active_games.json', 'w') as json_file:
-            json.dump(active_games_dict, json_file, indent=4)
-
+        shutil.rmtree(f"gamedata")
+        os.makedirs(f"gamedata")
+        active_game_ids = []
+        for game in Games:
+            active_game_ids.append(game.id)
+        for game_id in active_game_ids:
+            Games.delete(game_id)
+        Games.save()
         return redirect(f'/games')
 
-    # check if a game slot is available
-    full_game_id = None
-    for select_game_id, value in active_games_dict.items():
-        if not value.get("Game Active"):
-            full_game_id = select_game_id
-            break
-    if full_game_id != None:
-        site_functions.create_new_game(full_game_id, form_data_dict, profile_ids_list)
-        return redirect(f'/games')
-    else:
-        print("Error: No inactive game found to overwrite.")
-        quit()
+    # create game files
+    create_new_game()
+    Games.save()
+    
+    return redirect(f'/games')
 
 # GAMES ARCHIVE PAGE
 @main.route('/archived_games')
 def archived_games():
     
-    with open('game_records.json', 'r') as json_file:
+    with open("game_records.json", 'r') as json_file:
         game_records_dict = json.load(json_file)
     
-    #take information from game_record_dict
-    ongoing_list = []
-    for game_name, game_data in game_records_dict.items():
+    for game_id, game_data in game_records_dict.items():
         
-        if game_data["Statistics"]["Game Ended"] == "Present":
-            ongoing_list.append(game_name)
-            continue
-        
-        #get playerdata
+        # get playerdata
         archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
         if len(players_who_won_list) == 1:
             victors_str = players_who_won_list[0]
-            game_data["Winner String"] = f'{victors_str} Victory!'
+            game_data["Winner String"] = f"{victors_str} Victory!"
         elif len(players_who_won_list) > 1:
-            victors_str = ' & '.join(players_who_won_list)
-            game_data["Winner String"] = f'{victors_str} Victory!'
+            victors_str = " & ".join(players_who_won_list)
+            game_data["Winner String"] = f"{victors_str} Victory!"
         elif len(players_who_won_list) == 0:
-            game_data["Winner String"] = 'Draw!'
+            game_data["Winner String"] = "Draw!"
         game_data["Playerdata Masterlist"] = archived_player_data_list
 
-        #get game images
-        image_name_list = []
-        filename = "graphic.png"
-        filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
-        if os.path.isfile(filepath):
-            image_name_list.append(filename)
+        # get game image
         turn_number = game_data["Statistics"]["Game End Turn"]
-        if game_data["Statistics"]["Game End Turn"] % 4 != 0:
-            filename = f"{turn_number}.png"
-            filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
-            if os.path.isfile(filepath):
-                image_name_list.append(filename)
-            while turn_number % 4 != 0:
-                turn_number -= 1
-        while turn_number >= 0:
-            filename = f"{turn_number}.png"
-            filepath = os.path.join(f"app/static/archive/{game_data["Game ID"]}/", filename)
-            if os.path.isfile(filepath):
-                image_name_list.append(filename)
-            turn_number -= 4
-        game_data["Slideshow Images"] = image_name_list
+        game_data["image_url"] = f"{game_id}/{turn_number}.png"
     
-    #display games from newest to oldest
-    game_records_dict = dict(sorted(game_records_dict.items(), key=lambda item: item[1]['Game #'], reverse=True))
-
-    #hide ongoing games
-    for game_name in ongoing_list:
-        del game_records_dict[game_name]
-
-    #get gameid list (needed for slideshows)
-    game_id_list = []
-    for game_name, game_data in game_records_dict.items():
-        game_id_list.append(game_data["Game ID"])
-    game_id_list.reverse()
-    slide_index_list = [1] * len(game_id_list)
+    # display games from newest to oldest
+    game_records_dict = dict(sorted(game_records_dict.items(), key=lambda item: item[1]["Number"], reverse=True))
     
-    return render_template('temp_archive.html', dict = game_records_dict, game_id_list = game_id_list, slide_index_list = slide_index_list)
+    return render_template("temp_archive.html", dict = game_records_dict)
 
 # LEADERBOARD PAGE
 @main.route('/leaderboard')
 def leaderboard():
     
     leaderboard_data = []
-    with open('leaderboard.csv', 'r') as file:
+    with open("playerdata/leaderboard.csv", 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if row != []:
                 leaderboard_data.append(row)
+    
+    with open("playerdata/player_records.json", 'r') as json_file:
+        player_records_dict = json.load(json_file)
     
     username_list = []
     for profile_id, player_data in player_records_dict.items():
@@ -282,110 +324,89 @@ def leaderboard():
         profile_ids.append(profile_id)
         entry[0] = f"""<a href="profile/{profile_id}">{entry[0]}</a>"""
     
-    with open('leaderboard_records.json', 'r') as json_file:
+    with open("playerdata/leaderboard_records.json", 'r') as json_file:
         leaderboard_records_dict = json.load(json_file)
     
     return render_template('temp_leaderboard_new.html', leaderboard_data = leaderboard_data, profile_ids = profile_ids, leaderboard_records_dict = leaderboard_records_dict)
 
-# CREATE PROFILE PAGES
-def generate_profile_route(profile_id):
-    route_name = f'profile_route_{uuid.uuid4().hex}'
-    @main.route(f'/profile/{profile_id}', endpoint=route_name)
-    def load_profile():
-        #read needed files
-        with open('game_records.json', 'r') as json_file:
-            game_records_dict = json.load(json_file)
-        leaderboard_list = []
-        with open('leaderboard.csv', 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                leaderboard_list.append(row)
-        #get data from player_records.json
-        username = player_records_dict[profile_id]["Username"]
-        joined = player_records_dict[profile_id]["Join Date"]
-        resignations = player_records_dict[profile_id]["Resignations"]
-        #get data from game_records.json
-        game_starts = []
-        game_ends = []
-        governments_played = {
-            'Republic': 0,
-            'Technocracy': 0,
-            'Oligarchy': 0,
-            'Totalitarian': 0,
-            'Remnant': 0,
-            'Protectorate': 0,
-            'Military Junta': 0,
-            'Crime Syndicate': 0,
-            'Plutocracy': 0,
-            'United States Remnant': 0,
-        }
-        foreign_policies_played = {
-            'Diplomatic': 0,
-            'Commercial': 0,
-            'Isolationist': 0,
-            'Imperialist': 0,
-        }
-        first_game = ''
-        latest_game = ''
-        draws = 0
-        for game_name, game_data in game_records_dict.items():
-            if "Test Game" in game_name:
-                continue
-            players_who_won = []
-            players_who_lost = []
-            for select_profile_id, player_data in game_data.get("Player Data", {}).items():
-                if player_data.get("Victory") == 0:
-                    players_who_lost.append(select_profile_id)
-                    if profile_id in players_who_lost and len(players_who_lost) == len(game_records_dict[game_name]["Player Data"]):
-                        draws += 1
-                else:
-                    players_who_won.append(select_profile_id)
-            if profile_id in players_who_lost or profile_id in players_who_won:
-                game_starts.append(game_data['Statistics']["Game Started"])
-                game_ends.append(game_data['Statistics']["Game Ended"])
-                government_choice = game_records_dict[game_name]["Player Data"][profile_id]["Government"]
-                foreign_policy_choice = game_records_dict[game_name]["Player Data"][profile_id]["Foreign Policy"]
-                governments_played[government_choice] += 1
-                foreign_policies_played[foreign_policy_choice] += 1
-        first_game = game_starts.pop(0)
-        latest_game = game_ends.pop(0)
-        for date_str in game_starts:
-            date_obj_leading = datetime.strptime(first_game, "%m/%d/%Y")
-            data_obj_contender = datetime.strptime(date_str, "%m/%d/%Y")
-            if data_obj_contender < date_obj_leading:
-                first_game = date_str
-        for date_str in game_ends:
-            date_obj_leading = datetime.strptime(latest_game, "%m/%d/%Y")
-            data_obj_contender = datetime.strptime(date_str, "%m/%d/%Y")
-            if data_obj_contender > date_obj_leading:
-                latest_game = date_str
-        favorite_gov_score = max(governments_played.values())
-        favorite_govs = [key for key, value in governments_played.items() if value == favorite_gov_score]
-        favorite_gov = "/".join(favorite_govs)
-        favorite_fp_score = max(foreign_policies_played.values())
-        favorite_fps = [key for key, value in foreign_policies_played.items() if value == favorite_fp_score]
-        favorite_fp = "/".join(favorite_fps)
-        #get data from leaderboard.csv
-        for index, entry in enumerate(leaderboard_list):
-            if entry[0] == username:
-                rank = index + 1
-                wins = entry[1]
-                score = entry[2]
-                average = entry[3]
-                games = entry[4]
-                break
-        losses = int(games) - int(wins) - int(draws)
-        reliability = (float(games) - float(resignations)) / float(games)
-        reliability = round(reliability, 2)
-        reliability = reliability * 100
-        reliability = int(reliability)
-        reliability = f'{reliability}%'
-        return render_template('temp_profile.html', username = username, joined = joined, first_game = first_game, latest_game = latest_game, rank = rank, reliability = reliability, wins = wins, draws = draws, losses = losses, score = score, average = average, games = games, favorite_gov = favorite_gov, favorite_fp = favorite_fp)
-with open('player_records.json', 'r') as json_file:
-    player_records_dict = json.load(json_file)
-profile_id_list = list(player_records_dict.keys())
-for profile_id in profile_id_list:
-    generate_profile_route(profile_id)
+# PROFILE PAGES
+@main.route('/profile/<profile_id>')
+def profile_route(profile_id):
+
+    with open("playerdata/player_records.json", 'r') as json_file:
+        player_records_dict = json.load(json_file)
+    with open("game_records.json", 'r') as json_file:
+        game_records_dict = json.load(json_file)
+
+    profile = {
+        "username": player_records_dict[profile_id]["Username"],
+        "dateJoined": player_records_dict[profile_id]["Join Date"],
+        "resignations": player_records_dict[profile_id]["Resignations"],
+        "firstGame": None,
+        "lastGame": None,
+        "favoriteGov": None,
+        "favoriteFP": None,
+        "rank": 0,
+        "totalWins": 0,
+        "totalDraws": 0,
+        "totalLosses": 0,
+        "totalScore": 0,
+        "averageScore": 0,
+        "totalGames": 0,
+        "reliability": 0
+    }
+
+    with open("playerdata/leaderboard.csv", 'r') as file:
+        reader = csv.reader(file)
+        for i, row in enumerate(reader):
+            if row[0] == profile["username"]:
+                profile["rank"] = i + 1
+                profile["totalWins"] = row[1]
+                profile["totalScore"] = row[2]
+                profile["averageScore"] = row[3]
+                profile["totalGames"] = int(row[4])
+    
+    game_starts = defaultdict(int)
+    game_ends = defaultdict(int)
+    governments_played = defaultdict(int)
+    foreign_policies_played = defaultdict(int)
+    
+    for game_id, game_data in game_records_dict.items():
+
+        if profile_id not in game_data["Player Data"]:
+            continue
+        
+        players_who_lost = set()
+        for select_profile_id, player_data in game_data["Player Data"].items():
+            if not player_data["Victory"]:
+                players_who_lost.add(select_profile_id)
+        
+        if len(players_who_lost) == len(game_data["Player Data"]):
+            profile["totalDraws"] += 1
+        elif not game_data["Player Data"][profile_id]["Victory"]:
+            profile["totalLosses"] += 1
+    
+    for game_id, game_data in game_records_dict.items():
+        
+        if profile_id not in game_data["Player Data"]:
+            continue
+
+        game_starts[game_id] = datetime.strptime(game_data["Statistics"]["Game Started"], "%m/%d/%Y")
+        game_ends[game_id] = datetime.strptime(game_data["Statistics"]["Game Ended"], "%m/%d/%Y")
+        
+        government_choice = game_data["Player Data"][profile_id]["Government"]
+        foreign_policy_choice = game_data["Player Data"][profile_id]["Foreign Policy"]
+        governments_played[government_choice] += 1
+        foreign_policies_played[foreign_policy_choice] += 1
+
+    profile["firstGame"] = game_starts[min(game_starts, key=game_starts.get)]
+    profile["lastGame"] = game_ends[max(game_ends, key=game_ends.get)]
+    profile["favoriteGov"] = max(governments_played, key=governments_played.get)
+    profile["favoriteFP"] = max(foreign_policies_played, key=foreign_policies_played.get)
+
+    profile["reliability"] = int((profile["totalGames"] - profile["resignations"]) / profile["totalGames"] * 100)
+
+    return render_template('temp_profile.html', dict = profile)
 
 
 # GAME PAGES
@@ -395,59 +416,22 @@ for profile_id in profile_id_list:
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
-    #read the contents of active_games.json
-    nation_table = NationTable(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game1_title = active_games_dict[full_game_id]["Game Name"]
-    game1_turn = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
-    game1_active_bool = active_games_dict[full_game_id]["Game Active"]
-    game1_extendedtitle = f"Divided We Stand - {game1_title}" 
-    
-    #load images
+    from app.nation import Nations
+
+    game = Games.load(full_game_id)
+    Nations.load(full_game_id)
+
+    full_title = f"Divided We Stand - {game.name}" 
     main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
     resource_url = url_for('main.get_resourcemap', full_game_id=full_game_id)
     control_url = url_for('main.get_controlmap', full_game_id=full_game_id)
-    #load inactive state
-    if not game1_active_bool:
-        with open('game_records.json', 'r') as json_file:
-            game_records_dict = json.load(json_file)
-        game_data = game_records_dict[game1_title]
-        largest_nation_tup = nation_table.get_top_three("Largest Nation")
-        strongest_economy_tup = nation_table.get_top_three("Most Income")
-        largest_military_tup = nation_table.get_top_three("Largest Military")
-        most_research_tup = nation_table.get_top_three("Most Technology")
-        largest_nation_list = list(largest_nation_tup)
-        strongest_economy_list = list(strongest_economy_tup)
-        largest_military_list = list(largest_military_tup)
-        most_research_list = list(most_research_tup)
-        for i in range(len(largest_nation_list)):
-            largest_nation_list[i] = palette.color_nation_names(largest_nation_list[i], full_game_id)
-            strongest_economy_list[i] = palette.color_nation_names(strongest_economy_list[i], full_game_id)
-            largest_military_list[i] = palette.color_nation_names(largest_military_list[i], full_game_id)
-            most_research_list[i] = palette.color_nation_names(most_research_list[i], full_game_id)
-        archived_player_data_list, players_who_won_list = site_functions.generate_refined_player_list_inactive(game_data)
-        if len(players_who_won_list) == 1:
-            victors_str = players_who_won_list[0]
-            victory_string = (f"""{victors_str} has won the game.""")
-        elif len(players_who_won_list) > 1:
-            victors_str = ' and '.join(players_who_won_list)
-            victory_string = (f'{victors_str} have won the game.')
-        elif len(players_who_won_list) == 0:
-            victory_string = (f'Game drawn.')
-        victory_string = palette.color_nation_names(victory_string, full_game_id)
-        return render_template('temp_stage4.html', game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, archived_player_data_list = archived_player_data_list, largest_nation_list = largest_nation_list, strongest_economy_list = strongest_economy_list, largest_military_list = largest_military_list, most_research_list = most_research_list, victory_string = victory_string)
-    
-    # load active state
-    # tba - fix this garbage when you get around to redoing the frontend
-    match game1_turn:
-        
-        case "Starting Region Selection in Progress":
+
+    match game.status:
+
+        case GameStatus.REGION_SELECTION:
             
-            form_key = "main.stage1_resolution"
             player_data = []
-            
-            for nation in nation_table:
+            for nation in Nations:
                 p_id = f'p{nation.id}'
                 regioninput_id = f'regioninput_{p_id}'
                 colordropdown_id = f'colordropdown_{p_id}'
@@ -455,16 +439,14 @@ def game_load(full_game_id):
                 refined_player_data = [f"Player #{nation.id}", p_id, nation.color, vc1a, vc2a, vc3a, vc1b, vc2b, vc3b, regioninput_id, colordropdown_id]
                 player_data.append(refined_player_data)
             active_player_data = player_data.pop(0)
+
+            return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
+
+        case GameStatus.NATION_SETUP:
             
-            return render_template('temp_stage1.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
-        
-        case "Nation Setup in Progress":
-            
-            form_key = "main.stage2_resolution"
             player_data = []
-            
-            for nation in nation_table:
-                p_id = f'p{nation.id}'
+            for nation in Nations:
+                p_id = f"p{nation.id}"
                 nameinput_id = f"nameinput_{p_id}"
                 govinput_id = f"govinput_{p_id}"
                 fpinput_id = f"fpinput_{p_id}"
@@ -474,15 +456,12 @@ def game_load(full_game_id):
                 player_data.append(refined_player_data)
             active_player_data = player_data.pop(0)
             
-            return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
-        
-        case _:
-            
-            form_key = "main.turn_resolution"
-            main_url = url_for('main.get_mainmap', full_game_id=full_game_id)
-            player_data = []
+            return render_template('temp_stage2.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
 
-            for nation in nation_table:
+        case _:
+
+            player_data = []
+            for nation in Nations:
                 p_id = f'p{nation.id}'
                 public_actions_textarea_id = f"public_textarea_{p_id}"
                 private_actions_textarea_id = f"private_textarea_{p_id}"
@@ -491,56 +470,42 @@ def game_load(full_game_id):
                 player_data.append(refined_player_data)
             active_player_data = player_data.pop(0)
             
-            with open(f'active_games.json', 'r') as json_file:  
-                active_games_dict = json.load(json_file)
-            current_event_dict = active_games_dict[full_game_id]["Current Event"]
-            if current_event_dict != {}:
-                form_key = "main.event_resolution"
-            
-            return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game1_title = game1_title, game1_extendedtitle = game1_extendedtitle, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id, form_key = form_key)
+            return render_template('temp_stage3.html', active_player_data = active_player_data, player_data = player_data, game_title = game.name, full_title = full_title, main_url = main_url, resource_url = resource_url, control_url = control_url, full_game_id = full_game_id)
 
 # GENERATE NATION SHEET PAGES
-def generate_player_route(full_game_id, player_id):
-    route_name = f'player_route_{uuid.uuid4().hex}'
-    @main.route(f'/{full_game_id}/player{player_id}', endpoint=route_name)
-    def player_route():
-        page_title = f'Player #{player_id} Nation Sheet'
-        current_turn_num = core.get_current_turn_num(full_game_id)
-        player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
-        return render_template('temp_nation_sheet.html', page_title=page_title, player_information_dict=player_information_dict)
-
-# GENERATION PROCEDURE
-game_ids = ['game1', 'game2']
-map_names = ['mainmap', 'resourcemap', 'controlmap']
-player_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-for full_game_id in game_ids:
-    for player_id in player_ids:
-        generate_player_route(full_game_id, player_id)
+@main.route('/<full_game_id>/player<int:player_id>')
+def player_route(full_game_id, player_id):
+    page_title = f"Player #{player_id} Nation Sheet"
+    player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
+    return render_template("temp_nation_sheet.html", page_title = page_title, player_information_dict = player_information_dict)
 
 # WARS PAGE
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
     
-    # get game data
-    nation_table = NationTable(full_game_id)
-    war_table = WarTable(full_game_id)
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} Wars List'
+    from app.nation import Nations
+    from app.alliance import Alliances
+    from app.war import Wars
+
+    game = Games.load(full_game_id)
+    
+    Nations.load(full_game_id)
+    Alliances.load(full_game_id)
+    Wars.load(full_game_id)
+    
+    page_title = f"{game.name} Wars List"
     
     # read wars
     results = {}
-    for war in war_table:
+    for war in Wars:
 
         inner_dict = {}
         
         # get war timeframe
-        season, year = core.date_from_turn_num(war.start)
+        season, year = game.get_season_and_year(war.start)
         start_str = f"{season} {year}"
         if war.end != 0:
-            season, year = core.date_from_turn_num(war.end)
+            season, year = game.get_season_and_year(war.end)
             end_str = f"{season} {year}"
         else:
             end_str = "Present"
@@ -549,8 +514,8 @@ def wars(full_game_id):
         # get war score information
         attacker_threshold, defender_threshold = war.calculate_score_threshold()
         ma_id, md_id = war.get_main_combatant_ids()
-        main_attacker = nation_table.get(ma_id)
-        main_defender = nation_table.get(md_id)
+        main_attacker = Nations.get(ma_id)
+        main_defender = Nations.get(md_id)
 
         # implement a score bar using an html table >:)
         inner_dict["outcome"] = war.outcome
@@ -566,21 +531,21 @@ def wars(full_game_id):
                 war_status_bar = [white_color] * 1     # set bar entirely white
             case "TBD":
                 # color bar based on percentage
-                if war.attacker_total != 0 and war.defender_total == 0:
+                if war.attackers.total != 0 and war.defenders.total == 0:
                     war_status_bar = [attacker_color] * 1
-                elif war.attacker_total == 0 and war.defender_total != 0:
+                elif war.attackers.total == 0 and war.defenders.total != 0:
                     war_status_bar = [defender_color] * 1
-                elif war.attacker_total == 0 and war.defender_total == 0:
+                elif war.attackers.total == 0 and war.defenders.total == 0:
                     war_status_bar = [attacker_color] * 1
                     war_status_bar += [defender_color] * 1
                 else:
                     # calculate attacker value
-                    attacker_percent = float(war.attacker_total) / float(war.attacker_total + war.defender_total)
+                    attacker_percent = float(war.attackers.total) / float(war.attackers.total + war.defenders.total)
                     attacker_percent = round(attacker_percent, 2)
                     attacker_points = int(attacker_percent * 100)
                     attacker_steps = round(attacker_points / 5)
                     # calculate defender value
-                    defender_percent = float(war.defender_total) / float(war.attacker_total + war.defender_total)
+                    defender_percent = float(war.defenders.total) / float(war.attackers.total + war.defenders.total)
                     defender_percent = round(defender_percent, 2)
                     defender_points = int(defender_percent * 100)
                     defender_steps = round(defender_points / 5)
@@ -591,25 +556,25 @@ def wars(full_game_id):
 
         # get attacker warscore data
         copy = {
-            "Total War Score": war.attacker_total,
-            "From Occupation": war.attacker_occupation,
-            "From Combat Victories": war.attacker_victories,
-            "From Enemy Units Destroyed": war.attacker_destroyed_units,
-            "From Enemy Impr. Destroyed": war.attacker_destroyed_improvements,
-            "From Capital Captures": war.attacker_captures,
-            "From Nuclear Strikes": war.attacker_nuclear_strikes
+            "Total War Score": war.attackers.total,
+            "From Occupation": war.attackers.occupation,
+            "From Combat Victories": war.attackers.victories,
+            "From Enemy Units Destroyed": war.attackers.destroyed_units,
+            "From Enemy Impr. Destroyed": war.attackers.destroyed_improvements,
+            "From Capital Captures": war.attackers.captures,
+            "From Nuclear Strikes": war.attackers.nuclear_strikes
         }
         inner_dict["attackerWarScore"] = copy
         
         # get defender warscore data
         copy = {
-            "Total War Score": war.defender_total,
-            "From Occupation": war.defender_occupation,
-            "From Combat Victories": war.defender_victories,
-            "From Enemy Units Destroyed": war.defender_destroyed_units,
-            "From Enemy Impr. Destroyed": war.defender_destroyed_improvements,
-            "From Capital Captures": war.defender_captures,
-            "From Nuclear Strikes": war.defender_nuclear_strikes
+            "Total War Score": war.defenders.total,
+            "From Occupation": war.defenders.occupation,
+            "From Combat Victories": war.defenders.victories,
+            "From Enemy Units Destroyed": war.defenders.destroyed_units,
+            "From Enemy Impr. Destroyed": war.defenders.destroyed_improvements,
+            "From Capital Captures": war.defenders.captures,
+            "From Nuclear Strikes": war.defenders.nuclear_strikes
         }
         inner_dict["defenderWarScore"] = copy
 
@@ -630,13 +595,13 @@ def wars(full_game_id):
             
             case "TBD":
                 # calculate negotiation turn
-                if current_turn_num - war.start < 4:
-                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war.start + 4) - current_turn_num} turns."
+                if game.turn - war.start < 4:
+                    can_end_str = f"A peace deal may be negotiated by the main combatants in {(war.start + 4) - game.turn} turns."
                 else:
                     can_end_str = f"A peace deal may be negotiated by the main combatants at any time."
                 inner_dict["canEndStr"] = can_end_str
                 # calculate forced end score
-                if war.attacker_total > war.defender_total:
+                if war.attackers.total > war.defenders.total:
                     if attacker_threshold is not None:
                         forced_end_str = f"""The <span class="color-red"> attackers </span> will win this war upon reaching <span class="color-red"> {attacker_threshold} </span> war score."""
                     else:
@@ -666,27 +631,26 @@ def wars(full_game_id):
 # RESEARCH PAGE
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
-    
-    # get game data
-    nation_table = NationTable(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Technology Trees'
-    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
 
+    from app.nation import Nations
 
-    # refine technology dictionary
-    refined_dict = {}
-    research_data_dict = core.get_scenario_dict(full_game_id, "Technologies")
-    if scenario == "Standard":
+    SD.load(full_game_id)
+    game = Games.load(full_game_id)
+
+    Nations.load(full_game_id)
+
+    page_title = f"{game.name} - Technology Trees"
+    data = {}
+
+    # create technology dictionary
+    if SD.scenario == "standard":
         categories = ["Energy", "Infrastructure", "Military", "Defense"]
         for category in categories:
-            refined_dict[f'{category} Technologies'] = {}
-        refined_dict["Energy Technologies"]["Colors"] = ["#5555554D", "#CC58264D", "#106A254D", "NONE"]
-        refined_dict["Infrastructure Technologies"]["Colors"] = ["#F9CB304D", "#754C244D", "#5555554D", "#0583C54D"]
-        refined_dict["Military Technologies"]["Colors"] = ["#C419194D", "#5F2F8C4D", "#106A254D", "#CC58264D"]
-        refined_dict["Defense Technologies"]["Colors"] = ["#0583C54D", "#F9CB304D", "#C419194D", "NONE"]
+            data[f"{category} Technologies"] = {}
+        data["Energy Technologies"]["Colors"] = ["#5555554D", "#CC58264D", "#106A254D", "NONE"]
+        data["Infrastructure Technologies"]["Colors"] = ["#F9CB304D", "#754C244D", "#5555554D", "#0583C54D"]
+        data["Military Technologies"]["Colors"] = ["#C419194D", "#5F2F8C4D", "#106A254D", "#CC58264D"]
+        data["Defense Technologies"]["Colors"] = ["#0583C54D", "#F9CB304D", "#C419194D", "NONE"]
         color_complements_dict = {
             "#555555": "#636363",
             "#CC5826": "#E0622B",
@@ -698,7 +662,7 @@ def technologies(full_game_id):
             "#C41919": "#D43939"
         }
     
-    # create research table
+    # create technology table
     for category in categories:
         table_contents = {
             "A": [None] * 4,
@@ -706,57 +670,63 @@ def technologies(full_game_id):
             "C": [None] * 4,
             "D": [None] * 4,
         }
-        refined_dict[f'{category} Technologies']["Table"] = table_contents
-    
-    # hide fow techs if not fog of war
-    if active_games_dict[full_game_id]["Information"]["Fog of War"] == "Disabled":
-        del research_data_dict["Surveillance Operations"]
-        del research_data_dict["Economic Reports"]
-        del research_data_dict["Military Intelligence"]
+        data[f"{category} Technologies"]["Table"] = table_contents
 
-    # add player research data
-    for research_name in research_data_dict:
-        research_data_dict[research_name]["Player Research"] = [None] * len(nation_table)
-    for index, nation in enumerate(nation_table):
+    # fetch technology data
+    temp_technology_data = {}
+    for research_name, research_data in SD.technologies:
+
+        # TODO - make an attribute for technologies to handle this
+        if not game.info.fog_of_war and research_name in ["Surveillance Operations", "Economic Reports", "Military Intelligence"]:
+            continue
+
+        temp_technology_data[research_name] = {
+            "Name": research_name,
+            "Research Type": research_data.type,
+            "Cost": research_data.cost,
+            "Description": research_data.description,
+            "Location": research_data.location,
+            "Player Research": [None] * len(Nations)
+        }
+    
+    # fetch player research data
+    for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
-            if research_name in research_data_dict:
-                research_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+            if research_name in SD.technologies:
+                temp_technology_data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
-    for key, value in research_data_dict.items():
+    for key, value in temp_technology_data.items():
         research_type = value["Research Type"]
         if research_type in categories:
             pos = value["Location"]
             row_pos = pos[0]
             col_pos = int(pos[1])
             value["Name"] = key
-            refined_dict[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
+            data[research_type + " Technologies"]["Table"][row_pos][col_pos] = value
     
-    return render_template('temp_research.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+    return render_template('temp_research.html', page_title = page_title, dict = data, complement = color_complements_dict)
 
 # AGENDAS PAGE
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
-    # get game data
-    nation_table = NationTable(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Political Agendas'
-    scenario = active_games_dict[full_game_id]["Information"]["Scenario"]
+    from app.nation import Nations
 
-
-    # Get Research Information
-    refined_dict = {}
-    agenda_data_dict = core.get_scenario_dict(full_game_id, "Agendas")
+    SD.load(full_game_id)
+    game = Games.load(full_game_id)
     
-    # get scenario data
-    if scenario == "Standard":
+    Nations.load(full_game_id)
+
+    page_title = f"{game.name} - Political Agendas"
+    data = {}
+
+    # create dictionary
+    if SD.scenario == "standard":
         categories = ["Agendas"]
         for category in categories:
-            refined_dict[category] = {}
-        refined_dict["Agendas"]["Colors"] = ["#0583C54D", "#106A254D", "#5F2F8C4D", "#C419194D"]
+            data[category] = {}
+        data["Agendas"]["Colors"] = ["#0583C54D", "#106A254D", "#5F2F8C4D", "#C419194D"]
         color_complements_dict = {
             "#555555": "#636363",
             "#CC5826": "#E0622B",
@@ -768,7 +738,7 @@ def agendas(full_game_id):
             "#C41919": "#D43939"
         }
     
-    # create research table
+    # create table
     for category in categories:
         table_contents = {
             "A": [None] * 4,
@@ -776,169 +746,134 @@ def agendas(full_game_id):
             "C": [None] * 4,
             "D": [None] * 4,
         }
-        refined_dict[category]["Table"] = table_contents
+        data[category]["Table"] = table_contents
 
-    # add player research data
-    for research_name in agenda_data_dict:
-        agenda_data_dict[research_name]["Player Research"] = [None] * len(nation_table)
-    for index, nation in enumerate(nation_table):
+    # fetch agenda data
+    temp_agenda_data = {}
+    for agenda_name, agenda_data in SD.agendas:
+        
+        temp_agenda_data[agenda_name] = {
+            "Name": agenda_name,
+            "Agenda Type": agenda_data.type,
+            "Cost": agenda_data.cost,
+            "Description": agenda_data.description,
+            "Location": agenda_data.location,
+            "Player Research": [None] * len(Nations)
+        }
+    
+    # fetch player research data
+    for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
-            if research_name in agenda_data_dict:
-                agenda_data_dict[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+            if research_name in SD.agendas:
+                temp_agenda_data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
-    for key, value in agenda_data_dict.items():
+    for key, value in temp_agenda_data.items():
         pos = value["Location"]
         row_pos = pos[0]
         col_pos = int(pos[1])
         value["Name"] = key
-        refined_dict["Agendas"]["Table"][row_pos][col_pos] = value
+        data["Agendas"]["Table"][row_pos][col_pos] = value
     
-    return render_template('temp_agenda.html', page_title = page_title, dict = refined_dict, complement = color_complements_dict)
+    return render_template('temp_agenda.html', page_title = page_title, dict = data, complement = color_complements_dict)
 
 # UNITS REF PAGE
 @main.route('/<full_game_id>/units')
 def units_ref(full_game_id):
-    
-    # read the contents of active_games.json
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Unit Reference'
-    
-    # get unit dict
-    unit_dict = core.get_scenario_dict(full_game_id, "Units")
 
-    # add reference colors
-    for unit_name in unit_dict:
-        if "Motorized Infantry" == unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-purple"
-            continue
-        if "Infantry" in unit_name or "Artillery" in unit_name or "Special Forces" in unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-red"
-        elif "Tank" in unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-purple"
-        elif "Air" in unit_name:
-            unit_dict[unit_name]["stat_color"] = "stat-yellow"
+    SD.load(full_game_id)
+    game = Games.load(full_game_id)
 
-    return render_template('temp_units.html', page_title = page_title, dict = unit_dict)
+    page_title = f"{game.name} - Unit Reference"
+
+    data = {}
+    for unit_name, unit_data in SD.units:
+        data[unit_name] = {
+            "Required Research": unit_data.required_research,
+            "Unit Type": unit_data.type,
+            "Abbreviation": unit_data.abbreviation,
+            "Reference Color": unit_data.color,
+            "Health": unit_data.health,
+            "Victory Damage": unit_data.victory_damage,
+            "Draw Damage": unit_data.draw_damage,
+            "Combat Value": unit_data.hit_value,
+            "Movement": unit_data.movement,
+            "Standard Missile Defense": unit_data.missile_defense,
+            "Nuclear Missile Defense": unit_data.nuclear_defense,
+            "Abilities": unit_data.abilities,
+            "Upkeep": unit_data.upkeep,
+            "Build Costs": unit_data.cost
+        }
+
+    return render_template('temp_units.html', page_title = page_title, dict = data)
 
 # IMPROVEMENTS REF PAGE
 @main.route('/<full_game_id>/improvements')
 def improvements_ref(full_game_id):
-    
-    # read the contents of active_games.json
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Improvement Reference'
-    
-    # get unit dict
-    improvement_dict: dict = core.get_scenario_dict(full_game_id, "Improvements")
 
-    # filter improvements
-    improvement_dict_filtered = {}
-    for improvement_name, improvement_data in improvement_dict.items():
+    # Improvement Colors:
+    # red - military
+    # yellow - energy
+    # blue - civilian
+    # grey - everything else (default)
 
-        # assign color
-        # to do - make a function that assigns color based on improvement's required tech
-        match improvement_name:
-            case 'Boot Camp' | 'Military Base' | 'Military Outpost' | 'Missile Defense System' | 'Missile Silo' | 'Trench':
-                improvement_data["stat_color"] = "stat-red"
-            case 'Coal Mine' | 'Nuclear Power Plant' | 'Oil Well' | 'Solar Farm' | 'Wind Farm':
-                improvement_data["stat_color"] = "stat-yellow"
-            case 'Advanced Metals Mine' | 'Common Metals Mine' | 'Industrial Zone' | 'Uranium Mine' | 'Rare Earth Elements Mine':
-                improvement_data["stat_color"] = "stat-grey"
-            case 'Capital' | 'Central Bank' | 'City' | 'Farm' | 'Research Institute' | 'Research Laboratory' | 'Settlement':
-                improvement_data["stat_color"] = "stat-blue"
-            case _:
-                improvement_data["stat_color"] = "stat-grey"
+    SD.load(full_game_id)
+    game = Games.load(full_game_id)
+
+    page_title = f"{game.name} - Improvement Reference"
+
+    data = {}
+    for improvement_name, improvement_data in SD.improvements:
+
+        # hide event specific improvements
+        if improvement_name == "Colony" and "Faustian Bargain" not in game.active_events:
+            continue
 
         # hide fog of war improvements
-        if active_games_dict[full_game_id]["Information"]["Fog of War"] != "Enabled" and improvement_data.get("Fog of War Improvement", None):
+        if not game.info.fog_of_war and improvement_data.is_fog_of_war:
             continue
 
-        # hide event improvements
-        if improvement_name == "Colony" and "Faustian Bargain" not in active_games_dict[full_game_id]["Active Events"]:
-            continue
+        data[improvement_name] = {
+            "Required Research": improvement_data.required_research,
+            "Required Resource": improvement_data.required_resource,
+            "Reference Color": improvement_data.color,
+            "Income": improvement_data.income,
+            "Health": improvement_data.health,
+            "Victory Damage": improvement_data.victory_damage,
+            "Draw Damage": improvement_data.draw_damage,
+            "Combat Value": improvement_data.hit_value,
+            "Standard Missile Defense": improvement_data.missile_defense,
+            "Nuclear Missile Defense": improvement_data.nuclear_defense,
+            "Abilities": improvement_data.abilities,
+            "Upkeep": improvement_data.upkeep,
+            "Build Costs": improvement_data.cost
+        }
 
-        improvement_dict_filtered[improvement_name] = improvement_data
-
-    improvement_dict_filtered = {key: improvement_dict_filtered[key] for key in sorted(improvement_dict_filtered)}
-    return render_template('temp_improvements.html', page_title = page_title, dict = improvement_dict_filtered)
+    data = {key: data[key] for key in sorted(data)}
+    
+    return render_template('temp_improvements.html', page_title = page_title, dict = data)
 
 # RESOURCE MARKET PAGE
 @main.route('/<full_game_id>/resource_market')
 def resource_market(full_game_id):
 
-    # get game data
-    current_turn_num = core.get_current_turn_num(full_game_id)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Resource Market'
+    SD.load(full_game_id)
+    game = Games.load(full_game_id)
 
-    # tba - grab this from scenario files
-    data = {
-        "Food": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Research": {
-            "Base Price": 5,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Coal": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Oil": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Basic Materials": {
-            "Base Price": 3,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Common Metals": {
-            "Base Price": 5,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Advanced Metals": {
-            "Base Price": 10,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Uranium": {
-            "Base Price": 10,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
-        "Rare Earth Elements": {
-            "Base Price": 20,
-            "Current Price": 0,
-            "Bought": 0,
-            "Sold": 0
-        },
+    page_title = f"{game.name} - Resource Market"
+
+    # generate market data
+    data = {}
+    for resource_name, market_data in SD.market:
+        data[resource_name] = {
+        "Base Price": market_data.base_price,
+        "Current Price": 0,
+        "Bought": 0,
+        "Sold": 0
     }
     
     # get resource market records
-    rmdata_filepath = f'gamedata/{full_game_id}/rmdata.csv'
-    rmdata_recent_transaction_list = core.read_rmdata(rmdata_filepath, current_turn_num, 12, False)
+    rmdata_recent_transaction_list = game.get_market_data()
     if len(rmdata_recent_transaction_list) != 0:
         records_flag = True
         rmdata_recent_transaction_list = rmdata_recent_transaction_list[::-1]
@@ -964,11 +899,11 @@ def resource_market(full_game_id):
         data[resource_name]["Current Price"] = round(current_price, 2)
     
     # factor in impact of events on current prices
-    if "Market Inflation" in active_games_dict[full_game_id]["Active Events"]:
+    if "Market Inflation" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 2
             data[resource_name]["Current Price"] = round(new_price, 2)
-    elif "Market Recession" in active_games_dict[full_game_id]["Active Events"]:
+    elif "Market Recession" in game.active_events:
         for resource_name in data:
             new_price = data[resource_name]["Current Price"] * 0.5
             data[resource_name]["Current Price"] = round(new_price, 2)
@@ -984,113 +919,106 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
-    # get game data
-    nation_table = NationTable(full_game_id)
-    alliance_table = AllianceTable(full_game_id)
-    war_table = WarTable(full_game_id)
-    notifications = Notifications(full_game_id)
-    trucedata_filepath = f'gamedata/{full_game_id}/trucedata.csv'
-    trucedata_list = core.read_file(trucedata_filepath, 1)
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
+    from app.alliance import Alliances
+    from app.nation import Nations
+    from app.notifications import Notifications
+    from app.truce import Truces
+    from app.war import Wars
 
-    # read the contents of active_games.json
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Announcements Page'
-    current_turn_num = int(active_games_dict[full_game_id]["Statistics"]["Current Turn"])
-    accelerated_schedule_str = active_games_dict[full_game_id]["Information"]["Accelerated Schedule"]
-    current_event_dict = active_games_dict[full_game_id]["Current Event"]
-    if current_event_dict != {}:
-        event_pending = True
-    else:
-        event_pending = False
+    def build_diplomacy_string() -> str:
+        
+        diplomacy_list = []
 
-    # calculate date information
-    if not event_pending:
-        season, year = core.date_from_turn_num(current_turn_num)
-        date_output = f'{season} {year} - Turn {current_turn_num}'
-    else:
-        current_turn_num -= 1
-        season, year = core.date_from_turn_num(current_turn_num)
-        date_output = f'{season} {year} - Turn {current_turn_num} Bonus Phase'
+        if game.turn <= 4:
+            diplomacy_list.append("First year expansion rules are in effect.")
+        elif game.turn == 5:
+            diplomacy_list.append("Normal expansion rules are now in effect.")
 
+        if game.info.accelerated_schedule:
+            if game.turn <= 10:
+                diplomacy_list.append("Accelerated schedule is in effect until turn 11.")
+            elif game.turn == 11:
+                diplomacy_list.append("Normal turn schedule is now in effect.")
 
-    # Build Diplomacy String
-    diplomacy_list = []
-    # expansion rules reminder
-    if current_turn_num <= 4:
-        diplomacy_list.append('First year expansion rules are in effect.')
-    elif current_turn_num == 5:
-        diplomacy_list.append('Normal expansion rules are now in effect.')
-    # accelerate schedule reminder
-    if accelerated_schedule_str == 'Enabled' and current_turn_num <= 10:
-        diplomacy_list.append('Accelerated schedule is in effect until turn 11.')
-    elif accelerated_schedule_str == 'Enabled' and current_turn_num == 11:
-        diplomacy_list.append('Normal turn schedule is now in effect.')
-    # get all ongoing wars
-    for war in war_table:
-        if war.outcome == "TBD":
-            diplomacy_list.append(f"{war.name} is ongoing.")
-    # get all ongoing truces
-    for truce in trucedata_list:
-        truce_participants_list = []
-        for i in range(1, len(truce)):
-            truce_status = ast.literal_eval(truce[i])
-            if truce_status:
-                nation = nation_table.get(str(i - 1))
-                truce_participants_list.append(nation.name)
-        truce_name = ' - '.join(truce_participants_list)
-        truce_end_turn = int(len(truce))
-        if truce_end_turn > current_turn_num:
-            diplomacy_list.append(f"{truce_name} truce until turn {truce_end_turn}.")
-        if truce_end_turn == current_turn_num:
-            diplomacy_list.append(f'{truce_name} truce has expired.')
-    # format diplomacy string
-    diplomacy_string = "<br>".join(diplomacy_list)
-    diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
+        for war in Wars:
+            if war.outcome == "TBD":
+                diplomacy_list.append(f"{war.name} is ongoing.")
 
-    
-    # Build Notifications String
-    notifications_list = []
-    q = PriorityQueue()
-    for string, priority in notifications:
-        q.put((priority, string))
-    while not q.empty():
-        ntf = q.get()
-        notifications_list.append(ntf[1])
-    notifications_string = "<br>".join(notifications_list)
-    notifications_string = palette.color_nation_names(notifications_string, full_game_id)
+        for truce in Truces:
+            if truce.end_turn > game.turn:
+                diplomacy_list.append(f"{str(truce)} truce until turn {truce.end_turn}.")
+            elif truce.end_turn == game.turn:
+                diplomacy_list.append(f"{str(truce)} truce has expired.")
 
+        diplomacy_string = "<br>".join(diplomacy_list)
+        diplomacy_string = palette.color_nation_names(diplomacy_string, full_game_id)
+        return diplomacy_string
 
-    # Build Statistics String
-    statistics_list = []
-    statistics_list.append(f"Total alliances: {len(alliance_table)}")
-    longest_alliance_name, longest_alliance_duration = alliance_table.get_longest_alliance()
-    if longest_alliance_name is not None:
-        statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
-    else:
-        statistics_list.append(f"Longest alliance: N/A")
-    statistics_list.append(f"Total wars: {len(war_table)}")
-    statistics_list.append(f"Units lost in war: {war_table.total_units_lost()}")
-    statistics_list.append(f"Improvements destroyed in war: {war_table.total_units_lost()}")
-    statistics_list.append(f"Nuclear Missiles launched: {war_table.total_missiles_launched()}")
-    war_name, war_duration = war_table.find_longest_war()
-    if war_name is not None:
-        statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
-    else:
-        statistics_list.append("Longest war: N/A")
-    dispute_count = active_games_dict[full_game_id]["Statistics"]["Region Disputes"]
-    statistics_list.append(f"Region disputes: {dispute_count}")
-    statistics_string = "<br>".join(statistics_list)
-    statistics_string = palette.color_nation_names(statistics_string, full_game_id)
+    def build_notifications_string() -> str:
+        
+        notifications_list = []
+        q = PriorityQueue()
+        for notification in Notifications:
+            q.put(notification)
+        while not q.empty():
+            ntf = q.get()
+            notifications_list.append(ntf[1])
+        
+        notifications_string = "<br>".join(notifications_list)
+        notifications_string = palette.color_nation_names(notifications_string, full_game_id)
+        return notifications_string
 
+    def build_statistics_string() -> str:
+        
+        statistics_list = []
+        
+        statistics_list.append(f"Total alliances: {len(Alliances)}")
+        longest_alliance_name, longest_alliance_duration = Alliances.longest_alliance()
+        if longest_alliance_name is not None:
+            statistics_list.append(f"Longest alliance: {longest_alliance_name} - {longest_alliance_duration} turns")
+        else:
+            statistics_list.append(f"Longest alliance: N/A")
+        
+        statistics_list.append(f"Total wars: {len(Wars)}")
+        statistics_list.append(f"Units lost in war: {Wars.total_units_lost()}")
+        statistics_list.append(f"Improvements destroyed in war: {Wars.total_units_lost()}")
+        statistics_list.append(f"Nuclear Missiles launched: {Wars.total_missiles_launched()}")
+        
+        war_name, war_duration = Wars.find_longest_war()
+        if war_name is not None:
+            statistics_list.append(f"Longest war: {war_name} - {war_duration} turns")
+        else:
+            statistics_list.append("Longest war: N/A")
+        
+        statistics_list.append(f"Region disputes: {game.stats.region_disputes}")
+        
+        statistics_string = "<br>".join(statistics_list)
+        statistics_string = palette.color_nation_names(statistics_string, full_game_id)
+        return statistics_string
+
+    game = Games.load(full_game_id)
+    Alliances.load(full_game_id)
+    Nations.load(full_game_id)
+    Notifications.load(full_game_id)
+    Truces.load(full_game_id)
+    Wars.load(full_game_id)
+
+    # page title and date
+    page_title = f"{game.name} - Announcements Page"
+    season, year = game.get_season_and_year()
+    date_str = f"{season} {year} - Turn {game.turn}"
+    if game.status == GameStatus.ACTIVE_PENDING_EVENT:
+        date_str += " Bonus Phase"
+
+    # build announcements strings
+    diplomacy_string = build_diplomacy_string()
+    notifications_string = build_notifications_string()
+    statistics_string = build_statistics_string()
 
     # get top three standings
     standings_dict = {}
-    records = ["nationSize", "netIncome", "transactionCount", "militaryStrength", "researchCount"]
-    record_names = ["Largest Nation", "Most Income", "Most Transactions", "Largest Military", "Most Technology"]
-    for i, record in enumerate(records):
-        standings = nation_table.get_top_three(record)
+    for record_name in Nations.LEADERBOARD_RECORD_NAMES:
+        standings = Nations.get_top_three(record_name)
         standings_filtered = []
         for entry in standings:
             # add html span tag
@@ -1101,16 +1029,16 @@ def announcements(full_game_id):
             if end_index - start_index > 30:
                 nation_name = nation_name[0:start_index+31] + nation_name[end_index:]
             # format standing
-            if record == "netIncome":
+            if record_name == "net_income":
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
                 standings_filtered.append([nation_name, entry[1]])
-        record_name = record_names[i]
-        standings_dict[record_name] = standings_filtered
+        title = Nations.attribute_to_title(record_name)
+        standings_dict[title] = standings_filtered
     
     # update scoreboard
     scoreboard_dict = {}
-    for nation in nation_table:
+    for nation in Nations:
         inner_dict = {}
         inner_dict["color"] = nation.color
         inner_dict["score"] = nation.score
@@ -1124,69 +1052,84 @@ def announcements(full_game_id):
         )
     )
 
-    return render_template('temp_announcements.html', game_name = game_name, page_title = page_title, date_output = date_output, scoreboard_dict = scoreboard_dict, standings_dict = standings_dict, statistics_string = statistics_string, diplomacy_string = diplomacy_string, notifications_string = notifications_string)
+    return render_template('temp_announcements.html', game_name = game.name, page_title = page_title, date_output = date_str, scoreboard_dict = scoreboard_dict, standings_dict = standings_dict, statistics_string = statistics_string, diplomacy_string = diplomacy_string, notifications_string = notifications_string)
 
 # ALLIANCE PAGE
 @main.route('/<full_game_id>/alliances')
 def alliances(full_game_id):
 
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    game_name = active_games_dict[full_game_id]["Game Name"]
-    page_title = f'{game_name} - Alliance Page'
+    from app.alliance import Alliances
+    from app.nation import Nations
 
-    nation_table = NationTable(full_game_id)
-    alliance_table = AllianceTable(full_game_id)
-    alliance_dict = alliance_table.data
-    misc_data_dict = core.get_scenario_dict(full_game_id, "Misc")
-    alliance_type_dict = misc_data_dict["allianceTypes"]
+    SD.load(full_game_id)
+    game = Games.load(full_game_id)
+
+    Alliances.load(full_game_id)
+    Nations.load(full_game_id)
+    page_title = f"{game.name} - Alliance Page"
 
     alliance_dict_filtered = {}
-    for alliance_name, alliance_data in alliance_dict.items():
-        if alliance_data["turnEnded"] == 0:
-            
-            # adds alliance establishment string
-            turn_started = alliance_data["turnCreated"]
-            season, year = core.date_from_turn_num(turn_started)
-            date_str = f"{season} {year} (Turn {turn_started})"
-            alliance_data["turnCreated"] = date_str
+    
+    for alliance in Alliances:
+        
+        if not alliance.is_active:
+            continue
 
-            # add color to nation names
-            alliance_data["currentMembersFormatted"] = {}
-            for nation_name, turn_joined in alliance_data["currentMembers"].items():
-                nation = nation_table.get(nation_name)
-                bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
-                if nation.color in bad_primary_colors_set:
-                    color = palette.normal_to_occupied[nation.color]
-                else:
-                    color = nation.color
-                # add to new dict
-                alliance_data["currentMembersFormatted"][nation_name] = {}
-                alliance_data["currentMembersFormatted"][nation_name]["turnJoined"] = turn_joined
-                alliance_data["currentMembersFormatted"][nation_name]["nationColor"] = color
-            
-            # adds alliance color
-            alliance_data["color"] = palette.str_to_hex(alliance_type_dict[alliance_data["allianceType"]]["colorTheme"])
+        alliance_data = {
+            "allianceType": alliance.type,
+            "foundingMembers": alliance.founding_members,
+            "currentMembersFormatted": {},
+            "foundingMembersFormatted": {}
+        }
 
-            alliance_dict_filtered[alliance_name] = alliance_data
+        season, year = game.get_season_and_year()
+        date_str = f"{season} {year} (Turn {game.turn})"
+        alliance_data["turnCreated"] = date_str
 
-    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, abilities_dict = alliance_type_dict, page_title = page_title)
+        for nation_name, turn_joined in alliance.current_members.items():
+            nation = Nations.get(nation_name)
+            bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+            if nation.color in bad_primary_colors_set:
+                color = palette.normal_to_occupied[nation.color]
+            else:
+                color = nation.color
+            alliance_data["currentMembersFormatted"][nation_name] = {
+                "turnJoined": turn_joined,
+                "nationColor": color
+            }
+
+        # add color to nation names
+        for nation_name, turn_joined in alliance.founding_members.items():
+            nation = Nations.get(nation_name)
+            bad_primary_colors_set = {"#603913", "#105500", "#8b2a1a"}
+            if nation.color in bad_primary_colors_set:
+                color = palette.normal_to_occupied[nation.color]
+            else:
+                color = nation.color
+            alliance_data["foundingMembersFormatted"][nation_name] = {
+                "turnJoined": turn_joined,
+                "nationColor": color
+            }
+
+        sd_alliance = SD.alliances[alliance.type]
+        alliance_data["color"] = palette.str_to_hex(sd_alliance.color_theme)
+        alliance_data["abilities"] = sd_alliance.description
+
+        alliance_dict_filtered[alliance.name] = alliance_data
+
+    return render_template('temp_alliances.html', alliance_dict = alliance_dict_filtered, page_title = page_title)
 
 # MAP IMAGES
 @main.route('/<full_game_id>/mainmap.png')
 def get_mainmap(full_game_id):
-    with open('active_games.json', 'r') as json_file:
-        active_games_dict = json.load(json_file)
-    current_turn_num = active_games_dict[full_game_id]["Statistics"]["Current Turn"]
-    map_str = core.get_map_str(full_game_id)
-    try:
-        current_turn_num = int(current_turn_num)
-        filepath = f'..\\gamedata\\{full_game_id}\\images\\{current_turn_num - 1}.png'
-    except:
-        if current_turn_num == "Nation Setup in Progress":
-            filepath = f'..\\gamedata\\{full_game_id}\\images\\0.png'
-        else:
-            filepath = f'..\\app\\static\\images\\map_images\\{map_str}\\blank.png'
+    game = Games.load(full_game_id)
+    map_str = game.get_map_string()
+    if game.status == GameStatus.REGION_SELECTION:
+        filepath = f"..\\app\\static\\images\\map_images\\{map_str}\\blank.png"
+    elif game.status == GameStatus.NATION_SETUP:
+        filepath = f"..\\gamedata\\{full_game_id}\\images\\0.png"
+    else:
+        filepath = f"..\\gamedata\\{full_game_id}\\images\\{game.turn - 1}.png"
     return send_file(filepath, mimetype='image/png')
 @main.route('/<full_game_id>/resourcemap.png')
 def get_resourcemap(full_game_id):
@@ -1197,76 +1140,113 @@ def get_controlmap(full_game_id):
     filepath = f'../gamedata/{full_game_id}/images/controlmap.png'
     return send_file(filepath, mimetype='image/png')
 
+# TURN RESOLUTION
+@main.route('/<full_game_id>/resolve', methods=['POST'])
+def turn_resolution_new(full_game_id):
 
-# ACTION PROCESSING
-################################################################################
+    from app.alliance import Alliances
+    from app.region import Regions
+    from app.nation import Nations
+    from app.notifications import Notifications
+    from app.truce import Truces
+    from app.war import Wars
 
-@main.route('/stage1_resolution', methods=['POST'])
-def stage1_resolution():
+    game = Games.load(full_game_id)
+    SD.load(full_game_id)
+
+    match game.status:
+
+        case GameStatus.REGION_SELECTION:
+            
+            Nations.load(full_game_id)
+            Regions.load(full_game_id)
+
+            contents_dict = {}
+            for nation in Nations:
+                contents_dict[nation.id] = {}
+                contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
+                contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
+            
+            site_functions.resolve_stage1_processing(full_game_id, contents_dict)
+            Nations.save()
+            Regions.save()
+            
+            game.status = GameStatus.NATION_SETUP
+            
+        case GameStatus.NATION_SETUP:
+            
+            Alliances.load(full_game_id)
+            Nations.load(full_game_id)
+            Regions.load(full_game_id)
+
+            contents_dict = {}
+            for nation in Nations:
+                contents_dict[nation.id] = {}
+                contents_dict[nation.id]["name_choice"] = request.form.get(f"nameinput_p{nation.id}")
+                contents_dict[nation.id]["gov_choice"] = request.form.get(f"govinput_p{nation.id}")
+                contents_dict[nation.id]["fp_choice"] = request.form.get(f"fpinput_p{nation.id}")
+                contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
+
+            site_functions.resolve_stage2_processing(full_game_id, contents_dict)
+            Nations.save()
+            
+            game.set_startdate()
+            game.turn += 1
+            game.status = GameStatus.ACTIVE
+
+        case GameStatus.ACTIVE:
+            
+            Alliances.load(full_game_id)
+            Regions.load(full_game_id)
+            Nations.load(full_game_id)
+            Notifications.initialize(full_game_id)
+            Truces.load(full_game_id)
+            Wars.load(full_game_id)
+
+            contents_dict = {}
+            for nation in Nations:
+                contents_dict[nation.id] = []
+                public_str = request.form.get(f"public_textarea_p{nation.id}")
+                private_str = request.form.get(f"private_textarea_p{nation.id}")
+                if public_str:
+                    actions_list = public_str.split('\r\n')
+                    contents_dict[nation.id].extend(actions_list)
+                if private_str:
+                    actions_list = private_str.split('\r\n')
+                    contents_dict[nation.id].extend(actions_list)
+
+            site_functions.resolve_turn_processing(full_game_id, contents_dict)
+            Alliances.save()
+            Regions.save()
+            Nations.save()
+            Notifications.save()
+            Truces.save()
+            Wars.save()
+
+        case GameStatus.ACTIVE_PENDING_EVENT:
+            
+            Alliances.load(full_game_id)
+            Regions.load(full_game_id)
+            Nations.load(full_game_id)
+            Notifications.initialize(full_game_id)
+            Truces.load(full_game_id)
+            Wars.load(full_game_id)
+
+            events.resolve_current_event(full_game_id)
+            site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
+            Alliances.save()
+            Regions.save()
+            Nations.save()
+            Notifications.save()
+            Truces.save()
+            Wars.save()
+            
+            game.turn += 1
+            game.status = GameStatus.ACTIVE
     
-    full_game_id = request.form.get('full_game_id')
-    nation_table = NationTable(full_game_id)
+        case GameStatus.FINISHED:
+            print(f"{game.name} has already finished. Turn resolution skipped.")
 
-    contents_dict = {}
-    for nation in nation_table:
-        contents_dict[nation.id] = {}
-        contents_dict[nation.id]["start"] = request.form.get(f"regioninput_p{nation.id}")
-        contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
-    
-    site_functions.resolve_stage1_processing(full_game_id, contents_dict)
-    
-    return redirect(f'/{full_game_id}')
+    Games.save()
 
-@main.route('/stage2_resolution', methods=['POST'])
-def stage2_resolution():
-
-    full_game_id = request.form.get('full_game_id')
-    nation_table = NationTable(full_game_id)
-
-    contents_dict = {}
-    for nation in nation_table:
-        contents_dict[nation.id] = {}
-        contents_dict[nation.id]["name_choice"] = request.form.get(f"nameinput_p{nation.id}")
-        contents_dict[nation.id]["gov_choice"] = request.form.get(f"govinput_p{nation.id}")
-        contents_dict[nation.id]["fp_choice"] = request.form.get(f"fpinput_p{nation.id}")
-        contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
-
-    site_functions.resolve_stage2_processing(full_game_id, contents_dict)
-    
-    return redirect(f'/{full_game_id}')
-
-@main.route('/turn_resolution', methods=['POST'])
-def turn_resolution():
-
-    full_game_id = request.form.get('full_game_id')
-    nation_table = NationTable(full_game_id)
-
-    contents_dict = {}
-    for nation in nation_table:
-        contents_dict[nation.id] = []
-        public_str = request.form.get(f"public_textarea_p{nation.id}")
-        private_str = request.form.get(f"private_textarea_p{nation.id}")
-        if public_str:
-            actions_list = public_str.split('\r\n')
-            contents_dict[nation.id].extend(actions_list)
-        if private_str:
-            actions_list = private_str.split('\r\n')
-            contents_dict[nation.id].extend(actions_list)
-
-    site_functions.resolve_turn_processing(full_game_id, contents_dict)
-
-    return redirect(f'/{full_game_id}')
-
-@main.route('/event_resolution', methods=['POST'])
-def event_resolution():
-    '''
-    Handles current event and runs end of turn checks & updates when activated.
-    Redirects back to selected game.
-    '''
-    
-    full_game_id = request.form.get('full_game_id')
-    
-    events.handle_current_event(full_game_id)
-    site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
-
-    return redirect(f'/{full_game_id}')
+    return redirect(f"/{full_game_id}")

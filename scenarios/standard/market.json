@@ -1,0 +1,29 @@
+{
+    "Food": {
+        "Base Price": 3
+    },
+    "Research": {
+        "Base Price": 5
+    },
+    "Coal": {
+        "Base Price": 3
+    },
+    "Oil": {
+        "Base Price": 3
+    },
+    "Basic Materials": {
+        "Base Price": 3
+    },
+    "Common Metals": {
+        "Base Price": 5
+    },
+    "Advanced Metals": {
+        "Base Price": 10
+    },
+    "Uranium": {
+        "Base Price": 10
+    },
+    "Rare Earth Elements": {
+        "Base Price": 20
+    }
+}

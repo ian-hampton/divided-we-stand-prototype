@@ -1,52 +1,60 @@
 import json
-from typing import Union, Tuple, List
+import os
+from dataclasses import dataclass
+from typing import ClassVar, Iterator, Tuple
 
-from app import core
+from app.gamedata import Games
 
-class Alliance:
+class AlliancesMeta(type):
+
+    def __iter__(cls) -> Iterator["Alliance"]:
+        for alliance_name in cls._data:
+            yield Alliance(alliance_name)
+
+    def __len__(cls):
+        return len(cls._data) if cls._data else 0
+
+@dataclass
+class Alliances(metaclass=AlliancesMeta):
     
-    def __init__(self, alliance_name: str, alliance_data: dict, game_id: str):
+    game_id: ClassVar[str] = None
+    _data: ClassVar[dict[str, dict]] = None
+
+    @classmethod
+    def load(cls, game_id: str) -> None:
         
-        self.name = alliance_name
-        self.type: str = alliance_data["allianceType"]
-        self.turn_created: int = alliance_data["turnCreated"]
-        self.turn_ended: int = alliance_data["turnEnded"]
-        self.current_members: dict = alliance_data["currentMembers"]
-        self.founding_members: dict = alliance_data["foundingMembers"]
-        self.former_members: dict = alliance_data["formerMembers"]
+        cls.game_id = game_id
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        if not os.path.exists(gamedata_filepath):
+            raise FileNotFoundError(f"Error: Unable to locate required game files for Alliances class.")
+        
+        with open(gamedata_filepath, 'r') as f:
+            gamedata_dict = json.load(f)
 
-        if self.turn_ended == 0:
-            self.is_active: bool = True
-        else:
-            self.is_active: bool = False
+        cls._data = gamedata_dict["alliances"]
 
-        if self.is_active:
-            current_turn_num = core.get_current_turn_num(game_id)
-            self.age: int = current_turn_num - self.turn_created
-        else:
-            self.age: int = self.turn_ended - self.turn_created
+    @classmethod
+    def save(cls) -> None:
+        
+        if cls._data is None:
+            raise RuntimeError("Error: Alliances has not been loaded.")
+        
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        with open(gamedata_filepath, 'r') as json_file:
+            gamedata_dict = json.load(json_file)
 
-        self.game_id = game_id
-    
-    def build(alliance_name: str, alliance_type: str, founding_members: list[str], game_id: str) -> "Alliance":
-        """
-        Creates a new Alliance instance from scratch when called by AllianceTable factory method.
+        gamedata_dict["alliances"] = cls._data
+        with open(gamedata_filepath, 'w') as json_file:
+            json.dump(gamedata_dict, json_file, indent=4)
 
-        Params:
-            alliance_name (str): Name of alliance to create.
-            alliance_type (str): Type of alliance.
-            founding_members (list): List of nations who are founding the alliance.
-            game_id (str): Game ID string.
-
-        Returns:
-            Alliance: A created alliance.
-        """
-
-        current_turn_num = core.get_current_turn_num(game_id)
+    @classmethod
+    def create(cls, alliance_name: str, alliance_type: str, founding_members: list[str]) -> None:
+        
+        game = Games.load(cls.game_id)
 
         new_alliance_data = {
             "allianceType": alliance_type,
-            "turnCreated": current_turn_num,
+            "turnCreated": game.turn,
             "turnEnded": 0,
             "currentMembers": {},
             "foundingMembers": {},
@@ -54,50 +62,154 @@ class Alliance:
         }
 
         for nation_name in founding_members:
-            new_alliance_data["currentMembers"][nation_name] = current_turn_num
-            new_alliance_data["foundingMembers"][nation_name] = current_turn_num
+            new_alliance_data["currentMembers"][nation_name] = game.turn
+            new_alliance_data["foundingMembers"][nation_name] = game.turn
 
-        return Alliance(alliance_name, new_alliance_data, game_id)
+        cls._data[alliance_name] = new_alliance_data
+    
+    @classmethod
+    def get(cls, alliance_name: str) -> "Alliance":
+        if alliance_name in cls._data:
+            return Alliance(alliance_name)
+        return None
+    
+    @classmethod
+    def are_allied(cls, nation_name_1: str, nation_name_2: str) -> bool:
+        for alliance in cls:
+            if (alliance.is_active
+                and nation_name_1 in alliance.current_members
+                and nation_name_2 in alliance.current_members):
+                return True
+        return False
+
+    @classmethod
+    def allies(cls, nation_name: str, type_to_search = "ALL") -> list:
+        
+        from app.nation import Nations
+
+        allies_set = set()
+        for alliance in cls:
+            if alliance.is_active and nation_name in alliance.current_members:
+                if type_to_search != "ALL" and type_to_search != alliance.type:
+                    continue
+                for alliance_member_name in alliance.current_members:
+                    if alliance_member_name != nation_name:
+                        allies_set.add(alliance_member_name)
+
+        allies_list = []
+        for nation_name in allies_set:
+            nation = Nations.get(nation_name)
+            allies_list.append(nation.id)
+
+        return allies_list
+
+    @classmethod
+    def longest_alliance(cls) -> Tuple[str, int]:
+        
+        longest_alliance_name = None
+        longest_alliance_duration = -1
+
+        for alliance in cls:
+            if alliance.age > longest_alliance_duration:
+                longest_alliance_name = alliance.name
+                longest_alliance_duration = alliance.age
+
+        return longest_alliance_name, longest_alliance_duration
+
+class Alliance:
+    
+    def __init__(self, alliance_name: str):
+        self._data = Alliances._data[alliance_name]
+        self.name = alliance_name
+
+    @property
+    def type(self) -> str:
+        return self._data["allianceType"]
+
+    @type.setter
+    def type(self, value: str) -> None:
+        self._data["allianceType"] = value
+    
+    @property
+    def turn_created(self) -> int:
+        return self._data["turnCreated"]
+
+    @turn_created.setter
+    def turn_created(self, value: int) -> None:
+        self._data["turnCreated"] = value
+
+    @property
+    def turn_ended(self) -> int:
+        return self._data["turnEnded"]
+    
+    @turn_ended.setter
+    def turn_ended(self, value: int) -> None:
+        self._data["turnEnded"] = value
+    
+    @property
+    def is_active(self) -> bool:
+       return True if self.turn_ended == 0 else False
+
+    @property
+    def age(self) -> int:
+        game = Games.load(Alliances.game_id)
+        if self.turn_ended == 0:
+           return game.turn - self.turn_created
+        else:
+           return self.turn_ended - self.turn_created
+
+    @property
+    def current_members(self) -> dict[str, int]:
+        return self._data["currentMembers"]
+
+    @current_members.setter
+    def current_members(self, value: dict) -> None:
+        self._data["currentMembers"] = value
+
+    @property
+    def founding_members(self) -> dict[str, int]:
+        return self._data["foundingMembers"]
+    
+    @founding_members.setter
+    def founding_members(self, value: dict) -> None:
+        self._data["foundingMembers"] = value
+
+    @property
+    def former_members(self) -> dict[str, int]:
+        return self._data["formerMembers"]
+
+    @former_members.setter
+    def former_members(self, value: dict) -> None:
+        self._data["formerMembers"] = value
 
     def add_member(self, nation_name: str) -> None:
-        """
-        Adds a nation to the alliance.
-        Input validation is done by the public action function that calls this method.
-
-        Params:
-            nation_name (str): Nation to add to the alliance.
-        """
-
-        current_turn_num = core.get_current_turn_num(self.game_id)
-
+        game = Games.load(Alliances.game_id)
         if nation_name in self.former_members:
             del self.former_members[nation_name]
+        self.current_members[nation_name] = game.turn
 
-        self.current_members[nation_name] = current_turn_num
-        
     def remove_member(self, nation_name: str) -> None:
-        """
-        Removes a nation from the alliance.
-        Input validation is done by the public action function that calls this method.
+        from app.nation import Nations
+        from app.truce import Truces
+        
+        game = Games.load(Alliances.game_id)
 
-        Params:
-            nation_name (str): Nation to remove from the alliance.
-        """
+        for allied_nation_name in self.current_members:
+            
+            if allied_nation_name == nation_name:
+                continue
 
-        current_turn_num = core.get_current_turn_num(self.game_id)
-
+            nation = Nations.get(nation_name)
+            allied_nation = Nations.get(allied_nation_name)
+            Truces.create([nation.id, allied_nation.id], 2)
+        
         del self.current_members[nation_name]
+        self.former_members[nation_name] = game.turn
 
-        self.former_members[nation_name] = current_turn_num
-
-    def get_yield(self) -> Tuple[float, str | None]:
-        """
-        Calculates the yield of this alliance.
-        """
-
-        from app.nationdata import NationTable
-        nation_table = NationTable(self.game_id)
-        agenda_data_dict = core.get_scenario_dict(self.game_id, "Agendas")
+    def calculate_yield(self) -> Tuple[float, str | None]:
+        
+        from app.scenario import ScenarioData as SD
+        from app.nation import Nations
 
         if not self.is_active:
             return 0.0, None
@@ -108,7 +220,7 @@ class Alliance:
                 
                 total = 0.0
                 for ally_name in self.current_members:
-                    nation = nation_table.get(ally_name)
+                    nation = Nations.get(ally_name)
                     total += nation.improvement_counts["Settlement"]
                     total += nation.improvement_counts["City"]
                     total += nation.improvement_counts["Central Bank"]
@@ -120,13 +232,13 @@ class Alliance:
                 
                 tech_set = set()
                 for ally_name in self.current_members:
-                    nation = nation_table.get(ally_name)
+                    nation = Nations.get(ally_name)
                     ally_research_list = list(nation.completed_research.keys())
                     tech_set.update(ally_research_list)
 
                 tech_set_filtered = set()
                 for research_name in tech_set:
-                    if research_name not in agenda_data_dict:
+                    if research_name not in SD.agendas:
                         tech_set_filtered.add(research_name)
 
                 return len(tech_set_filtered) * 0.2, "Research"
@@ -138,241 +250,12 @@ class Alliance:
         return 0.0, None
 
     def end(self) -> None:
-        """
-        Retires an alliance.
-        """
+
+        game = Games.load(Alliances.game_id)
+
+        names = list(self.current_members.keys())
+        for nation_name in names:
+            self.remove_member(nation_name)
         
-        from app.nationdata import NationTable
-        nation_table = NationTable(self.game_id)
-        current_turn_num = core.get_current_turn_num(self.game_id)
-
-        # add truce periods
-        for nation1_name in self.current_members:
-            for nation2_name in self.current_members:
-                
-                if nation1_name == nation2_name:
-                    continue
-
-                nation1 = nation_table.get(nation1_name)
-                nation2 = nation_table.get(nation2_name)
-                
-                signatories_list = [False] * len(nation_table)
-                signatories_list[int(nation1.id) - 1] = True
-                signatories_list[int(nation2.id) - 1] = True
-                core.add_truce_period(self.game_id, signatories_list, 2)
-
-        # dissolve alliance
-        for nation_name in self.current_members:
-            self.former_members[nation_name] = current_turn_num
         self.current_members = {}
-        self.turn_ended = current_turn_num
-
-class AllianceTable:    
-    
-    def __init__(self, game_id):
-
-        # check if game id is valid
-        gamedata_filepath = f'gamedata/{game_id}/gamedata.json'
-        gamedata_dict = {}
-        try:
-            with open(gamedata_filepath, 'r') as json_file:
-                gamedata_dict = json.load(json_file)
-        except FileNotFoundError:
-            print(f"Error: Unable to locate {gamedata_filepath} during AllianceTable class initialization.")
-
-        # set attributes
-        self.game_id: str = game_id
-        self.data: dict = gamedata_dict["alliances"]
-
-    def __iter__(self):
-        for alliance_name, alliance_data in self.data.items():
-            yield Alliance(alliance_name, alliance_data, self.game_id)
-
-    def __len__(self):
-        return len(self.data)
-
-    def save(self, alliance: Alliance) -> None:
-        """
-        Saves an alliance to the AllianceTable and gamedata.json.
-
-        Params:
-            alliance (Alliance): Alliance to save/update.
-        """
-
-        alliance_data = {
-            "allianceType": alliance.type,
-            "turnCreated": alliance.turn_created,
-            "turnEnded": alliance.turn_ended,
-            "currentMembers": alliance.current_members,
-            "foundingMembers": alliance.founding_members,
-            "formerMembers": alliance.former_members
-        }
-
-        self.data[alliance.name] = alliance_data
-
-        gamedata_filepath = f'gamedata/{self.game_id}/gamedata.json'
-        with open(gamedata_filepath, 'r') as json_file:
-            gamedata_dict = json.load(json_file)
-        
-        gamedata_dict["alliances"] = self.data
-        with open(gamedata_filepath, 'w') as json_file:
-            json.dump(gamedata_dict, json_file, indent=4)
-    
-    def create(self, alliance_name: str, alliance_type: str, founding_members: list[str]) -> Alliance:
-        """
-        Factory method to create new Alliance instance.
-        Input validation is done by the public action function that calls this method.
-
-        Params:
-            alliance_name (str): Name of alliance to create.
-            alliance_type (str): Type of alliance to create.
-            founding_members (list): List of nation names that are founders 
-
-        Returns:
-            Alliance: Newly created alliance.
-        """
-
-        new_alliance = Alliance.build(alliance_name, alliance_type, founding_members, self.game_id)
-        self.save(new_alliance)
-
-        return new_alliance
-    
-    def get(self, alliance_name: str) -> Alliance:
-        """
-        Retrieves an Alliance from the AllianceTable.
-
-        Params:
-            alliance_name (str): Name of alliance to get.
-        
-        Returns:
-            Alliance: Alliance corresponding to alliance_name or None if match not found.
-        """
-        
-        if alliance_name in self.data:
-            return Alliance(alliance_name, self.data[alliance_name], self.game_id)
-
-        return None
-    
-    def are_allied(self, nation_name_1: str, nation_name_2: str) -> bool:
-        """
-        Checks if two players are a part of at least one active alliance together.
-
-        Params:
-            nation_name_1 (str): First nation name string.
-            nation_name_2 (str): Second nation name string.
-
-        Returns:
-            bool: True if an alliance found, False otherwise.
-        """
-
-        for alliance in self:
-            if (
-                alliance.is_active
-                and nation_name_1 in alliance.current_members
-                and nation_name_2 in alliance.current_members
-            ):
-                return True
-
-        return False
-    
-    def former_ally_truce(self, nation_name_1: str, nation_name_2: str) -> bool:
-        """
-        Nations are not allowed to declare war on their former allies until 2 turns have passed.
-
-        Params:
-            nation_name_1 (str): First nation name string.
-            nation_name_2 (str): Second nation name string.
-
-        Returns:
-            bool: True if an grace period is still in effect, False otherwise.
-        """
-
-        current_turn_num = core.get_current_turn_num(self.game_id)
-
-        for alliance in self:
-            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_1] <= 2:
-                    return True
-            elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
-                if current_turn_num - alliance.former_members[nation_name_2] <= 2:
-                    return True
-
-        return False
-    
-    def report(self, nation_name: str) -> dict:
-        """
-        Creates a dictionary containting counts of a specific player's alliances.
-
-        Params:
-            nation_name (str): Nation name string.
-        
-        Returns:
-            dict: Dictionary of alliance counts.
-        """
-
-        alliance_type_dict = {}
-        alliance_type_dict["Total"] = 0
-        alliance_type_dict["Non-Aggression Pact"] = 0
-        alliance_type_dict["Defense Pact"] = 0
-        alliance_type_dict["Trade Agreement"] = 0
-        alliance_type_dict["Research Agreement"] = 0
-
-        for alliance in self:
-            if alliance.is_active and nation_name in alliance.current_members:
-                alliance_type_dict["Total"] += 1
-                alliance_type_dict[alliance.type] += 1
-        
-        return alliance_type_dict
-    
-    def get_allies(self, nation_name: str, type_to_search = 'ALL') -> list:
-        """
-        Returns a list of all nations a player is allied with, no duplicates.
-
-        Params:
-            nation_name (str): Nation name string.
-            type_to_search (str): Type of alliance to check or 'ALL' to check all aliances.
-        
-        Returns:
-            list: List of nation ids.
-        """
-
-        from app.nationdata import NationTable
-
-        allies_set = set()
-
-        for alliance in self:
-            if alliance.is_active and nation_name in alliance.current_members:
-                if type_to_search != 'ALL' and type_to_search != alliance.type:
-                    continue
-                for alliance_member_name in alliance.current_members:
-                    if alliance_member_name != nation_name:
-                        allies_set.add(alliance_member_name)
-
-        allies_list = []
-        nation_table = NationTable(self.game_id)
-        for nation_name in allies_set:
-            nation = nation_table.get(nation_name)
-            allies_list.append(nation.id)
-
-        return allies_list
-    
-    def get_longest_alliance(self) -> Tuple[str, int]:
-        """
-        Identifies the longest alliance of the game.
-
-        Returns:
-            Tuple:
-                str: Name of longest alliance or None if no alliances found.
-                int: Length of the longest alliance.
-
-        """
-
-        longest_alliance_name = None
-        longest_alliance_duration = -1
-
-        for alliance in self:
-            if alliance.age > longest_alliance_duration:
-                longest_alliance_name = alliance.name
-                longest_alliance_duration = alliance.age
-
-        return longest_alliance_name, longest_alliance_duration
+        self.turn_ended = game.turn

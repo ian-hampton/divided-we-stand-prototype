@@ -1,0 +1,40 @@
+{
+    "Defense Pact": {
+        "Required Agenda": "Common Ground",
+        "Capacity": true,
+        "Color Theme": "orange",
+        "Description": [
+            "If a hostile nation declares war on one member of this alliance, all other alliance members will automatically join the war as secondary defenders (unless alliance or truce).",
+            "+1 military capacity per alliance member.",
+            "Alliance members cannot declare war on each other."
+        ]
+    },
+    "Non-Aggression Pact": {
+        "Required Agenda": "Common Ground",
+        "Capacity": false,
+        "Color Theme": "light purple",
+        "Description": [
+            "Alliance members cannot declare war on each other."
+        ]
+    },
+    "Research Agreement": {
+        "Required Agenda": "Technology Exchange",
+        "Capacity": true,
+        "Color Theme": "light blue",
+        "Description": [
+            "Technology that at least one alliance member has researched costs 20% for all other alliance members to research. Does not apply to agendas.",
+            "+0.2 technology per turn for every unique technology your alliance has. Agendas do not count.",
+            "Alliance members cannot declare war on each other."
+        ]
+    },
+    "Trade Agreement": {
+        "Required Agenda": "Trade Routes",
+        "Capacity": true,
+        "Color Theme": "light green",
+        "Description": [
+            "Alliance members can always trade with each other, ignoring all restrictions.",
+            "+0.5 dollars per turn for every Settlement, City, Capital, and Central Bank your alliance has.",
+            "Alliance members cannot declare war on each other."
+        ]
+    }
+}

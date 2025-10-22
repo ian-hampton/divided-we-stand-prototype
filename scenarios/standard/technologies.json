@@ -213,7 +213,7 @@
     },
     "Rare Earth Mining": {
         "Research Type": "Infrastructure",
-        "Prerequisite": "Uranium Extraction",
+        "Prerequisite": "Uranium Mining",
         "Cost": 20,
         "Description": "New Improvement: Rare Earth Elements Mine.",
         "Location": "B3",

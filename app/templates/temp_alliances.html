@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="cell-header">Abilities</div>
                     </div>
-                    {% for ability_str in abilities_dict[alliance_data["allianceType"]]["abilitiesDescriptionList"] %}
+                    {% for ability_str in alliance_data["abilities"] %}
                         <div class="row" style="padding-bottom: 8px; width:calc(100% - 16px)">
                             <div class="cell-left">{{ ability_str }}</div>
                         </div>
@@ -73,7 +73,7 @@
                         <div class="cell-header">Founding Members</div>
                     </div>
                     {% for nation_name in alliance_data["foundingMembers"] %}
-                        <div class="row-spaced" style="color:{{ alliance_data["currentMembersFormatted"][nation_name]["nationColor"] }}">
+                        <div class="row-spaced" style="color:{{ alliance_data["foundingMembersFormatted"][nation_name]["nationColor"] }}">
                             <div class="cell-left">{{ nation_name }}</div>
                         </div>
                     {% endfor %}

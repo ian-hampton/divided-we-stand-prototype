@@ -1,0 +1,66 @@
+{
+    "Animosity": {
+        "Required Agenda": null,
+        "Truce Duraton": 4,
+        "Winner Stockpile Gains": {
+            "Political Power": 10,
+            "Research": 10
+        },
+        "Looser Stockpile Gains": {
+            "Political Power": -99999
+        },
+        "Looser Penalty Duration": 8,
+        "Looser Penalties": {
+            "No Agenda Research": true
+        }
+    },
+    "Border Skirmish": {
+        "Required Agenda": null,
+        "Truce Duraton": 4,
+        "War Claims": {
+            "Free": 3,
+            "Max": 6,
+            "Cost": 5
+        }
+    },
+    "Containment": {
+        "Required Agenda": "Ideological Wars",
+        "Truce Duraton": 8,
+        "Looser Penalty Duration": 8,
+        "Looser Penalties": {
+            "No Agenda Research": true,
+            "Military Capacity Rate": -50
+        },
+        "Target Requirements": {
+            "Foreign Policy": [
+                "Commercial",
+                "Isolationist",
+                "Imperialist"
+            ]
+        }
+    },
+    "Conquest": {
+        "Required Agenda": "Early Expansion",
+        "Truce Duraton": 8,
+        "War Claims": {
+            "Free": 5,
+            "Max": 10,
+            "Cost": 3
+        }
+    },
+    "Independence": {
+        "Required Agenda": null,
+        "Truce Duraton": 8,
+        "For Puppet States": true,
+        "Winner Becomes Independent": true,
+        "Target Requirements": {
+            "isOverlord": true
+        }
+    },
+    "Subjugation": {
+        "Required Agenda": "Early Expansion",
+        "Truce Duraton": 8,
+        "Looser Releases All Puppet States": true,
+        "Looser Becomes Puppet State": true
+    }
+}

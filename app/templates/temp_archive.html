@@ -16,40 +16,7 @@
     flex-direction: column;
 }
 .record-box img {
-    width: 100%;
-}
-/* slideshow styling 
-* {box-sizing: border-box}*/
-.qSNQClOWRJwRwccPtSGV, .nLsefQYKStAlAngJKzCN, .RYeggypebzegsHSWdrql, .NWvKllpBdfvllSvBcUMF, .AvTkNMRkjIZXAXjVpJGb, .KwQvMSAzknEmGNFBZrmA, .hdUrBSNbJdIuEvVANqEn, .aPiJFqnrnvUiLhgsllVO, .iNFGnbJydzfkmyZwgBwe, .XwSUiwmEAfZUzDGXfEGj, .maSTSlhYOQjYTjHPtPhA {
-    display: none;
-}
-img {vertical-align: middle;}
-.slideshow-container {
-  position: relative;
-  margin: auto;
-  width: 50%;
-}
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  padding: 16px;
-  margin-top: -22px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
-}
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
-.prev:hover, .next:hover {
-  background-color: #f1f1f1;
-  color: black;
+    width: 50%;
 }
 </style>
 
@@ -70,7 +37,7 @@ img {vertical-align: middle;}
     
     {% for key, contents in dict.items() %}
         <div class="record-box">
-            <p class="record-title">{{ key }}</p>
+            <p class="record-title">{{ contents["Name"] }}</p>
             <p class="record-subtitle">{{ contents["Winner String"] }}</p>
 
             <div class="contents">
@@ -102,20 +69,7 @@ img {vertical-align: middle;}
                     {% endfor %}
                 </table>
 
-                <div class="slideshow-container">
-                    
-                    {% for filename in contents["Slideshow Images"] %}
-                        {% set image_url = contents["Game ID"] + "/" + filename %}
-                        <div class="{{ contents["Game ID"] }}">
-                            <img src="/static/archive/{{ image_url }}">
-                        </div>
-                    {% endfor %}
-
-                    {% set no = loop.index - 1 %}
-                    <a class="prev" onclick="plusSlides(-1, {{ no }})">&#10094;</a>
-                    <a class="next" onclick="plusSlides(1, {{ no }})">&#10095;</a>
-
-                </div>
+                <img src="/static/archive/{{ contents["image_url"] }}">
 
                 <table class="player-table">
                     <tr>
@@ -142,34 +96,3 @@ img {vertical-align: middle;}
 
 </body>
 </html>
-
-
-<script>
-    let slideIndex = {{ slide_index_list }};
-    let slideId = {{ game_id_list |tojson }};
-    let i;
-    for (i = 0; i < slideId.length; i++) {
-        console.log("1-"+i)
-        showSlides(1, i);
-    }
-
-    function plusSlides(n, no) {
-        showSlides(slideIndex[no] += n, no);
-    }
-
-    function showSlides(n, no) {
-        let i;
-        let x = document.getElementsByClassName(slideId[no]);
-        console.log(x)
-        if (n > x.length) {slideIndex[no] = 1}    
-        if (n < 1) {slideIndex[no] = x.length}
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";  
-                console.log("bruh")
-            }
-        x[slideIndex[no]-1].style.display = "block";
-        console.log(n + " " + no)
-        console.log("============")
-    }
-    
-</script>

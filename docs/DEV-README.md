@@ -1,7 +1,7 @@
 ## Development Environment Setup
 
 ### Prerequisites
-* This project uses Python 3.12.3.
+* This project uses Python 3.14.0.
 * Install python virtualenv (if you do not already have it installed)
     ```sh
     pip install virtualenv
@@ -14,7 +14,7 @@
    git clone -b dev --single-branch https://github.com/ian-hampton/divided-we-stand-prototype.git divided-we-stand-prototype-dev
    ```
 2. Download image assets and paste them into the 'static' folder.  
-    Note: Game archive images are currently unavailable.
+    Note: Game archive images are currently not available for download.
     ```
     https://drive.google.com/drive/folders/1KX-A1SJXS72XJk-dEyoSqpg7B-2L_KMG?usp=sharing
     ```

@@ -1,0 +1,1271 @@
+import json
+import os
+import random
+from dataclasses import dataclass
+from typing import ClassVar, Iterator, Tuple
+from collections.abc import Generator
+
+from app.gamedata import Games
+
+class NationsMeta(type):
+
+    def __iter__(cls) -> Iterator["Nation"]:
+        for nation_id in cls._data:
+            nation = Nation(nation_id)
+            if nation.is_active:
+                yield Nation(nation.id)
+
+    def __len__(cls):
+        length = 0
+        for nation_id in cls._data:
+            nation = Nation(nation_id)
+            if nation.is_active:
+                length += 1
+        return length
+
+@dataclass
+class Nations(metaclass=NationsMeta):
+
+    game_id: ClassVar[str] = None
+    _data: ClassVar[dict[str, dict]] = None
+    LEADERBOARD_RECORD_NAMES: ClassVar[list[str]] = ["nation_size", "net_income", "military_size", "technology_count", "transaction_count"]
+
+    @classmethod
+    def load(cls, game_id: str) -> None:
+
+        cls.game_id = game_id
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        if not os.path.exists(gamedata_filepath):
+            raise FileNotFoundError(f"Error: Unable to locate required game files for Nations class.")
+
+        with open(gamedata_filepath, 'r') as f:
+            gamedata_dict = json.load(f)
+
+        cls._data = gamedata_dict["nations"]
+
+    @classmethod
+    def save(cls) -> None:
+
+        if cls._data is None:
+            raise RuntimeError("Error: Nations has not been loaded.")
+
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        with open(gamedata_filepath, 'r') as json_file:
+            gamedata_dict = json.load(json_file)
+
+        gamedata_dict["nations"] = cls._data
+        with open(gamedata_filepath, 'w') as json_file:
+            json.dump(gamedata_dict, json_file, indent=4)
+
+    @classmethod
+    def create(cls, nation_id: str, player_id: int) -> None:
+
+        from app.scenario import ScenarioData as SD
+
+        nation_data = {
+            "nationName": "N/A",
+            "playerID": player_id,
+            "color": "#ffffff",
+            "government": "N/A",
+            "foreignPolicy": "N/A",
+            "status": "Independent Nation",
+            "tradeFee": "1:2",
+            "standardMissileStockpile": 0,
+            "nuclearMissileStockpile": 0,
+            "stealActionRecord": [0, ""],
+            "score": 0,
+            "chosenVictorySet": {},
+            "victorySets": cls._generate_vc_sets(2),
+            "satisfiedVictorySet": {},
+            "resources": {
+                "Dollars": {
+                    "stored": "5.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 100,
+                    "rate": 100
+                },
+                "Political Power": {
+                    "stored": "1.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Research": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Food": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Coal": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Oil": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Basic Materials": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Common Metals": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Advanced Metals": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Uranium": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Rare Earth Elements": {
+                    "stored": "0.00",
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "max": 50,
+                    "rate": 100
+                },
+                "Energy": {
+                    "income": "0.00",
+                    "grossIncome": "0.00",
+                    "rate": 100
+                },
+                "Military Capacity": {
+                    "used": "0.00",
+                    "max": "0.00",
+                    "rate": 100
+                },
+            },
+            "statistics": {
+                "regionsOwned": 0,
+                "regionsOccupied": 0,
+                "regionsOnEdge": 0,
+                "resourcesGiven": 0,
+                "resourcesReceived": 0
+            },
+            "records": {
+                "agendaCount": [],
+                "developmentScore": [],
+                "energyIncome": [],
+                "industrialIncome": [],
+                "militarySize": [],
+                "militaryStrength": [],
+                "nationSize": [],
+                "netIncome": [],
+                "researchCount": [],
+                "transactionCount": []
+            },
+            "improvementCounts": {improvement_name: 0 for improvement_name, improvement_data in SD.improvements},
+            "unitCounts": {unit_name: 0 for unit_name, unit_data in SD.units},
+            "unlockedResearch": {},
+            "incomeDetails": [],
+            "tags": {},
+            "actionLog": []
+        }
+        
+        cls._data[nation_id] = nation_data
+
+    @classmethod
+    def get(cls, string: str) -> "Nation":
+        
+        # check if nation id was provided
+        if string in cls._data:
+            return Nation(string)
+        
+        # check if nation name was provided
+        for nation in cls:
+            if nation.name.lower() == string.lower():
+                return Nation(nation.id)
+
+        raise Exception(f"Failed to retrieve nation with identifier {string}.")
+    
+    @classmethod
+    def get_random_id(cls) -> str:
+        
+        nation_ids = []
+
+        for nation in cls:
+            if nation.is_active:
+                nation_ids.append(nation.id)
+
+        return random.choice(nation_ids)
+
+    @classmethod
+    def update_records(cls) -> None:
+
+        from app.scenario import ScenarioData as SD
+        game = Games.load(cls.game_id)
+        
+        rmdata_all_transaction_list = game.get_market_data(refine=0)
+
+        for nation in cls:
+
+            nation.records.nation_size.append(nation.stats.regions_owned)
+
+            net_income_total = 0
+            for resource_name in nation._resources:
+                if resource_name == "Military Capacity":
+                    continue
+                income = float(nation.get_income(resource_name))
+                net_income_total += income
+            nation.records.net_income.append(f"{net_income_total:.2f}")
+
+            industrial_income_total = 0
+            energy_income_total = 0
+            for resource_name in nation._resources:
+                if resource_name == "Military Capacity":
+                    continue
+                income = float(nation.get_gross_income(resource_name))
+                if resource_name in ["Basic Materials", "Common Metals", "Advanced Metals"]:
+                    industrial_income_total += income
+                if resource_name in ["Energy", "Coal", "Oil"]:
+                    energy_income_total += income
+            nation.records.industrial_income.append(f"{industrial_income_total:.2f}")
+            nation.records.energy_income.append(f"{energy_income_total:.2f}")
+
+            development_score = 0
+            development_score += nation.improvement_counts.get("Central Bank", 0) * 1
+            development_score += nation.improvement_counts.get("Research Institute", 0) * 1
+            development_score += nation.improvement_counts.get("Settlement", 0) * 1
+            development_score += nation.improvement_counts.get("City", 0) * 3
+            development_score += nation.improvement_counts.get("Capital", 0) * 10
+            nation.records.development.append(development_score)
+
+            military_size = 0
+            for unit_name, unit_count in nation.unit_counts.items():
+                military_size += unit_count
+            nation.records.military_size.append(military_size)
+
+            military_strength = 0
+            for unit_name, unit_data in SD.units:
+                military_strength += nation.unit_counts.get(unit_name, 0) * unit_data.value
+            nation.records.military_strength.append(military_strength)
+
+            agenda_count = 0
+            technology_count = 0
+            for name in nation.completed_research:
+                if name in SD.agendas:
+                    agenda_count += 1
+                elif name in SD.technologies:
+                    technology_count += 1
+            nation.records.agenda_count.append(agenda_count)
+            nation.records.technology_count.append(technology_count)
+
+            transaction_count = 0
+            for transaction in rmdata_all_transaction_list:
+                if transaction[1] == nation.name:
+                    transaction_count += int(transaction[3])
+            transaction_count += nation.stats.resources_given
+            transaction_count += nation.stats.resources_received
+            nation.records.transaction_count.append(int(transaction_count))
+
+    @classmethod
+    def get_top_three(cls, record_name: str) -> list[Tuple[str, float|int]]:
+        
+        data = {}
+        
+        for nation in cls:
+            record_data: list = getattr(nation.records, record_name)
+            if record_name == "net_income":
+                data[nation.name] = float(record_data[-1])
+            else:
+                data[nation.name] = record_data[-1]
+
+        sorted_data = dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
+        top_three = list(sorted_data.items())[:3]
+        
+        return top_three
+
+    @classmethod
+    def get_lowest_in_record(cls, record_name: str) -> Tuple[str, float|int]:
+        
+        data = {}
+        
+        for nation in cls:
+            record_data: list = getattr(nation.records, record_name)
+            if record_name == "net_income":
+                data[nation.name] = float(record_data[-1])
+            else:
+                data[nation.name] = record_data[-1]
+
+        return min(data.items(), key=lambda item: item[1])
+
+    @classmethod
+    def add_leaderboard_bonuses(cls) -> None:
+        
+        # leaderboard bonuses only begin starting on turn 5
+        game = Games.load(cls.game_id)
+        if game.turn < 5:
+            return
+
+        bonus = [1, 0.5, 0.25]
+        record_name_to_string = {
+            "nation_size": "from nation size",
+            "net_income": "from economic strength",
+            "transaction_count": "from trade power",
+            "military_size": "from military size",
+            "technology_count": "from technology progress"
+        }
+
+        for record_name, string in record_name_to_string.items():
+
+            top_three = cls.get_top_three(record_name)
+
+            valid = 2
+            if top_three[0][1] == top_three[1][1]:
+                valid = -1
+            elif top_three[1][1] == top_three[2][1]:
+                valid = 0
+
+            for i, entry in enumerate(top_three):
+
+                nation_name = entry[0]
+                score = entry[1]
+
+                if i <= valid and score != 0:
+
+                    # add political power bonus to stockpile and income
+                    nation = cls.get(nation_name)
+                    nation.update_stockpile("Political Power", bonus[i])
+                    nation.update_income("Political Power", bonus[i])
+
+                    # add income string to income details
+                    pp_index = nation._find_pp_index()
+                    p1 = nation.income_details[:pp_index + 1]
+                    p2 = nation.income_details[pp_index + 1:]
+                    p1.append(f"&Tab;+{bonus[i]:.2f} {string}")
+                    nation.income_details = p1 + p2
+
+    @classmethod
+    def attribute_to_title(cls, attribute_name: str) -> str:
+
+        attribute_str_to_name_str = {
+            "military_size": "Largest Military",
+            "nation_size": "Largest Nation",
+            "net_income": "Largest Income",
+            "technology_count": "Most Technology",
+            "transaction_count": "Most Transactions"
+        }
+
+        return attribute_str_to_name_str.get(attribute_name, "NULL")
+
+    @classmethod
+    def check_tags(cls) -> None:
+        
+        game = Games.load(cls.game_id)
+        
+        for nation in cls:
+            
+            tags_filtered = {}
+            for tag_name, tag_data in nation.tags.items():
+                if tag_data["Expire Turn"] > game.turn:
+                    tags_filtered[tag_name] = tag_data
+            
+            nation.tags = tags_filtered
+
+    @classmethod
+    def prune_eliminated_nations(cls) -> None:
+
+        from app.notifications import Notifications
+        
+        for nation in cls:
+            if nation.status != "Eliminated" and nation.stats.regions_owned == 0:
+                nation.status = "Eliminated"
+                Notifications.add(f"{nation.name} has been eliminated!", 1)
+
+    @classmethod
+    def _generate_vc_sets(cls, count: int) -> dict:
+
+        from app.scenario import ScenarioData as SD
+        easy_list = SD.victory_conditions.easy
+        medium_list = SD.victory_conditions.medium
+        hard_List = SD.victory_conditions.hard
+
+        vc_sets = {}
+        random_easys = random.sample(easy_list, len(easy_list))
+        random_mediums = random.sample(medium_list, len(medium_list))
+        random_hards = random.sample(hard_List, len(hard_List))
+
+        for i in range(count):
+            name = f"set{i+1}"
+            vc_sets[name] = {}
+            vc_sets[name][random_easys.pop()] = False
+            vc_sets[name][random_mediums.pop()] = False
+            vc_sets[name][random_hards.pop()] = False
+
+        return vc_sets
+
+class Nation:
+    
+    def __init__(self, nation_id: str):
+        self._data = Nations._data[nation_id]
+        self.id: str = nation_id
+        self.stats = NationStatistics(self._data["statistics"])
+        self.records = NationRecords(self._data["records"])
+
+    @property
+    def name(self) -> str:
+        return self._data["nationName"]
+
+    @name.setter
+    def name(self, value: str):
+        self._data["nationName"] = value
+
+    @property
+    def player_id(self) -> str:
+        return self._data["playerID"]
+
+    @player_id.setter
+    def player_id(self, value: str):
+        self._data["playerID"] = value
+
+    @property
+    def is_active(self) -> bool:
+        """
+        Returns True if Nation is not eliminated or controlled by an event.
+        """
+
+        if self.status != "Eliminated" and self.id != 99:
+            return True
+        
+        return False
+
+    @property
+    def color(self) -> str:
+        return self._data["color"]
+
+    @color.setter
+    def color(self, value: str) -> None:
+        self._data["color"] = value
+
+    @property
+    def gov(self) -> str:
+        return self._data["government"]
+
+    @gov.setter
+    def gov(self, value: str) -> None:
+        self._data["government"] = value
+
+    @property
+    def fp(self) -> str:
+        return self._data["foreignPolicy"]
+
+    @fp.setter
+    def fp(self, value: str) -> None:
+        self._data["foreignPolicy"] = value
+
+    @property
+    def status(self) -> str:
+        return self._data["status"]
+
+    @status.setter
+    def status(self, value: str) -> None:
+        self._data["status"] = value
+
+    @property
+    def trade_fee(self) -> str:
+        return self._data["tradeFee"]
+
+    @trade_fee.setter
+    def trade_fee(self, value: str) -> None:
+        self._data["tradeFee"] = value
+
+    @property
+    def missile_count(self) -> int:
+        return self._data["standardMissileStockpile"]
+
+    @missile_count.setter
+    def missile_count(self, value: int) -> None:
+        self._data["standardMissileStockpile"] = value
+
+    @property
+    def nuke_count(self) -> int:
+        return self._data["nuclearMissileStockpile"]
+
+    @nuke_count.setter
+    def nuke_count(self, value: int) -> None:
+        self._data["nuclearMissileStockpile"] = value
+
+    @property
+    def score(self) -> int:
+        return self._data["score"]
+
+    @score.setter
+    def score(self, value: int) -> None:
+        self._data["score"] = value
+
+    @property
+    def victory_conditions(self) -> dict:
+        return self._data["chosenVictorySet"]
+
+    @victory_conditions.setter
+    def victory_conditions(self, value: dict) -> None:
+        self._data["chosenVictorySet"] = value
+
+    @property
+    def completed_research(self) -> dict:
+        return self._data["unlockedResearch"]
+
+    @completed_research.setter
+    def completed_research(self, value: dict) -> None:
+        self._data["unlockedResearch"] = value
+
+    @property
+    def improvement_counts(self) -> dict:
+        return self._data["improvementCounts"]
+
+    @improvement_counts.setter
+    def improvement_counts(self, value: dict) -> None:
+        self._data["improvementCounts"] = value
+
+    @property
+    def unit_counts(self) -> dict:
+        return self._data["unitCounts"]
+
+    @unit_counts.setter
+    def unit_counts(self, value: dict) -> None:
+        self._data["unitCounts"] = value
+
+    @property
+    def steal_action_record(self) -> list:
+        return self._data["stealActionRecord"]
+
+    @steal_action_record.setter
+    def stealActionRecord(self, value: list) -> None:
+        self._data["stealActionRecord"] = value
+
+    @property
+    def tags(self) -> dict:
+        return self._data["tags"]
+
+    @tags.setter
+    def tags(self, value: dict) -> None:
+        self._data["tags"] = value
+
+    @property
+    def action_log(self) -> list:
+        return self._data["actionLog"]
+
+    @action_log.setter
+    def action_log(self, value: list) -> None:
+        self._data["actionLog"] = value
+
+    @property
+    def income_details(self) -> list:
+        return self._data["incomeDetails"]
+
+    @income_details.setter
+    def income_details(self, value: list) -> None:
+        self._data["incomeDetails"] = value
+
+    @property
+    def _sets(self) -> dict:
+        return self._data["victorySets"]
+
+    @_sets.setter
+    def _sets(self, value: dict) -> None:
+        self._data["victorySets"] = value
+
+    @property
+    def _satisfied(self) -> dict:
+        return self._data["satisfiedVictorySet"]
+
+    @_satisfied.setter
+    def _satisfied(self, value: dict) -> None:
+        self._data["satisfiedVictorySet"] = value
+
+    @property
+    def _resources(self) -> dict:
+        return self._data["resources"]
+
+    @_resources.setter
+    def _resources(self, value: dict) -> None:
+        self._data["resources"] = value
+
+    def __lt__(self, other: 'Nation'):
+        return self.name < other.name
+
+    def add_gov_tags(self) -> None:
+        
+        match self.gov:
+
+            case "Republic":
+                new_tag = {
+                    "Alliance Limit Modifier": 1,
+                    "Expire Turn": 99999
+                }
+                self.tags["Republic"] = new_tag
+
+            case "Technocracy":
+                new_tag = {
+                    "Research Rate": 20,
+                    "Expire Turn": 99999
+                }
+                self.tags["Technocracy"] = new_tag
+
+            case "Oligarchy":
+                new_tag = {
+                    "Dollars Rate": 20,
+                    "Coal Rate": 20,
+                    "Oil Rate": 20,
+                    "Energy Rate": 20,
+                    "Expire Turn": 99999
+                }
+                self.tags["Oligarchy"] = new_tag
+
+            case "Totalitarian":
+                new_tag = {
+                    "Military Capacity Rate": 20,
+                    "Research Bonus": {
+                        "Amount": 2,
+                        "Resource": "Political Power",
+                        "Categories": ["Energy", "Infrastructure"]
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Totalitarian"] = new_tag
+
+            case "Remnant":
+                new_tag = {
+                    "Build Discount": 0.2,
+                    "Capital Boost": True,
+                    "Agenda Cost": 5,
+                    "Expire Turn": 99999
+                }
+                self.tags["Remnant"] = new_tag
+
+            case "Protectorate":
+                new_tag = {
+                    "Basic Materials Rate": 20,
+                    "Market Buy Modifier": 0.2,
+                    "Market Sell Modifier": 0.2,
+                    "Improvement Income Multiplier": {
+                        "Settlement": {
+                            "Dollars": -0.2
+                        },
+                        "City": {
+                            "Dollars": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Protectorate"] = new_tag
+
+            case "Military Junta":
+                new_tag = {
+                    "Improvement Income Multiplier": {
+                        "Research Laboratory": {
+                            "Research": -0.2
+                        },
+                        "Research Institute": {
+                            "Research": -0.2
+                        }
+                    },
+                    "Expire Turn": 99999
+                }
+                self.tags["Military Junta"] = new_tag
+
+            case "Crime Syndicate":
+                new_tag = {
+                    "Region Claim Cost": 0.2,
+                    "Expire Turn": 99999
+                }
+                self.tags["Crime Syndicate"] = new_tag
+
+    def update_victory_progress(self) -> None:
+        
+        import app.victory_conditions as vc
+        
+        self.score = 0
+        for name in self.victory_conditions.keys():
+            self.victory_conditions[name] = False
+
+        for name in self.victory_conditions.keys():
+            
+            # do not check vcs that have already been permanently satisfied
+            if self._satisfied[name]:
+                self.score += 1
+                continue
+
+            name_to_func = {
+                "Ambassador": vc.ambassador,
+                "Backstab": vc.backstab,
+                "Breakthrough": vc.breakthrough,
+                "Diversified Economy": vc.breakthrough,
+                "Double Down": vc.double_down,
+                "New Empire": vc.new_empire,
+                "Reconstruction Effort": vc.reconstruction_effort,
+                "Reliable Ally": vc.reliable_ally,
+                "Secure Strategic Resources": vc.secure_strategic_resources,
+                "Threat Containment": vc.threat_containment,
+                "Energy Focus": vc.energy_focus,
+                "Industrial Focus": vc.industrial_focus,
+                "Hegemony": vc.hegemony,
+                "Monopoly": vc.monopoly,
+                "Nuclear Deterrent": vc.nuclear_deterrent,
+                "Strong Research Agreement": vc.strong_research_agreement,
+                "Strong Trade Agreement": vc.strong_trade_agreement,
+                "Sphere of Influence": vc.sphere_of_influence,
+                "Underdog": vc.underdog,
+                "Warmonger": vc.warmonger,
+                "Economic Domination": vc.economic_domination,
+                "Influence Through Trade": vc.influence_through_trade,
+                "Military Superpower": vc.military_superpower,
+                "Scientific Leader": vc.scientific_leader,
+                "Territorial Control": vc.territorial_control
+            }
+            
+            if name in name_to_func:
+
+                if name_to_func[name](self):
+                    
+                    # mark victory condition as completed
+                    self.score += 1
+                    self.victory_conditions[name] = True
+
+                    # mark victory condition as permanently satisfied if needed
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Threat Containment",
+                                    "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    if name in one_and_done:
+                        self._satisfied[name] = True
+
+    def add_tech(self, technology_name: str) -> None:
+        
+        from app.scenario import ScenarioData as SD
+
+        if technology_name not in SD.agendas and technology_name not in SD.technologies:
+            raise Exception(f"{technology_name} not recognized as an agenda/technology.")
+
+        self.completed_research[technology_name] = True
+
+    def update_trade_fee(self) -> None:
+        
+        trade_fee_list = ["3:1", "2:1", "1:1", "1:2", "1:3", "1:4", "1:5"]
+        trade_index = 3
+
+        if "Improved Logistics" in self.completed_research:
+            trade_index += 1
+
+        for tag_data in self.tags.values():
+            trade_index += tag_data.get("Trade Fee Modifier", 0)
+
+        self.trade_fee = trade_fee_list[trade_index]
+
+    def award_research_bonus(self, research_name: str) -> None:
+        
+        from app.scenario import ScenarioData as SD
+
+        for tag_data in self.tags.values():
+            
+            if "Research Bonus" not in tag_data:
+                continue
+            
+            bonus_dict = tag_data["Research Bonus"]
+            sd_technology = SD.technologies[research_name]
+
+            if sd_technology.type in bonus_dict["Categories"]:
+                resource_name: str = bonus_dict["Resource"]
+                resource_amount: int = bonus_dict["Amount"]
+                self.update_stockpile(resource_name, resource_amount)
+                self.action_log.append(f"Gained {resource_amount} {resource_name} for researching {research_name}.")
+
+    def apply_build_discount(self, build_cost_dict: dict) -> None:
+        
+        build_cost_rate = 1.0
+        for tag_data in self.tags.values():
+            build_cost_rate -= float(tag_data.get("Build Discount", 0))
+
+        for key in build_cost_dict:
+            build_cost_dict[key] *= build_cost_rate
+
+    def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
+        
+        from app.scenario import ScenarioData as SD
+
+        adjustment = 0
+
+        agenda_cost_adjustment = {
+            "Cooperative": {
+                "Diplomatic": -5,
+                "Commercial": 0,
+                "Isolationist": 5,
+                "Imperialist": 0
+            },
+            "Economic": {
+                "Diplomatic": 0,
+                "Commercial": -5,
+                "Isolationist": 0,
+                "Imperialist": 5
+            },
+            "Security": {
+                "Diplomatic": 0,
+                "Commercial": 5,
+                "Isolationist": -5,
+                "Imperialist": 0,
+            },
+            "Warfare": {
+                "Diplomatic": 5,
+                "Commercial": 0,
+                "Isolationist": 0,
+                "Imperialist": -5,
+            }
+        }
+
+        sd_agenda = SD.agendas[agenda_name]
+        adjustment += agenda_cost_adjustment[sd_agenda.type][self.fp]
+
+        # cost adjustment from tags
+        for tag_data in self.tags.values():
+            adjustment += int(tag_data.get("Agenda Cost", 0))
+        
+        return adjustment
+
+    def calculate_alliance_capacity(self) -> tuple[int, int]:
+        
+        from app.scenario import ScenarioData as SD
+        from app.alliance import Alliances
+
+        capacity_used = 0
+        for alliance in Alliances:
+            if (alliance.is_active
+                and self.name in alliance.current_members
+                and SD.alliances[alliance.type].capacity
+                ):
+                capacity_used += 1
+        
+        capacity_limit = 2
+        for name in self.completed_research:
+            if name in SD.agendas:
+                agenda_data = SD.agendas[name]
+                capacity_limit += agenda_data.modifiers.get("Alliance Limit Modifier", 0)
+            elif name in SD.technologies:
+                technology_data = SD.technologies[name]
+                capacity_limit += technology_data.modifiers.get("Alliance Limit Modifier", 0)
+        for tag_data in self.tags.values():
+            capacity_limit += tag_data.get("Alliance Limit Modifier", 0)
+
+        return capacity_used, capacity_limit
+
+    def fetch_alliance_data(self) -> dict:
+
+        from app.scenario import ScenarioData as SD
+
+        alliance_count, alliance_capacity = self.calculate_alliance_capacity()
+
+        data = {
+            "Header": f"Alliances ({alliance_count}/{alliance_capacity})",
+            "Names": list(SD.alliances.names()),
+            "Colors": []
+        }
+
+        types_sorted = sorted(SD.alliances.names())
+        for alliance_type_name in types_sorted:
+            required_agenda = SD.alliances[alliance_type_name].required_agenda
+            if required_agenda in self.completed_research:
+                data["Colors"].append("#00ff00")
+            else:
+                data["Colors"].append("#ff0000")
+
+        return data
+
+    def get_subjects(self, subject_type: str) -> list:
+        
+        subjects = []
+
+        for nation in Nations:
+            if self.name in nation.status and subject_type in nation.status:
+                subjects.append(nation.id)
+        
+        return subjects
+
+    def export_action_log(self) -> None:
+        
+        log_file = f"gamedata/{Nations.game_id}/logs/nation{self.id}.txt"
+        log_dir = os.path.dirname(log_file)
+
+        os.makedirs(log_dir, exist_ok=True)
+        with open(log_file, 'w') as file:
+            for string in self.action_log:
+                file.write(string + '\n')
+
+    def get_stockpile(self, resource_name: str) -> str:
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        return self._resources[resource_name]["stored"]
+
+    def update_stockpile(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["stored"] = f"{amount:.2f}"
+            return
+        
+        stored = float(self._resources[resource_name]["stored"])
+        stored += amount
+        
+        stored_max = int(self.get_max(resource_name))
+        if stored > stored_max:
+            stored = stored_max
+        if stored < 0:
+            stored = 0
+
+        self._resources[resource_name]["stored"] = f"{stored:.2f}"
+
+    def get_income(self, resource_name: str) -> str:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if resource_name == "Military Capacity":
+            return self.get_max_mc()
+
+        return self._resources[resource_name]["income"]
+
+    def update_income(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if resource_name == "Military Capacity":
+            return
+        
+        if overwrite:
+            self._resources[resource_name]["income"] = f"{amount:.2f}"
+            return
+
+        income = float(self._resources[resource_name]["income"])
+        income += amount
+        self._resources[resource_name]["income"] = f"{income:.2f}"
+
+    def get_gross_income(self, resource_name: str) -> str:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if resource_name == "Military Capacity":
+            return self.get_max_mc()
+
+        return self._resources[resource_name]["grossIncome"]
+
+    def update_gross_income(self, resource_name: str, amount: int | float, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if resource_name == "Military Capacity":
+            self.update_max_mc(amount, overwrite=overwrite)
+            return
+
+        if overwrite:
+            self._resources[resource_name]["grossIncome"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources[resource_name]["grossIncome"])
+        income += amount
+        self._resources[resource_name]["grossIncome"] = f"{income:.2f}"
+
+    def get_max(self, resource_name: str) -> int:
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        return self._resources[resource_name]["max"]
+
+    def update_max(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected an integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["max"] = f"{amount}"
+            return
+        
+        max = int(self._resources[resource_name]["max"])
+        max += amount
+        self._resources[resource_name]["max"] = f"{max}"
+
+    def update_stockpile_limits(self) -> None:
+        
+        for resource_name in self._resources:
+
+            if resource_name in ["Energy", "Military Capacity"]:
+                continue
+            
+            new_max = 50
+            cb_count = self.improvement_counts.get("Central Bank", 0)
+            new_max += cb_count * 20
+            
+            # dollars stockpile is always 50 more than other resources
+            if resource_name == "Dollars":
+                new_max += 50
+            
+            self.update_max(resource_name, int(new_max), overwrite=True)
+
+    def get_rate(self, resource_name: str) -> int:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        rate = self._resources[resource_name]["rate"]
+        for tag_data in self.tags.values():
+            rate += tag_data.get(f"{resource_name} Rate", 0)
+
+        return rate
+
+    def update_rate(self, resource_name: str, amount: int, *, overwrite = False) -> None:
+        
+        if resource_name not in self._resources:
+            raise Exception(f"Resource {resource_name} not recognized.")
+        
+        if not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected an integer.")
+        
+        if overwrite:
+            self._resources[resource_name]["rate"] = amount
+        else:
+            self._resources[resource_name]["rate"] += amount
+
+    def get_used_mc(self) -> float:
+        return float(self._resources["Military Capacity"]["used"])
+
+    def update_military_capacity(self) -> None:
+        used_military_capacity = 0
+        for count in self.unit_counts.values():
+            used_military_capacity += count
+        self._resources["Military Capacity"]["used"] = f"{used_military_capacity:.2f}"
+
+    def get_max_mc(self) -> float:
+        
+        # do not enforce military capacity restrictions on foreign adversary
+        if self.name == "Foreign Adversary":
+            return 99999
+
+        return float(self._resources["Military Capacity"]["max"])
+
+    def update_max_mc(self, amount: int | float, *, overwrite = False) -> None:
+        
+        if not isinstance(amount, float) and not isinstance(amount, int):
+            raise TypeError(f"Invalid amount provided. Expected a float or integer.")
+        
+        if overwrite:
+            self._resources["Military Capacity"]["max"] = f"{amount:.2f}"
+            return
+        
+        income = float(self._resources["Military Capacity"]["max"])
+        income += amount
+        self._resources["Military Capacity"]["max"] = f"{income:.2f}"
+
+    def get_vc_list(self) -> list:
+        """
+        This function is a piece of garbage that exists only because I do not want to refactor the frontend right now.
+
+        Returns:
+            list: List of all victory conditions across all sets.
+        """
+        results = []
+        for key in self._sets["set1"]:
+            results.append(key)
+        for key in self._sets["set2"]:
+            results.append(key)
+        return results
+
+    def _find_pp_index(self) -> int:
+        """
+        Returns in index of where the political power log starts.
+        """
+        for i, str in enumerate(self.income_details):
+            if "Political Power" in str:
+                return i
+
+class NationStatistics:
+
+    def __init__(self, d: dict):
+        self._data = d
+
+    @property
+    def regions_owned(self) -> int:
+        return self._data["regionsOwned"]
+        
+    @regions_owned.setter
+    def regions_owned(self, value: int) -> None:
+        self._data["regionsOwned"] = value
+
+    @property
+    def regions_on_map_edge(self) -> int:
+        return self._data["regionsOnEdge"]
+    
+    @regions_on_map_edge.setter
+    def regions_on_map_edge(self, value: int) -> None:
+        self._data["regionsOnEdge"] = value
+
+    @property
+    def regions_occupied(self) -> int:
+        return self._data["regionsOccupied"]
+    
+    @regions_occupied.setter
+    def regions_occupied(self, value: int) -> None:
+        self._data["regionsOccupied"] = value
+
+    @property
+    def resources_given(self) -> float:
+        return self._data["resourcesGiven"]
+
+    @resources_given.setter
+    def resources_given(self, value: float) -> None:
+        self._data["resourcesGiven"] = value
+
+    @property
+    def resources_received(self) -> float:
+        return self._data["resourcesReceived"]
+
+    @resources_received.setter
+    def resources_received(self, value: float) -> None:
+        self._data["resourcesReceived"] = value
+
+class NationRecords:
+
+    def __init__(self, d: dict):
+        self._data = d
+
+    @property
+    def agenda_count(self) -> list:
+        return self._data["agendaCount"]
+    
+    @property
+    def development(self) -> list:
+        return self._data["developmentScore"]
+    
+    @property
+    def energy_income(self) -> list:
+        return self._data["energyIncome"]
+
+    @property
+    def industrial_income(self) -> list:
+        return self._data["industrialIncome"]
+    
+    @property
+    def military_size(self) -> list:
+        return self._data["militarySize"]
+
+    @property
+    def military_strength(self) -> list:
+        return self._data["militaryStrength"]
+
+    @property
+    def nation_size(self) -> list:
+        return self._data["nationSize"]
+
+    @property
+    def net_income(self) -> list:
+        return self._data["netIncome"]
+
+    @property
+    def technology_count(self) -> list:
+        return self._data["researchCount"]
+
+    @property
+    def transaction_count(self) -> list:
+        return self._data["transactionCount"]
+    
+    @agenda_count.setter
+    def agenda_count(self, value: list) -> None:
+        self._data["agendaCount"] = value
+
+    @development.setter
+    def development(self, value: list) -> None:
+        self._data["developmentScore"] = value
+
+    @energy_income.setter
+    def energy_income(self, value: list) -> None:
+        self._data["energyIncome"] = value
+    
+    @industrial_income.setter
+    def industrial_income(self, value: list) -> None:
+        self._data["industrialIncome"] = value
+
+    @military_size.setter
+    def military_size(self, value: list) -> None:
+        self._data["militarySize"] = value
+
+    @military_strength.setter
+    def military_strength(self, value: list) -> None:
+        self._data["militaryStrength"] = value
+
+    @nation_size.setter
+    def nation_size(self, value: list) -> None:
+        self._data["nationSize"] = value
+
+    @net_income.setter
+    def net_income(self, value: list) -> None:
+        self._data["netIncome"] = value
+
+    @technology_count.setter
+    def technology_count(self, value: list) -> None:
+        self._data["researchCount"] = value
+
+    @transaction_count.setter
+    def transaction_count(self, value: list) -> None:
+        self._data["transactionCount"] = value
+
+    def iter_leaderboard_records(self) -> Generator[tuple[str, list], None, None]:
+        
+        for attribute_name in Nations.LEADERBOARD_RECORD_NAMES:
+
+            value = getattr(self, attribute_name)
+
+            yield attribute_name, value
+
+    def iter_all_records(self) -> Generator[tuple[str, list], None, None]:
+
+        for attribute_name in dir(self):
+            
+            if attribute_name[0] == "_":
+                continue
+
+            value = getattr(self, attribute_name)
+            if callable(value):
+                continue
+
+            yield attribute_name, value

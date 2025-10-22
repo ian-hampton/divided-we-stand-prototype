@@ -1,24 +1,16 @@
-import json
 from collections import defaultdict
 
-from app import core
-from app.nationdata import Nation
-from app.nationdata import NationTable
-from app.alliance import AllianceTable
-from app.war import WarTable
-
+from app.nation import Nation, Nations
 
 # easy
 
 def ambassador(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
     
     # count alliances
     alliances_found = defaultdict(int)
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if nation.name in alliance.founding_members and alliance.type != "Non-Aggression Pact":
             alliances_found[alliance.type] += 1
     
@@ -31,15 +23,12 @@ def ambassador(nation: Nation) -> bool:
 
 def backstab(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-    alliance_table = AllianceTable(GAME_ID)
-    war_table = WarTable(GAME_ID)
+    from app.alliance import Alliances
+    from app.war import Wars
 
     # get set of all nations defeated in war
     nations_defeated = set()
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD" or nation.name not in war.combatants:
             # we do not care about wars player was not involved in
             continue
@@ -56,7 +45,7 @@ def backstab(nation: Nation) -> bool:
     
     # get set of all nations you lost a war to
     nations_lost_to = set()
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "TBD" or nation.name not in war.combatants:
             # we do not care about wars player was not involved in
             continue
@@ -74,7 +63,7 @@ def backstab(nation: Nation) -> bool:
     # get set of all former allies
     current_allies = set()
     former_allies = set()
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if alliance.is_active and nation.name in alliance.current_members:
             for ally_name in alliance.current_members:
                 current_allies.add(ally_name)
@@ -95,7 +84,7 @@ def backstab(nation: Nation) -> bool:
     
     # win a war against a former ally
     for former_ally in former_allies:
-        temp = nation_table.get(former_ally)
+        temp = Nations.get(former_ally)
         if temp.id in nations_defeated:
             return True
     
@@ -108,33 +97,27 @@ def backstab(nation: Nation) -> bool:
 
 def breakthrough(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-    tech_data_dict = core.get_scenario_dict(GAME_ID, "Technologies")
+    from app.scenario import ScenarioData as SD
 
     # build set of all techs other players have researched so we can compare
     completed_research_all = set()
-    for temp in nation_table:
+    for temp in Nations:
         if temp.name != nation.name:
             temp_research_list = list(temp.completed_research.keys())
             completed_research_all.update(temp_research_list)
     
     # find 20 point or greater tech that is not in completed_research_all
     for tech_name in nation.completed_research:
-        if (tech_name in tech_data_dict
+        if (tech_name in SD.technologies
             and tech_name not in completed_research_all
-            and tech_data_dict[tech_name]["Cost"] >= 20):
+            and SD.technologies.get(tech_name).cost >= 20):
             return True
 
     return False
 
 def diverse_economy(nation: Nation) -> bool:
 
-    non_zero_count = 0
-    for improvement_name, improvement_count in nation.improvement_counts.items():
-        if improvement_count > 0:
-            non_zero_count += 1
+    non_zero_count = sum(1 for count in nation.improvement_counts.values() if count != 0)
     
     if non_zero_count >= 16:
         return True
@@ -144,12 +127,11 @@ def diverse_economy(nation: Nation) -> bool:
 def double_down(nation: Nation) -> bool:
 
     # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     # count wars
     wars_found = defaultdict(int)
-    for war in war_table:
+    for war in Wars:
         
         if nation.id not in war.combatants:
             continue
@@ -180,35 +162,19 @@ def new_empire(nation: Nation) -> bool:
 
 def reconstruction_effort(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
-    # get score improvement count list
-    sum_dict = {}
-    for temp in nation_table:
-        sum_dict[temp.name] = 0
-        sum_dict[temp.name] += temp.improvement_counts["Settlement"]
-        sum_dict[temp.name] += temp.improvement_counts["City"] * 3
-        sum_dict[temp.name] += temp.improvement_counts["Capital"] * 10
-    
-    # check if nation has the greatest sum
-    nation_name_sum = sum_dict[nation.name]
-    for temp_nation_name, sum in sum_dict.items():
-        if temp_nation_name != nation.name and sum >= nation_name_sum:
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.development >= nation.records.development:
             return False
 
     return True
 
 def reliable_ally(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
 
-    longest_alliance_name, duration = alliance_table.get_longest_alliance()
+    longest_alliance_name, duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
-        longest_alliance = alliance_table.get(longest_alliance_name)
+        longest_alliance = Alliances.get(longest_alliance_name)
         if nation.name in longest_alliance.founding_members:
             return True
         
@@ -225,12 +191,10 @@ def secure_strategic_resources(nation: Nation) -> bool:
 
 def threat_containment(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     # check if war won with specific war justification
-    for war in war_table:
+    for war in Wars:
 
         if nation.id not in war.combatants:
             continue
@@ -246,67 +210,31 @@ def threat_containment(nation: Nation) -> bool:
 # medium
 
 def energy_focus(nation: Nation) -> bool:
-
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
-    # get gross income sums for each nation using gross income data
-    sum_dict = {}
-    for temp in nation_table:
-        sum_dict[temp.name] = 0
-        for resource_name in temp._resources:
-            if resource_name in ["Coal", "Oil", "Energy"]:
-                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
     
-    # check if nation has the greatest sum
-    nation_name_sum = sum_dict[nation.name]
-    for temp_nation_name, sum in sum_dict.items():
-        if temp_nation_name != nation.name and sum >= nation_name_sum:
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.energy_income >= nation.records.energy_income:
             return False
 
     return True
 
 def industrial_focus(nation: Nation) -> bool:
-
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
-    # get gross income sums for each nation using gross income data
-    sum_dict = {}
-    for temp in nation_table:
-        sum_dict[temp.name] = 0
-        for resource_name in temp._resources:
-            if resource_name in ["Basic Materials", "Common Metals", "Advanced Metals"]:
-                sum_dict[temp.name] += float(temp.get_gross_income(resource_name))
     
-    # check if nation has the greatest sum
-    nation_name_sum = sum_dict[nation.name]
-    for temp_nation_name, sum in sum_dict.items():
-        if temp_nation_name != nation.name and sum >= nation_name_sum:
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.industrial_income >= nation.records.industrial_income:
             return False
 
     return True
 
 def hegemony(nation: Nation) -> bool:
-
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
     
     puppet_str = f"{nation.name} Puppet State"
-    for temp in nation_table:
+    for temp in Nations:
         if puppet_str == temp.status:
             return True
 
     return False
 
 def monopoly(nation: Nation) -> bool:
-
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
 
     # create tag for tracking this if it doesn't already exist
     if "Monopoly" not in nation.tags:
@@ -322,7 +250,7 @@ def monopoly(nation: Nation) -> bool:
             continue
         
         # check nation gross income of resource vs all other players
-        if any(float(nation.get_gross_income(resource_name)) <= float(temp.get_gross_income(resource_name)) for temp in nation_table):
+        if any(float(nation.get_gross_income(resource_name)) <= float(temp.get_gross_income(resource_name)) for temp in Nations):
             if resource_name in nation.tags["Monopoly"]:
                 # reset streak if broken by deleting record
                 del nation.tags["Monopoly"][resource_name]
@@ -342,13 +270,9 @@ def monopoly(nation: Nation) -> bool:
 
 def nuclear_deterrent(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
     # get nuke counts
     sum_dict = {}
-    for temp in nation_table:
+    for temp in Nations:
         sum_dict[temp.name] = temp.nuke_count
     
     # check if nation has the greatest sum
@@ -365,13 +289,11 @@ def nuclear_deterrent(nation: Nation) -> bool:
 
 def strong_research_agreement(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Research Agreement":
-            amount, resource_name = alliance.get_yield()
+            amount, resource_name = alliance.calculate_yield()
             if amount >= 8:
                 return True
 
@@ -379,13 +301,11 @@ def strong_research_agreement(nation: Nation) -> bool:
 
 def strong_trade_agreement(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    alliance_table = AllianceTable(GAME_ID)
+    from app.alliance import Alliances
 
-    for alliance in alliance_table:
+    for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Trade Agreement":
-            amount, resource_name = alliance.get_yield()
+            amount, resource_name = alliance.calculate_yield()
             if amount >= 24:
                 return True
 
@@ -393,28 +313,17 @@ def strong_trade_agreement(nation: Nation) -> bool:
 
 def sphere_of_influence(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    agenda_data_dict = core.get_scenario_dict(GAME_ID, "Agendas")
-
-    agenda_count = 0
-    for research_name in nation.completed_research:
-        if research_name in agenda_data_dict:
-            agenda_count += 1
-    
-    if agenda_count >= 8:
+    if nation.records.agenda_count >= 8:
         return True
 
     return False
 
 def underdog(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     # search for an underdog victory
-    for war in war_table:
+    for war in Wars:
 
         # skip wars player not involved in
         if nation.id not in war.combatants:
@@ -445,12 +354,10 @@ def underdog(nation: Nation) -> bool:
 
 def warmonger(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    war_table = WarTable(GAME_ID)
+    from app.war import Wars
 
     count = 0
-    for war in war_table:
+    for war in Wars:
         if war.outcome == "Attacker Victory" and war.get_role(nation.id) == "Main Attacker":
             count += 1
     
@@ -463,12 +370,8 @@ def warmonger(nation: Nation) -> bool:
 
 def economic_domination(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
     # check if first and not tied
-    first, second, third = nation_table.get_top_three("netIncome")
+    first, second, third = Nations.get_top_three("net_income")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -476,12 +379,8 @@ def economic_domination(nation: Nation) -> bool:
 
 def influence_through_trade(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
     # check if first and not tied
-    first, second, third = nation_table.get_top_three("transactionCount")
+    first, second, third = Nations.get_top_three("transaction_count")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -489,25 +388,16 @@ def influence_through_trade(nation: Nation) -> bool:
 
 def military_superpower(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.military_strength >= nation.records.military_strength:
+            return False
 
-    # check if first and not tied
-    first, second, third = nation_table.get_top_three("militaryStrength")
-    if nation.name in first[0] and (first[1] > second[1]):
-        return True
-
-    return False
+    return True
 
 def scientific_leader(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
     # check if first and not tied
-    first, second, third = nation_table.get_top_three("researchCount")
+    first, second, third = Nations.get_top_three("technology_count")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -515,12 +405,8 @@ def scientific_leader(nation: Nation) -> bool:
 
 def territorial_control(nation: Nation) -> bool:
 
-    # load game data
-    GAME_ID = nation.game_id
-    nation_table = NationTable(GAME_ID)
-
     # check if first and not tied
-    first, second, third = nation_table.get_top_three("nationSize")
+    first, second, third = Nations.get_top_three("nation_size")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 

@@ -1,0 +1,110 @@
+{
+    "Assassination": {
+        "Type": "Standard Event",
+        "Duration": 8
+    },
+    "Corruption Scandal": {
+        "Type": "Standard Event",
+        "Duration": 8
+    },
+    "Coup": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Decaying Infrastructure": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Desertion": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Diplomatic Summit": {
+        "Type": "Standard Event",
+        "Duration": 8
+    },
+    "Foreign Aid": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Foreign Interference": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Lost Nuclear Weapons": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Security Breach": {
+        "Type": "Standard Event",
+        "Duration": 4
+    },
+    "Market Inflation": {
+        "Type": "Standard Event",
+        "Duration": 8
+    },
+    "Market Recession": {
+        "Type": "Standard Event",
+        "Duration": 8
+    },
+    "Observer Status Invitation": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Peacetime Rewards": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Power Plant Meltdown": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Shifting Attitudes": {
+        "Type": "Standard Event",
+        "Duration": 4
+    },
+    "United Nations Peacekeeping Mandate": {
+        "Type": "Standard Event",
+        "Duration": 0
+    },
+    "Widespread Civil Disorder": {
+        "Type": "Standard Event",
+        "Duration": 8
+    },
+    "Embargo": {
+        "Type": "Voting Event",
+        "Duration": 8
+    },
+    "Humiliation": {
+        "Type": "Voting Event",
+        "Duration": 8
+    },
+    "Foreign Investment": {
+        "Type": "Voting Event",
+        "Duration": 16
+    },
+    "Nominate Mediator": {
+        "Type": "Voting Event",
+        "Duration": 16
+    },
+    "Shared Fate": {
+        "Type": "Voting Event",
+        "Duration": 99999
+    },
+    "Threat Containment": {
+        "Type": "Voting Event",
+        "Duration": 8
+    },
+    "Foreign Invasion": {
+        "Type": "Major Event",
+        "Duration": 20
+    },
+    "Pandemic": {
+        "Type": "Major Event",
+        "Duration": 99999
+    },
+    "Faustian Bargain": {
+        "Type": "Major Event",
+        "Duration": 99999
+    }
+}

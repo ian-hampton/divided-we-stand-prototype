@@ -1,16 +1,16 @@
 {
-    "Alpha": {
-        "Game ID": "qSNQClOWRJwRwccPtSGV",
-        "Game #": 1,
+    "URVRAYhJJlFbktOvMjtV": {
+        "Name": "Alpha",
+        "Number": 1,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 3,
@@ -47,18 +47,18 @@
             }
         }
     },
-    "Bravo": {
-        "Game ID": "nLsefQYKStAlAngJKzCN",
-        "Game #": 2,
+    "lXaHPVDndBmfDsgsLCvA": {
+        "Name": "Bravo",
+        "Number": 2,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 5,
@@ -111,18 +111,18 @@
             }
         }
     },
-    "Charlie": {
-        "Game ID": "RYeggypebzegsHSWdrql",
-        "Game #": 3,
+    "jObpwHivZhEKxGsByKTJ": {
+        "Name": "Charlie",
+        "Number": 3,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 7,
@@ -191,18 +191,18 @@
             }
         }
     },
-    "Delta": {
-        "Game ID": "NWvKllpBdfvllSvBcUMF",
-        "Game #": 4,
+    "PISFvUqLBXcTgqcNqJKD": {
+        "Name": "Delta",
+        "Number": 4,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 8,
@@ -279,18 +279,18 @@
             }
         }
     },
-    "Echo": {
-        "Game ID": "AvTkNMRkjIZXAXjVpJGb",
-        "Game #": 5,
+    "CkrQEuJESDgAqKbxpCuJ": {
+        "Name": "Echo",
+        "Number": 5,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "Africa 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 6,
@@ -351,18 +351,18 @@
             }
         }
     },
-    "Foxtrot": {
-        "Game ID": "KwQvMSAzknEmGNFBZrmA",
-        "Game #": 6,
+    "pJyLGYdaLBfKToubMWUf": {
+        "Name": "Foxtrot",
+        "Number": 6,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "Southeast Asia 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 4,
@@ -407,18 +407,18 @@
             }
         }
     },
-    "Golf": {
-        "Game ID": "hdUrBSNbJdIuEvVANqEn",
-        "Game #": 7,
+    "WdJjRHPcqKIvBHeqRpJB": {
+        "Name": "Golf",
+        "Number": 7,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "Europe 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 7,
@@ -487,18 +487,18 @@
             }
         }
     },
-    "Hotel": {
-        "Game ID": "aPiJFqnrnvUiLhgsllVO",
-        "Game #": 8,
+    "DWPyMcRplsxTTaCmTHeS": {
+        "Name": "Hotel",
+        "Number": 8,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 1.1",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Enabled",
+            "Fog of War": true,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 7,
@@ -567,18 +567,18 @@
             }
         }
     },
-    "India": {
-        "Game ID": "iNFGnbJydzfkmyZwgBwe",
-        "Game #": 9,
+    "MkQqcnLXGtEjiCIYhvCh": {
+        "Name": "India",
+        "Number": 9,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "China 1.0",
             "Victory Conditions": "Foreign Policy",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Enabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": 9,
@@ -663,18 +663,18 @@
             }
         }
     },
-    "Test Game": {
-        "Game ID": "XwSUiwmEAfZUzDGXfEGj",
-        "Game #": 10,
+    "IhWiWbEaJNhMqxggtJpN": {
+        "Name": "Test Game",
+        "Number": 10,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
-            "Fog of War": "Disabled",
-            "Accelerated Schedule": "Enabled",
+            "Fog of War": false,
+            "Accelerated Schedule": true,
             "Turn Duration": "Live Game",
-            "Deadlines on Weekends": "Enabled"
+            "Deadlines on Weekends": true
         },
         "Statistics": {
             "Player Count": "4",
@@ -719,18 +719,18 @@
             }
         }
     },
-    "Genisys": {
-        "Game ID": "maSTSlhYOQjYTjHPtPhA",
-        "Game #": 11,
+    "efcVoaEmKstgNWMeajGB": {
+        "Name": "Genisys",
+        "Number": 11,
         "Information": {
             "Version": "Development",
             "Scenario": "Standard",
             "Map": "United States 2.0",
             "Victory Conditions": "Randomized Sets",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Turn Duration": "48 hours",
-            "Accelerated Schedule": "Enabled",
-            "Deadlines on Weekends": "Disabled"
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": false
         },
         "Statistics": {
             "Player Count": 8,
@@ -742,7 +742,7 @@
         },
         "Player Data": {
             "001": {
-                "Nation Name": "Allied States Of America",
+                "Nation Name": "Allied States of America",
                 "Color": "#b30000",
                 "Government": "Oligarchy",
                 "Foreign Policy": "Commercial",
@@ -766,7 +766,7 @@
                 "Victory": 0
             },
             "007": {
-                "Nation Name": "Threads Of Azj-Kahet",
+                "Nation Name": "Threads of Azj-Kahet",
                 "Color": "#5a009d",
                 "Government": "Remnant",
                 "Foreign Policy": "Imperialist",
@@ -807,15 +807,15 @@
             }
         }
     },
-    "Return To China": {
-        "Game ID": "temp",
-        "Game #": 12,
+    "XAwTWmaOrxNZKboRdLfm": {
+        "Name": "Return To China",
+        "Number": 12,
         "Information": {
             "Victory Conditions": "Randomized Sets",
             "Map": "China 2.0",
-            "Accelerated Schedule": "Enabled",
+            "Accelerated Schedule": true,
             "Turn Duration": "48 hours",
-            "Fog of War": "Disabled",
+            "Fog of War": false,
             "Version": "Development",
             "Scenario": "Standard"
         },
@@ -836,7 +836,7 @@
                 "Victory": 0
             },
             "002": {
-                "Nation Name": "Plutarchs Of Elonia",
+                "Nation Name": "Plutarchs of Elonia",
                 "Color": "#ff974e",
                 "Government": "Oligarchy",
                 "Foreign Policy": "Commercial",
@@ -860,7 +860,7 @@
                 "Victory": 0
             },
             "009": {
-                "Nation Name": "People'S Republic Of Sardinia",
+                "Nation Name": "People's Republic of Sardinia",
                 "Color": "#003b84",
                 "Government": "Republic",
                 "Foreign Policy": "Imperialist",
@@ -876,7 +876,7 @@
                 "Victory": 0
             },
             "011": {
-                "Nation Name": "Joj",
+                "Nation Name": "JoJ",
                 "Color": "#b654ff",
                 "Government": "Crime Syndicate",
                 "Foreign Policy": "Commercial",
@@ -884,11 +884,82 @@
                 "Victory": 0
             },
             "013": {
-                "Nation Name": "The People'S United States Of China",
+                "Nation Name": "The People's United States of China",
                 "Color": "#603913",
                 "Government": "Technocracy",
                 "Foreign Policy": "Commercial",
                 "Score": 0,
+                "Victory": 0
+            }
+        }
+    },
+    "yLWlauNzvTYrQXcRgKQW": {
+        "Name": "House Divided",
+        "Number": 13,
+        "Information": {
+            "Version": "Development",
+            "Scenario": "Standard",
+            "Map": "United States 3.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": false,
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": true,
+            "Deadlines on Weekends": false
+        },
+        "Statistics": {
+            "Player Count": 6,
+            "Game End Turn": 32,
+            "Days Ellapsed": 75,
+            "Game Started": "06/16/2025",
+            "Game Ended": "08/30/2025"
+        },
+        "Player Data": {
+            "001": {
+                "Nation Name": "Ian Industries",
+                "Color": "#b66317",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "002": {
+                "Nation Name": "The Galactic Trade Federation",
+                "Color": "#b654ff",
+                "Government": "Protectorate",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "006": {
+                "Nation Name": "Walmart",
+                "Color": "#003b84",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
+                "Victory": 0
+            },
+            "007": {
+                "Nation Name": "Progeny of Boundless Eternity",
+                "Color": "#ffd64b",
+                "Government": "Technocracy",
+                "Foreign Policy": "Isolationist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "008": {
+                "Nation Name": "Sanctum of the South",
+                "Color": "#5a009d",
+                "Government": "Protectorate",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "Lumiere",
+                "Color": "#9f8757",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 1,
                 "Victory": 0
             }
         }

@@ -2,7 +2,7 @@
 <html>
 
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-<title>{{ game1_title }}</title>
+<title>{{ game_title }}</title>
 
 <style>
 
@@ -189,13 +189,12 @@ textarea {
 }
 </style>
 
-<form action="{{ url_for(form_key) }}" method="POST">
-<input type="hidden" name="full_game_id" value="{{ full_game_id }}">
+<form action="{{ url_for('main.turn_resolution_new', full_game_id=full_game_id) }}" method="POST">
 
 <body>
     <header>
         <div class="left-header">
-            <p id="title">{{ game1_extendedtitle }}</p>
+            <p id="title">{{ full_title }}</p>
         </div>
         <div class="right-header">
             <button type="submit" class="submit-button"><img src="{{ url_for('static', filename='images/resolve.png') }}" style="width:36px;"></button>

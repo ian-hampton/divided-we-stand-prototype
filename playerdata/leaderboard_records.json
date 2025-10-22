@@ -1,0 +1,99 @@
+{
+    "Largest Nation": {
+        "Description": "Highest number of regions owned at the end of a game.",
+        "Player Name": "Eyiri",
+        "Nation Name": "Amikabuu",
+        "Game Name": "Hotel",
+        "Value": "53 regions owned"
+    },
+    "Largest Economy": {
+        "Description": "Highest net income at the end of a game.",
+        "Player Name": "Roman General",
+        "Nation Name": "Manchuria Company",
+        "Game Name": "Return To China",
+        "Value": "172.95 total income"
+    },
+    "Most Transactions": {
+        "Description": "Highest combined total of resources bought & sold to the resource market, and resources traded to and from a nation in a single game.",
+        "Player Name": "Xsotan",
+        "Nation Name": "Jinhua Confederation",
+        "Game Name": "Return To China",
+        "Value": "379 transactions"
+    },
+    "Most Technologies": {
+        "Description": "Highest total number of technologies and agendas unlocked during a single game.",
+        "Player Name": "Roman General",
+        "Nation Name": "Manchurian Tech Company",
+        "Game Name": "India",
+        "Value": "48 technologies"
+    },
+    "Largest Military": {
+        "Description": "Highest number of units at the end of a game.",
+        "Player Name": "Eyiri",
+        "Nation Name": "Amikabuu",
+        "Game Name": "Hotel",
+        "Value": "51 units"
+    },
+    "Warmonger": {
+        "Description": "Highest number of wars declared during a single game.",
+        "Player Name": "Eyiri",
+        "Nation Name": "Guandi Empire",
+        "Game Name": "India",
+        "Value": "6 war declarations"
+    },
+    "Most Battles Won": {
+        "Description": "Highest number of combats won during a single game.",
+        "Player Name": "Eyiri",
+        "Nation Name": "Guandi Empire",
+        "Game Name": "India",
+        "Value": "61 battles"
+    },
+    "Longest Alliance": {
+        "Description": "The longest alliance during a single game.",
+        "Alliance Name": "SuS or JoJ",
+        "Player Name": "mudkip & charl",
+        "Game Name": "Return To China",
+        "Value": "22 turns"
+    },
+    "Longest War": {
+        "Description": "The longest war during a single game.",
+        "War Name": "The Grand Ol' Party v. Texan Caliphate",
+        "Player Name": "mudkip vs Starzz",
+        "Game Name": "Charlie",
+        "Value": "20 turns"
+    },
+    "Game Records": {
+        "Greatest # of Players": {
+        "Game Name": "India",
+        "Value": "9 players"
+        },
+        "Smallest # of Players": {
+            "Game Name": "Foxtrot",
+            "Value": "4 players"
+        },
+        "Greatest # of Wars": {
+            "Game Name": "Golf",
+            "Value": "14 wars"
+        },
+        "Smallest # of Wars": {
+            "Game Name": "Foxtrot",
+            "Value": "5 wars"
+        },
+        "Longest Game (turns)": {
+            "Game Name": "Golf",
+            "Value": "50 turns"
+        },
+        "Shortest Game (turns)": {
+            "Game Name": "Genisys",
+            "Value": "32 turns"
+        },
+        "Longest Game (days)": {
+            "Game Name": "Golf",
+            "Value": "137 days"
+        },
+        "Shortest Game (days)": {
+            "Game Name": "Bravo",
+            "Value": "63 days"
+        }
+    }
+}
