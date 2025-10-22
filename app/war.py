@@ -673,7 +673,7 @@ class War:
         winner_combatant_data = self.get_combatant(nation_id)
         war_justification_data = SD.war_justificiations[winner_combatant_data.justification]
 
-        if not war_justification_data.has_war_claims:
+        if war_justification_data.has_war_claims:
             for region_id, original_owner_id in winner_combatant_data.claims.items():
                 region = Region(region_id)
                 
