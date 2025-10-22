@@ -158,7 +158,7 @@ class Wars(metaclass=WarsMeta):
         return None
 
     @classmethod
-    def get_war_claims(cls, nation_name: str, war_justification: str) -> int:
+    def get_war_claims(cls, nation_name: str, war_justification: str) -> tuple[int, list]:
         
         claim_cost = -1
         
@@ -167,7 +167,7 @@ class Wars(metaclass=WarsMeta):
             region_claims_list = region_claims_str.split(',')
             claim_cost = cls._validate_war_claims(war_justification, region_claims_list)
         
-        return claim_cost 
+        return claim_cost, region_claims_list
 
     @classmethod
     def is_at_peace(cls, nation_id: str) -> bool:
@@ -545,15 +545,15 @@ class War:
 
             # process war claims
             if SD.war_justificiations[war_justification].has_war_claims:
-
-                combatant.target_id = "N/A"
                 
-                claim_cost = Wars.get_war_claims(combatant.name, war_justification)
+                claim_cost, region_claims_list = Wars.get_war_claims(combatant.name, war_justification)
                 if float(combatant_nation.get_stockpile("Political Power")) - claim_cost < 0:
                     combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
                     continue
-
+                
+                combatant.target_id = "N/A"
                 combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
+                combatant.claims = Wars._claim_pairs(region_claims_list)
             
             # OR handle war justification that does not seize territory
             else:
@@ -561,7 +561,6 @@ class War:
                 combatant.target_id = str(target_id)
             
             combatant.justification = war_justification
-            combatant.claims = Wars._claim_pairs(region_claims_list)
 
     def calculate_score_threshold(self) -> tuple:
         

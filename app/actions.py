@@ -2169,7 +2169,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
         if SD.war_justificiations[action.war_justification].has_war_claims:
             
-            claim_cost = Wars.get_war_claims(attacker_nation.name, action.war_justification)
+            claim_cost, region_claims_list = Wars.get_war_claims(attacker_nation.name, action.war_justification)
             if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
                 attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
                 continue
@@ -2189,41 +2189,41 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
     for action in actions_list:
 
         war = Wars.get(action.war_name)
-        attacker_nation = Nations.get(action.id)
+        nation = Nations.get(action.id)
 
-        war.add_combatant(attacker_nation, f"Secondary {action.side}", action.war_justification)
+        war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
         combatant = war.get_combatant(action.id)
-        region_claims_list = []
 
         # process war claims
         if SD.war_justificiations[action.war_justification].has_war_claims:
 
-            combatant.target_id = "N/A"
             main_attacker_id, main_defender_id = war.get_main_combatant_ids()
             if {action.side} == "Attacker":
                 defender_nation = Nations.get(main_attacker_id)
             elif {action.side} == "Defender":
                 defender_nation = Nations.get(main_defender_id)
             
-            claim_cost = Wars.get_war_claims(combatant.name, action.war_justification)
-            if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
-                attacker_nation.action_log.append(f"Error: Not enough political power for war claims.")
+            if not _war_action_valid(action, nation, defender_nation):
                 continue
-
-            attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
+            
+            claim_cost, region_claims_list = Wars.get_war_claims(combatant.name, action.war_justification)
+            if float(nation.get_stockpile("Political Power")) - claim_cost < 0:
+                nation.action_log.append(f"Error: Not enough political power for war claims.")
+                continue
+            
+            combatant.target_id = "N/A"
+            nation.update_stockpile("Political Power", -1 * claim_cost)
+            combatant.claims = Wars._claim_pairs(region_claims_list)
         
         # OR handle war justification that does not seize territory
         else:
             target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {action.war_justification}: ")
-            combatant.target_id = target_id
             defender_nation = Nations.get(target_id)
+            if not _war_action_valid(action, nation, defender_nation):
+                continue
+            combatant.target_id = target_id
 
-        if not _war_action_valid(action, attacker_nation, defender_nation):
-            continue
-
-        # save
-        Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 4)
-        combatant.claims = Wars._claim_pairs(region_claims_list)
+        Notifications.add(f"{nation.name} has joined {war.name} as a {action.side}!", 4)
 
 def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):
     
