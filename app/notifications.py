@@ -1,4 +1,5 @@
 import json
+import os
 from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
@@ -18,6 +19,19 @@ class Notifications(metaclass=NotificationsMeta):
     def initialize(cls, game_id: str) -> None:
         cls.game_id = game_id
         cls._data = []
+
+    @classmethod
+    def load(cls, game_id: str) -> None:
+        
+        cls.game_id = game_id
+        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
+        if not os.path.exists(gamedata_filepath):
+            raise FileNotFoundError(f"Error: Unable to locate required game files for Notifications class.")
+        
+        with open(gamedata_filepath, 'r') as f:
+            gamedata_dict = json.load(f)
+
+        cls._data = gamedata_dict["notifications"]
     
     @classmethod
     def save(cls) -> None:

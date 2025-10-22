@@ -118,10 +118,9 @@ class Wars(metaclass=WarsMeta):
         possible_allies = set(puppet_states)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
-            if (cls.get_war_name(main_defender.id, ally.id) is None                     # ally cannot already be at war with defender
-                and not Truces.are_truced(main_defender.id, ally.id)                    # ally cannot have truce with defender
-                and not Alliances.are_allied(main_defender.name, ally.name)             # ally cannot be allied with defender
-                and not Alliances.former_ally_truce(main_defender.name, ally.name)):    # ally cannot be recently allied with defender
+            if (cls.get_war_name(main_defender.id, ally.id) is None              # ally cannot already be at war with defender
+                and not Truces.are_truced(main_defender.id, ally.id)             # ally cannot have truce with defender
+                and not Alliances.are_allied(main_defender.name, ally.name)):    # ally cannot be allied with defender
                 new_war.add_combatant(ally, "Secondary Attacker", "TBD")
 
         # call in main defender allies
@@ -135,10 +134,9 @@ class Wars(metaclass=WarsMeta):
                     ally_player_ids.add(nation.id)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
-            if (cls.get_war_name(main_attacker.id, ally.id) is None                     # ally cannot already be at war with attacker
-                and not Truces.are_truced(main_attacker.id, ally.id)                    # ally cannot have truce with attacker
-                and not Alliances.are_allied(main_attacker.name, ally.name)             # ally cannot be allied with attacker
-                and not Alliances.former_ally_truce(main_attacker.name, ally.name)):    # ally cannot be recently allied with attacker
+            if (cls.get_war_name(main_attacker.id, ally.id) is None              # ally cannot already be at war with attacker
+                and not Truces.are_truced(main_attacker.id, ally.id)             # ally cannot have truce with attacker
+                and not Alliances.are_allied(main_attacker.name, ally.name)):    # ally cannot be allied with attacker
                 new_war.add_combatant(ally, "Secondary Defender", "TBD")
 
     @classmethod
@@ -160,7 +158,7 @@ class Wars(metaclass=WarsMeta):
         return None
 
     @classmethod
-    def get_war_claims(cls, nation_name: str, war_justification: str) -> int:
+    def get_war_claims(cls, nation_name: str, war_justification: str) -> tuple[int, list]:
         
         claim_cost = -1
         
@@ -169,7 +167,7 @@ class Wars(metaclass=WarsMeta):
             region_claims_list = region_claims_str.split(',')
             claim_cost = cls._validate_war_claims(war_justification, region_claims_list)
         
-        return claim_cost 
+        return claim_cost, region_claims_list
 
     @classmethod
     def is_at_peace(cls, nation_id: str) -> bool:
@@ -314,7 +312,6 @@ class Wars(metaclass=WarsMeta):
                     file.write(entry + '\n')
             
             war.log = []
-            cls.save(war)
 
     @classmethod
     def _generate_war_name(cls, main_attacker: Nation, main_defender: Nation, war_justification: str) -> str:
@@ -548,15 +545,15 @@ class War:
 
             # process war claims
             if SD.war_justificiations[war_justification].has_war_claims:
-
-                combatant.target_id = "N/A"
                 
-                claim_cost = Wars.get_war_claims(combatant.name, war_justification)
+                claim_cost, region_claims_list = Wars.get_war_claims(combatant.name, war_justification)
                 if float(combatant_nation.get_stockpile("Political Power")) - claim_cost < 0:
                     combatant_nation.action_log.append(f"Error: Not enough political power for war claims.")
                     continue
-
+                
+                combatant.target_id = "N/A"
                 combatant_nation.update_stockpile("Political Power", -1 * claim_cost)
+                combatant.claims = Wars._claim_pairs(region_claims_list)
             
             # OR handle war justification that does not seize territory
             else:
@@ -564,7 +561,6 @@ class War:
                 combatant.target_id = str(target_id)
             
             combatant.justification = war_justification
-            combatant.claims = Wars._claim_pairs(region_claims_list)
 
     def calculate_score_threshold(self) -> tuple:
         
@@ -677,7 +673,7 @@ class War:
         winner_combatant_data = self.get_combatant(nation_id)
         war_justification_data = SD.war_justificiations[winner_combatant_data.justification]
 
-        if not war_justification_data.has_war_claims:
+        if war_justification_data.has_war_claims:
             for region_id, original_owner_id in winner_combatant_data.claims.items():
                 region = Region(region_id)
                 

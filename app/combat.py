@@ -20,7 +20,7 @@ def unit_vs_unit_standard(attacker_region: Region, defender_region: Region) -> N
     war = Wars.get(war_name)
     attacker_cd = war.get_combatant(attacker.id)
     defender_cd = war.get_combatant(defender.id)
-    war.log.append(f"{attacker.name} {attacker_region.unit.name} {attacker_region.region_id} vs {defender.name} {defender_region.unit.name} {defender_region.region_id}")
+    war.log.append(f"{attacker.name} {attacker_region.unit.name} {attacker_region.id} vs {defender.name} {defender_region.unit.name} {defender_region.id}")
 
     # calculate attacker roll modifier
     attacker_roll_modifier = 0
@@ -143,7 +143,7 @@ def unit_vs_improvement_standard(attacker_region: Region, defender_region: Regio
     war = Wars.get(war_name)
     attacker_cd = war.get_combatant(attacker.id)
     defender_cd = war.get_combatant(defender.id)
-    war.log.append(f"{attacker.name} {attacker_region.unit.name} {attacker_region.region_id} vs {defender.name} {defender_region.improvement.name} {defender_region.region_id}")
+    war.log.append(f"{attacker.name} {attacker_region.unit.name} {attacker_region.id} vs {defender.name} {defender_region.improvement.name} {defender_region.id}")
 
     # calculate attacker roll modifier
     attacker_roll_modifier = 0
@@ -260,7 +260,7 @@ def unit_vs_improvement_sf(attacker_region: Region, defender_region: Region) -> 
     war = Wars.get(war_name)
     attacker_cd = war.get_combatant(attacker.id)
     defender_cd = war.get_combatant(defender.id)
-    war.log.append(f"{attacker.name} {attacker_region.unit.name} {attacker_region.region_id} vs {defender.name} {defender_region.improvement.name} {defender_region.region_id}")
+    war.log.append(f"{attacker.name} {attacker_region.unit.name} {attacker_region.id} vs {defender.name} {defender_region.improvement.name} {defender_region.id}")
 
     # determine outcome - special forces always wins
     if "Attacker" in attacker_cd.role:

@@ -17,14 +17,15 @@ class Event:
 
     def __init__(self, game_id: str, event_name: str, event_data: dict):
 
-        self.game_id = game_id
-        self.state = -1
-
         self.name: str = event_name
         self.type: str = event_data["Type"]
         self.duration: int = event_data["Duration"]
         self.targets: list = event_data.get("Targets", [])
         self.expire_turn: int = event_data.get("Expiration", -1)
+
+        self.game_id = game_id
+        self.game = Games.load(self.game_id)
+        self.state = -1
 
         # EVENT STATES
         #  2  event is pending input from players
@@ -100,7 +101,9 @@ class Event:
 
                 if vote_count > float(nation.get_stockpile("Political Power")):
                     continue
-                if target_name.lower() not in Nations._name_to_id:
+                try:
+                    target_nation = Nations.get(target_name)
+                except:
                     continue
                 
                 if target_name in vote_tally_dict:
@@ -204,11 +207,11 @@ class Assassination(Event):
                         print("Unrecognized nation name, try again.")
                 new_tag = {
                     "Combat Roll Bonus": scapegoat.id,
-                    "Expire Turn": self.current_turn_num + self.duration + 1
+                    "Expire Turn": self.game.turn + self.duration + 1
                 }
                 nation.tags["Assassination Scapegoat"] = new_tag
                 self.state = 1
-                self.expire_turn = self.current_turn_num + self.duration + 1
+                self.expire_turn = self.game.turn + self.duration + 1
     
     def has_conditions_met(self) -> bool:
         return True
@@ -228,12 +231,12 @@ class CorruptionScandal(Event):
         new_tag = {
             "Dollars Rate": -20,
             "Political Power Rate": -20,
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         victim_nation.tags["Corruption Scandal"] = new_tag
 
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -291,7 +294,7 @@ class DecayingInfrastructure(Event):
                 if decay_roll >= 9:
                     nation = Nations.get(region.data.owner_id)
                     nation.improvement_counts[region.improvement.name] -= 1
-                    Notifications.add(f"{nation.name} {region.improvement.name} in {region.region_id} has decayed.", 3)
+                    Notifications.add(f"{nation.name} {region.improvement.name} in {region.id} has decayed.", 3)
                     region.improvement.clear()
 
         self.state = 0
@@ -396,14 +399,14 @@ class DiplomaticSummit(Event):
         for nation_id in summit_attendance_list:
             nation = Nations.get(nation_id)
             new_tag = {
-                "Expire Turn": self.current_turn_num + self.duration + 1
+                "Expire Turn": self.game.turn + self.duration + 1
             }
             for attendee_id in summit_attendance_list:
                 new_tag[f"Cannot Declare War On #{attendee_id}"] = True
             nation.tags["Summit"] = new_tag
         
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -571,12 +574,12 @@ class SecurityBreach(Event):
 
         new_tag = {
             "Research Rate": -20,
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         victim_nation.tags["Security Breach"] = new_tag
         
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -592,7 +595,7 @@ class MarketInflation(Event):
 
     def activate(self):
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -604,7 +607,7 @@ class MarketRecession(Event):
 
     def activate(self):
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -696,7 +699,7 @@ class PowerPlantMeltdown(Event):
         
         for region in Regions:
             if region.improvement.name == "Nuclear Power Plant":
-                self.targets.append(region.region_id)
+                self.targets.append(region.id)
         random.shuffle(self.targets)
         meltdown_region_id = self.targets.pop()
 
@@ -737,8 +740,8 @@ class ShiftingAttitudes(Event):
 
     def resolve(self):
 
-        choices = ["Change", "Keep"]
-        print(f"Available Options: {" or ".join(choices)}")
+        self.choices = ["Change", "Keep"]
+        print(f"Available Options: {" or ".join(self.choices)}")
         decision_dict = self._collect_basic_decisions()
 
         for nation_id, decision in decision_dict.items():
@@ -752,7 +755,7 @@ class ShiftingAttitudes(Event):
             elif decision == "Keep":
                 new_tag = {
                     "Political Power Rate": -20,
-                    "Expire Turn": self.current_turn_num + self.duration + 1
+                    "Expire Turn": self.game.turn + self.duration + 1
                 }
                 nation.tags["Shifting Attitudes"] = new_tag
                 valid_research = False
@@ -801,12 +804,12 @@ class WidespreadCivilDisorder(Event):
 
         for nation in Nations:
             new_tag = {
-                "Expire Turn": self.current_turn_num + self.duration + 1
+                "Expire Turn": self.game.turn + self.duration + 1
             }
             nation.tags["Civil Disorder"] = new_tag
 
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
 
@@ -841,14 +844,14 @@ class Embargo(Event):
         
         nation = Nations.get(nation_name)
         new_tag = {
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         nation.tags["Embargo"] = new_tag
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 3)
         
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1     
+        self.expire_turn = self.game.turn + self.duration + 1     
 
     def has_conditions_met(self) -> bool:
         return True
@@ -880,14 +883,14 @@ class Humiliation(Event):
         nation = Nations.get(nation_name)
         new_tag = {
             "No Agenda Research": True,
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         nation.tags["Humiliation"] = new_tag
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 3)
 
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1 
+        self.expire_turn = self.game.turn + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
         return True
@@ -919,14 +922,14 @@ class ForeignInvestment(Event):
         nation = Nations.get(nation_name)
         new_tag = {
             "Market Buy Modifier": 0.2,
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         nation.tags["Foreign Investment"] = new_tag
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 3)
 
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1 
+        self.expire_turn = self.game.turn + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
         return True
@@ -959,14 +962,14 @@ class NominateMediator(Event):
         new_tag = {
             "Alliance Political Power Bonus": 0.25,
             "Truces Extended": [],
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         nation.tags["Mediator"] = new_tag
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 3)
 
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1 
+        self.expire_turn = self.game.turn + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
         return True
@@ -1052,14 +1055,14 @@ class ThreatContainment(Event):
         new_tag = {
             "Military Capacity Rate": -20,
             "Trade Fee Modifier": -1,
-            "Expire Turn": self.current_turn_num + self.duration + 1
+            "Expire Turn": self.game.turn + self.duration + 1
         }
         nation.tags["Threat Containment"] = new_tag
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 3)
 
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
         return True
@@ -1114,7 +1117,7 @@ class ForeignInvasion(Event):
             self._foreign_invasion_initial_spawn(adj_id, unit_name)
         
         self.state = 1
-        self.expire_turn = self.current_turn_num + self.duration + 1
+        self.expire_turn = self.game.turn + self.duration + 1
 
     def run_before(self, actions_dict: dict[str, list]) -> None:
         
@@ -1128,16 +1131,16 @@ class ForeignInvasion(Event):
             if ending_region_id is None:
                 continue
             # foreign invasion always moves each unit one region at a time
-            movement_action_str = f"Move {region.region_id}-{ending_region_id}"
+            movement_action_str = f"Move {region.id}-{ending_region_id}"
             actions_dict["UnitMoveAction"].append(actions.UnitMoveAction(self.game_id, "99", movement_action_str))
         
         # generate deployment actions
-        if self.current_turn_num % 4 == 0:
+        if self.game.turn % 4 == 0:
             Notifications.add("The Foreign Invasion has received reinforcements.", 3)
             for region in Regions:
                 if region.data.owner_id == "99" and region.data.occupier_id == "0":
                     unit_name = self._foreign_invasion_determine_unit()
-                    deploy_action_str = f"Deploy {unit_name} {region.region_id}"
+                    deploy_action_str = f"Deploy {unit_name} {region.id}"
                     actions_dict["UnitDeployAction"].append(actions.UnitDeployAction(self.game_id, "99", deploy_action_str))
 
         self.state = 1
@@ -1179,11 +1182,11 @@ class ForeignInvasion(Event):
     
     def _foreign_invasion_determine_unit(self) -> str:
 
-        if self.current_turn_num >= 40:
+        if self.game.turn >= 40:
             return "Main Battle Tank"
-        elif self.current_turn_num >= 32:
+        elif self.game.turn >= 32:
             return "Special Forces"
-        elif self.current_turn_num >= 24:
+        elif self.game.turn >= 24:
             return "Mechanized Infantry"
         
         return "Infantry"
@@ -1299,7 +1302,7 @@ class ForeignInvasion(Event):
                 region.unit.clear()
 
             war = Wars.get("Foreign Invasion")
-            war.end = self.current_turn_num
+            war.end = self.game.turn
             war.outcome = "White Peace"
 
 class Pandemic(Event):
@@ -1356,7 +1359,7 @@ class Pandemic(Event):
             infected_regions = []
             for region in Regions:
                 if region.data.infection > 0:
-                    infected_regions.append(region.region_id)
+                    infected_regions.append(region.id)
 
             # conduct spread roles
             for region_id in infected_regions:
@@ -1519,7 +1522,7 @@ class FaustianBargain(Event):
         
         return True
 
-def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=False) -> any:
+def load_event(game_id: str, event_name: str, event_data: dict | None) -> any:
     """
     Creates an event object based on the event name.
 
@@ -1575,7 +1578,7 @@ def load_event(game_id: str, event_name: str, event_data: dict | None, *, temp=F
             "Duration": sd_event.duration
         }
 
-    return events[event_name](game_id, event_name, event_data, temp)
+    return events[event_name](game_id, event_name, event_data)
     
 def _is_first_event(game_id: str) -> bool:
 

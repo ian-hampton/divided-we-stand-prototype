@@ -159,47 +159,6 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
 # WAR HELPRR FUNCTIONS
 ################################################################################
 
-def locate_best_missile_defense(target_nation: Nation, missile_type: str, target_region_id: str) -> str | None:
-    """
-    Identifies best missile defense to counter incoming missile. Returns None if not found.
-    """
-    
-    # get game data
-    from app.region import Region
-    target_region = Region(target_region_id)
-
-    defender_name = None
-    # TODO - rewrite, no hardcoding the names
-
-    # check for MDS
-    if target_region.improvement.name == "Missile Defense System":
-        defender_name = "Missile Defense System"
-    else:
-        missile_defense_network_candidates_list = target_region.get_regions_in_radius(2)
-        for select_region_id in missile_defense_network_candidates_list:
-            select_region = Region(select_region_id)
-            if select_region.improvement.name == "Missile Defense System" and select_region.data.owner_id == target_region.data.owner_id:
-                defender_name = "Missile Defense System"
-                break
-    
-    if missile_type != "Standard Missile":
-        return defender_name
-
-    # check for anti-air unit
-    if target_region.unit.name == "Anti-Air":
-        defender_name = "Anti-Air"
-    else:
-        if target_region.check_for_adjacent_unit({"Anti-Air"}, target_region.data.owner_id):
-            defender_name = "Anti-Air"
-
-    # last resort - check for local defense
-    if defender_name is None and "Local Missile Defense" in target_nation.completed_research:
-        if target_region.improvement is not None and target_region.improvement.health != 0:
-            if target_region.improvement.missile_defense != "99":
-                defender_name = target_region.improvement.name
-
-    return defender_name
-
 def withdraw_units():
 
     from app.region import Region, Regions
@@ -213,10 +172,10 @@ def withdraw_units():
             target_id = region.find_suitable_region()
             
             if target_id is not None:
-                nation.action_log.append(f"Withdrew {region.unit.name} {region.region_id} to {target_id}.")
+                nation.action_log.append(f"Withdrew {region.unit.name} {region.id} to {target_id}.")
                 region.move_unit(Region(target_id), withdraw=True)
             else:
-                nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.region_id}. Unit disbanded!")
+                nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.id}. Unit disbanded!")
                 nation.unit_counts[region.unit.name] -= 1
                 region.unit.clear()
 
@@ -235,7 +194,7 @@ def search_and_destroy(player_id: str, target_improvement: str) -> str:
     candidate_region_ids = []
     for region in Regions:
         if region.improvement.name == target_improvement and region.data.owner_id == int(player_id):
-            candidate_region_ids.append(region.region_id)
+            candidate_region_ids.append(region.id)
 
     # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
@@ -257,7 +216,7 @@ def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str
     candidate_region_ids = []
     for region in Regions:
         if (desired_unit_name == 'ANY' or region.unit.name == desired_unit_name) and region.unit.owner_id == player_id:
-            candidate_region_ids.append(region.region_id)
+            candidate_region_ids.append(region.id)
 
     # randomly select one of the candidate regions
     # there should always be at least one candidate region because we have already checked that the target unit exists

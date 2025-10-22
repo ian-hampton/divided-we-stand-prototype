@@ -62,27 +62,27 @@ class Region:
 
     def __init__(self, region_id: str):
         self._data = Regions._data[region_id]
-        self.region_id = region_id
+        self.id = region_id
         self.game_id = Regions.game_id
         self.claim_list = []
         self.data = RegionData(self._data["regionData"])
-        self.graph = GraphData(Regions._graph[self.region_id])
+        self.graph = GraphData(Regions._graph[self.id])
         self.improvement = ImprovementData(self._data["improvementData"])
         self.unit = UnitData(self._data["unitData"])
 
     def __eq__(self, other):
         if isinstance(other, Region):
-            return self.region_id == other.region_id
+            return self.id == other.id
         return False
     
     def __lt__(self, other: 'Region'):
-        return self.region_id < other.region_id
+        return self.id < other.id
     
     def __hash__(self):
-        return hash(self.region_id)
+        return hash(self.id)
 
     def __str__(self):
-        return f"R[{self.region_id}]"
+        return f"R[{self.id}]"
     
     def __repr__(self):
         return self.__str__()
@@ -97,8 +97,8 @@ class Region:
     
     def get_regions_in_radius(self, radius: int) -> set:
         
-        visited = set([self.region_id])
-        queue = deque([(self.region_id, 0)])
+        visited = set([self.id])
+        queue = deque([(self.id, 0)])
         
         while queue:
             
@@ -141,7 +141,7 @@ class Region:
             str: Suitable region_id if found, otherwise None.
         """
 
-        queue = deque([self.region_id])
+        queue = deque([self.id])
         visited = set()
 
         while queue:
@@ -242,7 +242,7 @@ class Region:
             if other_player_id != "0" and self.data.occupier_id == other_player_id:
                 return False
         
-        return False
+        return True
 
     def move_unit(self, target_region: "Region", *, withdraw=False) -> bool:
         """
@@ -257,16 +257,24 @@ class Region:
         """
 
         from app import combat
-        from app.nation import Nations
         from app.war import Wars
 
-        combat_occured = False
+        def execute_move() -> None:
+            # update region occupation
+            if not withdraw and attacker_id != defender_id:
+                target_region.data.occupier_id = self.unit.owner_id
+            else:
+                target_region.data.occupier_id = "0"
+            # move attacking unit
+            target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
+            self.unit.clear()
 
         if withdraw:
-            self._execute_move(target_region)
+            execute_move()
             return True
         
         # conduct combat if needed
+        combat_occured = False
         if target_region.unit.is_hostile(self.unit.owner_id):
             combat.unit_vs_unit(self, target_region)
             combat_occured = True
@@ -274,41 +282,40 @@ class Region:
             combat.unit_vs_improvement(self, target_region)
             combat_occured = True
 
-        # complete move if still alive and no resistance
+        # complete move if unit still alive and no resistance
         if (self.unit.name is not None
             and not target_region.unit.is_hostile(self.unit.owner_id)
             and not target_region.improvement_is_hostile(self.unit.owner_id)):
             
-            unit_owner_id = copy.deepcopy(self.unit.owner_id)
-            self._execute_move(target_region)
+            attacker_id = self.unit.owner_id
+            defender_id = target_region.data.owner_id
+            execute_move()
 
-            if target_region.improvement_is_hostile(unit_owner_id) and target_region.improvement.name != "Capital":
+            if target_region.improvement.name is not None and target_region.improvement.name != "Capital" and attacker_id != defender_id:
 
                 # load war and combatant data
-                attacking_nation = Nations.get(str(unit_owner_id))
-                defending_nation = Nations.get(str(target_region.data.owner_id))
-                war_name = Wars.get_war_name(attacking_nation.id, defending_nation.id)
+                war_name = Wars.get_war_name(attacker_id, defender_id)
                 war = Wars.get(war_name)
-                attacking_nation_combatant_data = war.get_combatant(attacking_nation.id)
-                defending_nation_combatant_data = war.get_combatant(defending_nation.id)
+                attacking_nation_combatant_data = war.get_combatant(attacker_id)
+                defending_nation_combatant_data = war.get_combatant(defender_id)
                 
                 # award points and update stats
                 war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
                 attacking_nation_combatant_data.destroyed_improvements += 1
                 defending_nation_combatant_data.lost_improvements += 1
                 
-                # save war data
+                # update combat log
                 if combat_occured:
-                    war.log.append(f"    {defending_nation.name} {target_region.improvement.name} has been destroyed!")
+                    war.log.append(f"    {defending_nation_combatant_data.name} {target_region.improvement.name} has been destroyed!")
                 else:
-                    war.log.append(f"{attacking_nation.name} destroyed an undefended {defending_nation.name} {target_region.improvement.name}!")
+                    war.log.append(f"{attacking_nation_combatant_data.name} destroyed an undefended {defending_nation_combatant_data.name} {target_region.improvement.name}!")
 
                 # remove improvement
                 target_region.improvement.clear()
+            
+            return True
         
-    def _execute_move(self, target_region: "Region") -> None:
-        target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
-        self.unit.clear()
+        return False
 
     def calculate_yield(self, game_id: str, nation: Nation, improvement_income_dict: dict) -> dict:
         """
@@ -336,7 +343,7 @@ class Region:
             for resource_name in improvement_income_dict:
                 if resource_name in ["Political Power", "Military Capacity"]:
                     continue
-                improvement_income_dict[resource_name]["Income Multiplier"] += 0.2
+                improvement_income_dict[resource_name]["Income Multiplier"] += 1.0
         
         # get pandemic multiplier
         if "Pandemic" in game.active_events:

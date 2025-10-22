@@ -255,10 +255,10 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         "military reinforcements": MilitaryReinforcementsAction
     }
 
-    action_str = action_str.strip().lower()
+    action_str = action_str.strip()
 
     for action_key in sorted(actions.keys(), key=len, reverse=True):
-        if action_str.startswith(action_key):
+        if action_str.lower().startswith(action_key):
             return actions[action_key](game_id, nation_id, action_str)
     
     return None
@@ -326,7 +326,7 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data, temp=True)
+    event = events.load_event(game_id, "Pandemic", event_data)
 
     for action in actions_list:
 
@@ -357,7 +357,7 @@ def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundrais
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data, temp=True)
+    event = events.load_event(game_id, "Pandemic", event_data)
 
     for action in actions_list:
 
@@ -451,7 +451,7 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data, temp=True)
+    event = events.load_event(game_id, "Pandemic", event_data)
 
     for action in actions_list:
 
@@ -482,7 +482,7 @@ def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseA
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data, temp=True)
+    event = events.load_event(game_id, "Pandemic", event_data)
 
     for action in actions_list:
 

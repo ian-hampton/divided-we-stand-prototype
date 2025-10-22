@@ -9,6 +9,7 @@ from app.gamedata import Games
 from app.nation import Nation, Nations
 from app.region import Region
 from app.notifications import Notifications
+from app.missile_strike import *
 
 class AllianceCreateAction:
 
@@ -744,7 +745,7 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         "white peace": WhitePeaceAction
     }
 
-    action_str = action_str.strip().lower()
+    action_str = action_str.strip()
 
     while True:
 
@@ -752,7 +753,7 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
             return
         
         for action_key in sorted(actions.keys(), key=len, reverse=True):
-            if action_str.startswith(action_key):
+            if action_str.lower().startswith(action_key):
                 return actions[action_key](game_id, nation_id, action_str)
         
         scenario_action = _check_scenario_actions(game_id, nation_id, action_str)
@@ -1418,11 +1419,11 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
 
         minimum_spend[nation.id] += target_region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - minimum_spend[nation.id] < 0:
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Insufficient dollars.")
+            nation.action_log.append(f"Failed to claim {target_region.id}. Insufficient dollars.")
             continue
         
         target_region.add_claim(nation.id)
-        claim_actions_grouped[nation.id][target_region.region_id] = target_region
+        claim_actions_grouped[nation.id][target_region.id] = target_region
 
     # priority queue #1 - validate and pay for the claim actions of each nation
     claim_actions_validated: dict[str, Region] = {}
@@ -1430,24 +1431,24 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
         validated_region_ids = _check_all_claims(game_id, claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
             target_region = Region(region_id)
-            if target_region.region_id in claim_actions_validated:
-                claim_actions_validated[target_region.region_id].add_claim(action.id)
+            if target_region.id in claim_actions_validated:
+                claim_actions_validated[target_region.id].add_claim(action.id)
             else:
                 target_region.add_claim(nation.id)
-                claim_actions_validated[target_region.region_id] = target_region
+                claim_actions_validated[target_region.id] = target_region
 
     # resolve region disputes
     claim_actions_final: dict[str, Region] = {}
     for target_region in claim_actions_validated.values():
         
         if len(target_region.claim_list) == 1:
-            claim_actions_final[target_region.region_id] = target_region
+            claim_actions_final[target_region.id] = target_region
             continue
 
         for player_id in target_region.claim_list:
             nation = Nations.get(player_id)
             cost = target_region.calculate_region_claim_cost(nation)
-            nation.action_log.append(f"Failed to claim {target_region.region_id} due to a region dispute. {cost:.2f} dollars wasted.")
+            nation.action_log.append(f"Failed to claim {target_region.id} due to a region dispute. {cost:.2f} dollars wasted.")
 
         target_region.data.purchase_cost += 5
         game.stats.region_disputes += 1
@@ -1465,15 +1466,15 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         adj_owned = set()
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
-            if nation_id == adj_region.data.owner_id or adj_region.region_id in resolved:
-                adj_owned.add(adj_region.region_id)
+            if nation_id == adj_region.data.owner_id or adj_region.id in resolved:
+                adj_owned.add(adj_region.id)
 
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = claimed_regions.get(adj_region_id)
             if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
-                adj_claimed.add(adj_region.region_id)
+                adj_claimed.add(adj_region.id)
 
         return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
@@ -1481,10 +1482,11 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
     priorities = {}
     resolved = set()
     failed = set()
+    requeued = defaultdict(int)    # temporary solution to break deadlocks
 
     for target_region in claimed_regions.values():
         priority = get_priority(target_region)
-        priorities[target_region.region_id] = priority
+        priorities[target_region.id] = priority
         heapq.heappush(heap, (priority, target_region))
 
     while heap:
@@ -1492,27 +1494,28 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
-        if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
+        if priority != priorities[target_region.id] or target_region.id in resolved or target_region.id in failed:
             continue
 
-        if priority == 99999:
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
-            failed.add(target_region.region_id)
+        if priority == 99999 or requeued[target_region.id] > 100:
+            nation.action_log.append(f"Failed to claim {target_region.id}. Region is not adjacent to enough regions under your control.")
+            failed.add(target_region.id)
             continue
         
         if priority > 0:
+            requeued[target_region.id] += 1
             heapq.heappush(heap, (priority, target_region))
             continue
 
         cost = target_region.calculate_region_claim_cost(nation)
         if float(nation.get_stockpile("Dollars")) - cost < 0:
             # nation could not afford region
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Insufficient dollars.")
-            failed.add(target_region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.id}. Insufficient dollars.")
+            failed.add(target_region.id)
         else:
             # region successfully paid for
             nation.update_stockpile("Dollars", -1 * cost)
-            resolved.add(target_region.region_id)
+            resolved.add(target_region.id)
 
         # update priority values for adjacent regions
         for adj_region_id in target_region.graph.adjacent_regions:
@@ -1535,14 +1538,14 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = Region(adj_region_id)
             if nation_id == adj_region.data.owner_id:
-                adj_owned.add(adj_region.region_id)
+                adj_owned.add(adj_region.id)
         
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
         for adj_region_id in target_region.graph.adjacent_regions:
             adj_region = verified_claim_actions.get(adj_region_id)
             if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
-                adj_claimed.add(adj_region.region_id)
+                adj_claimed.add(adj_region.id)
 
         return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
@@ -1568,7 +1571,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
             encircled = True
             unclaimed: set[Region] = set()
 
-            visited = set([adj_region.region_id])
+            visited = set([adj_region.id])
             queue: deque[Region] = deque([adj_region])
 
             while queue:
@@ -1581,7 +1584,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
                     break
 
                 # continue if already owned
-                if region.data.owner_id == nation_id or region.region_id == target_region.region_id:
+                if region.data.owner_id == nation_id or region.id == target_region.id:
                     continue
 
                 region.add_claim(nation_id)
@@ -1601,10 +1604,11 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
     priorities = {}
     resolved = set()
     failed = set()
+    requeued = defaultdict(int)    # temporary solution to break deadlocks
     
     for target_region in verified_claim_actions.values():
         priority = get_priority(target_region)
-        priorities[target_region.region_id] = priority
+        priorities[target_region.id] = priority
         heapq.heappush(heap, (priority, target_region))
 
     while heap:
@@ -1612,12 +1616,12 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
-        if priority != priorities[target_region.region_id] or target_region.region_id in resolved or target_region.region_id in failed:
+        if priority != priorities[target_region.id] or target_region.id in resolved or target_region.id in failed:
             continue
 
-        if priority == 99999:
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. Region is not adjacent to enough regions under your control.")
-            failed.add(target_region.region_id)
+        if priority == 99999 or requeued[target_region.id] > 100:
+            nation.action_log.append(f"Failed to claim {target_region.id}. Region is not adjacent to enough regions under your control.")
+            failed.add(target_region.id)
             continue
         
         if priority > 0:
@@ -1628,32 +1632,32 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         encircled_cost = 0
         encircled_regions = find_encircled_regions(target_region, nation.id)
         for encircled_region in encircled_regions:
-            if encircled_region.region_id in verified_claim_actions:
+            if encircled_region.id in verified_claim_actions:
                 continue
             encircled_cost += encircled_region.calculate_region_claim_cost(nation)
         
         if float(nation.get_stockpile("Dollars")) - encircled_cost < 0:
             # player cannot afford to claim the unclaimed regions it has encircled
             nation.update_stockpile("Dollars", target_region.calculate_region_claim_cost(nation))
-            nation.action_log.append(f"Failed to claim {target_region.region_id}. You could not afford to pay for the unclaimed regions this claim action encircled.")
-            failed.add(target_region.region_id)
+            nation.action_log.append(f"Failed to claim {target_region.id}. You could not afford to pay for the unclaimed regions this claim action encircled.")
+            failed.add(target_region.id)
         else:
             # claim region
             target_region.data.owner_id = nation_id
             nation.stats.regions_owned += 1
             if target_region.improvement.name is not None:
                 nation.improvement_counts[target_region.improvement.name] += 1
-            nation.action_log.append(f"Claimed region {target_region.region_id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
-            resolved.add(target_region.region_id)
+            nation.action_log.append(f"Claimed region {target_region.id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
+            resolved.add(target_region.id)
             # pay for and create claim actions for encircled regions (if any)
             for encircled_region in encircled_regions:
-                if encircled_region.region_id in verified_claim_actions:
+                if encircled_region.id in verified_claim_actions:
                     continue
                 cost = encircled_region.calculate_region_claim_cost(nation)
                 nation.update_stockpile("Dollars", -1 * cost)
-                verified_claim_actions[encircled_region.region_id] = encircled_region
+                verified_claim_actions[encircled_region.id] = encircled_region
                 encircled_priority = get_priority(encircled_region)
-                priorities[encircled_region.region_id] = encircled_priority
+                priorities[encircled_region.id] = encircled_priority
                 heapq.heappush(heap, (encircled_priority, encircled_region))
 
         # update priority values for adjacent regions
@@ -1694,7 +1698,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
                 return False
             
             friendly_regions_found = 0
-            visited = set([target_region.region_id])
+            visited = set([target_region.id])
             queue: deque[Region] = deque()
 
             # populate queue with adjacent unclaimed regions
@@ -1748,7 +1752,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
             return 0
         
         # special case - valid with one if all other adjacent regions are unclaimable
-        if adj_owned_count == 1 and adj_claimed_count == 0 and bfs_no_access():
+        if adj_owned_count == 1 and bfs_no_access():
             return 0
 
         if adj_owned_count < 2 and adj_claimed_count == 0:
@@ -1845,47 +1849,46 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
     
+    from app.scenario import ScenarioData as SD
     from app.nation import Nations
-    # TODO - add missile data to scenario
 
     for action in actions_list:
 
         nation = Nations.get(action.id)
+        required_research = SD.missiles[action.missile_type].required_research
+        build_cost_dict = SD.missiles[action.missile_type].cost
 
-        if action.missile_type == "Standard Missile" and "Missile Technology" not in nation.completed_research:
-            nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Missile Technology technology.")
+        if required_research is not None and required_research not in nation.completed_research:
+            nation.action_log.append(f"Failed to make {action.quantity} {action.missile_type}. You do not have the required research.")
             continue
-        elif action.missile_type == "Nuclear Missile" and "Nuclear Warhead" not in nation.completed_research:
-            nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. You do not have the Nuclear Warhead technology.")
+
+        valid = True
+        for resource_name, cost in build_cost_dict.items():
+            total_cost = cost * action.quantity
+            if float(nation.get_stockpile(resource_name)) - total_cost < 0:
+                valid = False
+                break
+        if not valid:
+            nation.action_log.append(f"Failed to make {action.quantity} {action.missile_type}. Insufficient resources.")
             continue
 
-        if action.missile_type == "Standard Missile":
+        costs_list = []
+        for resource_name, cost in build_cost_dict.items():
+            total_cost = cost * action.quantity
+            costs_list.append(f"{total_cost} {resource_name.lower()}")
+            nation.update_stockpile(resource_name, -1 * total_cost)
 
-            cost = 3 * action.quantity
-            if float(nation.get_stockpile("Common Metals")) - cost < 0:
-                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
-                continue
-            
-            nation.update_stockpile("Common Metals", -1 * cost)
-
+        if action.missile_type == "Nuclear Missile":
+            nation.nuke_count += action.quantity
+        else:
             nation.missile_count += action.quantity
         
-        elif action.missile_type == "Nuclear Missile":
-
-            cost = 2 * action.quantity
-            if (float(nation.get_stockpile("Advanced Metals")) - cost < 0
-                or float(nation.get_stockpile("Uranium")) - cost < 0
-                or float(nation.get_stockpile("Rare Earth Elements")) - cost < 0):
-                nation.action_log.append(f"Failed to manufacture {action.quantity}x {action.missile_type}. Insufficient resources.")
-                continue
-            
-            nation.update_stockpile("Advanced Metals", -1 * cost)
-            nation.update_stockpile("Uranium", -1 * cost)
-            nation.update_stockpile("Rare Earth Elements", -1 * cost)
-
-            nation.nuke_count += action.quantity
-
-        nation.action_log.append(f"Manufactured {action.quantity}x {action.missile_type}.")
+        if len(costs_list) <= 2:
+            costs_str = " and ".join(costs_list)
+        else:
+            costs_str = ", ".join(costs_list)
+            costs_str = " and ".join(costs_str.rsplit(", ", 1))
+        nation.action_log.append(f"Manufactured {action.quantity} {action.missile_type} for {costs_str}.") 
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
     
@@ -2089,7 +2092,7 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
 
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
-            nation.update_used_mc(-1)
+            nation.update_military_capacity()
         region.unit.clear()
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
 
@@ -2137,10 +2140,9 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
 
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
-            nation.update_used_mc(-1)
-        nation.unit_counts[region.unit.name] += 1
-        nation.update_used_mc(1)
         region.unit.set(action.unit_name, action.id)
+        nation.unit_counts[region.unit.name] += 1
+        nation.update_military_capacity()
 
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
@@ -2167,7 +2169,7 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
         if SD.war_justificiations[action.war_justification].has_war_claims:
             
-            claim_cost = Wars.get_war_claims(attacker_nation.name, action.war_justification)
+            claim_cost, region_claims_list = Wars.get_war_claims(attacker_nation.name, action.war_justification)
             if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
                 attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
                 continue
@@ -2187,41 +2189,41 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
     for action in actions_list:
 
         war = Wars.get(action.war_name)
-        attacker_nation = Nations.get(action.id)
+        nation = Nations.get(action.id)
 
-        war.add_combatant(attacker_nation, f"Secondary {action.side}", action.war_justification)
+        war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
         combatant = war.get_combatant(action.id)
-        region_claims_list = []
 
         # process war claims
         if SD.war_justificiations[action.war_justification].has_war_claims:
 
-            combatant.target_id = "N/A"
             main_attacker_id, main_defender_id = war.get_main_combatant_ids()
             if {action.side} == "Attacker":
                 defender_nation = Nations.get(main_attacker_id)
             elif {action.side} == "Defender":
                 defender_nation = Nations.get(main_defender_id)
             
-            claim_cost = Wars.get_war_claims(combatant.name, action.war_justification)
-            if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
-                attacker_nation.action_log.append(f"Error: Not enough political power for war claims.")
+            if not _war_action_valid(action, nation, defender_nation):
                 continue
-
-            attacker_nation.update_stockpile("Political Power", -1 * claim_cost)
+            
+            claim_cost, region_claims_list = Wars.get_war_claims(combatant.name, action.war_justification)
+            if float(nation.get_stockpile("Political Power")) - claim_cost < 0:
+                nation.action_log.append(f"Error: Not enough political power for war claims.")
+                continue
+            
+            combatant.target_id = "N/A"
+            nation.update_stockpile("Political Power", -1 * claim_cost)
+            combatant.claims = Wars._claim_pairs(region_claims_list)
         
         # OR handle war justification that does not seize territory
         else:
             target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {action.war_justification}: ")
-            combatant.target_id = target_id
             defender_nation = Nations.get(target_id)
+            if not _war_action_valid(action, nation, defender_nation):
+                continue
+            combatant.target_id = target_id
 
-        if not _war_action_valid(action, attacker_nation, defender_nation):
-            continue
-
-        # save
-        Notifications.add(f"{attacker_nation.name} has joined {war.name} as a {action.side}!", 4)
-        combatant.claims = Wars._claim_pairs(region_claims_list)
+        Notifications.add(f"{nation.name} has joined {war.name} as a {action.side}!", 4)
 
 def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):
     
@@ -2255,11 +2257,6 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
     # alliance check
     if Alliances.are_allied(attacker_nation.name, defender_nation.name):
         attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have an alliance with this nation.")
-        return False
-
-    # alliance truce check
-    if Alliances.former_ally_truce(attacker_nation.name, defender_nation.name):
-        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. You have recently had an alliance with this nation.")
         return False
     
     # independence check
@@ -2299,6 +2296,26 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
     from app.nation import Nations
     from app.war import Wars
 
+    def is_valid_target(nation: Nation, target_region: Region) -> bool:
+        
+        if nation.id != target_region.data.owner_id:
+            if Wars.get_war_name(nation.id, target_region.data.owner_id) is None:
+                # cannot strike a foreign region if it is owned by a nation you are not at war with
+                return False
+            if target_region.data.occupier_id != "0" and Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
+                # cannot strike a hostile nation's region if it is occupied by a non-hostile nation
+                return False
+            if target_region.unit.name is not None and Wars.get_war_name(nation.id, target_region.unit.owner_id) is None:
+                # cannot strike a hostile nation's region if a non-hostile unit is present
+                return False
+        
+        elif nation.id == target_region.data.owner_id:
+            if target_region.data.occupier_id == "0" or Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
+                # only allowed to strike your own region if it is occupied by a hostile nation
+                return False
+        
+        return True
+
     # missile launch capacity is calculated in advance of actions because missile launches are simultaneous
     missiles_launched_list = [0] * len(Nations)
     launch_capacity_list = [0] * len(Nations)
@@ -2309,47 +2326,22 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         
         nation = Nations.get(action.id)
         target_region = Region(action.target_region)
+        missile = SD.missiles[action.missile_type]
 
-        has_missile = True
-        if action.missile_type == "Standard Missile" and nation.missile_count == 0:
-            has_missile = False
-        elif action.missile_type == "Nuclear Missile" and nation.nuke_count == 0:
-            has_missile = False
-        if not has_missile:
+        if (missile.type == "Nuclear Missile" and nation.nuke_count == 0) or (action.missile_type != "Nuclear Missile" and nation.missile_count == 0):
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. You do not have a {action.missile_type} in storage.")
             continue
 
-        is_valid_target = True
-        if nation.id != str(target_region.data.owner_id):
-            engagement_type = 1
-            if Wars.get_war_name(nation.id, target_region.data.owner_id) is None:
-                # cannot nuke a foreign region if it is owned by a nation you are not at war with
-                is_valid_target = False
-            if target_region.data.occupier_id != "0" and Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
-                # cannot nuke a hostile nation's region if it is occupied by a non-hostile nation
-                is_valid_target = False
-            if target_region.unit.name is not None and Wars.get_war_name(nation.id, target_region.unit.owner_id) is None:
-                # cannot nuke a hostile nation's region if a non-hostile unit is present
-                is_valid_target = False
-        elif nation.id == str(target_region.data.owner_id):
-            engagement_type = 2
-            if target_region.data.occupier_id == "0" or Wars.get_war_name(nation.id, target_region.data.occupier_id) is None:
-                # only allowed to strike your own region if it is occupied by a hostile nation
-                is_valid_target = False
-        if not is_valid_target:
+        if not is_valid_target(nation, target_region):
             nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Invalid target!")
             continue
-
-        if action.missile_type == "Standard Missile":
-            capacity_cost = 1
-        elif action.missile_type == "Nuclear Missile":
-            capacity_cost = 3
-        if missiles_launched_list[int(nation.id) - 1] + capacity_cost > launch_capacity_list[int(nation.id) - 1]:
-            nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Insufficient launch capacity!")
+        
+        if missiles_launched_list[int(nation.id) - 1] + missile.launch_cost > launch_capacity_list[int(nation.id) - 1]:
+            nation.action_log.append(f"Failed to launch {action.missile_type} at {action.target_region}. Insufficient missile silos!")
             continue
 
         # identify conflict
-        if engagement_type == 1 and target_region.data.occupier_id == "0":
+        if nation.id != target_region.data.owner_id and target_region.data.occupier_id == "0":
             # missile strike on hostile territory owned by the same hostile
             target_nation = Nations.get(str(target_region.data.owner_id))
             war_name = Wars.get_war_name(nation.id, str(target_region.data.owner_id))
@@ -2358,171 +2350,15 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
             target_nation = Nations.get(str(target_region.data.occupier_id))
             war_name = Wars.get_war_name(nation.id, str(target_region.data.occupier_id))
 
-        # get combatants
+        # resolve missile strike
         war = Wars.get(war_name)
-        war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.region_id} in {target_nation.name}!")
-        attacking_combatant = war.get_combatant(nation.id)
-        defending_combatant = war.get_combatant(target_nation.id)
-
-        # fire missile
-        missiles_launched_list[int(nation.id) - 1] += capacity_cost
-        if action.missile_type == "Standard Missile":
-            nation.missile_count -= 1
-        elif action.missile_type == "Nuclear Missile":
-            nation.nuke_count -= 1
-        
-        # log launch and find best missile defense
-        nation.action_log.append(f"Launched {action.missile_type} at {action.target_region}. See combat log for details.")
-        defender_name = core.locate_best_missile_defense(target_nation, action.missile_type, action.target_region)
-        
-        # engage missile defense
-        missile_intercepted = False
-        missile_did_something = False
-        if defender_name is not None:
-            
-            war.log.append(f"    A nearby {defender_name} attempted to defend {target_region.region_id}.")
-            if defender_name in SD.units:
-                if action.missile_type == "Standard Missile":
-                    hit_value = SD.units[defender_name].missile_defense
-                else:
-                    hit_value = SD.units[defender_name].nuclear_defense
-            else:
-                if action.missile_type == "Standard Missile":
-                    hit_value = SD.improvements[defender_name].missile_defense
-                else:
-                    hit_value = SD.improvements[defender_name].nuclear_defense
-                if "Local Missile Defense" in nation.completed_research and defender_name not in ["Missile Defense System", "Missile Defense Network"]:
-                    hit_value = SD.improvements[defender_name].hit_value
-
-            missile_defense_roll = random.randint(1, 10)
-            if missile_defense_roll >= hit_value:
-                # incoming missile shot down
-                missile_intercepted = True
-                war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {hit_value}+). Missile destroyed!")
-            else:
-                # incoming missile dodged defenses
-                war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {hit_value}+). Defenses missed!")
-
-        # end action if missile was destroyed
-        if missile_intercepted:
-            continue
-
-        # conduct missile strike
-        if action.missile_type == 'Standard Missile':
-            
-            attacking_combatant.launched_missiles += 1
-
-            # improvement damage
-            if target_region.improvement.name is not None and target_region.improvement.health != 99:
-
-                # initial roll against improvement
-                missile_did_something = True
-                accuracy_roll = random.randint(1, 10)
-                war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 4+).")
-
-                if accuracy_roll > 3:
-                
-                    # apply damage
-                    target_region.improvement.health -= 1
-                    if target_region.improvement.health > 0:
-                        # improvement survived
-                        war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.region_id} and dealt 1 damage.")
-                    else:
-                        # improvement destroyed
-                        war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-                        if target_region.improvement.name != 'Capital':
-                            attacking_combatant.destroyed_improvements += 1
-                            defending_combatant.lost_improvements += 1
-                            war.log.append(f"    Missile struck {target_region.improvement.name} in {target_region.region_id} and dealt 1 damage. Improvement destroyed!")
-                            target_nation.improvement_counts[target_region.improvement.name] -= 1
-                            target_region.improvement.clear()
-                        else:
-                            war.log.append(f"    Missile struck Capital in {target_region.region_id} and dealt 1 damage. Improvement devastated!")
-                
-                else:
-                    war.log.append(f"    Missile missed {target_region.improvement.name}.")
-
-            elif target_region.improvement.name is not None and target_region.improvement.health == 99:
-                
-                # initial roll against improvement
-                missile_did_something = True
-                accuracy_roll = random.randint(1, 10)
-                war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 8+).")
-
-                if accuracy_roll > 7:
-
-                    # improvement has no health so it is destroyed
-                    war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-                    attacking_combatant.destroyed_improvements += 1
-                    defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.region_id}!")
-                    target_nation.improvement_counts[target_region.improvement.name] -= 1
-                    target_region.improvement.clear()
-                
-                else:
-                    war.log.append(f"    Missile missed {target_region.improvement.name}.")
-
-            # unit damage
-            if target_region.unit.name != None:
-
-                # initial roll against unit
-                missile_did_something = True
-                accuracy_roll = random.randint(1, 10)
-                war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 4+).")
-
-                if accuracy_roll > 3:
-                    
-                    # apply damage
-                    target_region.unit.health -= 1
-                    if target_region.unit.health > 0:
-                        # unit survived
-                        war.log.append(f"    Missile struck {target_region.unit.name} in {target_region.region_id} and dealt 1 damage.")
-                    else:
-                        # unit destroyed
-                        war.attackers.destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
-                        attacking_combatant.destroyed_units += 1
-                        defending_combatant.lost_units += 1
-                        war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.region_id}!")
-                        target_nation.unit_counts[target_region.unit.name] -= 1
-                        target_region.unit.clear()
-                
-                else:
-                    war.log.append(f"    Missile missed {target_region.unit.name}.")
-
-        elif action.missile_type == 'Nuclear Missile':
-            
-            attacking_combatant.launched_nukes += 1
-            war.attackers.nuclear_strikes += Wars.WARSCORE_FROM_NUCLEAR_STRIKE
-            if target_region.improvement.name != 'Capital':
-                target_region.set_fallout()
-
-            # destroy improvement if present
-            if target_region.improvement.name is not None:
-                missile_did_something = True
-                war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-                if target_region.improvement.name != 'Capital':
-                    attacking_combatant.destroyed_improvements += 1
-                    defending_combatant.lost_improvements += 1
-                    war.log.append(f"    Missile destroyed {target_region.improvement.name} in {target_region.region_id}!")
-                    target_nation.improvement_counts[target_region.improvement.name] -= 1
-                    target_region.improvement.clear()
-                else:
-                    war.log.append(f"    Missile devastated Capital in {target_region.region_id}!")
-                    target_region.improvement.health = 0
-
-            # destroy unit if present
-            if target_region.unit.name != None:
-                missile_did_something = True
-                war.attackers.destroyed_units += target_region.unit.value    # amount of warscore earned depends on unit value
-                attacking_combatant.destroyed_units += 1
-                defending_combatant.lost_units += 1
-                war.log.append(f"    Missile destroyed {target_region.unit.name} in {target_region.region_id}!")
-                target_nation.unit_counts[target_region.unit.name] -= 1
-                target_region.unit.clear()
-
-        # message for if missile hit nothing despite reaching its target
-        if not missile_did_something:
-            war.log.append(f"    Missile successfully struck {target_region.region_id} but did not damage anything of strategic value.")
+        war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.id} in {target_nation.name}!")
+        if missile.type == "Nuclear Missile":
+            missile_strike = NuclearStrike(nation, target_nation, target_region, war)
+        else:
+            missile_strike = StandardStrike(nation, target_nation, target_region, war)
+        missiles_launched_list[int(nation.id) - 1] += missile_strike.fire_missile()
+        missile_strike.resolve()
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     

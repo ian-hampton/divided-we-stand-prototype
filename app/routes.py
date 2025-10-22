@@ -693,7 +693,7 @@ def technologies(full_game_id):
     for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
             if research_name in SD.technologies:
-                data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+                temp_technology_data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
     for key, value in temp_technology_data.items():
@@ -765,7 +765,7 @@ def agendas(full_game_id):
     for index, nation in enumerate(Nations):
         for research_name in nation.completed_research:
             if research_name in SD.agendas:
-                data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
+                temp_agenda_data[research_name]["Player Research"][index] = (nation.color[1:], nation.name)
 
     # load techs to table
     for key, value in temp_agenda_data.items():
@@ -999,7 +999,7 @@ def announcements(full_game_id):
     game = Games.load(full_game_id)
     Alliances.load(full_game_id)
     Nations.load(full_game_id)
-    Notifications.initialize(full_game_id)
+    Notifications.load(full_game_id)
     Truces.load(full_game_id)
     Wars.load(full_game_id)
 
@@ -1082,9 +1082,8 @@ def alliances(full_game_id):
             "foundingMembersFormatted": {}
         }
 
-        turn_started = alliance_data["turnCreated"]
-        season, year = core.date_from_turn_num(turn_started)
-        date_str = f"{season} {year} (Turn {turn_started})"
+        season, year = game.get_season_and_year()
+        date_str = f"{season} {year} (Turn {game.turn})"
         alliance_data["turnCreated"] = date_str
 
         for nation_name, turn_joined in alliance.current_members.items():

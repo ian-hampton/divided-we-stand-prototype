@@ -83,23 +83,6 @@ class Alliances(metaclass=AlliancesMeta):
         return False
 
     @classmethod
-    def former_ally_truce(cls, nation_name_1: str, nation_name_2: str) -> bool:
-        
-        game = Games.load(cls.game_id)
-
-        for alliance in cls:
-            
-            if nation_name_1 in alliance.former_members and nation_name_2 in alliance.current_members:
-                if game.turn - alliance.former_members[nation_name_1] <= 2:
-                    return True
-                
-            elif nation_name_2 in alliance.former_members and nation_name_1 in alliance.current_members:
-                if game.turn - alliance.former_members[nation_name_2] <= 2:
-                    return True
-
-        return False
-
-    @classmethod
     def allies(cls, nation_name: str, type_to_search = "ALL") -> list:
         
         from app.nation import Nations
@@ -206,7 +189,20 @@ class Alliance:
         self.current_members[nation_name] = game.turn
 
     def remove_member(self, nation_name: str) -> None:
+        from app.nation import Nations
+        from app.truce import Truces
+        
         game = Games.load(Alliances.game_id)
+
+        for allied_nation_name in self.current_members:
+            
+            if allied_nation_name == nation_name:
+                continue
+
+            nation = Nations.get(nation_name)
+            allied_nation = Nations.get(allied_nation_name)
+            Truces.create([nation.id, allied_nation.id], 2)
+        
         del self.current_members[nation_name]
         self.former_members[nation_name] = game.turn
 
@@ -254,27 +250,12 @@ class Alliance:
         return 0.0, None
 
     def end(self) -> None:
-        
-        from app.nation import Nations
-        from app.truce import Truces
+
         game = Games.load(Alliances.game_id)
 
-        # add truce periods
-        for nation1_name in self.current_members:
-            for nation2_name in self.current_members:
-                
-                if nation1_name == nation2_name:
-                    continue
-
-                nation1 = Nations.get(nation1_name)
-                nation2 = Nations.get(nation2_name)
-                
-                signatories = [nation1.id, nation2.id]
-                Truces.create(signatories, 2)
-
-        # dissolve alliance
         names = list(self.current_members.keys())
         for nation_name in names:
             self.remove_member(nation_name)
+        
         self.current_members = {}
         self.turn_ended = game.turn
