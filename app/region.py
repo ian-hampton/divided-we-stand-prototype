@@ -261,10 +261,10 @@ class Region:
 
         def execute_move() -> None:
             # update region occupation
-            if attacker_id != defender_id:
+            if not withdraw and attacker_id != defender_id:
                 target_region.data.occupier_id = self.unit.owner_id
             else:
-                target_region.data.occupier_id = 0
+                target_region.data.occupier_id = "0"
             # move attacking unit
             target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
             self.unit.clear()
