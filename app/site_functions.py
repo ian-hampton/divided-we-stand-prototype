@@ -360,6 +360,15 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 
     # build player info dict
     player_information_dict = {
+        "Nation Name": nation.name,
+        "Color": nation.color,
+        "Information": {
+            "Status": nation.status,
+            "Government": nation.gov,
+            "Foreign Policy": nation.fp,
+            "Trade Fee": nation.trade_fee,
+            "Military Capacity": f"{nation.get_used_mc()} / {nation.get_max_mc()}",
+        },
         "Victory Conditions Data": {},
         "Resource Data": {},
         "Misc Info": [],
@@ -367,13 +376,6 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         "Missile Data": {},
         "Relations Data": {}
     }
-    player_information_dict["Nation Name"] = nation.name
-    player_information_dict["Color"] = nation.color
-    player_information_dict["Government"] = nation.gov
-    player_information_dict["Foreign Policy"] = nation.fp
-    player_information_dict["Military Capacity"] = f"{nation.get_used_mc()} / {nation.get_max_mc()}"
-    player_information_dict["Trade Fee"] = nation.trade_fee
-    player_information_dict["Status"] = nation.status
     
     # get victory condition data
     player_information_dict["Victory Conditions Data"] = {

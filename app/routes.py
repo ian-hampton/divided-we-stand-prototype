@@ -477,7 +477,7 @@ def game_load(full_game_id):
 def player_route(full_game_id, player_id):
     page_title = f"Player #{player_id} Nation Sheet"
     player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
-    return render_template("temp_nation_sheet.html", page_title = page_title, player_information_dict = player_information_dict)
+    return render_template("temp_nation_sheet_new.html", page_title = page_title, dict = player_information_dict)
 
 # WARS PAGE
 @main.route('/<full_game_id>/wars')

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/default-blank.css') }}">
+<style>
+body {
+    background-color: rgb(67, 67, 67);
+}
+#nation-sheet {
+    margin: 40px;
+    width: calc(100% - 80px);
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+#left-sheet {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#left-contents {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+#alpha {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#beta {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#right-sheet {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+</style>
+
+
+<title> {{ page_title }} </title>
+
+
+<header>
+    <div class="left-header">
+        <p id="title"> {{ page_title }} </p>
+    </div>
+    <div class="right-header">
+        <a href="/"><img src="{{ url_for('static', filename='images/home-white.png') }}" style="width:36px;"></a>
+    </div>
+</header>
+
+
+<body>
+<div id="nation-sheet">
+
+    <div id="left-sheet">
+
+        <div class="box" id="nation-name">
+            <div class="row">
+                <div class="cell center" style="width: 100%; padding-top:25px; padding-bottom:25px">
+                    <b style="font-size: 36px">{{ dict["Nation Name"] }}</b>
+                </div>
+            </div>
+        </div>
+
+        <div id="left-contents">
+
+            <div id="alpha">
+
+                <div class="box" id="nation-info">
+                    <div class="top" style="font-size: 18px">Information</div>
+                    {% for key, value in dict["Information"].items() %}
+                    <div class="row">
+                        <div class="cell short" style="width:auto; flex-grow:1; font-size:14px;">{{ key }}</div>
+                        <div class="cell short right" style="width:max-content; font-size:14px;">{{ value }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div id="beta">
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div id="right-sheet">
+
+
+        
+    </div>
+
+</div>
+</body>
+
+
+</html>
