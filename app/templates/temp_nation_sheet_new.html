@@ -28,13 +28,13 @@ body {
     gap: 20px;
 }
 #alpha {
-    width: 40%;
+    width: 30%;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 #beta {
-    width: 60%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -44,6 +44,39 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+.dollars {
+    color: #5eaa3d;
+}
+.political-power {
+    color: #a67c52;
+}
+.research {
+    color: #21d3ff;
+}
+.food {
+    color: #93c47d;
+}
+.coal {
+    color: #877058;
+}
+.oil {
+    color: #df8a35;
+}
+.basic-materials {
+    color: #959595;
+}
+.common-metals {
+    color: #636363;
+}
+.advanced-metals {
+    color: #479ddf;
+}
+.uranium {
+    color: #00ff00;
+}
+.rare-earth-elements {
+    color: #f1c232;
 }
 </style>
 
@@ -124,7 +157,24 @@ body {
 
             <div id="beta">
 
-
+                <div class="box" id="resource-info">
+                    <div class="top" style="font-size: 18px">Resources</div>
+                    <div class="row hasline">
+                        <div class="cell short" style="flex: 3 1 0%; font-size:14px;">Resource Name</div>
+                        <div class="cell short" style="flex: 2 1 0%; font-size:14px;">Stored</div>
+                        <div class="cell short" style="flex: 2 1 0%; font-size:14px;">Net Income</div>
+                        <div class="cell short" style="flex: 2 1 0%; font-size:14px;">Income Rate</div>
+                    </div>
+                    {% for key, value in dict["Resource Data"].items() %}
+                        {% set resource_row_class = "row hasline " + value['Class'] %}
+                        <div class="{{ resource_row_class }}">
+                            <div class="cell short" style="flex: 3 1 0%; font-size:14px;">{{ key }}</div>
+                            <div class="cell short" style="flex: 2 1 0%; font-size:14px;">{{ value['Stockpile'] }}</div>
+                            <div class="cell short" style="flex: 2 1 0%; font-size:14px;">{{ value['Net Income'] }}</div>
+                            <div class="cell short" style="flex: 2 1 0%; font-size:14px;">{{ value['Income Rate'] }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
 
             </div>
 

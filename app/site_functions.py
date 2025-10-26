@@ -391,27 +391,18 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         vc_completed_count += 1 if is_complete else 0
     player_information_dict["Victory Conditions Data"]["Header"] = f"Victory Conditions ({vc_completed_count}/3)"
 
-    # resource data
-    class_list = []
-    name_list = []
-    stored_list = []
-    income_list = []
-    rate_list = []
+    # get resource data
+    player_information_dict["Resource Data"] = {}
     for resource_name in nation._resources:
         if resource_name in ["Energy", "Military Capacity"]:
             continue
-        name_list.append(resource_name)
-        class_list.append(resource_name.lower().replace(" ", "-"))
-        stored_list.append(f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}")
-        income_list.append(nation.get_income(resource_name))
-        rate_list.append(f"{nation.get_rate(resource_name)}%")
-    player_information_dict["Resource Data"] = {
-        "Class List": class_list,
-        "Name List": name_list,
-        "Stored List": stored_list,
-        "Income List": income_list,
-        "Rate List": rate_list
-    }
+        resource_data = {
+            "Class": resource_name.lower().replace(" ", "-"),
+            "Stockpile": f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}",
+            "Net Income": nation.get_income(resource_name),
+            "Income Rate": f"{nation.get_rate(resource_name)}%"
+        }
+        player_information_dict["Resource Data"][resource_name] = resource_data
 
     # relations data
     nation_name_list = ["-"] * 10
