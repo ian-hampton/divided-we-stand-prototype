@@ -79,12 +79,33 @@ body {
             <div id="alpha">
 
                 <div class="box" id="nation-info">
-                    <div class="top" style="font-size: 18px">Information</div>
+                    <div class="top" style="font-size: 18px">Nation Information</div>
                     {% for key, value in dict["Information"].items() %}
-                    <div class="row">
-                        <div class="cell short" style="width:auto; flex-grow:1; font-size:14px;">{{ key }}</div>
-                        <div class="cell short right" style="width:max-content; font-size:14px;">{{ value }}</div>
-                    </div>
+                        <div class="row">
+                            <div class="cell short" style="width:auto; flex-grow:1; font-size:14px;">{{ key }}</div>
+                            <div class="cell short right" style="width:max-content; font-size:14px;">{{ value }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="box" id="military-info">
+                    <div class="top" style="font-size: 18px">Military</div>
+                    {% for key, value in dict["Military"].items() %}
+                        <div class="row">
+                            <div class="cell short" style="width:auto; flex-grow:1; font-size:14px;">{{ key }}</div>
+                            <div class="cell short right" style="width:max-content; font-size:14px;">{{ value }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="box" id="alliance-info">
+                    <div class="top" style="font-size: 18px">{{ dict["Alliance Data"]["Header"] }}</div>
+                    {% for key, value in dict["Alliance Data"].items() %}
+                        {% if key != "Header" %}
+                            <div class="row">
+                                <div class="cell short" style="--text-color: {{ value }}; width:auto; flex-grow:1; font-size:14px; color: var(--text-color);">{{ key }}</div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
 

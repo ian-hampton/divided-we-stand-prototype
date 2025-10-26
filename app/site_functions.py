@@ -366,14 +366,17 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
             "Status": nation.status,
             "Government": nation.gov,
             "Foreign Policy": nation.fp,
-            "Trade Fee": nation.trade_fee,
+            "Trade Fee": nation.trade_fee
+        },
+        "Military": {
             "Military Capacity": f"{nation.get_used_mc()} / {nation.get_max_mc()}",
+            "Standard Missiles": nation.missile_count,
+            "Nuclear Missiles": nation.nuke_count
         },
         "Victory Conditions Data": {},
         "Resource Data": {},
         "Misc Info": [],
-        "Alliance Data": {},
-        "Missile Data": {},
+        "Alliance Data": nation.fetch_alliance_data(),
         "Relations Data": {}
     }
     
@@ -408,20 +411,6 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         "Stored List": stored_list,
         "Income List": income_list,
         "Rate List": rate_list
-    }
-
-    # alliance data
-    alliance_data = nation.fetch_alliance_data()
-    player_information_dict["Alliance Data"] = {
-        "Header": alliance_data["Header"],
-        "Name List": alliance_data["Names"],
-        "Color List": alliance_data["Colors"]
-    }
-
-    # missile data
-    player_information_dict["Missile Data"] = {
-        "Standard": f"{nation.missile_count}x Standard Missiles",
-        "Nuclear": f"{nation.nuke_count}x Nuclear Missiles"
     }
 
     # relations data

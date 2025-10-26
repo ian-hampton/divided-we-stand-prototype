@@ -883,18 +883,16 @@ class Nation:
         alliance_count, alliance_capacity = self.calculate_alliance_capacity()
 
         data = {
-            "Header": f"Alliances ({alliance_count}/{alliance_capacity})",
-            "Names": list(SD.alliances.names()),
-            "Colors": []
+            "Header": f"Alliances ({alliance_count}/{alliance_capacity})"
         }
 
         types_sorted = sorted(SD.alliances.names())
         for alliance_type_name in types_sorted:
             required_agenda = SD.alliances[alliance_type_name].required_agenda
             if required_agenda in self.completed_research:
-                data["Colors"].append("#00ff00")
+                data[alliance_type_name] = "#00ff00"
             else:
-                data["Colors"].append("#ff0000")
+                data[alliance_type_name] = "#ff0000"
 
         return data
 
