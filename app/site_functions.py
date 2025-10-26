@@ -381,15 +381,15 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     }
     
     # get victory condition data
-    player_information_dict["Victory Conditions Data"] = {
-        "Conditions List": list(nation.victory_conditions.keys()),
-        "Color List": list(nation.victory_conditions.values())
-    }
-    for i, entry in enumerate(player_information_dict["Victory Conditions Data"]["Color List"]):
-        if entry:
-           player_information_dict["Victory Conditions Data"]["Color List"][i] = "#00ff00"
-        else:
-            player_information_dict["Victory Conditions Data"]["Color List"][i] = "#ff0000"
+    vc_names = list(nation.victory_conditions.keys())
+    vc_status = list(nation.victory_conditions.values())
+    vc_completed_count = 0
+    for i, victory_condition in enumerate(vc_names):
+        is_complete = vc_status[i]
+        color_hex_str = "#00ff00" if is_complete else "#ff0000"
+        player_information_dict["Victory Conditions Data"][victory_condition] = color_hex_str
+        vc_completed_count += 1 if is_complete else 0
+    player_information_dict["Victory Conditions Data"]["Header"] = f"Victory Conditions ({vc_completed_count}/3)"
 
     # resource data
     class_list = []

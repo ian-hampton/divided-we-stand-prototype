@@ -109,6 +109,17 @@ body {
                     {% endfor %}
                 </div>
 
+                <div class="box" id="victory-info">
+                    <div class="top" style="font-size: 18px">{{ dict["Victory Conditions Data"]["Header"] }}</div>
+                    {% for key, value in dict["Victory Conditions Data"].items() %}
+                        {% if key != "Header" %}
+                            <div class="row">
+                                <div class="cell short" style="--text-color: {{ value }}; width:auto; flex-grow:1; font-size:14px; color: var(--text-color);">{{ key }}</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
             </div>
 
             <div id="beta">
