@@ -399,36 +399,31 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         resource_data = {
             "Class": resource_name.lower().replace(" ", "-"),
             "Stockpile": f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}",
+            "Gross Income": nation.get_gross_income(resource_name),
             "Net Income": nation.get_income(resource_name),
             "Income Rate": f"{nation.get_rate(resource_name)}%"
         }
         player_information_dict["Resource Data"][resource_name] = resource_data
 
-    # relations data
-    nation_name_list = ["-"] * 10
-    relation_colors = ["#000000"] * 10
-    relations_status_list = ["-"] * 10
-    for i in range(len(Nations)):
-        temp = Nations.get(str(i + 1))
+    # get relations data
+    player_information_dict["Relations Data"] = []
+    for temp in Nations:
+        relation = {"Name": temp.name, "Status": "-", "Color": "#FFFFFF"}
         if temp.name == nation.name:
-            continue
-        elif Wars.get_war_name(player_id, temp.id) is not None:
-            relation_colors[i] = "#ff0000"
-            relations_status_list[i] = "At War"
+            pass
+        elif Wars.get_war_name(nation.id, temp.id) is not None:
+            relation["Color"] = "#ff0000"
+            relation["Status"] = "At War"
         elif Alliances.are_allied(nation.name, temp.name):
-            relation_colors[i] = "#3c78d8"
-            relations_status_list[i] = "Allied"
+            relation["Color"] = "#3c78d8"
+            relation["Status"] = "Allied"
         else:
-            relation_colors[i] = "#00ff00"
-            relations_status_list[i] = "Neutral"
-        nation_name_list[i] = temp.name
-    while len(nation_name_list) < 10:
-        nation_name_list.append("-")
-    player_information_dict["Relations Data"] = {
-        "Name List": nation_name_list,
-        "Color List": relation_colors,
-        "Status List": relations_status_list
-    }
+            relation["Color"] = "#00ff00"
+            relation["Status"] = "Neutral"
+        player_information_dict["Relations Data"].append(relation)
+    for i in range(9 - len(Nations)):
+        relation = {"Name": "-", "Status": "-", "Color": "#FFFFFF"}
+        player_information_dict["Relations Data"].append(relation)
 
     # misc data
     misc_data = player_information_dict["Misc Info"]
