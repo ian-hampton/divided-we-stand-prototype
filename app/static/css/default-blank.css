@@ -116,3 +116,9 @@ body {
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(42, 42, 42, 0.7);
 }
+.box .modifier-section {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}

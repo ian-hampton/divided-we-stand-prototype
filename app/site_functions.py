@@ -374,10 +374,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
             "Nuclear Missiles": nation.nuke_count
         },
         "Victory Conditions Data": {},
-        "Resource Data": {},
-        "Misc Info": [],
-        "Alliance Data": nation.fetch_alliance_data(),
-        "Relations Data": {}
+        "Alliance Data": nation.fetch_alliance_data()
     }
     
     # get victory condition data
@@ -425,33 +422,42 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
         relation = {"Name": "-", "Status": "-", "Color": "#FFFFFF"}
         player_information_dict["Relations Data"].append(relation)
 
-    # misc data
-    misc_data = player_information_dict["Misc Info"]
-    misc_data.append(f"Owned Regions: {nation.stats.regions_owned}")
-    misc_data.append(f"Occupied Regions: {nation.stats.regions_occupied}")
-    misc_data.append(f"Net Income: {nation.records.net_income[-1]}")
-    misc_data.append(f"Gross Industrial Income: {nation.records.industrial_income[-1]}")
-    misc_data.append(f"Gross Energy Income: {nation.records.energy_income[-1]}")
-    misc_data.append(f"Development Score: {nation.records.development[-1]}")
-    misc_data.append(f"Unique Improvements: {sum(1 for count in nation.improvement_counts.values() if count != 0)}")
-    misc_data.append(f"Military Size: {nation.records.military_size[-1]}")
-    misc_data.append(f"Military Strength: {nation.records.military_strength[-1]}")
-    misc_data.append(f"Unique Units: {sum(1 for count in nation.unit_counts.values() if count != 0)}")
-    misc_data.append(f"Total Transactions: {nation.records.transaction_count[-1]}")
-    misc_data.append(f"Technology Count: {nation.records.technology_count[-1]}")
-    misc_data.append(f"Agenda Count: {nation.records.agenda_count[-1]}")
+    # get misc data
+    misc_data = []
+    misc_data.append(("Owned Regions", nation.stats.regions_owned))
+    misc_data.append(("Occupied Regions", nation.stats.regions_occupied))
+    misc_data.append(("Net Income", nation.records.net_income[-1]))
+    misc_data.append(("Gross Industrial Income", nation.records.industrial_income[-1]))
+    misc_data.append(("Gross Energy Income", nation.records.energy_income[-1]))
+    misc_data.append(("Development Score", nation.records.development[-1]))
+    misc_data.append(("Unique Improvements", sum(1 for count in nation.improvement_counts.values() if count != 0)))
+    misc_data.append(("Military Size", nation.records.military_size[-1]))
+    misc_data.append(("Military Strength", nation.records.military_strength[-1]))
+    misc_data.append(("Unique Units", sum(1 for count in nation.unit_counts.values() if count != 0)))
+    misc_data.append(("Total Transactions", nation.records.transaction_count[-1]))
+    misc_data.append(("Technology Count", nation.records.technology_count[-1]))
+    misc_data.append(("Agenda Count:", nation.records.agenda_count[-1]))
+    player_information_dict["Misc Info"] = misc_data
 
-    # income details
+    # get income details
     income_details = nation.income_details
     for i in range(len(income_details)):
         income_details[i] = income_details[i].replace("&Tab;", "&nbsp;&nbsp;&nbsp;&nbsp;")
     income_str = "<br>".join(income_details)
     player_information_dict["Income Details"] = income_str
 
-    # research details
-    research_details = list(nation.completed_research.keys())
-    research_str = "<br>".join(research_details)
-    player_information_dict["Research Details"] = research_str
+    # get tag data
+    player_information_dict["Tag Data"] = {}
+    for tag_name, tag_data in nation.tags.items():
+        tag_data_filtered = {
+            "Expire Turn": tag_data["Expire Turn"],
+            "Data": []
+        }
+        for td_key, td_value in tag_data.items():
+            if td_key == "Expire Turn":
+                continue
+            tag_data_filtered["Data"].append(f"{td_key}: {td_value}")
+        player_information_dict["Tag Data"][tag_name] = tag_data_filtered
 
     return player_information_dict
 
