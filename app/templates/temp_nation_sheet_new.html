@@ -21,12 +21,6 @@ body {
     flex-direction: column;
     gap: 20px;
 }
-#left-contents {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
 #column-1 {
     width: 33%;
     display: flex;
@@ -39,6 +33,12 @@ body {
     flex-direction: column;
     gap: 20px;
 }
+#column-2-div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 #right-sheet {
     width: 50%;
     display: flex;
@@ -46,21 +46,27 @@ body {
     gap: 20px;
 }
 #column-3 {
-    width: 34%;
+    width: 37.5%;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 #column-4 {
-    width: 33%;
+    width: 37.5%;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 #column-5 {
-    width: 33%;
+    width: 25%;
     display: flex;
     flex-direction: column;
+    gap: 20px;
+}
+.contents {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     gap: 20px;
 }
 .dollars {
@@ -125,7 +131,7 @@ body {
             </div>
         </div>
 
-        <div id="left-contents">
+        <div class="contents">
 
             <div id="column-1">
 
@@ -149,25 +155,13 @@ body {
                     {% endfor %}
                 </div>
 
-                <div class="box" id="alliance-info">
-                    <div class="top" style="font-size: 18px">{{ dict["Alliance Data"]["Header"] }}</div>
-                    {% for key, value in dict["Alliance Data"].items() %}
-                        {% if key != "Header" %}
-                            <div class="row">
-                                <div class="cell short small" style="--text-color: {{ value }}; width:auto; flex-grow:1; color: var(--text-color);">{{ key }}</div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-
-                <div class="box" id="victory-info">
-                    <div class="top" style="font-size: 18px">{{ dict["Victory Conditions Data"]["Header"] }}</div>
-                    {% for key, value in dict["Victory Conditions Data"].items() %}
-                        {% if key != "Header" %}
-                            <div class="row">
-                                <div class="cell short small" style="--text-color: {{ value }}; width:auto; flex-grow:1; color: var(--text-color);">{{ key }}</div>
-                            </div>
-                        {% endif %}
+                <div class="box" id="misc-info">
+                    <div class="top" style="font-size: 18px">Statistics</div>
+                    {% for value in dict["Misc Info"] %}
+                        <div class="row hasline">
+                            <div class="cell short small" style="width:auto; flex-grow:1;">{{ value[0] }}</div>
+                            <div class="cell short small" style="width:max-content;">{{ value[1] }}</div>
+                        </div>
                     {% endfor %}
                 </div>
 
@@ -196,6 +190,46 @@ body {
                     {% endfor %}
                 </div>
 
+                <div class="contents">
+
+                    <div class="box" id="relation-info" style="width:50%">
+                        <div class="top" style="font-size: 18px">Diplomacy</div>
+                        {% for value in dict["Relations Data"] %}
+                            <div class="row hasline">
+                                <div class="cell short small" style="width:auto; flex-grow:1;">{{ value['Name'] }}</div>
+                                <div class="cell short small" style="--text-color: {{ value['Color'] }}; width:max-content; color: var(--text-color);">{{ value['Status'] }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div id="column-2-div">
+
+                        <div class="box" id="alliance-info">
+                            <div class="top" style="font-size: 18px">{{ dict["Alliance Data"]["Header"] }}</div>
+                            {% for key, value in dict["Alliance Data"].items() %}
+                                {% if key != "Header" %}
+                                    <div class="row">
+                                        <div class="cell short small" style="--text-color: {{ value }}; width:auto; flex-grow:1; color: var(--text-color);">{{ key }}</div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="box" id="victory-info">
+                            <div class="top" style="font-size: 18px">{{ dict["Victory Conditions Data"]["Header"] }}</div>
+                            {% for key, value in dict["Victory Conditions Data"].items() %}
+                                {% if key != "Header" %}
+                                    <div class="row">
+                                        <div class="cell short small" style="--text-color: {{ value }}; width:auto; flex-grow:1; color: var(--text-color);">{{ key }}</div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
@@ -205,30 +239,7 @@ body {
     <div id="right-sheet">
 
         <div id="column-3">
-
-            <div class="box" id="relation-info">
-                <div class="top" style="font-size: 18px">Diplomacy</div>
-                {% for value in dict["Relations Data"] %}
-                    <div class="row hasline">
-                        <div class="cell short small" style="width:auto; flex-grow:1;">{{ value['Name'] }}</div>
-                        <div class="cell short small" style="--text-color: {{ value['Color'] }}; width:max-content; color: var(--text-color);">{{ value['Status'] }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div class="box" id="misc-info">
-                <div class="top" style="font-size: 18px">Statistics</div>
-                {% for value in dict["Misc Info"] %}
-                    <div class="row hasline">
-                        <div class="cell short small" style="width:auto; flex-grow:1;">{{ value[0] }}</div>
-                        <div class="cell short small" style="width:max-content;">{{ value[1] }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-
-        </div>
-
-        <div id="column-4">
+            
             <div class="box" id="income-info" style="height:100%;">
                 <div class="top" style="font-size: 18px">Income Details</div>
                 <div class="row">
@@ -237,9 +248,11 @@ body {
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <div id="column-5">
+        <div id="column-4">
+            
             <div class="box" id="tag-info" style="height:100%;">
                 <div class="top" style="font-size: 18px">Modifiers</div>
                 {% for key, value in dict["Tag Data"].items() %}
@@ -256,6 +269,15 @@ body {
                     </div>
                 {% endfor %}
             </div>
+
+        </div>
+
+        <div id="column-5">
+            
+            <div class="box" id="research-info" style="height:100%;">
+                <div class="top" style="font-size: 18px">Completed Research</div>
+            </div>
+
         </div>
 
     </div> 

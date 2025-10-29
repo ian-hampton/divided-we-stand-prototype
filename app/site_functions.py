@@ -418,7 +418,7 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
             relation["Color"] = "#00ff00"
             relation["Status"] = "Neutral"
         player_information_dict["Relations Data"].append(relation)
-    for i in range(9 - len(Nations)):
+    for i in range(10 - len(Nations)):
         relation = {"Name": "-", "Status": "-", "Color": "#FFFFFF"}
         player_information_dict["Relations Data"].append(relation)
 
