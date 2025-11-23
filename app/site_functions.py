@@ -16,7 +16,7 @@ from app.scenario import ScenarioData as SD
 from app.gamedata import Games, GameStatus
 from app.alliance import Alliances
 from app.region import Region, Regions
-from app.nation import Nations
+from app.nation import Nation, Nations
 from app.notifications import Notifications
 from app.truce import Truces
 from app.war import Wars
@@ -350,6 +350,11 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     Returns:
         dict: player_information_dict.
     """
+
+    def fetch_color_class(income_str: str, nation: Nation) -> str:
+        for resource_name in nation._resources.keys():
+            if resource_name in income_str:
+                return resource_name.lower().replace(" ", "-")
     
     SD.load(game_id)
 
@@ -436,15 +441,29 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     misc_data.append(("Unique Units", sum(1 for count in nation.unit_counts.values() if count != 0)))
     misc_data.append(("Total Transactions", nation.records.transaction_count[-1]))
     misc_data.append(("Technology Count", nation.records.technology_count[-1]))
-    misc_data.append(("Agenda Count:", nation.records.agenda_count[-1]))
+    misc_data.append(("Agenda Count", nation.records.agenda_count[-1]))
     player_information_dict["Misc Info"] = misc_data
 
-    # get income details
-    income_details = nation.income_details
-    for i in range(len(income_details)):
-        income_details[i] = income_details[i].replace("&Tab;", "&nbsp;&nbsp;&nbsp;&nbsp;")
-    income_str = "<br>".join(income_details)
-    player_information_dict["Income Details"] = income_str
+    # format income details - I am aware this code sucks, however making it better would require updating the income calculation code which I do not want to do right now
+    income_details = {}
+    income_string_block_text = []
+    income_string_block_color = ""
+    for income_str in nation.income_details:
+        if income_str.startswith("<section> ") and income_string_block_text == []:
+            # for loop has just started - start first group
+            income_string_block_color = fetch_color_class(income_str, nation)
+            income_string_block_text.append(income_str[10:])
+        elif income_str.startswith("<section> ") and income_string_block_text != []:
+            # group ended - save and start new group
+            income_details[income_string_block_color] = income_string_block_text
+            income_string_block_text = []
+            income_string_block_color = fetch_color_class(income_str, nation)
+            income_string_block_text.append(income_str[10:])
+        else:
+            # add income string to its group
+            income_string_block_text.append(income_str)
+    income_details[income_string_block_color] = income_string_block_text
+    player_information_dict["Income Details"] = income_details
 
     # get tag data
     player_information_dict["Tag Data"] = {}

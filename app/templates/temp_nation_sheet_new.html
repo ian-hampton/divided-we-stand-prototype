@@ -1,74 +1,27 @@
 <!DOCTYPE html>
 
 <html>
+
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/default-blank.css') }}">
+
 <style>
+
+/* overrides */
 body {
-    background-color: rgb(67, 67, 67);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-image: url("/static/images/background-blank.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    /* box-shadow: inset 0 0 0 1000px rgba(255, 88, 88, 0.2); */
+    min-height: 100vh;
 }
-#nation-sheet {
-    margin: 40px;
-    width: calc(100% - 80px);
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
-#left-sheet {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-#column-1 {
-    width: 33%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-#column-2 {
-    width: 67%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-#column-2-div {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-#right-sheet {
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
-#column-3 {
-    width: 37.5%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-#column-4 {
-    width: 37.5%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-#column-5 {
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.contents {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
+
+/* color classes */
 .dollars {
     color: #93c47d;
 }
@@ -102,6 +55,88 @@ body {
 .rare-earth-elements {
     color: #f1c232;
 }
+.energy,
+.military-capacity {
+    color: #ffffff;
+}
+
+/* main flexboxes */
+#nation-sheet {
+    margin: 40px;
+    width: calc(100% - 80px);
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+#left-sheet {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#right-sheet {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+/* additional flexboxes */
+#column-1 {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#column-2 {
+    width: 67%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#column-2-div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#column-3 {
+    width: 37.5%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#column-4 {
+    width: 37.5%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+#column-5 {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.contents {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+/* @media bullsh*t */
+@media (max-width: 2047px) {
+    #nation-sheet {
+        flex-direction: column;
+    }
+    #left-sheet,
+    #right-sheet {
+        width: 100%;
+    }
+}
+
 </style>
 
 
@@ -190,7 +225,7 @@ body {
                     {% endfor %}
                 </div>
 
-                <div class="contents">
+                <div class="contents" style="flex-grow:1;">
 
                     <div class="box" id="relation-info" style="width:50%">
                         <div class="top" style="font-size: 18px">Diplomacy</div>
@@ -204,7 +239,7 @@ body {
 
                     <div id="column-2-div">
 
-                        <div class="box" id="alliance-info">
+                        <div class="box" id="alliance-info" style="flex-grow:1;">
                             <div class="top" style="font-size: 18px">{{ dict["Alliance Data"]["Header"] }}</div>
                             {% for key, value in dict["Alliance Data"].items() %}
                                 {% if key != "Header" %}
@@ -215,7 +250,7 @@ body {
                             {% endfor %}
                         </div>
 
-                        <div class="box" id="victory-info">
+                        <div class="box" id="victory-info" style="flex-grow:1;">
                             <div class="top" style="font-size: 18px">{{ dict["Victory Conditions Data"]["Header"] }}</div>
                             {% for key, value in dict["Victory Conditions Data"].items() %}
                                 {% if key != "Header" %}
@@ -242,11 +277,22 @@ body {
             
             <div class="box" id="income-info" style="height:100%;">
                 <div class="top" style="font-size: 18px">Income Details</div>
-                <div class="row">
-                    <div class="cell short small" style="width:auto; flex-grow:1;">
-                        {% autoescape false %}{{ dict["Income Details"] }}{% endautoescape %}
+                {% for key, value in dict["Income Details"].items() %}
+                    {% set resource_row_class = "modifier-section " + key %}
+                    <div class="{{ resource_row_class }}">
+                    {% for income_str in value %}
+                        {% if loop.index == 1 %}
+                            <div class="row">
+                                <div class="cell shortest small" style="width:auto; flex-grow:1;">{{ income_str }}</div>
+                            </div>
+                        {% else %}
+                            <div class="row">
+                                <div class="cell shortest small" style="width:auto; flex-grow:1; padding-left:32px;">{{ income_str }}</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                     </div>
-                </div>
+                {% endfor %}
             </div>
 
         </div>
@@ -284,6 +330,5 @@ body {
 
 </div>
 </body>
-
 
 </html>

@@ -49,7 +49,7 @@ def update_income(game_id: str) -> None:
                     if amount_gained == 0:
                         continue
                     nation.update_gross_income(resource_name, amount_gained)
-                    income_str = f"&Tab;+{amount_gained:.2f} from {plural_improvement_name}"
+                    income_str = f"+{amount_gained:.2f} from {plural_improvement_name}"
                     text_dict[nation.name][resource_name][income_str] += 1
 
             # collect unit income
@@ -57,7 +57,7 @@ def update_income(game_id: str) -> None:
                 nation = Nations.get(region.unit.owner_id)
                 if nation.gov == "Military Junta":
                     nation.update_gross_income("Political Power", 0.1)
-                    income_str = "&Tab;+0.10 from Military Junta bonus."
+                    income_str = "+0.10 from Military Junta bonus."
                     text_dict[nation.name]["Political Power"][income_str] += 1
         
         for nation in Nations:
@@ -78,7 +78,7 @@ def update_income(game_id: str) -> None:
                 continue
             nation.update_gross_income("Political Power", alliance_income * alliance_count)
             for i in range(alliance_count):
-                income_str = f"&Tab;+{alliance_income:.2f} from alliances"
+                income_str = f"+{alliance_income:.2f} from alliances"
                 text_dict[nation.name]["Political Power"][income_str] += 1
 
             for resource_name in nation._resources:
@@ -91,7 +91,7 @@ def update_income(game_id: str) -> None:
                         continue
 
                     nation.update_gross_income(resource_name, amount)
-                    income_str = f"&Tab;{amount:+.2f} from {tag_name}."
+                    income_str = f"{amount:+.2f} from {tag_name}."
                     text_dict[nation.name][resource_name][income_str] += 1
 
         # alliance yields
@@ -107,7 +107,7 @@ def update_income(game_id: str) -> None:
                     nation.update_max_mc(amount)
                 else:
                     nation.update_gross_income(resource_name, amount)
-                income_str = f"&Tab;+{amount:.2f} from {alliance.name}."
+                income_str = f"+{amount:.2f} from {alliance.name}."
                 text_dict[nation.name][resource_name][income_str] += 1
 
         # apply income rate to gross income
@@ -120,7 +120,7 @@ def update_income(game_id: str) -> None:
                 rate_diff = round(final_gross_income - total, 2)
                 
                 if rate_diff != 0:
-                    income_str = f"&Tab;+{rate_diff:+.2f} from income rate."
+                    income_str = f"{rate_diff:+.2f} from income rate."
                     text_dict[nation.name][resource_name][income_str] += 1
                 
                 nation.update_gross_income(resource_name, final_gross_income, overwrite=True)
@@ -151,11 +151,11 @@ def update_income(game_id: str) -> None:
                     tax_amount = round(tax_amount, 2)
                     
                     nation.update_income(resource_name, -1 * tax_amount)
-                    income_str = f"&Tab;-{tax_amount:.2f} from tribute to {overlord.name}."
+                    income_str = f"-{tax_amount:.2f} from tribute to {overlord.name}."
                     text_dict[nation.name][resource_name][income_str] += 1
                     
                     overlord.update_income(resource_name, tax_amount)
-                    income_str = f"&Tab;{tax_amount:.2f} from puppet state tribute."
+                    income_str = f"{tax_amount:.2f} from puppet state tribute."
                     text_dict[nation.name][resource_name][income_str] += 1
 
             # calculate player upkeep costs
@@ -175,14 +175,14 @@ def update_income(game_id: str) -> None:
                 upkeep = player_upkeep_costs_dict[resource_name]["From Units"] + player_upkeep_costs_dict[resource_name]["From Improvements"]
                 if upkeep > 0:
                     nation.update_income(resource_name, -1 * upkeep)
-                    income_str = f'&Tab;-{upkeep:.2f} from upkeep costs.'
+                    income_str = f'-{upkeep:.2f} from upkeep costs.'
                     text_dict[nation.name][resource_name][income_str] += 1
 
             # add energy upkeep to net income
             energy_upkeep = player_upkeep_costs_dict["Energy"]["From Units"] + player_upkeep_costs_dict["Energy"]["From Improvements"]
             nation.update_income("Energy", -1 * energy_upkeep)
             if energy_upkeep > 0:
-                income_str = f"&Tab;-{energy_upkeep:.2f} from energy upkeep costs."
+                income_str = f"-{energy_upkeep:.2f} from energy upkeep costs."
                 text_dict[nation.name][resource_name][income_str] += 1
             
             # attempt to spend coal income to pay remaining energy upkeep
@@ -218,7 +218,7 @@ def update_income(game_id: str) -> None:
             for resource_name in nation._resources:
                 str_list = []
                 resource_total = float(nation.get_income(resource_name))
-                str_list.append(f"{resource_total:+.2f} {resource_name}")
+                str_list.append(f"<section> {resource_total:+.2f} {resource_name}")
                 final_income_strings[nation.name][resource_name] = str_list
 
         # add counts
@@ -260,10 +260,10 @@ def update_income(game_id: str) -> None:
             nation.update_income("Energy", upkeep_payment)
             nation.update_income(resouce_name, 0.00, overwrite=True)
             
-        income_str = f"&Tab;+{upkeep_payment:.2f} from {resouce_name.lower()} {source}."
+        income_str = f"+{upkeep_payment:.2f} from {resouce_name.lower()} {source}."
         text_dict[nation.name]["Energy"][income_str] += 1
         
-        income_str = f"&Tab;-{upkeep_payment:.2f} from energy upkeep costs."
+        income_str = f"-{upkeep_payment:.2f} from energy upkeep costs."
         text_dict[nation.name][resouce_name][income_str] += 1
 
         return nation
