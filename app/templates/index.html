@@ -1,35 +1,97 @@
 <!DOCTYPE html>
 <html>
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-<title>United We Stood</title>
+<title>Divided We Stand</title>
 
 <style>
 body {
-    background-image: url("{{ url_for('static', filename='images/new-background.png') }}");
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Franklin Gothic Medium', Arial, sans-serif;
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("/static/preview.png");
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;
+    background-position: center;
+    filter: blur(5px);
+    transform: scale(1.05); /* prevents edge clipping */
+    z-index: -1;
+}
+#main-box {
     display: flex;
     flex-direction: column;
+    width: 600px;
+    padding: 40px;
+    background-color: rgba(67, 67, 67, 0.7);
+    color: white;
+    border-radius: 10px;
 }
-img {
+#buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.title {
+    font-size: 42px;
+    font-weight: bold;
     margin-left: auto;
     margin-right: auto;
+    padding: 0;
+    padding-bottom: 10px
 }
-.button {
-    margin-left: auto;
-    margin-right: auto;
-    width:25%;
-    margin-bottom:2%;
-    display: block;
+p {
+    font-size: 18px;
+    margin: 0;
+    padding: 0; 
+}
+button {
+    flex-grow: 1;
+    background-color: #0f4660;
+    margin-top: 20px;
+    padding: 12px; 
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
 }
 </style>
 
 <body>
-    <img src={{ url_for('static', filename='images/title.png') }} align="center" style="width:70%;margin-bottom:2%;">
-    <a href="games"><img class="button" src={{ url_for('static', filename='images/button-1.png') }}></a>
-    <a href="leaderboard"><img class="button" src={{ url_for('static', filename='images/button-2.png') }}></a>
-    <a href="archived_games"><img class="button" src={{ url_for('static', filename='images/button-3.png') }} ></a>
+    
+    <div id="main-box">
+
+        <div class="title">Divided We Stand</div>
+
+        <p>An online turn-based strategy game set in the modern era. Create your own unique nation out of the ashes of old and rebuild civilization in your image by securing new territory and researching new technologies. Engage with other players in negotiation, trade, and diplomacy. Form grand alliances with those that share your vision, and wage war against those who stand against you.</p>
+
+        <div id="buttons">
+            <button id="b1">Active Games</button>
+            <button id="b2">Completed Games</button>
+            <button id="b3">Rankings</button>
+        </div>
+
+    </div>
+
 </body>
 
 </html>
+
+<script>
+document.getElementById("b1").addEventListener("click", () => {
+    window.location.href = "/games";
+});
+
+document.getElementById("b2").addEventListener("click", () => {
+    window.location.href = "/archived_games";
+});
+
+document.getElementById("b3").addEventListener("click", () => {
+    window.location.href = "/leaderboard";
+});
+</script>
