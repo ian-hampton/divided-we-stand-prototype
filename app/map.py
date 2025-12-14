@@ -14,8 +14,14 @@ DO_NOT_SPAWN = {"Capital", "City", "Colony", "Military Base", "Missile Defense S
                 "Nuclear Power Plant", "Research Institute", "Solar Farm", "Surveillance Center"}
 
 class GameMaps:
-    
-    """Class used for generating and updating map images."""
+    """
+    Class used for generating and updating map images.
+
+    Important methods:
+        update_all() - updates all maps and exports them as images
+        populate_main_map() - spawns random improvements on random regions
+        populate_resource_map() - handles resource generation
+    """
 
     def __init__(self, game_id: str):
 
