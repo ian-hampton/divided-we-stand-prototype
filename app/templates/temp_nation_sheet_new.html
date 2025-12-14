@@ -9,19 +9,11 @@
 <style>
 
 :root {
-    --background_color: {{ dict["Color"] + "33" }}
+    --nation-color: {{ dict['Color'] }};
 }
 
 /* overrides */
 body {
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-image: url("/static/images/background-blank.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    margin: 0;
-    padding: 0;
-    box-shadow: inset 0 0 0 1000px var(--background_color);
     min-height: 100vh;
 }
 
@@ -165,7 +157,7 @@ body {
         <div class="box" id="nation-name">
             <div class="row">
                 <div class="cell center" style="width: 100%; padding-top:25px; padding-bottom:25px">
-                    <b style="font-size: 36px">{{ dict["Nation Name"] }}</b>
+                    <b style="color: var(--nation-color); font-size: 36px;">{{ dict["Nation Name"] }}</b>
                 </div>
             </div>
         </div>
