@@ -245,21 +245,48 @@ class GameMaps:
         """
         Assigns a resource to each map region. Should only be called at the start of the game.
         """
+
+        def is_resource_allowed(resource_name) -> bool:
+            for adj_id in region.graph.adjacent_regions:
+                adj_region = Region(adj_id)
+                if adj_region.data.resource == resource_name:
+                    return False
+            return True
+
+        PRIORITY = {"Advanced Metals", "Uranium", "Rare Earth Elements"}
+        region_id_list = Regions.ids()
         
-        # get resource data for map
+        # get resource distribution data for this specific game
         game = Games.load(self.game_id)
         scenario_name = game.info.scenario.lower()
         map_resources: dict = self.map_config["mapResources"][scenario_name]
-        
-        # create resource list
-        resource_list = []
-        for resource, resource_count in map_resources.items():
-            resource_list += [resource] * resource_count
-        resource_list = random.sample(resource_list, len(resource_list))
 
-        # update regdata.json
-        for region in Regions:
-            region.data.resource = resource_list.pop()
+        # determine resource quantities
+        priority_resources = []
+        general_resources = []
+        for key, value in map_resources.items():
+            target = priority_resources if key in PRIORITY else general_resources
+            target.extend([key] * value)
+
+        # place priority resources
+        for resource in priority_resources:
+            while len(region_id_list) != 0:
+                random_region_id = random.choice(region_id_list)
+                region = Region(random_region_id)
+                # rare resources are not allowed to be adjacent another of its kind
+                if not is_resource_allowed(resource):
+                    continue
+                # place resource
+                region.data.resource = resource
+                region_id_list.remove(random_region_id)
+                break
+
+        # place all other resources
+        for resource in general_resources:
+            random_region_id = random.choice(region_id_list)
+            region = Region(random_region_id)
+            region.data.resource = resource
+            region_id_list.remove(random_region_id)
 
     def _init_images(self) -> None:
         
