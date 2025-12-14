@@ -478,6 +478,22 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
             tag_data_filtered["Data"].append(f"{td_key}: {td_value}")
         player_information_dict["Tag Data"][tag_name] = tag_data_filtered
 
+    # format completed research
+    player_information_dict["Research Data"] = defaultdict(list)
+    for research_name in nation.completed_research.keys():
+        if research_name in SD.agendas:
+            player_information_dict["Research Data"]["Agendas"].append(research_name)
+        elif research_name in SD.technologies:
+            sd_tech = SD.technologies[research_name]
+            player_information_dict["Research Data"][sd_tech.type].append(research_name)
+    player_information_dict["Research Data"] = {        # sort research names within each category
+        key: sorted(value)
+        for key, value in player_information_dict["Research Data"].items()
+    }
+    player_information_dict["Research Data"] = dict(    # sort categories alphabetically
+        sorted(player_information_dict["Research Data"].items())
+    )
+
     return player_information_dict
 
 def check_color_correction(color):

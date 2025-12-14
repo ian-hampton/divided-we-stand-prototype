@@ -8,6 +8,10 @@
 
 <style>
 
+:root {
+    --background_color: {{ dict["Color"] + "33" }}
+}
+
 /* overrides */
 body {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -17,7 +21,7 @@ body {
     background-attachment: fixed;
     margin: 0;
     padding: 0;
-    /* box-shadow: inset 0 0 0 1000px rgba(255, 88, 88, 0.2); */
+    box-shadow: inset 0 0 0 1000px var(--background_color);
     min-height: 100vh;
 }
 
@@ -287,7 +291,7 @@ body {
                             </div>
                         {% else %}
                             <div class="row">
-                                <div class="cell shortest small" style="width:auto; flex-grow:1; padding-left:32px;">{{ income_str }}</div>
+                                <div class="cell shortest" style="width:auto; flex-grow:1; font-size:12px; padding-left:24px;">{{ income_str }}</div>
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -309,7 +313,7 @@ body {
                         </div>
                         {% for modifier in value["Data"] %}
                         <div class="row">
-                            <div class="cell shortest small" style="width:auto; flex-grow:1;">{{ modifier }}</div>
+                            <div class="cell shortest" style="width:auto; flex-grow:1; font-size:12px;">{{ modifier }}</div>
                         </div>
                         {% endfor %}
                     </div>
@@ -322,6 +326,18 @@ body {
             
             <div class="box" id="research-info" style="height:100%;">
                 <div class="top" style="font-size: 18px">Completed Research</div>
+                {% for key, value in dict["Research Data"].items() %}
+                    <div class="modifier-section">
+                        <div class="row">
+                            <div class="cell shortest small" style="width:auto; flex-grow:1;">{{ key }}</div>
+                        </div>
+                        {% for research_name in value %}
+                        <div class="row">
+                            <div class="cell shortest" style="width:auto; flex-grow:1; font-size:12px;">{{ research_name }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
 
         </div>

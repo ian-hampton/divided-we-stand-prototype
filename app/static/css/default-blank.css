@@ -79,6 +79,9 @@ body {
 .box .bold {
     font-weight: bold;
 }
+.box .underline {
+    text-decoration: underline;
+}
 .box .short {
     padding: 8px;
     padding-top: 4px;
