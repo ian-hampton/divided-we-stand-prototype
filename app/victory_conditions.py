@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from app.nation import Nation, Nations
+from app.region import Regions
 
 # easy
 
@@ -324,6 +325,10 @@ def warmonger(nation: Nation) -> bool:
 
 def economic_domination(nation: Nation) -> bool:
 
+    # check if player meets minimum score
+    if nation.records.net_income < 100:
+        return False
+
     # check if first and not tied
     first, second, third = Nations.get_top_three("net_income")
     if nation.name in first[0] and (first[1] > second[1]):
@@ -333,8 +338,12 @@ def economic_domination(nation: Nation) -> bool:
 
 def influence_through_trade(nation: Nation) -> bool:
 
+    # check if player meets minimum score
+    if nation.records.net_exports < 200:
+        return False
+
     # check if first and not tied
-    first, second, third = Nations.get_top_three("transaction_count")
+    first, second, third = Nations.get_top_three("net_exports")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -342,9 +351,14 @@ def influence_through_trade(nation: Nation) -> bool:
 
 def military_superpower(nation: Nation) -> bool:
 
-    for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.military_strength >= nation.records.military_strength:
-            return False
+    # check if player meets minimum score
+    if nation.records.military_strength < 24:
+        return False
+
+    # check if first and not tied
+    first, second, third = Nations.get_top_three("military_strength")
+    if nation.name in first[0] and (first[1] > second[1]):
+        return True
 
     return True
 
@@ -358,6 +372,10 @@ def scientific_leader(nation: Nation) -> bool:
     return False
 
 def territorial_control(nation: Nation) -> bool:
+
+    # check if player meets minimum score
+    if nation.stats.regions_owned < int(len(Nations) * 0.25):
+        return False
 
     # check if first and not tied
     first, second, third = Nations.get_top_three("nation_size")

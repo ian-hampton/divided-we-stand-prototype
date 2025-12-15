@@ -28,7 +28,7 @@ class Nations(metaclass=NationsMeta):
 
     game_id: ClassVar[str] = None
     _data: ClassVar[dict[str, dict]] = None
-    LEADERBOARD_RECORD_NAMES: ClassVar[list[str]] = ["nation_size", "net_income", "military_size", "technology_count", "transaction_count"]
+    LEADERBOARD_RECORD_NAMES: ClassVar[list[str]] = ["nation_size", "net_income", "military_strength", "technology_count", "net_exports"]
 
     @classmethod
     def load(cls, game_id: str) -> None:
@@ -183,7 +183,8 @@ class Nations(metaclass=NationsMeta):
                 "nationSize": [],
                 "netIncome": [],
                 "researchCount": [],
-                "transactionCount": []
+                "transactionCount": [],
+                "netExports": []
             },
             "improvementCounts": {improvement_name: 0 for improvement_name, improvement_data in SD.improvements},
             "unitCounts": {unit_name: 0 for unit_name, unit_data in SD.units},
@@ -289,6 +290,16 @@ class Nations(metaclass=NationsMeta):
             transaction_count += nation.stats.resources_received
             nation.records.transaction_count.append(int(transaction_count))
 
+            net_exports = 0
+            for transaction in rmdata_all_transaction_list:
+                if transaction[1] == nation.name and transaction[2] == "Bought":
+                    net_exports -= int(transaction[3])
+                elif transaction[1] == nation.name and transaction[2] == "Sold":
+                    net_exports += int(transaction[3])
+            net_exports += nation.stats.resources_given
+            net_exports -= nation.stats.resources_received
+            nation.records.net_exports.append(int(net_exports))
+
     @classmethod
     def get_top_three(cls, record_name: str) -> list[Tuple[str, float|int]]:
         
@@ -331,9 +342,9 @@ class Nations(metaclass=NationsMeta):
         bonus = [1, 0.5, 0.25]
         record_name_to_string = {
             "nation_size": "from nation size",
-            "net_income": "from economic strength",
-            "transaction_count": "from trade power",
-            "military_size": "from military size",
+            "net_income": "from economic power",
+            "net_exports": "from trade power",
+            "military_strength": "from military strength",
             "technology_count": "from technology progress"
         }
 
@@ -370,11 +381,11 @@ class Nations(metaclass=NationsMeta):
     def attribute_to_title(cls, attribute_name: str) -> str:
 
         attribute_str_to_name_str = {
-            "military_size": "Largest Military",
-            "nation_size": "Largest Nation",
-            "net_income": "Largest Income",
-            "technology_count": "Most Technology",
-            "transaction_count": "Most Transactions"
+            "military_strength": "Strongest Militaries",
+            "nation_size": "Largest Nations",
+            "net_income": "Highest Net Incomes",
+            "technology_count": "Most Technologies",
+            "net_exports": "Highest Net Exports"
         }
 
         return attribute_str_to_name_str.get(attribute_name, "NULL")
@@ -1167,89 +1178,94 @@ class NationRecords:
     @property
     def agenda_count(self) -> list:
         return self._data["agendaCount"]
-    
-    @property
-    def development(self) -> list:
-        return self._data["developmentScore"]
-    
-    @property
-    def energy_income(self) -> list:
-        return self._data["energyIncome"]
-
-    @property
-    def industrial_income(self) -> list:
-        return self._data["industrialIncome"]
-    
-    @property
-    def military_size(self) -> list:
-        return self._data["militarySize"]
-
-    @property
-    def military_strength(self) -> list:
-        return self._data["militaryStrength"]
-
-    @property
-    def nation_size(self) -> list:
-        return self._data["nationSize"]
-
-    @property
-    def net_income(self) -> list:
-        return self._data["netIncome"]
-
-    @property
-    def technology_count(self) -> list:
-        return self._data["researchCount"]
-
-    @property
-    def transaction_count(self) -> list:
-        return self._data["transactionCount"]
-    
+        
     @agenda_count.setter
     def agenda_count(self, value: list) -> None:
         self._data["agendaCount"] = value
 
+    @property
+    def development(self) -> list:
+        return self._data["developmentScore"]
+    
     @development.setter
     def development(self, value: list) -> None:
         self._data["developmentScore"] = value
+
+    @property
+    def energy_income(self) -> list:
+        return self._data["energyIncome"]
 
     @energy_income.setter
     def energy_income(self, value: list) -> None:
         self._data["energyIncome"] = value
     
+    @property
+    def industrial_income(self) -> list:
+        return self._data["industrialIncome"]
+    
     @industrial_income.setter
     def industrial_income(self, value: list) -> None:
         self._data["industrialIncome"] = value
+
+    @property
+    def military_size(self) -> list:
+        return self._data["militarySize"]
 
     @military_size.setter
     def military_size(self, value: list) -> None:
         self._data["militarySize"] = value
 
+    @property
+    def military_strength(self) -> list:
+        return self._data["militaryStrength"]
+
     @military_strength.setter
     def military_strength(self, value: list) -> None:
         self._data["militaryStrength"] = value
+
+    @property
+    def nation_size(self) -> list:
+        return self._data["nationSize"]
 
     @nation_size.setter
     def nation_size(self, value: list) -> None:
         self._data["nationSize"] = value
 
+    @property
+    def net_income(self) -> list:
+        return self._data["netIncome"]
+
     @net_income.setter
     def net_income(self, value: list) -> None:
         self._data["netIncome"] = value
+
+    @property
+    def technology_count(self) -> list:
+        return self._data["researchCount"]
 
     @technology_count.setter
     def technology_count(self, value: list) -> None:
         self._data["researchCount"] = value
 
+    @property
+    def transaction_count(self) -> list:
+        return self._data["transactionCount"]
+
     @transaction_count.setter
     def transaction_count(self, value: list) -> None:
         self._data["transactionCount"] = value
 
+    @property
+    def net_exports(self) -> list:
+        return self._data["netExports"]
+
+    @net_exports.setter
+    def net_exports(self, value: list) -> None:
+        self._data["netExports"] = value
+
     def iter_leaderboard_records(self) -> Generator[tuple[str, list], None, None]:
-        
         for attribute_name in Nations.LEADERBOARD_RECORD_NAMES:
-
             value = getattr(self, attribute_name)
-
             yield attribute_name, value
 
     def iter_all_records(self) -> Generator[tuple[str, list], None, None]:

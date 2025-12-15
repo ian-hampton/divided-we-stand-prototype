@@ -436,10 +436,10 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     misc_data.append(("Gross Energy Income", nation.records.energy_income[-1]))
     misc_data.append(("Development Score", nation.records.development[-1]))
     misc_data.append(("Unique Improvements", sum(1 for count in nation.improvement_counts.values() if count != 0)))
+    misc_data.append(("Net Exports", nation.records.net_exports[-1]))
     misc_data.append(("Military Size", nation.records.military_size[-1]))
     misc_data.append(("Military Strength", nation.records.military_strength[-1]))
     misc_data.append(("Unique Units", sum(1 for count in nation.unit_counts.values() if count != 0)))
-    misc_data.append(("Total Transactions", nation.records.transaction_count[-1]))
     misc_data.append(("Technology Count", nation.records.technology_count[-1]))
     misc_data.append(("Agenda Count", nation.records.agenda_count[-1]))
     player_information_dict["Misc Info"] = misc_data
