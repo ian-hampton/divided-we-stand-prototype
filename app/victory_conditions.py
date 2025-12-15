@@ -194,25 +194,59 @@ def secure_strategic_resources(nation: Nation) -> bool:
 
 def energy_focus(nation: Nation) -> bool:
 
-    if nation.records.energy_income < 24:
+    # create tag for tracking this if it doesn't already exist
+    if "Energy Focus" not in nation.tags:
+        new_tag = {
+            "Streak": 0,
+            "Expire Turn": 99999
+        }
+        nation.tags["Energy Focus"] = new_tag
+
+    # reset streak if failed to meet minimum
+    if float(nation.records.energy_income[-1]) < 24:
+        nation.tags["Energy Focus"]["Streak"] = 0
         return False
     
+    # reset streak if failed to be first
     for other_nation in Nations:
         if other_nation.name != nation.name and other_nation.records.energy_income >= nation.records.energy_income:
+            nation.tags["Energy Focus"]["Streak"] = 0
             return False
+        
+    # return true if streak has reached thresh
+    nation.tags["Energy Focus"]["Streak"] += 1
+    if nation.tags["Energy Focus"]["Streak"] >= 8:
+        return True
 
-    return True
+    return False
 
 def industrial_focus(nation: Nation) -> bool:
 
-    if nation.records.industrial_income < 50:
+    # create tag for tracking this if it doesn't already exist
+    if "Industrial Focus" not in nation.tags:
+        new_tag = {
+            "Streak": 0,
+            "Expire Turn": 99999
+        }
+        nation.tags["Industrial Focus"] = new_tag
+
+    # reset streak if failed to meet minimum
+    if float(nation.records.industrial_income[-1]) < 50:
+        nation.tags["Industrial Focus"]["Streak"] = 0
         return False
     
+    # reset streak if failed to be first
     for other_nation in Nations:
         if other_nation.name != nation.name and other_nation.records.industrial_income >= nation.records.industrial_income:
+            nation.tags["Industrial Focus"]["Streak"] = 0
             return False
+        
+    # return true if streak has reached thresh
+    nation.tags["Industrial Focus"]["Streak"] += 1
+    if nation.tags["Industrial Focus"]["Streak"] >= 8:
+        return True
 
-    return True
+    return False
 
 def hegemony(nation: Nation) -> bool:
     
@@ -326,7 +360,7 @@ def warmonger(nation: Nation) -> bool:
 def economic_domination(nation: Nation) -> bool:
 
     # check if player meets minimum score
-    if nation.records.net_income < 100:
+    if float(nation.records.net_income[-1]) < 100:
         return False
 
     # check if first and not tied
@@ -339,7 +373,7 @@ def economic_domination(nation: Nation) -> bool:
 def influence_through_trade(nation: Nation) -> bool:
 
     # check if player meets minimum score
-    if nation.records.net_exports < 200:
+    if nation.records.net_exports[-1] < 200:
         return False
 
     # check if first and not tied
@@ -352,7 +386,7 @@ def influence_through_trade(nation: Nation) -> bool:
 def military_superpower(nation: Nation) -> bool:
 
     # check if player meets minimum score
-    if nation.records.military_strength < 24:
+    if nation.records.military_strength[-1] < 24:
         return False
 
     # check if first and not tied

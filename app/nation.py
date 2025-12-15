@@ -763,7 +763,7 @@ class Nation:
                     self.victory_conditions[name] = True
 
                     # mark victory condition as permanently satisfied if needed
-                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Warmonger"}
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Energy Focus", "Industrial Focus", "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Warmonger"}
                     if name in one_and_done:
                         self._satisfied[name] = True
 
