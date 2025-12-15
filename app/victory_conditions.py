@@ -408,7 +408,7 @@ def scientific_leader(nation: Nation) -> bool:
 def territorial_control(nation: Nation) -> bool:
 
     # check if player meets minimum score
-    if nation.stats.regions_owned < int(len(Nations) * 0.25):
+    if nation.stats.regions_owned < int(len(Regions) * 0.25):
         return False
 
     # check if first and not tied
