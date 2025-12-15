@@ -727,7 +727,6 @@ class Nation:
                 "Reconstruction Effort": vc.reconstruction_effort,
                 "Reliable Ally": vc.reliable_ally,
                 "Secure Strategic Resources": vc.secure_strategic_resources,
-                "Threat Containment": vc.threat_containment,
                 "Energy Focus": vc.energy_focus,
                 "Industrial Focus": vc.industrial_focus,
                 "Hegemony": vc.hegemony,
@@ -754,8 +753,7 @@ class Nation:
                     self.victory_conditions[name] = True
 
                     # mark victory condition as permanently satisfied if needed
-                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Threat Containment",
-                                    "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
                     if name in one_and_done:
                         self._satisfied[name] = True
 

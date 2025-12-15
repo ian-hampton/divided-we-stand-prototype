@@ -175,7 +175,7 @@ def reliable_ally(nation: Nation) -> bool:
     longest_alliance_name, duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
         longest_alliance = Alliances.get(longest_alliance_name)
-        if nation.name in longest_alliance.founding_members:
+        if nation.name in longest_alliance.founding_members and longest_alliance.age >= 12:
             return True
         
     return False
@@ -186,24 +186,6 @@ def secure_strategic_resources(nation: Nation) -> bool:
         and nation.improvement_counts["Uranium Mine"] > 0
         and nation.improvement_counts["Rare Earth Elements Mine"] > 0):
         return True
-
-    return False
-
-def threat_containment(nation: Nation) -> bool:
-
-    from app.war import Wars
-
-    # check if war won with specific war justification
-    for war in Wars:
-
-        if nation.id not in war.combatants:
-            continue
-
-        combatant =  war.get_combatant(nation.id)
-        if war.outcome == "Attacker Victory" and "Attacker" in combatant.role and combatant.justification == "Containment":
-            return True
-        elif war.outcome == "Defender Victory" and "Defender" in combatant.role and combatant.justification == "Containment":
-            return True
 
     return False
 
