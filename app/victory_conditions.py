@@ -192,6 +192,9 @@ def secure_strategic_resources(nation: Nation) -> bool:
 # medium
 
 def energy_focus(nation: Nation) -> bool:
+
+    if nation.records.energy_income < 24:
+        return False
     
     for other_nation in Nations:
         if other_nation.name != nation.name and other_nation.records.energy_income >= nation.records.energy_income:
@@ -200,6 +203,9 @@ def energy_focus(nation: Nation) -> bool:
     return True
 
 def industrial_focus(nation: Nation) -> bool:
+
+    if nation.records.industrial_income < 50:
+        return False
     
     for other_nation in Nations:
         if other_nation.name != nation.name and other_nation.records.industrial_income >= nation.records.industrial_income:
@@ -297,40 +303,6 @@ def sphere_of_influence(nation: Nation) -> bool:
 
     if nation.records.agenda_count >= 8:
         return True
-
-    return False
-
-def underdog(nation: Nation) -> bool:
-
-    from app.war import Wars
-
-    # search for an underdog victory
-    for war in Wars:
-
-        # skip wars player not involved in
-        if nation.id not in war.combatants:
-            continue
-        
-        # skip wars player did not win
-        if not ("Attacker" in war.outcome and "Attacker" in war.get_role(nation.id)
-            or "Defender" in war.outcome and "Defender" in war.get_role(nation.id)):
-            continue
-        
-        # count sides
-        friendly_count = 0
-        hostile_count = 0
-        for combatant_id in war.combatants:
-            if combatant_id == nation.id:
-                friendly_count += 1
-                continue
-            if war.is_on_same_side(combatant_id, nation.id):
-                friendly_count += 1
-            else:
-                hostile_count += 1
-
-        # vc fullfilled if friendly side outnumbered
-        if friendly_count < hostile_count:
-            return True
 
     return False
 

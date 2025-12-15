@@ -735,7 +735,6 @@ class Nation:
                 "Strong Research Agreement": vc.strong_research_agreement,
                 "Strong Trade Agreement": vc.strong_trade_agreement,
                 "Sphere of Influence": vc.sphere_of_influence,
-                "Underdog": vc.underdog,
                 "Warmonger": vc.warmonger,
                 "Economic Domination": vc.economic_domination,
                 "Influence Through Trade": vc.influence_through_trade,
@@ -753,7 +752,7 @@ class Nation:
                     self.victory_conditions[name] = True
 
                     # mark victory condition as permanently satisfied if needed
-                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Underdog", "Warmonger"}
+                    one_and_done = {"Ambassador", "Backstab", "Breakthrough", "Double Down", "Reliable Ally", "Monopoly", "Strong Research Agreement", "Strong Trade Agreement", "Sphere of Influence", "Warmonger"}
                     if name in one_and_done:
                         self._satisfied[name] = True
 
