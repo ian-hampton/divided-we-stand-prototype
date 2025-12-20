@@ -64,7 +64,7 @@ class Regions(metaclass=RegionsMeta):
             raise Exception(f"Failed to load Region with id {region_id}. Region ID not valid for this game.")
         
         if region_id not in cls._instances:
-            cls._instances[region_id] = Regions.load(region_id)
+            cls._instances[region_id] = Region(region_id)
         return cls._instances[region_id]
     
     @classmethod
