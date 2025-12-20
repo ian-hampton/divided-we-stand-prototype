@@ -7,7 +7,7 @@ from typing import List, Tuple
 from app import core
 from app.gamedata import Games
 from app.nation import Nation, Nations
-from app.region import Region
+from app.region import Region, Regions
 from app.notifications import Notifications
 from app.missile_strike import *
 
@@ -795,8 +795,6 @@ def _check_region_id(region_id: str) -> str | None:
 
     # region_id string is already converted to all uppercase, so we can just check if it exists or not 
     
-    from app.region import Regions
-    
     if region_id in Regions:
         return region_id
     
@@ -974,7 +972,6 @@ def resolve_trade_actions(game_id: str) -> None:
     """
 
     from app.nation import Nations
-    from app.region import Regions
 
     trade_action = input("Are there any trade actions this turn? (Y/n) ")
 
@@ -1084,7 +1081,7 @@ def resolve_trade_actions(game_id: str) -> None:
             
             for region_id in trade_deal["Nation1RegionsCeded"]:
                 
-                region = Region(region_id)
+                region = Regions.load(region_id)
 
                 if region.improvement.name is not None:
                     nation1.improvement_counts[region.improvement.name] -= 1
@@ -1094,7 +1091,7 @@ def resolve_trade_actions(game_id: str) -> None:
             
             for region_id in trade_deal["Nation2RegionsCeded"]:
                 
-                region = Region(region_id)
+                region = Regions.load(region_id)
 
                 if region.improvement.name is not None:
                     nation1.improvement_counts[region.improvement.name] += 1
@@ -1403,7 +1400,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     claim_actions_grouped: dict[str, dict[str, Region]] = defaultdict(dict)
     for action in actions_list:
         nation = Nations.get(action.id)
-        target_region = Region(action.target_region)
+        target_region = Regions.load(action.target_region)
 
         if target_region.data.owner_id == nation.id:
             nation.action_log.append(f"Failed to claim {action.target_region}. You already own this region.")
@@ -1430,7 +1427,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     for nation in Nations:
         validated_region_ids = _check_all_claims(game_id, claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
-            target_region = Region(region_id)
+            target_region = Regions.load(region_id)
             if target_region.id in claim_actions_validated:
                 claim_actions_validated[target_region.id].add_claim(action.id)
             else:
@@ -1465,7 +1462,7 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
         for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = Region(adj_region_id)
+            adj_region = Regions.load(adj_region_id)
             if nation_id == adj_region.data.owner_id or adj_region.id in resolved:
                 adj_owned.add(adj_region.id)
 
@@ -1536,7 +1533,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
         for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = Region(adj_region_id)
+            adj_region = Regions.load(adj_region_id)
             if nation_id == adj_region.data.owner_id:
                 adj_owned.add(adj_region.id)
         
@@ -1558,7 +1555,7 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         
         # checking every adjacent region with a seperate BFS because one claim can result in multiple encircled pockets
         for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = Region(adj_region_id)
+            adj_region = Regions.load(adj_region_id)
             
             # skip if already owned by someone
             if adj_region.data.owner_id != "0":
@@ -1703,7 +1700,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
 
             # populate queue with adjacent unclaimed regions
             for adj_region_id in target_region.graph.adjacent_regions:
-                adj_region = Region(adj_region_id)
+                adj_region = Regions.load(adj_region_id)
                 visited.add(adj_region_id)
                 if adj_region.data.owner_id != "0":
                     continue
@@ -1767,7 +1764,7 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
 
         if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to remove {region.improvement.name} in region {action.target_region}. You do not own or control this region.")
@@ -1790,7 +1787,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
 
         if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not own or control this region.")
@@ -2084,7 +2081,7 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
 
         if str(region.unit.owner_id) != action.id:
             nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own this unit.")
@@ -2103,7 +2100,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
 
     for action in actions_list:
 
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         nation = Nations.get(action.id)
         sd_unit = SD.units[action.unit_name]
 
@@ -2325,7 +2322,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        target_region = Region(action.target_region)
+        target_region = Regions.load(action.target_region)
         missile = SD.missiles[action.missile_type]
 
         if (missile.type == "Nuclear Missile" and nation.nuke_count == 0) or (action.missile_type != "Nuclear Missile" and nation.missile_count == 0):
@@ -2390,8 +2387,8 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
             target_region_id = action.target_region_ids.pop()
 
             nation = Nations.get(action.id)
-            current_region = Region(action.current_region_id)
-            target_region = Region(target_region_id)
+            current_region = Regions.load(action.current_region_id)
+            target_region = Regions.load(target_region_id)
 
             # current region checks
             if current_region.unit.name == None or action.id != current_region.unit.owner_id:

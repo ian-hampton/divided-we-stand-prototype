@@ -269,7 +269,7 @@ class GameMaps:
         while count < placement_quota and len(region_id_list) != 0:
             random_region_id = random.choice(region_id_list)
             region_id_list.remove(random_region_id)
-            random_region = Region(random_region_id)
+            random_region = Regions.load(random_region_id)
             
             # improvement cannot be spawned in a region already taken
             if random_region.improvement.name != None:
@@ -278,7 +278,7 @@ class GameMaps:
             # there cannot be other improvements within a radius of two regions
             nearby_improvement_found = False
             for region_id in random_region.get_regions_in_radius(2):
-                temp = Region(region_id)
+                temp = Regions.load(region_id)
                 if temp.improvement.name is not None:
                     nearby_improvement_found = True
                     break
@@ -336,7 +336,7 @@ class GameMaps:
 
         def is_resource_allowed(resource_name) -> bool:
             for adj_id in region.graph.adjacent_regions:
-                adj_region = Region(adj_id)
+                adj_region = Regions.load(adj_id)
                 if adj_region.data.resource == resource_name:
                     return False
             return True
@@ -360,7 +360,7 @@ class GameMaps:
         for resource in priority_resources:
             while len(region_id_list) != 0:
                 random_region_id = random.choice(region_id_list)
-                region = Region(random_region_id)
+                region = Regions.load(random_region_id)
                 # rare resources are not allowed to be adjacent another of its kind
                 if not is_resource_allowed(resource):
                     continue
@@ -372,6 +372,6 @@ class GameMaps:
         # place all other resources
         for resource in general_resources:
             random_region_id = random.choice(region_id_list)
-            region = Region(random_region_id)
+            region = Regions.load(random_region_id)
             region.data.resource = resource
             region_id_list.remove(random_region_id)

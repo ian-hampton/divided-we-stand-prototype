@@ -26,9 +26,10 @@ class Regions(metaclass=RegionsMeta):
     game_id: ClassVar[str] = None
     _data: ClassVar[dict[str, dict]] = None
     _graph: ClassVar[dict[str, dict]] = None
+    _instances: ClassVar[dict[str, "Region"]] = {}
 
     @classmethod
-    def load(cls, game_id: str) -> None:
+    def initialize(cls, game_id: str) -> None:
 
         game = Games.load(game_id)
         
@@ -53,6 +54,18 @@ class Regions(metaclass=RegionsMeta):
         
         with open(regdata_filepath, 'w') as json_file:
             json.dump(cls._data, json_file, indent=4)
+
+    @classmethod
+    def load(cls, region_id: str) -> "Region":
+        """
+        Loads a Region based on the region id. Creates new Region object if one does not already exist.
+        """
+        if region_id not in cls._data:
+            raise Exception(f"Failed to load Region with id {region_id}. Region ID not valid for this game.")
+        
+        if region_id not in cls._instances:
+            cls._instances[region_id] = Regions.load(region_id)
+        return cls._instances[region_id]
     
     @classmethod
     def ids(cls) -> list:
@@ -90,7 +103,7 @@ class Region:
     def owned_adjacent_regions(self) -> list:
         owned_adjacent_list = []
         for region_id in self.graph.adjacent_regions:
-            temp = Region(region_id)
+            temp = Regions.load(region_id)
             if temp.data.owner_id == self.data.owner_id:
                 owned_adjacent_list.append(region_id)
         return owned_adjacent_list
@@ -106,7 +119,7 @@ class Region:
             
             if depth < radius:
                 
-                current_region = Region(current_region_id)
+                current_region = Regions.load(current_region_id)
                 
                 for adjacent_id in current_region.graph.adjacent_regions:
                     if adjacent_id not in visited:
@@ -117,14 +130,14 @@ class Region:
 
     def check_for_adjacent_improvement(self, improvement_names: set) -> bool:
         for region_id in self.owned_adjacent_regions():
-            adjacent_region = Region(region_id)
+            adjacent_region = Regions.load(region_id)
             if adjacent_region.improvement.name in improvement_names:
                 return True
         return False
     
     def check_for_adjacent_unit(self, unit_names: set, desired_id: str) -> bool:
         for region_id in self.graph.adjacent_regions:
-            adjacent_region = Region(region_id)
+            adjacent_region = Regions.load(region_id)
             if adjacent_region.unit.name is None:
                 continue
             if desired_id != adjacent_region.unit.owner_id:
@@ -152,7 +165,7 @@ class Region:
                 continue
             visited.add(current_region_id)
 
-            current_region = Region(current_region_id)
+            current_region = Regions.load(current_region_id)
 
             if (
                 current_region.data.owner_id == self.unit.owner_id    # region must be owned by the unit owner

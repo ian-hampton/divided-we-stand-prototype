@@ -338,7 +338,7 @@ class Desertion(Event):
         
         # check all regions owned by targets
         for region_id in Regions:
-            region = Region(region_id)
+            region = Regions.load(region_id)
             if region.unit.owner_id not in self.targets:
                 continue
             defection_roll = random.randint(1, 10)
@@ -526,7 +526,7 @@ class LostNuclearWeapons(Event):
                     if silo_location_id in set(Regions.ids()):
                         valid_region_id = True
                 nation.improvement_counts["Missile Silo"] += 1
-                region = Region(valid_region_id)
+                region = Regions.load(valid_region_id)
                 region.improvement.set("Missile Silo")
                 nation.nuke_count += 3
             
@@ -704,7 +704,7 @@ class PowerPlantMeltdown(Event):
         meltdown_region_id = self.targets.pop()
 
         nation = Nations.get(str(meltdown_region_id))
-        region = Region(meltdown_region_id)
+        region = Regions.load(meltdown_region_id)
 
         nation.improvement_counts["Nuclear Power Plant"] -= 1
         region.improvement.clear()
@@ -1082,7 +1082,7 @@ class ForeignInvasion(Event):
         while True:
             
             invasion_point_id = random.choice(region_id_list)
-            region = Region(invasion_point_id)
+            region = Regions.load(invasion_point_id)
             is_near_capital = any(Region(adj_id).improvement.name == "Capital" for adj_id in region.graph.adjacent_regions)
             if region.graph.is_edge and region.improvement.name != "Capital" and not is_near_capital:
                 break
@@ -1111,7 +1111,7 @@ class ForeignInvasion(Event):
                 combatant.justification = "NULL"
 
         unit_name = self._foreign_invasion_determine_unit()
-        invasion_point = Region(invasion_point_id, self.game_id)    #!!!
+        invasion_point = Regions.load(invasion_point_id, self.game_id)    #!!!
         self._foreign_invasion_initial_spawn(invasion_point_id, unit_name)
         for adj_id in invasion_point.graph.adjacent_regions:
             self._foreign_invasion_initial_spawn(adj_id, unit_name)
@@ -1193,7 +1193,7 @@ class ForeignInvasion(Event):
     
     def _foreign_invasion_initial_spawn(self, region_id: str, unit_name: str) -> None:
 
-        region = Region(region_id)
+        region = Regions.load(region_id)
 
         if region.unit.name is not None:
             # remove old unit
@@ -1235,7 +1235,7 @@ class ForeignInvasion(Event):
             adjacent_region_id = adjacency_list.pop(index)
 
             # get data from region
-            region = Region(adjacent_region_id)
+            region = Regions.load(adjacent_region_id)
             candidate_region_priority = 0
             candidate_region_health = 0
             
@@ -1326,7 +1326,7 @@ class Pandemic(Event):
         self.closed_borders = []
         origin_region_id = random.choice(Regions.ids())
         
-        region = Region(origin_region_id)
+        region = Regions.load(origin_region_id)
         region.data.infection += 1
         
         self.state = 1
@@ -1363,11 +1363,11 @@ class Pandemic(Event):
 
             # conduct spread roles
             for region_id in infected_regions:
-                region = Region(region_id)
+                region = Regions.load(region_id)
                 if region.data.infection == 0:
                     continue
                 for adjacent_region_id in region.graph.adjacent_regions:
-                    adjacent_region = Region(adjacent_region_id)
+                    adjacent_region = Regions.load(adjacent_region_id)
                     adjacent_owner_id = adjacent_region.data.owner_id
                     # spread only to regions that are not yet infected
                     if adjacent_region.data.infection != 0:
