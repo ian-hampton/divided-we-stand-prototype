@@ -45,3 +45,4 @@ app/static/clipboards.png
 app/static/handshake.png
 /.vscode
 /scenarios/standard/__pycache__
+/app/alliance/__pycache__

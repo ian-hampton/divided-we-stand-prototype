@@ -66,7 +66,7 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def create(cls, main_attacker_id: str, main_defender_id: str, war_justification: str, war_claims = []) -> None:
         
-        from app.alliance import Alliances
+        from app.alliance.alliances import Alliances
         from app.truce import Truces
         from app.nation import Nations
 

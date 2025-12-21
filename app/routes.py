@@ -482,7 +482,7 @@ def player_route(full_game_id, player_id):
 def wars(full_game_id):
     
     from app.nation import Nations
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
     from app.war import Wars
 
     game = Games.load(full_game_id)
@@ -917,7 +917,7 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
     from app.nation import Nations
     from app.notifications import Notifications
     from app.truce import Truces
@@ -1056,7 +1056,7 @@ def announcements(full_game_id):
 @main.route('/<full_game_id>/alliances')
 def alliances(full_game_id):
 
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
     from app.nation import Nations
 
     SD.load(full_game_id)
@@ -1142,7 +1142,7 @@ def get_controlmap(full_game_id):
 @main.route('/<full_game_id>/resolve', methods=['POST'])
 def turn_resolution_new(full_game_id):
 
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
     from app.region import Regions
     from app.nation import Nations
     from app.notifications import Notifications

@@ -14,7 +14,7 @@ from app import core
 from app import palette
 from app.scenario import ScenarioData as SD
 from app.gamedata import Games, GameStatus
-from app.alliance import Alliances
+from app.alliance.alliances import Alliances
 from app.region import Region, Regions
 from app.nation import Nation, Nations
 from app.notifications import Notifications

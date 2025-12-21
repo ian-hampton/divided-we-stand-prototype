@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 from app.gamedata import Games
 from app.scenario import ScenarioData as SD
-from app.alliance import Alliances
+from app.alliance.alliances import Alliances
 from app.nation import Nation, Nations
 from app.notifications import Notifications
 from app.region import Region, Regions
@@ -1170,7 +1170,7 @@ def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, cur
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
 
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
 
     for action in actions_list:
         
@@ -1241,7 +1241,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
     
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
 
     for action in actions_list:
 
@@ -1254,7 +1254,7 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
 
 def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
     
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
 
     kick_actions_tally = defaultdict(lambda: defaultdict(int))
     
@@ -1288,7 +1288,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
 
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
 
     alliance_creation_dict = {}
     
@@ -1333,7 +1333,7 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
 
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
 
-    from app.alliance import Alliances
+    from app.alliance.alliances import Alliances
 
     for action in actions_list:
         

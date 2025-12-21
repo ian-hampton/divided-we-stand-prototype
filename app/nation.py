@@ -851,7 +851,7 @@ class Nation:
 
     def calculate_alliance_capacity(self) -> tuple[int, int]:
 
-        from app.alliance import Alliances
+        from app.alliance.alliances import Alliances
 
         capacity_used = 0
         for alliance in Alliances:

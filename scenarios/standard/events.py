@@ -4,7 +4,7 @@ import random
 from app import core
 from app.gamedata import Games
 from app import actions
-from app.alliance import Alliances
+from app.alliance.alliances import Alliances
 from app.region import Region, Regions
 from app.nation import Nation, Nations
 from app.notifications import Notifications
