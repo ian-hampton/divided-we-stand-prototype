@@ -5,7 +5,8 @@ from collections import defaultdict
 from app import core
 from app.scenario import ScenarioData as SD
 from app.alliance.alliances import Alliances
-from app.nation import Nation, Nations
+from app.nation.nation import Nation
+from app.nation.nations import Nations
 from app.region import Regions
 from app.notifications import Notifications
 from app.region import Region, Regions

@@ -2,7 +2,8 @@ import random
 import copy
 
 from app.scenario import ScenarioData as SD
-from app.nation import Nation, Nations
+from app.nation.nation import Nation
+from app.nation.nations import Nations
 from app.region import Region, Regions
 
 # ECONOMIC HELPER FUNCTIONS

@@ -6,7 +6,8 @@ from app.gamedata import Games
 from app import actions
 from app.alliance.alliances import Alliances
 from app.region import Region, Regions
-from app.nation import Nation, Nations
+from app.nation.nation import Nation
+from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications
 from app.war import Wars
 
@@ -418,8 +419,8 @@ class ForeignAid(Event):
 
     def activate(self):
         
-        for record_name in Nations.LEADERBOARD_RECORD_NAMES:
-            top_three = Nations.get_top_three(record_name)
+        for record in LeaderboardRecordNames:
+            top_three = Nations.get_top_three(record)
             for nation_name, score in top_three:
                 if score != 0 and nation_name not in self.targets:
                     self.targets.append(nation_name)

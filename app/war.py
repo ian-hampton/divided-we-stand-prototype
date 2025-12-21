@@ -7,7 +7,7 @@ from typing import ClassVar, Iterator, Tuple
 from app import core
 from app.scenario import ScenarioData as SD
 from app.gamedata import Games
-from app.nation import Nation
+from app.nation.nation import Nation
 
 
 class WarsMeta(type):
@@ -68,7 +68,7 @@ class Wars(metaclass=WarsMeta):
         
         from app.alliance.alliances import Alliances
         from app.truce import Truces
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         game = Games.load(cls.game_id)
         main_attacker = Nations.get(main_attacker_id)
@@ -115,7 +115,7 @@ class Wars(metaclass=WarsMeta):
 
         # call in main attacker allies
         # possible allies: puppet states
-        puppet_states = main_attacker.get_subjects("Puppet State")
+        puppet_states = main_attacker.get_subjects("Puppet State", list(Nations))
         possible_allies = set(puppet_states)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
@@ -126,7 +126,7 @@ class Wars(metaclass=WarsMeta):
 
         # call in main defender allies
         # possible allies: puppet states, defensive pacts, overlord
-        puppet_states = main_defender.get_subjects("Puppet State")
+        puppet_states = main_defender.get_subjects("Puppet State", list(Nations))
         defense_allies = Alliances.allies(main_defender.name, "Defense Pact")
         ally_player_ids = set(puppet_states) | set(defense_allies)
         if main_defender.status != "Independent Nation":
@@ -251,7 +251,7 @@ class Wars(metaclass=WarsMeta):
     def add_warscore_from_occupations(cls) -> None:
         
         from app.region import Regions
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         for region in Regions:
             
@@ -527,7 +527,7 @@ class War:
 
     def add_missing_justifications(self) -> None:
         
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         for combatant_id in self.combatants:
             
@@ -563,7 +563,7 @@ class War:
 
     def calculate_score_threshold(self) -> tuple:
         
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         # initial win threshold is a 100 point difference
         attacker_threshold = 100
@@ -598,7 +598,7 @@ class War:
 
     def end_conflict(self, outcome: str) -> None:
         
-        from app.nation import Nations
+        from app.nation.nations import Nations
         from app.region import Regions
         from app.truce import Truces
         game = Games.load(Wars.game_id)
@@ -662,7 +662,7 @@ class War:
 
     def _resolve_war_justification(self, nation_id: str):
         
-        from app.nation import Nations
+        from app.nation.nations import Nations
         from app.region import Regions
         game = Games.load(Wars.game_id)
         
@@ -779,7 +779,7 @@ class Combatant:
         self.id: str = self._data["id"]
         self.role: str = self._data["role"]
 
-        from app.nation import Nations
+        from app.nation.nations import Nations
         nation = Nations.get(self.id)
         self.name = nation.name
         # TODO - restructure Combatant and Nation to both pull nationattribute sfrom a parent class

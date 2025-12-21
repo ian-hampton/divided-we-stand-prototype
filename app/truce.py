@@ -99,7 +99,7 @@ class Truce:
         return True if self.end_turn > game.turn else False
 
     def __str__(self):
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         signatories_list = list(self.signatories.keys())
         

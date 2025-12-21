@@ -10,7 +10,7 @@ class AlliancesMeta(type):
 
     def __iter__(cls) -> Iterator["Alliance"]:
         for alliance_name in cls._data:
-            yield Alliance(alliance_name)
+            yield Alliance(alliance_name, cls._data[alliance_name], cls.game_id)
 
     def __len__(cls):
         return len(cls._data) if cls._data else 0
@@ -86,7 +86,7 @@ class Alliances(metaclass=AlliancesMeta):
     @classmethod
     def allies(cls, nation_name: str, type_to_search = "ALL") -> list:
         
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         allies_set = set()
         for alliance in cls:

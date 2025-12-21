@@ -46,3 +46,4 @@ app/static/handshake.png
 /.vscode
 /scenarios/standard/__pycache__
 /app/alliance/__pycache__
+/app/nation/__pycache__

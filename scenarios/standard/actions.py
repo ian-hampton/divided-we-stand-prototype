@@ -5,7 +5,7 @@ import importlib
 from app import core
 from app.gamedata import Games
 from app.region import Region
-from app.nation import Nations
+from app.nation.nations import Nations
 from app.notifications import Notifications
 from app.war import Wars
 

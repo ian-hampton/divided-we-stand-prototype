@@ -2,7 +2,7 @@ import random
 
 from app.scenario import ScenarioData as SD
 from app.region import Region, Regions
-from app.nation import Nation
+from app.nation.nation import Nation
 from app.war import War, Wars
 
 class Strike:

@@ -7,7 +7,8 @@ from typing import List, Tuple
 from app.gamedata import Games
 from app.scenario import ScenarioData as SD
 from app.alliance.alliances import Alliances
-from app.nation import Nation, Nations
+from app.nation.nation import Nation
+from app.nation.nations import Nations
 from app.notifications import Notifications
 from app.region import Region, Regions
 from app.truce import Truces

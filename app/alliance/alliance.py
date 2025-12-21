@@ -77,7 +77,7 @@ class Alliance:
         self.current_members[nation_name] = game.turn
 
     def remove_member(self, nation_name: str) -> None:
-        from app.nation import Nations
+        from app.nation.nations import Nations
         from app.truce import Truces
         
         game = Games.load(self._game_id)
@@ -96,7 +96,7 @@ class Alliance:
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         if not self.is_active:
             return 0.0, None

@@ -9,7 +9,7 @@ from app.gamedata import Games
 from app.scenario import ScenarioData as SD
 from app.map import GameMaps
 from app.region import Regions
-from app.nation import Nations
+from app.nation.nations import Nations
 
 GAME_ID = "game1"
 
