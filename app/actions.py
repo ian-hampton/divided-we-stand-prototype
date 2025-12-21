@@ -11,7 +11,7 @@ from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications
 from app.region import Region, Regions
-from app.truce import Truces
+from app.truce.truces import Truces
 from app.war import Wars
 from app.missile_strike import *
 

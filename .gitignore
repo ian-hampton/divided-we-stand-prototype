@@ -48,3 +48,4 @@ app/static/handshake.png
 /app/alliance/__pycache__
 /app/nation/__pycache__
 /app/game/__pycache__
+/app/truce/__pycache__

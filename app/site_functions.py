@@ -19,7 +19,7 @@ from app.region import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications
-from app.truce import Truces
+from app.truce.truces import Truces
 from app.war import Wars
 from app.map import GameMaps
 from app import actions

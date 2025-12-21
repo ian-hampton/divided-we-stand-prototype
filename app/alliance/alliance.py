@@ -78,7 +78,7 @@ class Alliance:
 
     def remove_member(self, nation_name: str) -> None:
         from app.nation.nations import Nations
-        from app.truce import Truces
+        from app.truce.truces import Truces
         
         game = Games.load(self._game_id)
 

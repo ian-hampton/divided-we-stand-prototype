@@ -273,7 +273,7 @@ def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
 
 def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
 
-    from app.truce import Truces
+    from app.truce.truces import Truces
     game = Games.load(game_id)
 
     for action in actions_list:

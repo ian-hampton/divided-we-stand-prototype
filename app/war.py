@@ -67,7 +67,7 @@ class Wars(metaclass=WarsMeta):
     def create(cls, main_attacker_id: str, main_defender_id: str, war_justification: str, war_claims = []) -> None:
         
         from app.alliance.alliances import Alliances
-        from app.truce import Truces
+        from app.truce.truces import Truces
         from app.nation.nations import Nations
 
         game = Games.load(cls.game_id)
@@ -600,7 +600,7 @@ class War:
         
         from app.nation.nations import Nations
         from app.region import Regions
-        from app.truce import Truces
+        from app.truce.truces import Truces
         game = Games.load(Wars.game_id)
         
         # resolve war justifications
