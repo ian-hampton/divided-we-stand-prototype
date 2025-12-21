@@ -44,6 +44,7 @@ class Regions(metaclass=RegionsMeta):
             cls._data = json.load(f)
         with open(graph_filepath, 'r') as f:
             cls._graph = json.load(f)
+        cls._instances.clear()
     
     @classmethod
     def save(cls) -> None:
