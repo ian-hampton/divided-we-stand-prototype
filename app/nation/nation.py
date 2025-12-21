@@ -1,7 +1,7 @@
 import os
 from collections.abc import Generator
 
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 
 class Nation:
     

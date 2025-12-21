@@ -49,3 +49,4 @@ app/static/handshake.png
 /app/nation/__pycache__
 /app/game/__pycache__
 /app/truce/__pycache__
+/app/scenario/__pycache__

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
 from app.game.games import Games
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 
 class RegionsMeta(type):

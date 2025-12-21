@@ -13,7 +13,7 @@ from app import site_functions
 from app import palette
 from app.game.games import Games
 from app.game.game import GameStatus
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 

@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from app.game.games import Games
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 
 class Alliance:
     

@@ -4,7 +4,7 @@ import importlib
 
 from app.game.games import Games
 from app.game.game import GameStatus
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 from app.notifications import Notifications
 
 def trigger_event(game_id: str) -> None:

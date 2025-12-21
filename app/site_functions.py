@@ -11,7 +11,7 @@ from operator import itemgetter
 from collections import defaultdict
 
 from app import palette
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 from app.game.games import Games
 from app.game.game import GameStatus
 from app.alliance.alliances import Alliances

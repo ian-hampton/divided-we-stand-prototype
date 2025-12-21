@@ -5,7 +5,7 @@ from collections import defaultdict, deque
 from typing import List, Tuple
 
 from app.game.games import Games
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
 from app.nation.nation import Nation
 from app.nation.nations import Nations

@@ -1,7 +1,7 @@
 import random
 
 from app.game.games import Games
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 from app import actions
 from app.alliance.alliances import Alliances
 from app.region import Regions

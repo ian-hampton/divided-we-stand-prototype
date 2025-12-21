@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 from app import palette
 from app.game.games import Games
 from app.game.game import GameStatus
-from app.scenario import ScenarioInterface as SD
+from app.scenario.scenario import ScenarioInterface as SD
 from app.region import Region, Regions
 from app.nation.nations import Nations
 
