@@ -1,6 +1,7 @@
 import random
 
 from app.game.games import Games
+from app.scenario import ScenarioInterface as SD
 from app import actions
 from app.alliance.alliances import Alliances
 from app.region import Regions
@@ -51,8 +52,6 @@ class Event:
         """
         Returns updated playerdata_List and a bool that is True if the research was valid, False otherwise.
         """
-
-        from app.scenario import ScenarioData as SD
 
         prereq = SD.technologies[research_name].prerequisite
         if prereq is not None and prereq not in nation.completed_research:
@@ -1534,8 +1533,6 @@ def load_event(game_id: str, event_name: str, event_data: dict | None) -> any:
         any: An event object corresponding to the event name, or raises an exception if none found.
     """
 
-    from app.scenario import ScenarioData as SD
-
     events = {
         "Assassination": Assassination,
         "Corruption Scandal": CorruptionScandal,
@@ -1591,7 +1588,6 @@ def _is_first_event(game_id: str) -> bool:
 
 def _no_major_events(game_id: str) -> bool:
 
-    from app.scenario import ScenarioData as SD
     game = Games.load(game_id)
     
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)

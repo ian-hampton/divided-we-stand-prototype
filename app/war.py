@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
 from app import core
-from app.scenario import ScenarioData as SD
+from app.scenario import ScenarioInterface as SD
 from app.game.games import Games
 from app.nation.nation import Nation
 

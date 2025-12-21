@@ -1,7 +1,7 @@
 import random
 import copy
 
-from app.scenario import ScenarioData as SD
+from app.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.region import Region, Regions

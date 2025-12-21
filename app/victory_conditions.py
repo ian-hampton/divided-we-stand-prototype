@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from app.scenario import ScenarioData as SD
+from app.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
 from app.nation.nation import Nation
 from app.nation.nations import Nations

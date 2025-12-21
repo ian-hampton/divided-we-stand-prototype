@@ -1,6 +1,7 @@
 import importlib
 
 from app.game.games import Games
+from app.scenario import ScenarioInterface as SD
 from app.region import Regions
 from app.nation.nations import Nations
 
@@ -312,8 +313,6 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
 
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 
-    from app.scenario import ScenarioData as SD
-
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -342,8 +341,6 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
     game.active_events["Pandemic"] = event.export()
 
 def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
 
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
@@ -437,8 +434,6 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
 
 def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
 
-    from app.scenario import ScenarioData as SD
-    
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -468,8 +463,6 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
 
 def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
 
-    from app.scenario import ScenarioData as SD
-    
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -498,8 +491,6 @@ def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseA
     game.active_events["Pandemic"] = event.export()
 
 def resolve_outsource_technology_actions(game_id: str, actions_list: list[OutsourceTechnologyAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
 
     for action in actions_list:
 

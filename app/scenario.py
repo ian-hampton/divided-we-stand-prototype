@@ -119,7 +119,7 @@ class SD_VictoryCondition:
     def __init__(self):
 
         filename = "victory"
-        filepath = f"scenarios/{ScenarioData.scenario}/{filename}.json"
+        filepath = f"scenarios/{ScenarioInterface.scenario}/{filename}.json"
         
         self.d = {}
         with open(filepath, 'r') as file:
@@ -189,11 +189,11 @@ class ScenarioDataFile(Generic[T]):
         try:
             class_name = cls.__name__
             self.filename = ClassNameToFileName[class_name]
-            filepath = f"scenarios/{ScenarioData.scenario}/{self.filename}.json"
+            filepath = f"scenarios/{ScenarioInterface.scenario}/{self.filename}.json"
             with open(filepath, 'r') as file:
                 self.file = json.load(file)
         except:
-            raise FileNotFoundError(f"Error: {ScenarioData.scenario} scenario is missing {self.filename} file.")
+            raise FileNotFoundError(f"Error: {ScenarioInterface.scenario} scenario is missing {self.filename} file.")
 
     def __iter__(self):
         for name in self.file:
@@ -216,7 +216,7 @@ class ScenarioDataFile(Generic[T]):
         return set(self.file.keys())
 
 @dataclass
-class ScenarioData:
+class ScenarioInterface:
     """
     Simple read-only class for fetching scenario data on demand.
     """

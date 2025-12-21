@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
 from app.game.games import Games
+from app.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 
 class RegionsMeta(type):
@@ -536,8 +537,6 @@ class ImprovementData:
         return True if self.health not in [0, 99] else False
 
     def _load_attributes_from_game_files(self) -> None:
-
-        from app.scenario import ScenarioData as SD
         
         if self.name is not None:
             self.victory_damage = SD.improvements[self.name].victory_damage
@@ -606,8 +605,6 @@ class UnitData:
         self._data["ownerID"] = new_id
 
     def _load_attributes_from_game_files(self) -> None:
-    
-        from app.scenario import ScenarioData as SD
 
         if self.name is not None:
             self.type = SD.units[self.name].type
