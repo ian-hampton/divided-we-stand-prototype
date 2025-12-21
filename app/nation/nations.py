@@ -299,13 +299,23 @@ class Nations(metaclass=NationsMeta):
             nation.records.net_exports.append(int(net_exports))
 
     @classmethod
-    def get_top_three(cls, record: LeaderboardRecordNames) -> list[Tuple[str, float|int]]:
-
+    def get_top_three(cls, record: LeaderboardRecordNames | str) -> list[Tuple[str, float|int]]:
+        """
+        Returns list of top 3 nations for a particular record.
+        Can use either a record name enum or a string corresponding to a record name to determine this.
+        """
         data = {}
-        
+
         for nation in cls:
-            record_data: list = getattr(nation.records, record.value)
-            if record is LeaderboardRecordNames.NET_INCOME:
+            
+            if isinstance(record, LeaderboardRecordNames):
+                record_data: list = getattr(nation.records, record.value)
+                is_net_income = record is LeaderboardRecordNames.NET_INCOME
+            else:
+                record_data: list = getattr(nation.records, record)
+                is_net_income = record == "net_income"
+            
+            if is_net_income:
                 data[nation.name] = float(record_data[-1])
             else:
                 data[nation.name] = record_data[-1]
