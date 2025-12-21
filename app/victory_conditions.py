@@ -157,7 +157,7 @@ def new_empire(nation: Nation) -> bool:
 def reconstruction_effort(nation: Nation) -> bool:
 
     for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.development >= nation.records.development:
+        if other_nation.name != nation.name and other_nation.records.development[-1] >= nation.records.development[-1]:
             return False
 
     return True
@@ -200,7 +200,7 @@ def energy_focus(nation: Nation) -> bool:
     
     # reset streak if failed to be first
     for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.energy_income >= nation.records.energy_income:
+        if other_nation.name != nation.name and other_nation.records.energy_income[-1] >= nation.records.energy_income[-1]:
             nation.tags["Energy Focus"]["Streak"] = 0
             return False
         
@@ -228,7 +228,7 @@ def industrial_focus(nation: Nation) -> bool:
     
     # reset streak if failed to be first
     for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.industrial_income >= nation.records.industrial_income:
+        if other_nation.name != nation.name and other_nation.records.industrial_income[-1] >= nation.records.industrial_income[-1]:
             nation.tags["Industrial Focus"]["Streak"] = 0
             return False
         
@@ -323,7 +323,7 @@ def strong_trade_agreement(nation: Nation) -> bool:
 
 def sphere_of_influence(nation: Nation) -> bool:
 
-    if nation.records.agenda_count >= 8:
+    if nation.records.agenda_count[-1] >= 8:
         return True
 
     return False

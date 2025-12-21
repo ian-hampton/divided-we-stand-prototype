@@ -394,7 +394,7 @@ def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegio
             continue
 
         nation.update_stockpile("Dollars", -5)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         nation.action_log.append(f"Used Inspect action for 5 dollars. Region {action.target_region} has an infection score of {region.data.infection}.")
 
 def resolve_quarantine_create_actions(game_id: str, actions_list: list[QuarantineCreateAction]) -> None:
@@ -415,7 +415,7 @@ def resolve_quarantine_create_actions(game_id: str, actions_list: list[Quarantin
             continue
 
         nation.update_stockpile("Political Power", -1)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         region.data.quarantine = True
         nation.action_log.append(f"Quarantined {action.target_region} for 1 political power.")
 
@@ -436,7 +436,7 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
             continue
 
         nation.update_stockpile("Political Power", -1)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         region.data.quarantine = False
         nation.action_log.append(f"Ended quarantine {action.target_region} for 1 political power.")
 
@@ -554,7 +554,7 @@ def resolve_military_reinforcements_actions(game_id: str, actions_list: list[Mil
 
         for region_id in action.target_region_ids:
             
-            region = Region(region_id)
+            region = Regions.load(region_id)
             
             if region.data.owner_id != action.id:
                 nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. You do not own that region.")

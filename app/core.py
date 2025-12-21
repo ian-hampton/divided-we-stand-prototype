@@ -192,7 +192,7 @@ def search_and_destroy(player_id: str, target_improvement: str) -> str:
     # randomly select one of the candidate regions
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    target_region = Region(chosen_region_id)
+    target_region = Regions.load(chosen_region_id)
     target_region.improvement.clear()
     
     return chosen_region_id
@@ -212,7 +212,7 @@ def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str
     # there should always be at least one candidate region because we have already checked that the target unit exists
     random.shuffle(candidate_region_ids)
     chosen_region_id = candidate_region_ids.pop()
-    target_region = Region(chosen_region_id)
+    target_region = Regions.load(chosen_region_id)
     victim = copy.deepcopy(target_region.unit.name)
     target_region.unit.clear()
 

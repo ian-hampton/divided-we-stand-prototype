@@ -1158,7 +1158,7 @@ def turn_resolution_new(full_game_id):
         case GameStatus.REGION_SELECTION:
             
             Nations.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
 
             contents_dict = {}
             for nation in Nations:
@@ -1177,7 +1177,7 @@ def turn_resolution_new(full_game_id):
             
             Alliances.load(full_game_id)
             Nations.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
 
             contents_dict = {}
             for nation in Nations:
@@ -1198,7 +1198,7 @@ def turn_resolution_new(full_game_id):
         case GameStatus.ACTIVE:
             
             Alliances.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
             Nations.load(full_game_id)
             Notifications.initialize(full_game_id)
             Truces.load(full_game_id)
@@ -1228,7 +1228,7 @@ def turn_resolution_new(full_game_id):
         case GameStatus.ACTIVE_PENDING_EVENT:
             
             Alliances.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
             Nations.load(full_game_id)
             Notifications.initialize(full_game_id)
             Truces.load(full_game_id)

@@ -15,7 +15,7 @@ GAME_ID = "game1"
 
 game = Games.load(GAME_ID)
 SD.load(GAME_ID)
-Regions.load(GAME_ID)
+Regions.initialize(GAME_ID)
 Nations.load(GAME_ID)
 
 print(f"Manually updating maps for game {GAME_ID}...")

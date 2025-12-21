@@ -1,7 +1,7 @@
 import random
 
 from app.scenario import ScenarioData as SD
-from app.region import Region
+from app.region import Region, Regions
 from app.nation import Nation
 from app.war import War, Wars
 
@@ -86,7 +86,7 @@ class StandardStrike(Strike):
         for name, data in possible_defenders.items():
             nearby_region_ids = self.target_region.get_regions_in_radius(data["range"])
             for temp_region_id in nearby_region_ids:
-                temp_region = Region(temp_region_id)
+                temp_region = Regions.load(temp_region_id)
                 if temp_region.improvement.name == name:
                     if data["value"] < defender_value and temp_region.data.owner_id == self.target_nation.id and temp_region.data.occupier_id == "0":
                         defender_name = name
@@ -221,7 +221,7 @@ class NuclearStrike(Strike):
         for name, data in possible_defenders.items():
             nearby_region_ids = self.target_region.get_regions_in_radius(data["range"])
             for temp_region_id in nearby_region_ids:
-                temp_region = Region(temp_region_id)
+                temp_region = Regions.load(temp_region_id)
                 if temp_region.improvement.name == name:
                     if data["value"] < defender_value and temp_region.data.owner_id == self.target_nation.id and temp_region.data.occupier_id == "0":
                         defender_name = name
