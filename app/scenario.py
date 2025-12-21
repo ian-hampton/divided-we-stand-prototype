@@ -251,7 +251,7 @@ class ScenarioData:
 
     @classmethod
     def _get_scenario_name(cls) -> str:
-        from app.gamedata import Games
+        from app.game.games import Games
         if cls.game_id != "TBD":
             game = Games.load(cls.game_id)
             return game.info.scenario.lower()

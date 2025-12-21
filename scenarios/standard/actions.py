@@ -1,13 +1,8 @@
-import csv
-import json
 import importlib
 
-from app import core
-from app.gamedata import Games
-from app.region import Region
+from app.game.games import Games
+from app.region import Regions
 from app.nation.nations import Nations
-from app.notifications import Notifications
-from app.war import Wars
 
 class HostPeaceTalksAction:
 

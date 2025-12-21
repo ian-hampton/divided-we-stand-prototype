@@ -1,11 +1,9 @@
-import json
 import random
 
-from app import core
-from app.gamedata import Games
+from app.game.games import Games
 from app import actions
 from app.alliance.alliances import Alliances
-from app.region import Region, Regions
+from app.region import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications

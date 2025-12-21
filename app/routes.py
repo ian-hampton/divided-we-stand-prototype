@@ -11,8 +11,9 @@ from queue import PriorityQueue
 
 from app import site_functions
 from app import palette
+from app.game.games import Games
+from app.game.game import GameStatus
 from app.scenario import ScenarioData as SD
-from app.gamedata import Games, GameStatus
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 

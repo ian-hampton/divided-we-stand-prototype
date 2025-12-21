@@ -47,3 +47,4 @@ app/static/handshake.png
 /scenarios/standard/__pycache__
 /app/alliance/__pycache__
 /app/nation/__pycache__
+/app/game/__pycache__

@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from app.gamedata import Games
+from app.game.games import Games
 from app.scenario import ScenarioData as SD
 
 class Alliance:

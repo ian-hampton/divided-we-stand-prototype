@@ -6,7 +6,7 @@ from typing import ClassVar, Iterator, Tuple
 
 from app import core
 from app.scenario import ScenarioData as SD
-from app.gamedata import Games
+from app.game.games import Games
 from app.nation.nation import Nation
 
 

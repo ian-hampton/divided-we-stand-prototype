@@ -4,10 +4,10 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 
 from app import palette
-from app.gamedata import Games, GameStatus
+from app.game.games import Games
+from app.game.game import GameStatus
 from app.scenario import ScenarioData as SD
 from app.region import Region, Regions
-from app.nation.nation import Nation
 from app.nation.nations import Nations
 
 MAP_OPACITY = 0.75

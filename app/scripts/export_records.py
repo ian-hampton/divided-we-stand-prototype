@@ -7,7 +7,7 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.append(parent_dir)
 os.chdir(parent_dir)
 
-from app.gamedata import Games
+from app.game.games import Games
 from app.nation.nations import Nations, LeaderboardRecordNames
 
 GAME_ID = "game1"

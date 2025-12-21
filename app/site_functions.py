@@ -10,12 +10,12 @@ from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
 
-from app import core
 from app import palette
 from app.scenario import ScenarioData as SD
-from app.gamedata import Games, GameStatus
+from app.game.games import Games
+from app.game.game import GameStatus
 from app.alliance.alliances import Alliances
-from app.region import Region, Regions
+from app.region import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications

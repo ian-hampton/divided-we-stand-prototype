@@ -5,7 +5,7 @@ from collections import deque
 from dataclasses import dataclass
 from typing import ClassVar, Iterator
 
-from app.gamedata import Games
+from app.game.games import Games
 from app.nation.nation import Nation
 
 class RegionsMeta(type):

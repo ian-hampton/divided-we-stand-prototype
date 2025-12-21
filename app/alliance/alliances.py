@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
-from app.gamedata import Games
+from app.game.games import Games
 from .alliance import Alliance
 
 class AlliancesMeta(type):

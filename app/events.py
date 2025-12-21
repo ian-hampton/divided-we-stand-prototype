@@ -2,7 +2,8 @@ import copy
 import random
 import importlib
 
-from app.gamedata import Games, GameStatus
+from app.game.games import Games
+from app.game.game import GameStatus
 from app.scenario import ScenarioData as SD
 from app.notifications import Notifications
 
