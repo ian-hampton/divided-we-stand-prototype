@@ -3,6 +3,7 @@ import random
 import importlib
 
 from app.gamedata import Games, GameStatus
+from app.scenario import ScenarioData as SD
 from app.notifications import Notifications
 
 def trigger_event(game_id: str) -> None:
@@ -15,8 +16,6 @@ def trigger_event(game_id: str) -> None:
     Returns:
         None
     """
-
-    from app.scenario import ScenarioData as SD
     
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
@@ -49,8 +48,6 @@ def trigger_event(game_id: str) -> None:
 
 def resolve_current_event(game_id: str) -> None:
     
-    from app.scenario import ScenarioData as SD
-    
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -71,8 +68,6 @@ def resolve_current_event(game_id: str) -> None:
             game.inactive_events.append(event_name)
 
 def resolve_active_events(game_id: str, actions_dict=None):
-    
-    from app.scenario import ScenarioData as SD
     
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
@@ -98,8 +93,6 @@ def resolve_active_events(game_id: str, actions_dict=None):
 
 def filter_events(game_id: str):
     
-    from app.scenario import ScenarioData as SD
-
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 

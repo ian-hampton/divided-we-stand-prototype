@@ -2,7 +2,8 @@ import random
 from typing import Union, Tuple
 
 from app.region import Region
-from app.nation import Nation, Nations
+from app.nation import Nations
+from app.war import Wars
 
 def unit_vs_unit(attacker_region: Region, defender_region: Region) -> None:
 
@@ -15,7 +16,6 @@ def unit_vs_unit_standard(attacker_region: Region, defender_region: Region) -> N
     defender = Nations.get(defender_region.unit.owner_id)
 
     # get war data
-    from app.war import Wars
     war_name = Wars.get_war_name(attacker.id, defender.id)
     war = Wars.get(war_name)
     attacker_cd = war.get_combatant(attacker.id)
@@ -138,7 +138,6 @@ def unit_vs_improvement_standard(attacker_region: Region, defender_region: Regio
     defender = Nations.get(defender_region.data.owner_id)
 
     # get information from wardata
-    from app.war import Wars
     war_name = Wars.get_war_name(attacker.id, defender.id)
     war = Wars.get(war_name)
     attacker_cd = war.get_combatant(attacker.id)
@@ -255,7 +254,6 @@ def unit_vs_improvement_sf(attacker_region: Region, defender_region: Region) -> 
     defender = Nations.get(defender_region.data.owner_id)
 
     # get war data
-    from app.war import Wars
     war_name = Wars.get_war_name(attacker.id, defender.id)
     war = Wars.get(war_name)
     attacker_cd = war.get_combatant(attacker.id)

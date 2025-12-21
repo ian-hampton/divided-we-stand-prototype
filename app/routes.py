@@ -10,8 +10,6 @@ from datetime import datetime
 from queue import PriorityQueue 
 
 from app import site_functions
-from app import core
-from app import events
 from app import palette
 from app.scenario import ScenarioData as SD
 from app.gamedata import Games, GameStatus
@@ -1150,6 +1148,7 @@ def turn_resolution_new(full_game_id):
     from app.notifications import Notifications
     from app.truce import Truces
     from app.war import Wars
+    from app import events
 
     game = Games.load(full_game_id)
     SD.load(full_game_id)
@@ -1168,6 +1167,7 @@ def turn_resolution_new(full_game_id):
                 contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
             
             site_functions.resolve_stage1_processing(full_game_id, contents_dict)
+            
             Nations.save()
             Regions.save()
             
@@ -1188,6 +1188,7 @@ def turn_resolution_new(full_game_id):
                 contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
 
             site_functions.resolve_stage2_processing(full_game_id, contents_dict)
+            
             Nations.save()
             
             game.set_startdate()
@@ -1216,6 +1217,7 @@ def turn_resolution_new(full_game_id):
                     contents_dict[nation.id].extend(actions_list)
 
             site_functions.resolve_turn_processing(full_game_id, contents_dict)
+
             Alliances.save()
             Regions.save()
             Nations.save()
@@ -1234,6 +1236,7 @@ def turn_resolution_new(full_game_id):
 
             events.resolve_current_event(full_game_id)
             site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
+
             Alliances.save()
             Regions.save()
             Nations.save()

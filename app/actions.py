@@ -4,11 +4,14 @@ import random
 from collections import defaultdict, deque
 from typing import List, Tuple
 
-from app import core
 from app.gamedata import Games
+from app.scenario import ScenarioData as SD
+from app.alliance import Alliances
 from app.nation import Nation, Nations
-from app.region import Region
 from app.notifications import Notifications
+from app.region import Region, Regions
+from app.truce import Truces
+from app.war import Wars
 from app.missile_strike import *
 
 class AllianceCreateAction:
@@ -765,15 +768,11 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
 
 def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> any:
     
-    from app.scenario import ScenarioData as SD
-    
     scenario_actions = importlib.import_module(f"scenarios.{SD.scenario}.actions")
 
     return scenario_actions._create_action(game_id, nation_id, action_str)
 
 def _check_alliance_type(input_str: str) -> str | None:
-    
-    from app.scenario import ScenarioData as SD
 
     for alliance_type, alliance_type_data in SD.alliances:
         if input_str.lower() == alliance_type.lower():
@@ -782,8 +781,6 @@ def _check_alliance_type(input_str: str) -> str | None:
     return None
 
 def _check_alliance_name(input_str: str) -> str | None:
-    
-    from app.alliance import Alliances
 
     for alliance in Alliances:
         if input_str.lower() == alliance.name.lower():
@@ -795,16 +792,12 @@ def _check_region_id(region_id: str) -> str | None:
 
     # region_id string is already converted to all uppercase, so we can just check if it exists or not 
     
-    from app.region import Regions
-    
     if region_id in Regions:
         return region_id
     
     return None
 
 def _check_nation_name(input_str: str) -> str | None:
-
-    from app.nation import Nations
 
     for nation in Nations:
         if input_str.lower() == nation.name.lower():
@@ -813,8 +806,6 @@ def _check_nation_name(input_str: str) -> str | None:
     return None
 
 def _check_improvement_name(input_str: str) -> str | None:
-
-    from app.scenario import ScenarioData as SD
 
     improvement_errors = {
         "amm": "Advanced Metals Mine",
@@ -907,8 +898,6 @@ def _check_resource(resource_name: str) -> str | None:
     return resource_errors.get(resource_name)
 
 def _check_missile(input_str: str) -> str | None:
-    
-    from app.scenario import ScenarioData as SD
 
     missile_errors = {
         "missile": "Standard Missile",
@@ -927,8 +916,6 @@ def _check_missile(input_str: str) -> str | None:
 
 def _check_research(input_str: str) -> str | None:
 
-    from app.scenario import ScenarioData as SD
-    
     research_names = set(SD.agendas.names()).union(SD.technologies.names())
 
     for name in research_names:
@@ -938,9 +925,7 @@ def _check_research(input_str: str) -> str | None:
     return None
 
 def _check_unit(input_str: str) -> str | None:
-    
-    from app.scenario import ScenarioData as SD
-    
+  
     for unit_name, unit_data in SD.units:
         if (input_str.lower() == unit_name.lower()
             or input_str.upper() == unit_data.abbreviation):
@@ -960,8 +945,6 @@ def _check_war_name(input_str: str) -> str | None:
 
 def _check_war_justification(input_str: str) -> str | None:
 
-    from app.scenario import ScenarioData as SD
-    
     for justification_name, justification_data in SD.war_justificiations:
         if input_str.lower() == justification_name.lower():
             return justification_name
@@ -972,9 +955,6 @@ def resolve_trade_actions(game_id: str) -> None:
     """
     Resolves trade actions between players via CLI.
     """
-
-    from app.nation import Nations
-    from app.region import Regions
 
     trade_action = input("Are there any trade actions this turn? (Y/n) ")
 
@@ -1112,8 +1092,6 @@ def resolve_trade_actions(game_id: str) -> None:
 
 def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], white_peace_list: list[WhitePeaceAction]) -> None:
     
-    from app.nation import Nations
-    from app.war import Wars
     game = Games.load(game_id)
 
     # execute surrender actions
@@ -1191,10 +1169,8 @@ def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, cur
     return True
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
+
     from app.alliance import Alliances
-    from app.nation import Nations
 
     for action in actions_list:
         
@@ -1266,7 +1242,6 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
     
     from app.alliance import Alliances
-    from app.nation import Nations
 
     for action in actions_list:
 
@@ -1280,7 +1255,6 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
 def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
     
     from app.alliance import Alliances
-    from app.nation import Nations
 
     kick_actions_tally = defaultdict(lambda: defaultdict(int))
     
@@ -1313,10 +1287,8 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
                 Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 8)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
+
     from app.alliance import Alliances
-    from app.nation import Nations
 
     alliance_creation_dict = {}
     
@@ -1360,10 +1332,8 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
         nation.action_log.append(f"Failed to form {action.alliance_name} alliance. Not enough players agreed to establish it.")
 
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
+
     from app.alliance import Alliances
-    from app.nation import Nations
 
     for action in actions_list:
         
@@ -1395,7 +1365,6 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
 
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
 
-    from app.nation import Nations
     game = Games.load(game_id)
 
     # initial validation
@@ -1761,8 +1730,6 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
         return 2 - adj_owned_count
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
-    
-    from app.nation import Nations
 
     for action in actions_list:
         
@@ -1783,9 +1750,6 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
         nation.action_log.append(f"Removed improvement in region {action.target_region}.")
 
 def resolve_improvement_build_actions(game_id: str, actions_list: list[ImprovementBuildAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
 
     for action in actions_list:
         
@@ -1849,9 +1813,6 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
     
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-
     for action in actions_list:
 
         nation = Nations.get(action.id)
@@ -1892,8 +1853,6 @@ def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAct
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
     
-    from app.nation import Nations
-
     for action in actions_list:
 
         nation = Nations.get(action.id)
@@ -1918,9 +1877,7 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
         Notifications.add(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 9)
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
-    
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
+
     game = Games.load(game_id)
 
     rmdata_update_list = []
@@ -2078,8 +2035,6 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     return market_results
 
 def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAction]) -> None:
-    
-    from app.nation import Nations
 
     for action in actions_list:
         
@@ -2098,9 +2053,6 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
 
 def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
     
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-
     for action in actions_list:
 
         region = Region(action.target_region)
@@ -2152,10 +2104,6 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-    from app.war import Wars
 
     for action in actions_list:
 
@@ -2181,10 +2129,6 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
 
 def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-    from app.war import Wars
 
     for action in actions_list:
 
@@ -2226,11 +2170,6 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
         Notifications.add(f"{nation.name} has joined {war.name} as a {action.side}!", 4)
 
 def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):
-    
-    from app.scenario import ScenarioData as SD
-    from app.alliance import Alliances
-    from app.truce import Truces
-    from app.war import Wars
 
     # agenda check
     prereq = SD.war_justificiations[action.war_justification].required_agenda
@@ -2291,10 +2230,6 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
     return True
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-    from app.war import Wars
 
     def is_valid_target(nation: Nation, target_region: Region) -> bool:
         
@@ -2362,7 +2297,6 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     
-    from app.nation import Nations
     game = Games.load(game_id)
 
     # generate movement order for the turn

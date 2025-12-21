@@ -1,8 +1,9 @@
 import random
 import copy
 
+from app.scenario import ScenarioData as SD
 from app.nation import Nation, Nations
-
+from app.region import Region, Regions
 
 # ECONOMIC HELPER FUNCTIONS
 ################################################################################
@@ -19,8 +20,6 @@ def create_player_yield_dict(nation: Nation) -> dict:
         dict: Yield dictionary detailing income and multiplier for every improvement.
     """
     
-    from app.scenario import ScenarioData as SD
-
     # build yield dict
     yield_dict = {}
     for improvement_name, improvement_data in SD.improvements:
@@ -73,8 +72,6 @@ def create_player_upkeep_dict(nation: Nation) -> dict:
     Returns:
         dict: Upkeep dictionary detailing upkeep and upkeep multiplier for every improvement.
     """
-    
-    from app.scenario import ScenarioData as SD
 
     upkeep_dict = {}
 
@@ -161,8 +158,6 @@ def calculate_upkeep(upkeep_type: str, player_upkeep_dict: dict, player_count_di
 
 def withdraw_units():
 
-    from app.region import Region, Regions
-
     for region in Regions:
         
         # a unit can only be present in another nation without occupation if a war just ended 
@@ -187,8 +182,6 @@ def search_and_destroy(player_id: str, target_improvement: str) -> str:
     """
     Searches for a specific improvement and removes it.
     """
-
-    from app.region import Region, Regions
     
     # find all regions belonging to a player with target improvement
     candidate_region_ids = []
@@ -208,9 +201,6 @@ def search_and_destroy_unit(player_id: str, desired_unit_name: str) -> tuple[str
     """
     Randomly destroys one unit of a given type belonging to a specific player.
     """
-
-    from app.scenario import ScenarioData as SD
-    from app.region import Region, Regions
 
     # get list of regions with desired_unit_name owned by player_id
     candidate_region_ids = []

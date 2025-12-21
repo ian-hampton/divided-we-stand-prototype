@@ -1,13 +1,14 @@
 from collections import defaultdict
 
+from app.scenario import ScenarioData as SD
+from app.alliance import Alliances
 from app.nation import Nation, Nations
 from app.region import Regions
+from app.war import Wars
 
 # easy
 
 def ambassador(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
     
     # count alliances
     alliances_found = defaultdict(int)
@@ -23,9 +24,6 @@ def ambassador(nation: Nation) -> bool:
     return False
 
 def backstab(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
-    from app.war import Wars
 
     # get set of all nations defeated in war
     nations_defeated = set()
@@ -98,8 +96,6 @@ def backstab(nation: Nation) -> bool:
 
 def breakthrough(nation: Nation) -> bool:
 
-    from app.scenario import ScenarioData as SD
-
     # build set of all techs other players have researched so we can compare
     completed_research_all = set()
     for temp in Nations:
@@ -126,9 +122,6 @@ def diverse_economy(nation: Nation) -> bool:
     return False
 
 def double_down(nation: Nation) -> bool:
-
-    # load game data
-    from app.war import Wars
 
     # count wars
     wars_found = defaultdict(int)
@@ -170,8 +163,6 @@ def reconstruction_effort(nation: Nation) -> bool:
     return True
 
 def reliable_ally(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
 
     longest_alliance_name, duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
@@ -312,8 +303,6 @@ def nuclear_deterrent(nation: Nation) -> bool:
 
 def strong_research_agreement(nation: Nation) -> bool:
 
-    from app.alliance import Alliances
-
     for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Research Agreement":
             amount, resource_name = alliance.calculate_yield()
@@ -323,8 +312,6 @@ def strong_research_agreement(nation: Nation) -> bool:
     return False
 
 def strong_trade_agreement(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
 
     for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Trade Agreement":
@@ -342,8 +329,6 @@ def sphere_of_influence(nation: Nation) -> bool:
     return False
 
 def warmonger(nation: Nation) -> bool:
-
-    from app.war import Wars
 
     count = 0
     for war in Wars:

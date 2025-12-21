@@ -3,15 +3,14 @@ import random
 from collections import defaultdict
 
 from app import core
+from app.scenario import ScenarioData as SD
+from app.alliance import Alliances
 from app.nation import Nation, Nations
 from app.notifications import Notifications
+from app.region import Region, Regions
+from app.war import Wars
 
 def update_income(game_id: str) -> None:
-
-    from app.scenario import ScenarioData as SD
-
-    from app.alliance import Alliances
-    from app.region import Regions
 
     def calculate_gross_income() -> None:
     
@@ -316,8 +315,6 @@ def countdown() -> None:
     """
     Resolves improvements/units that have countdowns associated with them.
     """
-
-    from app.region import Region, Regions
     
     # resolve nuked regions
     for region in Regions:
@@ -422,9 +419,6 @@ def bonus_phase_heals() -> None:
     Heals all units and defensive improvements by 2 health.
     """
     
-    from app.region import Region, Regions
-    from app.war import Wars
-    
     for region in Regions:
         
         if region.data.owner_id not in ["0", "99"]:
@@ -465,7 +459,7 @@ def prompt_for_missing_war_justifications() -> None:
     """
     Prompts in terminal when a war justification has not been entered for an ongoing war.
     """
-    from app.war import Wars
+    
     for war in Wars:
         if war.outcome == "TBD":
             war.add_missing_justifications()
@@ -477,10 +471,6 @@ def total_occupation_forced_surrender() -> None:
     Params:
         game_id (str): Game ID string.
     """
-    
-    # get game data
-    from app.region import Regions
-    from app.war import Wars
 
     # check all regions for occupation
     non_occupied_found_list = [False] * len(Nations)
@@ -522,8 +512,6 @@ def war_score_forced_surrender() -> None:
         game_id (str): Game ID string.
     """
 
-    from app.war import Wars
-
     for war in Wars:
         if war.outcome == "TBD":
 
@@ -552,8 +540,6 @@ def prune_alliances() -> None:
     Params:
         game_id (str): Game ID string.
     """
-
-    from app.alliance import Alliances
 
     for alliance in Alliances:
         if alliance.is_active and len(alliance.current_members) < 2:

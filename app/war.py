@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
 from app import core
+from app.scenario import ScenarioData as SD
 from app.gamedata import Games
 from app.nation import Nation
 
@@ -399,7 +400,6 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def _validate_war_claims(cls, war_justification: str, region_claims_list: list[str]) -> int:
 
-        from app.scenario import ScenarioData as SD
         from app.region import Regions
 
         region_id_set = set(Regions.ids())
@@ -527,7 +527,6 @@ class War:
 
     def add_missing_justifications(self) -> None:
         
-        from app.scenario import ScenarioData as SD
         from app.nation import Nations
 
         for combatant_id in self.combatants:
@@ -599,7 +598,6 @@ class War:
 
     def end_conflict(self, outcome: str) -> None:
         
-        from app.scenario import ScenarioData as SD
         from app.nation import Nations
         from app.region import Regions
         from app.truce import Truces
@@ -664,7 +662,6 @@ class War:
 
     def _resolve_war_justification(self, nation_id: str):
         
-        from app.scenario import ScenarioData as SD
         from app.nation import Nations
         from app.region import Region
         game = Games.load(Wars.game_id)

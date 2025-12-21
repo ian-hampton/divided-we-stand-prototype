@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Iterator, Tuple
 
 from app.gamedata import Games
+from app.scenario import ScenarioData as SD
 
 class AlliancesMeta(type):
 
@@ -208,7 +209,6 @@ class Alliance:
 
     def calculate_yield(self) -> Tuple[float, str | None]:
         
-        from app.scenario import ScenarioData as SD
         from app.nation import Nations
 
         if not self.is_active:

@@ -6,6 +6,7 @@ from typing import ClassVar, Iterator, Tuple
 from collections.abc import Generator
 
 from app.gamedata import Games
+from app.scenario import ScenarioData as SD
 
 class NationsMeta(type):
 
@@ -59,8 +60,6 @@ class Nations(metaclass=NationsMeta):
 
     @classmethod
     def create(cls, nation_id: str, player_id: int) -> None:
-
-        from app.scenario import ScenarioData as SD
 
         nation_data = {
             "nationName": "N/A",
@@ -224,7 +223,6 @@ class Nations(metaclass=NationsMeta):
     @classmethod
     def update_records(cls) -> None:
 
-        from app.scenario import ScenarioData as SD
         game = Games.load(cls.game_id)
         
         rmdata_all_transaction_list = game.get_market_data(refine=0)
@@ -417,7 +415,6 @@ class Nations(metaclass=NationsMeta):
     @classmethod
     def _generate_vc_sets(cls, count: int) -> dict:
 
-        from app.scenario import ScenarioData as SD
         easy_list = SD.victory_conditions.easy
         medium_list = SD.victory_conditions.medium
         hard_List = SD.victory_conditions.hard
@@ -768,8 +765,6 @@ class Nation:
                         self._satisfied[name] = True
 
     def add_tech(self, technology_name: str) -> None:
-        
-        from app.scenario import ScenarioData as SD
 
         if technology_name not in SD.agendas and technology_name not in SD.technologies:
             raise Exception(f"{technology_name} not recognized as an agenda/technology.")
@@ -790,8 +785,6 @@ class Nation:
         self.trade_fee = trade_fee_list[trade_index]
 
     def award_research_bonus(self, research_name: str) -> None:
-        
-        from app.scenario import ScenarioData as SD
 
         for tag_data in self.tags.values():
             
@@ -817,8 +810,6 @@ class Nation:
             build_cost_dict[key] *= build_cost_rate
 
     def calculate_agenda_cost_adjustment(self, agenda_name: str) -> int:
-        
-        from app.scenario import ScenarioData as SD
 
         adjustment = 0
 
@@ -859,8 +850,7 @@ class Nation:
         return adjustment
 
     def calculate_alliance_capacity(self) -> tuple[int, int]:
-        
-        from app.scenario import ScenarioData as SD
+
         from app.alliance import Alliances
 
         capacity_used = 0
@@ -885,8 +875,6 @@ class Nation:
         return capacity_used, capacity_limit
 
     def fetch_alliance_data(self) -> dict:
-
-        from app.scenario import ScenarioData as SD
 
         alliance_count, alliance_capacity = self.calculate_alliance_capacity()
 
