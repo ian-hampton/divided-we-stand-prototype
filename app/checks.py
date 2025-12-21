@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from app import core
 from app.nation import Nation, Nations
+from app.region import Regions
 from app.notifications import Notifications
 
 def update_income(game_id: str) -> None:
@@ -11,7 +12,6 @@ def update_income(game_id: str) -> None:
     from app.scenario import ScenarioData as SD
 
     from app.alliance import Alliances
-    from app.region import Regions
 
     def calculate_gross_income() -> None:
     
@@ -450,8 +450,7 @@ def bonus_phase_heals() -> None:
             elif region.data.owner_id == region.unit.owner_id:
                 heal_allowed = True
             else:
-                for adjacent_region_id in region.graph.adjacent_regions:
-                    adjacent_region = Region(adjacent_region_id)
+                for adjacent_region in region.graph.iter_adjacent_regions():
                     if adjacent_region.unit.owner_id == region.unit.owner_id:
                         heal_allowed = True
 

@@ -386,12 +386,12 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def _claim_pairs(cls, war_claims: list) -> dict:
 
-        from app.region import Region
+        from app.region import Regions
 
         pairs = {}
         
         for region_id in war_claims:
-            region = Region(region_id)
+            region = Regions.load(region_id)
             pairs[region_id] = region.data.owner_id
 
         return pairs
@@ -666,7 +666,7 @@ class War:
         
         from app.scenario import ScenarioData as SD
         from app.nation import Nations
-        from app.region import Region
+        from app.region import Regions
         game = Games.load(Wars.game_id)
         
         winner_nation = Nations.get(nation_id)
@@ -675,7 +675,7 @@ class War:
 
         if war_justification_data.has_war_claims:
             for region_id, original_owner_id in winner_combatant_data.claims.items():
-                region = Region(region_id)
+                region = Regions.load(region_id)
                 
                 # do not take over regions that have changed ownership since start of war
                 if str(region.data.owner_id) != original_owner_id:

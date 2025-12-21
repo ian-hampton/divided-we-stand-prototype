@@ -54,7 +54,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         if region_id is None or region_id not in Regions:
             random_assignment_list.append(nation_id)
             continue
-        starting_region = Region(region_id)
+        starting_region = Regions.load(region_id)
         starting_region.data.owner_id = nation_id
         starting_region.improvement.set("Capital")
         nation = Nations.get(nation_id)
@@ -68,14 +68,14 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
             conflict_detected = False
             region_id_list = Regions.ids()
             random_region_id = random.sample(region_id_list, 1)[0]
-            random_region = Region(random_region_id)
+            random_region = Regions.load(random_region_id)
             # if region not allowed restart loop
             if not random_region.graph.is_start:
                 continue
             # check if there is a player within three regions
             regions_in_radius = random_region.get_regions_in_radius(3)
             for candidate_region_id in regions_in_radius:
-                candidate_region = Region(candidate_region_id)
+                candidate_region = Regions.load(candidate_region_id)
                 # if player found restart loop
                 if candidate_region.data.owner_id != "0":
                     conflict_detected = True
