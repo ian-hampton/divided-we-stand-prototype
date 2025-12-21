@@ -335,8 +335,7 @@ class GameMaps:
         """
 
         def is_resource_allowed(resource_name) -> bool:
-            for adj_id in region.graph.adjacent_regions:
-                adj_region = Regions.load(adj_id)
+            for adj_region in region.graph.iter_adjacent_regions():
                 if adj_region.data.resource == resource_name:
                     return False
             return True

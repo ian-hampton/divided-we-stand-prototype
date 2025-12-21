@@ -99,14 +99,6 @@ class Region:
     
     def __repr__(self):
         return self.__str__()
-
-    def owned_adjacent_regions(self) -> list:
-        owned_adjacent_list = []
-        for region_id in self.graph.adjacent_regions:
-            temp = Regions.load(region_id)
-            if temp.data.owner_id == self.data.owner_id:
-                owned_adjacent_list.append(region_id)
-        return owned_adjacent_list
     
     def get_regions_in_radius(self, radius: int) -> set:
         
@@ -129,20 +121,20 @@ class Region:
         return visited
 
     def check_for_adjacent_improvement(self, improvement_names: set) -> bool:
-        for region_id in self.owned_adjacent_regions():
-            adjacent_region = Regions.load(region_id)
-            if adjacent_region.improvement.name in improvement_names:
+        for adj_region in self.graph.iter_adjacent_regions():
+            if adj_region.data.owner_id != self.data.owner_id:
+                continue
+            if adj_region.improvement.name in improvement_names:
                 return True
         return False
     
     def check_for_adjacent_unit(self, unit_names: set, desired_id: str) -> bool:
-        for region_id in self.graph.adjacent_regions:
-            adjacent_region = Regions.load(region_id)
-            if adjacent_region.unit.name is None:
+        for adj_region in self.graph.iter_adjacent_regions():
+            if desired_id != adj_region.unit.owner_id:
                 continue
-            if desired_id != adjacent_region.unit.owner_id:
+            if adj_region.unit.name is None:
                 continue
-            if adjacent_region.unit.name in unit_names:
+            if adj_region.unit.name in unit_names:
                 return True
         return False
 
@@ -497,12 +489,16 @@ class GraphData:
         self.is_significant: bool = d["hasRegionalCapital"]
         self.is_magnified: bool = d["isMagnified"]
         self.is_start: bool = d["randomStartAllowed"]
-        self.map: dict = d.get("adjacencyMap", {})
-        self.sea_routes: dict = d.get("seaRoutes", {})
-        self.adjacent_regions: dict = self.map | self.sea_routes
+        self.map: dict[str] = d.get("adjacencyMap", {})
+        self.sea_routes: dict[str] = d.get("seaRoutes", {})
+        self.adjacent_regions: dict[str] = self.map | self.sea_routes
         self.additional_region_coordinates: list = d["additionalRegionCords"]
         self.improvement_coordinates: list = d["improvementCords"]
         self.unit_coordinates: list = d["unitCords"]
+
+    def iter_adjacent_regions(self):
+        for region_id in self.adjacent_regions:
+            yield Regions.load(region_id)
 
 class ImprovementData:
     

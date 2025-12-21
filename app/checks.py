@@ -450,8 +450,7 @@ def bonus_phase_heals() -> None:
             elif region.data.owner_id == region.unit.owner_id:
                 heal_allowed = True
             else:
-                for adjacent_region_id in region.graph.adjacent_regions:
-                    adjacent_region = Regions.load(adjacent_region_id)
+                for adjacent_region in region.graph.iter_adjacent_regions():
                     if adjacent_region.unit.owner_id == region.unit.owner_id:
                         heal_allowed = True
 

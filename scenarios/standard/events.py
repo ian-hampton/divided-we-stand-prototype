@@ -1083,7 +1083,7 @@ class ForeignInvasion(Event):
             
             invasion_point_id = random.choice(region_id_list)
             region = Regions.load(invasion_point_id)
-            is_near_capital = any(Region(adj_id).improvement.name == "Capital" for adj_id in region.graph.adjacent_regions)
+            is_near_capital = any(adj_region.improvement.name == "Capital" for adj_region in region.graph.iter_adjacent_regions())
             if region.graph.is_edge and region.improvement.name != "Capital" and not is_near_capital:
                 break
         
@@ -1111,7 +1111,7 @@ class ForeignInvasion(Event):
                 combatant.justification = "NULL"
 
         unit_name = self._foreign_invasion_determine_unit()
-        invasion_point = Regions.load(invasion_point_id, self.game_id)    #!!!
+        invasion_point = Regions.load(invasion_point_id)
         self._foreign_invasion_initial_spawn(invasion_point_id, unit_name)
         for adj_id in invasion_point.graph.adjacent_regions:
             self._foreign_invasion_initial_spawn(adj_id, unit_name)
@@ -1366,8 +1366,7 @@ class Pandemic(Event):
                 region = Regions.load(region_id)
                 if region.data.infection == 0:
                     continue
-                for adjacent_region_id in region.graph.adjacent_regions:
-                    adjacent_region = Regions.load(adjacent_region_id)
+                for adjacent_region in region.graph.iter_adjacent_regions():
                     adjacent_owner_id = adjacent_region.data.owner_id
                     # spread only to regions that are not yet infected
                     if adjacent_region.data.infection != 0:
