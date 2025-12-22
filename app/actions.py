@@ -2287,8 +2287,9 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         # resolve missile strike
         war = Wars.get(war_name)
         war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.id} in {target_nation.name}!")
+        missiles_launched_list[int(nation.id) - 1] += missile.launch_cost
         missile_strike = strike_factory(missile.type, nation, target_nation, target_region, war)
-        missiles_launched_list[int(nation.id) - 1] += missile_strike.fire_missile()
+        missile_strike.fire_missile()
         missile_strike.resolve()
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:

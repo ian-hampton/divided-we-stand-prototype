@@ -38,10 +38,9 @@ class NuclearStrike(Strike):
 
         return defender_name, defender_value
 
-    def fire_missile(self) -> int:
-        self.nation.missile_count -= 1
+    def fire_missile(self) -> None:
+        self.nation.nuke_count -= 1
         self.nation.action_log.append(f"Launched {self.missile.type} at {self.target_region.id}. See combat log for details.")
-        return self.missile.launch_cost
     
     def resolve_improvement_damage(self) -> bool:
         if self.target_region.improvement.name is None:
