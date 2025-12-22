@@ -13,7 +13,8 @@ from app.notifications import Notifications
 from app.region import Region, Regions
 from app.truce.truces import Truces
 from app.war import Wars
-from app.missile_strike import *
+from app.combat.strike import Strike
+from app.combat.strike_factory import strike_factory
 
 class AllianceCreateAction:
 
@@ -2286,10 +2287,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         # resolve missile strike
         war = Wars.get(war_name)
         war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.id} in {target_nation.name}!")
-        if missile.type == "Nuclear Missile":
-            missile_strike = NuclearStrike(nation, target_nation, target_region, war)
-        else:
-            missile_strike = StandardStrike(nation, target_nation, target_region, war)
+        missile_strike = strike_factory(missile.type, nation, target_nation, target_region, war)
         missiles_launched_list[int(nation.id) - 1] += missile_strike.fire_missile()
         missile_strike.resolve()
 

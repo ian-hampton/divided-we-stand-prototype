@@ -263,7 +263,7 @@ class Region:
             bool: True if action succeeded, False otherwise.
         """
 
-        from app import combat
+        from app.combat import combat
         from app.war import Wars
 
         def execute_move() -> None:
