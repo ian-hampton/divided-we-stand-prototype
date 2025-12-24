@@ -1,6 +1,6 @@
 from app.nation.nation import Nation
 from app.region import Region
-from app.war import War
+from app.war.war import War
 
 from .strike import Strike
 from .strike_standard import StandardStrike

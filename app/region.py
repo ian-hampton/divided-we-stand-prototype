@@ -206,7 +206,7 @@ class Region:
             bool: True if all checks pass. False otherwise.
         """
         
-        from app.war import Wars
+        from app.war.wars import Wars
 
         # you can always move into regions owned by you
         if self.data.owner_id == other_player_id:
@@ -264,7 +264,7 @@ class Region:
         """
 
         from app.combat import combat
-        from app.war import Wars
+        from app.war.wars import Wars
 
         def execute_move() -> None:
             # update region occupation
@@ -645,7 +645,7 @@ class UnitData:
 
     def is_hostile(self, other_player_id: str) -> bool:
 
-        from app.war import Wars
+        from app.war.wars import Wars
 
         # if no unit return False
         if self.owner_id == "0" or other_player_id == "0":

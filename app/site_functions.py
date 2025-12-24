@@ -20,7 +20,7 @@ from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications
 from app.truce.truces import Truces
-from app.war import Wars
+from app.war.wars import Wars
 from app.map import GameMaps
 from app import actions
 from app import checks

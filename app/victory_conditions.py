@@ -5,7 +5,7 @@ from app.alliance.alliances import Alliances
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.region import Regions
-from app.war import Wars
+from app.war.wars import Wars
 
 # easy
 

@@ -1,6 +1,6 @@
 from app.scenario.scenario import ScenarioInterface as SD
 from app.region import Regions
-from app.war import Wars
+from app.war.wars import Wars
 from .strike import Strike
 
 class NuclearStrike(Strike):

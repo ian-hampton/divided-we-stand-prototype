@@ -12,8 +12,8 @@ from app.nation.nations import Nations
 from app.notifications import Notifications
 from app.region import Region, Regions
 from app.truce.truces import Truces
-from app.war import Wars
-from app.combat.strike import Strike
+from app.war.wars import Wars
+from app.war.war_claims import ManageWarClaims
 from app.combat.strike_factory import strike_factory
 
 class AllianceCreateAction:
@@ -937,7 +937,7 @@ def _check_unit(input_str: str) -> str | None:
 
 def _check_war_name(input_str: str) -> str | None:
 
-    from app.war import Wars
+    from app.war.wars import Wars
 
     for war in Wars:
         if input_str.lower() == war.name.lower():
@@ -1147,7 +1147,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
 
 def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
 
-    from app.war import Wars
+    from app.war.wars import Wars
 
     # check that war exists
     war_name = Wars.get_war_name(surrendering_nation.id, winning_nation.id)
@@ -2116,7 +2116,8 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
         if SD.war_justificiations[action.war_justification].has_war_claims:
             
-            claim_cost, region_claims_list = Wars.get_war_claims(attacker_nation.name, action.war_justification)
+            manage_claims = ManageWarClaims(attacker_nation.name, action.war_justification)
+            claim_cost, region_claims_list = manage_claims.get_war_claims()
             if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
                 attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
                 continue
@@ -2149,14 +2150,15 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             if not _war_action_valid(action, nation, defender_nation):
                 continue
             
-            claim_cost, region_claims_list = Wars.get_war_claims(combatant.name, action.war_justification)
+            manage_claims = ManageWarClaims(combatant.name, action.war_justification)
+            claim_cost, region_claims_list = manage_claims.get_war_claims()
             if float(nation.get_stockpile("Political Power")) - claim_cost < 0:
                 nation.action_log.append(f"Error: Not enough political power for war claims.")
                 continue
             
             combatant.target_id = "N/A"
             nation.update_stockpile("Political Power", -1 * claim_cost)
-            combatant.claims = Wars._claim_pairs(region_claims_list)
+            combatant.claims = manage_claims.claim_pairs(region_claims_list)
         
         # OR handle war justification that does not seize territory
         else:

@@ -10,7 +10,7 @@ from app.nation.nations import Nations
 from app.region import Regions
 from app.notifications import Notifications
 from app.region import Region, Regions
-from app.war import Wars
+from app.war.wars import Wars
 
 def update_income(game_id: str) -> None:
 

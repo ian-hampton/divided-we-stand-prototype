@@ -484,7 +484,7 @@ def wars(full_game_id):
     
     from app.nation.nations import Nations
     from app.alliance.alliances import Alliances
-    from app.war import Wars
+    from app.war.wars import Wars
 
     game = Games.load(full_game_id)
     
@@ -922,7 +922,7 @@ def announcements(full_game_id):
     from app.nation.nations import Nations, LeaderboardRecordNames
     from app.notifications import Notifications
     from app.truce.truces import Truces
-    from app.war import Wars
+    from app.war.wars import Wars
 
     def build_diplomacy_string() -> str:
         
@@ -1148,7 +1148,7 @@ def turn_resolution_new(full_game_id):
     from app.nation.nations import Nations
     from app.notifications import Notifications
     from app.truce.truces import Truces
-    from app.war import Wars
+    from app.war.wars import Wars
     from app import events
 
     game = Games.load(full_game_id)

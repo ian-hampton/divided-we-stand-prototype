@@ -8,7 +8,7 @@ from app.region import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications
-from app.war import Wars
+from app.war.wars import Wars
 
 from app import palette
 
