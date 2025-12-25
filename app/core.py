@@ -4,7 +4,8 @@ import copy
 from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 from app.nation.nations import Nations
-from app.region import Region, Regions
+from app.region.region import Region
+from app.region.regions import Regions
 
 # ECONOMIC HELPER FUNCTIONS
 ################################################################################

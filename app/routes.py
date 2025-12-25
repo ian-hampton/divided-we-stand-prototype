@@ -1144,7 +1144,7 @@ def get_controlmap(full_game_id):
 def turn_resolution_new(full_game_id):
 
     from app.alliance.alliances import Alliances
-    from app.region import Regions
+    from app.region.regions import Regions
     from app.nation.nations import Nations
     from app.notifications import Notifications
     from app.truce.truces import Truces

@@ -1,7 +1,7 @@
 import random
 
 from app.scenario.scenario import ScenarioInterface as SD
-from app.region import Region
+from app.region.region import Region
 from app.nation.nation import Nation
 from app.war.war import War
 

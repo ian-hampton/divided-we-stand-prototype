@@ -15,7 +15,7 @@ from app.scenario.scenario import ScenarioInterface as SD
 from app.game.games import Games
 from app.game.game import GameStatus
 from app.alliance.alliances import Alliances
-from app.region import Regions
+from app.region.regions import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications

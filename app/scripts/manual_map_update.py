@@ -8,7 +8,7 @@ os.chdir(parent_dir)
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app.map import GameMaps
-from app.region import Regions
+from app.region.regions import Regions
 from app.nation.nations import Nations
 
 GAME_ID = "game1"

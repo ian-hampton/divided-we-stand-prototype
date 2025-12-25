@@ -10,7 +10,8 @@ from app.alliance.alliances import Alliances
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications
-from app.region import Region, Regions
+from app.region.region import Region
+from app.region.regions import Regions
 from app.truce.truces import Truces
 from app.war.wars import Wars
 from app.war.war_claims import ManageWarClaims

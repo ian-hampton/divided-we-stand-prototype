@@ -1,7 +1,7 @@
 import random
 from typing import Union, Tuple
 
-from app.region import Region
+from app.region.region import Region
 from app.nation.nations import Nations
 from app.war.wars import Wars
 

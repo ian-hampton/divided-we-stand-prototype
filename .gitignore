@@ -52,3 +52,4 @@ app/static/handshake.png
 /app/scenario/__pycache__
 /app/combat/__pycache__
 /app/war/__pycache__
+/app/region/__pycache__

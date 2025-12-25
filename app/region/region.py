@@ -1,89 +1,24 @@
 import copy
 import json
-import os
 from collections import deque
-from dataclasses import dataclass
-from typing import ClassVar, Iterator
 
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 
-class RegionsMeta(type):
-    
-    def __contains__(cls, region_id: str):
-        return cls._graph is not None and region_id in cls._graph
-
-    def __iter__(cls) -> Iterator["Region"]:
-        for region_id in cls._graph:
-            yield Region(region_id)
-
-    def __len__(cls):
-        return len(cls._graph) if cls._graph else 0
-
-@dataclass
-class Regions(metaclass=RegionsMeta):
-
-    game_id: ClassVar[str] = None
-    _data: ClassVar[dict[str, dict]] = None
-    _graph: ClassVar[dict[str, dict]] = None
-    _instances: ClassVar[dict[str, "Region"]] = {}
-
-    @classmethod
-    def initialize(cls, game_id: str) -> None:
-
-        game = Games.load(game_id)
-        
-        cls.game_id = game_id
-        regdata_filepath = f"gamedata/{Regions.game_id}/regdata.json"
-        graph_filepath = f"maps/{game.get_map_string()}/graph.json"
-        
-        if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
-            raise FileNotFoundError(f"Error: Unable to locate required game files for Regions class.")
-        
-        with open(regdata_filepath, 'r') as f:
-            cls._data = json.load(f)
-        with open(graph_filepath, 'r') as f:
-            cls._graph = json.load(f)
-        cls._instances.clear()
-    
-    @classmethod
-    def save(cls) -> None:
-        if cls._data is None:
-            raise RuntimeError("Error: Regions data not loaded.")
-        
-        regdata_filepath = f"gamedata/{cls.game_id}/regdata.json"
-        
-        with open(regdata_filepath, 'w') as json_file:
-            json.dump(cls._data, json_file, indent=4)
-
-    @classmethod
-    def load(cls, region_id: str) -> "Region":
-        """
-        Loads a Region based on the region id. Creates new Region object if one does not already exist.
-        """
-        if region_id not in cls._data:
-            raise Exception(f"Failed to load Region with id {region_id}. Region ID not valid for this game.")
-        
-        if region_id not in cls._instances:
-            cls._instances[region_id] = Region(region_id)
-        return cls._instances[region_id]
-    
-    @classmethod
-    def ids(cls) -> list:
-        return list(cls._graph.keys())
-
 class Region:
 
-    def __init__(self, region_id: str):
-        self._data = Regions._data[region_id]
+    def __init__(self, region_id: str, data: dict, graph: dict, game_id: str):
         self.id = region_id
-        self.game_id = Regions.game_id
-        self.claim_list = []
+        self._data = data
+        self.game_id = game_id
+        
         self.data = RegionData(self._data["regionData"])
-        self.graph = GraphData(Regions._graph[self.id])
         self.improvement = ImprovementData(self._data["improvementData"])
         self.unit = UnitData(self._data["unitData"])
+        self.graph = GraphData(graph)
+
+        self.claim_list = []
 
     def __eq__(self, other):
         if isinstance(other, Region):
@@ -104,21 +39,19 @@ class Region:
     
     def get_regions_in_radius(self, radius: int) -> set:
         
+        queue = deque([(self, 0)])
         visited = set([self.id])
-        queue = deque([(self.id, 0)])
         
         while queue:
             
-            current_region_id, depth = queue.popleft()
+            region, depth = queue.popleft()
             
             if depth < radius:
                 
-                current_region = Regions.load(current_region_id)
-                
-                for adjacent_id in current_region.graph.adjacent_regions:
-                    if adjacent_id not in visited:
-                        visited.add(adjacent_id)
-                        queue.append((adjacent_id, depth + 1))
+                for adj_region in region.graph.iter_adjacent_regions():
+                    if adj_region.id not in visited:
+                        visited.add(adj_region.id)
+                        queue.append((adj_region, depth + 1))
         
         return visited
 
@@ -148,29 +81,27 @@ class Region:
             str: Suitable region_id if found, otherwise None.
         """
 
-        queue = deque([self.id])
+        queue = deque([self])
         visited = set()
 
         while queue:
             
-            current_region_id = queue.popleft()
+            region = queue.popleft()
 
-            if current_region_id in visited:
+            if region.id in visited:
                 continue
-            visited.add(current_region_id)
-
-            current_region = Regions.load(current_region_id)
+            visited.add(region.id)
 
             if (
-                current_region.data.owner_id == self.unit.owner_id    # region must be owned by the unit owner
-                and current_region.unit.name is None                  # region must not have another unit in it
-                and current_region.data.occupier_id == "0"            # region must not be occupied by another nation
+                region.data.owner_id == self.unit.owner_id    # region must be owned by the unit owner
+                and region.unit.name is None                  # region must not have another unit in it
+                and region.data.occupier_id == "0"            # region must not be occupied by another nation
             ):
-                return current_region_id
+                return region.id
             
-            for adjacent_id in current_region.graph.adjacent_regions:
-                if adjacent_id not in visited:
-                    queue.append(adjacent_id)
+            for adj_region in region.graph.iter_adjacent_regions():
+                if adj_region.id not in visited:
+                    queue.append(adj_region)
 
         return None
 
@@ -485,7 +416,6 @@ class RegionData:
 class GraphData:
         
     def __init__(self, d: dict):
-
         self.full_name: str = d["fullName"]
         self.is_edge: bool = d["isEdgeOfMap"]
         self.is_significant: bool = d["hasRegionalCapital"]
@@ -499,6 +429,7 @@ class GraphData:
         self.unit_coordinates: list = d["unitCords"]
 
     def iter_adjacent_regions(self):
+        from .regions import Regions
         for region_id in self.adjacent_regions:
             yield Regions.load(region_id)
 

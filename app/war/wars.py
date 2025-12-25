@@ -238,7 +238,7 @@ class Wars(metaclass=WarsMeta):
     @classmethod
     def add_warscore_from_occupations(cls) -> None:
         
-        from app.region import Regions
+        from app.region.regions import Regions
         from app.nation.nations import Nations
 
         for region in Regions:

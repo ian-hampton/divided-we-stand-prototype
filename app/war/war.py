@@ -54,7 +54,7 @@ class War:
     def _resolve_war_justification(self, nation_id: str):
         
         from app.nation.nations import Nations
-        from app.region import Regions
+        from app.region.regions import Regions
         game = Games.load(self._game_id)
         
         winner_nation = Nations.get(nation_id)
@@ -238,7 +238,7 @@ class War:
     def end_conflict(self, outcome: str) -> None:
         
         from app.nation.nations import Nations
-        from app.region import Regions
+        from app.region.regions import Regions
         from app.truce.truces import Truces
         game = Games.load(self._game_id)
         

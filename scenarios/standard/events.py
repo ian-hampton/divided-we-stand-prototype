@@ -4,7 +4,7 @@ from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app import actions
 from app.alliance.alliances import Alliances
-from app.region import Regions
+from app.region.regions import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications
