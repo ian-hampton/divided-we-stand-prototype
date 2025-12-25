@@ -1,5 +1,4 @@
 from app.scenario.scenario import ScenarioInterface as SD
-from app.region.regions import Regions
 
 class ManageWarClaims:
 
@@ -18,6 +17,7 @@ class ManageWarClaims:
         Returns:
             int: Total cost of region claims.
         """
+        from app.region.regions import Regions
 
         region_id_set = set(Regions.ids())
         war_justification_data = SD.war_justificiations[self.justification]
@@ -66,6 +66,7 @@ class ManageWarClaims:
         Returns:
             dict: A dictionary of region id - original owner id pairs.
         """
+        from app.region.regions import Regions
 
         pairs = {}
         

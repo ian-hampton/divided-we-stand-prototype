@@ -14,6 +14,8 @@ from app import palette
 from app.scenario.scenario import ScenarioInterface as SD
 from app.game.games import Games
 from app.game.game import GameStatus
+from app.game import checks
+from app.game.update_income import UpdateIncomeProcess
 from app.alliance.alliances import Alliances
 from app.region.regions import Regions
 from app.nation.nation import Nation
@@ -23,7 +25,6 @@ from app.truce.truces import Truces
 from app.war.wars import Wars
 from app.map import GameMaps
 from app import actions
-from app import checks
 from app import events
 
 
@@ -137,7 +138,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
                 nation.add_tech(technology_name)
 
     # update income in playerdata
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     Nations.update_records()
         
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
@@ -188,7 +189,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     market_results = actions.resolve_market_actions(game_id, actions_dict.get("CrimeSyndicateAction", []), actions_dict.get("MarketBuyAction", []), actions_dict.get("MarketSellAction", []))
 
     # update income step
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
 
     # resolve event actions
     scenario_actions.resolve_event_actions(game_id, actions_dict)
@@ -237,12 +238,12 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         checks.war_score_forced_surrender()
         checks.prune_alliances()
     
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     if not event_phase:
         checks.gain_income()
     checks.resolve_resource_shortages()
     checks.resolve_military_capacity_shortages(game_id)
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     
     for nation in Nations:
         nation.update_stockpile_limits()

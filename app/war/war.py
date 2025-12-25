@@ -2,8 +2,8 @@ from app import core
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
-from .combatant import Combatant
 from .war_claims import ManageWarClaims
+from .combatant import Combatant
 
 class War:
 
@@ -101,8 +101,6 @@ class War:
         if war_justification_data.looser_becomes_puppet_state:
             looser_nation = Nations.get(winner_combatant_data.target_id)
             looser_nation.status = f"Puppet State of {winner_nation.name}"
-
-
 
     def add_combatant(self, nation: Nation, role: str, target_id: str) -> None:
         
