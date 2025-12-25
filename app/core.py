@@ -4,7 +4,6 @@ import copy
 from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 from app.nation.nations import Nations
-from app.region.region import Region
 from app.region.regions import Regions
 
 # ECONOMIC HELPER FUNCTIONS
@@ -170,7 +169,7 @@ def withdraw_units():
             
             if target_id is not None:
                 nation.action_log.append(f"Withdrew {region.unit.name} {region.id} to {target_id}.")
-                region.move_unit(Region(target_id), withdraw=True)
+                region.move_unit(Regions.load(target_id), withdraw=True)
             else:
                 nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.id}. Unit disbanded!")
                 nation.unit_counts[region.unit.name] -= 1
