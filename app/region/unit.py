@@ -1,5 +1,4 @@
 from app.scenario.scenario import ScenarioInterface as SD
-from app.war.wars import Wars
 
 class UnitData:
     
@@ -71,6 +70,7 @@ class UnitData:
         self._load_attributes_from_game_files()
 
     def is_hostile(self, other_player_id: str) -> bool:
+        from app.war.wars import Wars
 
         # if no unit return False
         if self.owner_id == "0" or other_player_id == "0":

@@ -1,9 +1,10 @@
 import random
 
-from app import core
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications
+from . import economic_helpers
+from . import destroy
 
 RESOURCES = {"Oil", "Coal", "Energy", "Uranium", "Food", "Dollars"}
 
@@ -36,10 +37,10 @@ def _resolve_shortage(resource_name: str, upkeep_dict: dict, nation: Nation) -> 
         
         # remove consumer
         if consumer_type == "improvement":
-            region_id = core.search_and_destroy(nation.id, consumer_name)
+            region_id = destroy.search_and_destroy_improvement(nation.id, consumer_name)
             nation.improvement_counts[consumer_name] -= 1
         else:
-            region_id, victim = core.search_and_destroy_unit(nation.id, consumer_name)
+            region_id, victim = destroy.search_and_destroy_unit(nation.id, consumer_name)
             nation.unit_counts[consumer_name] -= 1
         Notifications.add(f'{nation.name} lost a {consumer_name} in {region_id} due to {resource_name.lower()} shortages.', 7)
         
@@ -76,7 +77,7 @@ def resolve_resource_shortages() -> None:
         if nation.name == "Foreign Invasion":
             continue
 
-        upkeep_dict = core.create_player_upkeep_dict(nation)
+        upkeep_dict = economic_helpers.create_player_upkeep_dict(nation)
 
         for resource in RESOURCES:
             _resolve_shortage(resource, upkeep_dict, nation)

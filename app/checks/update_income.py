@@ -1,12 +1,12 @@
 import copy
 from collections import defaultdict
 
-from app import core
 from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.region.regions import Regions
+from . import economic_helpers
 
 class UpdateIncomeProcess:
 
@@ -23,8 +23,8 @@ class UpdateIncomeProcess:
         
         for nation in Nations:
 
-            self.yield_dict[nation.name] = core.create_player_yield_dict(nation)
-            self.upkeep_dict[nation.name] = core.create_player_upkeep_dict(nation)
+            self.yield_dict[nation.name] = economic_helpers.create_player_yield_dict(nation)
+            self.upkeep_dict[nation.name] = economic_helpers.create_player_upkeep_dict(nation)
             self.text_dict[nation.name] = {}
             
             for resource_name in nation._resources:
@@ -217,8 +217,8 @@ class UpdateIncomeProcess:
             upkeep_resources = ["Dollars", "Food", "Oil", "Uranium", "Energy"]
             for resource_name in upkeep_resources:
                 inner_dict = {
-                    "From Units": core.calculate_upkeep(resource_name, self.upkeep_dict[nation.name], nation.unit_counts),
-                    "From Improvements": core.calculate_upkeep(resource_name, self.upkeep_dict[nation.name], nation.improvement_counts)
+                    "From Units": economic_helpers.calculate_upkeep(resource_name, self.upkeep_dict[nation.name], nation.unit_counts),
+                    "From Improvements": economic_helpers.calculate_upkeep(resource_name, self.upkeep_dict[nation.name], nation.improvement_counts)
                 }
                 player_upkeep_costs_dict[resource_name] = copy.deepcopy(inner_dict)
             

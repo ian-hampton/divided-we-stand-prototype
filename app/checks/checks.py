@@ -1,9 +1,9 @@
-from app import core
 from app.alliance.alliances import Alliances
 from app.nation.nations import Nations
 from app.notifications import Notifications
 from app.region.regions import Regions
 from app.war.wars import Wars
+from . import destroy
 
 def gain_income() -> None:
 
@@ -42,7 +42,7 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
         
         while float(nation.get_used_mc()) > float(nation.get_max_mc()):
             
-            region_id, victim = core.search_and_destroy_unit(nation.id, 'ANY')
+            region_id, victim = destroy.search_and_destroy_unit(nation.id, 'ANY')
             nation.unit_counts[victim] -= 1
             nation.update_military_capacity()
 

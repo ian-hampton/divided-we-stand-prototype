@@ -1,4 +1,3 @@
-from app import core
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
@@ -233,15 +232,44 @@ class War:
 
         return attacker_threshold, defender_threshold
 
+    def withdraw_units(self) -> None:
+        """
+        Forces all units in foreign territory to withdraw back to friendly territory if they are not participating in war.
+        """
+        from app.nation.nations import Nations
+        from app.region.regions import Regions
+
+        for region in Regions:
+            
+            # a unit can only be present in another nation without occupation if a war just ended 
+            if region.unit.name is not None and region.unit.owner_id != region.data.owner_id and region.data.occupier_id == "0":
+                
+                nation = Nations.get(region.unit.owner_id)
+                target_id = region.find_suitable_region()
+                
+                if target_id is not None:
+                    nation.action_log.append(f"Withdrew {region.unit.name} {region.id} to {target_id}.")
+                    region.move_unit(Regions.load(target_id), withdraw=True)
+                else:
+                    nation.action_log.append(f"Failed to withdraw {region.unit.name} {region.id}. Unit disbanded!")
+                    nation.unit_counts[region.unit.name] -= 1
+                    region.unit.clear()
+
     def end_conflict(self, outcome: str) -> None:
-        
+        """
+        Ends and resolves this war according to a certain outcome.
+
+        Args:
+            outcome (str): Either 'Attacker Victory' or 'Defender Victory' or 'White Peace'
+        """
         from app.nation.nations import Nations
         from app.region.regions import Regions
         from app.truce.truces import Truces
+        
         game = Games.load(self._game_id)
+        truce_length = 4
         
         # resolve war justifications
-        truce_length = 4
         match outcome:
             
             case "Attacker Victory":
@@ -284,7 +312,7 @@ class War:
                 region.data.occupier_id = "0"
 
         # withdraw units
-        core.withdraw_units()
+        self.withdraw_units()
 
         # resolve foreign interference tag if applicable (event)
         attacker_id, defender_id = self.get_main_combatant_ids()

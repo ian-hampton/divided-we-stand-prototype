@@ -5,7 +5,6 @@ import importlib
 from app.game.games import Games
 from app.game.game import GameStatus
 from app.scenario.scenario import ScenarioInterface as SD
-from app.notifications import Notifications
 
 def trigger_event(game_id: str) -> None:
     """
@@ -93,6 +92,7 @@ def resolve_active_events(game_id: str, actions_dict=None):
     game.active_events = active_events_filtered
 
 def filter_events(game_id: str):
+    from app.notifications import Notifications
     
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
