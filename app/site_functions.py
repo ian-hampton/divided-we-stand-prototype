@@ -1,32 +1,29 @@
-import csv
 import json
 import random
-import shutil
-import os
 import copy
 import importlib
-import string
 from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
 
+from app import actions
+from app.checks import bonus_phase
+from app.checks import checks
+from app.checks import end_wars
+from app.checks import resolve_shortages
+from app.checks.update_income import UpdateIncomeProcess
+from app import events
+from app.map import GameMaps
 from app import palette
-from app.scenario.scenario import ScenarioInterface as SD
 from app.game.games import Games
 from app.game.game import GameStatus
-from app.game import checks
-from app.game.update_income import UpdateIncomeProcess
+from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
 from app.region.regions import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.notifications import Notifications
-from app.truce.truces import Truces
 from app.war.wars import Wars
-from app.map import GameMaps
-from app import actions
-from app import events
-
 
 # TURN PROCESSING
 ################################################################################
@@ -234,14 +231,14 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
 
     if not event_phase:
-        checks.total_occupation_forced_surrender()
-        checks.war_score_forced_surrender()
+        end_wars.total_occupation_forced_surrender()
+        end_wars.war_score_forced_surrender()
         checks.prune_alliances()
     
     UpdateIncomeProcess(game_id).run()
     if not event_phase:
         checks.gain_income()
-    checks.resolve_resource_shortages()
+    resolve_shortages.resolve_resource_shortages()
     checks.resolve_military_capacity_shortages(game_id)
     UpdateIncomeProcess(game_id).run()
     
@@ -322,7 +319,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
         resolve_win(game_id)
 
     if game.turn % 4 == 0:
-        checks.bonus_phase_heals()
+        bonus_phase.heals()
         Notifications.add('All units and defensive improvements have regained 2 health.', 2)
     
     if game.turn % 8 == 0 and not player_has_won:
