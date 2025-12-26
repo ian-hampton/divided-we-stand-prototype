@@ -1,10 +1,11 @@
 from collections import defaultdict
 
-from app.scenario import ScenarioData as SD
-from app.alliance import Alliances
-from app.nation import Nation, Nations
-from app.region import Regions
-from app.war import Wars
+from app.scenario.scenario import ScenarioInterface as SD
+from app.alliance.alliances import Alliances
+from app.nation.nation import Nation
+from app.nation.nations import Nations
+from app.region.regions import Regions
+from app.war.wars import Wars
 
 # easy
 

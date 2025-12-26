@@ -5,11 +5,11 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.append(parent_dir)
 os.chdir(parent_dir)
 
-from app.gamedata import Games
-from app.scenario import ScenarioData as SD
+from app.game.games import Games
+from app.scenario.scenario import ScenarioInterface as SD
 from app.map import GameMaps
-from app.region import Regions
-from app.nation import Nations
+from app.region.regions import Regions
+from app.nation.nations import Nations
 
 GAME_ID = "game1"
 

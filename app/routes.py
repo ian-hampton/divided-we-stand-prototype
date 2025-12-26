@@ -11,8 +11,9 @@ from queue import PriorityQueue
 
 from app import site_functions
 from app import palette
-from app.scenario import ScenarioData as SD
-from app.gamedata import Games, GameStatus
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -58,7 +59,7 @@ def games():
 
         return data
     
-    from app.nation import Nations
+    from app.nation.nations import Nations
     with open("playerdata/player_records.json", 'r') as json_file:
         player_records_dict = json.load(json_file)
 
@@ -144,7 +145,7 @@ def create_game():
 
     def create_new_game() -> None:
 
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         game_id = ''.join(random.choices(string.ascii_letters, k=20))
 
@@ -414,7 +415,7 @@ def profile_route(profile_id):
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     game = Games.load(full_game_id)
     Nations.load(full_game_id)
@@ -481,9 +482,9 @@ def player_route(full_game_id, player_id):
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
     
-    from app.nation import Nations
-    from app.alliance import Alliances
-    from app.war import Wars
+    from app.nation.nations import Nations
+    from app.alliance.alliances import Alliances
+    from app.war.wars import Wars
 
     game = Games.load(full_game_id)
     
@@ -630,7 +631,7 @@ def wars(full_game_id):
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
 
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     SD.load(full_game_id)
     game = Games.load(full_game_id)
@@ -709,7 +710,7 @@ def technologies(full_game_id):
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     SD.load(full_game_id)
     game = Games.load(full_game_id)
@@ -917,11 +918,11 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
-    from app.alliance import Alliances
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
+    from app.nation.nations import Nations, LeaderboardRecordNames
     from app.notifications import Notifications
-    from app.truce import Truces
-    from app.war import Wars
+    from app.truce.truces import Truces
+    from app.war.wars import Wars
 
     def build_diplomacy_string() -> str:
         
@@ -1015,7 +1016,7 @@ def announcements(full_game_id):
 
     # get top three standings
     standings_dict = {}
-    for record_name in Nations.LEADERBOARD_RECORD_NAMES:
+    for record_name in LeaderboardRecordNames:
         standings = Nations.get_top_three(record_name)
         standings_filtered = []
         for entry in standings:
@@ -1027,7 +1028,7 @@ def announcements(full_game_id):
             if end_index - start_index > 30:
                 nation_name = nation_name[0:start_index+31] + nation_name[end_index:]
             # format standing
-            if record_name == "net_income":
+            if record_name is LeaderboardRecordNames.NET_INCOME:
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
                 standings_filtered.append([nation_name, entry[1]])
@@ -1056,8 +1057,8 @@ def announcements(full_game_id):
 @main.route('/<full_game_id>/alliances')
 def alliances(full_game_id):
 
-    from app.alliance import Alliances
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
+    from app.nation.nations import Nations
 
     SD.load(full_game_id)
     game = Games.load(full_game_id)
@@ -1142,12 +1143,12 @@ def get_controlmap(full_game_id):
 @main.route('/<full_game_id>/resolve', methods=['POST'])
 def turn_resolution_new(full_game_id):
 
-    from app.alliance import Alliances
-    from app.region import Regions
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
+    from app.region.regions import Regions
+    from app.nation.nations import Nations
     from app.notifications import Notifications
-    from app.truce import Truces
-    from app.war import Wars
+    from app.truce.truces import Truces
+    from app.war.wars import Wars
     from app import events
 
     game = Games.load(full_game_id)

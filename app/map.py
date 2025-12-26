@@ -4,10 +4,12 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 
 from app import palette
-from app.gamedata import Games, GameStatus
-from app.scenario import ScenarioData as SD
-from app.region import Region, Regions
-from app.nation import Nation, Nations
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
+from app.nation.nations import Nations
+from app.region.region import Region
+from app.region.regions import Regions
 
 MAP_OPACITY = 0.75
 DO_NOT_SPAWN = {"Capital", "City", "Colony", "Military Base", "Missile Defense System", "Missile Silo",

@@ -1,30 +1,29 @@
-import csv
 import json
 import random
-import shutil
-import os
 import copy
 import importlib
-import string
 from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
 
-from app import core
-from app import palette
-from app.scenario import ScenarioData as SD
-from app.gamedata import Games, GameStatus
-from app.alliance import Alliances
-from app.region import Region, Regions
-from app.nation import Nation, Nations
-from app.notifications import Notifications
-from app.truce import Truces
-from app.war import Wars
-from app.map import GameMaps
 from app import actions
-from app import checks
+from app.checks import bonus_phase
+from app.checks import checks
+from app.checks import end_wars
+from app.checks import resolve_shortages
+from app.checks.update_income import UpdateIncomeProcess
 from app import events
-
+from app.map import GameMaps
+from app import palette
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
+from app.alliance.alliances import Alliances
+from app.region.regions import Regions
+from app.nation.nation import Nation
+from app.nation.nations import Nations
+from app.notifications import Notifications
+from app.war.wars import Wars
 
 # TURN PROCESSING
 ################################################################################
@@ -136,7 +135,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
                 nation.add_tech(technology_name)
 
     # update income in playerdata
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     Nations.update_records()
         
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
@@ -187,7 +186,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     market_results = actions.resolve_market_actions(game_id, actions_dict.get("CrimeSyndicateAction", []), actions_dict.get("MarketBuyAction", []), actions_dict.get("MarketSellAction", []))
 
     # update income step
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
 
     # resolve event actions
     scenario_actions.resolve_event_actions(game_id, actions_dict)
@@ -232,16 +231,16 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
 
     if not event_phase:
-        checks.total_occupation_forced_surrender()
-        checks.war_score_forced_surrender()
+        end_wars.total_occupation_forced_surrender()
+        end_wars.war_score_forced_surrender()
         checks.prune_alliances()
     
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     if not event_phase:
         checks.gain_income()
-    checks.resolve_resource_shortages()
+    resolve_shortages.resolve_resource_shortages()
     checks.resolve_military_capacity_shortages(game_id)
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     
     for nation in Nations:
         nation.update_stockpile_limits()
@@ -320,7 +319,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
         resolve_win(game_id)
 
     if game.turn % 4 == 0:
-        checks.bonus_phase_heals()
+        bonus_phase.heals()
         Notifications.add('All units and defensive improvements have regained 2 health.', 2)
     
     if game.turn % 8 == 0 and not player_has_won:

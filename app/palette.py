@@ -7,7 +7,7 @@ def color_nation_names(string: str, game_id: str):
     Adds html span tags around all nation names in given string
     """
 
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     color_dict = {}
 

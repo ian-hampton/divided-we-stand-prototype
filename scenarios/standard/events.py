@@ -1,14 +1,14 @@
-import json
 import random
 
-from app import core
-from app.gamedata import Games
+from app.game.games import Games
+from app.scenario.scenario import ScenarioInterface as SD
 from app import actions
-from app.alliance import Alliances
-from app.region import Region, Regions
-from app.nation import Nation, Nations
+from app.alliance.alliances import Alliances
+from app.region.regions import Regions
+from app.nation.nation import Nation
+from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications
-from app.war import Wars
+from app.war.wars import Wars
 
 from app import palette
 
@@ -52,8 +52,6 @@ class Event:
         """
         Returns updated playerdata_List and a bool that is True if the research was valid, False otherwise.
         """
-
-        from app.scenario import ScenarioData as SD
 
         prereq = SD.technologies[research_name].prerequisite
         if prereq is not None and prereq not in nation.completed_research:
@@ -418,8 +416,8 @@ class ForeignAid(Event):
 
     def activate(self):
         
-        for record_name in Nations.LEADERBOARD_RECORD_NAMES:
-            top_three = Nations.get_top_three(record_name)
+        for record in LeaderboardRecordNames:
+            top_three = Nations.get_top_three(record)
             for nation_name, score in top_three:
                 if score != 0 and nation_name not in self.targets:
                     self.targets.append(nation_name)
@@ -1535,8 +1533,6 @@ def load_event(game_id: str, event_name: str, event_data: dict | None) -> any:
         any: An event object corresponding to the event name, or raises an exception if none found.
     """
 
-    from app.scenario import ScenarioData as SD
-
     events = {
         "Assassination": Assassination,
         "Corruption Scandal": CorruptionScandal,
@@ -1592,7 +1588,6 @@ def _is_first_event(game_id: str) -> bool:
 
 def _no_major_events(game_id: str) -> bool:
 
-    from app.scenario import ScenarioData as SD
     game = Games.load(game_id)
     
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)

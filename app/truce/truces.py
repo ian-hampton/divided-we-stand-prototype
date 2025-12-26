@@ -1,15 +1,16 @@
 import json
 import os
 from dataclasses import dataclass
-from typing import ClassVar, Iterator, Tuple
+from typing import ClassVar, Iterator
 
-from app.gamedata import Games
+from app.game.games import Games
+from .truce import Truce
 
 class TrucesMeta(type):
 
-    def __iter__(cls) -> Iterator["Truce"]:
+    def __iter__(cls) -> Iterator[Truce]:
         for truce_id in cls._data:
-            yield Truce(truce_id)
+            yield Truce(truce_id, cls._data[truce_id], cls.game_id)
 
     def __len__(cls):
         return len(cls._data)
@@ -69,43 +70,3 @@ class Truces(metaclass=TrucesMeta):
                 and nation2_id in truce.signatories):
                 return True
         return False
-
-class Truce:
-
-    def __init__(self, truce_id: str):
-        self._data = Truces._data[truce_id]
-        self.id = truce_id
-        self.start_turn: int = self._data["startTurn"]
-
-    @property
-    def end_turn(self) -> int:
-        return self._data["endTurn"]
-    
-    @end_turn.setter
-    def end_turn(self, turn: int) -> None:
-        self._data["endTurn"] = turn
-
-    @property
-    def signatories(self) -> dict[str, bool]:
-        return self._data["signatories"]
-    
-    @signatories.setter
-    def signatories(self, value: dict) -> None:
-        self._data["signatories"] = value
-
-    @property
-    def is_active(self) -> bool:
-        game = Games.load(Truces.game_id)
-        return True if self.end_turn > game.turn else False
-
-    def __str__(self):
-        from app.nation import Nations
-
-        signatories_list = list(self.signatories.keys())
-        
-        nations_list = []
-        for nation_id in signatories_list:
-            nation = Nations.get(nation_id)
-            nations_list.append(nation.name)
-        
-        return " - ".join(nations_list)

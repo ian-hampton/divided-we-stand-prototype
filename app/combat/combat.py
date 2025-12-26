@@ -1,9 +1,9 @@
 import random
 from typing import Union, Tuple
 
-from app.region import Region
-from app.nation import Nations
-from app.war import Wars
+from app.region.region import Region
+from app.nation.nations import Nations
+from app.war.wars import Wars
 
 def unit_vs_unit(attacker_region: Region, defender_region: Region) -> None:
 
