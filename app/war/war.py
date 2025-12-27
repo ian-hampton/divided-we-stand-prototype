@@ -3,6 +3,7 @@ from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 from .war_claims import ManageWarClaims
 from .combatant import Combatant
+from .warscore import WarScore
 
 class War:
 
@@ -196,6 +197,44 @@ class War:
                 combatant.target_id = str(target_id)
             
             combatant.justification = war_justification
+
+    def update_warscore(self, side: str, category: str, amount: WarScore) -> None:
+        """
+        This is an ugly solution. Too bad!
+
+        Args:
+            side (str): _description_
+            category (str): _description_
+            amount (WarScore): _description_
+        """
+        if side == "Attacker":
+            match category:
+                case "occupation":
+                    self.attackers.occupation += amount
+                case "victories":
+                    self.attackers.victories += amount
+                case "destroyed_units":
+                    self.attackers.destroyed_units += amount
+                case "destroyed_improvements":
+                    self.attackers.destroyed_improvements += amount
+                case "captures":
+                    self.attackers.captures += amount
+                case "nuclear_strikes":
+                    self.attackers.nuclear_strikes += amount
+        elif side == "Defender":
+            match category:
+                case "occupation":
+                    self.defenders.occupation += amount
+                case "victories":
+                    self.defenders.victories += amount
+                case "destroyed_units":
+                    self.defenders.destroyed_units += amount
+                case "destroyed_improvements":
+                    self.defenders.destroyed_improvements += amount
+                case "captures":
+                    self.defenders.captures += amount
+                case "nuclear_strikes":
+                    self.defenders.nuclear_strikes += amount
 
     def calculate_score_threshold(self) -> tuple:
         

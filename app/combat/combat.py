@@ -19,18 +19,18 @@ class CombatProcedure:
         Returns:
             bool: True if combat occured, False otherwise.
         """
+        from .uvu import UnitVsUnit
+        from .uvi import UnitVsImprovement
         
         # conduct unit vs unit combat if needed
         if self.defending_region.unit.is_hostile(self.attacking_region.unit.owner_id):
-            combat_old.unit_vs_unit(self.attacking_region, self.defending_region)
+            UnitVsUnit(self).resolve()
             self.has_conducted_combat = True
         
         # conduct units vs improvement combat if needed
         if self.defending_region.improvement_is_hostile(self.attacking_region.unit.owner_id) and self.attacking_region.unit.name is not None:
-            combat_old.unit_vs_improvement(self.attacking_region, self.defending_region)
+            UnitVsImprovement(self).resolve()
             self.has_conducted_combat = True
-        
-        self.has_conducted_combat = False
 
     def is_able_to_move(self) -> bool:
         """
