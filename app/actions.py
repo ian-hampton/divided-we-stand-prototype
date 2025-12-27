@@ -2319,15 +2319,13 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
         print(f"{i + 1}. {nation.name}")
 
     for action in ordered_actions_list:
-        
         while action.target_region_ids != []:
             target_region_id = action.target_region_ids.pop()
-
             nation = Nations.get(action.id)
             current_region = Regions.load(action.current_region_id)
             target_region = Regions.load(target_region_id)
 
-            # current region checks
+            # validate current region
             if current_region.unit.name == None or action.id != current_region.unit.owner_id:
                 nation.action_log.append(f"Failed to perform a move action from {action.current_region_id}. You do not control a unit there.")
                 continue
@@ -2337,7 +2335,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
             if target_region_id == action.current_region_id:
                 continue
 
-            # target region checks
+            # validate target region
             if target_region.data.owner_id == "0" and action.id != "99":
                 nation.action_log.append(f"Failed to move {target_region.unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
                 continue

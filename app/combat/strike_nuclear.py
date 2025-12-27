@@ -84,9 +84,9 @@ class NuclearStrike(Strike):
         unit_damage_occured = self.resolve_unit_damage()
 
         if "Attacker" in self.attacking_combatant.role:
-            self.war.attackers.nuclear_strikes += Wars.WARSCORE_FROM_NUCLEAR_STRIKE
+            self.war.attackers.nuclear_strikes += WarScore.FROM_NUCLEAR_STRIKE
         else:
-            self.war.defenders.nuclear_strikes += Wars.WARSCORE_FROM_NUCLEAR_STRIKE
+            self.war.defenders.nuclear_strikes += WarScore.FROM_NUCLEAR_STRIKE
         
         if self.target_region.improvement.name != "Capital":
             self.target_region.set_fallout()

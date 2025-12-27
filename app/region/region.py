@@ -130,7 +130,7 @@ class Region:
     def is_valid_move(self, other_player_id: int) -> bool:
         """
         Determines if a unit owned by other_player_id can move into this region.
-        Only takes into account ownership. Does not consider adjacency or other disqualifiers.
+        Only takes into account ownership. Does not consider adjacency or other disqualifiers, that is the job of the move action function.
 
         Params:
             other_player_id (int): player_id to compare to
@@ -138,7 +138,6 @@ class Region:
         Returns:
             bool: True if all checks pass. False otherwise.
         """
-        
         from app.war.wars import Wars
 
         # you can always move into regions owned by you
@@ -148,8 +147,7 @@ class Region:
         # you may move into unoccupied regions owned by an enemy
         if Wars.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id == "0":
             return True
-        
-        # you may move into occupied regions owned by an enemy in two cases
+        # or you may move into occupied regions owned by an enemy in two cases
         elif Wars.get_war_name(self.data.owner_id, other_player_id) is not None and self.data.occupier_id != "0":
             # you are the occupier
             if self.data.occupier_id == other_player_id:
@@ -195,7 +193,6 @@ class Region:
         Returns:
             bool: True if action succeeded, False otherwise.
         """
-
         from app.combat import combat
         from app.war.wars import Wars
 
@@ -209,6 +206,7 @@ class Region:
             target_region.unit.set(self.unit.name, self.unit.owner_id, self.unit.health)
             self.unit.clear()
 
+        # withdraw moves need not conduct combat
         if withdraw:
             execute_move()
             return True

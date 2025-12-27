@@ -283,7 +283,7 @@ def unit_vs_improvement_sf(attacker_region: Region, defender_region: Region) -> 
         defender.improvement_counts[defender_region.improvement.name] -= 1
         defender_region.improvement.clear()
     else:
-        war.attackers.captures += Wars.WARSCORE_FROM_CAPITAL_CAPTURE
+        war.attackers.captures += WarScore.FROM_CAPITAL_CAPTURE
         war.log.append(f"    {defender.name} {defender_region.improvement.name} has been captured!")
         defender_region.improvement.health = 0
 
