@@ -8,6 +8,7 @@ from app.game.games import Games
 from app.nation.nation import Nation
 from .war import War
 from .war_claims import ManageWarClaims
+from .warscore import WarScore
 
 class WarsMeta(type):
     
@@ -36,13 +37,6 @@ class Wars(metaclass=WarsMeta):
             gamedata_dict = json.load(f)
 
         cls._data = gamedata_dict["wars"]
-
-        # TODO - make these enums
-        cls.WARSCORE_FROM_VICTORY = 1
-        cls.WARSCORE_FROM_OCCUPATION = 2
-        cls.WARSCORE_FROM_DESTROY_IMPROVEMENT = 2
-        cls.WARSCORE_FROM_CAPITAL_CAPTURE = 20
-        cls.WARSCORE_FROM_NUCLEAR_STRIKE = 5
 
     @classmethod
     def save(cls) -> None:
@@ -255,9 +249,9 @@ class Wars(metaclass=WarsMeta):
                 score += 1
             
             if "Attacker" in occupier_war_role:
-                war.attackers.occupation += cls.WARSCORE_FROM_OCCUPATION
+                war.attackers.occupation += WarScore.FROM_OCCUPATION
             else:
-                war.defenders.occupation += cls.WARSCORE_FROM_OCCUPATION
+                war.defenders.occupation += WarScore.FROM_OCCUPATION
 
     @classmethod
     def update_totals(cls) -> None:

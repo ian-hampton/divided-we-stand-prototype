@@ -1,0 +1,8 @@
+from enum import IntEnum
+
+class WarScore(IntEnum):
+    FROM_VICTORY = 1
+    FROM_OCCUPATION = 2
+    FROM_DESTROY_IMPROVEMENT = 2
+    FROM_CAPITAL_CAPTURE = 20
+    FROM_NUCLEAR_STRIKE = 5

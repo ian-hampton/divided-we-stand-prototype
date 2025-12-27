@@ -3,6 +3,7 @@ import random
 from app.scenario.scenario import ScenarioInterface as SD
 from app.region.regions import Regions
 from app.war.wars import Wars
+from app.war.warscore import WarScore
 from .strike import Strike
 
 class StandardStrike(Strike):
@@ -68,9 +69,9 @@ class StandardStrike(Strike):
 
             # improvement destroyed
             if "Attacker" in self.attacking_combatant.role:
-                self.war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+                self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
             else:
-                self.war.defenders.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+                self.war.defenders.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
             if self.target_region.improvement.name != 'Capital':
                 self.attacking_combatant.destroyed_improvements += 1
                 self.defending_combatant.lost_improvements += 1
@@ -93,9 +94,9 @@ class StandardStrike(Strike):
             
             # improvement destroyed
             if "Attacker" in self.attacking_combatant.role:
-                self.war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+                self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
             else:
-                self.war.defenders.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+                self.war.defenders.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
             self.attacking_combatant.destroyed_improvements += 1
             self.defending_combatant.lost_improvements += 1
             self.war.log.append(f"    Missile struck {self.target_region.improvement.name} in {self.target_region.id}. Improvement destroyed!")

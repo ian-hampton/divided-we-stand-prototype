@@ -4,6 +4,7 @@ from collections import deque
 
 from app.game.games import Games
 from app.nation.nation import Nation
+from app.war.warscore import WarScore
 from .improvement import ImprovementData
 from .unit import UnitData
 
@@ -239,7 +240,7 @@ class Region:
                 defending_nation_combatant_data = war.get_combatant(defender_id)
                 
                 # award points and update stats
-                war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+                war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
                 attacking_nation_combatant_data.destroyed_improvements += 1
                 defending_nation_combatant_data.lost_improvements += 1
                 
