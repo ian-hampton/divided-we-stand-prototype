@@ -187,6 +187,7 @@ class Nations(metaclass=NationsMeta):
             },
             "improvementCounts": {improvement_name: 0 for improvement_name, improvement_data in SD.improvements},
             "unitCounts": {unit_name: 0 for unit_name, unit_data in SD.units},
+            "unitCountsLifetime": {unit_name: 0 for unit_name, unit_data in SD.units},
             "unlockedResearch": {},
             "incomeDetails": [],
             "tags": {},
