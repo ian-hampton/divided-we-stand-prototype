@@ -203,13 +203,13 @@ class GameMaps:
         unit_img.paste(symb_img, (9, 16))
 
         # place unit name
-        font = ImageFont.truetype("app/fonts/LeelaUIb.ttf", size=12)
-        abbrev = SD.units[region.unit.name].abbreviation
-        ImageDraw.Draw(unit_img).text(xy=(25, 4), text=abbrev, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
+        font = ImageFont.truetype("app/fonts/LeelaUIb.ttf", size=10)
+        ImageDraw.Draw(unit_img).text(xy=(25, 5), text=region.unit.full_name, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
 
         # place unit health
         max_health = SD.units[region.unit.name].health
-        ImageDraw.Draw(unit_img).text(xy=(25, 36), text=f"{region.unit.health}/{max_health}", fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
+        status = f"{region.unit.health}/{max_health}"
+        ImageDraw.Draw(unit_img).text(xy=(25, 37), text=status, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
         
         # place unit on map
         x = region.graph.unit_coordinates[0]

@@ -1209,7 +1209,7 @@ class ForeignInvasion(Event):
 
         region.data.owner_id = "99"
         region.data.occupier_id = "0"
-        region.unit.set(unit_name, "99")
+        region.unit.set(unit_name, unit_name, "99")
 
         foreign_nation = Nations.get("99")
         foreign_nation.unit_counts[unit_name] += 1

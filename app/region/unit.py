@@ -15,6 +15,14 @@ class UnitData:
         self._data["name"] = value
 
     @property
+    def full_name(self) -> str:
+        return self._data["fullName"]
+    
+    @full_name.setter
+    def full_name(self, value: str) -> None:
+        self._data["fullName"] = value
+
+    @property
     def health(self) -> int:
         return self._data["health"]
     
@@ -31,7 +39,6 @@ class UnitData:
         self._data["ownerID"] = new_id
 
     def _load_attributes_from_game_files(self) -> None:
-
         if self.name is not None:
             self.type = SD.units[self.name].type
             self.value = SD.units[self.name].value
@@ -51,9 +58,10 @@ class UnitData:
             self.missile_defense = None
             self.nuclear_defense = None
 
-    def set(self, unit_name: str, owner_id: str, starting_health=0) -> None:
+    def set(self, unit_name: str, full_unit_name: str, owner_id: str, starting_health=0) -> None:
         self.clear()
         self.name = unit_name
+        self.full_name = full_unit_name
         self.owner_id = owner_id
         self._load_attributes_from_game_files()
         self.health = self.max_health if starting_health == 0 else starting_health
@@ -65,6 +73,7 @@ class UnitData:
 
     def clear(self) -> None:
         self.name = None
+        self.full_name = None
         self.health = 99
         self.owner_id = "0"
         self._load_attributes_from_game_files()

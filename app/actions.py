@@ -2092,7 +2092,8 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
 
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
-        region.unit.set(action.unit_name, action.id)
+        full_unit_name = nation.generate_full_unit_name(action.unit_name)
+        region.unit.set(action.unit_name, full_unit_name, action.id)
         nation.unit_counts[region.unit.name] += 1
         nation.update_military_capacity()
 

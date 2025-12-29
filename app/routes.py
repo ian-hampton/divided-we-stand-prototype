@@ -185,6 +185,7 @@ def create_game():
                 },
                 "unitData": {
                     "name": None,
+                    "fullName": None,
                     "health": 99,
                     "ownerID": "0"
                 }

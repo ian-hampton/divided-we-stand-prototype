@@ -683,6 +683,18 @@ class Nation:
         for i, str in enumerate(self.income_details):
             if "Political Power" in str:
                 return i
+            
+    def generate_full_unit_name(unit_name: str) -> str:
+        """
+        Creates the full name for a unit using its name and number.
+
+        Args:
+            unit_name (str): A string name representing what unit it is.
+
+        Returns:
+            str: Full unit name.
+        """
+        pass
 
 class NationStatistics:
 
