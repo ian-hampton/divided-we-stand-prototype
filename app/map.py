@@ -206,9 +206,8 @@ class GameMaps:
         font = ImageFont.truetype("app/fonts/LeelaUIb.ttf", size=10)
         ImageDraw.Draw(unit_img).text(xy=(25, 5), text=region.unit.full_name, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
 
-        # place unit health
-        max_health = SD.units[region.unit.name].health
-        status = f"{region.unit.health}/{max_health}"
+        # place unit stats
+        status = f"{region.unit.damage}-{region.unit.armor}-{region.unit.health}"
         ImageDraw.Draw(unit_img).text(xy=(25, 37), text=status, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
         
         # place unit on map
