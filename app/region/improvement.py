@@ -37,17 +37,16 @@ class ImprovementData:
     def _load_attributes_from_game_files(self) -> None:
         
         if self.name is not None:
-            self.victory_damage = SD.improvements[self.name].victory_damage
-            self.draw_damage = SD.improvements[self.name].draw_damage
-            self.max_health = SD.improvements[self.name].health
-            self.hit_value = SD.improvements[self.name].hit_value
-            self.missile_defense = SD.improvements[self.name].missile_defense
-            self.nuclear_defense = SD.improvements[self.name].nuclear_defense
+            improvement = SD.improvements[self.name]
+            self.damage = improvement.damage
+            self.armor = improvement.armor
+            self.max_health = improvement.health
+            self.missile_defense = improvement.missile_defense
+            self.nuclear_defense = improvement.nuclear_defense
         else:
-            self.victory_damage = None
-            self.draw_damage = None
+            self.damage = None
+            self.armor = None
             self.max_health = None
-            self.hit_value = None
             self.missile_defense = None
             self.nuke_defense = None
 
