@@ -42,25 +42,25 @@
         "Location": "B0",
         "Modifiers": {}
     },
-    "Technology Exchange": {
+    "Improved Logistics": {
         "Agenda Type": "Economic",
         "Prerequisite": "Trade Routes",
         "Cost": 15,
-        "Description": "New Alliance: Research Agreement.",
+        "Description": "Your nation's trade fee is lowered to 1:3.<br>Buying resources from the Resource Market is 20% cheaper.",
         "Location": "B1",
         "Modifiers": {}
     },
-    "Improved Logistics": {
+    "Technology Exchange": {
         "Agenda Type": "Economic",
-        "Prerequisite": "Technology Exchange",
+        "Prerequisite": "Improved Logistics",
         "Cost": 15,
-        "Description": "Your nation's trade fee is lowered to 1:3.<br>Buying resources from the Resource Market is 20% cheaper.",
+        "Description": "New Alliance: Research Agreement.",
         "Location": "B2",
         "Modifiers": {}
     },
     "Efficient Bureaucracy": {
         "Agenda Type": "Economic",
-        "Prerequisite": "Improved Logistics",
+        "Prerequisite": "Technology Exchange",
         "Cost": 15,
         "Description": "All dollars upkeep costs for improvements in your nation are reduced by 50%.",
         "Location": "B3",
@@ -101,7 +101,7 @@
         "Agenda Type": "Security",
         "Prerequisite": null,
         "Cost": 15,
-        "Description": "+2 military capacity from Capital improvements.<br>+1 to all combat rolls for all defensive improvements.",
+        "Description": "+2 military capacity from Capital improvements.<br>Your defensive improvements deal +1 damage during defensive wars.",
         "Location": "C0",
         "Modifiers": {
             "Capital": {
@@ -131,7 +131,7 @@
         "Agenda Type": "Security",
         "Prerequisite": "Peacetime Recovery",
         "Cost": 15,
-        "Description": "Your nation will surrender at -150 war score instead of -100 war score. +1 to combat rolls for all units during a defensive war.",
+        "Description": "Your nation will surrender at -150 war score instead of -100 war score. Your units deal +1 damage during defensive wars.",
         "Location": "C3",
         "Modifiers": {}
     },
@@ -139,7 +139,7 @@
         "Agenda Type": "Warfare",
         "Prerequisite": null,
         "Cost": 15,
-        "Description": "+1 to combat rolls for all units during an offensive war.",
+        "Description": "Your units deal +1 damage during offensive wars. Your nation may join any ongoing war on either side, if you have permission from a main combatant and obey all other normal war restrictions.",
         "Location": "D0",
         "Modifiers": {}
     },
@@ -147,7 +147,7 @@
         "Agenda Type": "Warfare",
         "Prerequisite": "Superior Training",
         "Cost": 15,
-        "Description": "New War Justification: Conquest. Your nation may join any ongoing war on either side, if you have permission from a main combatant and obey all other normal war restrictions.",
+        "Description": "New War Justification: Conquest.<br>Gain +0.5 political power per turn for each war your nation has won.",
         "Location": "D1",
         "Modifiers": {}
     },
