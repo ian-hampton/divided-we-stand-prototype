@@ -40,23 +40,26 @@ class UnitData:
 
     def _load_attributes_from_game_files(self) -> None:
         if self.name is not None:
-            self.type = SD.units[self.name].type
-            self.value = SD.units[self.name].value
-            self.victory_damage = SD.units[self.name].victory_damage
-            self.draw_damage = SD.units[self.name].draw_damage
-            self.max_health = SD.units[self.name].health
-            self.hit_value = SD.units[self.name].hit_value
-            self.missile_defense = SD.units[self.name].missile_defense
-            self.nuclear_defense = SD.units[self.name].nuclear_defense
+            unit = SD.units[self.name]
+            self.type = unit.type
+            self.value = unit.value
+            self.damage = unit.damage
+            self.armor = unit.armor
+            self.max_health = unit.health
+            self.movement = unit.movement
+            self.missile_defense = unit.missile_defense
+            self.nuclear_defense = unit.nuclear_defense
+            self.defense_range = unit.defense_range
         else:
             self.type = None
             self.value = None
-            self.victory_damage = None
-            self.draw_damage = None
+            self.damage = None
+            self.armor = None
             self.max_health = None
-            self.hit_value = None
+            self.movement = None
             self.missile_defense = None
             self.nuclear_defense = None
+            self.defense_range = None
 
     def set(self, unit_name: str, full_unit_name: str, owner_id: str, starting_health=0) -> None:
         self.clear()
