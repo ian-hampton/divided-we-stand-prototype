@@ -106,12 +106,10 @@
         "Point Value": 2,
         "Reference Color": "stat-purple",
         "Damage": 4,
-        "Armor": 3,
+        "Armor": 2,
         "Health": 12,
         "Movement": 2,
-        "Abilities": [
-            "All of your Infantry-type units that are adjacent to one of your Light Tank units gain +1 to all combat rolls. If multiple Light Tank are adjacent, this bonus does not stack."
-        ],
+        "Abilities": [],
         "Upkeep": {
             "Oil": 0.5
         },
@@ -127,7 +125,7 @@
         "Point Value": 3,
         "Reference Color": "stat-purple",
         "Damage": 6,
-        "Armor": 4,
+        "Armor": 3,
         "Health": 16,
         "Movement": 1,
         "Abilities": [
@@ -148,8 +146,8 @@
         "Point Value": 4,
         "Reference Color": "stat-purple",
         "Damage": 6,
-        "Armor": 4,
-        "Health": 16,
+        "Armor": 3,
+        "Health": 20,
         "Movement": 2,
         "Abilities": [
             "All of your Infantry-type units adjacent to this unit gain +1 armor for this turn only.",

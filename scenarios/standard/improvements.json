@@ -170,7 +170,7 @@
         "Income": {},
         "Abilities": [
             "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions.",
-            "If there is a unit within the same region as this improvement, that unit gains +1 armor and +1 damage."
+            "If there is a unit within the same region as this improvement, that unit gains +1 armor and +1 damage for this turn only."
         ],
         "Upkeep": {
             "Energy": 2
@@ -192,7 +192,7 @@
         "Income": {},
         "Abilities": [
             "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions.",
-            "If there is an Infantry-type unit within the same region as this improvement, that unit gains +1 armor."
+            "If there is an Infantry-type unit within the same region as this improvement, that unit gains +1 armor for this turn only."
         ],
         "Upkeep": {
             "Energy": 1
@@ -209,8 +209,8 @@
         "Damage": 1,
         "Armor": 1,
         "Health": 9,
-        "Standard Missile Defense": 5,
-        "Nuclear Missile Defense": 7,
+        "Standard Missile Defense": 7,
+        "Nuclear Missile Defense": 5,
         "Missile Defense Range": 2,
         "Income": {},
         "Abilities": [
@@ -314,7 +314,7 @@
         "Reference Color": "stat-red",
         "Income": {},
         "Abilities": [
-            "If there is an Infantry-type unit within the same region as this improvement, that unit gains +1 armor."
+            "If there is an Infantry-type unit within the same region as this improvement, that unit gains +1 armor for this turn only."
         ],
         "Upkeep": {},
         "Build Costs": {
