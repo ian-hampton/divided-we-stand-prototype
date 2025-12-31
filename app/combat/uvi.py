@@ -1,18 +1,14 @@
-import random
-from enum import StrEnum
-
 from app.nation.nations import Nations
 from app.war.warscore import WarScore
+from .battle import BattleTemplate
 from .combat import CombatProcedure
 
-class UnitVsImprovement:
+class UnitVsImprovement(BattleTemplate):
     
     def __init__(self, combat: CombatProcedure):
-        self.attacking_region = combat.attacking_region
-        self.defending_region = combat.defending_region
+        super().__init__(combat)
         self.attacker_id = self.attacking_region.unit.owner_id
         self.defender_id = self.defending_region.data.owner_id
-        self.war = combat.war
         self.attacker = Nations.get(self.attacker_id)
         self.defender = Nations.get(self.defender_id)
         self.attacker_cd = self.war.get_combatant(self.attacker_id)
@@ -21,41 +17,12 @@ class UnitVsImprovement:
         self.attacker_damage_modifier = 0
         self.defender_damage_modifier = 0
 
-    def _award_warscore(self, side: str, category: str, amount: WarScore) -> None:
-        """
-        This function is silly but important.
-        Since an "attacker" in this combat may not be the same as the "attacker" in the corresponding war, we need to identify what side should be rewarded.
-
-        Args:
-            side (str): _description_
-            category (str): _description_
-            amount (WarScore): _description_
-        """
-        if side == "Attacker":
-            if "Attacker" in self.attacker_cd.role:
-                self.war.update_warscore("Attacker", category, amount)
-            else:
-                self.war.update_warscore("Defender", category, amount)
-        elif side == "Defender":
-            if "Attacker" in self.defender_cd.role:
-                self.war.update_warscore("Attacker", category, amount)
-            else:
-                self.war.update_warscore("Defender", category, amount)
-
     def _calculate_damage_modifiers(self) -> None:
-
-        # attacker damage from tags
-        for tag_data in self.attacker.tags.values():
-            if tag_data.get("Combat Roll Bonus") == self.defender.id:
-                self.attacker_damage_modifier += 1
-        
-        # attacker damage from research
-        if "Attacker" in self.attacker_cd.role and "Superior Training" in self.attacker.completed_research:
-            self.war.log.append(f"    Attacking unit has Superior Training (+1).")
-            self.attacker_damage_modifier += 1
-        elif "Defender" in self.attacker_cd.role and "Unyielding" in self.attacker.completed_research:
-            self.war.log.append(f"    Attacking unit has Unyielding (+1).")
-            self.attacker_damage_modifier += 1
+        """
+        Calculates damage modifiers for attacker and defender.
+        Partially implemented by parent class BattleTemplate.
+        """
+        super()._calculate_damage_modifiers()
         
         # attacker damage from units
         if self.attacking_region.unit.name == "Main Battle Tank":
@@ -63,11 +30,6 @@ class UnitVsImprovement:
             self.attacker_damage_modifier += 2
         if self.attacking_region.check_for_adjacent_unit({"Artillery"}, self.attacking_region.unit.owner_id):
             self.war.log.append(f"    Attacking unit has Artillery support (+1).")
-            self.attacker_damage_modifier += 1
-
-        # attacker damage from improvements
-        if self.attacking_region.improvement.name == "Military Base":
-            self.war.log.append(f"    Attacking unit has Military Base support (+1).")
             self.attacker_damage_modifier += 1
 
         # defender damage from research
