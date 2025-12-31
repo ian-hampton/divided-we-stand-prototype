@@ -2300,17 +2300,17 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
     
     game = Games.load(game_id)
 
-    # generate movement order for the turn
+    # generate random movement order for the turn
     players_moving_units: list[str] = []
     for action in actions_list:
+        # flag corresponding unit as having a movement ordered queued (presuming that unit exists)
+        current_region = Regions.load(action.current_region_id)
+        if current_region.unit.name is not None and action.id == current_region.unit.owner_id:
+            current_region.unit.has_movement_queued = True
+        # add nation id to list
         if action.id not in players_moving_units:
             players_moving_units.append(action.id)
     random.shuffle(players_moving_units)
-    ordered_actions_list: list[UnitMoveAction] = []
-    for nation_id in players_moving_units:
-        for action in actions_list:
-            if action.id == nation_id:
-                ordered_actions_list.append(action)
 
     # print movement order
     if len(players_moving_units) != 0: 
@@ -2319,6 +2319,14 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
         nation = Nations.get(nation_id)
         print(f"{i + 1}. {nation.name}")
 
+    # re-order actions
+    ordered_actions_list: list[UnitMoveAction] = []
+    for nation_id in players_moving_units:
+        for action in actions_list:
+            if action.id == nation_id:
+                ordered_actions_list.append(action)
+
+    # process movement action
     for action in ordered_actions_list:
         while action.target_region_ids != []:
             target_region_id = action.target_region_ids.pop()
