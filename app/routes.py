@@ -558,7 +558,7 @@ def wars(full_game_id):
         copy = {
             "Total War Score": war.attackers.total,
             "From Occupation": war.attackers.occupation,
-            "From Combat Victories": war.attackers.victories,
+            "From Decisive Battles": war.attackers.decisive_battles,
             "From Enemy Units Destroyed": war.attackers.destroyed_units,
             "From Enemy Impr. Destroyed": war.attackers.destroyed_improvements,
             "From Capital Captures": war.attackers.captures,
@@ -570,7 +570,7 @@ def wars(full_game_id):
         copy = {
             "Total War Score": war.defenders.total,
             "From Occupation": war.defenders.occupation,
-            "From Combat Victories": war.defenders.victories,
+            "From Decisive Battles": war.defenders.decisive_battles,
             "From Enemy Units Destroyed": war.defenders.destroyed_units,
             "From Enemy Impr. Destroyed": war.defenders.destroyed_improvements,
             "From Capital Captures": war.defenders.captures,

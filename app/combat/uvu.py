@@ -93,16 +93,15 @@ class UnitVsUnit:
         net_damage = total_damage - total_armor 
         self.defending_region.unit.health -= net_damage
         
+        self.attacker_cd.attacks += 1
         if net_damage > 3:
             # decisive victory
-            self._award_warscore("Attacker", "victories", WarScore.FROM_VICTORY)
-            self.attacker_cd.battles_won += 1
+            self._award_warscore("Attacker", "decisive_battles", WarScore.FROM_SUCCESSFUL_ATTACK)
             battle_str = f"    {self.attacker.name} dealt {net_damage} to {self.defender.name} {self.defending_region.unit.name} ({total_damage} damage - {total_armor} armor). Decisive victory!"
             self.war.log.append(battle_str)
         else:
             # not a decisive victory
             self.attacking_region.unit.health -= 1
-            self.attacker_cd.battles_won += 1
             battle_str = f"    {self.attacker.name} dealt {net_damage if net_damage > 0 else 0} to {self.defender.name} {self.defending_region.unit.name} ({total_damage} damage - {total_armor} armor)."
             self.war.log.append(battle_str)
             battle_str = f"    {self.attacker.name} {self.attacking_region.unit.name} suffers 1 damage."
@@ -134,7 +133,8 @@ class UnitVsUnit:
         """
         Resolve combat between the attacking and defending units.
         """
-        self.war.log.append(f"{self.attacker.name} {self.attacking_region.unit.name} {self.attacking_region.id} attacked {self.defender.name} {self.defending_region.unit.name} {self.defending_region.id}")
+        battle_title = f"{self.attacker.name} {self.attacking_region.unit.name} {self.attacking_region.id} attacked {self.defender.name} {self.defending_region.unit.name} {self.defending_region.id}"
+        self.war.log.append(battle_title)
         self._calculate_damage_modifiers()
         self._calculate_armor_modifiers()
         self._execute_combat()

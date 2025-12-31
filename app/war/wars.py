@@ -77,7 +77,7 @@ class Wars(metaclass=WarsMeta):
             "attackerWarScore": {
                 "total": 0,
                 "occupation": 0,
-                "combatVictories": 0,
+                "decisiveBattles": 0,
                 "enemyUnitsDestroyed": 0,
                 "enemyImprovementsDestroyed": 0,
                 "capitalCaptures": 0,
@@ -86,7 +86,7 @@ class Wars(metaclass=WarsMeta):
             "defenderWarScore": {
                 "total": 0,
                 "occupation": 0,
-                "combatVictories": 0,
+                "decisiveBattles": 0,
                 "enemyUnitsDestroyed": 0,
                 "enemyImprovementsDestroyed": 0,
                 "capitalCaptures": 0,

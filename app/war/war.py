@@ -110,8 +110,7 @@ class War:
             "justification": "TBD",
             "targetID": target_id,
             "claims": {},
-            "battlesWon": 0,
-            "battlesLost": 0,
+            "attacks": 0,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 0,
             "friendlyUnitsDestroyed": 0,
@@ -211,8 +210,8 @@ class War:
             match category:
                 case "occupation":
                     self.attackers.occupation += amount
-                case "victories":
-                    self.attackers.victories += amount
+                case "decisive_battles":
+                    self.attackers.decisive_battles += amount
                 case "destroyed_units":
                     self.attackers.destroyed_units += amount
                 case "destroyed_improvements":
@@ -225,8 +224,8 @@ class War:
             match category:
                 case "occupation":
                     self.defenders.occupation += amount
-                case "victories":
-                    self.defenders.victories += amount
+                case "decisive_battles":
+                    self.defenders.decisive_battles += amount
                 case "destroyed_units":
                     self.defenders.destroyed_units += amount
                 case "destroyed_improvements":
@@ -386,12 +385,12 @@ class WarScoreData:
         self._data["occupation"] = value
 
     @property
-    def victories(self) -> int:
-        return self._data["combatVictories"]
+    def decisive_battles(self) -> int:
+        return self._data["decisiveBattles"]
     
-    @victories.setter
-    def victories(self, value: int) -> None:
-        self._data["combatVictories"] = value
+    @decisive_battles.setter
+    def decisive_battles(self, value: int) -> None:
+        self._data["decisiveBattles"] = value
 
     @property
     def destroyed_units(self) -> int:

@@ -28,20 +28,12 @@ class Combatant:
         self._data["justification"] = value
 
     @property
-    def battles_won(self) -> int:
-        return self._data["battlesWon"]
+    def attacks(self) -> int:
+        return self._data["attacks"]
 
-    @battles_won.setter
-    def battles_won(self, value: int):
-        self._data["battlesWon"] = value
-
-    @property
-    def battles_lost(self) -> int:
-        return self._data["battlesLost"]
-    
-    @battles_lost.setter
-    def battles_lost(self, value: int):
-        self._data["battlesLost"] = value
+    @attacks.setter
+    def attacks(self, value: int):
+        self._data["attacks"] = value
 
     @property
     def destroyed_units(self) -> int:
