@@ -22,15 +22,20 @@ class Alliances(metaclass=AlliancesMeta):
     _data: ClassVar[dict[str, dict]] = None
 
     @classmethod
+    def _gamedata_path(cls) -> str:
+        return f"gamedata/{cls.game_id}/gamedata.json"
+
+    @classmethod
     def load(cls, game_id: str) -> None:
         
         cls.game_id = game_id
-        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
-        if not os.path.exists(gamedata_filepath):
+        path = cls._gamedata_path()
+
+        if not os.path.exists(path):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Alliances class.")
         
-        with open(gamedata_filepath, 'r') as f:
-            gamedata_dict = json.load(f)
+        with open(path, 'r') as file:
+            gamedata_dict = json.load(file)
 
         cls._data = gamedata_dict["alliances"]
 

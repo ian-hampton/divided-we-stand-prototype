@@ -54,3 +54,4 @@ app/static/handshake.png
 /app/war/__pycache__
 /app/region/__pycache__
 /app/checks/__pycache__
+/tests/__pycache__
