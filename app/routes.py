@@ -1178,6 +1178,7 @@ def turn_resolution_new(full_game_id):
             Alliances.load(full_game_id)
             Nations.load(full_game_id)
             Regions.initialize(full_game_id)
+            Wars.load(full_game_id)
 
             contents_dict = {}
             for nation in Nations:
