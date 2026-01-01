@@ -25,7 +25,8 @@ from app.truce.truces import Truces
 from app.war.wars import Wars
 
 GAME_ID = "HrQyxUeblAMjTJbTrxsp"
-ACTIONS = {}
+GAMEDATA_FILE = "tests/mock-files/gamedata.json"
+REGDATA_FILE = "tests/mock-files/regdata.json"
 
 class TestClassLoad(unittest.TestCase):
 
@@ -37,8 +38,55 @@ class TestClassLoad(unittest.TestCase):
         assert SD.improvements["Industrial Zone"].cost == {"Dollars": 5}
     
     def test_load_alliances(self):
-        test_file = "tests/mock-files/gamedata.json"
-        with patch.object(Alliances, "_gamedata_path", return_value=str(test_file)):
+        with patch.object(Alliances, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
             Alliances.load(GAME_ID)
 
-        assert "Test Trade Agreement" in Alliances._data
+        alliance = Alliances.get("Test Trade Agreement")
+        assert alliance.name == "Test Trade Agreement"
+        assert alliance.turn_created == 17
+        assert alliance.turn_ended == 20
+        assert alliance.is_active == False
+
+    def test_load_regions(self):
+        SD.load(GAME_ID)
+        with patch.object(Regions, "_regdata_path", return_value=str(REGDATA_FILE)):
+            Regions.initialize(GAME_ID)
+
+        NTHWY = Regions.load("NTHWY")
+        assert NTHWY.data.owner_id == "3"
+        assert NTHWY.data.occupier_id == "0"
+        assert NTHWY.data.resource == "Empty"
+        assert NTHWY.improvement.name == "Capital"
+        assert NTHWY.improvement.health == 12
+        assert NTHWY.unit.name == None
+
+    def test_load_nations(self):
+        SD.load(GAME_ID)
+        with patch.object(Nations, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
+            Nations.load(GAME_ID)
+
+        nation_1 = Nations.get("1")
+        assert nation_1.name == "Nation A"
+        assert nation_1.gov == "Republic"
+        assert nation_1.fp == "Diplomatic"
+
+    def test_load_notifications(self):
+        with patch.object(Notifications, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
+            Notifications.load(GAME_ID)
+        
+        test_notification = [3, "Foreign Investment will end on turn 33."]
+        assert test_notification in Notifications._data
+
+    def test_load_truces(self):
+        with patch.object(Truces, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
+            Truces.load(GAME_ID)
+        
+        assert "1" in Truces._data
+        assert Truces.are_truced("3", "4") == False
+
+    def test_load_wars(self):
+        with patch.object(Wars, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
+            Wars.load(GAME_ID)
+
+        # TODO - add example war data
+        assert True == True
