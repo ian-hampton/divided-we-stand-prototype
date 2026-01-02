@@ -19,9 +19,6 @@ from app.war.wars import Wars
 
 from app.actions import WarAction, resolve_war_actions, UnitMoveAction, resolve_unit_move_actions
 
-if __name__ == "__main__":
-    unittest.main()
-
 GAME_ID = "HrQyxUeblAMjTJbTrxsp"
 GAMEDATA_FILE = "tests/mock-files/gamedata.json"
 REGDATA_FILE = "tests/mock-files/regdata.json"
