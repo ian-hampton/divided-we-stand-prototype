@@ -23,13 +23,12 @@ REGDATA_FILE = "tests/mock-files/regdata.json"
 
 class TestCombat(unittest.TestCase):
 
-    def test_initialize(self):
+    @classmethod
+    def setUpClass(cls):
         """
-        Initialize all dataclasses with test data.
-        Required in order for tests to work!
+        Initialize all dataclasses with test data. Required in order for tests to work!
         """
         from app.game.games import Games
-
         SD.load(GAME_ID)
 
         with patch.object(Alliances, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
@@ -50,10 +49,6 @@ class TestCombat(unittest.TestCase):
         with patch.object(Wars, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
             Wars.load(GAME_ID)
 
-    def test_war_declaration(self):
-        """
-        Need to intitialize a war so that we can test combat.
-        """
         from app.actions import WarAction, resolve_war_actions
 
         # verify war does not exist already
@@ -98,4 +93,15 @@ class TestCombat(unittest.TestCase):
         Finally, the combat unit tests.
         """
         from app.actions import UnitMoveAction, resolve_unit_move_actions
-        pass
+
+        war_name = Wars.get_war_name("3", "4")
+        assert war_name is not None
+        
+        # Nation D Infantry vs Nation C Infantry
+        # Attacking unit should deal a net 1 damage, but also take 1 damage due to ineffective attack
+        m1 = UnitMoveAction(GAME_ID, "4", "Move DURAN-GJUNC")
+        assert m1.is_valid() == True
+        assert m1.game_id == GAME_ID
+        assert m1.id == "4"
+        assert m1.current_region_id == "DURAN"
+        assert m1.target_region_ids == ["GJUNC"]
