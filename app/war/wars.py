@@ -268,7 +268,7 @@ class Wars(metaclass=WarsMeta):
 
             war.attackers.total = 0
             war.attackers.total += war.attackers.occupation
-            war.attackers.total += war.attackers.victories
+            war.attackers.total += war.attackers.decisive_battles
             war.attackers.total += war.attackers.destroyed_units
             war.attackers.total += war.attackers.destroyed_improvements
             war.attackers.total += war.attackers.captures
@@ -276,7 +276,7 @@ class Wars(metaclass=WarsMeta):
 
             war.defenders.total = 0
             war.defenders.total += war.defenders.occupation
-            war.defenders.total += war.defenders.victories
+            war.defenders.total += war.defenders.decisive_battles
             war.defenders.total += war.defenders.destroyed_units
             war.defenders.total += war.defenders.destroyed_improvements
             war.defenders.total += war.defenders.captures
