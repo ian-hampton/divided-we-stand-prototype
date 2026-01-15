@@ -3,7 +3,7 @@ File: test_combat.py
 Author: Ian Hampton
 Created Date: 2nd January 2026
 """
-
+import os, sys
 import unittest
 from unittest.mock import patch
 
@@ -88,20 +88,33 @@ class TestCombat(unittest.TestCase):
         assert defender.target_id == "TBD"
         assert defender.claims == {}
     
-    def test_combat(self):
+    def test_infantry_vs_infantry(self):
         """
-        Finally, the combat unit tests.
+        Nation D Infantry DURAN vs Nation C Infantry GJUNC
+            Attacking Unit Gross Damage = 2 (+2 from base damage)
+            Defending Unit Armor = 1 (+1 from holding position)
+            Attacking Unit Net Damage = 1 (Attacker Gross Damage - Defender Armor)
+            Attacking Unit will suffer 1 damage due to ineffective attack.
         """
         from app.actions import UnitMoveAction, resolve_unit_move_actions
 
-        war_name = Wars.get_war_name("3", "4")
-        assert war_name is not None
-        
-        # Nation D Infantry vs Nation C Infantry
-        # Attacking unit should deal a net 1 damage, but also take 1 damage due to ineffective attack
+        # create and verify movement action
         m1 = UnitMoveAction(GAME_ID, "4", "Move DURAN-GJUNC")
         assert m1.is_valid() == True
         assert m1.game_id == GAME_ID
         assert m1.id == "4"
         assert m1.current_region_id == "DURAN"
         assert m1.target_region_ids == ["GJUNC"]
+
+        # execute movement and combat
+        resolve_unit_move_actions(GAME_ID, [m1])
+
+        # check attacker
+        DURAN = Regions.load("DURAN")
+        assert DURAN.unit.name == "Infantry"
+        assert DURAN.unit.health == 7
+
+        # check defender
+        GJUNC = Regions.load("GJUNC")
+        assert GJUNC.unit.name == "Infantry"
+        assert DURAN.unit.health == 7

@@ -1843,7 +1843,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "6th IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "3"
         }
     },
@@ -2019,7 +2019,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "5th IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "3"
         }
     },
@@ -2151,7 +2151,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "4th IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "3"
         }
     },
@@ -2239,7 +2239,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "3rd IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "3"
         }
     },
@@ -2371,7 +2371,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "1st IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "4"
         }
     },
@@ -2393,7 +2393,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "2nd IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "3"
         }
     },
@@ -2591,7 +2591,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "1st IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "3"
         }
     },
@@ -2855,7 +2855,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "2nd IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "4"
         }
     },
@@ -2943,7 +2943,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "3rd IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "4"
         }
     },
@@ -2965,7 +2965,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "12th IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "4"
         }
     },
@@ -3119,7 +3119,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "5th IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "4"
         }
     },
@@ -3581,7 +3581,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "6th IN",
-            "health": 6,
+            "health": 8,
             "ownerID": "4"
         }
     },
