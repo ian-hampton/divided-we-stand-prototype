@@ -156,3 +156,40 @@ class TestCombat(unittest.TestCase):
         assert DENVE.unit.health == 5
         assert DENVE.improvement.name == None
         assert DENVE.improvement.health == 99
+
+    def test_in_vs_undefended(self):
+        """
+        Basic move to an undefended territory to test occupation.
+        """
+        from app.actions import UnitMoveAction, resolve_unit_move_actions
+
+        # create and verify movement action
+        m1 = UnitMoveAction(GAME_ID, "4", "Move SANFR-SROSA")
+        assert m1.is_valid() == True
+        assert m1.game_id == GAME_ID
+        assert m1.id == "4"
+        assert m1.current_region_id == "SANFR"
+        assert m1.target_region_ids == ["SROSA"]
+
+        # execute movement and combat
+        resolve_unit_move_actions(GAME_ID, [m1])
+
+        # check SANFR
+        SANFR = Regions.load("SANFR")
+        assert SANFR.data.owner_id == "4"
+        assert SANFR.data.occupier_id == "0"
+        assert SANFR.unit.name == None
+        assert SANFR.unit.health == 99
+        assert SANFR.unit.owner_id == "0"
+        assert SANFR.improvement.name == "Research Laboratory"
+        assert SANFR.improvement.health == 99
+
+        # check SROSA
+        SROSA = Regions.load("SROSA")
+        assert SROSA.data.owner_id == "3"
+        assert SROSA.data.occupier_id == "4"
+        assert SROSA.unit.name == "Infantry"
+        assert SROSA.unit.health == 8
+        assert SROSA.unit.owner_id == "4"
+        assert SROSA.improvement.name == None
+        assert SROSA.improvement.health == 99

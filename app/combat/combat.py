@@ -52,7 +52,7 @@ class CombatProcedure:
         Why are only defenseless improvements checked here?
         If combat has made it this far, improvements that can defend themselves will have already been destroyed in the unit vs improvement combat step.
         """
-        from war.warscore import WarScore
+        from app.war.warscore import WarScore
 
         # check if there is a defenseless improvement owned by an enemy that can be destroyed
         if (self.defending_region.improvement.name is None
