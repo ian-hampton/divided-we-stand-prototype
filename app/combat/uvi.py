@@ -44,13 +44,14 @@ class UnitVsImprovement(BattleTemplate):
         if self.attacking_region.unit.type == "Special Forces":
             total_armor = 0
             battle_str = f"    The attacking unit is a special forces. The defender's armor will be ignored!"
+            self.war.log.append(battle_str)
         else:
             total_armor = self.defending_region.improvement.armor
         net_damage = total_damage - total_armor 
         self.defending_region.improvement.health -= net_damage
 
         self.attacker_cd.attacks += 1
-        if net_damage > 3:
+        if net_damage >= 3:
             # decisive victory
             self._award_warscore("Attacker", "decisive_battles", WarScore.FROM_SUCCESSFUL_ATTACK)
             battle_str = f"    {self.attacker.name} dealt {net_damage} to {self.defender.name} {self.defending_region.improvement.name} ({total_damage} damage - {total_armor} armor). Decisive victory!"

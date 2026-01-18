@@ -88,7 +88,7 @@ class TestCombat(unittest.TestCase):
         assert defender.target_id == "TBD"
         assert defender.claims == {}
     
-    def test_infantry_vs_infantry(self):
+    def test_in_vs_in(self):
         """
         Nation D Infantry DURAN vs Nation C Infantry GJUNC
             Attacking Unit Gross Damage = 2 (+2 from base damage)
@@ -117,4 +117,42 @@ class TestCombat(unittest.TestCase):
         # check defender
         GJUNC = Regions.load("GJUNC")
         assert GJUNC.unit.name == "Infantry"
-        assert DURAN.unit.health == 7
+        assert GJUNC.unit.health == 7
+
+    def test_sf_vs_in_settlement(self):
+        """
+        Nation D Special Forces COSPR vs Nation C Infantry DENVE
+            Attacking Unit Gross Damage = 3 (+3 from base damage)
+            Defending Unit Armor = 0 (nullified by SF ability)
+            Attacking Unit Net Damage = 3 (Attacker Gross Damage - Defender Armor)
+        Nation D Special Forces COSPR vs Nation C Settlement DENVE
+            Attacking Unit Gross Damage = 3 (+3 from base damage)
+            Defending Improvement Armor = 0 (nullified by SF ability)
+            Attacking Unit Net Damage = 3 (Attacker Gross Damage - Defender Armor)
+            Attacking Unit will suffer 1 damage from the Settlement.
+            Settlement will be destroyed.
+        """
+        from app.actions import UnitMoveAction, resolve_unit_move_actions
+
+        # create and verify movement action
+        m1 = UnitMoveAction(GAME_ID, "4", "Move COSPR-DENVE")
+        assert m1.is_valid() == True
+        assert m1.game_id == GAME_ID
+        assert m1.id == "4"
+        assert m1.current_region_id == "COSPR"
+        assert m1.target_region_ids == ["DENVE"]
+
+        # execute movement and combat
+        resolve_unit_move_actions(GAME_ID, [m1])
+
+        # check attacker
+        COSPR = Regions.load("COSPR")
+        assert COSPR.unit.name == "Special Forces"
+        assert COSPR.unit.health == 15
+
+        # check defender
+        DENVE = Regions.load("DENVE")
+        assert DENVE.unit.name == "Infantry"
+        assert DENVE.unit.health == 5
+        assert DENVE.improvement.name == None
+        assert DENVE.improvement.health == 99

@@ -2963,9 +2963,9 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Infantry",
-            "fullName": "12th IN",
-            "health": 8,
+            "name": "Special Forces",
+            "fullName": "12th SF",
+            "health": 16,
             "ownerID": "4"
         }
     },
