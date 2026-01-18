@@ -2017,8 +2017,8 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": "Infantry",
-            "fullName": "5th IN",
+            "name": "Motorized Infantry",
+            "fullName": "5th MO",
             "health": 8,
             "ownerID": "3"
         }

@@ -193,3 +193,53 @@ class TestCombat(unittest.TestCase):
         assert SROSA.unit.owner_id == "4"
         assert SROSA.improvement.name == None
         assert SROSA.improvement.health == 99
+
+    def test_mo_vs_undefended(self):
+        """
+        This test checks two things:
+        1. Are units with multiple moves functioning as expected?
+        2. Are defenseless improvements being pillaged?
+        """
+
+        from app.actions import UnitMoveAction, resolve_unit_move_actions
+
+        # create and verify movement action
+        m1 = UnitMoveAction(GAME_ID, "3", "Move PROVO-STEUT-NTEAZ")
+        assert m1.is_valid() == True
+        assert m1.game_id == GAME_ID
+        assert m1.id == "3"
+        assert m1.current_region_id == "PROVO"
+        assert m1.target_region_ids == ["NTEAZ", "STEUT"]
+
+        # execute movement and combat
+        resolve_unit_move_actions(GAME_ID, [m1])
+
+        # check PROVO
+        PROVO = Regions.load("PROVO")
+        assert PROVO.data.owner_id == "3"
+        assert PROVO.data.occupier_id == "0"
+        assert PROVO.unit.name == None
+        assert PROVO.unit.health == 99
+        assert PROVO.unit.owner_id == "0"
+        assert PROVO.improvement.name == "Research Laboratory"
+        assert PROVO.improvement.health == 99
+
+        # check STEUT
+        STEUT = Regions.load("STEUT")
+        assert STEUT.data.owner_id == "4"
+        assert STEUT.data.occupier_id == "3"
+        assert STEUT.unit.name == None
+        assert STEUT.unit.health == 99
+        assert STEUT.unit.owner_id == "0"
+        assert STEUT.improvement.name == None
+        assert STEUT.improvement.health == 99
+
+        # check NTEAZ
+        NTEAZ = Regions.load("NTEAZ")
+        assert NTEAZ.data.owner_id == "4"
+        assert NTEAZ.data.occupier_id == "3"
+        assert NTEAZ.unit.name == "Motorized Infantry"
+        assert NTEAZ.unit.health == 8
+        assert NTEAZ.unit.owner_id == "3"
+        assert NTEAZ.improvement.name == None
+        assert NTEAZ.improvement.health == 99
