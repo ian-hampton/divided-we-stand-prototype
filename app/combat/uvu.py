@@ -51,7 +51,11 @@ class UnitVsUnit(BattleTemplate):
         
         # attacker deals damage to defender
         total_damage = self.attacking_region.unit.damage + self.attacker_damage_modifier
-        total_armor = self.defending_region.unit.armor + self.defender_armor_modifier
+        if self.attacking_region.unit.type == "Special Forces":
+            total_armor = 0
+            battle_str = f"    The attacking unit is a special forces. The defender's armor will be ignored!"
+        else:
+            total_armor = self.defending_region.improvement.armor
         net_damage = total_damage - total_armor 
         self.defending_region.unit.health -= net_damage
         
