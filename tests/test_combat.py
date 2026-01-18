@@ -2,7 +2,11 @@
 File: test_combat.py
 Author: Ian Hampton
 Created Date: 2nd January 2026
+
+These are tests to make sure that combat and occupation is working as expected.
+TODO: Test warscore updates and unit xp.
 """
+
 import os, sys
 import unittest
 from unittest.mock import patch
