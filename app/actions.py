@@ -2306,7 +2306,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
         # flag corresponding unit as having a movement ordered queued (presuming that unit exists)
         current_region = Regions.load(action.current_region_id)
         if current_region.unit.name is not None and action.id == current_region.unit.owner_id:
-            current_region.unit_has_movement_queued = True
+            current_region.unit.has_movement_queued = True
         # add nation id to list
         if action.id not in players_moving_units:
             players_moving_units.append(action.id)

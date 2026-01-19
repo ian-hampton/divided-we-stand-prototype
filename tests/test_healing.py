@@ -79,7 +79,7 @@ class TestHealing(unittest.TestCase):
 
         ALBUQ = Regions.reload("ALBUQ")
         ALBUQ.improvement.health = 1
-        ALBUQ.improvement_has_been_attacked = True
+        ALBUQ.improvement.has_been_attacked = True
         
         heals.heal_all()
 

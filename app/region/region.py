@@ -21,9 +21,6 @@ class Region:
         self.graph = GraphData(graph)
 
         self.claim_list = []
-        self.improvement_has_been_attacked = False
-        self.unit_has_been_attacked = False
-        self.unit_has_movement_queued = False
 
     def __eq__(self, other):
         if isinstance(other, Region):
