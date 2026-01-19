@@ -124,3 +124,19 @@ class TestHealing(unittest.TestCase):
         heals.heal_unit(COSPR)
         
         assert COSPR.unit.health == 1
+
+    def test_healing_comprehensive(self):
+        """
+        Multiple regions are being healed at the same time.
+        """
+        from app.checks import heals
+
+        ALBUQ = Regions.reload("ALBUQ")
+        ALBUQ.improvement.health = 1
+        COSPR = Regions.reload("COSPR")
+        COSPR.unit.health = 1
+
+        heals.heal_all()
+        
+        assert COSPR.unit.health == 2
+        assert ALBUQ.improvement.health == 2
