@@ -18,7 +18,7 @@ def heal_units():
             continue
 
         # do not heal units that have been attacked this turn
-        if region.unit.has_been_attacked:
+        if region.unit_has_been_attacked:
             continue
 
         unit_owner = Nations.get(region.unit.owner_id)
@@ -59,7 +59,7 @@ def heal_improvements():
             continue
 
         # do not heal improvements that have been attacked this turn
-        if region.improvement.has_been_attacked:
+        if region.improvement_has_been_attacked:
             continue
 
         region.improvement.heal(1)

@@ -35,7 +35,7 @@ class UnitVsUnit(BattleTemplate):
     def _calculate_armor_modifiers(self) -> None:
         
         # defender entrenched
-        if not self.defending_region.unit.has_movement_queued:
+        if not self.defending_region.unit_has_movement_queued:
             self.war.log.append(f"    Defending unit is entrenched and gains +1 armor for this battle!")
             self.defender_armor_modifier += 1
 

@@ -5,7 +5,6 @@ class ImprovementData:
     def __init__(self, d: dict):
         self._data = d
         self._load_attributes_from_game_files()
-        self.has_been_attacked = False
 
     @property
     def name(self) -> str:

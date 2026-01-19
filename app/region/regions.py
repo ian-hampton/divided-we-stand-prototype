@@ -13,7 +13,7 @@ class RegionsMeta(type):
 
     def __iter__(cls) -> Iterator[Region]:
         for region_id in cls._graph:
-            yield Region(region_id, cls._data[region_id], cls._graph[region_id], cls.game_id)
+            yield cls.load(region_id)
 
     def __len__(cls):
         return len(cls._graph) if cls._graph else 0
@@ -69,6 +69,19 @@ class Regions(metaclass=RegionsMeta):
         
         if region_id not in cls._instances:
             cls._instances[region_id] = Region(region_id, cls._data[region_id], cls._graph[region_id], cls.game_id)
+        return cls._instances[region_id]
+    
+    @classmethod
+    def reload(cls, region_id: str) -> Region:
+        """
+        Loads a Region based on the region id. Garunteed to do so by creating a new Region object.
+        Only use this for testing! Do not use this in normal turn processing code or some data may be lost!
+        """
+        if region_id not in cls._data:
+            raise Exception(f"Failed to load Region with id {region_id}. Region ID not valid for this game.")
+        
+        cls._instances[region_id] = Region(region_id, cls._data[region_id], cls._graph[region_id], cls.game_id)
+        
         return cls._instances[region_id]
     
     @classmethod
