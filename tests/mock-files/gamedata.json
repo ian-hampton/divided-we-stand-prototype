@@ -1698,7 +1698,8 @@
                 "Metallurgy": true,
                 "Launch Codes": true,
                 "Missile Technology": true,
-                "Tailings Reprocessing": true
+                "Tailings Reprocessing": true,
+                "Peacetime Recovery": true
             },
             "incomeDetails": [
                 "<section> +17.00 Dollars",

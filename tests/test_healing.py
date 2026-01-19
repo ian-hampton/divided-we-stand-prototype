@@ -54,13 +54,13 @@ class TestHealing(unittest.TestCase):
         Unowned improvements should NOT heal.
         """
         from app.checks import heals
-        DULUT = Regions.load("DULUT")
+        DULUT = Regions.reload("DULUT")
         heals.heal_improvement(DULUT)
         assert DULUT.improvement.health == 1
 
     def test_improvement_normal(self):
         """
-        Damaged improvements should heal if not attacked.
+        Improvements should heal if not attacked.
         """
         from app.checks import heals
 
@@ -73,7 +73,7 @@ class TestHealing(unittest.TestCase):
 
     def test_improvement_attacked(self):
         """
-        Damaged improvements should NOT heal if attacked that turn.
+        Improvements should NOT heal if attacked that turn.
         """
         from app.checks import heals
 
@@ -86,10 +86,41 @@ class TestHealing(unittest.TestCase):
         assert ALBUQ.improvement.health == 1
 
     def test_unit_normal(self):
-        pass
+        """
+        Units should heal if not attacked.
+        """
+        from app.checks import heals
+
+        COSPR = Regions.reload("COSPR")
+        COSPR.unit.health = 1
+
+        heals.heal_unit(COSPR)
+        
+        assert COSPR.unit.health == 2
 
     def test_unit_peacetime(self):
-        pass
+        """
+        Units owned by a nation with Peacetime Recovery should heal twice as much during peacetime.
+        """
+        from app.checks import heals
+        
+        PROVO = Regions.reload("PROVO")
+        PROVO.unit.health = 1
+
+        heals.heal_unit(PROVO)
+
+        assert PROVO.unit.health == 3
 
     def test_unit_attacked(self):
-        pass
+        """
+        Units should NOT heal if attacked that turn.
+        """
+        from app.checks import heals
+
+        COSPR = Regions.reload("COSPR")
+        COSPR.unit.health = 1
+        COSPR.unit.has_been_attacked = True
+
+        heals.heal_unit(COSPR)
+        
+        assert COSPR.unit.health == 1
