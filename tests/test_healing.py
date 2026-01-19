@@ -54,8 +54,8 @@ class TestHealing(unittest.TestCase):
         Unowned improvements should NOT heal.
         """
         from app.checks import heals
-        heals.heal_all()
         DULUT = Regions.load("DULUT")
+        heals.heal_improvement(DULUT)
         assert DULUT.improvement.health == 1
 
     def test_improvement_normal(self):
@@ -67,7 +67,7 @@ class TestHealing(unittest.TestCase):
         ALBUQ = Regions.reload("ALBUQ")
         ALBUQ.improvement.health = 1
 
-        heals.heal_all()
+        heals.heal_improvement(ALBUQ)
 
         assert ALBUQ.improvement.health == 2
 
@@ -81,7 +81,7 @@ class TestHealing(unittest.TestCase):
         ALBUQ.improvement.health = 1
         ALBUQ.improvement.has_been_attacked = True
         
-        heals.heal_all()
+        heals.heal_improvement(ALBUQ)
 
         assert ALBUQ.improvement.health == 1
 
