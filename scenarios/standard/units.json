@@ -70,7 +70,7 @@
         "Movement": 2,
         "Abilities": [
             "Ignores enemy armor when attacking.",
-            "Always eligible to heal within enemy territory when not moving."
+            "This unit will never be disqualified from healing based on its position."
         ],
         "Upkeep": {
             "Food": 1
