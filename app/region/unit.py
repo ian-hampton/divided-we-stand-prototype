@@ -6,6 +6,7 @@ class UnitData:
         self._data = d
         self._load_attributes_from_game_files()
         self.has_movement_queued = False
+        self.has_been_attacked = False
 
     @property
     def name(self) -> str:

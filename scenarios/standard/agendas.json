@@ -123,7 +123,7 @@
         "Agenda Type": "Security",
         "Prerequisite": "Mobilization",
         "Cost": 15,
-        "Description": "All of your units and improvements will heal to full health during the bonus phase if you are not at war.",
+        "Description": "All of your units and improvements heal twice as fast when your nation is at peace.",
         "Location": "C2",
         "Modifiers": {}
     },

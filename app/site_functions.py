@@ -7,9 +7,9 @@ from operator import itemgetter
 from collections import defaultdict
 
 from app import actions
-from app.checks import bonus_phase
 from app.checks import checks
 from app.checks import end_wars
+from app.checks import heals
 from app.checks import resolve_shortages
 from app.checks.update_income import UpdateIncomeProcess
 from app import events
@@ -318,9 +318,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
     if player_has_won:
         resolve_win(game_id)
 
-    if game.turn % 4 == 0:
-        bonus_phase.heals()
-        Notifications.add('All units and defensive improvements have regained 2 health.', 2)
+    heals.heal_all()
     
     if game.turn % 8 == 0 and not player_has_won:
         events.trigger_event(game_id)

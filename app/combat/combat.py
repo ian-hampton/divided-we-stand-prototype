@@ -25,11 +25,13 @@ class CombatProcedure:
         # conduct unit vs unit combat if needed
         if self.defending_region.unit.is_hostile(self.attacking_region.unit.owner_id):
             UnitVsUnit(self).resolve()
+            self.defending_region.unit.has_been_attacked = True
             self.has_conducted_combat = True
         
         # conduct units vs improvement combat if needed
         if self.defending_region.improvement_is_hostile(self.attacking_region.unit.owner_id) and self.attacking_region.unit.name is not None:
             UnitVsImprovement(self).resolve()
+            self.defending_region.improvement.has_been_attacked = True
             self.has_conducted_combat = True
 
     def is_able_to_move(self) -> bool:
