@@ -9,10 +9,10 @@ from .strike import Strike
 class StandardStrike(Strike):
     missile_str = "Standard Missile"
 
-    def identify_best_missile_defense(self) -> tuple[str, int]:
+    def identify_best_missile_defense(self) -> tuple[str, float]:
         possible_defenders = {}
         defender_name = None
-        defender_value = -1
+        defender_value = -1.0
         
         # check improvements
         for improvement_name, improvement_data in SD.improvements:

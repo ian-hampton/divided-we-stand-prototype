@@ -22,7 +22,7 @@ class Strike:
         except:
             raise ValueError(f"Failed to init a Missile Strike. Invalid missile type.")
 
-    def identify_best_missile_defense(self) -> tuple[str, int]:
+    def identify_best_missile_defense(self) -> tuple[str, float]:
         """
         Helper function for missile defense function.
         Retrieves the name and defense value of the best unit or improvement available to defend against the incoming missile.
@@ -48,13 +48,13 @@ class Strike:
             return False
         
         self.war.log.append(f"    A nearby {defender_name} attempted to defend {self.target_region.id}.")
-        missile_defense_roll = random.randint(1, 10)
+        missile_defense_roll = random.random()
         
         if missile_defense_roll >= defender_value:
-            self.war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {defender_value}+). Missile destroyed!")
+            self.war.log.append(f"    {defender_name} missile defense roll succeeded. Missile destroyed! ({int(defender_value * 100)}% chance)")
             return True
         else:
-            self.war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {defender_value}+). Defenses missed!")
+            self.war.log.append(f"    {defender_name} missile defense roll failed. Defenses missed! ({int(defender_value * 100)}% chance)")
         
         return False
 
