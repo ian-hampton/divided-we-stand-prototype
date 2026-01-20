@@ -13,8 +13,8 @@ class SD_Improvement:
         self.damage: int = d.get("Damage", 0)
         self.armor: int = d.get("Armor", 0)
         self.health: int = d.get("Health", 99)
-        self.missile_defense: float = d.get("Standard Missile Defense", 99)
-        self.nuclear_defense: float = d.get("Nuclear Missile Defense", 99)
+        self.missile_defense: float = d.get("Standard Missile Defense", -1.0)
+        self.nuclear_defense: float = d.get("Nuclear Missile Defense", -1.0)
         self.defense_range: int = d.get("Missile Defense Range", 99)
         self.abilities: list = d.get("Abilities", [])
 

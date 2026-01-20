@@ -2,6 +2,10 @@
     "Standard Missile": {
         "Required Research": "Missile Technology",
         "Type": "Standard Missile",
+        "Improvement Damage": 2,
+        "Unit Damage": 2,
+        "Improvement Damage Chance": 0.5,
+        "Unit Damage Chance": 0.5,
         "Launch Capacity": 1,
         "Build Costs": {
             "Common Metals": 3

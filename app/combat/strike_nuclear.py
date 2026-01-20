@@ -10,16 +10,16 @@ class NuclearStrike(Strike):
     def identify_best_missile_defense(self) -> tuple[str, int]:
         possible_defenders = {}
         defender_name = None
-        defender_value = 99
+        defender_value = -1
         
         # check improvements
         for improvement_name, improvement_data in SD.improvements:
-            if improvement_data.nuclear_defense != 99 and self.target_nation.improvement_counts[improvement_name] > 0:
+            if improvement_data.nuclear_defense != -1 and self.target_nation.improvement_counts[improvement_name] > 0:
                 possible_defenders[improvement_name] = {"range": improvement_data.defense_range, "value": improvement_data.nuclear_defense}
 
         # check units
         for unit_name, unit_data in SD.units:
-            if unit_data.nuclear_defense != 99 and self.target_nation.unit_counts[unit_name] > 0:
+            if unit_data.nuclear_defense != -1 and self.target_nation.unit_counts[unit_name] > 0:
                 possible_defenders[unit_name] = {"range": unit_data.defense_range, "value": unit_data.nuclear_defense}
         
         # determine best defense
@@ -29,11 +29,11 @@ class NuclearStrike(Strike):
             for temp_region_id in nearby_region_ids:
                 temp_region = Regions.load(temp_region_id)
                 if temp_region.improvement.name == name:
-                    if data["value"] < defender_value and temp_region.data.owner_id == self.target_nation.id and temp_region.data.occupier_id == "0":
+                    if data["value"] > defender_value and temp_region.data.owner_id == self.target_nation.id and temp_region.data.occupier_id == "0":
                         defender_name = name
                         defender_value = data["value"]
                 elif temp_region.unit.name == name:
-                    if data["value"] < defender_value and temp_region.unit.owner_id == self.target_nation.id:
+                    if data["value"] > defender_value and temp_region.unit.owner_id == self.target_nation.id:
                         defender_name = name
                         defender_value = data["value"]
 
