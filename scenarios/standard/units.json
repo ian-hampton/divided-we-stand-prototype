@@ -172,7 +172,7 @@
         "Armor": 2,
         "Health": 8,
         "Movement": 1,
-        "Standard Missile Defense": 5,
+        "Standard Missile Defense": 0.5,
         "Missile Defense Range": 1,
         "Abilities": [
             "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions."

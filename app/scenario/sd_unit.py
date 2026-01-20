@@ -16,8 +16,8 @@ class SD_Unit:
         self.armor: int = d.get("Armor", 0)
         self.health: int = d.get("Health", 99)
         self.movement: int = d.get("Movement", 0)
-        self.missile_defense: int = d.get("Standard Missile Defense", 99)
-        self.nuclear_defense: int = d.get("Nuclear Missile Defense", 99)
+        self.missile_defense: float = d.get("Standard Missile Defense", 99)
+        self.nuclear_defense: float = d.get("Nuclear Missile Defense", 99)
         self.defense_range: int = d.get("Missile Defense Range", 99)
         self.abilities: list = d.get("Abilities", [])
 

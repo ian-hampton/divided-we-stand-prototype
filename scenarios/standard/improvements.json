@@ -165,7 +165,7 @@
         "Damage": 2,
         "Armor": 3,
         "Health": 12,
-        "Standard Missile Defense": 5,
+        "Standard Missile Defense": 0.5,
         "Missile Defense Range": 1,
         "Income": {},
         "Abilities": [
@@ -187,7 +187,7 @@
         "Damage": 1,
         "Armor": 2,
         "Health": 9,
-        "Standard Missile Defense": 3,
+        "Standard Missile Defense": 0.3,
         "Missile Defense Range": 1,
         "Income": {},
         "Abilities": [
@@ -209,8 +209,8 @@
         "Damage": 1,
         "Armor": 1,
         "Health": 9,
-        "Standard Missile Defense": 7,
-        "Nuclear Missile Defense": 5,
+        "Standard Missile Defense": 0.7,
+        "Nuclear Missile Defense": 0.5,
         "Missile Defense Range": 2,
         "Income": {},
         "Abilities": [
