@@ -18,7 +18,7 @@ class StandardStrike(Strike):
         for improvement_name, improvement_data in SD.improvements:
             if improvement_data.missile_defense != -1 and self.target_nation.improvement_counts[improvement_name] > 0:
                 possible_defenders[improvement_name] = {"range": improvement_data.defense_range, "value": improvement_data.missile_defense}
-            elif improvement_data.missile_defense == -1 and "Local Missile Defense" in self.target_nation.completed_research:
+            elif "Local Missile Defense" in self.target_nation.completed_research and improvement_name in ["Settlement", "City", "Capital"]:
                 possible_defenders[improvement_name] = {"range": 0, "value": 0.3}
 
         # check units

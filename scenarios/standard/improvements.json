@@ -322,7 +322,7 @@
         }
     },
     "Missile Silo": {
-        "Required Research": "Launch Codes",
+        "Required Research": "Missile Technology",
         "Required Resource": null,
         "Reference Color": "stat-red",
         "Damage": 1,
