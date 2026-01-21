@@ -48,10 +48,7 @@ class NuclearStrike(Strike):
             return False
         
         # improvement is always destroyed by a nuke
-        if "Attacker" in self.attacking_combatant.role:
-            self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
-        else:
-            self.war.defenders.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
+        self._award_warscore("Attacker", "destroyed_improvements", WarScore.FROM_DESTROY_IMPROVEMENT)
         if self.target_region.improvement.name != "Capital":
             self.attacking_combatant.destroyed_improvements += 1
             self.defending_combatant.lost_improvements += 1
@@ -68,10 +65,7 @@ class NuclearStrike(Strike):
             return False
         
         # unit is always destroyed by a nuke
-        if "Attacker" in self.attacking_combatant.role:
-            self.war.attackers.destroyed_units += self.target_region.unit.value    # amount of warscore earned depends on unit value
-        else:
-            self.war.defenders.destroyed_units += self.target_region.unit.value    # amount of warscore earned depends on unit value
+        self._award_warscore("Attacker", "destroyed_units", self.target_region.unit.value)
         self.attacking_combatant.destroyed_units += 1
         self.defending_combatant.lost_units += 1
         self.war.log.append(f"    Missile destroyed {self.target_region.unit.name} in {self.target_region.id}!")
@@ -82,15 +76,9 @@ class NuclearStrike(Strike):
         self.attacking_combatant.launched_nukes += 1
         improvement_damage_occurred = self.resolve_improvement_damage()
         unit_damage_occured = self.resolve_unit_damage()
-
-        if "Attacker" in self.attacking_combatant.role:
-            self.war.attackers.nuclear_strikes += WarScore.FROM_NUCLEAR_STRIKE
-        else:
-            self.war.defenders.nuclear_strikes += WarScore.FROM_NUCLEAR_STRIKE
-        
+        self._award_warscore("Attacker", "nuclear_strikes", WarScore.FROM_NUCLEAR_STRIKE)
         if self.target_region.improvement.name != "Capital":
             self.target_region.set_fallout()
-
         if improvement_damage_occurred or unit_damage_occured:
             return True
         return False

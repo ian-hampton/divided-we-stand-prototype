@@ -21,14 +21,14 @@ class BattleTemplate:
         """
         if side == "Attacker":
             if "Attacker" in self.attacker_cd.role:
-                self.war.update_warscore("Attacker", category, amount)
+                self.war.update_warscore("Attacker", category, amount.value)
             else:
-                self.war.update_warscore("Defender", category, amount)
+                self.war.update_warscore("Defender", category, amount.value)
         elif side == "Defender":
             if "Attacker" in self.defender_cd.role:
-                self.war.update_warscore("Attacker", category, amount)
+                self.war.update_warscore("Attacker", category, amount.value)
             else:
-                self.war.update_warscore("Defender", category, amount)
+                self.war.update_warscore("Defender", category, amount.value)
     
     def _calculate_damage_modifiers(self) -> None:
         """

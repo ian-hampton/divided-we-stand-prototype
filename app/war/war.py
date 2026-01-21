@@ -3,7 +3,6 @@ from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
 from .war_claims import ManageWarClaims
 from .combatant import Combatant
-from .warscore import WarScore
 
 class War:
 
@@ -197,7 +196,7 @@ class War:
             
             combatant.justification = war_justification
 
-    def update_warscore(self, side: str, category: str, amount: WarScore) -> None:
+    def update_warscore(self, side: str, category: str, amount: int) -> None:
         """
         This is an ugly solution. Too bad!
 
