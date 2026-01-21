@@ -9,7 +9,7 @@ class BattleTemplate:
         self.defending_region = combat.defending_region
         self.war = combat.war
 
-    def _award_warscore(self, side: str, category: str, amount: WarScore) -> None:
+    def _award_warscore(self, side: str, category: str, amount: WarScore | int) -> None:
         """
         This function is silly but important.
         Since an "attacker" in this combat may not be the same as the "attacker" in the corresponding war, we need to identify what side should be rewarded.
@@ -19,16 +19,18 @@ class BattleTemplate:
             category (str): _description_
             amount (WarScore): _description_
         """
+        amount = amount.value if isinstance(amount, WarScore) else amount
+
         if side == "Attacker":
             if "Attacker" in self.attacker_cd.role:
-                self.war.update_warscore("Attacker", category, amount.value)
+                self.war.update_warscore("Attacker", category, amount)
             else:
-                self.war.update_warscore("Defender", category, amount.value)
+                self.war.update_warscore("Defender", category, amount)
         elif side == "Defender":
             if "Attacker" in self.defender_cd.role:
-                self.war.update_warscore("Attacker", category, amount.value)
+                self.war.update_warscore("Attacker", category, amount)
             else:
-                self.war.update_warscore("Defender", category, amount.value)
+                self.war.update_warscore("Defender", category, amount)
     
     def _calculate_damage_modifiers(self) -> None:
         """

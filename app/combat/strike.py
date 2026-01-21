@@ -23,7 +23,7 @@ class Strike:
         except:
             raise ValueError(f"Failed to init a Missile Strike. Invalid missile type.")
         
-    def _award_warscore(self, side: str, category: str, amount: WarScore) -> None:
+    def _award_warscore(self, side: str, category: str, amount: WarScore | int) -> None:
         """
         This function is silly but important.
         Since an "attacker" in this combat may not be the same as the "attacker" in the corresponding war, we need to identify what side should be rewarded.
@@ -33,16 +33,18 @@ class Strike:
             category (str): _description_
             amount (WarScore): _description_
         """
+        amount = amount.value if isinstance(amount, WarScore) else amount
+
         if side == "Attacker":
             if "Attacker" in self.attacking_combatant.role:
-                self.war.update_warscore("Attacker", category, amount.value)
+                self.war.update_warscore("Attacker", category, amount)
             else:
-                self.war.update_warscore("Defender", category, amount.value)
+                self.war.update_warscore("Defender", category, amount)
         elif side == "Defender":
             if "Attacker" in self.defending_combatant:
-                self.war.update_warscore("Attacker", category, amount.value)
+                self.war.update_warscore("Attacker", category, amount)
             else:
-                self.war.update_warscore("Defender", category, amount.value)
+                self.war.update_warscore("Defender", category, amount)
 
     def identify_best_missile_defense(self) -> tuple[str, float]:
         """
