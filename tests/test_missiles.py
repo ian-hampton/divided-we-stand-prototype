@@ -7,6 +7,7 @@ TODO: Add tests for invalid missile launch targets and for missile defense.
 TODO: Check war score.
 """
 
+import copy
 import unittest
 from unittest.mock import patch
 
@@ -91,17 +92,102 @@ class TestMissiles(unittest.TestCase):
         assert defender.target_id == "TBD"
         assert defender.claims == {}
 
-    def test_missile_vs_improvement_1(self):
-        from app.actions import MissileLaunchAction, resolve_missile_launch_actions
-        pass
+        from app.scenario import scenario
+        from app.scenario.scenario import ScenarioDataFile
 
-    def test_missile_vs_improvement_2(self):
-        from app.actions import MissileLaunchAction, resolve_missile_launch_actions
-        pass
+        # make testing easier by patching scenario data so that missile damage chance is 100%
+        class MissileMock:
+            def __init__(self, d: dict):
+                self.d = d
+                self.required_research: str = d["Required Research"]
+                self.type: str = d["Type"]
+                self.improvement_damage: int = d.get("Improvement Damage", -1)
+                self.unit_damage: int = d.get("Unit Damage", -1)
+                self.improvement_damage_chance: float = 1.0
+                self.unit_damage_chance: float = 1.0
+                self.launch_cost: int = d["Launch Capacity"]
+            @property
+            def cost(self) -> dict:
+                return copy.deepcopy(self.d.get("Build Costs", {}))
+        
+        scenario.ClassNameToFileName["MissileMock"] = "missiles"
+        SD.missiles = ScenarioDataFile(MissileMock)
 
-    def test_missile_vs_unit(self):
+        # verify missile patch
+        assert SD.missiles["Standard Missile"].improvement_damage_chance == 1.0
+        assert SD.missiles["Standard Missile"].unit_damage_chance == 1.0
+
+    def test_missile_vs_improvement(self):
+        """
+        Missile vs defenseless improvement with no health.
+        Outcome: Improvement should be destroyed.
+        """
         from app.actions import MissileLaunchAction, resolve_missile_launch_actions
-        pass
+
+        # create and verify missile launch action
+        a1 = MissileLaunchAction(GAME_ID, "4", "Launch Standard Missile OLYMP")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "4"
+        assert a1.missile_type == "Standard Missile"
+        assert a1.target_region == "OLYMP"
+
+        # pre-checks
+        nation = Nations.get("Nation D")
+        nation.missile_count = 3
+        assert nation.missile_count == 3
+        OLYMP = Regions.reload("OLYMP")
+        assert OLYMP.data.owner_id == "3"
+        assert OLYMP.improvement.name == "Industrial Zone"
+        assert OLYMP.unit.name == None
+
+        # execute missile launch actions
+        resolve_missile_launch_actions(GAME_ID, [a1])
+
+        # check player inventory
+        assert nation.missile_count == 2
+
+        # check target region
+        war_name = Wars.get_war_name("3", "4")
+        war = Wars.get(war_name)
+        assert OLYMP.improvement.name == None
+
+    def test_missile_comprehensive(self):
+        """
+        Two missiles vs improvement and unit that both have health bars.
+        Outcome: Improvement should be destroyed (will take 4 damage only has 3 health), unit should take 2 damage (has armor from entrenched)
+        """
+        from app.actions import MissileLaunchAction, resolve_missile_launch_actions
+        
+        # create and verify missile launch action
+        a1 = MissileLaunchAction(GAME_ID, "4", "Launch Standard Missile DENVE")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "4"
+        assert a1.missile_type == "Standard Missile"
+        assert a1.target_region == "DENVE"
+
+        # pre-checks
+        nation = Nations.get("Nation D")
+        nation.missile_count = 3
+        assert nation.missile_count == 3
+        DENVE = Regions.reload("DENVE")
+        assert DENVE.data.owner_id == "3"
+        assert DENVE.improvement.name == "Settlement"
+        assert DENVE.improvement.health == 3
+        assert DENVE.unit.name == "Infantry"
+        assert DENVE.unit.health == 8
+
+        # execute missile launch actions
+        resolve_missile_launch_actions(GAME_ID, [a1, a1])
+
+        # check player inventory
+        assert nation.missile_count == 1
+
+        # check target region
+        assert DENVE.improvement.name == None
+        assert DENVE.unit.name == "Infantry"
+        assert DENVE.unit.health == 6
 
     def test_nuke(self):
         """
@@ -112,20 +198,20 @@ class TestMissiles(unittest.TestCase):
         from app.actions import MissileLaunchAction, resolve_missile_launch_actions
         
         # create and verify missile launch action
-        a1 = MissileLaunchAction(GAME_ID, "4", "Launch Nuclear Missile DENVE")
+        a1 = MissileLaunchAction(GAME_ID, "4", "Launch Nuclear Missile OMAHA")
         assert a1.is_valid() == True
         assert a1.game_id == GAME_ID
         assert a1.id == "4"
         assert a1.missile_type == "Nuclear Missile"
-        assert a1.target_region == "DENVE"
+        assert a1.target_region == "OMAHA"
 
         # pre-checks
         nation = Nations.get("Nation D")
         nation.nuke_count = 1
         assert nation.nuke_count == 1
-        DENVE = Regions.reload("DENVE")
-        assert DENVE.improvement.name == "Settlement"
-        assert DENVE.unit.name == "Infantry"
+        OMAHA = Regions.reload("OMAHA")
+        assert OMAHA.improvement.name == "Research Laboratory"
+        assert OMAHA.unit.name == "Infantry"
 
         # execute missile launch actions
         resolve_missile_launch_actions(GAME_ID, [a1])
@@ -134,9 +220,9 @@ class TestMissiles(unittest.TestCase):
         assert nation.nuke_count == 0
 
         # check target region
-        assert DENVE.improvement.name == None
-        assert DENVE.unit.name == None
-        assert DENVE.data.fallout == 4
+        assert OMAHA.improvement.name == None
+        assert OMAHA.unit.name == None
+        assert OMAHA.data.fallout == 4
 
     def test_nuke_vs_capital(self):
         """
