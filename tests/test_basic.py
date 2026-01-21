@@ -83,7 +83,9 @@ class TestBasicLoad(unittest.TestCase):
         assert NTHWY.data.resource == "Empty"
         assert NTHWY.improvement.name == "Capital"
         assert NTHWY.improvement.health == 12
-        assert NTHWY.unit.name == None
+        assert NTHWY.unit.name == "Artillery"
+        assert NTHWY.unit.health == 8
+        assert NTHWY.unit.owner_id == "3"
 
     def test_load_nations(self):
         SD.load(GAME_ID)

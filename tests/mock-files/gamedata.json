@@ -1746,8 +1746,8 @@
             "foreignPolicy": "Commercial",
             "status": "Independent Nation",
             "tradeFee": "1:2",
-            "standardMissileStockpile": 0,
-            "nuclearMissileStockpile": 0,
+            "standardMissileStockpile": 3,
+            "nuclearMissileStockpile": 1,
             "stealActionRecord": [
                 0,
                 ""
@@ -2257,7 +2257,7 @@
                 "Research Institute": 0,
                 "Research Laboratory": 4,
                 "Trench": 0,
-                "Missile Silo": 0,
+                "Missile Silo": 1,
                 "Settlement": 0,
                 "Solar Farm": 0,
                 "Surveillance Center": 0,

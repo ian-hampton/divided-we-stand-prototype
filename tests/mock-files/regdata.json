@@ -1027,10 +1027,10 @@
             "turnTimer": 99
         },
         "unitData": {
-            "name": null,
-            "fullName": null,
-            "health": 99,
-            "ownerID": "0"
+            "name": "Artillery",
+            "fullName": "300th AR",
+            "health": 8,
+            "ownerID": "3"
         }
     },
     "MANKA": {
@@ -3442,8 +3442,8 @@
             "quarantine": false
         },
         "improvementData": {
-            "name": null,
-            "health": 99,
+            "name": "Missile Silo",
+            "health": 6,
             "turnTimer": 99
         },
         "unitData": {
