@@ -2090,10 +2090,14 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             costs_list.append(f"{cost} {resource_name.lower()}")
             nation.update_stockpile(resource_name, -1 * cost)
 
+        starting_xp = 0
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
+            if region.unit.type == sd_unit.type:
+                starting_xp = region.unit.xp // 2
+        
         full_unit_name = nation.generate_full_unit_name(action.unit_name)
-        region.unit.set(action.unit_name, full_unit_name, action.id)
+        region.unit.set(action.unit_name, full_unit_name, starting_xp, action.id)
         nation.unit_counts[region.unit.name] += 1
         nation.update_military_capacity()
 

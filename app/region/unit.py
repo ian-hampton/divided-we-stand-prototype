@@ -71,10 +71,11 @@ class UnitData:
             self.nuclear_defense = None
             self.defense_range = None
 
-    def set(self, unit_name: str, full_unit_name: str, owner_id: str, starting_health=0) -> None:
+    def set(self, unit_name: str, full_unit_name: str, xp: int, owner_id: str, starting_health=0) -> None:
         self.clear()
         self.name = unit_name
         self.full_name = full_unit_name
+        self.xp = xp
         self.owner_id = owner_id
         self._load_attributes_from_game_files()
         self.health = self.max_health if starting_health == 0 else starting_health

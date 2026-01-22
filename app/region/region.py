@@ -202,7 +202,7 @@ class Region:
             else:
                 target_region.data.occupier_id = "0"
             # move attacking unit
-            target_region.unit.set(self.unit.name, self.unit.full_name, self.unit.owner_id, self.unit.health)
+            target_region.unit.set(self.unit.name, self.unit.full_name, self.unit.xp, self.unit.owner_id, self.unit.health)
             self.unit.clear()
 
         # withdraw moves need not conduct combat
