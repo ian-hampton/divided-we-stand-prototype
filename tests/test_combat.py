@@ -134,7 +134,7 @@ class TestCombat(unittest.TestCase):
             Defending Improvement Armor = 0 (nullified by SF ability)
             Attacking Unit Net Damage = 3 (Attacker Gross Damage - Defender Armor)
             Attacking Unit will suffer 1 damage from the Settlement.
-            Settlement will be destroyed.
+            Settlement will be captured.
         """
         from app.actions import UnitMoveAction, resolve_unit_move_actions
 
@@ -158,8 +158,8 @@ class TestCombat(unittest.TestCase):
         DENVE = Regions.load("DENVE")
         assert DENVE.unit.name == "Infantry"
         assert DENVE.unit.health == 5
-        assert DENVE.improvement.name == None
-        assert DENVE.improvement.health == 99
+        assert DENVE.improvement.name == "Settlement"
+        assert DENVE.improvement.health == 0
 
     def test_in_vs_undefended(self):
         """
