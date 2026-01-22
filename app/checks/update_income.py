@@ -84,6 +84,7 @@ class UpdateIncomeProcess:
                 # trigger boot camp ability
                 if region.improvement.name == "Boot Camp" and region.unit.xp < 10:
                     region.unit.xp = 10
+                    region.unit.calculate_level()
                 
                 # collect unit income
                 nation = Nations.get(region.unit.owner_id)
