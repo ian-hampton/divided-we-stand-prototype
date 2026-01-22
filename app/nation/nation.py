@@ -136,6 +136,14 @@ class Nation:
         self._data["unitCounts"] = value
 
     @property
+    def unit_counts_lifetime(self) -> dict:
+        return self._data["unitCountsLifetime"]
+
+    @unit_counts_lifetime.setter
+    def unit_counts_lifetime(self, value: dict) -> None:
+        self._data["unitCountsLifetime"] = value
+
+    @property
     def steal_action_record(self) -> list:
         return self._data["stealActionRecord"]
 
@@ -683,6 +691,32 @@ class Nation:
         for i, str in enumerate(self.income_details):
             if "Political Power" in str:
                 return i
+            
+    def generate_full_unit_name(self, unit_name: str) -> str:
+        """
+        Creates the full name for a unit using its name and number.
+
+        Args:
+            unit_name (str): A string name representing what unit it is.
+
+        Returns:
+            str: Full unit name.
+        """
+        self.unit_counts_lifetime[unit_name] += 1
+        count = self.unit_counts_lifetime[unit_name]
+        if 10 <= count % 100 <= 13:
+            suffix = "th"
+        else:
+            match count % 10:
+                case 1:
+                    suffix = "st"
+                case 2:
+                    suffix = "nd"
+                case 3:
+                    suffix = "rd"
+                case _:
+                    suffix = "th"
+        return f"{count}{suffix} {unit_name}"
 
 class NationStatistics:
 

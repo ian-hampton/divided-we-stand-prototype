@@ -109,8 +109,7 @@ class War:
             "justification": "TBD",
             "targetID": target_id,
             "claims": {},
-            "battlesWon": 0,
-            "battlesLost": 0,
+            "attacks": 0,
             "enemyUnitsDestroyed": 0,
             "enemyImprovementsDestroyed": 0,
             "friendlyUnitsDestroyed": 0,
@@ -196,6 +195,44 @@ class War:
                 combatant.target_id = str(target_id)
             
             combatant.justification = war_justification
+
+    def update_warscore(self, side: str, category: str, amount: int) -> None:
+        """
+        This is an ugly solution. Too bad!
+
+        Args:
+            side (str): _description_
+            category (str): _description_
+            amount (WarScore): _description_
+        """
+        if side == "Attacker":
+            match category:
+                case "occupation":
+                    self.attackers.occupation += amount
+                case "decisive_battles":
+                    self.attackers.decisive_battles += amount
+                case "destroyed_units":
+                    self.attackers.destroyed_units += amount
+                case "destroyed_improvements":
+                    self.attackers.destroyed_improvements += amount
+                case "captures":
+                    self.attackers.captures += amount
+                case "nuclear_strikes":
+                    self.attackers.nuclear_strikes += amount
+        elif side == "Defender":
+            match category:
+                case "occupation":
+                    self.defenders.occupation += amount
+                case "decisive_battles":
+                    self.defenders.decisive_battles += amount
+                case "destroyed_units":
+                    self.defenders.destroyed_units += amount
+                case "destroyed_improvements":
+                    self.defenders.destroyed_improvements += amount
+                case "captures":
+                    self.defenders.captures += amount
+                case "nuclear_strikes":
+                    self.defenders.nuclear_strikes += amount
 
     def calculate_score_threshold(self) -> tuple:
         
@@ -347,12 +384,12 @@ class WarScoreData:
         self._data["occupation"] = value
 
     @property
-    def victories(self) -> int:
-        return self._data["combatVictories"]
+    def decisive_battles(self) -> int:
+        return self._data["decisiveBattles"]
     
-    @victories.setter
-    def victories(self, value: int) -> None:
-        self._data["combatVictories"] = value
+    @decisive_battles.setter
+    def decisive_battles(self, value: int) -> None:
+        self._data["decisiveBattles"] = value
 
     @property
     def destroyed_units(self) -> int:

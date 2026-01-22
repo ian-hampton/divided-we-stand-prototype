@@ -4,6 +4,7 @@ from app.scenario.scenario import ScenarioInterface as SD
 from app.region.region import Region
 from app.nation.nation import Nation
 from app.war.war import War
+from app.war.warscore import WarScore
 
 class Strike:
     missile_str: str = None
@@ -21,8 +22,50 @@ class Strike:
             self.missile = SD.missiles[self.missile_str]
         except:
             raise ValueError(f"Failed to init a Missile Strike. Invalid missile type.")
+        
+    def _award_warscore(self, side: str, category: str, amount: WarScore | int) -> None:
+        """
+        This function is silly but important.
+        Since an "attacker" in this combat may not be the same as the "attacker" in the corresponding war, we need to identify what side should be rewarded.
 
-    def identify_best_missile_defense(self) -> tuple[str, int]:
+        Args:
+            side (str): _description_
+            category (str): _description_
+            amount (WarScore): _description_
+        """
+        amount = amount.value if isinstance(amount, WarScore) else amount
+
+        if side == "Attacker":
+            if "Attacker" in self.attacking_combatant.role:
+                self.war.update_warscore("Attacker", category, amount)
+            else:
+                self.war.update_warscore("Defender", category, amount)
+        elif side == "Defender":
+            if "Attacker" in self.defending_combatant:
+                self.war.update_warscore("Attacker", category, amount)
+            else:
+                self.war.update_warscore("Defender", category, amount)
+
+    def _calculate_armor_modifiers(self) -> None:
+
+        defender_armor_modifier = 0
+        
+        # defender entrenched
+        if not self.target_region.unit.has_movement_queued:
+            self.war.log.append(f"    Defending unit is entrenched and gains +1 armor for this battle!")
+            defender_armor_modifier += 1
+
+        # defender armor from units
+        if self.target_region.unit.type == "Infantry" and self.target_region.check_for_adjacent_unit({"Heavy Tank", "Main Battle Tank"}, self.target_region.unit.owner_id):
+            defender_armor_modifier += 1
+        
+        # defender armor from improvements
+        if self.target_region.unit.type == "Infantry" and self.target_region.improvement.name in ["Trench", "Fort", "Military Base"]:
+            defender_armor_modifier += 1
+
+        return defender_armor_modifier
+
+    def identify_best_missile_defense(self) -> tuple[str, float]:
         """
         Helper function for missile defense function.
         Retrieves the name and defense value of the best unit or improvement available to defend against the incoming missile.
@@ -48,13 +91,13 @@ class Strike:
             return False
         
         self.war.log.append(f"    A nearby {defender_name} attempted to defend {self.target_region.id}.")
-        missile_defense_roll = random.randint(1, 10)
+        missile_defense_roll = random.random()
         
-        if missile_defense_roll >= defender_value:
-            self.war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {defender_value}+). Missile destroyed!")
-            return True
+        if missile_defense_roll > defender_value:
+            self.war.log.append(f"    {defender_name} missile defense roll failed. Defenses missed! ({int(defender_value * 100)}% chance)")
         else:
-            self.war.log.append(f"    {defender_name} missile defense rolled {missile_defense_roll} (needed {defender_value}+). Defenses missed!")
+            self.war.log.append(f"    {defender_name} missile defense roll succeeded. Missile destroyed! ({int(defender_value * 100)}% chance)")
+            return True
         
         return False
 

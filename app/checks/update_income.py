@@ -6,6 +6,7 @@ from app.alliance.alliances import Alliances
 from app.nation.nation import Nation
 from app.nation.nations import Nations
 from app.region.regions import Regions
+from app.war.wars import Wars
 from . import economic_helpers
 
 class UpdateIncomeProcess:
@@ -100,22 +101,29 @@ class UpdateIncomeProcess:
                     alliance_income += technology_data.modifiers.get("Alliance Political Power Bonus", 0)
             for tag_data in nation.tags.values():
                 alliance_income += tag_data.get("Alliance Political Power Bonus", 0)
-            if alliance_income * alliance_count == 0:
-                continue
-            nation.update_gross_income("Political Power", alliance_income * alliance_count)
-            for i in range(alliance_count):
-                income_str = f"+{alliance_income:.2f} from alliances"
-                self.text_dict[nation.name]["Political Power"][income_str] += 1
+            if alliance_income * alliance_count != 0:
+                nation.update_gross_income("Political Power", alliance_income * alliance_count)
+                for i in range(alliance_count):
+                    income_str = f"+{alliance_income:.2f} from alliances"
+                    self.text_dict[nation.name]["Political Power"][income_str] += 1
 
+            # add political power income from wars
+            war_win_count = 0
+            for war in Wars:
+                if war.outcome == "Attacker Victory" and war.get_role(nation.id) == "Main Attacker":
+                    war_win_count += 1
+            if war_win_count != 0 and "Early Expansion" in nation.completed_research:
+                nation.update_gross_income("Political Power", 0.5 * war_win_count)
+                for i in range(war_win_count):
+                    income_str = f"+0.5 from winning a war"
+                    self.text_dict[nation.name]["Political Power"][income_str] += 1
+
+            # add income from tags
             for resource_name in nation._resources:
-                
-                # add income from tags
                 for tag_name, tag_data in nation.tags.items():
-                    
                     amount = float(tag_data.get(f"{resource_name} Income", 0))
                     if amount == 0:
                         continue
-
                     nation.update_gross_income(resource_name, amount)
                     income_str = f"{amount:+.2f} from {tag_name}."
                     self.text_dict[nation.name][resource_name][income_str] += 1

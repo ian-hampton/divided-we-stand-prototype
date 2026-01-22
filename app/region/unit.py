@@ -5,6 +5,8 @@ class UnitData:
     def __init__(self, d: dict):
         self._data = d
         self._load_attributes_from_game_files()
+        self.has_been_attacked = False
+        self.has_movement_queued = False
 
     @property
     def name(self) -> str:
@@ -13,6 +15,14 @@ class UnitData:
     @name.setter
     def name(self, value: str) -> None:
         self._data["name"] = value
+
+    @property
+    def full_name(self) -> str:
+        return self._data["fullName"]
+    
+    @full_name.setter
+    def full_name(self, value: str) -> None:
+        self._data["fullName"] = value
 
     @property
     def health(self) -> int:
@@ -31,29 +41,32 @@ class UnitData:
         self._data["ownerID"] = new_id
 
     def _load_attributes_from_game_files(self) -> None:
-
         if self.name is not None:
-            self.type = SD.units[self.name].type
-            self.value = SD.units[self.name].value
-            self.victory_damage = SD.units[self.name].victory_damage
-            self.draw_damage = SD.units[self.name].draw_damage
-            self.max_health = SD.units[self.name].health
-            self.hit_value = SD.units[self.name].hit_value
-            self.missile_defense = SD.units[self.name].missile_defense
-            self.nuclear_defense = SD.units[self.name].nuclear_defense
+            unit = SD.units[self.name]
+            self.type = unit.type
+            self.value = unit.value
+            self.damage = unit.damage
+            self.armor = unit.armor
+            self.max_health = unit.health
+            self.movement = unit.movement
+            self.missile_defense = unit.missile_defense
+            self.nuclear_defense = unit.nuclear_defense
+            self.defense_range = unit.defense_range
         else:
             self.type = None
             self.value = None
-            self.victory_damage = None
-            self.draw_damage = None
+            self.damage = None
+            self.armor = None
             self.max_health = None
-            self.hit_value = None
+            self.movement = None
             self.missile_defense = None
             self.nuclear_defense = None
+            self.defense_range = None
 
-    def set(self, unit_name: str, owner_id: str, starting_health=0) -> None:
+    def set(self, unit_name: str, full_unit_name: str, owner_id: str, starting_health=0) -> None:
         self.clear()
         self.name = unit_name
+        self.full_name = full_unit_name
         self.owner_id = owner_id
         self._load_attributes_from_game_files()
         self.health = self.max_health if starting_health == 0 else starting_health
@@ -65,6 +78,7 @@ class UnitData:
 
     def clear(self) -> None:
         self.name = None
+        self.full_name = None
         self.health = 99
         self.owner_id = "0"
         self._load_attributes_from_game_files()

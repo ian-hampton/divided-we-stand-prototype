@@ -3,26 +3,27 @@ import random
 from app.scenario.scenario import ScenarioInterface as SD
 from app.region.regions import Regions
 from app.war.wars import Wars
+from app.war.warscore import WarScore
 from .strike import Strike
 
 class StandardStrike(Strike):
     missile_str = "Standard Missile"
 
-    def identify_best_missile_defense(self) -> tuple[str, int]:
+    def identify_best_missile_defense(self) -> tuple[str, float]:
         possible_defenders = {}
         defender_name = None
-        defender_value = 99
+        defender_value = -1.0
         
         # check improvements
         for improvement_name, improvement_data in SD.improvements:
-            if improvement_data.missile_defense != 99 and self.target_nation.improvement_counts[improvement_name] > 0:
+            if improvement_data.missile_defense != -1 and self.target_nation.improvement_counts[improvement_name] > 0:
                 possible_defenders[improvement_name] = {"range": improvement_data.defense_range, "value": improvement_data.missile_defense}
-            elif "Local Missile Defense" in self.target_nation.completed_research and improvement_data.hit_value != 99:
-                possible_defenders[improvement_name] = {"range": 0, "value": improvement_data.hit_value}
+            elif "Local Missile Defense" in self.target_nation.completed_research and improvement_name in ["Settlement", "City", "Capital"]:
+                possible_defenders[improvement_name] = {"range": 0, "value": 0.3}
 
         # check units
         for unit_name, unit_data in SD.units:
-            if unit_data.missile_defense != 99 and self.target_nation.unit_counts[unit_name] > 0:
+            if unit_data.missile_defense != -1 and self.target_nation.unit_counts[unit_name] > 0:
                 possible_defenders[unit_name] = {"range": unit_data.defense_range, "value": unit_data.missile_defense}
         
         # determine best defense
@@ -31,12 +32,16 @@ class StandardStrike(Strike):
             nearby_region_ids = self.target_region.get_regions_in_radius(data["range"])
             for temp_region_id in nearby_region_ids:
                 temp_region = Regions.load(temp_region_id)
+                if data["value"] <= defender_value:
+                    continue
                 if temp_region.improvement.name == name:
-                    if data["value"] < defender_value and temp_region.data.owner_id == self.target_nation.id and temp_region.data.occupier_id == "0":
+                    if (temp_region.data.owner_id == self.target_nation.id 
+                        and temp_region.improvement.health != 0
+                        and temp_region.data.occupier_id == "0"):
                         defender_name = name
                         defender_value = data["value"]
                 elif temp_region.unit.name == name:
-                    if data["value"] < defender_value and temp_region.unit.owner_id == self.target_nation.id:
+                    if temp_region.unit.owner_id == self.target_nation.id:
                         defender_name = name
                         defender_value = data["value"]
 
@@ -47,55 +52,48 @@ class StandardStrike(Strike):
         self.nation.action_log.append(f"Launched {self.missile.type} at {self.target_region.id}. See combat log for details.")
     
     def resolve_improvement_damage(self) -> bool:
-        if self.target_region.improvement.name is None:
+        if self.target_region.improvement.name is None or self.target_region.improvement.health == 0:
+            return False
+        
+        # missile accuracy roll
+        accuracy_roll = random.random()
+        if accuracy_roll > self.missile.improvement_damage_chance:
+            self.war.log.append(f"    Missile missed {self.target_region.improvement.name}. ({int(self.missile.improvement_damage_chance * 100)}% chance)")
             return False
         
         # improvement damage procedure - improvements with health bar
-        if self.target_region.improvement.health != 99:
-            accuracy_roll = random.randint(1, 10)
-            self.war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 4+).")
-
-            if accuracy_roll < 4:
-                self.war.log.append(f"    Missile missed {self.target_region.improvement.name}.")
-                return False
+        if self.target_region.improvement.has_health:
             
-            self.target_region.improvement.health -= 1
+            # deal damage
+            defender_armor = 0
+            if "Armor-Piercing Warheads" not in self.nation.completed_research:
+                defender_armor = self.target_region.improvement.armor
+            net_damage = self.missile.improvement_damage - defender_armor
+            net_damage = 0 if net_damage < 0 else net_damage
+            self.target_region.improvement.health -= net_damage
             
+            # improvement survived
             if self.target_region.improvement.health > 0:
-                # improvement survived
-                self.war.log.append(f"    Missile struck {self.target_region.improvement.name} in {self.target_region.id} and dealt 1 damage.")
+                self.war.log.append(f"    Missile struck {self.target_region.improvement.name} in {self.target_region.id} and dealt {net_damage} damage.")
                 return True
 
-            # improvement destroyed
-            if "Attacker" in self.attacking_combatant.role:
-                self.war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-            else:
-                self.war.defenders.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+            # OR improvement destroyed
+            self._award_warscore("Attacker", "destroyed_improvements", WarScore.FROM_DESTROY_IMPROVEMENT)
             if self.target_region.improvement.name != 'Capital':
                 self.attacking_combatant.destroyed_improvements += 1
                 self.defending_combatant.lost_improvements += 1
-                self.war.log.append(f"    Missile struck {self.target_region.improvement.name} in {self.target_region.id} and dealt 1 damage. Improvement destroyed!")
+                self.war.log.append(f"    Missile struck {self.target_region.improvement.name} in {self.target_region.id} and dealt {net_damage} damage. Improvement destroyed!")
                 self.target_nation.improvement_counts[self.target_region.improvement.name] -= 1
                 self.target_region.improvement.clear()
             else:
-                self.war.log.append(f"    Missile struck Capital in {self.target_region.id} and dealt 1 damage. Improvement rendered non-functional!")
+                self.war.log.append(f"    Missile struck Capital in {self.target_region.id} and dealt {net_damage} damage. Improvement rendered non-functional!")
             return True
         
         # improvement damage procedure - improvements without health bar
         elif self.target_region.improvement.health == 99:
-            accuracy_roll = random.randint(1, 10)
-            self.war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 8+).")
-
-            if accuracy_roll < 8:
-                # improvement survived
-                self.war.log.append(f"    Missile missed {self.target_region.improvement.name}.")
-                return False
             
             # improvement destroyed
-            if "Attacker" in self.attacking_combatant.role:
-                self.war.attackers.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
-            else:
-                self.war.defenders.destroyed_improvements += Wars.WARSCORE_FROM_DESTROY_IMPROVEMENT
+            self._award_warscore("Attacker", "destroyed_improvements", WarScore.FROM_DESTROY_IMPROVEMENT)
             self.attacking_combatant.destroyed_improvements += 1
             self.defending_combatant.lost_improvements += 1
             self.war.log.append(f"    Missile struck {self.target_region.improvement.name} in {self.target_region.id}. Improvement destroyed!")
@@ -104,31 +102,33 @@ class StandardStrike(Strike):
             return True
     
     def resolve_unit_damage(self) -> bool:
-        if self.target_region.unit.name is None:
+        if self.target_region.unit.name is None or self.target_region.unit.health == 0:
             return False
 
-        accuracy_roll = random.randint(1, 10)
-        self.war.log.append(f"    Missile rolled a {accuracy_roll} for accuracy (needed 4+).")
-
-        if accuracy_roll < 4:
-            self.war.log.append(f"    Missile missed {self.target_region.unit.name}.")
+        # missile accuracy roll
+        accuracy_roll = random.random()
+        if accuracy_roll > self.missile.unit_damage_chance:
+            self.war.log.append(f"    Missile missed {self.target_region.unit.name}. ({int(self.missile.unit_damage_chance * 100)}% chance)")
             return False
-
-        self.target_region.unit.health -= 1
         
+        # deal damage
+        defender_armor = 0
+        if "Armor-Piercing Warheads" not in self.nation.completed_research:
+            defender_armor = self.target_region.unit.armor + self._calculate_armor_modifiers()
+        net_damage = self.missile.unit_damage - defender_armor
+        net_damage = 0 if net_damage < 0 else net_damage
+        self.target_region.unit.health -= net_damage
+        
+        # unit survived
         if self.target_region.unit.health > 0:
-            # unit survived
-            self.war.log.append(f"    Missile struck {self.target_region.unit.name} in {self.target_region.id} and dealt 1 damage.")
+            self.war.log.append(f"    Missile struck {self.target_region.unit.name} in {self.target_region.id} and dealt {net_damage} damage.")
             return True
         
-        # unit destroyed
-        if "Attacker" in self.attacking_combatant.role:
-            self.war.attackers.destroyed_units += self.target_region.unit.value    # amount of warscore earned depends on unit value
-        else:
-            self.war.defenders.destroyed_units += self.target_region.unit.value    # amount of warscore earned depends on unit value
+        # OR unit destroyed
+        self._award_warscore("Attacker", "destroyed_units", self.target_region.unit.value)
         self.attacking_combatant.destroyed_units += 1
         self.defending_combatant.lost_units += 1
-        self.war.log.append(f"    Missile struck {self.target_region.unit.name} in {self.target_region.id}. Unit destroyed!")
+        self.war.log.append(f"    Missile struck {self.target_region.unit.name} in {self.target_region.id} and dealt {net_damage} damage. Unit destroyed!")
         self.target_nation.unit_counts[self.target_region.unit.name] -= 1
         self.target_region.unit.clear()
         return True

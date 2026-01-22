@@ -13,7 +13,7 @@ class RegionsMeta(type):
 
     def __iter__(cls) -> Iterator[Region]:
         for region_id in cls._graph:
-            yield Region(region_id, cls._data[region_id], cls._graph[region_id], cls.game_id)
+            yield cls.load(region_id)
 
     def __len__(cls):
         return len(cls._graph) if cls._graph else 0
@@ -27,21 +27,26 @@ class Regions(metaclass=RegionsMeta):
     _instances: ClassVar[dict[str, Region]] = {}
 
     @classmethod
+    def _regdata_path(cls) -> str:
+        return f"gamedata/{cls.game_id}/regdata.json"
+
+    @classmethod
     def initialize(cls, game_id: str) -> None:
 
         game = Games.load(game_id)
         
         cls.game_id = game_id
-        regdata_filepath = f"gamedata/{Regions.game_id}/regdata.json"
+        regdata_path = cls._regdata_path()
         graph_filepath = f"maps/{game.get_map_string()}/graph.json"
         
-        if not (os.path.exists(regdata_filepath) and os.path.exists(graph_filepath)):
+        if not (os.path.exists(regdata_path) and os.path.exists(graph_filepath)):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Regions class.")
         
-        with open(regdata_filepath, 'r') as f:
+        with open(regdata_path, 'r') as f:
             cls._data = json.load(f)
         with open(graph_filepath, 'r') as f:
             cls._graph = json.load(f)
+        
         cls._instances.clear()
     
     @classmethod
@@ -64,6 +69,19 @@ class Regions(metaclass=RegionsMeta):
         
         if region_id not in cls._instances:
             cls._instances[region_id] = Region(region_id, cls._data[region_id], cls._graph[region_id], cls.game_id)
+        return cls._instances[region_id]
+    
+    @classmethod
+    def reload(cls, region_id: str) -> Region:
+        """
+        Loads a Region based on the region id. Garunteed to do so by creating a new Region object.
+        Only use this for testing! Do not use this in normal turn processing code or some data may be lost!
+        """
+        if region_id not in cls._data:
+            raise Exception(f"Failed to load Region with id {region_id}. Region ID not valid for this game.")
+        
+        cls._instances[region_id] = Region(region_id, cls._data[region_id], cls._graph[region_id], cls.game_id)
+        
         return cls._instances[region_id]
     
     @classmethod

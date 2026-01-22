@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 from typing import ClassVar, TypeVar, Generic
 
+from app.game.games import Games
 from .sd_agenda import *
 from .sd_alliance import *
 from .sd_event import *
@@ -99,7 +100,6 @@ class ScenarioInterface:
 
     @classmethod
     def _get_scenario_name(cls) -> str:
-        from app.game.games import Games
         if cls.game_id != "TBD":
             game = Games.load(cls.game_id)
             return game.info.scenario.lower()

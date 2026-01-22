@@ -524,6 +524,8 @@ def resolve_outsource_technology_actions(game_id: str, actions_list: list[Outsou
 
 def resolve_military_reinforcements_actions(game_id: str, actions_list: list[MilitaryReinforcementsAction]) -> None:
 
+    UNIT_NAME = "Mechanized Infantry"
+
     for action in actions_list:
 
         nation = Nations.get(action.id)
@@ -543,15 +545,16 @@ def resolve_military_reinforcements_actions(game_id: str, actions_list: list[Mil
             region = Regions.load(region_id)
             
             if region.data.owner_id != action.id:
-                nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. You do not own that region.")
+                nation.action_log.append(f"Failed to use Military Reinforcements to deploy {UNIT_NAME} {region_id}. You do not own that region.")
                 continue
             
             if region.unit.owner_id != action.id:
-                nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. A hostile unit is present.")
+                nation.action_log.append(f"Failed to use Military Reinforcements to deploy {UNIT_NAME} {region_id}. A hostile unit is present.")
                 continue
             
             if region.unit.name is not None:
                 nation.unit_counts[region.unit.name] -= 1
-            nation.unit_counts["Mechanized Infantry"] += 1
-            region.unit.set("Mechanized Infantry", action.id)
+            nation.unit_counts[UNIT_NAME] += 1
+            full_unit_name = nation.generate_full_unit_name(UNIT_NAME)
+            region.unit.set(UNIT_NAME, full_unit_name, action.id)
             nation.action_log.append(f"Used Military Reinforcements to deploy Mechanized Infantry {region_id}.")

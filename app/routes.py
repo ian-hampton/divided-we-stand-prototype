@@ -185,6 +185,7 @@ def create_game():
                 },
                 "unitData": {
                     "name": None,
+                    "fullName": None,
                     "health": 99,
                     "ownerID": "0"
                 }
@@ -557,7 +558,7 @@ def wars(full_game_id):
         copy = {
             "Total War Score": war.attackers.total,
             "From Occupation": war.attackers.occupation,
-            "From Combat Victories": war.attackers.victories,
+            "From Decisive Battles": war.attackers.decisive_battles,
             "From Enemy Units Destroyed": war.attackers.destroyed_units,
             "From Enemy Impr. Destroyed": war.attackers.destroyed_improvements,
             "From Capital Captures": war.attackers.captures,
@@ -569,7 +570,7 @@ def wars(full_game_id):
         copy = {
             "Total War Score": war.defenders.total,
             "From Occupation": war.defenders.occupation,
-            "From Combat Victories": war.defenders.victories,
+            "From Decisive Battles": war.defenders.decisive_battles,
             "From Enemy Units Destroyed": war.defenders.destroyed_units,
             "From Enemy Impr. Destroyed": war.defenders.destroyed_improvements,
             "From Capital Captures": war.defenders.captures,
@@ -792,13 +793,12 @@ def units_ref(full_game_id):
             "Unit Type": unit_data.type,
             "Abbreviation": unit_data.abbreviation,
             "Reference Color": unit_data.color,
+            "Damage": unit_data.damage,
+            "Armor": unit_data.armor,
             "Health": unit_data.health,
-            "Victory Damage": unit_data.victory_damage,
-            "Draw Damage": unit_data.draw_damage,
-            "Combat Value": unit_data.hit_value,
             "Movement": unit_data.movement,
-            "Standard Missile Defense": unit_data.missile_defense,
-            "Nuclear Missile Defense": unit_data.nuclear_defense,
+            "Standard Missile Defense": f"{int(unit_data.missile_defense * 100)}%" if unit_data.missile_defense != 99 else 99,
+            "Nuclear Missile Defense": f"{int(unit_data.nuclear_defense * 100)}%" if unit_data.nuclear_defense != 99 else 99,
             "Abilities": unit_data.abilities,
             "Upkeep": unit_data.upkeep,
             "Build Costs": unit_data.cost
@@ -837,12 +837,11 @@ def improvements_ref(full_game_id):
             "Required Resource": improvement_data.required_resource,
             "Reference Color": improvement_data.color,
             "Income": improvement_data.income,
+            "Damage": improvement_data.damage,
+            "Armor": improvement_data.armor,
             "Health": improvement_data.health,
-            "Victory Damage": improvement_data.victory_damage,
-            "Draw Damage": improvement_data.draw_damage,
-            "Combat Value": improvement_data.hit_value,
-            "Standard Missile Defense": improvement_data.missile_defense,
-            "Nuclear Missile Defense": improvement_data.nuclear_defense,
+            "Standard Missile Defense": f"{int(improvement_data.missile_defense * 100)}%" if improvement_data.missile_defense != 99 else 99,
+            "Nuclear Missile Defense": f"{int(improvement_data.nuclear_defense * 100)}%" if improvement_data.nuclear_defense != 99 else 99,
             "Abilities": improvement_data.abilities,
             "Upkeep": improvement_data.upkeep,
             "Build Costs": improvement_data.cost
@@ -1179,6 +1178,7 @@ def turn_resolution_new(full_game_id):
             Alliances.load(full_game_id)
             Nations.load(full_game_id)
             Regions.initialize(full_game_id)
+            Wars.load(full_game_id)
 
             contents_dict = {}
             for nation in Nations:

@@ -8,6 +8,7 @@ from app.game.games import Games
 from app.nation.nation import Nation
 from .war import War
 from .war_claims import ManageWarClaims
+from .warscore import WarScore
 
 class WarsMeta(type):
     
@@ -25,24 +26,22 @@ class Wars(metaclass=WarsMeta):
     _data: ClassVar[dict[str, dict]] = None
 
     @classmethod
+    def _gamedata_path(cls) -> str:
+        return f"gamedata/{cls.game_id}/gamedata.json"
+
+    @classmethod
     def load(cls, game_id: str) -> None:
 
         cls.game_id = game_id
-        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
-        if not os.path.exists(gamedata_filepath):
+        gamedata_path = cls._gamedata_path()
+
+        if not os.path.exists(gamedata_path):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Alliances class.")
         
-        with open(gamedata_filepath, 'r') as f:
+        with open(gamedata_path, 'r') as f:
             gamedata_dict = json.load(f)
 
         cls._data = gamedata_dict["wars"]
-
-        # TODO - make these enums
-        cls.WARSCORE_FROM_VICTORY = 1
-        cls.WARSCORE_FROM_OCCUPATION = 2
-        cls.WARSCORE_FROM_DESTROY_IMPROVEMENT = 2
-        cls.WARSCORE_FROM_CAPITAL_CAPTURE = 20
-        cls.WARSCORE_FROM_NUCLEAR_STRIKE = 5
 
     @classmethod
     def save(cls) -> None:
@@ -83,7 +82,7 @@ class Wars(metaclass=WarsMeta):
             "attackerWarScore": {
                 "total": 0,
                 "occupation": 0,
-                "combatVictories": 0,
+                "decisiveBattles": 0,
                 "enemyUnitsDestroyed": 0,
                 "enemyImprovementsDestroyed": 0,
                 "capitalCaptures": 0,
@@ -92,7 +91,7 @@ class Wars(metaclass=WarsMeta):
             "defenderWarScore": {
                 "total": 0,
                 "occupation": 0,
-                "combatVictories": 0,
+                "decisiveBattles": 0,
                 "enemyUnitsDestroyed": 0,
                 "enemyImprovementsDestroyed": 0,
                 "capitalCaptures": 0,
@@ -255,9 +254,9 @@ class Wars(metaclass=WarsMeta):
                 score += 1
             
             if "Attacker" in occupier_war_role:
-                war.attackers.occupation += cls.WARSCORE_FROM_OCCUPATION
+                war.attackers.occupation += WarScore.FROM_OCCUPATION
             else:
-                war.defenders.occupation += cls.WARSCORE_FROM_OCCUPATION
+                war.defenders.occupation += WarScore.FROM_OCCUPATION
 
     @classmethod
     def update_totals(cls) -> None:
@@ -269,7 +268,7 @@ class Wars(metaclass=WarsMeta):
 
             war.attackers.total = 0
             war.attackers.total += war.attackers.occupation
-            war.attackers.total += war.attackers.victories
+            war.attackers.total += war.attackers.decisive_battles
             war.attackers.total += war.attackers.destroyed_units
             war.attackers.total += war.attackers.destroyed_improvements
             war.attackers.total += war.attackers.captures
@@ -277,7 +276,7 @@ class Wars(metaclass=WarsMeta):
 
             war.defenders.total = 0
             war.defenders.total += war.defenders.occupation
-            war.defenders.total += war.defenders.victories
+            war.defenders.total += war.defenders.decisive_battles
             war.defenders.total += war.defenders.destroyed_units
             war.defenders.total += war.defenders.destroyed_improvements
             war.defenders.total += war.defenders.captures
