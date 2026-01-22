@@ -33,6 +33,14 @@ class UnitData:
         self._data["health"] = value
 
     @property
+    def xp(self) -> int:
+        return self._data["experience"]
+    
+    @xp.setter
+    def xp(self, value: int) -> None:
+        self._data["experience"] = value
+
+    @property
     def owner_id(self) -> str:
         return self._data["ownerID"]
     
