@@ -1,5 +1,7 @@
+from app.nation.nations import Nations
 from app.region.region import Region
 from app.war.wars import Wars
+from app.combat.experience import ExperienceRewards
 
 class CombatProcedure:
 
@@ -34,6 +36,20 @@ class CombatProcedure:
             self.defending_region.improvement.has_been_attacked = True
             self.has_conducted_combat = True
 
+        # check if attacker and defender has leveled up
+        self.announce_level_changes()
+
+    def announce_level_changes(self) -> None:
+        """
+        Tells units involved in this combat to recalculate their level. If a unit has leveled up, this is added to the war log.
+        """
+        if self.attacking_region.unit.calculate_level():
+            attacker = Nations.get(self.attacker_id)
+            self.war.log.append(f"{attacker.name} {self.attacking_region.unit.name} has reached level {self.attacking_region.unit.level}!")
+        if self.defending_region.unit.calculate_level():
+            defender = Nations.get(self.defender_id)
+            self.war.log.append(f"{defender.name} {self.defending_region.unit.name} has reached level {self.defending_region.unit.level}!")
+
     def is_able_to_move(self) -> bool:
         """
         Attacking unit can only move after combat if still alive and no remaining resistance in defending region.
@@ -67,6 +83,7 @@ class CombatProcedure:
         defending_nation_combatant_data = self.war.get_combatant(self.defender_id)
         
         # award points and update stats
+        self.attacking_region.unit.xp += ExperienceRewards.FROM_DEFEAT_ENEMY
         self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
         attacking_nation_combatant_data.destroyed_improvements += 1
         defending_nation_combatant_data.lost_improvements += 1

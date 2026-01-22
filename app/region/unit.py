@@ -5,6 +5,7 @@ class UnitData:
     def __init__(self, d: dict):
         self._data = d
         self._load_attributes_from_game_files()
+        self.level = self.xp // 10
         self.has_been_attacked = False
         self.has_movement_queued = False
 
@@ -38,7 +39,7 @@ class UnitData:
     
     @xp.setter
     def xp(self, value: int) -> None:
-        self._data["experience"] = value
+        self._data["experience"] = min(value, 30)
 
     @property
     def owner_id(self) -> str:
@@ -47,6 +48,14 @@ class UnitData:
     @owner_id.setter
     def owner_id(self, new_id: str) -> None:
         self._data["ownerID"] = new_id
+    
+    @property
+    def true_max_health(self) -> int:
+        return self.max_health + self.level * 2
+    
+    @property
+    def true_damage(self) -> int:
+        return self.damage + self.level
 
     def _load_attributes_from_game_files(self) -> None:
         if self.name is not None:
@@ -71,6 +80,30 @@ class UnitData:
             self.nuclear_defense = None
             self.defense_range = None
 
+    def calculate_level(self) -> bool:
+        """
+        Recalculate this unit's level based on its experience.
+
+        Returns:
+            bool: True if the unit has increased their level, False otherwise.
+        """
+        new_level = self.xp // 10
+        
+        # do nothing if this unit does not exist or level has not changed
+        if self.name is None or self.level == new_level:
+            return False
+        
+        if new_level > self.level:
+            # unit is at a higher level now than before
+            self.level = new_level
+            self.heal(2)
+            return True
+        
+        # unit is at a lower level than before - this code should never run but here it is anyway
+        self.level = new_level
+        self.heal(0)
+        return False
+
     def set(self, unit_name: str, full_unit_name: str, xp: int, owner_id: str, starting_health=0) -> None:
         self.clear()
         self.name = unit_name
@@ -78,12 +111,13 @@ class UnitData:
         self.xp = xp
         self.owner_id = owner_id
         self._load_attributes_from_game_files()
-        self.health = self.max_health if starting_health == 0 else starting_health
+        self.level = self.xp // 10
+        self.health = self.true_max_health if starting_health == 0 else starting_health
 
     def heal(self, amount: int) -> None:
         self.health += amount
-        if self.health > self.max_health:
-            self.health = self.max_health
+        if self.health > self.true_max_health:
+            self.health = self.true_max_health
 
     def clear(self) -> None:
         self.name = None
