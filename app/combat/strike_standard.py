@@ -32,12 +32,16 @@ class StandardStrike(Strike):
             nearby_region_ids = self.target_region.get_regions_in_radius(data["range"])
             for temp_region_id in nearby_region_ids:
                 temp_region = Regions.load(temp_region_id)
+                if data["value"] <= defender_value:
+                    continue
                 if temp_region.improvement.name == name:
-                    if data["value"] > defender_value and temp_region.data.owner_id == self.target_nation.id and temp_region.data.occupier_id == "0":
+                    if (temp_region.data.owner_id == self.target_nation.id 
+                        and temp_region.improvement.health != 0
+                        and temp_region.data.occupier_id == "0"):
                         defender_name = name
                         defender_value = data["value"]
                 elif temp_region.unit.name == name:
-                    if data["value"] > defender_value and temp_region.unit.owner_id == self.target_nation.id:
+                    if temp_region.unit.owner_id == self.target_nation.id:
                         defender_name = name
                         defender_value = data["value"]
 
@@ -48,7 +52,7 @@ class StandardStrike(Strike):
         self.nation.action_log.append(f"Launched {self.missile.type} at {self.target_region.id}. See combat log for details.")
     
     def resolve_improvement_damage(self) -> bool:
-        if self.target_region.improvement.name is None:
+        if self.target_region.improvement.name is None or self.target_region.improvement.health == 0:
             return False
         
         # missile accuracy roll
@@ -58,7 +62,7 @@ class StandardStrike(Strike):
             return False
         
         # improvement damage procedure - improvements with health bar
-        if self.target_region.improvement.health != 99:
+        if self.target_region.improvement.has_health:
             
             # deal damage
             defender_armor = 0
@@ -98,7 +102,7 @@ class StandardStrike(Strike):
             return True
     
     def resolve_unit_damage(self) -> bool:
-        if self.target_region.unit.name is None:
+        if self.target_region.unit.name is None or self.target_region.unit.health == 0:
             return False
 
         # missile accuracy roll

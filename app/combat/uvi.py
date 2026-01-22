@@ -85,15 +85,14 @@ class UnitVsImprovement(BattleTemplate):
         if self.defending_region.improvement.health <= 0:
             self.attacker_cd.destroyed_improvements += 1
             self.defender_cd.lost_improvements += 1
-            if self.defending_region.improvement.name != 'Capital':
-                self.war.log.append(f"    {self.defender.name} {self.defending_region.improvement.name} has been destroyed!")
-                self._award_warscore("Attacker", "destroyed_improvements", WarScore.FROM_DESTROY_IMPROVEMENT)
-                self.defender.improvement_counts[self.defending_region.improvement.name] -= 1
-                self.defending_region.improvement.clear()
-            else:
-                self.war.log.append(f"    {self.defender.name} {self.defending_region.improvement.name} has been captured!")
+            self.war.log.append(f"    {self.defender.name} {self.defending_region.improvement.name} has been captured!")
+            self.defending_region.improvement.health = 0
+            # special case - capital captured
+            if self.defending_region.improvement.name == "Capital":
                 self._award_warscore("Attacker", "captures", WarScore.FROM_CAPITAL_CAPTURE)
-                self.defending_region.improvement.health = 0
+                return
+            # improvement captured
+            self._award_warscore("Attacker", "destroyed_improvements", WarScore.FROM_DESTROY_IMPROVEMENT)
 
     def resolve(self) -> None:
         """
