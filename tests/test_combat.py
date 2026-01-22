@@ -4,7 +4,7 @@ Author: Ian Hampton
 Created Date: 2nd January 2026
 
 These are tests to make sure that combat and occupation is working as expected.
-TODO: Test warscore updates and unit xp.
+TODO: Test warscore updates.
 """
 
 import os, sys
@@ -91,6 +91,9 @@ class TestCombat(unittest.TestCase):
         assert defender.justification == "TBD"
         assert defender.target_id == "TBD"
         assert defender.claims == {}
+
+    def setUp(self):
+        Regions._instances.clear()
     
     def test_in_vs_in(self):
         """
@@ -110,16 +113,18 @@ class TestCombat(unittest.TestCase):
         assert m1.current_region_id == "DURAN"
         assert m1.target_region_ids == ["GJUNC"]
 
+        # prep
+        DURAN = Regions.load("DURAN")
+        GJUNC = Regions.load("GJUNC")
+
         # execute movement and combat
         resolve_unit_move_actions(GAME_ID, [m1])
 
         # check attacker
-        DURAN = Regions.load("DURAN")
         assert DURAN.unit.name == "Infantry"
         assert DURAN.unit.health == 7
 
         # check defender
-        GJUNC = Regions.load("GJUNC")
         assert GJUNC.unit.name == "Infantry"
         assert GJUNC.unit.health == 7
 
@@ -146,16 +151,18 @@ class TestCombat(unittest.TestCase):
         assert m1.current_region_id == "COSPR"
         assert m1.target_region_ids == ["DENVE"]
 
+        # prep
+        COSPR = Regions.load("COSPR")
+        DENVE = Regions.load("DENVE")
+
         # execute movement and combat
         resolve_unit_move_actions(GAME_ID, [m1])
 
         # check attacker
-        COSPR = Regions.load("COSPR")
         assert COSPR.unit.name == "Special Forces"
         assert COSPR.unit.health == 15
 
         # check defender
-        DENVE = Regions.load("DENVE")
         assert DENVE.unit.name == "Infantry"
         assert DENVE.unit.health == 5
         assert DENVE.improvement.name == "Settlement"
@@ -175,11 +182,14 @@ class TestCombat(unittest.TestCase):
         assert m1.current_region_id == "SANFR"
         assert m1.target_region_ids == ["SROSA"]
 
+        # prep
+        SANFR = Regions.load("SANFR")
+        SROSA = Regions.load("SROSA")
+
         # execute movement and combat
         resolve_unit_move_actions(GAME_ID, [m1])
 
         # check SANFR
-        SANFR = Regions.load("SANFR")
         assert SANFR.data.owner_id == "4"
         assert SANFR.data.occupier_id == "0"
         assert SANFR.unit.name == None
@@ -189,7 +199,6 @@ class TestCombat(unittest.TestCase):
         assert SANFR.improvement.health == 99
 
         # check SROSA
-        SROSA = Regions.load("SROSA")
         assert SROSA.data.owner_id == "3"
         assert SROSA.data.occupier_id == "4"
         assert SROSA.unit.name == "Infantry"
@@ -200,9 +209,10 @@ class TestCombat(unittest.TestCase):
 
     def test_mo_vs_undefended(self):
         """
-        This test checks two things:
+        This test checks three things:
         1. Are units with multiple moves functioning as expected?
         2. Are defenseless improvements being pillaged?
+        3. Is the appropriate XP being awarded?
         """
 
         from app.actions import UnitMoveAction, resolve_unit_move_actions
@@ -215,11 +225,15 @@ class TestCombat(unittest.TestCase):
         assert m1.current_region_id == "PROVO"
         assert m1.target_region_ids == ["NTEAZ", "STEUT"]
 
+        # prep
+        PROVO = Regions.load("PROVO")
+        STEUT = Regions.load("STEUT")
+        NTEAZ = Regions.load("NTEAZ")
+
         # execute movement and combat
         resolve_unit_move_actions(GAME_ID, [m1])
 
         # check PROVO
-        PROVO = Regions.load("PROVO")
         assert PROVO.data.owner_id == "3"
         assert PROVO.data.occupier_id == "0"
         assert PROVO.unit.name == None
@@ -229,7 +243,6 @@ class TestCombat(unittest.TestCase):
         assert PROVO.improvement.health == 99
 
         # check STEUT
-        STEUT = Regions.load("STEUT")
         assert STEUT.data.owner_id == "4"
         assert STEUT.data.occupier_id == "3"
         assert STEUT.unit.name == None
@@ -239,7 +252,6 @@ class TestCombat(unittest.TestCase):
         assert STEUT.improvement.health == 99
 
         # check NTEAZ
-        NTEAZ = Regions.load("NTEAZ")
         assert NTEAZ.data.owner_id == "4"
         assert NTEAZ.data.occupier_id == "3"
         assert NTEAZ.unit.name == "Motorized Infantry"
@@ -247,3 +259,43 @@ class TestCombat(unittest.TestCase):
         assert NTEAZ.unit.owner_id == "3"
         assert NTEAZ.improvement.name == None
         assert NTEAZ.improvement.health == 99
+        
+        # check NTEAZ XP    (2x destruction) + (2x occupation) + (2x attacking) = 4 + 4 + 2 = 10
+        assert NTEAZ.unit.xp == 10
+
+    def test_in_vs_in_xp(self):
+        """
+        Nation D Infantry DURAN vs Nation C Infantry GJUNC
+            Attacking Unit Gross Damage = 4 (+2 from base damage, +2 from xp lvl)
+            Defending Unit Armor = 1 (+1 from holding position)
+            Attacking Unit Net Damage = 3 (Attacker Gross Damage - Defender Armor)
+        """
+        from app.actions import UnitMoveAction, resolve_unit_move_actions
+
+        # create and verify movement action
+        m1 = UnitMoveAction(GAME_ID, "4", "Move DURAN-GJUNC")
+        assert m1.is_valid() == True
+        assert m1.game_id == GAME_ID
+        assert m1.id == "4"
+        assert m1.current_region_id == "DURAN"
+        assert m1.target_region_ids == ["GJUNC"]
+
+        # prep
+        DURAN = Regions.load("DURAN")
+        DURAN.unit.xp = 20
+        DURAN.unit.calculate_level()
+        DURAN.unit.heal(1000)
+        GJUNC = Regions.load("GJUNC")
+
+        # execute movement and combat
+        resolve_unit_move_actions(GAME_ID, [m1])
+
+        # check attacker
+        assert DURAN.unit.name == "Infantry"
+        assert DURAN.unit.health == 12
+        assert DURAN.unit.xp == 21
+
+        # check defender
+        assert GJUNC.unit.name == "Infantry"
+        assert GJUNC.unit.health == 5
+        assert GJUNC.unit.xp == 1

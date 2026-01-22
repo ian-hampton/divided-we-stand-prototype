@@ -1,4 +1,5 @@
 from app.scenario.scenario import ScenarioInterface as SD
+from app.combat.experience import ExperienceRewards
 
 class UnitData:
     
@@ -39,7 +40,7 @@ class UnitData:
     
     @xp.setter
     def xp(self, value: int) -> None:
-        self._data["experience"] = min(value, 30)
+        self._data["experience"] = value
 
     @property
     def owner_id(self) -> str:
@@ -80,30 +81,6 @@ class UnitData:
             self.nuclear_defense = None
             self.defense_range = None
 
-    def calculate_level(self) -> bool:
-        """
-        Recalculate this unit's level based on its experience.
-
-        Returns:
-            bool: True if the unit has increased their level, False otherwise.
-        """
-        new_level = self.xp // 10
-        
-        # do nothing if this unit does not exist or level has not changed
-        if self.name is None or self.level == new_level:
-            return False
-        
-        if new_level > self.level:
-            # unit is at a higher level now than before
-            self.level = new_level
-            self.heal(2)
-            return True
-        
-        # unit is at a lower level than before - this code should never run but here it is anyway
-        self.level = new_level
-        self.heal(0)
-        return False
-
     def set(self, unit_name: str, full_unit_name: str, xp: int, owner_id: str, starting_health=0) -> None:
         self.clear()
         self.name = unit_name
@@ -122,6 +99,7 @@ class UnitData:
     def clear(self) -> None:
         self.name = None
         self.full_name = None
+        self.xp = 0
         self.health = 99
         self.owner_id = "0"
         self._load_attributes_from_game_files()
@@ -146,3 +124,32 @@ class UnitData:
             return True
         
         return False
+    
+    def calculate_level(self) -> bool:
+        """
+        Recalculate this unit's level based on its experience.
+
+        Returns:
+            bool: True if the unit has increased their level, False otherwise.
+        """
+        new_level = self.xp // 10
+        
+        # do nothing if this unit does not exist or level has not changed
+        if self.name is None or self.level == new_level:
+            return False
+        
+        if new_level > self.level:
+            # unit is at a higher level now than before
+            self.level = new_level
+            self.heal(2)
+            return True
+        
+        # unit is at a lower level than before - this code should never run but here it is anyway
+        self.level = new_level
+        self.heal(0)
+        return False
+
+    def add_xp(self, value: ExperienceRewards) -> None:
+        self.xp += value
+        if self.xp > 30:
+            self.xp = 30

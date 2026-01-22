@@ -117,6 +117,9 @@ class TestMissiles(unittest.TestCase):
         assert SD.missiles["Standard Missile"].improvement_damage_chance == 1.0
         assert SD.missiles["Standard Missile"].unit_damage_chance == 1.0
 
+    def setUp(self):
+        Regions._instances.clear()
+
     def test_missile_vs_improvement(self):
         """
         Missile vs defenseless improvement with no health.
@@ -136,7 +139,7 @@ class TestMissiles(unittest.TestCase):
         nation = Nations.get("Nation D")
         nation.missile_count = 3
         assert nation.missile_count == 3
-        OLYMP = Regions.reload("OLYMP")
+        OLYMP = Regions.load("OLYMP")
         assert OLYMP.data.owner_id == "3"
         assert OLYMP.improvement.name == "Industrial Zone"
         assert OLYMP.unit.name == None
@@ -171,7 +174,7 @@ class TestMissiles(unittest.TestCase):
         nation = Nations.get("Nation D")
         nation.missile_count = 3
         assert nation.missile_count == 3
-        DENVE = Regions.reload("DENVE")
+        DENVE = Regions.load("DENVE")
         assert DENVE.data.owner_id == "3"
         assert DENVE.improvement.name == "Settlement"
         assert DENVE.improvement.health == 3
@@ -209,7 +212,7 @@ class TestMissiles(unittest.TestCase):
         nation = Nations.get("Nation D")
         nation.nuke_count = 1
         assert nation.nuke_count == 1
-        OMAHA = Regions.reload("OMAHA")
+        OMAHA = Regions.load("OMAHA")
         assert OMAHA.improvement.name == "Research Laboratory"
         assert OMAHA.unit.name == "Infantry"
 
@@ -244,7 +247,7 @@ class TestMissiles(unittest.TestCase):
         nation = Nations.get("Nation D")
         nation.nuke_count = 1
         assert nation.nuke_count == 1
-        NTHWY = Regions.reload("NTHWY")
+        NTHWY = Regions.load("NTHWY")
         assert NTHWY.data.owner_id == "3"
         assert NTHWY.improvement.name == "Capital"
         assert NTHWY.unit.name == "Artillery"

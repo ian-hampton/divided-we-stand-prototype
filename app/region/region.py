@@ -15,9 +15,9 @@ class Region:
         self.game_id = game_id
         
         self.data = RegionData(self._data["regionData"])
+        self.graph = GraphData(graph)
         self.improvement = ImprovementData(self._data["improvementData"])
         self.unit = UnitData(self._data["unitData"])
-        self.graph = GraphData(graph)
 
         self.claim_list = []
 
@@ -37,7 +37,7 @@ class Region:
     
     def __repr__(self):
         return self.__str__()
-    
+
     def get_regions_in_radius(self, radius: int) -> set:
         
         queue = deque([(self, 0)])
@@ -198,10 +198,10 @@ class Region:
         def execute_move() -> None:
             # update region occupation
             if attacker_id != defender_id:
-                self.unit.xp += ExperienceRewards.FROM_OCCUPATION
+                self.unit.add_xp(ExperienceRewards.FROM_OCCUPATION)
                 target_region.data.occupier_id = self.unit.owner_id
             elif target_region.data.occupier_id != "0":
-                self.unit.xp += ExperienceRewards.FROM_OCCUPATION
+                self.unit.add_xp(ExperienceRewards.FROM_OCCUPATION)
                 target_region.data.occupier_id = "0"
             # move attacking unit
             target_region.unit.set(self.unit.name, self.unit.full_name, self.unit.xp, self.unit.owner_id, self.unit.health)

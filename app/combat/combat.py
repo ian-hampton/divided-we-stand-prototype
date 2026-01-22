@@ -23,7 +23,7 @@ class CombatProcedure:
         """
         from .uvu import UnitVsUnit
         from .uvi import UnitVsImprovement
-        
+
         # conduct unit vs unit combat if needed
         if self.defending_region.unit.is_hostile(self.attacking_region.unit.owner_id):
             UnitVsUnit(self).resolve()
@@ -83,7 +83,7 @@ class CombatProcedure:
         defending_nation_combatant_data = self.war.get_combatant(self.defender_id)
         
         # award points and update stats
-        self.attacking_region.unit.xp += ExperienceRewards.FROM_DEFEAT_ENEMY
+        self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
         self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
         attacking_nation_combatant_data.destroyed_improvements += 1
         defending_nation_combatant_data.lost_improvements += 1

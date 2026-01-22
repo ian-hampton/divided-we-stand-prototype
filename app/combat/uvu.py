@@ -63,7 +63,7 @@ class UnitVsUnit(BattleTemplate):
         
         # update stats
         self.attacker_cd.attacks += 1
-        self.attacking_region.unit.xp += ExperienceRewards.FROM_ATTACK_ENEMY
+        self.attacking_region.unit.add_xp(ExperienceRewards.FROM_ATTACK_ENEMY)
 
         if net_damage >= 3:
             # decisive victory
@@ -93,7 +93,7 @@ class UnitVsUnit(BattleTemplate):
         if self.defending_region.unit.health <= 0:
             self.war.log.append(f"    {self.defender.name} {self.defending_region.unit.name} has been defeated!")
             # update stats
-            self.attacking_region.unit.xp += ExperienceRewards.FROM_DEFEAT_ENEMY
+            self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
             self._award_warscore("Attacker", "destroyed_units", self.defending_region.unit.value)
             self.attacker_cd.destroyed_units += 1
             self.defender_cd.lost_units += 1
@@ -102,7 +102,7 @@ class UnitVsUnit(BattleTemplate):
             self.defending_region.unit.clear()
         else:
             # award defending unit with xp if it survived this attack
-            self.defending_region.unit.xp += ExperienceRewards.FROM_SURVIVE_ATTACK
+            self.defending_region.unit.add_xp(ExperienceRewards.FROM_SURVIVE_ATTACK)
 
     def resolve(self) -> None:
         """

@@ -53,7 +53,7 @@ class UnitVsImprovement(BattleTemplate):
 
         # update stats
         self.attacker_cd.attacks += 1
-        self.attacking_region.unit.xp += ExperienceRewards.FROM_ATTACK_ENEMY
+        self.attacking_region.unit.add_xp(ExperienceRewards.FROM_ATTACK_ENEMY)
 
         if net_damage >= 3:
             # decisive victory
@@ -91,7 +91,7 @@ class UnitVsImprovement(BattleTemplate):
             self.defending_region.improvement.health = 0
             self.attacker_cd.destroyed_improvements += 1
             self.defender_cd.lost_improvements += 1
-            self.attacking_region.unit.xp += ExperienceRewards.FROM_DEFEAT_ENEMY
+            self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
             # special case - capital captured
             if self.defending_region.improvement.name == "Capital":
                 self._award_warscore("Attacker", "captures", WarScore.FROM_CAPITAL_CAPTURE)
