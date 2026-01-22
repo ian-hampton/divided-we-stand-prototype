@@ -79,8 +79,13 @@ class UpdateIncomeProcess:
                     income_str = f"+{amount_gained:.2f} from {plural_improvement_name}"
                     self.text_dict[nation.name][resource_name][income_str] += 1
 
-            # collect unit income
             if region.unit.name is not None:
+
+                # trigger boot camp ability
+                if region.improvement.name == "Boot Camp" and region.unit.xp < 10:
+                    region.unit.xp = 10
+                
+                # collect unit income
                 nation = Nations.get(region.unit.owner_id)
                 if nation.gov == "Military Junta":
                     nation.update_gross_income("Political Power", 0.1)
