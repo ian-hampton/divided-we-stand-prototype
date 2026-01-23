@@ -93,7 +93,8 @@ class TestCombat(unittest.TestCase):
         assert defender.claims == {}
 
     def setUp(self):
-        Regions._instances.clear()
+        with patch.object(Regions, "_regdata_path", return_value=str(REGDATA_FILE)):
+            Regions.initialize(GAME_ID)
     
     def test_in_vs_in(self):
         """
@@ -260,8 +261,8 @@ class TestCombat(unittest.TestCase):
         assert NTEAZ.improvement.name == None
         assert NTEAZ.improvement.health == 99
         
-        # check NTEAZ XP    (2x destruction) + (2x occupation) + (2x attacking) = 4 + 4 + 2 = 10
-        assert NTEAZ.unit.xp == 10
+        # check NTEAZ XP    (2x destruction) + (2x occupation) = 4 + 4 = 8
+        assert NTEAZ.unit.xp == 8
 
     def test_in_vs_in_xp(self):
         """
@@ -297,5 +298,6 @@ class TestCombat(unittest.TestCase):
 
         # check defender
         assert GJUNC.unit.name == "Infantry"
+        print(GJUNC.unit.health)
         assert GJUNC.unit.health == 5
         assert GJUNC.unit.xp == 1

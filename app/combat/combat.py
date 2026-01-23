@@ -83,8 +83,12 @@ class CombatProcedure:
         defending_nation_combatant_data = self.war.get_combatant(self.defender_id)
         
         # award points and update stats
-        self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
-        self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
+        self.defending_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
+        attacker_cd = self.war.get_combatant(self.attacker_id)
+        if "Attacker" in attacker_cd.role:
+            self.war.attackers.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
+        else:
+            self.war.defenders.destroyed_improvements += WarScore.FROM_DESTROY_IMPROVEMENT
         attacking_nation_combatant_data.destroyed_improvements += 1
         defending_nation_combatant_data.lost_improvements += 1
         

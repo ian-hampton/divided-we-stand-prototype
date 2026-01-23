@@ -50,7 +50,8 @@ class TestHealing(unittest.TestCase):
             Wars.load(GAME_ID)
 
     def setUp(self):
-        Regions._instances.clear()
+        with patch.object(Regions, "_regdata_path", return_value=str(REGDATA_FILE)):
+            Regions.initialize(GAME_ID)
 
     def test_neutral_improvement(self):
         """
