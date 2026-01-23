@@ -205,6 +205,8 @@ class Region:
                 target_region.data.occupier_id = "0"
             # move attacking unit
             target_region.unit.set(self.unit.name, self.unit.full_name, self.unit.xp, self.unit.owner_id, self.unit.health)
+            target_region.unit.has_been_attacked = self.unit.has_been_attacked
+            target_region.unit.has_movement_queued = self.unit.has_movement_queued
             self.unit.clear()
 
         # withdraw moves need not conduct combat
