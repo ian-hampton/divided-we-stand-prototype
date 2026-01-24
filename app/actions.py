@@ -2,6 +2,7 @@ import importlib
 import heapq
 import random
 from collections import defaultdict, deque
+from queue import PriorityQueue
 from typing import List, Tuple
 
 from app.game.games import Games
@@ -2304,34 +2305,46 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
     
     game = Games.load(game_id)
 
-    # generate random movement order for the turn
-    players_moving_units: list[str] = []
+    nations_moving_units = {}
     for action in actions_list:
-        # flag corresponding unit as having a movement ordered queued (presuming that unit exists)
+        # flag units with movement actions as having a movement ordered queued (presuming that unit exists)
         current_region = Regions.load(action.current_region_id)
         if current_region.unit.name is not None and action.id == current_region.unit.owner_id:
             current_region.unit.has_movement_queued = True
-        # add nation id to list
-        if action.id not in players_moving_units:
-            players_moving_units.append(action.id)
-    random.shuffle(players_moving_units)
+        # add nation id to list of nations moving units this turn
+        if action.id not in nations_moving_units:
+            nations_moving_units[action.id] = {}
+
+    # determine movement order
+    for nation in Nations:
+        if nation.id in nations_moving_units:
+            nations_moving_units[nation.id] = {
+                "Count": nation.get_used_mc(),
+                "Mobility": sum(1 for region in Regions if region.unit.owner_id == nation.id and region.unit.movement > 1),
+                "XP": sum(region.unit.xp for region in Regions if region.unit.owner_id == nation.id),
+                "Economy": float(nation.records.net_income[-1])
+            }
+    sorted_nations = sorted(nations_moving_units.items(), key=lambda item: (item[1]["Count"], -item[1]["Mobility"], -item[1]["XP"], -item[1]["Economy"]))
 
     # print movement order
-    if len(players_moving_units) != 0: 
+    if len(sorted_nations) != 0: 
         print(f"Movement Order - Turn {game.turn}")
-    for i, nation_id in enumerate(players_moving_units):
-        nation = Nations.get(nation_id)
+    for i, entry in enumerate(sorted_nations):
+        nation = Nations.get(entry[0][0])
         print(f"{i + 1}. {nation.name}")
 
-    # re-order actions
-    ordered_actions_list: list[UnitMoveAction] = []
-    for nation_id in players_moving_units:
+    # create and load queue
+    movement_queue: PriorityQueue[tuple[int, UnitMoveAction]] = PriorityQueue()
+    for i, entry in enumerate(sorted_nations):
+        nation_id = entry[0][0]
         for action in actions_list:
-            if action.id == nation_id:
-                ordered_actions_list.append(action)
+            if action.id != nation_id:
+                continue
+            movement_queue.put((i, action))
 
     # process movement action
-    for action in ordered_actions_list:
+    while not movement_queue.empty():
+        action = movement_queue.get()[1]
         while action.target_region_ids != []:
             target_region_id = action.target_region_ids.pop()
             nation = Nations.get(action.id)
