@@ -255,7 +255,6 @@ class Nation:
                 new_tag = {
                     "Basic Materials Rate": 20,
                     "Market Buy Modifier": 0.2,
-                    "Market Sell Modifier": 0.2,
                     "Improvement Income Multiplier": {
                         "Settlement": {
                             "Dollars": -0.2
@@ -270,6 +269,7 @@ class Nation:
 
             case "Military Junta":
                 new_tag = {
+                    "Starting XP Bonus": 10,
                     "Improvement Income Multiplier": {
                         "Research Laboratory": {
                             "Research": -0.2
@@ -717,6 +717,18 @@ class Nation:
                 case _:
                     suffix = "th"
         return f"{count}{suffix} {unit_name}"
+
+    def calculate_starting_xp(self) -> int:
+        """
+        Calculates the amount of XP each unit deployed by this nation starts with.
+
+        Returns:
+            int: Starting XP value.
+        """
+        amount = 0
+        for tag_data in self.tags.values():
+            amount += int(tag_data.get("Starting XP Bonus", 0))
+        return amount
 
 class NationStatistics:
 
