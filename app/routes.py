@@ -798,8 +798,8 @@ def units_ref(full_game_id):
             "Armor": unit_data.armor,
             "Health": unit_data.health,
             "Movement": unit_data.movement,
-            "Standard Missile Defense": f"{int(unit_data.missile_defense * 100)}%" if unit_data.missile_defense != 99 else 99,
-            "Nuclear Missile Defense": f"{int(unit_data.nuclear_defense * 100)}%" if unit_data.nuclear_defense != 99 else 99,
+            "Standard Missile Defense": f"{int(unit_data.missile_defense * 100)}%" if unit_data.missile_defense != -1 else 99,
+            "Nuclear Missile Defense": f"{int(unit_data.nuclear_defense * 100)}%" if unit_data.nuclear_defense != -1 else 99,
             "Abilities": unit_data.abilities,
             "Upkeep": unit_data.upkeep,
             "Build Costs": unit_data.cost
@@ -841,8 +841,8 @@ def improvements_ref(full_game_id):
             "Damage": improvement_data.damage,
             "Armor": improvement_data.armor,
             "Health": improvement_data.health,
-            "Standard Missile Defense": f"{int(improvement_data.missile_defense * 100)}%" if improvement_data.missile_defense != 99 else 99,
-            "Nuclear Missile Defense": f"{int(improvement_data.nuclear_defense * 100)}%" if improvement_data.nuclear_defense != 99 else 99,
+            "Standard Missile Defense": f"{int(improvement_data.missile_defense * 100)}%" if improvement_data.missile_defense != -1 else 99,
+            "Nuclear Missile Defense": f"{int(improvement_data.nuclear_defense * 100)}%" if improvement_data.nuclear_defense != -1 else 99,
             "Abilities": improvement_data.abilities,
             "Upkeep": improvement_data.upkeep,
             "Build Costs": improvement_data.cost
