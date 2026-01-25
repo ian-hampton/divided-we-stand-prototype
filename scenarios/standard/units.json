@@ -92,6 +92,7 @@
         "Movement": 2,
         "Abilities": [],
         "Upkeep": {
+            "Food": 0.25,
             "Oil": 0.25
         },
         "Build Costs": {
@@ -111,6 +112,7 @@
         "Movement": 2,
         "Abilities": [],
         "Upkeep": {
+            "Food": 0.5,
             "Oil": 0.5
         },
         "Build Costs": {
@@ -132,6 +134,7 @@
             "All of your Infantry-type units adjacent to this unit gain +1 armor for this turn only."
         ],
         "Upkeep": {
+            "Food": 0.5,
             "Oil": 0.5
         },
         "Build Costs": {
@@ -154,6 +157,7 @@
             "+2 damage against enemy Improvements and Tank-type units."
         ],
         "Upkeep": {
+            "Food": 1,
             "Oil": 1
         },
         "Build Costs": {
