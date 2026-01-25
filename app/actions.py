@@ -2091,14 +2091,16 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
             costs_list.append(f"{cost} {resource_name.lower()}")
             nation.update_stockpile(resource_name, -1 * cost)
         
+        xp_transfer = 0
         starting_xp = nation.calculate_starting_xp()
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
             if region.unit.type == sd_unit.type:
                 if nation.gov == "Military Junta":
-                    starting_xp += (region.unit.xp * 3) // 4
+                    xp_transfer = (region.unit.xp * 3) // 4
                 else:
-                    starting_xp += region.unit.xp // 2
+                    xp_transfer = region.unit.xp // 2
+        starting_xp = xp_transfer if xp_transfer > starting_xp else starting_xp
          
         full_unit_name = nation.generate_full_unit_name(action.unit_name)
         region.unit.set(action.unit_name, full_unit_name, starting_xp, action.id)
