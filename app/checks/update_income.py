@@ -85,13 +85,6 @@ class UpdateIncomeProcess:
                 if region.improvement.name == "Boot Camp" and region.unit.xp < 10:
                     region.unit.xp = 10
                     region.unit.calculate_level()
-                
-                # collect unit income
-                nation = Nations.get(region.unit.owner_id)
-                if nation.gov == "Military Junta":
-                    nation.update_gross_income("Political Power", 0.1)
-                    income_str = "+0.10 from Military Junta bonus."
-                    self.text_dict[nation.name]["Political Power"][income_str] += 1
         
         for nation in Nations:
 
