@@ -49,12 +49,16 @@ class TestHealing(unittest.TestCase):
         with patch.object(Wars, "_gamedata_path", return_value=str(GAMEDATA_FILE)):
             Wars.load(GAME_ID)
 
+    def setUp(self):
+        with patch.object(Regions, "_regdata_path", return_value=str(REGDATA_FILE)):
+            Regions.initialize(GAME_ID)
+
     def test_neutral_improvement(self):
         """
         Unowned improvements should NOT heal.
         """
         from app.checks import heals
-        DULUT = Regions.reload("DULUT")
+        DULUT = Regions.load("DULUT")
         heals.heal_improvement(DULUT)
         assert DULUT.improvement.health == 1
 
@@ -64,7 +68,7 @@ class TestHealing(unittest.TestCase):
         """
         from app.checks import heals
 
-        ALBUQ = Regions.reload("ALBUQ")
+        ALBUQ = Regions.load("ALBUQ")
         ALBUQ.improvement.health = 1
 
         heals.heal_improvement(ALBUQ)
@@ -77,7 +81,7 @@ class TestHealing(unittest.TestCase):
         """
         from app.checks import heals
 
-        ALBUQ = Regions.reload("ALBUQ")
+        ALBUQ = Regions.load("ALBUQ")
         ALBUQ.improvement.health = 1
         ALBUQ.improvement.has_been_attacked = True
         
@@ -91,7 +95,7 @@ class TestHealing(unittest.TestCase):
         """
         from app.checks import heals
 
-        COSPR = Regions.reload("COSPR")
+        COSPR = Regions.load("COSPR")
         COSPR.unit.health = 1
 
         heals.heal_unit(COSPR)
@@ -104,7 +108,7 @@ class TestHealing(unittest.TestCase):
         """
         from app.checks import heals
         
-        PROVO = Regions.reload("PROVO")
+        PROVO = Regions.load("PROVO")
         PROVO.unit.health = 1
 
         heals.heal_unit(PROVO)
@@ -117,7 +121,7 @@ class TestHealing(unittest.TestCase):
         """
         from app.checks import heals
 
-        COSPR = Regions.reload("COSPR")
+        COSPR = Regions.load("COSPR")
         COSPR.unit.health = 1
         COSPR.unit.has_been_attacked = True
 
@@ -131,9 +135,9 @@ class TestHealing(unittest.TestCase):
         """
         from app.checks import heals
 
-        ALBUQ = Regions.reload("ALBUQ")
+        ALBUQ = Regions.load("ALBUQ")
         ALBUQ.improvement.health = 1
-        COSPR = Regions.reload("COSPR")
+        COSPR = Regions.load("COSPR")
         COSPR.unit.health = 1
 
         heals.heal_all()

@@ -2,6 +2,7 @@ from app.nation.nations import Nations
 from app.war.warscore import WarScore
 from .battle import BattleTemplate
 from .combat import CombatProcedure
+from .experience import ExperienceRewards
 
 class UnitVsImprovement(BattleTemplate):
     
@@ -40,7 +41,7 @@ class UnitVsImprovement(BattleTemplate):
     def _execute_combat(self) -> None:
         
         # attacker deals damage to defender
-        total_damage = self.attacking_region.unit.damage + self.attacker_damage_modifier
+        total_damage = self.attacking_region.unit.true_damage + self.attacker_damage_modifier
         if self.attacking_region.unit.type == "Special Forces":
             total_armor = 0
             battle_str = f"    The attacking unit is a special forces. The defender's armor will be ignored!"
@@ -50,7 +51,10 @@ class UnitVsImprovement(BattleTemplate):
         net_damage = total_damage - total_armor 
         self.defending_region.improvement.health -= net_damage
 
+        # update stats
         self.attacker_cd.attacks += 1
+        self.attacking_region.unit.add_xp(ExperienceRewards.FROM_ATTACK_ENEMY)
+
         if net_damage >= 3:
             # decisive victory
             self._award_warscore("Attacker", "decisive_battles", WarScore.FROM_SUCCESSFUL_ATTACK)
@@ -83,10 +87,11 @@ class UnitVsImprovement(BattleTemplate):
 
         # remove defending improvement if defeated
         if self.defending_region.improvement.health <= 0:
-            self.attacker_cd.destroyed_improvements += 1
-            self.defender_cd.lost_improvements += 1
             self.war.log.append(f"    {self.defender.name} {self.defending_region.improvement.name} has been captured!")
             self.defending_region.improvement.health = 0
+            self.attacker_cd.destroyed_improvements += 1
+            self.defender_cd.lost_improvements += 1
+            self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
             # special case - capital captured
             if self.defending_region.improvement.name == "Capital":
                 self._award_warscore("Attacker", "captures", WarScore.FROM_CAPITAL_CAPTURE)

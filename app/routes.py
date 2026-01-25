@@ -187,6 +187,7 @@ def create_game():
                     "name": None,
                     "fullName": None,
                     "health": 99,
+                    "experience": 0,
                     "ownerID": "0"
                 }
             }

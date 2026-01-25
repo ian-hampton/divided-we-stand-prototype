@@ -4,7 +4,6 @@ from collections import deque
 
 from app.game.games import Games
 from app.nation.nation import Nation
-from app.war.warscore import WarScore
 from .improvement import ImprovementData
 from .unit import UnitData
 
@@ -16,9 +15,9 @@ class Region:
         self.game_id = game_id
         
         self.data = RegionData(self._data["regionData"])
+        self.graph = GraphData(graph)
         self.improvement = ImprovementData(self._data["improvementData"])
         self.unit = UnitData(self._data["unitData"])
-        self.graph = GraphData(graph)
 
         self.claim_list = []
 
@@ -38,7 +37,7 @@ class Region:
     
     def __repr__(self):
         return self.__str__()
-    
+
     def get_regions_in_radius(self, radius: int) -> set:
         
         queue = deque([(self, 0)])
@@ -194,15 +193,20 @@ class Region:
             bool: True if action succeeded, False otherwise.
         """
         from app.combat.combat import CombatProcedure
+        from app.combat.experience import ExperienceRewards
 
         def execute_move() -> None:
             # update region occupation
-            if not withdraw and attacker_id != defender_id:
+            if attacker_id != defender_id:
+                self.unit.add_xp(ExperienceRewards.FROM_OCCUPATION)
                 target_region.data.occupier_id = self.unit.owner_id
-            else:
+            elif target_region.data.occupier_id != "0":
+                self.unit.add_xp(ExperienceRewards.FROM_OCCUPATION)
                 target_region.data.occupier_id = "0"
             # move attacking unit
-            target_region.unit.set(self.unit.name, self.unit.full_name, self.unit.owner_id, self.unit.health)
+            target_region.unit.set(self.unit.name, self.unit.full_name, self.unit.xp, self.unit.owner_id, self.unit.health)
+            target_region.unit.has_been_attacked = self.unit.has_been_attacked
+            target_region.unit.has_movement_queued = self.unit.has_movement_queued
             self.unit.clear()
 
         # withdraw moves need not conduct combat

@@ -21,6 +21,7 @@ This document is a complete reference for all modifiers that can be attached to 
 | Research Category Bonus      | Awards an amount of any 1 resource for completing research in specified categories.      | See below.                                                  |
 | Resource Income              | Resource income increases by specified value.                                            | f"{action.resource_name} Income": 5                         |
 | Resource Rate                | Resource income increases by specified value (as a percentage). 100% = 100.              | f"{action.resource_name} Rate": 20                          |
+| Starting XP Bonus            | All units made by this nation start with this amount of XP. These modifiers will stack.  | "Starting XP Bonus": 10                                     |
 | Trade Fee                    | Trade fee increases the number of steps indicated by value.                              | "Trade Fee Modifier": 1                                     |
 
 ### Additional Examples

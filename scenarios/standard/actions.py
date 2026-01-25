@@ -556,5 +556,5 @@ def resolve_military_reinforcements_actions(game_id: str, actions_list: list[Mil
                 nation.unit_counts[region.unit.name] -= 1
             nation.unit_counts[UNIT_NAME] += 1
             full_unit_name = nation.generate_full_unit_name(UNIT_NAME)
-            region.unit.set(UNIT_NAME, full_unit_name, action.id)
+            region.unit.set(UNIT_NAME, full_unit_name, 0, action.id)
             nation.action_log.append(f"Used Military Reinforcements to deploy Mechanized Infantry {region_id}.")

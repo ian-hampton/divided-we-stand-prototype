@@ -64,6 +64,9 @@ class GameMaps:
 
         self.images_filepath = "app/static/images"
         self.filepath_unit_back = f"{self.images_filepath}/units/back.png"
+        self.filepath_unit_back_1 = f"{self.images_filepath}/units/back_1.png"
+        self.filepath_unit_back_2 = f"{self.images_filepath}/units/back_2.png"
+        self.filepath_unit_back_3 = f"{self.images_filepath}/units/back_3.png"
         self.filepath_unit_symb_back = f"{self.images_filepath}/units/back_symb.png"
         self.nuke_img = Image.open(f"{self.images_filepath}/nuke.png")
 
@@ -191,6 +194,13 @@ class GameMaps:
         nation = Nations.get(region.unit.owner_id)
         fill_color = palette.hex_to_tup(nation.color, alpha=True)
         unit_img = Image.open(self.filepath_unit_back).convert("RGBA")
+        match region.unit.level:
+            case 3:
+                unit_img = Image.open(self.filepath_unit_back_3).convert("RGBA")
+            case 2:
+                unit_img = Image.open(self.filepath_unit_back_2).convert("RGBA")
+            case 1:
+                unit_img = Image.open(self.filepath_unit_back_1).convert("RGBA")
         ImageDraw.floodfill(unit_img, (1, 1), fill_color, border=(0, 0, 0, 255))
 
         # place unit symbol
@@ -207,7 +217,7 @@ class GameMaps:
         ImageDraw.Draw(unit_img).text(xy=(25, 5), text=region.unit.full_name, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
 
         # place unit stats
-        status = f"{region.unit.damage}-{region.unit.armor}-{region.unit.health}"
+        status = f"{region.unit.true_damage}-{region.unit.armor}-{region.unit.health}"
         ImageDraw.Draw(unit_img).text(xy=(25, 37), text=status, fill=(0, 0, 0, 255), font=font, anchor="mt", align="center")
         
         # place unit on map
