@@ -7,7 +7,7 @@
         "Reference Color": "stat-purple",
         "Damage": 2,
         "Armor": 0,
-        "Health": 8,
+        "Health": 6,
         "Movement": 1,
         "Abilities": [],
         "Upkeep": {
@@ -26,7 +26,7 @@
         "Reference Color": "stat-red",
         "Damage": 3,
         "Armor": 1,
-        "Health": 8,
+        "Health": 6,
         "Movement": 1,
         "Abilities": [
             "All of your units adjacent to this unit deal an additional +1 damage. If multiple Artillery are adjacent, this bonus does not stack."
@@ -47,7 +47,7 @@
         "Reference Color": "stat-red",
         "Damage": 3,
         "Armor": 2,
-        "Health": 12,
+        "Health": 10,
         "Movement": 1,
         "Abilities": [],
         "Upkeep": {
@@ -66,7 +66,7 @@
         "Reference Color": "stat-red",
         "Damage": 3,
         "Armor": 1,
-        "Health": 16,
+        "Health": 14,
         "Movement": 2,
         "Abilities": [
             "Ignores enemy armor when attacking.",
@@ -88,7 +88,7 @@
         "Reference Color": "stat-purple",
         "Damage": 2,
         "Armor": 0,
-        "Health": 8,
+        "Health": 6,
         "Movement": 2,
         "Abilities": [],
         "Upkeep": {
@@ -108,7 +108,7 @@
         "Reference Color": "stat-purple",
         "Damage": 4,
         "Armor": 2,
-        "Health": 12,
+        "Health": 10,
         "Movement": 2,
         "Abilities": [],
         "Upkeep": {
@@ -128,7 +128,7 @@
         "Reference Color": "stat-purple",
         "Damage": 6,
         "Armor": 3,
-        "Health": 16,
+        "Health": 14,
         "Movement": 1,
         "Abilities": [
             "All of your Infantry-type units adjacent to this unit gain +1 armor for this turn only."
@@ -150,7 +150,7 @@
         "Reference Color": "stat-purple",
         "Damage": 6,
         "Armor": 3,
-        "Health": 20,
+        "Health": 18,
         "Movement": 2,
         "Abilities": [
             "All of your Infantry-type units adjacent to this unit gain +1 armor for this turn only.",
@@ -174,7 +174,7 @@
         "Reference Color": "stat-yellow",
         "Damage": 2,
         "Armor": 2,
-        "Health": 8,
+        "Health": 6,
         "Movement": 1,
         "Standard Missile Defense": 0.5,
         "Missile Defense Range": 1,

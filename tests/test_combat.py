@@ -123,11 +123,11 @@ class TestCombat(unittest.TestCase):
 
         # check attacker
         assert DURAN.unit.name == "Infantry"
-        assert DURAN.unit.health == 7
+        assert DURAN.unit.health == 5
 
         # check defender
         assert GJUNC.unit.name == "Infantry"
-        assert GJUNC.unit.health == 7
+        assert GJUNC.unit.health == 5
 
     def test_sf_vs_in_settlement(self):
         """
@@ -161,11 +161,11 @@ class TestCombat(unittest.TestCase):
 
         # check attacker
         assert COSPR.unit.name == "Special Forces"
-        assert COSPR.unit.health == 15
+        assert COSPR.unit.health == 13
 
         # check defender
         assert DENVE.unit.name == "Infantry"
-        assert DENVE.unit.health == 5
+        assert DENVE.unit.health == 3
         assert DENVE.improvement.name == "Settlement"
         assert DENVE.improvement.health == 0
 
@@ -203,7 +203,7 @@ class TestCombat(unittest.TestCase):
         assert SROSA.data.owner_id == "3"
         assert SROSA.data.occupier_id == "4"
         assert SROSA.unit.name == "Infantry"
-        assert SROSA.unit.health == 8
+        assert SROSA.unit.health == 6
         assert SROSA.unit.owner_id == "4"
         assert SROSA.improvement.name == None
         assert SROSA.improvement.health == 99
@@ -256,7 +256,7 @@ class TestCombat(unittest.TestCase):
         assert NTEAZ.data.owner_id == "4"
         assert NTEAZ.data.occupier_id == "3"
         assert NTEAZ.unit.name == "Motorized Infantry"
-        assert NTEAZ.unit.health == 8
+        assert NTEAZ.unit.health == 6
         assert NTEAZ.unit.owner_id == "3"
         assert NTEAZ.improvement.name == None
         assert NTEAZ.improvement.health == 99
@@ -293,11 +293,11 @@ class TestCombat(unittest.TestCase):
 
         # check attacker
         assert DURAN.unit.name == "Infantry"
-        assert DURAN.unit.health == 12
+        assert DURAN.unit.health == 10
         assert DURAN.unit.xp == 21
 
         # check defender
         assert GJUNC.unit.name == "Infantry"
         print(GJUNC.unit.health)
-        assert GJUNC.unit.health == 5
+        assert GJUNC.unit.health == 3
         assert GJUNC.unit.xp == 1

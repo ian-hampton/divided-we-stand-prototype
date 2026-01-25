@@ -84,7 +84,7 @@ class TestBasicLoad(unittest.TestCase):
         assert NTHWY.improvement.name == "Capital"
         assert NTHWY.improvement.health == 12
         assert NTHWY.unit.name == "Artillery"
-        assert NTHWY.unit.health == 8
+        assert NTHWY.unit.health == 6
         assert NTHWY.unit.owner_id == "3"
 
     def test_load_nations(self):

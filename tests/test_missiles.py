@@ -180,7 +180,7 @@ class TestMissiles(unittest.TestCase):
         assert DENVE.improvement.name == "Settlement"
         assert DENVE.improvement.health == 3
         assert DENVE.unit.name == "Infantry"
-        assert DENVE.unit.health == 8
+        assert DENVE.unit.health == 6
 
         # execute missile launch actions
         resolve_missile_launch_actions(GAME_ID, [a1, a1])
@@ -191,7 +191,7 @@ class TestMissiles(unittest.TestCase):
         # check target region
         assert DENVE.improvement.name == None
         assert DENVE.unit.name == "Infantry"
-        assert DENVE.unit.health == 6
+        assert DENVE.unit.health == 4
 
     def test_nuke(self):
         """

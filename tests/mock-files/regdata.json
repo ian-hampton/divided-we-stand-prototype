@@ -1075,7 +1075,7 @@
         "unitData": {
             "name": "Artillery",
             "fullName": "300th AR",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -1926,7 +1926,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "6th IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -2110,7 +2110,7 @@
         "unitData": {
             "name": "Motorized Infantry",
             "fullName": "5th MO",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -2248,7 +2248,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "4th IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -2340,7 +2340,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "3rd IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -2478,7 +2478,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "1st IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "4"
         }
@@ -2501,7 +2501,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "2nd IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -2708,7 +2708,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "1st IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "3"
         }
@@ -2984,7 +2984,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "2nd IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "4"
         }
@@ -3076,7 +3076,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "3rd IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "4"
         }
@@ -3099,7 +3099,7 @@
         "unitData": {
             "name": "Special Forces",
             "fullName": "12th SF",
-            "health": 16,
+            "health": 14,
             "experience": 0,
             "ownerID": "4"
         }
@@ -3260,7 +3260,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "5th IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "4"
         }
@@ -3743,7 +3743,7 @@
         "unitData": {
             "name": "Infantry",
             "fullName": "6th IN",
-            "health": 8,
+            "health": 6,
             "experience": 0,
             "ownerID": "4"
         }
