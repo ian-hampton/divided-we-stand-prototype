@@ -272,10 +272,87 @@ class TestBuild(unittest.TestCase):
         assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. The region does not have the resource required for this improvement." in nation.action_log
 
     def test_blocked_by_fallout(self):
-        pass
+        """
+        Testing a build action in a region that has been nuked. Should fail.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Farm"
+        REGION_ID = "TALLA"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set nation
+        nation = Nations.get("2")
+        nation.completed_research["Resettlement"] = True
+
+        # set region
+        region = Regions.load(REGION_ID)
+        region.set_fallout()
+        
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        assert region.improvement.name == None
+        assert region.improvement.health == 99
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
+        assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. Region cannot support an improvement due to nuclear missile detonation." in nation.action_log
 
     def test_blocked_by_shortage(self):
-        pass
+        """
+        Simple build action doomed by a lack of resources. Should fail.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Research Laboratory"
+        REGION_ID = "ATHEN"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set nation
+        nation = Nations.get("2")
+        nation.completed_research["Laboratories"] = True
+        nation.update_stockpile("Basic Materials", 4, overwrite=True)
+
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        region = Regions.load(REGION_ID)
+        assert region.improvement.name == None
+        assert region.improvement.health == 99
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
+        assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. Insufficient resources." in nation.action_log
+
+        # test resources
+        assert nation.get_stockpile("Dollars") == "100.00"
+        assert nation.get_stockpile("Political Power") == "50.00"
+        assert nation.get_stockpile("Research") == "50.00"
+        assert nation.get_stockpile("Food") == "50.00"
+        assert nation.get_stockpile("Coal") == "50.00"
+        assert nation.get_stockpile("Oil") == "50.00"
+        assert nation.get_stockpile("Basic Materials") == "4.00"
+        assert nation.get_stockpile("Common Metals") == "50.00"
+        assert nation.get_stockpile("Advanced Metals") == "50.00"
+        assert nation.get_stockpile("Uranium") == "50.00"
+        assert nation.get_stockpile("Rare Earth Elements") == "50.00"
 
     def test_blocked_by_capital(self):
         """
@@ -307,5 +384,4 @@ class TestBuild(unittest.TestCase):
 
         # test nation
         assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
-        print(nation.action_log)
         assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. You cannot build over a Capital improvement." in nation.action_log
