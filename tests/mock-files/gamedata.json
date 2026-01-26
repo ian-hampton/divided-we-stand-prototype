@@ -427,7 +427,7 @@
                 "City": 0,
                 "Coal Mine": 0,
                 "Colony": 0,
-                "Common Metals Mine": 0,
+                "Common Metals Mine": 2,
                 "Farm": 0,
                 "Industrial Zone": 0,
                 "Military Base": 0,
@@ -439,7 +439,7 @@
                 "Rare Earth Elements Mine": 0,
                 "Research Institute": 0,
                 "Research Laboratory": 0,
-                "Trench": 0,
+                "Trench": 1,
                 "Missile Silo": 0,
                 "Settlement": 0,
                 "Solar Farm": 0,
@@ -457,9 +457,7 @@
                 "Main Battle Tank": 0,
                 "Anti-Air": 0
             },
-            "unlockedResearch": {
-                "Resettlement": true
-            },
+            "unlockedResearch": {},
             "incomeDetails": [
                 "<section> +5.00 Dollars",
                 "+5.00 from Capitals",
