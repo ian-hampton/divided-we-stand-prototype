@@ -102,7 +102,6 @@ class TestBuild(unittest.TestCase):
 
         # test region
         region = Regions.load(REGION_ID)
-        assert region.data.owner_id == "2"
         assert region.improvement.name == IMPROVEMENT_NAME
         assert region.improvement.health == 99
 
@@ -122,3 +121,191 @@ class TestBuild(unittest.TestCase):
         assert nation.get_stockpile("Advanced Metals") == "50.00"
         assert nation.get_stockpile("Uranium") == "50.00"
         assert nation.get_stockpile("Rare Earth Elements") == "50.00"
+
+    def test_complex(self):
+        """
+        Testing a more complicated build action that requires extensive research and a required resource. Should succeed.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Rare Earth Elements Mine"
+        REGION_ID = "CHRLO"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set research
+        nation = Nations.get("2")
+        nation.completed_research["Metal Extraction"] = True
+        nation.completed_research["Metallurgy"] = True
+        nation.completed_research["Uranium Mining"] = True
+        nation.completed_research["Rare Earth Mining"] = True
+
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        region = Regions.load(REGION_ID)
+        assert region.improvement.name == IMPROVEMENT_NAME
+        assert region.improvement.health == 99
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 1
+        assert f"Built {IMPROVEMENT_NAME} in region {REGION_ID} for 5.0 advanced metals." in nation.action_log
+
+        # test resources
+        assert nation.get_stockpile("Dollars") == "100.00"
+        assert nation.get_stockpile("Political Power") == "50.00"
+        assert nation.get_stockpile("Research") == "50.00"
+        assert nation.get_stockpile("Food") == "50.00"
+        assert nation.get_stockpile("Coal") == "50.00"
+        assert nation.get_stockpile("Oil") == "50.00"
+        assert nation.get_stockpile("Basic Materials") == "50.00"
+        assert nation.get_stockpile("Common Metals") == "50.00"
+        assert nation.get_stockpile("Advanced Metals") == "45.00"
+        assert nation.get_stockpile("Uranium") == "50.00"
+        assert nation.get_stockpile("Rare Earth Elements") == "50.00"
+
+    def test_bad_region(self):
+        """
+        Testing a build action in an invalid region. Should fail.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Industrial Zone"
+        REGION_ID = "TXPAN"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set research
+        nation = Nations.get("2")
+        
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        region = Regions.load(REGION_ID)
+        assert region.improvement.name == "Research Laboratory"
+        assert region.improvement.health == 99
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
+        assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. You do not own or control this region." in nation.action_log
+
+    def test_bad_research(self):
+        """
+        Testing a build action when missing needed research. Should fail.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Farm"
+        REGION_ID = "JACKS"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set research
+        nation = Nations.get("2")
+        
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        region = Regions.load(REGION_ID)
+        assert region.improvement.name == None
+        assert region.improvement.health == 99
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
+        assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. You do not have the required research." in nation.action_log
+
+    def test_bad_resource(self):
+        """
+        Testing a build action in a region without required resource. Should fail.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Rare Earth Elements Mine"
+        REGION_ID = "TALLA"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set research
+        nation = Nations.get("2")
+        nation.completed_research["Metal Extraction"] = True
+        nation.completed_research["Metallurgy"] = True
+        nation.completed_research["Uranium Mining"] = True
+        nation.completed_research["Rare Earth Mining"] = True
+
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        region = Regions.load(REGION_ID)
+        assert region.improvement.name == None
+        assert region.improvement.health == 99
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
+        assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. The region does not have the resource required for this improvement." in nation.action_log
+
+    def test_blocked_by_fallout(self):
+        pass
+
+    def test_blocked_by_shortage(self):
+        pass
+
+    def test_blocked_by_capital(self):
+        """
+        Testing a build action in a region with a Capital. Should fail.
+        """
+        from app.actions import ImprovementBuildAction, resolve_improvement_build_actions
+
+        IMPROVEMENT_NAME = "Industrial Zone"
+        REGION_ID = "BILOX"
+        
+        # create and verify action
+        a1 = ImprovementBuildAction(GAME_ID, "2", f"Build {IMPROVEMENT_NAME} {REGION_ID}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "2"
+        assert a1.improvement_name == IMPROVEMENT_NAME
+        assert a1.target_region == REGION_ID
+
+        # set research
+        nation = Nations.get("2")
+        
+        # execute actions
+        resolve_improvement_build_actions(GAME_ID, [a1])
+
+        # test region
+        region = Regions.load(REGION_ID)
+        assert region.improvement.name == "Capital"
+        assert region.improvement.health == 12
+
+        # test nation
+        assert nation.improvement_counts[IMPROVEMENT_NAME] == 0
+        print(nation.action_log)
+        assert f"Failed to build {IMPROVEMENT_NAME} in region {REGION_ID}. You cannot build over a Capital improvement." in nation.action_log

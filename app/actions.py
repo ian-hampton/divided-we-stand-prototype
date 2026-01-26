@@ -1762,7 +1762,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             continue
 
         if region.improvement.name == "Capital":
-            nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
             continue
         
         required_research = SD.improvements[action.improvement_name].required_research
