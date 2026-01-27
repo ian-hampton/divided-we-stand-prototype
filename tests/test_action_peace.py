@@ -163,6 +163,12 @@ class TestPeace(unittest.TestCase):
         Regions.load("HAYSK").data.owner_id == "4"
         Regions.load("WICHI").data.owner_id == "4"
 
+    def test_attacker_surrender(self):
+        pass
+
+    def test_defender_surrender(self):
+        pass
+
     def test_bad_war(self):
         """
         Cannot make peace if you're not at war. Should fail.
