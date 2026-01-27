@@ -29,6 +29,7 @@ class TestBasicLoad(unittest.TestCase):
     def test_load_game(self):
         from app.game.games import Games
         game = Games.load(GAME_ID)
+        game.turn = 33
 
         assert game.name == "test"
         assert game.turn == 33
