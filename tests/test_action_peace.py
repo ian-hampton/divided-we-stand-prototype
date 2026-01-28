@@ -109,9 +109,9 @@ class TestPeace(unittest.TestCase):
         assert defender.role == "Main Defender"
 
         # add defender war justification
-        defender.justification == "Border Skirmish"
-        defender.target_id == "TBD"
-        defender.claims == {
+        defender.justification = "Border Skirmish"
+        defender.target_id = "TBD"
+        defender.claims = {
             "TOPEK": "4",
             "HAYSK": "4",
             "WICHI": "4"
@@ -164,10 +164,85 @@ class TestPeace(unittest.TestCase):
         Regions.load("WICHI").data.owner_id == "4"
 
     def test_attacker_surrender(self):
-        pass
+        """
+        War ends when attacker surrenders. Defender war justification fullfilled.
+        """
+        from app.game.games import Games
+        from app.actions import SurrenderAction, resolve_peace_actions
+
+        # create and verify surrender action
+        a1 = SurrenderAction(GAME_ID, "4", "Surrender Nation C")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "4"
+        assert a1.target_nation == "Nation C"
+
+        # load war
+        war_name = Wars.get_war_name("3", "4")
+        war = Wars.get(war_name)
+
+        # change turn
+        Games.load(GAME_ID).turn = 37
+
+        # resolve peace actions
+        resolve_peace_actions(GAME_ID, [a1], [])
+        
+        # check war
+        assert war.end == 37
+        assert war.outcome == "Defender Victory"
+        
+        # check notifications
+        assert any(notification[1] == f"Nation D surrendered to Nation C." for notification in Notifications)
+
+        # check that attacker war justification not fullfilled
+        nation_c = Nations.get("3")
+        for tag_name in nation_c.tags:
+            assert tag_name.startswith("Defeated by") == False
+
+        # check that defender war justification is fullfilled
+        Regions.load("TOPEK").data.owner_id == "3"
+        Regions.load("HAYSK").data.owner_id == "3"
+        Regions.load("WICHI").data.owner_id == "3"
 
     def test_defender_surrender(self):
-        pass
+        """
+        War ends when defender surrenders. Attacker war justification fullfilled.
+        """
+        from app.game.games import Games
+        from app.actions import SurrenderAction, resolve_peace_actions
+
+        # create and verify surrender action
+        a1 = SurrenderAction(GAME_ID, "3", "Surrender Nation D")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "3"
+        assert a1.target_nation == "Nation D"
+
+        # load war
+        war_name = Wars.get_war_name("3", "4")
+        war = Wars.get(war_name)
+
+        # change turn
+        Games.load(GAME_ID).turn = 37
+
+        # resolve peace actions
+        resolve_peace_actions(GAME_ID, [a1], [])
+        
+        # check war
+        assert war.end == 37
+        assert war.outcome == "Attacker Victory"
+        
+        # check notifications
+        assert any(notification[1] == f"Nation C surrendered to Nation D." for notification in Notifications)
+
+        # check that attacker war justification is fullfilled
+        nation_c = Nations.get("3")
+        assert any(tag_name.startswith("Defeated by") == True for tag_name in nation_c.tags)
+
+        # check that defender war justification not fullfilled
+        Regions.load("TOPEK").data.owner_id == "4"
+        Regions.load("HAYSK").data.owner_id == "4"
+        Regions.load("WICHI").data.owner_id == "4"
 
     def test_bad_war(self):
         """
