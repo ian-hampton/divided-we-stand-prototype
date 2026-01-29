@@ -107,10 +107,112 @@ class TestAllianceCreate(unittest.TestCase):
         assert f"Successfully formed {ALLIANCE_NAME}." in nation_d.action_log
 
     def test_trade_agreement(self):
-        pass
+        """
+        Alliance create actions for a Trade Agreement. Should pass.
+        """
+        from app.actions import AllianceCreateAction, resolve_alliance_create_actions
+
+        ALLIANCE_NAME = "Test"
+        ALLIANCE_TYPE = "Trade Agreement"
+
+        # create and verify actions
+        a1 = AllianceCreateAction(GAME_ID, "3", f"Alliance Create {ALLIANCE_NAME} as {ALLIANCE_TYPE}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "3"
+        assert a1.alliance_name == ALLIANCE_NAME
+        assert a1.alliance_type == ALLIANCE_TYPE
+        a2 = AllianceCreateAction(GAME_ID, "4", f"Alliance Create {ALLIANCE_NAME} as {ALLIANCE_TYPE}")
+        assert a2.is_valid() == True
+        assert a2.game_id == GAME_ID
+        assert a2.id == "4"
+        assert a2.alliance_name == ALLIANCE_NAME
+        assert a2.alliance_type == ALLIANCE_TYPE
+
+        # add agendas to nations
+        nation_c = Nations.get("3")
+        nation_d = Nations.get("4")
+        nation_c.completed_research["Trade Routes"] = True
+        nation_d.completed_research["Trade Routes"] = True
+
+        # execute actions
+        resolve_alliance_create_actions(GAME_ID, [a1, a2])
+
+        # independently calculate yield of non-aggression pact
+        expected_alliance_yield = 0
+        expected_alliance_yield += 0.5 * nation_c.improvement_counts["Settlement"]
+        expected_alliance_yield += 0.5 * nation_c.improvement_counts["City"]
+        expected_alliance_yield += 0.5 * nation_c.improvement_counts["Central Bank"]
+        expected_alliance_yield += 0.5 * nation_c.improvement_counts["Capital"]
+        expected_alliance_yield += 0.5 * nation_d.improvement_counts["Settlement"]
+        expected_alliance_yield += 0.5 * nation_d.improvement_counts["City"]
+        expected_alliance_yield += 0.5 * nation_d.improvement_counts["Central Bank"]
+        expected_alliance_yield += 0.5 * nation_d.improvement_counts["Capital"]
+
+        # test alliance
+        alliance = Alliances.get(ALLIANCE_NAME)
+        assert alliance.name == ALLIANCE_NAME
+        assert alliance.is_active == True
+        assert alliance.current_members == {"Nation C": 33, "Nation D": 33}
+        assert alliance.founding_members == {"Nation C": 33, "Nation D": 33}
+        assert alliance.calculate_yield()[0] == expected_alliance_yield
+        assert any(notification[1] == f"{ALLIANCE_NAME} has formed." for notification in Notifications)
+
+        # test nation c
+        assert f"Successfully formed {ALLIANCE_NAME}." in nation_c.action_log
+
+        # test nation d
+        assert f"Successfully formed {ALLIANCE_NAME}." in nation_d.action_log
 
     def test_bad_research(self):
-        pass
+        """
+        Alliance create action fails due to not having the needed agenda.
+        """
+        from app.actions import AllianceCreateAction, resolve_alliance_create_actions
+
+        ALLIANCE_NAME = "Test"
+        ALLIANCE_TYPE = "Non-Aggression Pact"
+
+        # create and verify actions
+        a1 = AllianceCreateAction(GAME_ID, "3", f"Alliance Create {ALLIANCE_NAME} as {ALLIANCE_TYPE}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "3"
+        assert a1.alliance_name == ALLIANCE_NAME
+        assert a1.alliance_type == ALLIANCE_TYPE
+
+        # add agendas to nations
+        nation_c = Nations.get("3")
+
+        # execute actions
+        resolve_alliance_create_actions(GAME_ID, [a1])
+
+        # test nation c
+        assert f"Failed to form {ALLIANCE_NAME} alliance. You do not have the required agenda." in nation_c.action_log
 
     def test_blocked_by_count(self):
-        pass
+        """
+        Alliance create action fails due to not having enough founding members.
+        """
+        from app.actions import AllianceCreateAction, resolve_alliance_create_actions
+
+        ALLIANCE_NAME = "Test"
+        ALLIANCE_TYPE = "Non-Aggression Pact"
+
+        # create and verify actions
+        a1 = AllianceCreateAction(GAME_ID, "3", f"Alliance Create {ALLIANCE_NAME} as {ALLIANCE_TYPE}")
+        assert a1.is_valid() == True
+        assert a1.game_id == GAME_ID
+        assert a1.id == "3"
+        assert a1.alliance_name == ALLIANCE_NAME
+        assert a1.alliance_type == ALLIANCE_TYPE
+
+        # add agendas to nations
+        nation_c = Nations.get("3")
+        nation_c.completed_research["Common Ground"] = True
+
+        # execute actions
+        resolve_alliance_create_actions(GAME_ID, [a1])
+
+        # test nation c
+        assert f"Failed to form {ALLIANCE_NAME} alliance. Not enough players agreed to establish it." in nation_c.action_log
