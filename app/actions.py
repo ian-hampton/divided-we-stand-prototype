@@ -1268,7 +1268,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
         target_nation = Nations.get(action.target_nation)
         alliance = Alliances.get(action.alliance_name)
 
-        if action.target_nation not in alliance.current_members:
+        if nation.name not in alliance.current_members:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. You are not in the alliance.")
             continue
 
