@@ -1626,7 +1626,8 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: set[str]) -> None:
                     continue
                 cost = encircled_region.calculate_region_claim_cost(nation)
                 nation.update_stockpile("Dollars", -1 * cost)
-                verified_claim_actions[encircled_region.id] = encircled_region
+                encircled_region.claim_list.append(nation_id)
+                verified_claim_actions.add(encircled_region.id)
                 encircled_priority = get_priority(encircled_region)
                 priorities[encircled_region.id] = encircled_priority
                 heapq.heappush(heap, (encircled_priority, encircled_region.id))
