@@ -1,7 +1,7 @@
 # Divided We Stand
 An online turn-based strategy game set in the modern era. Create your own unique nation out of the ashes of old and rebuild civilization in your image by securing new territory and researching new technologies. Engage with other players in negotiation, trade, and diplomacy. Form grand alliances with those that share your vision, and wage war against those who stand against you.
 
-<img src="app/static/preview.png" width="100%" alt="preview">
+<img src="app/static/preview-cropped.png" width="100%" alt="preview">
 
 
 ## About This Project
