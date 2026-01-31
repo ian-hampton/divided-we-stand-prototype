@@ -2114,7 +2114,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         else:
             costs_str = ", ".join(costs_list)
             costs_str = " and ".join(costs_str.rsplit(", ", 1))
-        nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
+        nation.action_log.append(f"Deployed {action.unit_name} in region {action.target_region} for {costs_str}.")
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 

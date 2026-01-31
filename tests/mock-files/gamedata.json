@@ -223,6 +223,17 @@
                 "Main Battle Tank": 0,
                 "Anti-Air": 0
             },
+            "unitCountsLifetime": {
+                "Infantry": 0,
+                "Artillery": 0,
+                "Mechanized Infantry": 0,
+                "Special Forces": 0,
+                "Motorized Infantry": 0,
+                "Light Tank": 0,
+                "Heavy Tank": 0,
+                "Main Battle Tank": 0,
+                "Anti-Air": 0
+            },
             "unlockedResearch": {
                 "Resettlement": true,
                 "Trade Routes": true
@@ -447,6 +458,17 @@
                 "Wind Farm": 0
             },
             "unitCounts": {
+                "Infantry": 0,
+                "Artillery": 0,
+                "Mechanized Infantry": 0,
+                "Special Forces": 0,
+                "Motorized Infantry": 0,
+                "Light Tank": 0,
+                "Heavy Tank": 0,
+                "Main Battle Tank": 0,
+                "Anti-Air": 0
+            },
+            "unitCountsLifetime": {
                 "Infantry": 0,
                 "Artillery": 0,
                 "Mechanized Infantry": 0,
@@ -684,6 +706,17 @@
             },
             "unitCounts": {
                 "Infantry": 6,
+                "Artillery": 0,
+                "Mechanized Infantry": 0,
+                "Special Forces": 0,
+                "Motorized Infantry": 0,
+                "Light Tank": 0,
+                "Heavy Tank": 0,
+                "Main Battle Tank": 0,
+                "Anti-Air": 0
+            },
+            "unitCountsLifetime": {
+                "Infantry": 0,
                 "Artillery": 0,
                 "Mechanized Infantry": 0,
                 "Special Forces": 0,
@@ -942,6 +975,17 @@
             },
             "unitCounts": {
                 "Infantry": 6,
+                "Artillery": 0,
+                "Mechanized Infantry": 0,
+                "Special Forces": 0,
+                "Motorized Infantry": 0,
+                "Light Tank": 0,
+                "Heavy Tank": 0,
+                "Main Battle Tank": 0,
+                "Anti-Air": 0
+            },
+            "unitCountsLifetime": {
+                "Infantry": 0,
                 "Artillery": 0,
                 "Mechanized Infantry": 0,
                 "Special Forces": 0,
