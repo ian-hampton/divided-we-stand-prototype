@@ -2233,14 +2233,10 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
                     return False
 
     # tag check
-    is_blocked = False
     for tag_name, tag_data in attacker_nation.tags.items():
         if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
-            is_blocked = True
-            break
-    if is_blocked:
-        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-        return False
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
+            return False
 
     return True
 
