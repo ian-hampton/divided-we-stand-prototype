@@ -76,10 +76,10 @@ class War:
                 region.data.owner_id = winner_nation.id
                 region.data.occupier_id = "0"
 
-        for resource_name, amount in war_justification_data.winner_stockpile_gains:
+        for resource_name, amount in war_justification_data.winner_stockpile_gains.items():
             winner_nation.update_stockpile(resource_name, amount)
 
-        for resource_name, amount in war_justification_data.looser_stockpile_gains:
+        for resource_name, amount in war_justification_data.looser_stockpile_gains.items():
             looser_nation = Nations.get(winner_combatant_data.target_id)
             looser_nation.update_stockpile(resource_name, amount)
 

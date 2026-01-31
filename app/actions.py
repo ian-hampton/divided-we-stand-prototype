@@ -1268,7 +1268,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
         target_nation = Nations.get(action.target_nation)
         alliance = Alliances.get(action.alliance_name)
 
-        if action.target_nation not in alliance.current_members:
+        if nation.name not in alliance.current_members:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. You are not in the alliance.")
             continue
 
@@ -1626,7 +1626,8 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: set[str]) -> None:
                     continue
                 cost = encircled_region.calculate_region_claim_cost(nation)
                 nation.update_stockpile("Dollars", -1 * cost)
-                verified_claim_actions[encircled_region.id] = encircled_region
+                encircled_region.claim_list.append(nation_id)
+                verified_claim_actions.add(encircled_region.id)
                 encircled_priority = get_priority(encircled_region)
                 priorities[encircled_region.id] = encircled_priority
                 heapq.heappush(heap, (encircled_priority, encircled_region.id))
@@ -1762,7 +1763,7 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
             continue
 
         if region.improvement.name == "Capital":
-            nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
             continue
         
         required_research = SD.improvements[action.improvement_name].required_research
@@ -2042,13 +2043,12 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
         nation = Nations.get(action.id)
         region = Regions.load(action.target_region)
 
-        if str(region.unit.owner_id) != action.id:
-            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own this unit.")
+        if str(region.unit.owner_id) != action.id or region.unit.name is None:
+            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own a unit in this region.")
             continue
 
-        if region.unit.name is not None:
-            nation.unit_counts[region.unit.name] -= 1
-            nation.update_military_capacity()
+        nation.unit_counts[region.unit.name] -= 1
+        nation.update_military_capacity()
         region.unit.clear()
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
 
@@ -2113,7 +2113,7 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         else:
             costs_str = ", ".join(costs_list)
             costs_str = " and ".join(costs_str.rsplit(", ", 1))
-        nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
+        nation.action_log.append(f"Deployed {action.unit_name} in region {action.target_region} for {costs_str}.")
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
@@ -2232,14 +2232,10 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
                     return False
 
     # tag check
-    is_blocked = False
     for tag_name, tag_data in attacker_nation.tags.items():
         if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
-            is_blocked = True
-            break
-    if is_blocked:
-        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-        return False
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
+            return False
 
     return True
 
