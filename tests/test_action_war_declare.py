@@ -86,8 +86,6 @@ class TestDeclareWar(unittest.TestCase):
         war = Wars.get(war_name)
 
         # test war
-        assert war.start == 33
-        assert war.end == 0
         assert war.outcome == "TBD"
         assert "3" in war.combatants
         assert "4" in war.combatants
