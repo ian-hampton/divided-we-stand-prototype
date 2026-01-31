@@ -1,7 +1,7 @@
 ## Development Environment Setup
 
 ### Prerequisites
-* This project uses Python 3.14.0.
+* This project uses Python 3.14.2.
 * Install python virtualenv (if you do not already have it installed)
     ```sh
     pip install virtualenv
