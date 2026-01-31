@@ -2043,13 +2043,12 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
         nation = Nations.get(action.id)
         region = Regions.load(action.target_region)
 
-        if str(region.unit.owner_id) != action.id:
-            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own this unit.")
+        if str(region.unit.owner_id) != action.id or region.unit.name is None:
+            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own a unit in this region.")
             continue
 
-        if region.unit.name is not None:
-            nation.unit_counts[region.unit.name] -= 1
-            nation.update_military_capacity()
+        nation.unit_counts[region.unit.name] -= 1
+        nation.update_military_capacity()
         region.unit.clear()
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
 
