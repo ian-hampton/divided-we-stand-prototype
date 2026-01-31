@@ -380,25 +380,25 @@
         "Location": "B3",
         "Modifiers": {}
     },
-    "Launch Codes": {
+    "Missile Technology": {
         "Research Type": "Military",
         "Prerequisite": null,
         "Cost": 10,
-        "Description": "New Improvement: Missile Silo",
+        "Description": "New Improvement: Missile Silo.<br>New Missile: Standard Missile.",
         "Location": "C0",
         "Modifiers": {}
     },
-    "Missile Technology": {
+    "Armor-Piercing Warheads": {
         "Research Type": "Military",
-        "Prerequisite": "Launch Codes",
+        "Prerequisite": "Missile Technology",
         "Cost": 20,
-        "Description": "New Missile: Standard Missile.",
+        "Description": "Standard Missiles ignore the armor of their targets.",
         "Location": "C1",
         "Modifiers": {}
     },
     "Nuclear Warhead": {
         "Research Type": "Military",
-        "Prerequisite": "Missile Technology",
+        "Prerequisite": "Armor-Piercing Warheads",
         "Cost": 30,
         "Description": "New Missile: Nuclear Missile.",
         "Location": "C2",
@@ -501,7 +501,7 @@
         "Research Type": "Defense",
         "Prerequisite": "Air Defense",
         "Cost": 10,
-        "Description": "Your defensive improvements will attempt to shoot down Standard Missiles aimed at the region they are located in. Uses that improvement's hit value (without modifiers).",
+        "Description": "Your nation's Settlements, Cities, and Capitals gain 30% standard missile defense chance.",
         "Location": "B1",
         "Modifiers": {}
     },

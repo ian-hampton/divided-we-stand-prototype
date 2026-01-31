@@ -15,15 +15,15 @@
         "Required Research": "Standing Army",
         "Required Resource": null,
         "Reference Color": "stat-red",
+        "Damage": 1,
+        "Armor": 1,
         "Health": 6,
-        "Victory Damage": 2,
-        "Draw Damage": 1,
-        "Combat Value": 9,
         "Income": {
             "Military Capacity": 2
         },
         "Abilities": [
-            "Provides +2 military capacity."
+            "Provides +2 military capacity.",
+            "If a unit ends its turn in the same region as a Boot Camp, it gains enough experience to reach level one. If the unit is already at level one or higher, it does not gain any additional experience."
         ],
         "Upkeep": {},
         "Build Costs": {
@@ -34,10 +34,9 @@
         "Required Research": null,
         "Required Resource": null,
         "Reference Color": "stat-blue",
+        "Damage": 1,
+        "Armor": 1,
         "Health": 12,
-        "Victory Damage": 2,
-        "Draw Damage": 1,
-        "Combat Value": 7,
         "Income": {
             "Dollars": 5,
             "Political Power": 1,
@@ -54,10 +53,9 @@
         "Required Research": "Monetary Authority",
         "Required Resource": null,
         "Reference Color": "stat-blue",
-        "Health": 9,
-        "Victory Damage": 2,
-        "Combat Value": 7,
-        "Draw Damage": 1,
+        "Damage": 1,
+        "Armor": 1,
+        "Health": 6,
         "Income": {},
         "Abilities": [
             "Provides +20 storage capacity for all resources.",
@@ -75,10 +73,9 @@
         "Required Research": "Urbanization",
         "Required Resource": null,
         "Reference Color": "stat-blue",
+        "Damage": 1,
+        "Armor": 1,
         "Health": 6,
-        "Victory Damage": 2,
-        "Combat Value": 7,
-        "Draw Damage": 1,
         "Income": {
             "Dollars": 5
         },
@@ -108,10 +105,9 @@
         "Required Research": null,
         "Required Resource": null,
         "Reference Color": "stat-blue",
-        "Health": 6,
-        "Victory Damage": 3,
-        "Combat Value": 9,
-        "Draw Damage": 1,
+        "Damage": 1,
+        "Armor": 1,
+        "Health": 12,
         "Income": {
             "Dollars": 10,
             "Political Power": 0.25,
@@ -166,12 +162,16 @@
         "Required Research": "Military Bases",
         "Required Resource": null,
         "Reference Color": "stat-red",
+        "Damage": 2,
+        "Armor": 3,
         "Health": 12,
-        "Victory Damage": 3,
-        "Draw Damage": 2,
-        "Combat Value": 5,
+        "Standard Missile Defense": 0.5,
+        "Missile Defense Range": 1,
         "Income": {},
-        "Abilities": [],
+        "Abilities": [
+            "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions.",
+            "If there is a unit within the same region as this improvement, that unit gains +1 armor and +1 damage for this turn only."
+        ],
         "Upkeep": {
             "Energy": 2
         },
@@ -184,12 +184,16 @@
         "Required Research": "Fortifications",
         "Required Resource": null,
         "Reference Color": "stat-red",
+        "Damage": 1,
+        "Armor": 2,
         "Health": 9,
-        "Victory Damage": 3,
-        "Draw Damage": 2,
-        "Combat Value": 7,
+        "Standard Missile Defense": 0.3,
+        "Missile Defense Range": 1,
         "Income": {},
-        "Abilities": [],
+        "Abilities": [
+            "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions.",
+            "If there is an Infantry-type unit within the same region as this improvement, that unit gains +1 armor for this turn only."
+        ],
         "Upkeep": {
             "Energy": 1
         },
@@ -202,16 +206,15 @@
         "Required Research": "Missile Defense System",
         "Required Resource": null,
         "Reference Color": "stat-red",
+        "Damage": 1,
+        "Armor": 1,
         "Health": 9,
-        "Victory Damage": 3,
-        "Draw Damage": 2,
-        "Combat Value": 7,
-        "Standard Missile Defense": 3,
-        "Nuclear Missile Defense": 6,
+        "Standard Missile Defense": 0.7,
+        "Nuclear Missile Defense": 0.5,
         "Missile Defense Range": 2,
         "Income": {},
         "Abilities": [
-            "Intercepts incoming Standard Missiles and Nuclear Missiles. Defends its own region and all regions within a two region radius. Upon a successful interception, the incoming missile is destroyed and causes no damage."
+            "Intercepts incoming Standard Missiles and Nuclear Missiles. Defends its own region and all regions within a two region radius."
         ],
         "Upkeep": {
             "Energy": 2
@@ -311,7 +314,7 @@
         "Reference Color": "stat-red",
         "Income": {},
         "Abilities": [
-            "All of your Infantry-type units located within a region with a Trench improvement will receive 1 less damage from enemy attacks."
+            "If there is an Infantry-type unit within the same region as this improvement, that unit gains +1 armor for this turn only."
         ],
         "Upkeep": {},
         "Build Costs": {
@@ -319,16 +322,16 @@
         }
     },
     "Missile Silo": {
-        "Required Research": "Launch Codes",
+        "Required Research": "Missile Technology",
         "Required Resource": null,
         "Reference Color": "stat-red",
+        "Damage": 1,
+        "Armor": 1,
         "Health": 6,
-        "Victory Damage": 2,
-        "Draw Damage": 1,
-        "Combat Value": 9,
         "Income": {},
         "Abilities": [
-            "May launch up to three Standard Missiles or one Nuclear Missile per turn."
+            "May launch up to three Standard Missiles or one Nuclear Missile per turn.",
+            "Cannot be damaged by Standard Missiles."
         ],
         "Upkeep": {
             "Energy": 1
@@ -341,10 +344,9 @@
         "Required Research": "Resettlement",
         "Required Resource": null,
         "Reference Color": "stat-blue",
+        "Damage": 1,
+        "Armor": 0,
         "Health": 3,
-        "Victory Damage": 2,
-        "Combat Value": 9,
-        "Draw Damage": 1,
         "Income": {
             "Dollars": 3
         },

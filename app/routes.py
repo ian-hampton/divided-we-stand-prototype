@@ -10,11 +10,10 @@ from datetime import datetime
 from queue import PriorityQueue 
 
 from app import site_functions
-from app import core
-from app import events
 from app import palette
-from app.scenario import ScenarioData as SD
-from app.gamedata import Games, GameStatus
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, send_file
 
@@ -60,7 +59,7 @@ def games():
 
         return data
     
-    from app.nation import Nations
+    from app.nation.nations import Nations
     with open("playerdata/player_records.json", 'r') as json_file:
         player_records_dict = json.load(json_file)
 
@@ -146,7 +145,7 @@ def create_game():
 
     def create_new_game() -> None:
 
-        from app.nation import Nations
+        from app.nation.nations import Nations
 
         game_id = ''.join(random.choices(string.ascii_letters, k=20))
 
@@ -186,7 +185,9 @@ def create_game():
                 },
                 "unitData": {
                     "name": None,
+                    "fullName": None,
                     "health": 99,
+                    "experience": 0,
                     "ownerID": "0"
                 }
             }
@@ -416,7 +417,7 @@ def profile_route(profile_id):
 @main.route(f'/<full_game_id>')
 def game_load(full_game_id):
     
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     game = Games.load(full_game_id)
     Nations.load(full_game_id)
@@ -477,15 +478,15 @@ def game_load(full_game_id):
 def player_route(full_game_id, player_id):
     page_title = f"Player #{player_id} Nation Sheet"
     player_information_dict = site_functions.get_data_for_nation_sheet(full_game_id, str(player_id))
-    return render_template("temp_nation_sheet.html", page_title = page_title, player_information_dict = player_information_dict)
+    return render_template("temp_nation_sheet_new.html", page_title = page_title, dict = player_information_dict)
 
 # WARS PAGE
 @main.route('/<full_game_id>/wars')
 def wars(full_game_id):
     
-    from app.nation import Nations
-    from app.alliance import Alliances
-    from app.war import Wars
+    from app.nation.nations import Nations
+    from app.alliance.alliances import Alliances
+    from app.war.wars import Wars
 
     game = Games.load(full_game_id)
     
@@ -558,7 +559,7 @@ def wars(full_game_id):
         copy = {
             "Total War Score": war.attackers.total,
             "From Occupation": war.attackers.occupation,
-            "From Combat Victories": war.attackers.victories,
+            "From Decisive Battles": war.attackers.decisive_battles,
             "From Enemy Units Destroyed": war.attackers.destroyed_units,
             "From Enemy Impr. Destroyed": war.attackers.destroyed_improvements,
             "From Capital Captures": war.attackers.captures,
@@ -570,7 +571,7 @@ def wars(full_game_id):
         copy = {
             "Total War Score": war.defenders.total,
             "From Occupation": war.defenders.occupation,
-            "From Combat Victories": war.defenders.victories,
+            "From Decisive Battles": war.defenders.decisive_battles,
             "From Enemy Units Destroyed": war.defenders.destroyed_units,
             "From Enemy Impr. Destroyed": war.defenders.destroyed_improvements,
             "From Capital Captures": war.defenders.captures,
@@ -632,7 +633,7 @@ def wars(full_game_id):
 @main.route('/<full_game_id>/technologies')
 def technologies(full_game_id):
 
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     SD.load(full_game_id)
     game = Games.load(full_game_id)
@@ -711,7 +712,7 @@ def technologies(full_game_id):
 @main.route('/<full_game_id>/agendas')
 def agendas(full_game_id):
     
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     SD.load(full_game_id)
     game = Games.load(full_game_id)
@@ -793,13 +794,12 @@ def units_ref(full_game_id):
             "Unit Type": unit_data.type,
             "Abbreviation": unit_data.abbreviation,
             "Reference Color": unit_data.color,
+            "Damage": unit_data.damage,
+            "Armor": unit_data.armor,
             "Health": unit_data.health,
-            "Victory Damage": unit_data.victory_damage,
-            "Draw Damage": unit_data.draw_damage,
-            "Combat Value": unit_data.hit_value,
             "Movement": unit_data.movement,
-            "Standard Missile Defense": unit_data.missile_defense,
-            "Nuclear Missile Defense": unit_data.nuclear_defense,
+            "Standard Missile Defense": f"{int(unit_data.missile_defense * 100)}%" if unit_data.missile_defense != -1 else 99,
+            "Nuclear Missile Defense": f"{int(unit_data.nuclear_defense * 100)}%" if unit_data.nuclear_defense != -1 else 99,
             "Abilities": unit_data.abilities,
             "Upkeep": unit_data.upkeep,
             "Build Costs": unit_data.cost
@@ -838,12 +838,11 @@ def improvements_ref(full_game_id):
             "Required Resource": improvement_data.required_resource,
             "Reference Color": improvement_data.color,
             "Income": improvement_data.income,
+            "Damage": improvement_data.damage,
+            "Armor": improvement_data.armor,
             "Health": improvement_data.health,
-            "Victory Damage": improvement_data.victory_damage,
-            "Draw Damage": improvement_data.draw_damage,
-            "Combat Value": improvement_data.hit_value,
-            "Standard Missile Defense": improvement_data.missile_defense,
-            "Nuclear Missile Defense": improvement_data.nuclear_defense,
+            "Standard Missile Defense": f"{int(improvement_data.missile_defense * 100)}%" if improvement_data.missile_defense != -1 else 99,
+            "Nuclear Missile Defense": f"{int(improvement_data.nuclear_defense * 100)}%" if improvement_data.nuclear_defense != -1 else 99,
             "Abilities": improvement_data.abilities,
             "Upkeep": improvement_data.upkeep,
             "Build Costs": improvement_data.cost
@@ -919,11 +918,11 @@ def resource_market(full_game_id):
 @main.route('/<full_game_id>/announcements')
 def announcements(full_game_id):
 
-    from app.alliance import Alliances
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
+    from app.nation.nations import Nations, LeaderboardRecordNames
     from app.notifications import Notifications
-    from app.truce import Truces
-    from app.war import Wars
+    from app.truce.truces import Truces
+    from app.war.wars import Wars
 
     def build_diplomacy_string() -> str:
         
@@ -1017,7 +1016,7 @@ def announcements(full_game_id):
 
     # get top three standings
     standings_dict = {}
-    for record_name in Nations.LEADERBOARD_RECORD_NAMES:
+    for record_name in LeaderboardRecordNames:
         standings = Nations.get_top_three(record_name)
         standings_filtered = []
         for entry in standings:
@@ -1029,7 +1028,7 @@ def announcements(full_game_id):
             if end_index - start_index > 30:
                 nation_name = nation_name[0:start_index+31] + nation_name[end_index:]
             # format standing
-            if record_name == "net_income":
+            if record_name is LeaderboardRecordNames.NET_INCOME:
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
             else:
                 standings_filtered.append([nation_name, entry[1]])
@@ -1058,8 +1057,8 @@ def announcements(full_game_id):
 @main.route('/<full_game_id>/alliances')
 def alliances(full_game_id):
 
-    from app.alliance import Alliances
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
+    from app.nation.nations import Nations
 
     SD.load(full_game_id)
     game = Games.load(full_game_id)
@@ -1144,12 +1143,13 @@ def get_controlmap(full_game_id):
 @main.route('/<full_game_id>/resolve', methods=['POST'])
 def turn_resolution_new(full_game_id):
 
-    from app.alliance import Alliances
-    from app.region import Regions
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
+    from app.region.regions import Regions
+    from app.nation.nations import Nations
     from app.notifications import Notifications
-    from app.truce import Truces
-    from app.war import Wars
+    from app.truce.truces import Truces
+    from app.war.wars import Wars
+    from app import events
 
     game = Games.load(full_game_id)
     SD.load(full_game_id)
@@ -1159,7 +1159,7 @@ def turn_resolution_new(full_game_id):
         case GameStatus.REGION_SELECTION:
             
             Nations.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
 
             contents_dict = {}
             for nation in Nations:
@@ -1168,6 +1168,7 @@ def turn_resolution_new(full_game_id):
                 contents_dict[nation.id]["color"] = request.form.get(f"colordropdown_p{nation.id}")
             
             site_functions.resolve_stage1_processing(full_game_id, contents_dict)
+            
             Nations.save()
             Regions.save()
             
@@ -1177,7 +1178,8 @@ def turn_resolution_new(full_game_id):
             
             Alliances.load(full_game_id)
             Nations.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
+            Wars.load(full_game_id)
 
             contents_dict = {}
             for nation in Nations:
@@ -1188,6 +1190,7 @@ def turn_resolution_new(full_game_id):
                 contents_dict[nation.id]["vc_choice"] = request.form.get(f"vcinput_p{nation.id}")
 
             site_functions.resolve_stage2_processing(full_game_id, contents_dict)
+            
             Nations.save()
             
             game.set_startdate()
@@ -1197,7 +1200,7 @@ def turn_resolution_new(full_game_id):
         case GameStatus.ACTIVE:
             
             Alliances.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
             Nations.load(full_game_id)
             Notifications.initialize(full_game_id)
             Truces.load(full_game_id)
@@ -1216,6 +1219,7 @@ def turn_resolution_new(full_game_id):
                     contents_dict[nation.id].extend(actions_list)
 
             site_functions.resolve_turn_processing(full_game_id, contents_dict)
+
             Alliances.save()
             Regions.save()
             Nations.save()
@@ -1226,7 +1230,7 @@ def turn_resolution_new(full_game_id):
         case GameStatus.ACTIVE_PENDING_EVENT:
             
             Alliances.load(full_game_id)
-            Regions.load(full_game_id)
+            Regions.initialize(full_game_id)
             Nations.load(full_game_id)
             Notifications.initialize(full_game_id)
             Truces.load(full_game_id)
@@ -1234,6 +1238,7 @@ def turn_resolution_new(full_game_id):
 
             events.resolve_current_event(full_game_id)
             site_functions.run_end_of_turn_checks(full_game_id, event_phase=True)
+
             Alliances.save()
             Regions.save()
             Nations.save()

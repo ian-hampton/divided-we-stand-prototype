@@ -1,0 +1,5062 @@
+{
+    "NTCAS": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SPOKA": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "OLYMP": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SEATT": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHME": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "COLBA": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PACAS": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTWMN": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PORTL": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "IDPAN": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STHME": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DULUT": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 1,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WESND": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "EASND": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BLING": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "HELEN": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHVT": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SALEM": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "UPPEN": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHNH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CENOR": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WTRTW": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CENMN": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STHVT": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STHNH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "EAUCL": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ALBAN": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "EASOR": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Farm",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STEVE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MINNE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BOSTO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHMI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SYRAC": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WORCE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BOISE": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MEDFO": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PLYMO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ROCHE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MARSH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BINGH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Wind Farm",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WESSD": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "EASSD": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Farm",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "GRBAY": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CONNE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "RHODE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "THUMB": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHWY": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 12,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Artillery",
+            "fullName": "300th AR",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "MANKA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NEWYO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LANSI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BUFFA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TWNFA": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "GRAPI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MADIS": {
+        "regionData": {
+            "ownerID": "1",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SCRAN": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MILWA": {
+        "regionData": {
+            "ownerID": "1",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHCT": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Settlement",
+            "health": 3,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHNJ": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DETRO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTWPA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHPA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WATER": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "REDDI": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SIOUX": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "KALAM": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "HARRI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PHILA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CLEVE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CHICA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHNE": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Settlement",
+            "health": 3,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TOLED": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STHWY": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ROCKF": {
+        "regionData": {
+            "ownerID": "1",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 12,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WESNV": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SLTLK": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Settlement",
+            "health": 3,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LANCA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STHNJ": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SBEND": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "EASNV": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PITTS": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CEDAR": {
+        "regionData": {
+            "ownerID": "1",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DESMO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BALTI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "OMAHA": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "6th IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "EASOH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SACRA": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MIAVA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WAYNE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "COLUM": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PEORI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TERRE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PROVO": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Motorized Infantry",
+            "fullName": "5th MO",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "DELAW": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SROSA": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "KEARN": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ANNAP": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "FREDE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "GJUNC": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "4th IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "EASMD": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "POTOM": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "INDIA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DENVE": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Settlement",
+            "health": 3,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "3rd IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "QUINC": {
+        "regionData": {
+            "ownerID": "1",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PARKE": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CINCI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CHAMP": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTHMO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SANFR": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "1st IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "4"
+        }
+    },
+    "SIENV": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "2nd IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "STHOH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SPRIN": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STGEO": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STOCK": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WINCH": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NEWPO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "RICHM": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "HAYSK": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STHNV": {
+        "regionData": {
+            "ownerID": "3",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "1st IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "3"
+        }
+    },
+    "BLOOM": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "HUNTI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LOUIS": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STLOU": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NORFO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SANJO": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TOPEK": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STWIL": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ROANO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STEUT": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ASHLA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "FRESN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "2nd IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "4"
+        }
+    },
+    "KANSA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "JEFFC": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DANVI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DURAN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Farm",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "3rd IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "4"
+        }
+    },
+    "COSPR": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Special Forces",
+            "fullName": "12th SF",
+            "health": 14,
+            "experience": 0,
+            "ownerID": "4"
+        }
+    },
+    "EGYPT": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STWVA": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BOWLI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ROCKY": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WICHI": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PADUC": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LASVE": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "5th IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "4"
+        }
+    },
+    "JOHNS": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "GBORO": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "RALEI": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "STEMO": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BAKER": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "JOPLI": {
+        "regionData": {
+            "ownerID": "0",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "KNOXV": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NASHV": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WILMI": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ASHEV": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CHRLO": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MOHAV": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "REDCA": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "FAYET": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TULSA": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Missile Silo",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "JONES": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Trench",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CHATT": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ALBUQ": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 12,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MEMPH": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LOSAN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "INEMP": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": "Infantry",
+            "fullName": "6th IN",
+            "health": 6,
+            "experience": 0,
+            "ownerID": "4"
+        }
+    },
+    "GREEN": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LAWRE": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SMITH": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NTEAZ": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CLBIA": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "FLORE": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "YAVAP": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "OKLAH": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ATHEN": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "HUNTS": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LAWTO": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "AIKEN": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ATLAN": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LROCK": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TUPEL": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SANDI": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CHOCT": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LAPAZ": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "AUGUS": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CHARL": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "PHOEN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TEXAR": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TXPAN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BIRMI": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MACON": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LASCR": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "City",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ROSWE": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "GACPL": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TUSCA": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "DALLA": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SHREV": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TYLER": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Advanced Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Advanced Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TUCSO": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Industrial Zone",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "JACKS": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MONTG": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SAVAN": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "VALDO": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MOBIL": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ALEXA": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BILOX": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Capital",
+            "health": 12,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "JKSNV": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TALLA": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "GAINE": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "WESTX": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "AUSTI": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Coal Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BATON": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "BEAUM": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Oil Well",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "LAFAY": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "ORLAN": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Oil",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "NEWOR": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Coal",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "HUSTO": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Basic Materials",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Research Laboratory",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "TAMPA": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Common Metals",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Common Metals Mine",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "SANAN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "CORPU": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Boot Camp",
+            "health": 6,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MYERS": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Empty",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MIAMI": {
+        "regionData": {
+            "ownerID": "2",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Rare Earth Elements",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": null,
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    },
+    "MCALN": {
+        "regionData": {
+            "ownerID": "4",
+            "occupierID": "0",
+            "purchaseCost": 5,
+            "regionResource": "Uranium",
+            "nukeTurns": 0,
+            "infection": 0,
+            "quarantine": false
+        },
+        "improvementData": {
+            "name": "Farm",
+            "health": 99,
+            "turnTimer": 99
+        },
+        "unitData": {
+            "name": null,
+            "fullName": null,
+            "health": 99,
+            "experience": 0,
+            "ownerID": "0"
+        }
+    }
+}

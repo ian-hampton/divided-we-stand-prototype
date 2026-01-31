@@ -45,3 +45,13 @@ app/static/clipboards.png
 app/static/handshake.png
 /.vscode
 /scenarios/standard/__pycache__
+/app/alliance/__pycache__
+/app/nation/__pycache__
+/app/game/__pycache__
+/app/truce/__pycache__
+/app/scenario/__pycache__
+/app/combat/__pycache__
+/app/war/__pycache__
+/app/region/__pycache__
+/app/checks/__pycache__
+/tests/__pycache__

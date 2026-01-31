@@ -2,14 +2,21 @@ import importlib
 import heapq
 import random
 from collections import defaultdict, deque
+from queue import PriorityQueue
 from typing import List, Tuple
 
-from app import core
-from app.gamedata import Games
-from app.nation import Nation, Nations
-from app.region import Region
+from app.game.games import Games
+from app.scenario.scenario import ScenarioInterface as SD
+from app.alliance.alliances import Alliances
+from app.nation.nation import Nation
+from app.nation.nations import Nations
 from app.notifications import Notifications
-from app.missile_strike import *
+from app.region.region import Region
+from app.region.regions import Regions
+from app.truce.truces import Truces
+from app.war.wars import Wars
+from app.war.war_claims import ManageWarClaims
+from app.combat.strike_factory import strike_factory
 
 class AllianceCreateAction:
 
@@ -765,15 +772,11 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
 
 def _check_scenario_actions(game_id: str, nation_id: str, action_str: str) -> any:
     
-    from app.scenario import ScenarioData as SD
-    
     scenario_actions = importlib.import_module(f"scenarios.{SD.scenario}.actions")
 
     return scenario_actions._create_action(game_id, nation_id, action_str)
 
 def _check_alliance_type(input_str: str) -> str | None:
-    
-    from app.scenario import ScenarioData as SD
 
     for alliance_type, alliance_type_data in SD.alliances:
         if input_str.lower() == alliance_type.lower():
@@ -782,8 +785,6 @@ def _check_alliance_type(input_str: str) -> str | None:
     return None
 
 def _check_alliance_name(input_str: str) -> str | None:
-    
-    from app.alliance import Alliances
 
     for alliance in Alliances:
         if input_str.lower() == alliance.name.lower():
@@ -795,16 +796,12 @@ def _check_region_id(region_id: str) -> str | None:
 
     # region_id string is already converted to all uppercase, so we can just check if it exists or not 
     
-    from app.region import Regions
-    
     if region_id in Regions:
         return region_id
     
     return None
 
 def _check_nation_name(input_str: str) -> str | None:
-
-    from app.nation import Nations
 
     for nation in Nations:
         if input_str.lower() == nation.name.lower():
@@ -813,8 +810,6 @@ def _check_nation_name(input_str: str) -> str | None:
     return None
 
 def _check_improvement_name(input_str: str) -> str | None:
-
-    from app.scenario import ScenarioData as SD
 
     improvement_errors = {
         "amm": "Advanced Metals Mine",
@@ -907,8 +902,6 @@ def _check_resource(resource_name: str) -> str | None:
     return resource_errors.get(resource_name)
 
 def _check_missile(input_str: str) -> str | None:
-    
-    from app.scenario import ScenarioData as SD
 
     missile_errors = {
         "missile": "Standard Missile",
@@ -927,8 +920,6 @@ def _check_missile(input_str: str) -> str | None:
 
 def _check_research(input_str: str) -> str | None:
 
-    from app.scenario import ScenarioData as SD
-    
     research_names = set(SD.agendas.names()).union(SD.technologies.names())
 
     for name in research_names:
@@ -938,9 +929,7 @@ def _check_research(input_str: str) -> str | None:
     return None
 
 def _check_unit(input_str: str) -> str | None:
-    
-    from app.scenario import ScenarioData as SD
-    
+  
     for unit_name, unit_data in SD.units:
         if (input_str.lower() == unit_name.lower()
             or input_str.upper() == unit_data.abbreviation):
@@ -950,7 +939,7 @@ def _check_unit(input_str: str) -> str | None:
 
 def _check_war_name(input_str: str) -> str | None:
 
-    from app.war import Wars
+    from app.war.wars import Wars
 
     for war in Wars:
         if input_str.lower() == war.name.lower():
@@ -960,8 +949,6 @@ def _check_war_name(input_str: str) -> str | None:
 
 def _check_war_justification(input_str: str) -> str | None:
 
-    from app.scenario import ScenarioData as SD
-    
     for justification_name, justification_data in SD.war_justificiations:
         if input_str.lower() == justification_name.lower():
             return justification_name
@@ -972,9 +959,6 @@ def resolve_trade_actions(game_id: str) -> None:
     """
     Resolves trade actions between players via CLI.
     """
-
-    from app.nation import Nations
-    from app.region import Regions
 
     trade_action = input("Are there any trade actions this turn? (Y/n) ")
 
@@ -1084,7 +1068,7 @@ def resolve_trade_actions(game_id: str) -> None:
             
             for region_id in trade_deal["Nation1RegionsCeded"]:
                 
-                region = Region(region_id)
+                region = Regions.load(region_id)
 
                 if region.improvement.name is not None:
                     nation1.improvement_counts[region.improvement.name] -= 1
@@ -1094,7 +1078,7 @@ def resolve_trade_actions(game_id: str) -> None:
             
             for region_id in trade_deal["Nation2RegionsCeded"]:
                 
-                region = Region(region_id)
+                region = Regions.load(region_id)
 
                 if region.improvement.name is not None:
                     nation1.improvement_counts[region.improvement.name] += 1
@@ -1112,8 +1096,6 @@ def resolve_trade_actions(game_id: str) -> None:
 
 def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], white_peace_list: list[WhitePeaceAction]) -> None:
     
-    from app.nation import Nations
-    from app.war import Wars
     game = Games.load(game_id)
 
     # execute surrender actions
@@ -1167,7 +1149,7 @@ def resolve_peace_actions(game_id: str, surrender_list: list[SurrenderAction], w
 
 def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, current_turn_num: int) -> bool:
 
-    from app.war import Wars
+    from app.war.wars import Wars
 
     # check that war exists
     war_name = Wars.get_war_name(surrendering_nation.id, winning_nation.id)
@@ -1191,10 +1173,8 @@ def _peace_action_valid(surrendering_nation: Nation, winning_nation: Nation, cur
     return True
 
 def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.alliance import Alliances
-    from app.nation import Nations
+
+    from app.alliance.alliances import Alliances
 
     for action in actions_list:
         
@@ -1265,8 +1245,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
 
 def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeaveAction]) -> None:
     
-    from app.alliance import Alliances
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
 
     for action in actions_list:
 
@@ -1279,8 +1258,7 @@ def resolve_alliance_leave_actions(game_id: str, actions_list: list[AllianceLeav
 
 def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickAction]) -> None:
     
-    from app.alliance import Alliances
-    from app.nation import Nations
+    from app.alliance.alliances import Alliances
 
     kick_actions_tally = defaultdict(lambda: defaultdict(int))
     
@@ -1290,7 +1268,7 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
         target_nation = Nations.get(action.target_nation)
         alliance = Alliances.get(action.alliance_name)
 
-        if action.target_nation not in alliance.current_members:
+        if nation.name not in alliance.current_members:
             nation.action_log.append(f"Failed to vote to kick {action.target_nation} from {action.alliance_name}. You are not in the alliance.")
             continue
 
@@ -1313,10 +1291,8 @@ def resolve_alliance_kick_actions(game_id: str, actions_list: list[AllianceKickA
                 Notifications.add(f"{action.target_nation} has been kicked from {action.alliance_name}!", 8)
 
 def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCreateAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.alliance import Alliances
-    from app.nation import Nations
+
+    from app.alliance.alliances import Alliances
 
     alliance_creation_dict = {}
     
@@ -1360,10 +1336,8 @@ def resolve_alliance_create_actions(game_id: str, actions_list: list[AllianceCre
         nation.action_log.append(f"Failed to form {action.alliance_name} alliance. Not enough players agreed to establish it.")
 
 def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.alliance import Alliances
-    from app.nation import Nations
+
+    from app.alliance.alliances import Alliances
 
     for action in actions_list:
         
@@ -1395,15 +1369,14 @@ def resolve_alliance_join_actions(game_id: str, actions_list: list[AllianceJoinA
 
 def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None:
 
-    from app.nation import Nations
     game = Games.load(game_id)
 
     # initial validation
     minimum_spend: dict[str, int] = defaultdict(int)
-    claim_actions_grouped: dict[str, dict[str, Region]] = defaultdict(dict)
+    claim_actions_grouped: dict[str, set[str]] = defaultdict(set)
     for action in actions_list:
         nation = Nations.get(action.id)
-        target_region = Region(action.target_region)
+        target_region = Regions.load(action.target_region)
 
         if target_region.data.owner_id == nation.id:
             nation.action_log.append(f"Failed to claim {action.target_region}. You already own this region.")
@@ -1423,26 +1396,23 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
             continue
         
         target_region.add_claim(nation.id)
-        claim_actions_grouped[nation.id][target_region.id] = target_region
+        claim_actions_grouped[nation.id].add(target_region.id)
 
     # priority queue #1 - validate and pay for the claim actions of each nation
-    claim_actions_validated: dict[str, Region] = {}
+    claim_actions_validated = set()
     for nation in Nations:
         validated_region_ids = _check_all_claims(game_id, claim_actions_grouped[nation.id])
         for region_id in validated_region_ids:
-            target_region = Region(region_id)
-            if target_region.id in claim_actions_validated:
-                claim_actions_validated[target_region.id].add_claim(action.id)
-            else:
-                target_region.add_claim(nation.id)
-                claim_actions_validated[target_region.id] = target_region
+            claim_actions_validated.add(region_id)
 
     # resolve region disputes
-    claim_actions_final: dict[str, Region] = {}
-    for target_region in claim_actions_validated.values():
+    claim_actions_final = set()
+    for target_region_id in claim_actions_validated:
+        
+        target_region = Regions.load(target_region_id)
         
         if len(target_region.claim_list) == 1:
-            claim_actions_final[target_region.id] = target_region
+            claim_actions_final.add(target_region.id)
             continue
 
         for player_id in target_region.claim_list:
@@ -1456,7 +1426,7 @@ def resolve_claim_actions(game_id: str, actions_list: list[ClaimAction]) -> None
     # priority queue #2 - validate remaining claim actions together and resolve
     _resolve_all_claims(game_id, claim_actions_final)
 
-def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
+def _check_all_claims(game_id: str, claimed_regions: set[str]) -> set:
 
     def get_priority(target_region: Region) -> int:
 
@@ -1464,33 +1434,33 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         
         # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
-        for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = Region(adj_region_id)
+        for adj_region in target_region.graph.iter_adjacent_regions():
             if nation_id == adj_region.data.owner_id or adj_region.id in resolved:
                 adj_owned.add(adj_region.id)
 
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
-        for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = claimed_regions.get(adj_region_id)
-            if adj_region is not None and adj_region_id not in resolved and adj_region_id not in failed:
+        for adj_region in target_region.graph.iter_adjacent_regions():
+            if adj_region.id in claimed_regions and adj_region.id not in resolved and adj_region.id not in failed:
                 adj_claimed.add(adj_region.id)
 
         return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
     
     heap: List[Tuple[int, Region]] = []
     priorities = {}
-    resolved = set()
+    resolved: set = set()
     failed = set()
     requeued = defaultdict(int)    # temporary solution to break deadlocks
 
-    for target_region in claimed_regions.values():
+    for target_region_id in claimed_regions:
+        target_region = Regions.load(target_region_id)
         priority = get_priority(target_region)
         priorities[target_region.id] = priority
-        heapq.heappush(heap, (priority, target_region))
+        heapq.heappush(heap, (priority, target_region.id))
 
     while heap:
-        priority, target_region = heapq.heappop(heap)
+        priority, target_region_id = heapq.heappop(heap)
+        target_region = Regions.load(target_region_id)
         nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
@@ -1504,7 +1474,7 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
         
         if priority > 0:
             requeued[target_region.id] += 1
-            heapq.heappush(heap, (priority, target_region))
+            heapq.heappush(heap, (priority, target_region.id))
             continue
 
         cost = target_region.calculate_region_claim_cost(nation)
@@ -1518,16 +1488,15 @@ def _check_all_claims(game_id: str, claimed_regions: dict[str, Region]) -> set:
             resolved.add(target_region.id)
 
         # update priority values for adjacent regions
-        for adj_region_id in target_region.graph.adjacent_regions:
-            if adj_region_id in claimed_regions and adj_region_id not in resolved and adj_region_id not in failed:
-                adj_region = claimed_regions.get(adj_region_id)
+        for adj_region in target_region.graph.iter_adjacent_regions():
+            if adj_region.id in claimed_regions and adj_region.id not in resolved and adj_region.id not in failed:
                 new_priority = get_priority(adj_region)
-                priorities[adj_region_id] = new_priority
-                heapq.heappush(heap, (new_priority, adj_region))
+                priorities[adj_region.id] = new_priority
+                heapq.heappush(heap, (new_priority, adj_region.id))
 
     return resolved
 
-def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region]) -> None:
+def _resolve_all_claims(game_id: str, verified_claim_actions: set[str]) -> None:
 
     def get_priority(target_region: Region) -> int:
 
@@ -1535,16 +1504,14 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
 
         # adjacent owned - region already owned by the nation before claim actions resolved OR successful claim
         adj_owned = set()
-        for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = Region(adj_region_id)
+        for adj_region in target_region.graph.iter_adjacent_regions():
             if nation_id == adj_region.data.owner_id:
                 adj_owned.add(adj_region.id)
         
         # adjacent claim - region pending claim action resolution that belongs to this nation
         adj_claimed = set()
-        for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = verified_claim_actions.get(adj_region_id)
-            if adj_region is not None and adj_region_id not in failed and nation_id == adj_region.claim_list[0]:
+        for adj_region in target_region.graph.iter_adjacent_regions():
+            if adj_region.id in verified_claim_actions and adj_region.id not in failed and nation_id == adj_region.claim_list[0]:
                 adj_claimed.add(adj_region.id)
 
         return _validate_claim_action(game_id, nation_id, target_region, adj_owned, adj_claimed)
@@ -1554,29 +1521,28 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
         Checks for pockets of unclaimed regions that are entirely encircled by one nation as a result of a claim action.
         """
         
-        encircled_regions: set[Region] = set()
+        encircled_region_ids = set()
         
         # checking every adjacent region with a seperate BFS because one claim can result in multiple encircled pockets
-        for adj_region_id in target_region.graph.adjacent_regions:
-            adj_region = Region(adj_region_id)
+        for adj_region in target_region.graph.iter_adjacent_regions():
             
             # skip if already owned by someone
             if adj_region.data.owner_id != "0":
                 continue
 
             # skip if this adjacent region does not lead to a seperate pocket
-            if adj_region in encircled_regions:
+            if adj_region.id in encircled_region_ids:
                 continue
             
             encircled = True
-            unclaimed: set[Region] = set()
-
+            unclaimed = set()
             visited = set([adj_region.id])
-            queue: deque[Region] = deque([adj_region])
+            queue: deque[str] = deque([adj_region.id])
 
             while queue:
 
-                region = queue.popleft()
+                region_id = queue.popleft()
+                region = Regions.load(region_id)
 
                 # pocket is not encircled if this region is owned by another player
                 if region.data.owner_id not in ["0", nation_id]:
@@ -1586,19 +1552,20 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
                 # continue if already owned
                 if region.data.owner_id == nation_id or region.id == target_region.id:
                     continue
+                
+                # add region to unclaimed set
+                unclaimed.add(region.id)
 
-                region.add_claim(nation_id)
-                unclaimed.add(region)
-
+                # find more regions to check
                 for temp_id in region.graph.adjacent_regions:
                     if temp_id not in visited:
                         visited.add(temp_id)
-                        queue.append(Region(temp_id))
+                        queue.append(temp_id)
 
             if encircled:
-                encircled_regions.update(unclaimed)
+                encircled_region_ids.update(unclaimed)
         
-        return encircled_regions
+        return encircled_region_ids
 
     heap: List[Tuple[int, Region]] = []
     priorities = {}
@@ -1606,13 +1573,15 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
     failed = set()
     requeued = defaultdict(int)    # temporary solution to break deadlocks
     
-    for target_region in verified_claim_actions.values():
+    for target_region_id in verified_claim_actions:
+        target_region = Regions.load(target_region_id)
         priority = get_priority(target_region)
         priorities[target_region.id] = priority
-        heapq.heappush(heap, (priority, target_region))
+        heapq.heappush(heap, (priority, target_region.id))
 
     while heap:
-        priority, target_region = heapq.heappop(heap)
+        priority, target_region_id = heapq.heappop(heap)
+        target_region = Regions.load(target_region_id)
         nation_id = target_region.claim_list[0]
         nation = Nations.get(nation_id)
 
@@ -1625,13 +1594,14 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
             continue
         
         if priority > 0:
-            heapq.heappush(heap, (priority, target_region))
+            heapq.heappush(heap, (priority, target_region.id))
             continue
 
         # encirclement check - any unclaimed regions encircled by this claim must also be claimed
         encircled_cost = 0
-        encircled_regions = find_encircled_regions(target_region, nation.id)
-        for encircled_region in encircled_regions:
+        encircled_region_ids = find_encircled_regions(target_region, nation.id)
+        for encircled_region_id in encircled_region_ids:
+            encircled_region = Regions.load(encircled_region_id)
             if encircled_region.id in verified_claim_actions:
                 continue
             encircled_cost += encircled_region.calculate_region_claim_cost(nation)
@@ -1650,23 +1620,24 @@ def _resolve_all_claims(game_id: str, verified_claim_actions: dict[str, Region])
             nation.action_log.append(f"Claimed region {target_region.id} for {target_region.calculate_region_claim_cost(nation):.2f} dollars.")
             resolved.add(target_region.id)
             # pay for and create claim actions for encircled regions (if any)
-            for encircled_region in encircled_regions:
+            for encircled_region_id in encircled_region_ids:
+                encircled_region = Regions.load(encircled_region_id)
                 if encircled_region.id in verified_claim_actions:
                     continue
                 cost = encircled_region.calculate_region_claim_cost(nation)
                 nation.update_stockpile("Dollars", -1 * cost)
-                verified_claim_actions[encircled_region.id] = encircled_region
+                encircled_region.claim_list.append(nation_id)
+                verified_claim_actions.add(encircled_region.id)
                 encircled_priority = get_priority(encircled_region)
                 priorities[encircled_region.id] = encircled_priority
-                heapq.heappush(heap, (encircled_priority, encircled_region))
+                heapq.heappush(heap, (encircled_priority, encircled_region.id))
 
         # update priority values for adjacent regions
-        for adj_region_id in target_region.graph.adjacent_regions:
-            if adj_region_id in verified_claim_actions and adj_region_id not in resolved and adj_region_id not in failed:
-                adj_region = verified_claim_actions.get(adj_region_id)
+        for adj_region in target_region.graph.iter_adjacent_regions():
+            if adj_region.id in verified_claim_actions and adj_region.id not in resolved and adj_region.id not in failed:
                 new_priority = get_priority(adj_region)
-                priorities[adj_region_id] = new_priority
-                heapq.heappush(heap, (new_priority, adj_region))
+                priorities[adj_region.id] = new_priority
+                heapq.heappush(heap, (new_priority, adj_region.id))
 
 def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, adj_owned: set, adj_claimed: set) -> int:
         """
@@ -1699,19 +1670,19 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
             
             friendly_regions_found = 0
             visited = set([target_region.id])
-            queue: deque[Region] = deque()
+            queue = deque()
 
             # populate queue with adjacent unclaimed regions
-            for adj_region_id in target_region.graph.adjacent_regions:
-                adj_region = Region(adj_region_id)
-                visited.add(adj_region_id)
+            for adj_region in target_region.graph.iter_adjacent_regions():
+                visited.add(adj_region.id)
                 if adj_region.data.owner_id != "0":
                     continue
-                queue.append(adj_region)
+                queue.append(adj_region.id)
 
             while queue:
 
-                region = queue.popleft()
+                region_id = queue.popleft()
+                region = Regions.load(region_id)
 
                 # check if this region is owned by the player
                 if region.data.owner_id == nation_id:
@@ -1726,7 +1697,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
                 for adj_region_id in region.graph.adjacent_regions:
                     if adj_region_id not in visited:
                         visited.add(adj_region_id)
-                        queue.append(Region(adj_region_id))
+                        queue.append(adj_region_id)
             
             return True
         
@@ -1761,13 +1732,11 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
         return 2 - adj_owned_count
 
 def resolve_improvement_remove_actions(game_id: str, actions_list: list[ImprovementRemoveAction]) -> None:
-    
-    from app.nation import Nations
 
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
 
         if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to remove {region.improvement.name} in region {action.target_region}. You do not own or control this region.")
@@ -1783,21 +1752,18 @@ def resolve_improvement_remove_actions(game_id: str, actions_list: list[Improvem
         nation.action_log.append(f"Removed improvement in region {action.target_region}.")
 
 def resolve_improvement_build_actions(game_id: str, actions_list: list[ImprovementBuildAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
 
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
 
         if region.data.owner_id != action.id or region.data.occupier_id != "0":
             nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You do not own or control this region.")
             continue
 
         if region.improvement.name == "Capital":
-            nation.action_log.append(f"Failed to remove build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
+            nation.action_log.append(f"Failed to build {action.improvement_name} in region {action.target_region}. You cannot build over a Capital improvement.")
             continue
         
         required_research = SD.improvements[action.improvement_name].required_research
@@ -1849,9 +1815,6 @@ def resolve_improvement_build_actions(game_id: str, actions_list: list[Improveme
 
 def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAction]) -> None:
     
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-
     for action in actions_list:
 
         nation = Nations.get(action.id)
@@ -1892,8 +1855,6 @@ def resolve_missile_make_actions(game_id: str, actions_list: list[MissileMakeAct
 
 def resolve_government_actions(game_id: str, actions_list: list[RepublicAction]) -> None:
     
-    from app.nation import Nations
-
     for action in actions_list:
 
         nation = Nations.get(action.id)
@@ -1918,9 +1879,7 @@ def resolve_government_actions(game_id: str, actions_list: list[RepublicAction])
         Notifications.add(f"{nation.name} used Republic government action to boost {action.resource_name} income.", 9)
 
 def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction], buy_list: list[MarketBuyAction], sell_list: list[MarketSellAction]) -> dict:
-    
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
+
     game = Games.load(game_id)
 
     rmdata_update_list = []
@@ -2078,32 +2037,26 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     return market_results
 
 def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAction]) -> None:
-    
-    from app.nation import Nations
 
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
 
-        if str(region.unit.owner_id) != action.id:
-            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own this unit.")
+        if str(region.unit.owner_id) != action.id or region.unit.name is None:
+            nation.action_log.append(f"Failed to disband {region.unit.name} in region {action.target_region}. You do not own a unit in this region.")
             continue
 
-        if region.unit.name is not None:
-            nation.unit_counts[region.unit.name] -= 1
-            nation.update_military_capacity()
+        nation.unit_counts[region.unit.name] -= 1
+        nation.update_military_capacity()
         region.unit.clear()
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
 
 def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployAction]) -> None:
     
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-
     for action in actions_list:
 
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         nation = Nations.get(action.id)
         sd_unit = SD.units[action.unit_name]
 
@@ -2137,10 +2090,21 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         for resource_name, cost in build_cost_dict.items():
             costs_list.append(f"{cost} {resource_name.lower()}")
             nation.update_stockpile(resource_name, -1 * cost)
-
+        
+        xp_transfer = 0
+        starting_xp = nation.calculate_starting_xp()
         if region.unit.name is not None:
             nation.unit_counts[region.unit.name] -= 1
-        region.unit.set(action.unit_name, action.id)
+            if region.unit.type == sd_unit.type:
+                if nation.gov == "Military Junta":
+                    xp_transfer = (region.unit.xp * 3) // 4
+                else:
+                    xp_transfer = region.unit.xp // 2
+        starting_xp = xp_transfer if xp_transfer > starting_xp else starting_xp
+         
+        full_unit_name = nation.generate_full_unit_name(action.unit_name)
+        region.unit.set(action.unit_name, full_unit_name, starting_xp, action.id)
+        region.unit.calculate_level()
         nation.unit_counts[region.unit.name] += 1
         nation.update_military_capacity()
 
@@ -2149,13 +2113,9 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         else:
             costs_str = ", ".join(costs_list)
             costs_str = " and ".join(costs_str.rsplit(", ", 1))
-        nation.action_log.append(f"Deployed {action.unit_name} in region {action.unit_name} in region {action.target_region} for {costs_str}.")
+        nation.action_log.append(f"Deployed {action.unit_name} in region {action.target_region} for {costs_str}.")
 
 def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
-    
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-    from app.war import Wars
 
     for action in actions_list:
 
@@ -2169,7 +2129,8 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
 
         if SD.war_justificiations[action.war_justification].has_war_claims:
             
-            claim_cost, region_claims_list = Wars.get_war_claims(attacker_nation.name, action.war_justification)
+            manage_claims = ManageWarClaims(attacker_nation.name, action.war_justification)
+            claim_cost, region_claims_list = manage_claims.get_war_claims()
             if float(attacker_nation.get_stockpile("Political Power")) - claim_cost < 0:
                 attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name}. Not enough political power for war claims.")
                 continue
@@ -2181,10 +2142,6 @@ def resolve_war_actions(game_id: str, actions_list: list[WarAction]) -> None:
         attacker_nation.action_log.append(f"Declared war on {defender_nation.name}.")
 
 def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-    from app.war import Wars
 
     for action in actions_list:
 
@@ -2206,14 +2163,15 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             if not _war_action_valid(action, nation, defender_nation):
                 continue
             
-            claim_cost, region_claims_list = Wars.get_war_claims(combatant.name, action.war_justification)
+            manage_claims = ManageWarClaims(combatant.name, action.war_justification)
+            claim_cost, region_claims_list = manage_claims.get_war_claims()
             if float(nation.get_stockpile("Political Power")) - claim_cost < 0:
                 nation.action_log.append(f"Error: Not enough political power for war claims.")
                 continue
             
             combatant.target_id = "N/A"
             nation.update_stockpile("Political Power", -1 * claim_cost)
-            combatant.claims = Wars._claim_pairs(region_claims_list)
+            combatant.claims = manage_claims.claim_pairs(region_claims_list)
         
         # OR handle war justification that does not seize territory
         else:
@@ -2226,11 +2184,6 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
         Notifications.add(f"{nation.name} has joined {war.name} as a {action.side}!", 4)
 
 def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation, defender_nation: Nation):
-    
-    from app.scenario import ScenarioData as SD
-    from app.alliance import Alliances
-    from app.truce import Truces
-    from app.war import Wars
 
     # agenda check
     prereq = SD.war_justificiations[action.war_justification].required_agenda
@@ -2279,22 +2232,14 @@ def _war_action_valid(action: WarAction | WarJoinAction, attacker_nation: Nation
                     return False
 
     # tag check
-    is_blocked = False
     for tag_name, tag_data in attacker_nation.tags.items():
         if f"Cannot Declare War On #{defender_nation.id}" in tag_data:
-            is_blocked = True
-            break
-    if is_blocked:
-        attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
-        return False
+            attacker_nation.action_log.append(f"Failed to declare a {action.war_justification} war on {defender_nation.name} due to {tag_name}.")
+            return False
 
     return True
 
 def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunchAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
-    from app.nation import Nations
-    from app.war import Wars
 
     def is_valid_target(nation: Nation, target_region: Region) -> bool:
         
@@ -2325,7 +2270,7 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
     for action in actions_list:
         
         nation = Nations.get(action.id)
-        target_region = Region(action.target_region)
+        target_region = Regions.load(action.target_region)
         missile = SD.missiles[action.missile_type]
 
         if (missile.type == "Nuclear Missile" and nation.nuke_count == 0) or (action.missile_type != "Nuclear Missile" and nation.missile_count == 0):
@@ -2353,47 +2298,62 @@ def resolve_missile_launch_actions(game_id: str, actions_list: list[MissileLaunc
         # resolve missile strike
         war = Wars.get(war_name)
         war.log.append(f"{nation.name} launched a {action.missile_type} at {target_region.id} in {target_nation.name}!")
-        if missile.type == "Nuclear Missile":
-            missile_strike = NuclearStrike(nation, target_nation, target_region, war)
-        else:
-            missile_strike = StandardStrike(nation, target_nation, target_region, war)
-        missiles_launched_list[int(nation.id) - 1] += missile_strike.fire_missile()
+        missiles_launched_list[int(nation.id) - 1] += missile.launch_cost
+        missile_strike = strike_factory(missile.type, nation, target_nation, target_region, war)
+        missile_strike.fire_missile()
         missile_strike.resolve()
 
 def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) -> None:
     
-    from app.nation import Nations
     game = Games.load(game_id)
 
-    # generate movement order for the turn
-    players_moving_units: list[str] = []
+    nations_moving_units = {}
     for action in actions_list:
-        if action.id not in players_moving_units:
-            players_moving_units.append(action.id)
-    random.shuffle(players_moving_units)
-    ordered_actions_list: list[UnitMoveAction] = []
-    for nation_id in players_moving_units:
-        for action in actions_list:
-            if action.id == nation_id:
-                ordered_actions_list.append(action)
+        # flag units with movement actions as having a movement ordered queued (presuming that unit exists)
+        current_region = Regions.load(action.current_region_id)
+        if current_region.unit.name is not None and action.id == current_region.unit.owner_id:
+            current_region.unit.has_movement_queued = True
+        # add nation id to list of nations moving units this turn
+        if action.id not in nations_moving_units:
+            nations_moving_units[action.id] = {}
+
+    # determine movement order
+    for nation in Nations:
+        if nation.id in nations_moving_units:
+            nations_moving_units[nation.id] = {
+                "Count": nation.get_used_mc(),
+                "Mobility": sum(1 for region in Regions if region.unit.owner_id == nation.id and region.unit.movement > 1),
+                "XP": sum(region.unit.xp for region in Regions if region.unit.owner_id == nation.id),
+                "Economy": float(nation.records.net_income[-1])
+            }
+    sorted_nations = sorted(nations_moving_units.items(), key=lambda item: (item[1]["Count"], -item[1]["Mobility"], -item[1]["XP"], -item[1]["Economy"]))
 
     # print movement order
-    if len(players_moving_units) != 0: 
+    if len(sorted_nations) != 0: 
         print(f"Movement Order - Turn {game.turn}")
-    for i, nation_id in enumerate(players_moving_units):
-        nation = Nations.get(nation_id)
+    for i, entry in enumerate(sorted_nations):
+        nation = Nations.get(entry[0][0])
         print(f"{i + 1}. {nation.name}")
 
-    for action in ordered_actions_list:
-        
+    # create and load queue
+    movement_queue: PriorityQueue[tuple[int, UnitMoveAction]] = PriorityQueue()
+    for i, entry in enumerate(sorted_nations):
+        nation_id = entry[0][0]
+        for action in actions_list:
+            if action.id != nation_id:
+                continue
+            movement_queue.put((i, action))
+
+    # process movement action
+    while not movement_queue.empty():
+        action = movement_queue.get()[1]
         while action.target_region_ids != []:
             target_region_id = action.target_region_ids.pop()
-
             nation = Nations.get(action.id)
-            current_region = Region(action.current_region_id)
-            target_region = Region(target_region_id)
+            current_region = Regions.load(action.current_region_id)
+            target_region = Regions.load(target_region_id)
 
-            # current region checks
+            # validate current region
             if current_region.unit.name == None or action.id != current_region.unit.owner_id:
                 nation.action_log.append(f"Failed to perform a move action from {action.current_region_id}. You do not control a unit there.")
                 continue
@@ -2403,7 +2363,7 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
             if target_region_id == action.current_region_id:
                 continue
 
-            # target region checks
+            # validate target region
             if target_region.data.owner_id == "0" and action.id != "99":
                 nation.action_log.append(f"Failed to move {target_region.unit.name} {action.current_region_id} - {target_region_id}. You cannot move a unit to an unclaimed region.")
                 continue

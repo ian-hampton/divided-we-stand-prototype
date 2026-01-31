@@ -7,7 +7,7 @@ def color_nation_names(string: str, game_id: str):
     Adds html span tags around all nation names in given string
     """
 
-    from app.nation import Nations
+    from app.nation.nations import Nations
 
     color_dict = {}
 
@@ -97,8 +97,8 @@ normal_to_occupied = {
 }
 
 resource_colors = {
-    "Coal": (166, 124, 82, 255),
-    "Oil": (96, 57, 19, 255),
+    "Coal": (135, 112, 88, 255),
+    "Oil": (223, 138, 53, 255),
     "Basic Materials": (149, 149, 149, 255),
     "Common Metals": (99, 99, 99, 255),
     "Advanced Metals": (71, 157, 223, 255),

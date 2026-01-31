@@ -1,30 +1,29 @@
-import csv
 import json
 import random
-import shutil
-import os
 import copy
 import importlib
-import string
 from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
 
-from app import core
-from app import palette
-from app.scenario import ScenarioData as SD
-from app.gamedata import Games, GameStatus
-from app.alliance import Alliances
-from app.region import Region, Regions
-from app.nation import Nations
-from app.notifications import Notifications
-from app.truce import Truces
-from app.war import Wars
-from app.map import GameMaps
 from app import actions
-from app import checks
+from app.checks import checks
+from app.checks import end_wars
+from app.checks import heals
+from app.checks import resolve_shortages
+from app.checks.update_income import UpdateIncomeProcess
 from app import events
-
+from app.map import GameMaps
+from app import palette
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
+from app.alliance.alliances import Alliances
+from app.region.regions import Regions
+from app.nation.nation import Nation
+from app.nation.nations import Nations
+from app.notifications import Notifications
+from app.war.wars import Wars
 
 # TURN PROCESSING
 ################################################################################
@@ -54,7 +53,7 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
         if region_id is None or region_id not in Regions:
             random_assignment_list.append(nation_id)
             continue
-        starting_region = Region(region_id)
+        starting_region = Regions.load(region_id)
         starting_region.data.owner_id = nation_id
         starting_region.improvement.set("Capital")
         nation = Nations.get(nation_id)
@@ -68,14 +67,14 @@ def resolve_stage1_processing(game_id: str, contents_dict: dict) -> None:
             conflict_detected = False
             region_id_list = Regions.ids()
             random_region_id = random.sample(region_id_list, 1)[0]
-            random_region = Region(random_region_id)
+            random_region = Regions.load(random_region_id)
             # if region not allowed restart loop
             if not random_region.graph.is_start:
                 continue
             # check if there is a player within three regions
             regions_in_radius = random_region.get_regions_in_radius(3)
             for candidate_region_id in regions_in_radius:
-                candidate_region = Region(candidate_region_id)
+                candidate_region = Regions.load(candidate_region_id)
                 # if player found restart loop
                 if candidate_region.data.owner_id != "0":
                     conflict_detected = True
@@ -136,7 +135,7 @@ def resolve_stage2_processing(game_id: str, contents_dict: dict) -> None:
                 nation.add_tech(technology_name)
 
     # update income in playerdata
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     Nations.update_records()
         
 def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
@@ -187,7 +186,7 @@ def resolve_turn_processing(game_id: str, contents_dict: dict) -> None:
     market_results = actions.resolve_market_actions(game_id, actions_dict.get("CrimeSyndicateAction", []), actions_dict.get("MarketBuyAction", []), actions_dict.get("MarketSellAction", []))
 
     # update income step
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
 
     # resolve event actions
     scenario_actions.resolve_event_actions(game_id, actions_dict)
@@ -232,16 +231,16 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
     """
 
     if not event_phase:
-        checks.total_occupation_forced_surrender()
-        checks.war_score_forced_surrender()
+        end_wars.total_occupation_forced_surrender()
+        end_wars.war_score_forced_surrender()
         checks.prune_alliances()
     
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     if not event_phase:
         checks.gain_income()
-    checks.resolve_resource_shortages()
+    resolve_shortages.resolve_resource_shortages()
     checks.resolve_military_capacity_shortages(game_id)
-    checks.update_income(game_id)
+    UpdateIncomeProcess(game_id).run()
     
     for nation in Nations:
         nation.update_stockpile_limits()
@@ -319,9 +318,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
     if player_has_won:
         resolve_win(game_id)
 
-    if game.turn % 4 == 0:
-        checks.bonus_phase_heals()
-        Notifications.add('All units and defensive improvements have regained 2 health.', 2)
+    heals.heal_all()
     
     if game.turn % 8 == 0 and not player_has_won:
         events.trigger_event(game_id)
@@ -350,6 +347,11 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     Returns:
         dict: player_information_dict.
     """
+
+    def fetch_color_class(income_str: str, nation: Nation) -> str:
+        for resource_name in nation._resources.keys():
+            if resource_name in income_str:
+                return resource_name.lower().replace(" ", "-")
     
     SD.load(game_id)
 
@@ -360,121 +362,134 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
 
     # build player info dict
     player_information_dict = {
+        "Nation Name": nation.name,
+        "Color": nation.color,
+        "Information": {
+            "Status": nation.status,
+            "Government": nation.gov,
+            "Foreign Policy": nation.fp,
+            "Trade Fee": nation.trade_fee
+        },
+        "Military": {
+            "Military Capacity": f"{nation.get_used_mc()} / {nation.get_max_mc()}",
+            "Standard Missiles": nation.missile_count,
+            "Nuclear Missiles": nation.nuke_count
+        },
         "Victory Conditions Data": {},
-        "Resource Data": {},
-        "Misc Info": [],
-        "Alliance Data": {},
-        "Missile Data": {},
-        "Relations Data": {}
+        "Alliance Data": nation.fetch_alliance_data()
     }
-    player_information_dict["Nation Name"] = nation.name
-    player_information_dict["Color"] = nation.color
-    player_information_dict["Government"] = nation.gov
-    player_information_dict["Foreign Policy"] = nation.fp
-    player_information_dict["Military Capacity"] = f"{nation.get_used_mc()} / {nation.get_max_mc()}"
-    player_information_dict["Trade Fee"] = nation.trade_fee
-    player_information_dict["Status"] = nation.status
     
     # get victory condition data
-    player_information_dict["Victory Conditions Data"] = {
-        "Conditions List": list(nation.victory_conditions.keys()),
-        "Color List": list(nation.victory_conditions.values())
-    }
-    for i, entry in enumerate(player_information_dict["Victory Conditions Data"]["Color List"]):
-        if entry:
-           player_information_dict["Victory Conditions Data"]["Color List"][i] = "#00ff00"
-        else:
-            player_information_dict["Victory Conditions Data"]["Color List"][i] = "#ff0000"
+    vc_names = list(nation.victory_conditions.keys())
+    vc_status = list(nation.victory_conditions.values())
+    vc_completed_count = 0
+    for i, victory_condition in enumerate(vc_names):
+        is_complete = vc_status[i]
+        color_hex_str = "#00ff00" if is_complete else "#ff0000"
+        player_information_dict["Victory Conditions Data"][victory_condition] = color_hex_str
+        vc_completed_count += 1 if is_complete else 0
+    player_information_dict["Victory Conditions Data"]["Header"] = f"Victory Conditions ({vc_completed_count}/3)"
 
-    # resource data
-    class_list = []
-    name_list = []
-    stored_list = []
-    income_list = []
-    rate_list = []
+    # get resource data
+    player_information_dict["Resource Data"] = {}
     for resource_name in nation._resources:
         if resource_name in ["Energy", "Military Capacity"]:
             continue
-        name_list.append(resource_name)
-        class_list.append(resource_name.lower().replace(" ", "-"))
-        stored_list.append(f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}")
-        income_list.append(nation.get_income(resource_name))
-        rate_list.append(f"{nation.get_rate(resource_name)}%")
-    player_information_dict["Resource Data"] = {
-        "Class List": class_list,
-        "Name List": name_list,
-        "Stored List": stored_list,
-        "Income List": income_list,
-        "Rate List": rate_list
-    }
+        resource_data = {
+            "Class": resource_name.lower().replace(" ", "-"),
+            "Stockpile": f"{nation.get_stockpile(resource_name)} / {nation.get_max(resource_name)}",
+            "Gross Income": nation.get_gross_income(resource_name),
+            "Net Income": nation.get_income(resource_name),
+            "Income Rate": f"{nation.get_rate(resource_name)}%"
+        }
+        player_information_dict["Resource Data"][resource_name] = resource_data
 
-    # alliance data
-    alliance_data = nation.fetch_alliance_data()
-    player_information_dict["Alliance Data"] = {
-        "Header": alliance_data["Header"],
-        "Name List": alliance_data["Names"],
-        "Color List": alliance_data["Colors"]
-    }
-
-    # missile data
-    player_information_dict["Missile Data"] = {
-        "Standard": f"{nation.missile_count}x Standard Missiles",
-        "Nuclear": f"{nation.nuke_count}x Nuclear Missiles"
-    }
-
-    # relations data
-    nation_name_list = ["-"] * 10
-    relation_colors = ["#000000"] * 10
-    relations_status_list = ["-"] * 10
-    for i in range(len(Nations)):
-        temp = Nations.get(str(i + 1))
+    # get relations data
+    player_information_dict["Relations Data"] = []
+    for temp in Nations:
+        relation = {"Name": temp.name, "Status": "-", "Color": "#FFFFFF"}
         if temp.name == nation.name:
-            continue
-        elif Wars.get_war_name(player_id, temp.id) is not None:
-            relation_colors[i] = "#ff0000"
-            relations_status_list[i] = "At War"
+            pass
+        elif Wars.get_war_name(nation.id, temp.id) is not None:
+            relation["Color"] = "#ff0000"
+            relation["Status"] = "At War"
         elif Alliances.are_allied(nation.name, temp.name):
-            relation_colors[i] = "#3c78d8"
-            relations_status_list[i] = "Allied"
+            relation["Color"] = "#3c78d8"
+            relation["Status"] = "Allied"
         else:
-            relation_colors[i] = "#00ff00"
-            relations_status_list[i] = "Neutral"
-        nation_name_list[i] = temp.name
-    while len(nation_name_list) < 10:
-        nation_name_list.append("-")
-    player_information_dict["Relations Data"] = {
-        "Name List": nation_name_list,
-        "Color List": relation_colors,
-        "Status List": relations_status_list
+            relation["Color"] = "#00ff00"
+            relation["Status"] = "Neutral"
+        player_information_dict["Relations Data"].append(relation)
+    for i in range(10 - len(Nations)):
+        relation = {"Name": "-", "Status": "-", "Color": "#FFFFFF"}
+        player_information_dict["Relations Data"].append(relation)
+
+    # get misc data
+    misc_data = []
+    misc_data.append(("Owned Regions", nation.stats.regions_owned))
+    misc_data.append(("Occupied Regions", nation.stats.regions_occupied))
+    misc_data.append(("Net Income", nation.records.net_income[-1]))
+    misc_data.append(("Gross Industrial Income", nation.records.industrial_income[-1]))
+    misc_data.append(("Gross Energy Income", nation.records.energy_income[-1]))
+    misc_data.append(("Development Score", nation.records.development[-1]))
+    misc_data.append(("Unique Improvements", sum(1 for count in nation.improvement_counts.values() if count != 0)))
+    misc_data.append(("Net Exports", nation.records.net_exports[-1]))
+    misc_data.append(("Military Size", nation.records.military_size[-1]))
+    misc_data.append(("Military Strength", nation.records.military_strength[-1]))
+    misc_data.append(("Unique Units", sum(1 for count in nation.unit_counts.values() if count != 0)))
+    misc_data.append(("Technology Count", nation.records.technology_count[-1]))
+    misc_data.append(("Agenda Count", nation.records.agenda_count[-1]))
+    player_information_dict["Misc Info"] = misc_data
+
+    # format income details - I am aware this code sucks, however making it better would require updating the income calculation code which I do not want to do right now
+    income_details = {}
+    income_string_block_text = []
+    income_string_block_color = ""
+    for income_str in nation.income_details:
+        if income_str.startswith("<section> ") and income_string_block_text == []:
+            # for loop has just started - start first group
+            income_string_block_color = fetch_color_class(income_str, nation)
+            income_string_block_text.append(income_str[10:])
+        elif income_str.startswith("<section> ") and income_string_block_text != []:
+            # group ended - save and start new group
+            income_details[income_string_block_color] = income_string_block_text
+            income_string_block_text = []
+            income_string_block_color = fetch_color_class(income_str, nation)
+            income_string_block_text.append(income_str[10:])
+        else:
+            # add income string to its group
+            income_string_block_text.append(income_str)
+    income_details[income_string_block_color] = income_string_block_text
+    player_information_dict["Income Details"] = income_details
+
+    # get tag data
+    player_information_dict["Tag Data"] = {}
+    for tag_name, tag_data in nation.tags.items():
+        tag_data_filtered = {
+            "Expire Turn": tag_data["Expire Turn"],
+            "Data": []
+        }
+        for td_key, td_value in tag_data.items():
+            if td_key == "Expire Turn":
+                continue
+            tag_data_filtered["Data"].append(f"{td_key}: {td_value}")
+        player_information_dict["Tag Data"][tag_name] = tag_data_filtered
+
+    # format completed research
+    player_information_dict["Research Data"] = defaultdict(list)
+    for research_name in nation.completed_research.keys():
+        if research_name in SD.agendas:
+            player_information_dict["Research Data"]["Agendas"].append(research_name)
+        elif research_name in SD.technologies:
+            sd_tech = SD.technologies[research_name]
+            player_information_dict["Research Data"][sd_tech.type].append(research_name)
+    player_information_dict["Research Data"] = {        # sort research names within each category
+        key: sorted(value)
+        for key, value in player_information_dict["Research Data"].items()
     }
-
-    # misc data
-    misc_data = player_information_dict["Misc Info"]
-    misc_data.append(f"Owned Regions: {nation.stats.regions_owned}")
-    misc_data.append(f"Occupied Regions: {nation.stats.regions_occupied}")
-    misc_data.append(f"Net Income: {nation.records.net_income[-1]}")
-    misc_data.append(f"Gross Industrial Income: {nation.records.industrial_income[-1]}")
-    misc_data.append(f"Gross Energy Income: {nation.records.energy_income[-1]}")
-    misc_data.append(f"Development Score: {nation.records.development[-1]}")
-    misc_data.append(f"Unique Improvements: {sum(1 for count in nation.improvement_counts.values() if count != 0)}")
-    misc_data.append(f"Military Size: {nation.records.military_size[-1]}")
-    misc_data.append(f"Military Strength: {nation.records.military_strength[-1]}")
-    misc_data.append(f"Unique Units: {sum(1 for count in nation.unit_counts.values() if count != 0)}")
-    misc_data.append(f"Total Transactions: {nation.records.transaction_count[-1]}")
-    misc_data.append(f"Technology Count: {nation.records.technology_count[-1]}")
-    misc_data.append(f"Agenda Count: {nation.records.agenda_count[-1]}")
-
-    # income details
-    income_details = nation.income_details
-    for i in range(len(income_details)):
-        income_details[i] = income_details[i].replace("&Tab;", "&nbsp;&nbsp;&nbsp;&nbsp;")
-    income_str = "<br>".join(income_details)
-    player_information_dict["Income Details"] = income_str
-
-    # research details
-    research_details = list(nation.completed_research.keys())
-    research_str = "<br>".join(research_details)
-    player_information_dict["Research Details"] = research_str
+    player_information_dict["Research Data"] = dict(    # sort categories alphabetically
+        sorted(player_information_dict["Research Data"].items())
+    )
 
     return player_information_dict
 

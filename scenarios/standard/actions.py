@@ -1,13 +1,9 @@
-import csv
-import json
 import importlib
 
-from app import core
-from app.gamedata import Games
-from app.region import Region
-from app.nation import Nations
-from app.notifications import Notifications
-from app.war import Wars
+from app.game.games import Games
+from app.scenario.scenario import ScenarioInterface as SD
+from app.region.regions import Regions
+from app.nation.nations import Nations
 
 class HostPeaceTalksAction:
 
@@ -278,7 +274,7 @@ def resolve_event_actions(game_id: str, actions_dict: dict) -> None:
 
 def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAction]) -> None:
 
-    from app.truce import Truces
+    from app.truce.truces import Truces
     game = Games.load(game_id)
 
     for action in actions_list:
@@ -317,8 +313,6 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
 
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 
-    from app.scenario import ScenarioData as SD
-
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -347,8 +341,6 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
     game.active_events["Pandemic"] = event.export()
 
 def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
 
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
@@ -394,7 +386,7 @@ def resolve_inspect_region_actions(game_id: str, actions_list: list[InspectRegio
             continue
 
         nation.update_stockpile("Dollars", -5)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         nation.action_log.append(f"Used Inspect action for 5 dollars. Region {action.target_region} has an infection score of {region.data.infection}.")
 
 def resolve_quarantine_create_actions(game_id: str, actions_list: list[QuarantineCreateAction]) -> None:
@@ -415,7 +407,7 @@ def resolve_quarantine_create_actions(game_id: str, actions_list: list[Quarantin
             continue
 
         nation.update_stockpile("Political Power", -1)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         region.data.quarantine = True
         nation.action_log.append(f"Quarantined {action.target_region} for 1 political power.")
 
@@ -436,14 +428,12 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
             continue
 
         nation.update_stockpile("Political Power", -1)
-        region = Region(action.target_region)
+        region = Regions.load(action.target_region)
         region.data.quarantine = False
         nation.action_log.append(f"Ended quarantine {action.target_region} for 1 political power.")
 
 def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
 
-    from app.scenario import ScenarioData as SD
-    
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -473,8 +463,6 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
 
 def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
 
-    from app.scenario import ScenarioData as SD
-    
     game = Games.load(game_id)
     events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
@@ -503,8 +491,6 @@ def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseA
     game.active_events["Pandemic"] = event.export()
 
 def resolve_outsource_technology_actions(game_id: str, actions_list: list[OutsourceTechnologyAction]) -> None:
-
-    from app.scenario import ScenarioData as SD
 
     for action in actions_list:
 
@@ -538,6 +524,8 @@ def resolve_outsource_technology_actions(game_id: str, actions_list: list[Outsou
 
 def resolve_military_reinforcements_actions(game_id: str, actions_list: list[MilitaryReinforcementsAction]) -> None:
 
+    UNIT_NAME = "Mechanized Infantry"
+
     for action in actions_list:
 
         nation = Nations.get(action.id)
@@ -554,18 +542,19 @@ def resolve_military_reinforcements_actions(game_id: str, actions_list: list[Mil
 
         for region_id in action.target_region_ids:
             
-            region = Region(region_id)
+            region = Regions.load(region_id)
             
             if region.data.owner_id != action.id:
-                nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. You do not own that region.")
+                nation.action_log.append(f"Failed to use Military Reinforcements to deploy {UNIT_NAME} {region_id}. You do not own that region.")
                 continue
             
             if region.unit.owner_id != action.id:
-                nation.action_log.append(f"Failed to use Military Reinforcements to deploy Mechanized Infantry {region_id}. A hostile unit is present.")
+                nation.action_log.append(f"Failed to use Military Reinforcements to deploy {UNIT_NAME} {region_id}. A hostile unit is present.")
                 continue
             
             if region.unit.name is not None:
                 nation.unit_counts[region.unit.name] -= 1
-            nation.unit_counts["Mechanized Infantry"] += 1
-            region.unit.set("Mechanized Infantry", action.id)
+            nation.unit_counts[UNIT_NAME] += 1
+            full_unit_name = nation.generate_full_unit_name(UNIT_NAME)
+            region.unit.set(UNIT_NAME, full_unit_name, 0, action.id)
             nation.action_log.append(f"Used Military Reinforcements to deploy Mechanized Infantry {region_id}.")

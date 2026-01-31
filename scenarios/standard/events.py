@@ -1,14 +1,14 @@
-import json
 import random
 
-from app import core
-from app.gamedata import Games
+from app.game.games import Games
+from app.scenario.scenario import ScenarioInterface as SD
 from app import actions
-from app.alliance import Alliances
-from app.region import Region, Regions
-from app.nation import Nation, Nations
+from app.alliance.alliances import Alliances
+from app.region.regions import Regions
+from app.nation.nation import Nation
+from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications
-from app.war import Wars
+from app.war.wars import Wars
 
 from app import palette
 
@@ -52,8 +52,6 @@ class Event:
         """
         Returns updated playerdata_List and a bool that is True if the research was valid, False otherwise.
         """
-
-        from app.scenario import ScenarioData as SD
 
         prereq = SD.technologies[research_name].prerequisite
         if prereq is not None and prereq not in nation.completed_research:
@@ -338,7 +336,7 @@ class Desertion(Event):
         
         # check all regions owned by targets
         for region_id in Regions:
-            region = Region(region_id)
+            region = Regions.load(region_id)
             if region.unit.owner_id not in self.targets:
                 continue
             defection_roll = random.randint(1, 10)
@@ -418,8 +416,8 @@ class ForeignAid(Event):
 
     def activate(self):
         
-        for record_name in Nations.LEADERBOARD_RECORD_NAMES:
-            top_three = Nations.get_top_three(record_name)
+        for record in LeaderboardRecordNames:
+            top_three = Nations.get_top_three(record)
             for nation_name, score in top_three:
                 if score != 0 and nation_name not in self.targets:
                     self.targets.append(nation_name)
@@ -526,7 +524,7 @@ class LostNuclearWeapons(Event):
                     if silo_location_id in set(Regions.ids()):
                         valid_region_id = True
                 nation.improvement_counts["Missile Silo"] += 1
-                region = Region(valid_region_id)
+                region = Regions.load(valid_region_id)
                 region.improvement.set("Missile Silo")
                 nation.nuke_count += 3
             
@@ -704,7 +702,7 @@ class PowerPlantMeltdown(Event):
         meltdown_region_id = self.targets.pop()
 
         nation = Nations.get(str(meltdown_region_id))
-        region = Region(meltdown_region_id)
+        region = Regions.load(meltdown_region_id)
 
         nation.improvement_counts["Nuclear Power Plant"] -= 1
         region.improvement.clear()
@@ -1082,8 +1080,8 @@ class ForeignInvasion(Event):
         while True:
             
             invasion_point_id = random.choice(region_id_list)
-            region = Region(invasion_point_id)
-            is_near_capital = any(Region(adj_id).improvement.name == "Capital" for adj_id in region.graph.adjacent_regions)
+            region = Regions.load(invasion_point_id)
+            is_near_capital = any(adj_region.improvement.name == "Capital" for adj_region in region.graph.iter_adjacent_regions())
             if region.graph.is_edge and region.improvement.name != "Capital" and not is_near_capital:
                 break
         
@@ -1111,7 +1109,7 @@ class ForeignInvasion(Event):
                 combatant.justification = "NULL"
 
         unit_name = self._foreign_invasion_determine_unit()
-        invasion_point = Region(invasion_point_id, self.game_id)    #!!!
+        invasion_point = Regions.load(invasion_point_id)
         self._foreign_invasion_initial_spawn(invasion_point_id, unit_name)
         for adj_id in invasion_point.graph.adjacent_regions:
             self._foreign_invasion_initial_spawn(adj_id, unit_name)
@@ -1193,7 +1191,7 @@ class ForeignInvasion(Event):
     
     def _foreign_invasion_initial_spawn(self, region_id: str, unit_name: str) -> None:
 
-        region = Region(region_id)
+        region = Regions.load(region_id)
 
         if region.unit.name is not None:
             # remove old unit
@@ -1211,7 +1209,7 @@ class ForeignInvasion(Event):
 
         region.data.owner_id = "99"
         region.data.occupier_id = "0"
-        region.unit.set(unit_name, "99")
+        region.unit.set(unit_name, unit_name, 0, "99")
 
         foreign_nation = Nations.get("99")
         foreign_nation.unit_counts[unit_name] += 1
@@ -1235,7 +1233,7 @@ class ForeignInvasion(Event):
             adjacent_region_id = adjacency_list.pop(index)
 
             # get data from region
-            region = Region(adjacent_region_id)
+            region = Regions.load(adjacent_region_id)
             candidate_region_priority = 0
             candidate_region_health = 0
             
@@ -1326,7 +1324,7 @@ class Pandemic(Event):
         self.closed_borders = []
         origin_region_id = random.choice(Regions.ids())
         
-        region = Region(origin_region_id)
+        region = Regions.load(origin_region_id)
         region.data.infection += 1
         
         self.state = 1
@@ -1363,11 +1361,10 @@ class Pandemic(Event):
 
             # conduct spread roles
             for region_id in infected_regions:
-                region = Region(region_id)
+                region = Regions.load(region_id)
                 if region.data.infection == 0:
                     continue
-                for adjacent_region_id in region.graph.adjacent_regions:
-                    adjacent_region = Region(adjacent_region_id)
+                for adjacent_region in region.graph.iter_adjacent_regions():
                     adjacent_owner_id = adjacent_region.data.owner_id
                     # spread only to regions that are not yet infected
                     if adjacent_region.data.infection != 0:
@@ -1536,8 +1533,6 @@ def load_event(game_id: str, event_name: str, event_data: dict | None) -> any:
         any: An event object corresponding to the event name, or raises an exception if none found.
     """
 
-    from app.scenario import ScenarioData as SD
-
     events = {
         "Assassination": Assassination,
         "Corruption Scandal": CorruptionScandal,
@@ -1593,7 +1588,6 @@ def _is_first_event(game_id: str) -> bool:
 
 def _no_major_events(game_id: str) -> bool:
 
-    from app.scenario import ScenarioData as SD
     game = Games.load(game_id)
     
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)

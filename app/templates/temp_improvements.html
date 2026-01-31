@@ -49,9 +49,11 @@
         {% endfor %}
 
         <!-- Missile Interception -->
-        {% if improvement_data["Standard Missile Defense"] != 99 or improvement_data["Nuclear Missile Defense"] != 99 %}
-            <div class="top-break"> <b>Standard Missile Defense:</b> {{ improvement_data["Standard Missile Defense"] }}+ </div>
-            <div class="top-break"> <b>Nuclear Missile Defense:</b> {{ improvement_data["Nuclear Missile Defense"] }}+ </div>
+        {% if improvement_data["Standard Missile Defense"] != 99 %}
+            <div class="top-break"> <b>Standard Missile Defense:</b> {{ improvement_data["Standard Missile Defense"] }} </div>
+        {% endif %}
+        {% if improvement_data["Nuclear Missile Defense"] != 99 %}
+            <div class="top-break"> <b>Nuclear Missile Defense:</b> {{ improvement_data["Nuclear Missile Defense"] }} </div>
         {% endif %}
 
         <!-- Build Costs -->
@@ -84,29 +86,20 @@
         <div class="stats-bar">
 
             <div class="{{ improvement_data["Reference Color"] }}">
-                {% if improvement_data["Victory Damage"] != 99 %}
-                    {{ improvement_data["Victory Damage"] }}
+                {% if improvement_data["Damage"] != 0 %}
+                    {{ improvement_data["Damage"] }}
                 {% else %}
                     -
                 {% endif%}
-                <br> <div class="small"> Victory Damage </div>
+                <br> <div class="small"> Damage </div>
             </div>
             <div class="{{ improvement_data["Reference Color"] }}">
-                {% if improvement_data["Draw Damage"] != 99 %}
-                    {{ improvement_data["Draw Damage"] }}
+                {% if improvement_data["Armor"] != 0 %}
+                    {{ improvement_data["Armor"] }}
                 {% else %}
                     -
                 {% endif%}
-                <br> <div class="small"> Draw Damage </div>
-            </div>
-            
-            <div class="{{ improvement_data["Reference Color"] }}">
-                {% if improvement_data["Combat Value"] != 99 %}
-                    {{ improvement_data["Combat Value"] }}+
-                {% else %}
-                    -
-                {% endif%}
-                <br> <div class="small"> Hit Value </div>
+                <br> <div class="small"> Armor </div>
             </div>
             
             <div class="{{ improvement_data["Reference Color"] }}">

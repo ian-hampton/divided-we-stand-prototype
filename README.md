@@ -1,14 +1,7 @@
 # Divided We Stand
-Divided We Stand is a turn-based strategy game set in the modern era.
-* Control your own unique nation with 8 governments and 4 foreign policy options to choose from.
-* Secure and develop regions to expand your nation.
-* Negotiate and trade with other players.
-* Form alliances with your allies and declare war on your enemies.
-* Research new technologies and domestic agendas to get an edge over your opponents.
-* Win the game by completing your unique victory conditions before all other players.
-* Supports up to 10 players.
+An online turn-based strategy game set in the modern era. Create your own unique nation out of the ashes of old and rebuild civilization in your image by securing new territory and researching new technologies. Engage with other players in negotiation, trade, and diplomacy. Form grand alliances with those that share your vision, and wage war against those who stand against you.
 
-<img src="app/static/preview.png" width="100%" alt="preview">
+<img src="app/static/preview-cropped.png" width="100%" alt="preview">
 
 
 ## About This Project
@@ -25,8 +18,7 @@ This repository is a prototype! It is meant to be used by a game administrator t
 - [x] Rewrite Part 2 - Nation Data Management & Map Code Rewrite
 - [x] Update #10
 - [x] Rewrite Part 3 - Game Management
-- [ ] Update #11
-- [ ] Update #12
+- [x] Update #11
 
 
 ## Contact

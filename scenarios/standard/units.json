@@ -5,10 +5,9 @@
         "Abbreviation": "IN",
         "Point Value": 1,
         "Reference Color": "stat-purple",
+        "Damage": 2,
+        "Armor": 0,
         "Health": 6,
-        "Victory Damage": 2,
-        "Draw Damage": 1,
-        "Combat Value": 9,
         "Movement": 1,
         "Abilities": [],
         "Upkeep": {
@@ -25,13 +24,12 @@
         "Abbreviation": "AR",
         "Point Value": 2,
         "Reference Color": "stat-red",
+        "Damage": 3,
+        "Armor": 1,
         "Health": 6,
-        "Victory Damage": 3,
-        "Draw Damage": 1,
-        "Combat Value": 7,
         "Movement": 1,
         "Abilities": [
-            "All of your units that are adjacent to one of your Artillery units gain +1 victory damage and +1 draw damage. If multiple Artillery are adjacent, this bonus does not stack."
+            "All of your units adjacent to this unit deal an additional +1 damage. If multiple Artillery are adjacent, this bonus does not stack."
         ],
         "Upkeep": {
             "Food": 0.5
@@ -47,14 +45,11 @@
         "Abbreviation": "ME",
         "Point Value": 2,
         "Reference Color": "stat-red",
-        "Health": 8,
-        "Victory Damage": 3,
-        "Draw Damage": 2,
-        "Combat Value": 7,
-        "Movement": 2,
-        "Abilities": [
-            "All of your Tank-type units that are adjacent to one of your Mechanized Infantry units gain +1 to all combat rolls. If multiple Mechanized Infantry are adjacent, this bonus does not stack."
-        ],
+        "Damage": 3,
+        "Armor": 2,
+        "Health": 10,
+        "Movement": 1,
+        "Abilities": [],
         "Upkeep": {
             "Food": 0.5
         },
@@ -69,21 +64,20 @@
         "Abbreviation": "SF",
         "Point Value": 3,
         "Reference Color": "stat-red",
-        "Health": 10,
-        "Victory Damage": 3,
-        "Draw Damage": 2,
-        "Combat Value": 5,
+        "Damage": 3,
+        "Armor": 1,
+        "Health": 14,
         "Movement": 2,
         "Abilities": [
-            "Automatically defeats improvements that are not defended by an enemy unit.",
-            "Always heals during the bonus phase regardless of its positioning."
+            "Ignores enemy armor when attacking.",
+            "This unit will never be disqualified from healing based on its position."
         ],
         "Upkeep": {
             "Food": 1
         },
         "Build Costs": {
-            "Dollars": 15,
-            "Basic Materials": 15
+            "Dollars": 20,
+            "Basic Materials": 20
         }
     },
     "Motorized Infantry": {
@@ -92,13 +86,13 @@
         "Abbreviation": "MO",
         "Point Value": 1,
         "Reference Color": "stat-purple",
+        "Damage": 2,
+        "Armor": 0,
         "Health": 6,
-        "Victory Damage": 2,
-        "Draw Damage": 1,
-        "Combat Value": 8,
         "Movement": 2,
         "Abilities": [],
         "Upkeep": {
+            "Food": 0.25,
             "Oil": 0.25
         },
         "Build Costs": {
@@ -112,15 +106,13 @@
         "Abbreviation": "LT",
         "Point Value": 2,
         "Reference Color": "stat-purple",
-        "Health": 8,
-        "Victory Damage": 3,
-        "Draw Damage": 1,
-        "Combat Value": 6,
+        "Damage": 4,
+        "Armor": 2,
+        "Health": 10,
         "Movement": 2,
-        "Abilities": [
-            "All of your Infantry-type units that are adjacent to one of your Light Tank units gain +1 to all combat rolls. If multiple Light Tank are adjacent, this bonus does not stack."
-        ],
+        "Abilities": [],
         "Upkeep": {
+            "Food": 0.5,
             "Oil": 0.5
         },
         "Build Costs": {
@@ -134,19 +126,19 @@
         "Abbreviation": "HT",
         "Point Value": 3,
         "Reference Color": "stat-purple",
-        "Health": 10,
-        "Victory Damage": 4,
-        "Draw Damage": 2,
-        "Combat Value": 6,
+        "Damage": 6,
+        "Armor": 3,
+        "Health": 14,
         "Movement": 1,
         "Abilities": [
-            "+1 to combat rolls against enemy improvements."
+            "All of your Infantry-type units adjacent to this unit gain +1 armor for this turn only."
         ],
         "Upkeep": {
+            "Food": 0.5,
             "Oil": 0.5
         },
         "Build Costs": {
-            "Common Metals": 12,
+            "Common Metals": 15,
             "Advanced Metals": 3
         }
     },
@@ -156,20 +148,20 @@
         "Abbreviation": "BT",
         "Point Value": 4,
         "Reference Color": "stat-purple",
-        "Health": 10,
-        "Victory Damage": 4,
-        "Draw Damage": 2,
-        "Combat Value": 4,
+        "Damage": 6,
+        "Armor": 3,
+        "Health": 18,
         "Movement": 2,
         "Abilities": [
-            "+1 to combat rolls against enemy Infantry-type units.",
-            "+1 to combat rolls against enemy improvements."
+            "All of your Infantry-type units adjacent to this unit gain +1 armor for this turn only.",
+            "+2 damage against enemy Improvements and Tank-type units."
         ],
         "Upkeep": {
+            "Food": 1,
             "Oil": 1
         },
         "Build Costs": {
-            "Common Metals": 15,
+            "Common Metals": 20,
             "Advanced Metals": 5,
             "Rare Earth Elements": 1
         }
@@ -180,15 +172,14 @@
         "Abbreviation": "AA",
         "Point Value": 2,
         "Reference Color": "stat-yellow",
+        "Damage": 2,
+        "Armor": 2,
         "Health": 6,
-        "Victory Damage": 2,
-        "Draw Damage": 1,
-        "Combat Value": 9,
         "Movement": 1,
-        "Standard Missile Defense": 6,
+        "Standard Missile Defense": 0.5,
         "Missile Defense Range": 1,
         "Abilities": [
-            "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions. Upon a successful interception, the incoming missile is destroyed and causes no damage."
+            "Intercepts incoming Standard Missiles. Defends its own region and all adjacent regions."
         ],
         "Upkeep": {
             "Food": 0.25

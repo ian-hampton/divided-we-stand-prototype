@@ -1,12 +1,15 @@
 from collections import defaultdict
 
-from app.nation import Nation, Nations
+from app.scenario.scenario import ScenarioInterface as SD
+from app.alliance.alliances import Alliances
+from app.nation.nation import Nation
+from app.nation.nations import Nations
+from app.region.regions import Regions
+from app.war.wars import Wars
 
 # easy
 
 def ambassador(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
     
     # count alliances
     alliances_found = defaultdict(int)
@@ -22,9 +25,6 @@ def ambassador(nation: Nation) -> bool:
     return False
 
 def backstab(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
-    from app.war import Wars
 
     # get set of all nations defeated in war
     nations_defeated = set()
@@ -97,8 +97,6 @@ def backstab(nation: Nation) -> bool:
 
 def breakthrough(nation: Nation) -> bool:
 
-    from app.scenario import ScenarioData as SD
-
     # build set of all techs other players have researched so we can compare
     completed_research_all = set()
     for temp in Nations:
@@ -125,9 +123,6 @@ def diverse_economy(nation: Nation) -> bool:
     return False
 
 def double_down(nation: Nation) -> bool:
-
-    # load game data
-    from app.war import Wars
 
     # count wars
     wars_found = defaultdict(int)
@@ -163,19 +158,17 @@ def new_empire(nation: Nation) -> bool:
 def reconstruction_effort(nation: Nation) -> bool:
 
     for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.development >= nation.records.development:
+        if other_nation.name != nation.name and other_nation.records.development[-1] >= nation.records.development[-1]:
             return False
 
     return True
 
 def reliable_ally(nation: Nation) -> bool:
 
-    from app.alliance import Alliances
-
     longest_alliance_name, duration = Alliances.longest_alliance()
     if longest_alliance_name is not None:
         longest_alliance = Alliances.get(longest_alliance_name)
-        if nation.name in longest_alliance.founding_members:
+        if nation.name in longest_alliance.founding_members and longest_alliance.age >= 12:
             return True
         
     return False
@@ -189,41 +182,63 @@ def secure_strategic_resources(nation: Nation) -> bool:
 
     return False
 
-def threat_containment(nation: Nation) -> bool:
-
-    from app.war import Wars
-
-    # check if war won with specific war justification
-    for war in Wars:
-
-        if nation.id not in war.combatants:
-            continue
-
-        combatant =  war.get_combatant(nation.id)
-        if war.outcome == "Attacker Victory" and "Attacker" in combatant.role and combatant.justification == "Containment":
-            return True
-        elif war.outcome == "Defender Victory" and "Defender" in combatant.role and combatant.justification == "Containment":
-            return True
-
-    return False
-
 # medium
 
 def energy_focus(nation: Nation) -> bool:
-    
-    for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.energy_income >= nation.records.energy_income:
-            return False
 
-    return True
+    # create tag for tracking this if it doesn't already exist
+    if "Energy Focus" not in nation.tags:
+        new_tag = {
+            "Streak": 0,
+            "Expire Turn": 99999
+        }
+        nation.tags["Energy Focus"] = new_tag
+
+    # reset streak if failed to meet minimum
+    if float(nation.records.energy_income[-1]) < 24:
+        nation.tags["Energy Focus"]["Streak"] = 0
+        return False
+    
+    # reset streak if failed to be first
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.energy_income[-1] >= nation.records.energy_income[-1]:
+            nation.tags["Energy Focus"]["Streak"] = 0
+            return False
+        
+    # return true if streak has reached thresh
+    nation.tags["Energy Focus"]["Streak"] += 1
+    if nation.tags["Energy Focus"]["Streak"] >= 8:
+        return True
+
+    return False
 
 def industrial_focus(nation: Nation) -> bool:
-    
-    for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.industrial_income >= nation.records.industrial_income:
-            return False
 
-    return True
+    # create tag for tracking this if it doesn't already exist
+    if "Industrial Focus" not in nation.tags:
+        new_tag = {
+            "Streak": 0,
+            "Expire Turn": 99999
+        }
+        nation.tags["Industrial Focus"] = new_tag
+
+    # reset streak if failed to meet minimum
+    if float(nation.records.industrial_income[-1]) < 50:
+        nation.tags["Industrial Focus"]["Streak"] = 0
+        return False
+    
+    # reset streak if failed to be first
+    for other_nation in Nations:
+        if other_nation.name != nation.name and other_nation.records.industrial_income[-1] >= nation.records.industrial_income[-1]:
+            nation.tags["Industrial Focus"]["Streak"] = 0
+            return False
+        
+    # return true if streak has reached thresh
+    nation.tags["Industrial Focus"]["Streak"] += 1
+    if nation.tags["Industrial Focus"]["Streak"] >= 8:
+        return True
+
+    return False
 
 def hegemony(nation: Nation) -> bool:
     
@@ -289,8 +304,6 @@ def nuclear_deterrent(nation: Nation) -> bool:
 
 def strong_research_agreement(nation: Nation) -> bool:
 
-    from app.alliance import Alliances
-
     for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Research Agreement":
             amount, resource_name = alliance.calculate_yield()
@@ -300,8 +313,6 @@ def strong_research_agreement(nation: Nation) -> bool:
     return False
 
 def strong_trade_agreement(nation: Nation) -> bool:
-
-    from app.alliance import Alliances
 
     for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Trade Agreement":
@@ -313,48 +324,12 @@ def strong_trade_agreement(nation: Nation) -> bool:
 
 def sphere_of_influence(nation: Nation) -> bool:
 
-    if nation.records.agenda_count >= 8:
+    if nation.records.agenda_count[-1] >= 8:
         return True
 
     return False
 
-def underdog(nation: Nation) -> bool:
-
-    from app.war import Wars
-
-    # search for an underdog victory
-    for war in Wars:
-
-        # skip wars player not involved in
-        if nation.id not in war.combatants:
-            continue
-        
-        # skip wars player did not win
-        if not ("Attacker" in war.outcome and "Attacker" in war.get_role(nation.id)
-            or "Defender" in war.outcome and "Defender" in war.get_role(nation.id)):
-            continue
-        
-        # count sides
-        friendly_count = 0
-        hostile_count = 0
-        for combatant_id in war.combatants:
-            if combatant_id == nation.id:
-                friendly_count += 1
-                continue
-            if war.is_on_same_side(combatant_id, nation.id):
-                friendly_count += 1
-            else:
-                hostile_count += 1
-
-        # vc fullfilled if friendly side outnumbered
-        if friendly_count < hostile_count:
-            return True
-
-    return False
-
 def warmonger(nation: Nation) -> bool:
-
-    from app.war import Wars
 
     count = 0
     for war in Wars:
@@ -370,6 +345,10 @@ def warmonger(nation: Nation) -> bool:
 
 def economic_domination(nation: Nation) -> bool:
 
+    # check if player meets minimum score
+    if float(nation.records.net_income[-1]) < 100:
+        return False
+
     # check if first and not tied
     first, second, third = Nations.get_top_three("net_income")
     if nation.name in first[0] and (first[1] > second[1]):
@@ -379,8 +358,12 @@ def economic_domination(nation: Nation) -> bool:
 
 def influence_through_trade(nation: Nation) -> bool:
 
+    # check if player meets minimum score
+    if nation.records.net_exports[-1] < 200:
+        return False
+
     # check if first and not tied
-    first, second, third = Nations.get_top_three("transaction_count")
+    first, second, third = Nations.get_top_three("net_exports")
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
@@ -388,9 +371,14 @@ def influence_through_trade(nation: Nation) -> bool:
 
 def military_superpower(nation: Nation) -> bool:
 
-    for other_nation in Nations:
-        if other_nation.name != nation.name and other_nation.records.military_strength >= nation.records.military_strength:
-            return False
+    # check if player meets minimum score
+    if nation.records.military_strength[-1] < 24:
+        return False
+
+    # check if first and not tied
+    first, second, third = Nations.get_top_three("military_strength")
+    if nation.name in first[0] and (first[1] > second[1]):
+        return True
 
     return True
 
@@ -404,6 +392,10 @@ def scientific_leader(nation: Nation) -> bool:
     return False
 
 def territorial_control(nation: Nation) -> bool:
+
+    # check if player meets minimum score
+    if nation.stats.regions_owned < int(len(Regions) * 0.25):
+        return False
 
     # check if first and not tied
     first, second, third = Nations.get_top_three("nation_size")

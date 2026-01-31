@@ -16,6 +16,10 @@ class Notifications(metaclass=NotificationsMeta):
     _data: ClassVar[list[tuple]] = None
 
     @classmethod
+    def _gamedata_path(cls) -> str:
+        return f"gamedata/{cls.game_id}/gamedata.json"
+
+    @classmethod
     def initialize(cls, game_id: str) -> None:
         cls.game_id = game_id
         cls._data = []
@@ -24,11 +28,12 @@ class Notifications(metaclass=NotificationsMeta):
     def load(cls, game_id: str) -> None:
         
         cls.game_id = game_id
-        gamedata_filepath = f"gamedata/{cls.game_id}/gamedata.json"
-        if not os.path.exists(gamedata_filepath):
+        gamedata_path = cls._gamedata_path()
+        
+        if not os.path.exists(gamedata_path):
             raise FileNotFoundError(f"Error: Unable to locate required game files for Notifications class.")
         
-        with open(gamedata_filepath, 'r') as f:
+        with open(gamedata_path, 'r') as f:
             gamedata_dict = json.load(f)
 
         cls._data = gamedata_dict["notifications"]
