@@ -18,8 +18,7 @@ This repository is a prototype! It is meant to be used by a game administrator t
 - [x] Rewrite Part 2 - Nation Data Management & Map Code Rewrite
 - [x] Update #10
 - [x] Rewrite Part 3 - Game Management
-- [ ] Update #11
-- [ ] Update #12
+- [x] Update #11
 
 
 ## Contact
