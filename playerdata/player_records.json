@@ -62,6 +62,11 @@
     "013": {
         "Username": "Perm",
         "Join Date": "12/31/2024",
+        "Resignations": 1
+    },
+    "014": {
+        "Username": "Skeleton with gun",
+        "Join Date": "02/05/2026",
         "Resignations": 0
     }
 }
