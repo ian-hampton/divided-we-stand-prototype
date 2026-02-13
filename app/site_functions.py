@@ -407,7 +407,8 @@ def get_data_for_nation_sheet(game_id: str, player_id: str) -> dict:
     # get relations data
     player_information_dict["Relations Data"] = []
     for temp in Nations:
-        relation = {"Name": temp.name, "Status": "-", "Color": "#FFFFFF"}
+        name = temp.name[:32] if len(temp.name) > 32 else temp.name
+        relation = {"Name": name, "Status": "-", "Color": "#FFFFFF"}
         if temp.name == nation.name:
             pass
         elif Wars.get_war_name(nation.id, temp.id) is not None:

@@ -1022,11 +1022,11 @@ def announcements(full_game_id):
         for entry in standings:
             # add html span tag
             nation_name = palette.color_nation_names(entry[0], full_game_id)
-            # truncate nation name if over 30 chars
+            # truncate nation name if over 28 chars
             start_index = nation_name.find('>') + 1
             end_index = nation_name.find('</span>')
-            if end_index - start_index > 30:
-                nation_name = nation_name[0:start_index+31] + nation_name[end_index:]
+            if end_index - start_index > 28:
+                nation_name = nation_name[0:start_index+29] + nation_name[end_index:]
             # format standing
             if record_name is LeaderboardRecordNames.NET_INCOME:
                 standings_filtered.append([nation_name, f"{entry[1]:.2f}"])
