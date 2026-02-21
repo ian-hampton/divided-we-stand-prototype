@@ -876,6 +876,9 @@ def resource_market(full_game_id):
     if len(rmdata_recent_transaction_list) != 0:
         records_flag = True
         rmdata_recent_transaction_list = rmdata_recent_transaction_list[::-1]
+        for i, transaction in enumerate(rmdata_recent_transaction_list): 
+            transaction[1] = transaction[1] if len(transaction[1]) <= 32 else transaction[1][:32]
+            rmdata_recent_transaction_list[i] = transaction
     else:
         records_flag = False
 
