@@ -388,7 +388,7 @@ class Nations(metaclass=NationsMeta):
                     pp_index = nation._find_pp_index()
                     p1 = nation.income_details[:pp_index + 1]
                     p2 = nation.income_details[pp_index + 1:]
-                    p1.append(f"&Tab;+{bonus[i]:.2f} {string}")
+                    p1.append(f"+{bonus[i]:.2f} {string}")
                     nation.income_details = p1 + p2
 
     @classmethod
