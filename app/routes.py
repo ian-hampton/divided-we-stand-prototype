@@ -1130,6 +1130,8 @@ def get_mainmap(full_game_id):
         filepath = f"..\\app\\static\\images\\map_images\\{map_str}\\blank.png"
     elif game.status == GameStatus.NATION_SETUP:
         filepath = f"..\\gamedata\\{full_game_id}\\images\\0.png"
+    elif game.status == GameStatus.ACTIVE_PENDING_EVENT:
+        filepath = f"..\\gamedata\\{full_game_id}\\images\\{game.turn}.png"
     else:
         filepath = f"..\\gamedata\\{full_game_id}\\images\\{game.turn - 1}.png"
     return send_file(filepath, mimetype='image/png')
