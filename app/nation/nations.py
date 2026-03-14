@@ -346,7 +346,7 @@ class Nations(metaclass=NationsMeta):
         return min(data.items(), key=lambda item: item[1])
 
     @classmethod
-    def add_leaderboard_bonuses(cls) -> None:
+    def add_leaderboard_bonuses(cls, update=True) -> None:
         
         # leaderboard bonuses only begin starting on turn 5
         game = Games.load(cls.game_id)
@@ -379,10 +379,12 @@ class Nations(metaclass=NationsMeta):
 
                 if i <= valid and score != 0:
 
-                    # add political power bonus to stockpile and income
                     nation = cls.get(nation_name)
-                    nation.update_stockpile("Political Power", bonus[i])
+
+                    # add political power bonus to stockpile and income
                     nation.update_income("Political Power", bonus[i])
+                    if update:
+                        nation.update_stockpile("Political Power", bonus[i])
 
                     # add income string to income details
                     pp_index = nation._find_pp_index()
@@ -390,6 +392,12 @@ class Nations(metaclass=NationsMeta):
                     p2 = nation.income_details[pp_index + 1:]
                     p1.append(f"+{bonus[i]:.2f} {string}")
                     nation.income_details = p1 + p2
+
+                    # update main political power string
+                    main_pp_string = nation.income_details[pp_index]
+                    value = float(main_pp_string[11:-15])
+                    value += bonus[i]
+                    nation.income_details[pp_index] = f"<section> +{value:.2f} Political Power"
 
     @classmethod
     def attribute_to_title(cls, attribute_name: str) -> str:

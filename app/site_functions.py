@@ -250,6 +250,8 @@ def run_end_of_turn_checks(game_id: str, *, event_phase = False) -> None:
         Nations.prune_eliminated_nations()
         Nations.update_records()
         Nations.add_leaderboard_bonuses()
+    else:
+        Nations.add_leaderboard_bonuses(update=False)
 
 def run_post_turn_checks(game_id: str, market_results: dict) -> None:
 
