@@ -704,6 +704,8 @@ class Nation:
         """
         self.unit_counts_lifetime[unit_name] += 1
         count = self.unit_counts_lifetime[unit_name]
+        abbrev = SD.units[unit_name].abbreviation
+        
         if 10 <= count % 100 <= 13:
             suffix = "th"
         else:
@@ -716,7 +718,8 @@ class Nation:
                     suffix = "rd"
                 case _:
                     suffix = "th"
-        return f"{count}{suffix} {unit_name}"
+        
+        return f"{count}{suffix} {abbrev}"
 
     def calculate_starting_xp(self) -> int:
         """
