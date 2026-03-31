@@ -1647,7 +1647,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
             game_id (str): Game ID string.
             nation_id (str): Nation ID of the nation that entered the claim action.
             target_region (Region): Region object representing the target region of the claim action.
-            adj_owned_count (set): Set of adjacent region_ids to target region owned by the nation.
+            adj_owned_count (set): Set of adjacent region_ids to target region that are approved claims (stage 1 only) or owned by the nation.
             adj_claimed_count (set): Set of adjacent region_ids to target region also claimed by the nation.
 
         Returns:
@@ -1675,7 +1675,7 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
             # populate queue with adjacent unclaimed regions
             for adj_region in target_region.graph.iter_adjacent_regions():
                 visited.add(adj_region.id)
-                if adj_region.data.owner_id != "0":
+                if adj_region.data.owner_id != "0" or adj_region.id in adj_owned:
                     continue
                 queue.append(adj_region.id)
 
@@ -1685,13 +1685,13 @@ def _validate_claim_action(game_id: str, nation_id: str, target_region: Region, 
                 region = Regions.load(region_id)
 
                 # check if this region is owned by the player
-                if region.data.owner_id == nation_id:
+                if region.data.owner_id == nation_id or adj_region.id in adj_owned:
                     friendly_regions_found += 1
                 if friendly_regions_found >= 2:
                     return False
 
                 # regions owned by players constrain possible routes to the target region
-                if region.data.owner_id != "0":
+                if region.data.owner_id != "0" or adj_region.id in adj_owned:
                     continue
 
                 for adj_region_id in region.graph.adjacent_regions:
