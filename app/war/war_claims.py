@@ -52,7 +52,7 @@ class ManageWarClaims:
         while claim_cost == -1:
             region_claims_str = input(f"List the regions that {self.nation_name} is claiming using {self.justification}: ")
             region_claims_list = region_claims_str.split(',')
-            claim_cost = self.validate_war_claims(self.justification, region_claims_list)
+            claim_cost = self.validate_war_claims(region_claims_list)
         
         return claim_cost, region_claims_list
     

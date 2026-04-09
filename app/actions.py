@@ -4,6 +4,7 @@ import random
 from collections import defaultdict, deque
 from queue import PriorityQueue
 from typing import List, Tuple
+from itertools import count
 
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
@@ -2336,17 +2337,18 @@ def resolve_unit_move_actions(game_id: str, actions_list: list[UnitMoveAction]) 
         print(f"{i + 1}. {nation.name}")
 
     # create and load queue
-    movement_queue: PriorityQueue[tuple[int, UnitMoveAction]] = PriorityQueue()
+    counter = count()
+    movement_queue: PriorityQueue[tuple[int, int, UnitMoveAction]] = PriorityQueue()
     for i, entry in enumerate(sorted_nations):
         nation_id = entry[0][0]
         for action in actions_list:
             if action.id != nation_id:
                 continue
-            movement_queue.put((i, action))
+            movement_queue.put((i, next(counter), action))
 
     # process movement action
     while not movement_queue.empty():
-        action = movement_queue.get()[1]
+        action = movement_queue.get()[2]
         while action.target_region_ids != []:
             target_region_id = action.target_region_ids.pop()
             nation = Nations.get(action.id)

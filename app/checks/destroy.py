@@ -10,7 +10,7 @@ def search_and_destroy_improvement(player_id: str, target_improvement: str) -> s
     # find all regions belonging to a player with target improvement
     candidate_region_ids = []
     for region in Regions:
-        if region.improvement.name == target_improvement and region.data.owner_id == int(player_id):
+        if region.improvement.name == target_improvement and region.data.owner_id == player_id:
             candidate_region_ids.append(region.id)
 
     # randomly select one of the candidate regions
