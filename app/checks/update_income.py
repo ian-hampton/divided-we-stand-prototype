@@ -89,21 +89,23 @@ class UpdateIncomeProcess:
         for nation in Nations:
 
             # add political power income from alliances
-            alliance_income = 0
-            alliance_count, alliance_capacity = nation.calculate_alliance_capacity()
-            for name in nation.completed_research:
-                if name in SD.agendas:
-                    agenda_data = SD.agendas[name]
-                    alliance_income += agenda_data.modifiers.get("Alliance Political Power Bonus", 0)
-                elif name in SD.technologies:
-                    technology_data = SD.technologies[name]
-                    alliance_income += technology_data.modifiers.get("Alliance Political Power Bonus", 0)
-            for tag_data in nation.tags.values():
-                alliance_income += tag_data.get("Alliance Political Power Bonus", 0)
-            if alliance_income * alliance_count != 0:
-                nation.update_gross_income("Political Power", alliance_income * alliance_count)
-                for i in range(alliance_count):
-                    income_str = f"+{alliance_income:.2f} from alliances"
+            for alliance in Alliances:
+                alliance_income = 0
+                for name in nation.completed_research:
+                    if name in SD.agendas:
+                        agenda_data = SD.agendas[name]
+                        alliance_income += agenda_data.modifiers.get("Alliance Political Power Bonus", 0)
+                    elif name in SD.technologies:
+                        technology_data = SD.technologies[name]
+                        alliance_income += technology_data.modifiers.get("Alliance Political Power Bonus", 0)
+                for tag_data in nation.tags.values():
+                    alliance_income += tag_data.get("Alliance Political Power Bonus", 0)
+                mediator_name = next((nation.name for nation in Nations if "Mediator" in nation.tags), None)
+                if mediator_name in alliance.current_members:
+                    alliance_income += 0.25
+                if alliance_income > 0:
+                    nation.update_gross_income("Political Power", alliance_income)
+                    income_str = f"+{alliance_income:.2f} from {alliance.name}."
                     self.text_dict[nation.name]["Political Power"][income_str] += 1
 
             # add political power income from wars
