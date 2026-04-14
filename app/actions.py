@@ -750,6 +750,7 @@ def _create_action(game_id: str, nation_id: str, action_str: str) -> any:
         "disband": UnitDisbandAction,
         "move": UnitMoveAction,
         "war": WarAction,
+        "war join": WarJoinAction,
         "white peace": WhitePeaceAction
     }
 
@@ -2149,37 +2150,39 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
         war = Wars.get(action.war_name)
         nation = Nations.get(action.id)
 
-        war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
-        combatant = war.get_combatant(action.id)
-
         # process war claims
         if SD.war_justificiations[action.war_justification].has_war_claims:
 
             main_attacker_id, main_defender_id = war.get_main_combatant_ids()
-            if {action.side} == "Attacker":
+            if action.side == "Attacker":
                 defender_nation = Nations.get(main_attacker_id)
-            elif {action.side} == "Defender":
+            elif action.side == "Defender":
                 defender_nation = Nations.get(main_defender_id)
             
             if not _war_action_valid(action, nation, defender_nation):
                 continue
             
-            manage_claims = ManageWarClaims(combatant.name, action.war_justification)
+            manage_claims = ManageWarClaims(nation.name, action.war_justification)
             claim_cost, region_claims_list = manage_claims.get_war_claims()
             if float(nation.get_stockpile("Political Power")) - claim_cost < 0:
                 nation.action_log.append(f"Error: Not enough political power for war claims.")
                 continue
             
+            war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
+            combatant = war.get_combatant(action.id)
             combatant.target_id = "N/A"
             nation.update_stockpile("Political Power", -1 * claim_cost)
             combatant.claims = manage_claims.claim_pairs(region_claims_list)
         
         # OR handle war justification that does not seize territory
         else:
-            target_id = input(f"Enter nation_id of nation {combatant.name} is targeting with {action.war_justification}: ")
+            target_id = input(f"Enter nation_id of nation {nation.name} is targeting with {action.war_justification}: ")
             defender_nation = Nations.get(target_id)
             if not _war_action_valid(action, nation, defender_nation):
                 continue
+
+            war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
+            combatant = war.get_combatant(action.id)
             combatant.target_id = target_id
 
         Notifications.add(f"{nation.name} has joined {war.name} as a {action.side}!", 4)
