@@ -2155,9 +2155,9 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
 
             main_attacker_id, main_defender_id = war.get_main_combatant_ids()
             if action.side == "Attacker":
-                defender_nation = Nations.get(main_attacker_id)
-            elif action.side == "Defender":
                 defender_nation = Nations.get(main_defender_id)
+            elif action.side == "Defender":
+                defender_nation = Nations.get(main_attacker_id)
             
             if not _war_action_valid(action, nation, defender_nation):
                 continue
