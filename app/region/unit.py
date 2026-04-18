@@ -102,6 +102,8 @@ class UnitData:
         self.xp = 0
         self.health = 99
         self.owner_id = "0"
+        self.has_been_attacked = False
+        self.has_movement_queued = False
         self._load_attributes_from_game_files()
 
     def is_hostile(self, other_player_id: str) -> bool:

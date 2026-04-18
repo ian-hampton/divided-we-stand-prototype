@@ -58,12 +58,12 @@ class UnitVsImprovement(BattleTemplate):
         if net_damage >= 3:
             # decisive victory
             self._award_warscore("Attacker", "decisive_battles", WarScore.FROM_SUCCESSFUL_ATTACK)
-            battle_str = f"    {self.attacker.name} dealt {net_damage} to {self.defender.name} {self.defending_region.improvement.name} ({total_damage} damage - {total_armor} armor). Decisive victory!"
+            battle_str = f"    {self.attacker.name} dealt {net_damage} damage to {self.defender.name} {self.defending_region.improvement.name} ({total_damage} damage - {total_armor} armor). Decisive victory!"
             self.war.log.append(battle_str)
         else:
             # not a decisive victory
             self.attacking_region.unit.health -= 1
-            battle_str = f"    {self.attacker.name} dealt {net_damage if net_damage > 0 else 0} to {self.defender.name} {self.defending_region.improvement.name} ({total_damage} damage - {total_armor} armor)."
+            battle_str = f"    {self.attacker.name} dealt {net_damage if net_damage > 0 else 0} damage to {self.defender.name} {self.defending_region.improvement.name} ({total_damage} damage - {total_armor} armor)."
             self.war.log.append(battle_str)
             battle_str = f"    {self.attacker.name} {self.attacking_region.unit.name} suffers 1 damage."
             self.war.log.append(battle_str)

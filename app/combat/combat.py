@@ -27,12 +27,14 @@ class CombatProcedure:
         # conduct unit vs unit combat if needed
         if self.defending_region.unit.is_hostile(self.attacking_region.unit.owner_id):
             UnitVsUnit(self).resolve()
+            self.attacking_region.unit.has_been_attacked = True
             self.defending_region.unit.has_been_attacked = True
             self.has_conducted_combat = True
         
         # conduct units vs improvement combat if needed
         if self.defending_region.improvement_is_hostile(self.attacking_region.unit.owner_id) and self.attacking_region.unit.name is not None:
             UnitVsImprovement(self).resolve()
+            self.attacking_region.unit.has_been_attacked = True
             self.defending_region.improvement.has_been_attacked = True
             self.has_conducted_combat = True
 
@@ -74,7 +76,7 @@ class CombatProcedure:
 
         # check if there is a defenseless improvement owned by an enemy that can be destroyed
         if (self.defending_region.improvement.name is None
-            or self.defending_region.improvement.name == "Capital"
+            or self.defending_region.improvement.max_health != 99
             or self.attacker_id == self.defender_id):
             return
 

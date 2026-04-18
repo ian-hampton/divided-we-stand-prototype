@@ -209,6 +209,9 @@ class Region:
             target_region.unit.has_movement_queued = self.unit.has_movement_queued
             self.unit.clear()
 
+        attacker_id = self.unit.owner_id
+        defender_id = target_region.data.owner_id
+
         # withdraw moves need not conduct combat
         if withdraw:
             execute_move()
@@ -223,8 +226,6 @@ class Region:
             return False
 
         # execute move
-        attacker_id = self.unit.owner_id
-        defender_id = target_region.data.owner_id
         execute_move()
         combat.pillage()
         return True
