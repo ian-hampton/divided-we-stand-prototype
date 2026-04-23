@@ -514,8 +514,6 @@ class Nation:
         stored_max = int(self.get_max(resource_name))
         if stored > stored_max:
             stored = stored_max
-        if stored < 0:
-            stored = 0
 
         self._resources[resource_name]["stored"] = f"{stored:.2f}"
 

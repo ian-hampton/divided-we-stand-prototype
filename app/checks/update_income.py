@@ -90,6 +90,8 @@ class UpdateIncomeProcess:
 
             # add political power income from alliances
             for alliance in Alliances:
+                if nation.name not in alliance.current_members:
+                    continue
                 alliance_income = 0
                 for name in nation.completed_research:
                     if name in SD.agendas:
@@ -101,7 +103,7 @@ class UpdateIncomeProcess:
                 for tag_data in nation.tags.values():
                     alliance_income += tag_data.get("Alliance Political Power Bonus", 0)
                 mediator_name = next((nation.name for nation in Nations if "Mediator" in nation.tags), None)
-                if mediator_name in alliance.current_members:
+                if mediator_name is not None and mediator_name in alliance.current_members:
                     alliance_income += 0.25
                 if alliance_income > 0:
                     nation.update_gross_income("Political Power", alliance_income)
