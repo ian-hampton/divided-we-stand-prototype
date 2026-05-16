@@ -1192,6 +1192,7 @@ class ForeignInvasion(Event):
     def _foreign_invasion_initial_spawn(self, region_id: str, unit_name: str) -> None:
 
         region = Regions.load(region_id)
+        unit_sd = SD.units[unit_name]
 
         if region.unit.name is not None:
             # remove old unit
@@ -1209,7 +1210,7 @@ class ForeignInvasion(Event):
 
         region.data.owner_id = "99"
         region.data.occupier_id = "0"
-        region.unit.set(unit_name, unit_name, 0, "99")
+        region.unit.set(unit_name, unit_sd.abbreviation, 0, "99")
 
         foreign_nation = Nations.get("99")
         foreign_nation.unit_counts[unit_name] += 1
