@@ -209,6 +209,7 @@ class Region:
             target_region.unit.has_movement_queued = self.unit.has_movement_queued
             self.unit.clear()
 
+        # these variable names are inaccurate but this function does not really need to care
         attacker_id = self.unit.owner_id
         defender_id = target_region.data.owner_id
 

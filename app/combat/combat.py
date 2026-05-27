@@ -9,14 +9,16 @@ class CombatProcedure:
         self.attacking_region = current_region
         self.defending_region = target_region
         self.attacker_id = self.attacking_region.unit.owner_id
-        self.defender_id = self.defending_region.data.owner_id
-        war_name = Wars.get_war_name(self.attacker_id, self.defender_id)
-        self.war = Wars.get(war_name)
+        self.defender_id = None  # dynamic - can be region owner, region occupier, or unit owner
+        self.war = None          # dynamic - in rare cases region owner and unit owner can be different nations fighting different wars with the attacker
         self.has_conducted_combat = False
 
     def resolve(self) -> None:
         """
         Resolves combat in stages. Tracks if combat has actually occured.
+        1. Conduct unit vs unit combat if needed
+        2. Conduct units vs improvement combat if needed
+        3. Check if attacker and defender has leveled up
 
         Returns:
             bool: True if combat occured, False otherwise.
@@ -24,21 +26,30 @@ class CombatProcedure:
         from .uvu import UnitVsUnit
         from .uvi import UnitVsImprovement
 
-        # conduct unit vs unit combat if needed
         if self.defending_region.unit.is_hostile(self.attacking_region.unit.owner_id):
+
+            self.defender_id = self.defending_region.unit.owner_id
+            war_name = Wars.get_war_name(self.attacker_id, self.defender_id)
+            self.war = Wars.get(war_name)
+            
             UnitVsUnit(self).resolve()
             self.attacking_region.unit.has_been_attacked = True
             self.defending_region.unit.has_been_attacked = True
             self.has_conducted_combat = True
         
-        # conduct units vs improvement combat if needed
         if self.defending_region.improvement_is_hostile(self.attacking_region.unit.owner_id) and self.attacking_region.unit.name is not None:
+
+            self.defender_id = self.defending_region.data.owner_id
+            if self.attacker_id == self.defender_id:
+                self.defender_id = self.defending_region.data.occupier_id
+            war_name = Wars.get_war_name(self.attacker_id, self.defender_id)
+            self.war = Wars.get(war_name)
+            
             UnitVsImprovement(self).resolve()
             self.attacking_region.unit.has_been_attacked = True
             self.defending_region.improvement.has_been_attacked = True
             self.has_conducted_combat = True
 
-        # check if attacker and defender has leveled up
         self.announce_level_changes()
 
     def announce_level_changes(self) -> None:
@@ -47,10 +58,10 @@ class CombatProcedure:
         """
         if self.attacking_region.unit.calculate_level():
             attacker = Nations.get(self.attacker_id)
-            self.war.log.append(f"{attacker.name} {self.attacking_region.unit.name} has reached level {self.attacking_region.unit.level}!")
+            self.war.log.append(f"    {attacker.name} {self.attacking_region.unit.name} has reached level {self.attacking_region.unit.level}!")
         if self.defending_region.unit.calculate_level():
             defender = Nations.get(self.defender_id)
-            self.war.log.append(f"{defender.name} {self.defending_region.unit.name} has reached level {self.defending_region.unit.level}!")
+            self.war.log.append(f"    {defender.name} {self.defending_region.unit.name} has reached level {self.defending_region.unit.level}!")
 
     def is_able_to_move(self) -> bool:
         """
@@ -74,10 +85,14 @@ class CombatProcedure:
         """
         from app.war.warscore import WarScore
 
-        # check if there is a defenseless improvement owned by an enemy that can be destroyed
-        if (self.defending_region.improvement.name is None
-            or self.defending_region.improvement.max_health != 99
+        # do not pillage if this is your own territory
+        if (self.attacker_id == self.defending_region.data.owner_id
             or self.attacker_id == self.defender_id):
+            return
+
+        # cannot pillage if there is no defenseless improvement to destroy
+        if (self.defending_region.improvement.name is None
+            or self.defending_region.improvement.max_health != 99):
             return
 
         # load combatant data
