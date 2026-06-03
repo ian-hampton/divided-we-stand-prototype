@@ -1186,7 +1186,7 @@ def resolve_research_actions(game_id: str, actions_list: list[ResearchAction]) -
             nation.action_log.append(f"Failed to research {action.research_name}. You have already researched this.")
             continue
 
-        if any("No Agenda Research" in tag_data for tag_data in nation.tags.values()):
+        if action.research_name in SD.agendas and any("No Agenda Research" in tag_data for tag_data in nation.tags.values()):
             nation.action_log.append(f"Failed to research {action.research_name} due to an event penalty.")
             continue
 

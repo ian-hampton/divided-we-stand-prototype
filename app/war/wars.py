@@ -250,13 +250,14 @@ class Wars(metaclass=WarsMeta):
             occupier_war_role = war.get_role(region.data.occupier_id)
             occupier_nation = Nations.get(region.data.occupier_id)
 
+            score = WarScore.FROM_OCCUPATION
             if "Scorched Earth" in occupier_nation.completed_research:
                 score += 1
             
             if "Attacker" in occupier_war_role:
-                war.attackers.occupation += WarScore.FROM_OCCUPATION
+                war.attackers.occupation += score
             else:
-                war.defenders.occupation += WarScore.FROM_OCCUPATION
+                war.defenders.occupation += score
 
     @classmethod
     def update_totals(cls) -> None:
