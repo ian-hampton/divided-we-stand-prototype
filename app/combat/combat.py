@@ -39,9 +39,10 @@ class CombatProcedure:
         
         if self.defending_region.improvement_is_hostile(self.attacking_region.unit.owner_id) and self.attacking_region.unit.name is not None:
 
-            self.defender_id = self.defending_region.data.owner_id
-            if self.attacker_id == self.defender_id:
+            if self.defending_region.data.occupier_id != "0":
                 self.defender_id = self.defending_region.data.occupier_id
+            else:
+                self.defender_id = self.defending_region.data.owner_id
             war_name = Wars.get_war_name(self.attacker_id, self.defender_id)
             self.war = Wars.get(war_name)
             
@@ -94,6 +95,11 @@ class CombatProcedure:
         if (self.defending_region.improvement.name is None
             or self.defending_region.improvement.max_health != 99):
             return
+        
+        # load war (we know b/c of above that defender must be owner of the territory)
+        self.defender_id = self.defending_region.data.owner_id
+        war_name = Wars.get_war_name(self.attacker_id, self.defender_id)
+        self.war = Wars.get(war_name)
 
         # load combatant data
         attacking_nation_combatant_data = self.war.get_combatant(self.attacker_id)
