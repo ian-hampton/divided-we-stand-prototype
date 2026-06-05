@@ -308,7 +308,7 @@ class Nation:
                 "Ambassador": vc.ambassador,
                 "Backstab": vc.backstab,
                 "Breakthrough": vc.breakthrough,
-                "Diversified Economy": vc.breakthrough,
+                "Diverse Economy": vc.diverse_economy,
                 "Double Down": vc.double_down,
                 "New Empire": vc.new_empire,
                 "Reconstruction Effort": vc.reconstruction_effort,
