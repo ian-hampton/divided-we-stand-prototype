@@ -304,7 +304,7 @@ class War:
         from app.truce.truces import Truces
         
         game = Games.load(self._game_id)
-        truce_length = 4
+        truce_length = 8
         
         # resolve war justifications
         match outcome:
