@@ -14,7 +14,7 @@ def total_occupation_forced_surrender() -> None:
     # check all regions for occupation
     non_occupied_found_list = [False] * len(Nations)
     for region in Regions:
-        if region.data.owner_id != "0" and region.data.owner_id != "99" and region.data.occupier_id == "0":
+        if region.data.occupier_id == "0" and region.data.owner_id not in ["0", "99"]:
             non_occupied_found_list[int(region.data.owner_id) - 1] = True
     
     # if no unoccupied region found for a player force surrender if main combatant
@@ -24,24 +24,27 @@ def total_occupation_forced_surrender() -> None:
         
         if not region_found:
             
-            # look for wars to surrender to
+            # look for active wars to surrender to
             for war in Wars:
 
-                if war.outcome == "TBD" and looser_name in war.combatants and "Main" in war.get_role(str(looser_id)):
+                if war.outcome != "TBD":
+                    continue
 
-                    # never force end the war caused by foreign invasion
-                    if war.name == "Foreign Invasion":
-                        continue
-                    
-                    main_attacker_id, main_defender_id = war.get_main_combatant_ids()
-                    
-                    if looser_id == main_attacker_id:
-                        outcome = "Defender Victory"
-                    elif looser_id == main_defender_id:
-                        outcome = "Attacker Victory"
-                    war.end_conflict(outcome)
+                if looser_id not in war.combatants or "Main" not in war.get_role(str(looser_id)):
+                    continue
 
-                    Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 5)
+                # never force end the war caused by foreign invasion
+                if war.name == "Foreign Invasion":
+                    continue
+
+                main_attacker_id, main_defender_id = war.get_main_combatant_ids()
+                outcome = "Attacker Victory"
+                if looser_id == main_attacker_id:
+                    outcome = "Defender Victory"
+
+                war.end_conflict(outcome)
+
+                Notifications.add(f"{war.name} has ended due to {looser_name} total occupation.", 5)
 
 def war_score_forced_surrender() -> None:
     """
