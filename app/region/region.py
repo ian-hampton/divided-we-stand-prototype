@@ -126,13 +126,13 @@ class Region:
     def set_fallout(self, starting_fallout=4) -> None:
         self.data.fallout = starting_fallout
 
-    def is_valid_move(self, other_player_id: int) -> bool:
+    def is_valid_move(self, other_player_id: str) -> bool:
         """
         Determines if a unit owned by other_player_id can move into this region.
         Only takes into account ownership. Does not consider adjacency or other disqualifiers, that is the job of the move action function.
 
         Params:
-            other_player_id (int): player_id to compare to
+            other_player_id (str): player_id to compare to
         
         Returns:
             bool: True if all checks pass. False otherwise.
@@ -152,7 +152,7 @@ class Region:
             if self.data.occupier_id == other_player_id:
                 return True
             # you are also at war with the occupier
-            if Wars.get_war_name(self.data.owner_id, other_player_id) is not None:
+            if Wars.get_war_name(self.data.occupier_id, other_player_id) is not None:
                 return True
             
         # foreign invasion may move into unclaimed regions
