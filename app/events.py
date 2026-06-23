@@ -107,6 +107,7 @@ def filter_events(game_id: str):
             Notifications.add(f"{event.name} event has ended.", 3)
             if event.name == "Foreign Invasion":
                 event._foreign_invasion_end()
+            game.inactive_events.append(event_name)
             continue
 
         active_events_filtered[event.name] = event.export()
