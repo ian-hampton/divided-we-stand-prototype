@@ -380,7 +380,7 @@ def military_superpower(nation: Nation) -> bool:
     if nation.name in first[0] and (first[1] > second[1]):
         return True
 
-    return True
+    return False
 
 def scientific_leader(nation: Nation) -> bool:
 
