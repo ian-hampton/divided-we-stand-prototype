@@ -127,11 +127,11 @@ class Wars(metaclass=WarsMeta):
         # possible allies: puppet states, defensive pacts, overlord
         puppet_states = main_defender.get_subjects("Puppet State", list(Nations))
         defense_allies = Alliances.allies(main_defender.name, "Defense Pact")
-        ally_player_ids = set(puppet_states) | set(defense_allies)
+        possible_allies = set(puppet_states) | set(defense_allies)
         if main_defender.status != "Independent Nation":
             for nation in Nations:
                 if nation.name in main_defender.status:
-                    ally_player_ids.add(nation.id)
+                    possible_allies.add(nation.id)
         for ally_id in possible_allies:
             ally = Nations.get(ally_id)
             if (cls.get_war_name(main_attacker.id, ally.id) is None              # ally cannot already be at war with attacker
