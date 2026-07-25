@@ -85,8 +85,8 @@ class War:
 
         if war_justification_data.looser_penalties is not None:
             looser_nation = Nations.get(winner_combatant_data.target_id)
-            war_justification_data.looser_penalties["Expire Turn"] = game.turn + war_justification_data.looser_penalty_duration + 1
-            looser_nation.tags[f"Defeated by {winner_nation} in {self.name}"] = war_justification_data.looser_penalties
+            looser_penalties = war_justification_data.looser_penalties | {"Expire Turn": game.turn + war_justification_data.looser_penalty_duration + 1}
+            looser_nation.tags[f"Defeated by {winner_nation.name} in {self.name}"] = looser_penalties
 
         if war_justification_data.winner_becomes_independent:
             winner_nation.status = "Independent Nation"
