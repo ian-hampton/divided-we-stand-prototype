@@ -203,7 +203,7 @@ class UpdateIncomeProcess:
             if "Puppet State" in nation.status:
                 
                 for temp in Nations:
-                    if temp in nation.status:
+                    if temp.name in nation.status:
                         overlord = temp
                         break
                 
@@ -212,16 +212,16 @@ class UpdateIncomeProcess:
                     if resource_name == "Military Capacity":
                         continue
                     
-                    tax_amount = nation.get_gross_income(resource_name) * 0.2
+                    tax_amount = float(nation.get_gross_income(resource_name)) * 0.2
                     tax_amount = round(tax_amount, 2)
                     
                     nation.update_income(resource_name, -1 * tax_amount)
                     income_str = f"-{tax_amount:.2f} from tribute to {overlord.name}."
                     self.text_dict[nation.name][resource_name][income_str] += 1
-                    
+
                     overlord.update_income(resource_name, tax_amount)
                     income_str = f"{tax_amount:.2f} from puppet state tribute."
-                    self.text_dict[nation.name][resource_name][income_str] += 1
+                    self.text_dict[overlord.name][resource_name][income_str] += 1
 
             # calculate player upkeep costs
             player_upkeep_costs_dict = {}
