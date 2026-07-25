@@ -85,8 +85,15 @@ class UnitVsImprovement(BattleTemplate):
             self.attacker.unit_counts[self.attacking_region.unit.name] -= 1
             self.attacking_region.unit.clear()
 
-        # remove defending improvement if defeated
+        # remove defending improvement if defeated and undefended
         if self.defending_region.improvement.health <= 0:
+            # special case - improvement is still defended by a hostile unit
+            if self.defending_region.unit.name is not None:
+                self.war.log.append(f"    {self.defender.name} {self.defending_region.improvement.name} has been disabled!")
+                self.defending_region.improvement.health = 0
+                self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
+                return
+            # update stats and award xp
             self.war.log.append(f"    {self.defender.name} {self.defending_region.improvement.name} has been captured!")
             self.defending_region.improvement.health = 0
             self.attacker_cd.destroyed_improvements += 1
