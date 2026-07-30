@@ -43,8 +43,10 @@ def trigger_event(game_id: str) -> None:
             game.status = GameStatus.ACTIVE_PENDING_EVENT
         case 1:
             game.active_events[event_name] = event.export()
+            game.turn += 1
         case 0:
             game.inactive_events.append(event_name)
+            game.turn += 1
 
 def resolve_current_event(game_id: str) -> None:
     
