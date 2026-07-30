@@ -2167,11 +2167,11 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             if float(nation.get_stockpile("Political Power")) - claim_cost < 0:
                 nation.action_log.append(f"Error: Not enough political power for war claims.")
                 continue
-            
-            war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
-            combatant = war.get_combatant(action.id)
-            combatant.target_id = "N/A"
             nation.update_stockpile("Political Power", -1 * claim_cost)
+            
+            war.add_combatant(nation, f"Secondary {action.side}", "N/A")
+            combatant = war.get_combatant(action.id)
+            combatant.justification = action.war_justification
             combatant.claims = manage_claims.claim_pairs(region_claims_list)
         
         # OR handle war justification that does not seize territory
@@ -2181,9 +2181,9 @@ def resolve_war_join_actions(game_id: str, actions_list: list[WarJoinAction]) ->
             if not _war_action_valid(action, nation, defender_nation):
                 continue
 
-            war.add_combatant(nation, f"Secondary {action.side}", action.war_justification)
+            war.add_combatant(nation, f"Secondary {action.side}", target_id)
             combatant = war.get_combatant(action.id)
-            combatant.target_id = target_id
+            combatant.justification = action.war_justification
 
         Notifications.add(f"{nation.name} has joined {war.name} as a {action.side}!", 4)
 

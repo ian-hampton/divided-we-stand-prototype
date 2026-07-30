@@ -55,22 +55,24 @@ def war_score_forced_surrender() -> None:
     """
 
     for war in Wars:
-        if war.outcome == "TBD":
 
-            if war.name == "Foreign Invasion":
-                continue
+        if war.outcome != "TBD":
+            continue
+
+        if war.name == "Foreign Invasion":
+            continue
+    
+        attacker_threshold, defender_threshold = war.calculate_score_threshold()
+        attacker_id, defender_id = war.get_main_combatant_ids()
+        attacker_nation = Nations.get(attacker_id)
+        defender_nation = Nations.get(defender_id)
         
-            attacker_threshold, defender_threshold = war.calculate_score_threshold()
-            attacker_id, defender_id = war.get_main_combatant_ids()
-            attacker_nation = Nations.get(attacker_id)
-            defender_nation = Nations.get(defender_id)
-            
-            if attacker_threshold is not None and war.attackers.total >= attacker_threshold:
-                war.end_conflict("Attacker Victory")
-                Notifications.add(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 5)
-                Notifications.add(f"{war.name} has ended due to war score.", 5)
+        if attacker_threshold is not None and war.attackers.total >= attacker_threshold:
+            war.end_conflict("Attacker Victory")
+            Notifications.add(f"{defender_nation.name} surrendered to {attacker_nation.name}.", 5)
+            Notifications.add(f"{war.name} has ended due to war score.", 5)
 
-            elif defender_threshold is not None and war.defenders.total >= defender_threshold:
-                war.end_conflict("Defender Victory")
-                Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 5)
-                Notifications.add(f"{war.name} has ended due to war score.", 5)
+        elif defender_threshold is not None and war.defenders.total >= defender_threshold:
+            war.end_conflict("Defender Victory")
+            Notifications.add(f"{attacker_nation.name} surrendered to {defender_nation.name}.", 5)
+            Notifications.add(f"{war.name} has ended due to war score.", 5)
