@@ -318,7 +318,7 @@ def run_post_turn_checks(game_id: str, market_results: dict) -> None:
             player_has_won = True
 
     if player_has_won:
-        resolve_win(game_id)
+        resolve_win()
 
     heals.heal_all()
     
