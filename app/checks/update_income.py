@@ -139,12 +139,12 @@ class UpdateIncomeProcess:
             for ally_name in alliance.current_members:
                 nation = Nations.get(ally_name)
                 if "Alliance Centralization" in nation.completed_research:
-                    amount = round(amount * 1.5, 2)
+                    amount_actual = round(amount * 1.5, 2)
                 if resource_name == "Military Capacity":
-                    nation.update_max_mc(amount)
+                    nation.update_max_mc(amount_actual)
                 else:
-                    nation.update_gross_income(resource_name, amount)
-                income_str = f"+{amount:.2f} from {alliance.name}."
+                    nation.update_gross_income(resource_name, amount_actual)
+                income_str = f"+{amount_actual:.2f} from {alliance.name}."
                 self.text_dict[nation.name][resource_name][income_str] += 1
 
         # apply income rate to gross income

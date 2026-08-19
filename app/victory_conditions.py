@@ -307,7 +307,9 @@ def strong_research_agreement(nation: Nation) -> bool:
     for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Research Agreement":
             amount, resource_name = alliance.calculate_yield()
-            if amount >= 8:
+            if "Alliance Centralization" in nation.completed_research:
+                amount_actual = round(amount * 1.5, 2)
+            if amount_actual >= 8:
                 return True
 
     return False
@@ -317,7 +319,9 @@ def strong_trade_agreement(nation: Nation) -> bool:
     for alliance in Alliances:
         if nation.name in alliance.current_members and alliance.type == "Trade Agreement":
             amount, resource_name = alliance.calculate_yield()
-            if amount >= 24:
+            if "Alliance Centralization" in nation.completed_research:
+                amount_actual = round(amount * 1.5, 2)
+            if amount_actual >= 24:
                 return True
 
     return False
