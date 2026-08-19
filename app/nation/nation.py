@@ -641,6 +641,7 @@ class Nation:
     def get_used_mc(self) -> float:
         return float(self._resources["Military Capacity"]["used"])
 
+    # TODO - this function should not be manually called. get_used_mc() should do this instead and not be reading from a stored value
     def update_military_capacity(self) -> None:
         used_military_capacity = 0
         for count in self.unit_counts.values():

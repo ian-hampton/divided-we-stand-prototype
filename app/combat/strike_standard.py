@@ -130,6 +130,7 @@ class StandardStrike(Strike):
         self.defending_combatant.lost_units += 1
         self.war.log.append(f"    Missile struck {self.target_region.unit.name} in {self.target_region.id} and dealt {net_damage} damage. Unit destroyed!")
         self.target_nation.unit_counts[self.target_region.unit.name] -= 1
+        self.target_nation.update_military_capacity()
         self.target_region.unit.clear()
         return True
     
