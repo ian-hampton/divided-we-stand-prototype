@@ -16,8 +16,8 @@ def gain_income() -> None:
             nation.update_stockpile(resource_name, amount)
 
 def gain_market_income(market_results: dict) -> None:
-    for nation_name, market_info in market_results.items():
-        nation = Nations.get(nation_name)
+    for nation_id, market_info in market_results.items():
+        nation = Nations.get(nation_id)
         for resource_name, amount in market_info.items():
             if resource_name == "Thieves":
                 continue

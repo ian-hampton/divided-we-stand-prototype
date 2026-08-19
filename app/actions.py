@@ -1926,11 +1926,11 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
     # create market results dict
     market_results = {}
     for nation in Nations:
-        market_results[nation.name] = {}
+        market_results[nation.id] = {}
         for resource_name in data:
-            market_results[nation.name][resource_name] = 0
-        market_results[nation.name]["Dollars"] = 0
-        market_results[nation.name]["Thieves"] = []
+            market_results[nation.id][resource_name] = 0
+        market_results[nation.id]["Dollars"] = 0
+        market_results[nation.id]["Thieves"] = []
 
     for action in buy_list:
         
@@ -1956,7 +1956,7 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         new_entry = [game.turn, nation.name, 'Bought', action.quantity, action.resource_name]
         rmdata_update_list.append(new_entry)
 
-        market_results[nation.name][action.resource_name] = action.quantity
+        market_results[nation.id][action.resource_name] = action.quantity
         nation.action_log.append(f"Bought {action.quantity} {action.resource_name} from the resource market for {cost:.2f} dollars.")
 
     for action in sell_list:
@@ -1981,13 +1981,13 @@ def resolve_market_actions(game_id: str, crime_list: list[CrimeSyndicateAction],
         rmdata_update_list.append(new_entry)
 
         dollars_earned = round(action.quantity * price * rate, 2)
-        market_results[nation.name]["Dollars"] += dollars_earned
+        market_results[nation.id]["Dollars"] += dollars_earned
         nation.action_log.append(f"Sold {action.quantity} {action.resource_name} to the resource market for {dollars_earned:.2f} dollars.")
 
     # get crime syndicate steal actions
     for nation in Nations:
         for crime_action in crime_list:
-            market_results[nation.name]["Thieves"].append(crime_action.id)
+            market_results[nation.id]["Thieves"].append(crime_action.id)
     for nation_name, nation_info in market_results.items():
         thieves_list = nation_info["Thieves"]
         if len(thieves_list) != 1:
