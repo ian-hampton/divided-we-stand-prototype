@@ -1,31 +1,17 @@
 {
     "Largest Nation": {
         "Description": "Highest number of regions owned at the end of a game.",
-        "Player Name": "Eyiri",
-        "Nation Name": "Amikabuu",
-        "Game Name": "Hotel",
-        "Value": "53 regions owned"
+        "Player Name": "mudkip",
+        "Nation Name": "The OIOF",
+        "Game Name": "Patriots and Tyrants",
+        "Value": "100 regions owned"
     },
     "Largest Economy": {
         "Description": "Highest net income at the end of a game.",
-        "Player Name": "Roman General",
-        "Nation Name": "Manchuria Company",
-        "Game Name": "Return To China",
-        "Value": "172.95 total income"
-    },
-    "Most Transactions": {
-        "Description": "Highest combined total of resources bought & sold to the resource market, and resources traded to and from a nation in a single game.",
-        "Player Name": "Xsotan",
-        "Nation Name": "Jinhua Confederation",
-        "Game Name": "Return To China",
-        "Value": "379 transactions"
-    },
-    "Most Technologies": {
-        "Description": "Highest total number of technologies and agendas unlocked during a single game.",
-        "Player Name": "Roman General",
-        "Nation Name": "Manchurian Tech Company",
-        "Game Name": "India",
-        "Value": "48 technologies"
+        "Player Name": "mudkip",
+        "Nation Name": "The OIOF",
+        "Game Name": "Patriots and Tyrants",
+        "Value": "282.68 total income"
     },
     "Largest Military": {
         "Description": "Highest number of units at the end of a game.",
@@ -36,24 +22,17 @@
     },
     "Warmonger": {
         "Description": "Highest number of wars declared during a single game.",
-        "Player Name": "Eyiri",
-        "Nation Name": "Guandi Empire",
-        "Game Name": "India",
-        "Value": "6 war declarations"
-    },
-    "Most Battles Won": {
-        "Description": "Highest number of combats won during a single game.",
-        "Player Name": "Eyiri",
-        "Nation Name": "Guandi Empire",
-        "Game Name": "India",
-        "Value": "61 battles"
+        "Player Name": "mudkip",
+        "Nation Name": "The OIOF",
+        "Game Name": "Patriots and Tyrants",
+        "Value": "8 war declarations"
     },
     "Longest Alliance": {
         "Description": "The longest alliance during a single game.",
-        "Alliance Name": "SuS or JoJ",
-        "Player Name": "mudkip & charl",
-        "Game Name": "Return To China",
-        "Value": "22 turns"
+        "Alliance Name": "Aidan Alliance",
+        "Player Name": "mudkip & Xsotan",
+        "Game Name": "Patriots and Tyrants",
+        "Value": "44 turns"
     },
     "Longest War": {
         "Description": "The longest war during a single game.",
@@ -72,24 +51,24 @@
             "Value": "4 players"
         },
         "Greatest # of Wars": {
-            "Game Name": "Golf",
-            "Value": "14 wars"
+            "Game Name": "Patriots and Tyrants",
+            "Value": "17 wars"
         },
         "Smallest # of Wars": {
             "Game Name": "Foxtrot",
             "Value": "5 wars"
         },
         "Longest Game (turns)": {
-            "Game Name": "Golf",
-            "Value": "50 turns"
+            "Game Name": "Patriots and Tyrants",
+            "Value": "53 turns"
         },
         "Shortest Game (turns)": {
             "Game Name": "Genisys",
             "Value": "32 turns"
         },
         "Longest Game (days)": {
-            "Game Name": "Golf",
-            "Value": "137 days"
+            "Game Name": "Patriots and Tyrants",
+            "Value": "186 days"
         },
         "Shortest Game (days)": {
             "Game Name": "Bravo",

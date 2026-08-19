@@ -81,7 +81,7 @@ a {
             <div class="top">Player Records</div>
 
             {% for key, value in leaderboard_records_dict.items() %}
-                {% if loop.index <= 7 %}
+                {% if loop.index <= 4 %}
                     <div class="record-section">
                         <div class="row-spaced">
                             <div class="cell shortest left"> <b>{{ key }}</b> </div>

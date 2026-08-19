@@ -963,5 +963,85 @@
                 "Victory": 0
             }
         }
+    },
+    "QtgwSLCxTnBQdhwhIGoO": {
+        "Name": "Patriots and Tyrants",
+        "Number": 14,
+        "Information": {
+            "Version": "Development",
+            "Scenario": "Standard",
+            "Map": "United States 3.0",
+            "Victory Conditions": "Randomized Sets",
+            "Fog of War": false,
+            "Turn Duration": "48 hours",
+            "Accelerated Schedule": false,
+            "Deadlines on Weekends": false
+        },
+        "Statistics": {
+            "Player Count": 7,
+            "Region Disputes": 5,
+            "Game End Turn": 52,
+            "Days Ellapsed": 186,
+            "Game Started": "02/13/2026",
+            "Game Ended": "08/18/2026"
+        },
+        "Player Data": {
+            "001": {
+                "Nation Name": "Provisional Constitutional Government",
+                "Color": "#ff3d3d",
+                "Government": "Remnant",
+                "Foreign Policy": "Imperialist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "002": {
+                "Nation Name": "Ocmulgee Institute for Optimized Futures",
+                "Color": "#b654ff",
+                "Government": "Technocracy",
+                "Foreign Policy": "Imperialist",
+                "Score": 3,
+                "Victory": 1
+            },
+            "007": {
+                "Nation Name": "The Lost",
+                "Color": "#ffd64b",
+                "Government": "Remnant",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "010": {
+                "Nation Name": "ChatGPT+",
+                "Color": "#5a009d",
+                "Government": "Military Junta",
+                "Foreign Policy": "Imperialist",
+                "Score": 0,
+                "Victory": 0
+            },
+            "013": {
+                "Nation Name": "Super Friend-Squad of Truth",
+                "Color": "#ff974e",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "014": {
+                "Nation Name": "Skeletech",
+                "Color": "#ff9600",
+                "Government": "Oligarchy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            },
+            "008": {
+                "Nation Name": "Wawa",
+                "Color": "#0096ff",
+                "Government": "Technocracy",
+                "Foreign Policy": "Commercial",
+                "Score": 0,
+                "Victory": 0
+            }
+        }
     }
 }
