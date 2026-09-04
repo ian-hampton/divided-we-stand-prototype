@@ -11,7 +11,7 @@ import os, sys
 import unittest
 from unittest.mock import patch
 
-import base
+from . import base
 
 from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
