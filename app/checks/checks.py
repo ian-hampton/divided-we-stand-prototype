@@ -44,7 +44,6 @@ def resolve_military_capacity_shortages(game_id: str) -> None:
             
             region_id, victim = destroy.search_and_destroy_unit(nation.id, 'ANY')
             nation.unit_counts[victim] -= 1
-            nation.update_military_capacity()
 
             Notifications.add(f"{nation.name} lost {victim} {region_id} due to insufficient military capacity.", 6)
 

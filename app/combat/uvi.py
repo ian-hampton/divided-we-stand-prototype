@@ -83,7 +83,6 @@ class UnitVsImprovement(BattleTemplate):
             self.defender_cd.destroyed_units += 1
             # update player
             self.attacker.unit_counts[self.attacking_region.unit.name] -= 1
-            self.attacker.update_military_capacity()
             self.attacking_region.unit.clear()
 
         # remove defending improvement if defeated and undefended

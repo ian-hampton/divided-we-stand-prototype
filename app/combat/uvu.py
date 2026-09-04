@@ -87,7 +87,6 @@ class UnitVsUnit(BattleTemplate):
             self.defender_cd.destroyed_units += 1
             # update player
             self.attacker.unit_counts[self.attacking_region.unit.name] -= 1
-            self.attacker.update_military_capacity()
             self.attacking_region.unit.clear()
 
         # remove defending unit if defeated
@@ -100,7 +99,6 @@ class UnitVsUnit(BattleTemplate):
             self.defender_cd.lost_units += 1
             # update player
             self.defender.unit_counts[self.defending_region.unit.name] -= 1
-            self.defender.update_military_capacity()
             self.defending_region.unit.clear()
         else:
             # award defending unit with xp if it survived this attack

@@ -2050,7 +2050,6 @@ def resolve_unit_disband_actions(game_id: str, actions_list: list[UnitDisbandAct
             continue
 
         nation.unit_counts[region.unit.name] -= 1
-        nation.update_military_capacity()
         region.unit.clear()
         nation.action_log.append(f"Disbanded unit in region {action.target_region}.")
 
@@ -2108,7 +2107,6 @@ def resolve_unit_deployment_actions(game_id: str, actions_list: list[UnitDeployA
         region.unit.set(action.unit_name, full_unit_name, starting_xp, action.id)
         region.unit.calculate_level()
         nation.unit_counts[region.unit.name] += 1
-        nation.update_military_capacity()
 
         if len(costs_list) <= 2:
             costs_str = " and ".join(costs_list)
