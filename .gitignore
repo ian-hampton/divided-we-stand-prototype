@@ -55,3 +55,4 @@ app/static/handshake.png
 /app/region/__pycache__
 /app/checks/__pycache__
 /tests/__pycache__
+/app/event/__pycache__

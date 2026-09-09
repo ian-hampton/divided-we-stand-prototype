@@ -12,7 +12,7 @@ from app.checks import end_wars
 from app.checks import heals
 from app.checks import resolve_shortages
 from app.checks.update_income import UpdateIncomeProcess
-from app import events
+from app.event import events
 from app.map import GameMaps
 from app import palette
 from app.game.games import Games
