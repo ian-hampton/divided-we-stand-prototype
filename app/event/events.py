@@ -5,6 +5,7 @@ import importlib
 from app.game.games import Games
 from app.game.game import GameStatus
 from app.scenario.scenario import ScenarioInterface as SD
+from app.event.event import EventState
 
 def trigger_event(game_id: str) -> None:
     """
@@ -38,13 +39,13 @@ def trigger_event(game_id: str) -> None:
 
     # save event
     match event.state:
-        case 2:
+        case EventState.PENDING:
             game.current_event = event.export()
             game.status = GameStatus.ACTIVE_PENDING_EVENT
-        case 1:
+        case EventState.ACTIVE:
             game.active_events[event_name] = event.export()
             game.turn += 1
-        case 0:
+        case EventState.FINISHED:
             game.inactive_events.append(event_name)
             game.turn += 1
 
@@ -64,9 +65,9 @@ def resolve_current_event(game_id: str) -> None:
 
     # save event
     match event.state:
-        case 1:
+        case EventState.ACTIVE:
             game.active_events[event_name] = event.export()
-        case 0:
+        case EventState.FINISHED:
             game.inactive_events.append(event_name)
 
 def resolve_active_events(game_id: str, actions_dict=None):
@@ -86,9 +87,9 @@ def resolve_active_events(game_id: str, actions_dict=None):
             event.run_after()
 
         match event.state:
-            case 1:
+            case EventState.ACTIVE:
                 active_events_filtered[event_name] = event.export()
-            case 0:
+            case EventState.FINISHED:
                 game.inactive_events.append(event_name)
 
     game.active_events = active_events_filtered

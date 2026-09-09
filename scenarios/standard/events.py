@@ -4,7 +4,7 @@ from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app import actions
 from app.alliance.alliances import Alliances
-from app.event.event import Event
+from app.event.event import Event, EventState
 from app.region.regions import Regions
 from app.nation.nations import Nations, LeaderboardRecordNames
 from app.notifications import Notifications
@@ -26,7 +26,7 @@ class Assassination(Event):
 
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
 
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
         
@@ -40,7 +40,7 @@ class Assassination(Event):
             
             if decision == "Find the Perpetrator":
                 nation.update_stockpile("Political Power", 5)
-                self.state = 0
+                self.state = EventState.FINISHED
             
             elif decision == "Find a Scapegoat":
                 while True:
@@ -55,7 +55,7 @@ class Assassination(Event):
                     "Expire Turn": self.game.turn + self.duration + 1
                 }
                 nation.tags["Assassination Scapegoat"] = new_tag
-                self.state = 1
+                self.state = EventState.ACTIVE
                 self.expire_turn = self.game.turn + self.duration + 1
     
     def has_conditions_met(self) -> bool:
@@ -80,7 +80,7 @@ class CorruptionScandal(Event):
         }
         victim_nation.tags["Corruption Scandal"] = new_tag
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -111,7 +111,7 @@ class Coup(Event):
         victim_nation.update_stockpile("Political Power", 0, overwrite=True)
         Notifications.add(f"{victim_nation_name}'s {old_government} government has been defeated by a coup. A new {new_government} government has taken power.", 3)
 
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -142,7 +142,7 @@ class DecayingInfrastructure(Event):
                     Notifications.add(f"{nation.name} {region.improvement.name} in {region.id} has decayed.", 3)
                     region.improvement.clear()
 
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -193,7 +193,7 @@ class Desertion(Event):
                 Notifications.add(f"{nation.name} {region.unit.name} {region_id} has deserted.", 3)
                 region.unit.clear()
         
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -213,7 +213,7 @@ class DiplomaticSummit(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -238,7 +238,7 @@ class DiplomaticSummit(Event):
                     valid_research = self._gain_free_research(research_name, nation)
         
         if len(summit_attendance_list) < 2:
-            self.state = 0
+            self.state = EventState.FINISHED
             return
 
         for nation_id in summit_attendance_list:
@@ -250,7 +250,7 @@ class DiplomaticSummit(Event):
                 new_tag[f"Cannot Declare War On #{attendee_id}"] = True
             nation.tags["Summit"] = new_tag
         
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -277,7 +277,7 @@ class ForeignAid(Event):
                 nation.update_stockpile("Dollars", amount)
                 Notifications.add(f"{nation_name} has received {amount} dollars worth of foreign aid.", 3)
 
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
         return True
@@ -293,7 +293,7 @@ class ForeignInterference(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -329,7 +329,7 @@ class ForeignInterference(Event):
                 nation.update_stockpile("Political Power", 5)
 
         actions.resolve_war_actions(self.game_id, war_actions)
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -351,7 +351,7 @@ class LostNuclearWeapons(Event):
 
         Notifications.add(f"{victim_nation.name} has been randomly selected as the target for the {self.name} event!", 3)
 
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
         
@@ -380,7 +380,7 @@ class LostNuclearWeapons(Event):
             
             Notifications.add(f"{nation.name} chose to {decision.lower()} the old military installation.", 3)
         
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
         return True
@@ -398,7 +398,7 @@ class SecurityBreach(Event):
 
         Notifications.add(f"{victim_nation_name} has suffered a {self.name}!", 3)
 
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -423,7 +423,7 @@ class SecurityBreach(Event):
         }
         victim_nation.tags["Security Breach"] = new_tag
         
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -439,7 +439,7 @@ class MarketInflation(Event):
         Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -451,7 +451,7 @@ class MarketRecession(Event):
         Event.__init__(self, game_id, event_name, event_data)
 
     def activate(self):
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -468,7 +468,7 @@ class ObserverStatusInvitation(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
         
@@ -493,7 +493,7 @@ class ObserverStatusInvitation(Event):
                     research_name = input(f"Enter {nation.name} military technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
         
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
         return True
@@ -515,7 +515,7 @@ class PeacetimeRewards(Event):
         Notifications.add(f"New Event: {self.name}!", 3)
         Notifications.add(f"Receiving reward: {nations_receiving_award_str}.", 3)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
         
@@ -526,7 +526,7 @@ class PeacetimeRewards(Event):
                 research_name = input(f"Enter {nation.name} technology decision: ")
                 valid_research = self._gain_free_research(research_name, nation)
 
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -561,7 +561,7 @@ class PowerPlantMeltdown(Event):
         nation.update_stockpile("Political Power", 0, overwrite=True)
         Notifications.add(f"The {nation.name} Nuclear Power Plant in {meltdown_region_id} has melted down!", 3)
         
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -581,7 +581,7 @@ class ShiftingAttitudes(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -608,7 +608,7 @@ class ShiftingAttitudes(Event):
                     research_name = input(f"Enter {nation.name} technology decision: ")
                     valid_research = self._gain_free_research(research_name, nation)
         
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -629,7 +629,7 @@ class UnitedNationsPeacekeepingMandate(Event):
                 war.end_conflict("White Peace")
                 Notifications.add(f"{war.name} has ended with a white peace due to United Nations Peacekeeping Mandate.", 3)
 
-        self.state = 0
+        self.state = EventState.FINISHED
 
     def has_conditions_met(self) -> bool:
 
@@ -653,7 +653,7 @@ class WidespreadCivilDisorder(Event):
             }
             nation.tags["Civil Disorder"] = new_tag
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -674,7 +674,7 @@ class Embargo(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -684,7 +684,7 @@ class Embargo(Event):
 
         if nation_name is None:
             Notifications.add(f"Vote tied. No nation has been embargoed.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
         
         nation = Nations.get(nation_name)
@@ -695,7 +695,7 @@ class Embargo(Event):
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been embargoed", 3)
         
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1     
 
     def has_conditions_met(self) -> bool:
@@ -712,7 +712,7 @@ class Humiliation(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -722,7 +722,7 @@ class Humiliation(Event):
 
         if nation_name is None:
             Notifications.add(f"Vote tied. No nation has been humiliated.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
 
         nation = Nations.get(nation_name)
@@ -734,7 +734,7 @@ class Humiliation(Event):
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been humiliated.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -751,7 +751,7 @@ class ForeignInvestment(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -761,7 +761,7 @@ class ForeignInvestment(Event):
 
         if nation_name is None:
             Notifications.add(f"Vote tied. No nation will recieve the foreign investment.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
 
         nation = Nations.get(nation_name)
@@ -773,7 +773,7 @@ class ForeignInvestment(Event):
         
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has recieved the foreign investment.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -790,7 +790,7 @@ class NominateMediator(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -800,7 +800,7 @@ class NominateMediator(Event):
 
         if nation_name is None:
             Notifications.add(f"Vote tied. No nation has been elected Mediator.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
 
         nation = Nations.get(nation_name)
@@ -813,7 +813,7 @@ class NominateMediator(Event):
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been elected Mediator.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1 
 
     def has_conditions_met(self) -> bool:
@@ -830,7 +830,7 @@ class SharedFate(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -841,7 +841,7 @@ class SharedFate(Event):
 
         if option_name is None:
             Notifications.add(f"Vote tied. No option was resolved.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
 
         if option_name == "Cooperation":
@@ -866,7 +866,7 @@ class SharedFate(Event):
                 nation.tags["Shared Fate"] = new_tag
             Notifications.add(f"Conflict won in a {self.vote_tally.get("Conflict")} - {self.vote_tally.get("Cooperation")} decision.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.duration = 99999
 
     def has_conditions_met(self) -> bool:
@@ -883,7 +883,7 @@ class ThreatContainment(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -893,7 +893,7 @@ class ThreatContainment(Event):
 
         if nation_name is None:
             Notifications.add(f"Vote tied. No nation has been sanctioned.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
         
         nation = Nations.get(nation_name)
@@ -906,7 +906,7 @@ class ThreatContainment(Event):
 
         Notifications.add(f"Having received {self.vote_tally[nation_name]} votes, {nation_name} has been sanctioned.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def has_conditions_met(self) -> bool:
@@ -961,7 +961,7 @@ class ForeignInvasion(Event):
         for adj_id in invasion_point.graph.adjacent_regions:
             self._foreign_invasion_initial_spawn(adj_id, unit_name)
         
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = self.game.turn + self.duration + 1
 
     def run_before(self, actions_dict: dict[str, list]) -> None:
@@ -988,7 +988,7 @@ class ForeignInvasion(Event):
                     deploy_action_str = f"Deploy {unit_name} {region.id}"
                     actions_dict["UnitDeployAction"].append(actions.UnitDeployAction(self.game_id, "99", deploy_action_str))
 
-        self.state = 1
+        self.state = EventState.ACTIVE
 
     def run_after(self) -> None:
         
@@ -1000,7 +1000,7 @@ class ForeignInvasion(Event):
             invasion_unit_count += count
         if invasion_unit_count == 0:
             self._foreign_invasion_end()
-            self.state = 0
+            self.state = EventState.FINISHED
             return
         
         # Foreign Invasion ends if no unoccupied reinforcement regions
@@ -1010,10 +1010,10 @@ class ForeignInvasion(Event):
                 invasion_unoccupied_count += 1
         if invasion_unoccupied_count == 0:
             self._foreign_invasion_end()
-            self.state = 0
+            self.state = EventState.FINISHED
             return
 
-        self.state = 1
+        self.state = EventState.ACTIVE
 
     def has_conditions_met(self) -> bool:
 
@@ -1175,7 +1175,7 @@ class Pandemic(Event):
         region = Regions.load(origin_region_id)
         region.data.infection += 1
         
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.expire_turn = 99999
 
     def run_after(self) -> None:
@@ -1240,7 +1240,7 @@ class Pandemic(Event):
             for region in Regions:
                 region.data.quarantine = False
             Notifications.add("The pandemic has been eradicated!", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
         
         # print diplomacy log messages
@@ -1259,7 +1259,7 @@ class Pandemic(Event):
             else:
                 Notifications.add(f"Pandemic cure research has been completed! The pandemic is now in decline.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
 
     def export(self) -> dict:
         
@@ -1297,7 +1297,7 @@ class FaustianBargain(Event):
         for nation in Nations:
             self.targets.append(nation.id)
         
-        self.state = 2
+        self.state = EventState.PENDING
 
     def resolve(self):
 
@@ -1316,7 +1316,7 @@ class FaustianBargain(Event):
 
         if len(candidates_list) == 0:
             Notifications.add("No nation took the Faustian Bargain. collaborate with the foreign nation.", 3)
-            self.state = 0
+            self.state = EventState.FINISHED
             return
         
         random.shuffle(candidates_list)
@@ -1338,7 +1338,7 @@ class FaustianBargain(Event):
 
         Notifications.add(f"{nation.name} took the Faustian Bargain and will collaborate with the foreign nation.", 3)
 
-        self.state = 1
+        self.state = EventState.ACTIVE
         self.duration = 99999
 
     def run_after(self) -> None:
@@ -1351,11 +1351,11 @@ class FaustianBargain(Event):
         # check if collaborator has been defeated (no capital)
         if nation.improvement_counts["Capital"] == 0:
             del nation.tags["Faustian Bargain"]
-            self.state = 0
+            self.state = EventState.FINISHED
             Notifications.add(f"{self.name} event has ended.", 3)
             return
 
-        self.state = 1
+        self.state = EventState.ACTIVE
 
     def has_conditions_met(self) -> bool:
 

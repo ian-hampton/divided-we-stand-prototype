@@ -1,3 +1,5 @@
+from enum import IntEnum
+
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from app.nation.nation import Nation
@@ -15,15 +17,9 @@ class Event:
 
         self.game_id = game_id
         self.game = Games.load(self.game_id)
-        self.state = -1
-
-        # EVENT STATES
-        #  2  event is pending input from players
-        #  1  event is active and does not require attention from players
-        #  0  event is completed and ready to be archived
+        self.state = EventState.UNINIT
 
     def export(self) -> dict:
-        
         return {
             "Name": self.name,
             "Type": self.type,
@@ -33,10 +29,10 @@ class Event:
         }
     
     def run_before(self, actions_dict: dict[str, list]) -> None:
-        self.state = 1
+        self.state = EventState.ACTIVE
 
     def run_after(self) -> None:
-        self.state = 1
+        self.state = EventState.ACTIVE
     
     def _gain_free_research(self, research_name: str, nation: Nation) -> bool:
         """
@@ -155,3 +151,9 @@ class Event:
             return None
         
         return top_two[0][0]
+
+class EventState(IntEnum):
+    UNINIT = -1
+    FINISHED = 0    # event is completed and ready to be archived
+    ACTIVE = 1      # event is active and does not require attention from players
+    PENDING = 2     # event is pending input from players
