@@ -20,7 +20,7 @@ def trigger_event(game_id: str) -> None:
     game = Games.load(game_id)
 
     # create list of eligible events
-    event_list = list(SD.events.names())
+    event_list = event_discovery.get_event_list()
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
     event_list_filtered = []
     for event_name in event_list:

@@ -6,7 +6,6 @@ from app.war.wars import Wars
 def _is_first_event(game_id: str) -> bool:
 
     game = Games.load(game_id)
-    
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
 
     if len(already_chosen_events) != 0:
@@ -17,12 +16,10 @@ def _is_first_event(game_id: str) -> bool:
 def _no_major_events(game_id: str) -> bool:
 
     game = Games.load(game_id)
-    
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
-   
-    for event_name, event_data in SD.events:
-        if event_name in already_chosen_events and event_data.type == "Major Event":
-            return False
+
+    if any(event_name in already_chosen_events for event_name in ["Foreign Invasion", "Pandemic", "Faustian Bargain"]):
+        return False
         
     return True
 

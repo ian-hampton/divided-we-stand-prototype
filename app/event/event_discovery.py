@@ -50,3 +50,6 @@ def load_event(game_id: str, event_name: str, event_data: dict | None) -> Event:
         }
 
     return EVENT_REGISTRY[event_name](game_id, event_name, event_data)
+
+def get_event_list() -> list:
+    return list(EVENT_REGISTRY.keys())
