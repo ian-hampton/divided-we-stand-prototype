@@ -83,9 +83,11 @@ class ScenarioInterface:
     
     @classmethod
     def load(cls, game_id: str) -> None:
+        from app.event import event_discovery
 
         cls.game_id = game_id
         cls.scenario = cls._get_scenario_name()
+        event_discovery.discover_events()
 
         cls.agendas = ScenarioDataFile(SD_Agenda)
         cls.alliances = ScenarioDataFile(SD_Alliance)

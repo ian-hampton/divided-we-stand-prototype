@@ -56,3 +56,4 @@ app/static/handshake.png
 /app/checks/__pycache__
 /tests/__pycache__
 /app/event/__pycache__
+/scenarios/standard/events/__pycache__

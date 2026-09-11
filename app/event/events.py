@@ -1,10 +1,10 @@
 import copy
 import random
-import importlib
 
 from app.game.games import Games
 from app.game.game import GameStatus
 from app.scenario.scenario import ScenarioInterface as SD
+from app.event import event_discovery
 from app.event.event import EventState
 
 def trigger_event(game_id: str) -> None:
@@ -17,16 +17,14 @@ def trigger_event(game_id: str) -> None:
     Returns:
         None
     """
-    
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     # create list of eligible events
     event_list = list(SD.events.names())
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
     event_list_filtered = []
     for event_name in event_list:
-        event = events.load_event(game_id, event_name, event_data=None)
+        event = event_discovery.load_event(game_id, event_name, event_data=None)
         if event_name in already_chosen_events or not event.has_conditions_met():
             continue
         event_list_filtered.append(event_name)
@@ -34,7 +32,7 @@ def trigger_event(game_id: str) -> None:
     # initiate random event
     event_name = random.choice(event_list_filtered)
     print(f"Triggering {event_name} event...")
-    event = events.load_event(game_id, event_name, event_data=None)
+    event = event_discovery.load_event(game_id, event_name, event_data=None)
     event.activate()
 
     # save event
@@ -50,14 +48,12 @@ def trigger_event(game_id: str) -> None:
             game.turn += 1
 
 def resolve_current_event(game_id: str) -> None:
-    
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     # load event
     event_data = copy.deepcopy(game.current_event)
     event_name = event_data["Name"]
-    event = events.load_event(game_id, event_name, event_data)
+    event = event_discovery.load_event(game_id, event_name, event_data)
 
     # resolve current event
     event.resolve()
@@ -71,15 +67,13 @@ def resolve_current_event(game_id: str) -> None:
             game.inactive_events.append(event_name)
 
 def resolve_active_events(game_id: str, actions_dict=None):
-    
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     active_events_filtered = {}
 
     for event_name, event_data in game.active_events.items():
 
-        event = events.load_event(game_id, event_name, event_data)
+        event = event_discovery.load_event(game_id, event_name, event_data)
 
         if actions_dict is not None:
             event.run_before(actions_dict)
@@ -98,13 +92,12 @@ def filter_events(game_id: str):
     from app.notifications import Notifications
     
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     active_events_filtered = {}
 
     for event_name, event_data in game.active_events.items():
 
-        event = events.load_event(game_id, event_name, event_data)
+        event = event_discovery.load_event(game_id, event_name, event_data)
 
         if game.turn >= event.expire_turn:
             Notifications.add(f"{event.name} event has ended.", 3)
