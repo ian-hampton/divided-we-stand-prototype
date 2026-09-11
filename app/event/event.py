@@ -7,14 +7,12 @@ from app.nation.nations import Nations
 
 class Event:
 
-    def __init__(self, game_id: str, event_name: str, event_data: dict):
-
-        self.name: str = event_name
-        self.type: str = event_data["Type"]
-        self.duration: int = event_data["Duration"]
-        self.targets: list = event_data.get("Targets", [])
-        self.expire_turn: int = event_data.get("Expiration", -1)
-
+    def __init__(self, game_id: str, event_name: str):
+        self.name = event_name
+        self.type = ""
+        self.duration = -1
+        self.targets = []
+        self.expire_turn = -1
         self.game_id = game_id
         self.game = Games.load(self.game_id)
         self.state = EventState.UNINIT

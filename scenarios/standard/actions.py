@@ -320,7 +320,7 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
         return
 
     event_data = game.active_events["Pandemic"]
-    event = event_discovery.load_event(game_id, "Pandemic", event_data=None)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 
@@ -348,7 +348,7 @@ def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundrais
         return
 
     event_data = game.active_events["Pandemic"]
-    event = event_discovery.load_event(game_id, "Pandemic", event_data=None)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 
@@ -439,7 +439,7 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
         return
 
     event_data = game.active_events["Pandemic"]
-    event = event_discovery.load_event(game_id, "Pandemic", event_data=None)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 
@@ -467,7 +467,7 @@ def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseA
         return
 
     event_data = game.active_events["Pandemic"]
-    event = event_discovery.load_event(game_id, "Pandemic", event_data=None)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 

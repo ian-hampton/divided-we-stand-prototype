@@ -24,7 +24,7 @@ def trigger_event(game_id: str) -> None:
     already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
     event_list_filtered = []
     for event_name in event_list:
-        event = event_discovery.load_event(game_id, event_name, event_data=None)
+        event = event_discovery.load_event(game_id, event_name, event_data={})
         if event_name in already_chosen_events or not event.has_conditions_met():
             continue
         event_list_filtered.append(event_name)
@@ -32,7 +32,7 @@ def trigger_event(game_id: str) -> None:
     # initiate random event
     event_name = random.choice(event_list_filtered)
     print(f"Triggering {event_name} event...")
-    event = event_discovery.load_event(game_id, event_name, event_data=None)
+    event = event_discovery.load_event(game_id, event_name, event_data={})
     event.activate()
 
     # save event

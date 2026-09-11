@@ -40,15 +40,6 @@ def load_event(game_id: str, event_name: str, event_data: dict | None) -> Event:
     """
     if event_name not in EVENT_REGISTRY:
         raise Exception(f"Error: {event_name} event not recognized.")
-
-    # if this is the first time initalizing this event, get starting info from scenario
-    if event_data is None:
-        sd_event = SD.events[event_name]
-        event_data = {
-            "Type": sd_event.type,
-            "Duration": sd_event.duration
-        }
-
     return EVENT_REGISTRY[event_name](game_id, event_name, event_data)
 
 def get_event_list() -> list:
