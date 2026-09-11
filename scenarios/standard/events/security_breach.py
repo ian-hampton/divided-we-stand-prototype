@@ -8,7 +8,11 @@ EVENT_NAME = "Security Breach"
 class SecurityBreach(Event):
     
     def __init__(self, game_id: str, event_name: str, event_data: dict):
-        Event.__init__(self, game_id, event_name, event_data)
+        Event.__init__(self, game_id, event_name)
+        self.type = "Standard Event"
+        self.duration = 4
+        self.targets: list = event_data.get("Targets", [])
+        self.expire_turn: int = event_data.get("Expiration", -1)
 
     def activate(self):
 

@@ -15,7 +15,11 @@ EVENT_NAME = "Foreign Invasion"
 class ForeignInvasion(Event):
     
     def __init__(self, game_id: str, event_name: str, event_data: dict):
-        Event.__init__(self, game_id, event_name, event_data)
+        Event.__init__(self, game_id, event_name)
+        self.type = "Major Event"
+        self.duration = 20
+        self.targets: list = event_data.get("Targets", [])
+        self.expire_turn: int = event_data.get("Expiration", -1)
 
     def activate(self):
         

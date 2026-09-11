@@ -11,7 +11,11 @@ EVENT_NAME = "Pandemic"
 class Pandemic(Event):
     
     def __init__(self, game_id: str, event_name: str, event_data: dict):
-        Event.__init__(self, game_id, event_name, event_data)
+        Event.__init__(self, game_id, event_name)
+        self.type = "Major Event"
+        self.duration = 99999
+        self.targets: list = event_data.get("Targets", [])
+        self.expire_turn: int = event_data.get("Expiration", -1)
         self.intensify: int = event_data.get("Intensify Value", -1)
         self.spread: int = event_data.get("Spread Value", -1)
         self.cure_current: int = event_data.get("Completed Cure Research", -1)
