@@ -317,6 +317,13 @@ class Region:
                 case "Rare Earth Elements":
                     if 'Rare Earth Mining' in nation.completed_research:
                         improvement_income_dict[self.data.resource]["Income"] += 1
+
+        # override - capital multiplier can never fall below 100%
+        if self.improvement.name == "Capital":
+            for resource_name in improvement_income_dict:
+                if improvement_income_dict[resource_name]["Income Multiplier"] >= 1.0:
+                    continue
+                improvement_income_dict[resource_name]["Income Multiplier"] = 1.0
         
         # calculate final income
         final_yield_dict = {}
