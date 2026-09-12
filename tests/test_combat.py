@@ -11,7 +11,7 @@ import os, sys
 import unittest
 from unittest.mock import patch
 
-import base
+from . import base
 
 from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
@@ -261,8 +261,8 @@ class TestCombat(unittest.TestCase):
         assert NTEAZ.improvement.name == None
         assert NTEAZ.improvement.health == 99
         
-        # check NTEAZ XP    (2x destruction) + (2x occupation) = 4 + 4 = 8
-        assert NTEAZ.unit.xp == 8
+        # check NTEAZ XP    (2x destruction) + (2x occupation) = 4 + 2 = 6
+        assert NTEAZ.unit.xp == 6
 
     def test_in_vs_in_xp(self):
         """

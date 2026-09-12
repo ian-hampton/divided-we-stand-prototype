@@ -5,7 +5,6 @@ from typing import ClassVar, TypeVar, Generic
 from app.game.games import Games
 from .sd_agenda import *
 from .sd_alliance import *
-from .sd_event import *
 from .sd_improvement import *
 from .sd_market import *
 from .sd_missile import *
@@ -17,7 +16,6 @@ from .sd_war import *
 ClassNameToFileName = {
     "SD_Agenda": "agendas",
     "SD_Alliance": "alliances",
-    "SD_Event": "events",
     "SD_Improvement": "improvements",
     "SD_Market": "market",
     "SD_Missile": "missiles",
@@ -72,7 +70,6 @@ class ScenarioInterface:
 
     agendas: ClassVar[ScenarioDataFile[SD_Agenda]] = None
     alliances: ClassVar[ScenarioDataFile[SD_Alliance]] = None
-    events: ClassVar[ScenarioDataFile[SD_Event]] = None
     improvements: ClassVar[ScenarioDataFile[SD_Improvement]] = None
     market: ClassVar[ScenarioDataFile[SD_Market]] = None
     missiles: ClassVar[ScenarioDataFile[SD_Missile]] = None
@@ -83,13 +80,14 @@ class ScenarioInterface:
     
     @classmethod
     def load(cls, game_id: str) -> None:
+        from app.event import event_discovery
 
         cls.game_id = game_id
         cls.scenario = cls._get_scenario_name()
+        event_discovery.discover_events()
 
         cls.agendas = ScenarioDataFile(SD_Agenda)
         cls.alliances = ScenarioDataFile(SD_Alliance)
-        cls.events = ScenarioDataFile(SD_Event)
         cls.improvements = ScenarioDataFile(SD_Improvement)
         cls.market = ScenarioDataFile(SD_Market)
         cls.missiles = ScenarioDataFile(SD_Missile)

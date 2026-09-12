@@ -82,12 +82,11 @@ class UnitVsUnit(BattleTemplate):
         if self.attacking_region.unit.health <= 0:
             self.war.log.append(f"    {self.attacker.name} {self.attacking_region.unit.name} has been defeated!")
             # update stats
-            self._award_warscore("Defender", "destroyed_units", self.attacking_region.unit.value)
+            self._award_warscore("Defender", "destroyed_units", self.attacking_region.unit.true_damage)
             self.attacker_cd.lost_units += 1
             self.defender_cd.destroyed_units += 1
             # update player
             self.attacker.unit_counts[self.attacking_region.unit.name] -= 1
-            self.attacker.update_military_capacity()
             self.attacking_region.unit.clear()
 
         # remove defending unit if defeated
@@ -95,12 +94,11 @@ class UnitVsUnit(BattleTemplate):
             self.war.log.append(f"    {self.defender.name} {self.defending_region.unit.name} has been defeated!")
             # update stats
             self.attacking_region.unit.add_xp(ExperienceRewards.FROM_DEFEAT_ENEMY)
-            self._award_warscore("Attacker", "destroyed_units", self.defending_region.unit.value)
+            self._award_warscore("Attacker", "destroyed_units", self.defending_region.unit.true_damage)
             self.attacker_cd.destroyed_units += 1
             self.defender_cd.lost_units += 1
             # update player
             self.defender.unit_counts[self.defending_region.unit.name] -= 1
-            self.defender.update_military_capacity()
             self.defending_region.unit.clear()
         else:
             # award defending unit with xp if it survived this attack

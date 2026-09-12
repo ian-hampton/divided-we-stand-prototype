@@ -2,6 +2,7 @@ import importlib
 
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
+from app.event import event_discovery
 from app.region.regions import Regions
 from app.nation.nations import Nations
 
@@ -314,13 +315,12 @@ def resolve_peace_talk_actions(game_id: str, actions_list: list[HostPeaceTalksAc
 def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchAction]) -> None:
 
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in game.active_events:
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 
@@ -343,13 +343,12 @@ def resolve_cure_research_actions(game_id: str, actions_list: list[CureResearchA
 def resolve_cure_fundraise_actions(game_id: str, actions_list: list[CureFundraiseAction]) -> None:
 
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in game.active_events:
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 
@@ -435,13 +434,12 @@ def resolve_quarantine_end_actions(game_id: str, actions_list: list[QuarantineEn
 def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAction]) -> None:
 
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in game.active_events:
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 
@@ -464,13 +462,12 @@ def resolve_open_borders_actions(game_id: str, actions_list: list[BordersOpenAct
 def resolve_close_borders_actions(game_id: str, actions_list: list[BordersCloseAction]) -> None:
 
     game = Games.load(game_id)
-    events = importlib.import_module(f"scenarios.{SD.scenario}.events")
 
     if "Pandemic" not in game.active_events:
         return
 
     event_data = game.active_events["Pandemic"]
-    event = events.load_event(game_id, "Pandemic", event_data)
+    event = event_discovery.load_event(game_id, "Pandemic", event_data={})
 
     for action in actions_list:
 

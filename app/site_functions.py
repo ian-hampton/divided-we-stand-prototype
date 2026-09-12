@@ -6,23 +6,22 @@ from datetime import datetime
 from operator import itemgetter
 from collections import defaultdict
 
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
+from app.event import events
 from app import actions
+from app import palette
 from app.checks import checks
 from app.checks import end_wars
 from app.checks import heals
 from app.checks import resolve_shortages
 from app.checks.update_income import UpdateIncomeProcess
-from app import events
 from app.map import GameMaps
-from app import palette
-from app.game.games import Games
-from app.game.game import GameStatus
-from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
 from app.region.regions import Regions
 from app.nation.nation import Nation
 from app.nation.nations import Nations
-from app.notifications import Notifications
 from app.war.wars import Wars
 
 # TURN PROCESSING

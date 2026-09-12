@@ -376,7 +376,7 @@ def influence_through_trade(nation: Nation) -> bool:
 def military_superpower(nation: Nation) -> bool:
 
     # check if player meets minimum score
-    if nation.records.military_strength[-1] < 24:
+    if nation.records.military_strength[-1] < 36:
         return False
 
     # check if first and not tied

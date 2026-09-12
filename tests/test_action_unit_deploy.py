@@ -9,7 +9,7 @@ Comprehensive series of unit tests for the deploy unit action.
 import unittest
 from unittest.mock import patch
 
-import base
+from . import base
 
 from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
@@ -122,7 +122,6 @@ class TestDeployUnit(unittest.TestCase):
         nation = Nations.get("3")
         costs_str = "5 dollars and 5 basic materials"
         assert f"Deployed {UNIT_NAME} in region {REGION_ID} for {costs_str}." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 7
 
         # test resources
@@ -184,7 +183,6 @@ class TestDeployUnit(unittest.TestCase):
         nation = Nations.get("3")
         costs_str = "5 dollars and 5 basic materials"
         assert f"Deployed {UNIT_NAME} in region {REGION_ID} for {costs_str}." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 6
 
         # test resources
@@ -242,7 +240,6 @@ class TestDeployUnit(unittest.TestCase):
         # test nation
         nation = Nations.get("3")
         assert f"Failed to deploy {UNIT_NAME} in region {REGION_ID}. You do not control this region." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 6
 
         # test resources
@@ -300,7 +297,6 @@ class TestDeployUnit(unittest.TestCase):
         # test nation
         nation = Nations.get("3")
         assert f"Failed to deploy {UNIT_NAME} in region {REGION_ID}. You do not have the required research." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 6
 
         # test resources
@@ -361,7 +357,6 @@ class TestDeployUnit(unittest.TestCase):
 
         # test nation
         assert f"Failed to deploy {UNIT_NAME} in region {REGION_ID}. Insufficient military capacity." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 6
 
         # test resources
@@ -422,7 +417,6 @@ class TestDeployUnit(unittest.TestCase):
 
         # test nation
         assert f"Failed to deploy {UNIT_NAME} in region {REGION_ID}. Insufficient resources." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 6
 
         # test resources

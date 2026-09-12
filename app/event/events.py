@@ -1,0 +1,115 @@
+import copy
+import random
+
+from app.game.games import Games
+from app.game.game import GameStatus
+from app.scenario.scenario import ScenarioInterface as SD
+from app.event import event_discovery
+from app.event.event import EventState
+
+def trigger_event(game_id: str) -> None:
+    """
+    Triggers a random event.
+
+    Params:
+        game_id (str): Game ID string.
+    
+    Returns:
+        None
+    """
+    game = Games.load(game_id)
+
+    # create list of eligible events
+    event_list = event_discovery.get_event_list()
+    already_chosen_events = set(game.inactive_events) | set(key for key in game.active_events)
+    event_list_filtered = []
+    for event_name in event_list:
+        event = event_discovery.load_event(game_id, event_name, event_data={})
+        if event_name in already_chosen_events or not event.has_conditions_met():
+            continue
+        event_list_filtered.append(event_name)
+
+    # initiate random event
+    event_name = random.choice(event_list_filtered)
+    print(f"Triggering {event_name} event...")
+    event = event_discovery.load_event(game_id, event_name, event_data={})
+    event.activate()
+
+    # save event
+    match event.state:
+        case EventState.PENDING:
+            game.current_event = event.export()
+            game.status = GameStatus.ACTIVE_PENDING_EVENT
+        case EventState.ACTIVE:
+            game.active_events[event_name] = event.export()
+            game.turn += 1
+        case EventState.FINISHED:
+            game.inactive_events.append(event_name)
+            game.turn += 1
+
+def resolve_current_event(game_id: str) -> None:
+    game = Games.load(game_id)
+
+    # load event
+    event_data = copy.deepcopy(game.current_event)
+    event_name = event_data["Name"]
+    event = event_discovery.load_event(game_id, event_name, event_data)
+
+    # resolve current event
+    event.resolve()
+    game.current_event = {}
+
+    # save event
+    match event.state:
+        case EventState.ACTIVE:
+            game.active_events[event_name] = event.export()
+        case EventState.FINISHED:
+            game.inactive_events.append(event_name)
+
+def resolve_active_events(game_id: str, actions_dict=None):
+    game = Games.load(game_id)
+
+    active_events_filtered = {}
+
+    for event_name, event_data in game.active_events.items():
+
+        event = event_discovery.load_event(game_id, event_name, event_data)
+
+        if actions_dict is not None:
+            event.run_before(actions_dict)
+        else:
+            event.run_after()
+
+        match event.state:
+            case EventState.ACTIVE:
+                active_events_filtered[event_name] = event.export()
+            case EventState.FINISHED:
+                game.inactive_events.append(event_name)
+
+    game.active_events = active_events_filtered
+
+def filter_events(game_id: str):
+    from app.notifications import Notifications
+    
+    game = Games.load(game_id)
+
+    active_events_filtered = {}
+
+    for event_name, event_data in game.active_events.items():
+
+        event = event_discovery.load_event(game_id, event_name, event_data)
+
+        if game.turn >= event.expire_turn:
+            Notifications.add(f"{event.name} event has ended.", 3)
+            if event.name == "Foreign Invasion":
+                event._foreign_invasion_end()
+            game.inactive_events.append(event_name)
+            continue
+
+        active_events_filtered[event.name] = event.export()
+        if event.expire_turn != 99999:
+            Notifications.add(f"{event.name} will end on turn {event.expire_turn}.", 3)
+        else:
+            Notifications.add(f"{event.name} event is active.", 3)
+
+    game.active_events = active_events_filtered

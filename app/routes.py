@@ -1154,7 +1154,7 @@ def turn_resolution_new(full_game_id):
     from app.notifications import Notifications
     from app.truce.truces import Truces
     from app.war.wars import Wars
-    from app import events
+    from app.event import events
 
     game = Games.load(full_game_id)
     SD.load(full_game_id)

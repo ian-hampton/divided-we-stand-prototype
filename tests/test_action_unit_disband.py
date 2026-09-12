@@ -9,7 +9,7 @@ Comprehensive series of unit tests for the disband unit action.
 import unittest
 from unittest.mock import patch
 
-import base
+from . import base
 
 from app.scenario.scenario import ScenarioInterface as SD
 from app.alliance.alliances import Alliances
@@ -100,7 +100,6 @@ class TestDisbandUnit(unittest.TestCase):
         # test nation
         nation = Nations.get("4")
         assert f"Disbanded unit in region {REGION_ID}." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 5
 
     def test_bad_region(self):
@@ -145,5 +144,4 @@ class TestDisbandUnit(unittest.TestCase):
         # test nation
         nation = Nations.get("4")
         assert f"Failed to disband {region.unit.name} in region {REGION_ID}. You do not own a unit in this region." in nation.action_log
-        nation.update_military_capacity()
         assert nation.get_used_mc() == 6
