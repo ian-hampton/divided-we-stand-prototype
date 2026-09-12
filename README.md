@@ -20,7 +20,7 @@ An online turn-based strategy game set in the modern era. Create your own unique
 - [x] Update #10
 - [x] Rewrite Part 3 - Game Management
 - [x] Update #11
-- [ ] Update #12
+- [x] Update #12
 
 
 ## Contact
