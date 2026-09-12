@@ -125,7 +125,7 @@ class StandardStrike(Strike):
             return True
         
         # OR unit destroyed
-        self._award_warscore("Attacker", "destroyed_units", self.target_region.unit.value)
+        self._award_warscore("Attacker", "destroyed_units", self.target_region.unit.true_damage)
         self.attacking_combatant.destroyed_units += 1
         self.defending_combatant.lost_units += 1
         self.war.log.append(f"    Missile struck {self.target_region.unit.name} in {self.target_region.id} and dealt {net_damage} damage. Unit destroyed!")

@@ -78,7 +78,7 @@ class UnitVsImprovement(BattleTemplate):
         if self.attacking_region.unit.health <= 0:
             self.war.log.append(f"    {self.attacker.name} {self.attacking_region.unit.name} has been lost!")
             # update stats
-            self._award_warscore("Defender", "destroyed_units", self.attacking_region.unit.value)
+            self._award_warscore("Defender", "destroyed_units", self.attacking_region.unit.true_damage)
             self.attacker_cd.lost_units += 1
             self.defender_cd.destroyed_units += 1
             # update player

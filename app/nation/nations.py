@@ -8,6 +8,7 @@ from enum import StrEnum
 from app.game.games import Games
 from app.scenario.scenario import ScenarioInterface as SD
 from .nation import Nation
+from app.region.regions import Regions
 
 class NationsMeta(type):
 
@@ -272,8 +273,9 @@ class Nations(metaclass=NationsMeta):
             nation.records.military_size.append(military_size)
 
             military_strength = 0
-            for unit_name, unit_data in SD.units:
-                military_strength += nation.unit_counts.get(unit_name, 0) * unit_data.value
+            for region in Regions:
+                if region.unit.owner_id == nation.id:
+                    military_strength += region.unit.true_damage
             nation.records.military_strength.append(military_strength)
 
             agenda_count = 0

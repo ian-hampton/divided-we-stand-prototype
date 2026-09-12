@@ -9,7 +9,6 @@ class SD_Unit:
         self.required_research: str = d["Required Research"]
         self.type: str = d["Unit Type"]
         self.abbreviation: str = d["Abbreviation"]
-        self.value: int = d["Point Value"]
         self.color: str = d["Reference Color"]
         
         self.damage: int = d.get("Damage", 0)

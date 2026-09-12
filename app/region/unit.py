@@ -62,7 +62,6 @@ class UnitData:
         if self.name is not None:
             unit = SD.units[self.name]
             self.type = unit.type
-            self.value = unit.value
             self.damage = unit.damage
             self.armor = unit.armor
             self.max_health = unit.health
@@ -72,7 +71,6 @@ class UnitData:
             self.defense_range = unit.defense_range
         else:
             self.type = None
-            self.value = None
             self.damage = None
             self.armor = None
             self.max_health = None
